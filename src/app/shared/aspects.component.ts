@@ -1,6 +1,7 @@
-import * as Enums from "../enums/enums";
 import { Component, input, model } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
+
+import * as Enums from "../enums/enums";
 
 @Component({
   selector: "app-aspects",

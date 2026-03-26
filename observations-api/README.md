@@ -1,6 +1,6 @@
 # observations-api
 
-HTTP API for observations built with [Astro](https://docs.astro.build)
+HTTP API for observations built with [Bun.serve](https://bun.sh/docs/runtime/http/server)
 
 ## Development
 

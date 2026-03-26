@@ -1,3 +1,7 @@
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { map, Observable } from "rxjs";
+
 import {
   StressLevel,
   StressLevelSchema,
@@ -7,9 +11,6 @@ import {
 import { UserModel, UserSchema } from "../../models/user.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
 
 @Injectable()
 export class UserService {

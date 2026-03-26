@@ -1,6 +1,7 @@
-import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../../enums/enums";
 import { orderBy } from "es-toolkit";
 import { z } from "zod/v4";
+
+import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../../enums/enums";
 
 export enum ImportantObservation {
   SurfaceHoar = "SurfaceHoar",
@@ -16,6 +17,7 @@ export enum ObservationSource {
   Observer = "Observer",
   LwdKip = "LwdKip",
   Lawis = "Lawis",
+  LoLaObserver = "LoLaObserver",
   LoLaKronos = "LoLaKronos",
   Snobs = "Snobs",
   WikisnowECT = "WikisnowECT",

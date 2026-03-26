@@ -43,13 +43,23 @@ export const RegionConfigurationSchema = z.object({
   enableLineaExport: z.boolean().nullish(),
   enableStrategicMindset: z.boolean().nullish(),
   enableStressLevel: z.boolean().nullish(),
+  enabledTextcatFields: z
+    .enum(TextcatTextfield)
+    .array()
+    .default(() => [
+      TextcatTextfield.highlights,
+      TextcatTextfield.avActivityHighlights,
+      TextcatTextfield.avActivityComment,
+      TextcatTextfield.snowpackStructureHighlights,
+      TextcatTextfield.snowpackStructureComment,
+      TextcatTextfield.tendencyComment,
+    ])
+    .describe("Textfields for bulletins to be entered using textcat"),
   enabledEditableFields: z
     .enum(TextcatTextfield)
     .array()
     .nullish()
     .describe("Editable textfields instead of textcat for bulletins"),
-  enableGeneralHeadline: z.boolean().nullish(),
-  enableWeatherTextField: z.boolean().nullish(),
   showMatrix: z.boolean().nullish(),
   pdfColor: z.string().nullish(),
   emailColor: z.string().nullish(),

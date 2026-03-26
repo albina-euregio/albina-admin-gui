@@ -1,7 +1,8 @@
-import { LangTexts } from "../../models/text.model";
-import { ConstantsService } from "../constants-service/constants.service";
 import { Injectable, inject } from "@angular/core";
 import { BulletinModel } from "app/models/bulletin.model";
+
+import { LangTexts } from "../../models/text.model";
+import { ConstantsService } from "../constants-service/constants.service";
 
 @Injectable()
 export class CopyService {

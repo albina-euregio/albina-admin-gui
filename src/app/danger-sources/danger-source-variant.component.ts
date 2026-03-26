@@ -1,11 +1,24 @@
+import { DatePipe } from "@angular/common";
+import { Component, ElementRef, inject, input, OnChanges, OnInit, output, ViewChild } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { DomSanitizer } from "@angular/platform-browser";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { MatrixInformationSchema } from "app/models/matrix-information.model";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { debounceTime, Subject } from "rxjs";
+
 import * as Enums from "../enums/enums";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { haveSameElements } from "../shared/compareArrays";
 import { ElevationsComponent } from "../shared/elevations.component";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { SliderOptions } from "../shared/slider.component";
 import { DangerSourcesService } from "./danger-sources.service";
 import {
@@ -20,18 +33,6 @@ import {
 } from "./models/danger-source-variant.model";
 import { zEnumValues } from "./models/zod-util";
 import { ToggleBtnGroup } from "./toggle-btn-group";
-import { DatePipe } from "@angular/common";
-import { Component, ElementRef, inject, input, OnChanges, OnInit, output, ViewChild } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { DomSanitizer } from "@angular/platform-browser";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { MatrixInformationSchema } from "app/models/matrix-information.model";
-import { AccordionModule } from "ngx-bootstrap/accordion";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { debounceTime, Subject } from "rxjs";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-danger-source-variant",

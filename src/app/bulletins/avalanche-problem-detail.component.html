@@ -215,10 +215,10 @@
     <div class="form-group">
       <app-matrix
         [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [matrixInformation]="avalancheProblemModel().matrixInformation"
-        [snowpackStability]="avalancheProblemModel().matrixInformation.snowpackStability"
-        [frequency]="avalancheProblemModel().matrixInformation.frequency"
-        [avalancheSize]="avalancheProblemModel().matrixInformation.avalancheSize"
+        (dangerRating)="avalancheProblemModel().matrixInformation.dangerRating"
+        [(snowpackStability)]="avalancheProblemModel().matrixInformation.snowpackStability"
+        [(frequency)]="avalancheProblemModel().matrixInformation.frequency"
+        [(avalancheSize)]="avalancheProblemModel().matrixInformation.avalancheSize"
         [disabled]="true"
       ></app-matrix>
     </div>

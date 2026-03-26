@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "skipLibCheck": true
-  },
-  "extends": "astro/tsconfigs/base"
+    "typeRoots": ["node_modules/@types"]
+  }
 }

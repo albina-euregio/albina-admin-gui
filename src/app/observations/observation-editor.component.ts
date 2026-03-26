@@ -1,3 +1,17 @@
+import { CommonModule } from "@angular/common";
+import { AfterViewInit, Component, ElementRef, viewChild, input, inject, signal } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
+import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
+import { zodCssClass } from "app/shared/zod-css-class";
+import { orderBy, xor } from "es-toolkit";
+import { Feature, Point } from "geojson";
+import { geocoders } from "leaflet-control-geocoder";
+import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
+import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
+
 import type {
   LolaRainBoundaryElevationTolerance,
   LolaRainBoundaryElevationPeriod,
@@ -15,19 +29,6 @@ import {
   ObservationType,
   PersonInvolvement,
 } from "./models/generic-observation.model";
-import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, viewChild, input, inject, signal } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
-import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
-import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
-import { zodCssClass } from "app/shared/zod-css-class";
-import { orderBy, xor } from "es-toolkit";
-import { Feature, Point } from "geojson";
-import { geocoders } from "leaflet-control-geocoder";
-import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
-import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
 
 @Component({
   standalone: true,

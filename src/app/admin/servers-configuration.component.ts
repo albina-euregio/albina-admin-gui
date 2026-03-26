@@ -1,11 +1,12 @@
+import { Component, OnInit, inject } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+
 import { LocalServerConfiguration, ServerConfiguration } from "../models/server-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { ServerConfigurationComponent } from "./server-configuration.component";
-import { Component, OnInit, inject } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
-import { AccordionModule } from "ngx-bootstrap/accordion";
 
 @Component({
   templateUrl: "servers-configuration.component.html",

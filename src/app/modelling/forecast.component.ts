@@ -1,14 +1,3 @@
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
-import type { ModellingRouteData } from "./routes";
-import {
-  type AlpsolutObservation,
-  AlpsolutProfileService,
-  MeteogramSourceService,
-  MultimodelSourceService,
-  ObservedProfileSourceService,
-  ZamgMeteoSourceService,
-} from "./sources";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
 import {
   Component,
@@ -28,10 +17,23 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
-import "bootstrap";
 import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
 import { BsModalService } from "ngx-bootstrap/modal";
 import type { Observable } from "rxjs";
+
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+
+import "bootstrap";
+import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
+import type { ModellingRouteData } from "./routes";
+import {
+  type AlpsolutObservation,
+  AlpsolutProfileService,
+  MeteogramSourceService,
+  MultimodelSourceService,
+  ObservedProfileSourceService,
+  ZamgMeteoSourceService,
+} from "./sources";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;

@@ -1,7 +1,9 @@
-import { changeRegion, loginForecaster } from "./utils";
-import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "path";
+
+import { test, expect } from "@playwright/test";
+
+import { changeRegion, loginForecaster } from "./utils";
 
 const testDate = new Date("2024-12-24");
 
@@ -41,7 +43,7 @@ test("filter observations", async ({ page }) => {
     await page.getByText("6", { exact: true }).first().click();
     await expect(page.getByRole("textbox")).toHaveValue("12/03/2024 - 12/06/2024");
     await expect(page).toHaveURL("#/observations?startDate=2024-12-03T10:00&endDate=2024-12-06T14:30");
-    await expect(page.locator(".keydata")).toHaveText("175 / 175", { timeout: 7000 });
+    await expect(page.locator(".keydata")).toHaveText("177 / 177", { timeout: 7000 });
     await page.getByText("Table", { exact: true }).click();
     await expect(
       page.getByText(
@@ -53,7 +55,7 @@ test("filter observations", async ({ page }) => {
     await page.getByRole("button", { name: "Region" }).click();
     await page.getByRole("checkbox", { name: "Kalkkögel" }).check();
     await page.getByRole("checkbox", { name: "Kühtai - Geigen Ridge" }).check();
-    await expect(page.locator(".keydata")).toHaveText("13 / 175");
+    await expect(page.locator(".keydata")).toHaveText("13 / 177");
     await expect(
       page.getByText(
         "Trockene Schneefallgrenze zum Beobachtungszeitpunkt: 1350m ± 50mm Aktuell Schneefallgrenze im Bereich Mittelstation Froneben",
@@ -64,7 +66,7 @@ test("filter observations", async ({ page }) => {
     await page.getByRole("button", { name: "" }).click();
     await page.getByRole("textbox", { name: "Search" }).fill("Neuschnee");
     await page.getByRole("textbox", { name: "Search" }).press("Enter");
-    await expect(page.locator(".keydata")).toHaveText("5 / 175");
+    await expect(page.locator(".keydata")).toHaveText("5 / 177");
     await expect(
       page.getByText(
         "Geringe Neuschneemenge bei schwachem Wind,es können alle Abfahrten geöffnet bleiben.Zirmach und Panoramabahn freigegeben Bergefall möglich.",
@@ -86,7 +88,7 @@ test("filter observations", async ({ page }) => {
           y: 95,
         },
       });
-    await expect(page.locator(".keydata")).toHaveText("45 / 175");
+    await expect(page.locator(".keydata")).toHaveText("45 / 177");
     await page
       .locator("app-observation-chart")
       .filter({ hasText: "Observation Type" })
@@ -97,7 +99,7 @@ test("filter observations", async ({ page }) => {
           y: 174,
         },
       });
-    await expect(page.locator(".keydata")).toHaveText("4 / 175");
+    await expect(page.locator(".keydata")).toHaveText("4 / 177");
     await page.locator("app-observation-chart").filter({ hasText: "Observation Type" }).getByTitle("reset").click();
     // TODO Shift+Click doesn't work
     // await page
@@ -131,7 +133,7 @@ test("filter observations", async ({ page }) => {
 test("observation details", async ({ page }) => {
   test.slow();
   await page.goto("#/observations?startDate=2024-12-23T00:00&endDate=2024-12-24T23:59");
-  await expect(page.locator(".keydata")).toHaveText("342 / 342", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("353 / 353", { timeout: 7000 });
   await page.getByText("Table", { exact: true }).click();
   await test.step("AvalancheWarningService", async () => {
     await page.getByRole("button", { name: "Sources" }).click();
@@ -186,7 +188,7 @@ test("export observation details", async ({ page }) => {
   await page.getByRole("checkbox", { name: "Tuxer Alps East" }).check();
   await page.getByRole("checkbox", { name: "Kitzbühel Alps Wildschönau" }).check();
   await page.getByRole("checkbox", { name: "Zillertal Alps Northwest" }).check();
-  await expect(page.locator(".keydata")).toHaveText("4 / 175", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("4 / 177", { timeout: 7000 });
   await test.step("GEOJSON", async () => {
     await page.getByRole("button", { name: "" }).click();
     const downloadJsonPromise = page.waitForEvent("download");
@@ -291,7 +293,7 @@ test("Weather stations", async ({ page }) => {
   await page.clock.setFixedTime(new Date("2025-03-05"));
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  await expect(page.locator(".keydata")).toHaveText("724 / 724", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("734 / 734", { timeout: 7000 });
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
   await expect

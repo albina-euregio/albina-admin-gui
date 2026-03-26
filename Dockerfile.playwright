@@ -4,8 +4,7 @@ ENV TZ="Europe/Vienna"
 
 WORKDIR /home/
 
-COPY package.json yarn.lock .yarnrc.yml playwright.config.ts .env ./
-COPY .yarn .yarn
+COPY package.json pnpm-lock.yaml playwright.config.ts .env ./
 COPY local-types ./local-types
 
-RUN corepack enable && yarn install --frozen-lockfile
+RUN corepack enable && pnpm install

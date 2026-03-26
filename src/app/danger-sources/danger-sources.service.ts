@@ -1,18 +1,15 @@
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { UndoRedoState } from "../providers/undo-redo-service/undo-redo.service";
-import {
-  DangerSourceVariantModel,
-  DangerSourceVariantSchema,
-  DangerSourceVariantType,
-} from "./models/danger-source-variant.model";
-import { DangerSourceModel, DangerSourceSchema } from "./models/danger-source.model";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { z } from "zod/v4";
+
 import { SourceDates } from "../models/SourceDates";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { UndoRedoState } from "../providers/undo-redo-service/undo-redo.service";
+import { DangerSourceVariantModel, DangerSourceVariantSchema } from "./models/danger-source-variant.model";
+import { DangerSourceModel, DangerSourceSchema } from "./models/danger-source.model";
 
 interface AccordionChangeEvent {
   isOpen: boolean;
@@ -114,14 +111,6 @@ export class DangerSourcesService {
 
   setIsReadOnly(isReadOnly: boolean) {
     this.isReadOnly = isReadOnly;
-  }
-
-  getDangerSourceVariantType() {
-    if (this.sourceDates.hasBeenPublished5PM(this.sourceDates.activeDate)) {
-      return DangerSourceVariantType.analysis;
-    } else {
-      return DangerSourceVariantType.forecast;
-    }
   }
 
   loadDangerSources(date: [Date, Date], region: string): Observable<DangerSourceModel[]> {

@@ -1,5 +1,6 @@
-import { loginAdmin } from "./utils";
 import { test, expect } from "@playwright/test";
+
+import { loginAdmin } from "./utils";
 
 /**
  * There are no tests where new regions, servers, users are created right now.

@@ -140,13 +140,6 @@ export interface Edited {
   email?: string;
 }
 
-export interface Entity {
-  entityId: string;
-  entityName: string;
-  entityShortName: string;
-  entityIcon: string;
-}
-
 export interface GlideCracks {
   altitude: number | null;
   exposure: string[];
@@ -1082,10 +1075,16 @@ export interface LolaSnowStabilityTest {
 export type LolaRainBoundaryElevationTolerance = "n/a" | "exact" | "50m" | "100m" | "200";
 export type LolaRainBoundaryElevationPeriod = "n/a" | "duringPrecipitationEvent" | "observationPeriod";
 
-export type LolaEntity =
+export type Entity =
   | {
       entityId: "651ea4bfc7740c4fbb635188";
       entityName: "SNOBS";
+      entityShortName: "";
+      entityIcon: "noIcon";
+    }
+  | {
+      entityId: "64edd52b863815ebc157dcd0";
+      entityName: "Beobachter*in LWD Tirol";
       entityShortName: "";
       entityIcon: "noIcon";
     }
@@ -1098,23 +1097,23 @@ export type LolaEntity =
 
 export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): GenericObservation[] {
   return [
-    ...kronos.lolaAvalancheEvent.map((obs) =>
+    ...(kronos.lolaAvalancheEvent ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Avalanche, urlPrefix + "detail-by-token/lolaAvalancheEvent/"),
     ),
-    ...kronos.lolaEvaluation.map((obs) =>
+    ...(kronos.lolaEvaluation ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/lolaEvaluation/"),
     ),
-    ...kronos.lolaCommissionEvaluation.map((obs) =>
+    ...(kronos.lolaCommissionEvaluation ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/lolaCommissionEvaluation/"),
     ),
-    ...kronos.lolaSimpleObservation.map((obs) =>
+    ...(kronos.lolaSimpleObservation ?? []).map((obs) =>
       convertLoLaToGeneric(
         obs,
         ObservationType.SimpleObservation,
         urlPrefix + "detail-by-token/lolaSimpleObservation/",
       ),
     ),
-    ...kronos.lolaSimpleObservation
+    ...(kronos.lolaSimpleObservation ?? [])
       .filter((obs) => obs.snowLine)
       .map((obs) =>
         convertLoLaToGeneric(
@@ -1124,10 +1123,10 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
           "snowLine",
         ),
       ),
-    ...kronos.lolaSnowProfile.map((obs) =>
+    ...(kronos.lolaSnowProfile ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail-by-token/lolaSnowProfile/"),
     ),
-    ...kronos.lolaRainBoundary.map((obs) =>
+    ...(kronos.lolaRainBoundary ?? []).map((obs) =>
       convertLoLaToGeneric(
         obs,
         ObservationType.DrySnowfallLevel,
@@ -1135,23 +1134,23 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
         "elevation",
       ),
     ),
-    ...kronos.lolaSnowStabilityTest.map((obs) =>
+    ...(kronos.lolaSnowStabilityTest ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail-by-token/lolaSnowStabilityTest/"),
     ),
-    ...kronos.lolaEarlyObservation.map((obs) =>
+    ...(kronos.lolaEarlyObservation ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail-by-token/lolaEarlyObservation/"),
     ),
-    ...kronos.laDokSimpleObservations.map((obs) =>
+    ...(kronos.laDokSimpleObservations ?? []).map((obs) =>
       convertLoLaToGeneric(
         obs,
         ObservationType.SimpleObservation,
         urlPrefix + "detail-by-token/laDokSimpleObservations/",
       ),
     ),
-    ...kronos.laDokDetailedObservations.map((obs) =>
+    ...(kronos.laDokDetailedObservations ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/laDokDetailedObservations/"),
     ),
-    ...kronos.laDokCommissionObservation.map((obs) =>
+    ...(kronos.laDokCommissionObservation ?? []).map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/laDokCommissionObservation/"),
     ),
   ];
@@ -1189,9 +1188,11 @@ export function convertLoLaToGeneric(
         }`
       : `${urlPrefix}${obs.uuId}`,
     $source:
-      Array.isArray(obs.entities) && obs.entities.every((e) => e.entityName === "SNOBS")
-        ? ObservationSource.Snobs
-        : ObservationSource.LoLaKronos,
+      Array.isArray(obs.entities) && obs.entities.some((e) => e.entityName === "Beobachter*in LWD Tirol")
+        ? ObservationSource.LoLaObserver
+        : Array.isArray(obs.entities) && obs.entities.some((e) => e.entityName === "SNOBS")
+          ? ObservationSource.Snobs
+          : ObservationSource.LoLaKronos,
     $type,
     stability:
       $type === ObservationType.Avalanche

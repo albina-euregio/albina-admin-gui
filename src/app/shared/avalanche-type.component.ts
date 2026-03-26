@@ -1,5 +1,6 @@
-import * as Enums from "../enums/enums";
 import { Component, input } from "@angular/core";
+
+import * as Enums from "../enums/enums";
 
 @Component({
   selector: "app-avalanche-type",

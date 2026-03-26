@@ -1,11 +1,3 @@
-import { environment } from "../../environments/environment";
-import { RegionConfiguration } from "../models/region-configuration.model";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
-import { RegionsService } from "../providers/regions-service/regions.service";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { Component, TemplateRef, viewChild, inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
@@ -14,6 +6,15 @@ import { DangerSourcesService } from "app/danger-sources/danger-sources.service"
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
+
+import { environment } from "../../environments/environment";
+import { RegionConfiguration } from "../models/region-configuration.model";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
+import { RegionsService } from "../providers/regions-service/regions.service";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   selector: "app-dashboard",

@@ -1,7 +1,6 @@
 import { getAwsObservers } from "../fetch/observers";
-import type { APIRoute } from "astro";
 
-export const GET: APIRoute = () => {
+export const GET = () => {
   const json = JSON.stringify(getAwsObservers());
   return new Response(json, {
     status: 200,

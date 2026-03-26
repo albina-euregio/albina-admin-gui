@@ -380,6 +380,31 @@
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
           <!-- End of danger situation description -->
+
+          <!-- Travel advisory -->
+          @if (authenticationService.isTextfieldEnabled("travelAdvisoryHighlights")) {
+            <app-bulletin-text
+              [textField]="TextcatTextfield.travelAdvisoryHighlights"
+              [rows]="3"
+              [bulletin]="bulletin()"
+              [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+              [disabled]="disabled()"
+              (showDialog)="showDialog($event)"
+              (updateBulletinOnServer)="updateBulletinOnServer()"
+            />
+          }
+          @if (authenticationService.isTextfieldEnabled("travelAdvisoryComment")) {
+            <app-bulletin-text
+              [textField]="TextcatTextfield.travelAdvisoryComment"
+              [rows]="9"
+              [bulletin]="bulletin()"
+              [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+              [disabled]="disabled()"
+              (showDialog)="showDialog($event)"
+              (updateBulletinOnServer)="updateBulletinOnServer()"
+            />
+          }
+          <!-- End of travel advisory -->
         </div>
         <!-- End of danger description panel content -->
       </accordion-group>
@@ -520,7 +545,7 @@
       <!-- End tendency -->
 
       <!-- Weather synopsis -->
-      @if (this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
+      @if (this.authenticationService.isTextfieldEnabled("synopsisComment")) {
         <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'synopsis')">
           <!-- Weather synopsis -->
           <div accordion-heading class="accordion-header">

@@ -1,4 +1,9 @@
-import { ObservationDatabaseConnection } from "../db/database.ts";
+import * as child_process from "node:child_process";
+import * as fs from "node:fs/promises";
+import * as os from "node:os";
+import * as path from "node:path";
+
+import { ObservationDatabaseConnection } from "../db/database";
 import type {
   LaDokObservation,
   LaDokSimpleObservation,
@@ -10,14 +15,9 @@ import type {
   LolaSnowProfile,
   LolaSnowStabilityTest,
 } from "../fetch/observations/lola-kronos.model.ts";
-import { type GenericObservation, ObservationSource } from "../generic-observation.ts";
-import type { APIRoute } from "astro";
-import child_process from "node:child_process";
-import fs from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
+import { type GenericObservation, ObservationSource } from "../generic-observation";
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST = async (request: Bun.BunRequest) => {
   if (
     !process.env.LOKANDO_API_SYNC_TOKEN ||
     process.env.LOKANDO_API_SYNC_TOKEN !== request.headers.get("X-Lokando-Sync-Token")

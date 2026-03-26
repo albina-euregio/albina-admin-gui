@@ -1,7 +1,8 @@
-import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
-import { fetchJSON, fetchText } from "../util/fetchJSON";
 import { orderBy, groupBy } from "es-toolkit";
 import { average, max, median, min, sum } from "simple-statistics";
+
+import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
+import { fetchJSON, fetchText } from "../util/fetchJSON";
 
 export async function getAwsWeatherStations(
   startDate: Date,

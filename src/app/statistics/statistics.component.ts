@@ -1,11 +1,12 @@
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { StatisticsService } from "../providers/statistics-service/statistics.service";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { saveAs } from "file-saver";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { TabsModule } from "ngx-bootstrap/tabs";
+
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { StatisticsService } from "../providers/statistics-service/statistics.service";
 
 @Component({
   templateUrl: "statistics.component.html",

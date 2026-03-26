@@ -1,10 +1,11 @@
+import { Component, inject, input, output } from "@angular/core";
+import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { BulletinModel } from "../models/bulletin.model";
 import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.component";
 import { AvalancheProblemPreviewComponent } from "./avalanche-problem-preview.component";
-import { Component, inject, input, output } from "@angular/core";
-import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
-import { AccordionModule } from "ngx-bootstrap/accordion";
 
 @Component({
   selector: "app-avalanche-problem",

@@ -34,7 +34,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="222" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">5</text>
+        <text x="222" y="366" class="matrix-danger-text">5</text>
         <path
           d="M 242 342 M 282 342 M 282 382 M 242 382"
           fill="none"
@@ -43,7 +43,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="262" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">4</text>
+        <text x="262" y="366" class="matrix-danger-text">4</text>
         <path
           d="M 282 342 M 322 342 M 322 382 M 282 382"
           fill="none"
@@ -52,7 +52,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="302" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">3</text>
+        <text x="302" y="366" class="matrix-danger-text">3</text>
         <path
           d="M 322 342 M 362 342 M 362 382 M 322 382"
           fill="none"
@@ -61,7 +61,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="342" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">2</text>
+        <text x="342" y="366" class="matrix-danger-text">2</text>
         <path
           d="M 362 342 M 402 342 M 402 382 M 362 382"
           fill="none"
@@ -70,9 +70,9 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="382" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">1</text>
+        <text x="382" y="366" class="matrix-danger-text">1</text>
         <rect x="202" y="382" width="680" height="40px" fill="#ffffff" stroke="#000000" pointer-events="none" />
-        <text x="542" y="406" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="542" y="406" class="matrix-danger-text">
           {{ "matrix.label.avalancheSize" | translate }}
         </text>
         <rect x="42" y="162" width="140" height="160" fill="#ffffff" stroke="none" pointer-events="none" />
@@ -121,7 +121,7 @@
           pointer-events="none"
         />
         <g transform="translate(-0.5 -0.5)rotate(-90 62 242)">
-          <text x="62" y="246" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+          <text x="62" y="246" class="matrix-danger-text">
             {{ "matrix.label.frequency" | translate }}
           </text>
         </g>
@@ -133,7 +133,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="132" y="186" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="132" y="186" class="matrix-danger-text">
           {{ "frequency.many" | translate }}
         </text>
         <path
@@ -144,7 +144,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="132" y="226" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="132" y="226" class="matrix-danger-text">
           {{ "frequency.some" | translate }}
         </text>
         <path
@@ -155,7 +155,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="132" y="266" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="132" y="266" class="matrix-danger-text">
           {{ "frequency.few" | translate }}
         </text>
         <path
@@ -166,7 +166,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="132" y="306" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="132" y="306" class="matrix-danger-text">
           {{ "frequency.none" | translate }}
         </text>
         <path
@@ -184,7 +184,7 @@
           pointer-events="none"
         />
         <rect x="442" y="282" width="200" height="40px" fill="#ffffff" stroke="#000000" pointer-events="none" />
-        <text x="542" y="306" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="542" y="306" class="matrix-danger-text">
           {{ "matrix.label.referToFairStability" | translate }}
         </text>
         <rect x="202" y="122" width="200" height="160" fill="#ffffff" stroke="none" pointer-events="none" />
@@ -253,340 +253,40 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="302" y="146" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="302" y="146" class="matrix-danger-text">
           {{ "snowpackStability.very_poor" | translate }}
         </text>
 
-        <rect
-          #1
-          id="1"
-          x="202"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#000000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="222"
-          y="186"
-          fill="#FFFFFF"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('1')"
-        >
-          5
-        </text>
-        <rect
-          #2
-          id="2"
-          x="242"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#000000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="262"
-          y="186"
-          fill="#FFFFFF"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('2')"
-        >
-          5 (4)
-        </text>
-        <rect
-          #3
-          id="3"
-          x="282"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="302"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('3')"
-        >
-          4
-        </text>
-        <rect
-          #4
-          id="4"
-          x="322"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="342"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('4')"
-        >
-          3 (4)
-        </text>
-        <rect
-          #5
-          id="5"
-          x="362"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="382"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('5')"
-        >
-          2 (3)
-        </text>
-        <rect
-          #6
-          id="6"
-          x="202"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#000000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="222"
-          y="226"
-          fill="#FFFFFF"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('6')"
-        >
-          5 (4)
-        </text>
-        <rect
-          #7
-          id="7"
-          x="242"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="262"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('7')"
-        >
-          4
-        </text>
-        <rect
-          #8
-          id="8"
-          x="282"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="302"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('8')"
-        >
-          3 (4)
-        </text>
-        <rect
-          #9
-          id="9"
-          x="322"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="342"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('9')"
-        >
-          3
-        </text>
-        <rect
-          #10
-          id="10"
-          x="362"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="382"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('10')"
-        >
-          2
-        </text>
-        <rect
-          #11
-          id="11"
-          x="202"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="222"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('11')"
-        >
-          4
-        </text>
-        <rect
-          #12
-          id="12"
-          x="242"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="262"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('12')"
-        >
-          3 (4)
-        </text>
-        <rect
-          #13
-          id="13"
-          x="282"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="302"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('13')"
-        >
-          3
-        </text>
-        <rect
-          #14
-          id="14"
-          x="322"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="342"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('14')"
-        >
-          2
-        </text>
-        <rect
-          #15
-          id="15"
-          x="362"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="382"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('15')"
-        >
-          1 (2)
-        </text>
+        <rect x="202" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[1])" (click)="selectCell(CELLS[1])" />
+        <text x="222" y="186" class="matrix-danger-text white">5</text>
+        <rect x="242" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[2])" (click)="selectCell(CELLS[2])" />
+        <text x="262" y="186" class="matrix-danger-text white">5 (4)</text>
+        <rect x="282" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[3])" (click)="selectCell(CELLS[3])" />
+        <text x="302" y="186" class="matrix-danger-text">4</text>
+        <rect x="322" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[4])" (click)="selectCell(CELLS[4])" />
+        <text x="342" y="186" class="matrix-danger-text">3 (4)</text>
+        <rect x="362" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[5])" (click)="selectCell(CELLS[5])" />
+        <text x="382" y="186" class="matrix-danger-text">2 (3)</text>
+        <rect x="202" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[6])" (click)="selectCell(CELLS[6])" />
+        <text x="222" y="226" class="matrix-danger-text white">5 (4)</text>
+        <rect x="242" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[7])" (click)="selectCell(CELLS[7])" />
+        <text x="262" y="226" class="matrix-danger-text">4</text>
+        <rect x="282" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[8])" (click)="selectCell(CELLS[8])" />
+        <text x="302" y="226" class="matrix-danger-text">3 (4)</text>
+        <rect x="322" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[9])" (click)="selectCell(CELLS[9])" />
+        <text x="342" y="226" class="matrix-danger-text">3</text>
+        <rect x="362" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[10])" (click)="selectCell(CELLS[10])" />
+        <text x="382" y="226" class="matrix-danger-text">2</text>
+        <rect x="202" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[11])" (click)="selectCell(CELLS[11])" />
+        <text x="222" y="266" class="matrix-danger-text">4</text>
+        <rect x="242" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[12])" (click)="selectCell(CELLS[12])" />
+        <text x="262" y="266" class="matrix-danger-text">3 (4)</text>
+        <rect x="282" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[13])" (click)="selectCell(CELLS[13])" />
+        <text x="302" y="266" class="matrix-danger-text">3</text>
+        <rect x="322" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[14])" (click)="selectCell(CELLS[14])" />
+        <text x="342" y="266" class="matrix-danger-text">2</text>
+        <rect x="362" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[15])" (click)="selectCell(CELLS[15])" />
+        <text x="382" y="266" class="matrix-danger-text">1 (2)</text>
 
         <rect x="442" y="122" width="200" height="160" fill="#ffffff" stroke="none" pointer-events="none" />
         <path
@@ -654,340 +354,49 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="542" y="146" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="542" y="146" class="matrix-danger-text">
           {{ "snowpackStability.poor" | translate }}
         </text>
 
+        <rect x="442" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[16])" (click)="selectCell(CELLS[16])" />
+        <text x="462" y="186" class="matrix-danger-text">5 (4)</text>
+        <rect x="482" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[17])" (click)="selectCell(CELLS[17])" />
+        <text x="502" y="186" class="matrix-danger-text">4</text>
+        <rect x="522" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[18])" (click)="selectCell(CELLS[18])" />
+        <text x="542" y="186" class="matrix-danger-text">4 (3)</text>
+        <rect x="562" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[19])" (click)="selectCell(CELLS[19])" />
+        <text x="582" y="186" class="matrix-danger-text">3</text>
+        <rect x="602" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[20])" (click)="selectCell(CELLS[20])" />
+        <text x="622" y="186" class="matrix-danger-text">2</text>
+        <rect x="442" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[21])" (click)="selectCell(CELLS[21])" />
+        <text x="462" y="226" class="matrix-danger-text">4</text>
+        <rect x="482" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[22])" (click)="selectCell(CELLS[22])" />
+        <text x="502" y="226" class="matrix-danger-text">4 (3)</text>
+        <rect x="522" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[23])" (click)="selectCell(CELLS[23])" />
+        <text x="542" y="226" class="matrix-danger-text">3</text>
+        <rect x="562" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[24])" (click)="selectCell(CELLS[24])" />
+        <text x="582" y="226" class="matrix-danger-text">2 (3)</text>
+        <rect x="602" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[25])" (click)="selectCell(CELLS[25])" />
+        <text x="622" y="226" class="matrix-danger-text">2</text>
         <rect
-          #16
-          id="16"
-          x="442"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="462"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('16')"
-        >
-          5 (4)
-        </text>
-        <rect
-          #17
-          id="17"
-          x="482"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="502"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('17')"
-        >
-          4
-        </text>
-        <rect
-          #18
-          id="18"
-          x="522"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="542"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('18')"
-        >
-          4 (3)
-        </text>
-        <rect
-          #19
-          id="19"
-          x="562"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="582"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('19')"
-        >
-          3
-        </text>
-        <rect
-          #20
-          id="20"
-          x="602"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="622"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('20')"
-        >
-          2
-        </text>
-        <rect
-          #21
-          id="21"
-          x="442"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="462"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('21')"
-        >
-          4
-        </text>
-        <rect
-          #22
-          id="22"
-          x="482"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="502"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('22')"
-        >
-          4 (3)
-        </text>
-        <rect
-          #23
-          id="23"
-          x="522"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="542"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('23')"
-        >
-          3
-        </text>
-        <rect
-          #24
-          id="24"
-          x="562"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="582"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('24')"
-        >
-          2 (3)
-        </text>
-        <rect
-          #25
-          id="25"
-          x="602"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="622"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('25')"
-        >
-          2
-        </text>
-        <rect
-          #26
-          id="26"
           x="442"
           y="242"
           width="40"
+          [attr.fill]="getColor(CELLS[26])"
+          (click)="selectCell(CELLS[26])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="462"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('26')"
-        >
-          3 (4)
-        </text>
-        <rect
-          #27
-          id="27"
-          x="482"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="502"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('27')"
-        >
-          3
-        </text>
-        <rect
-          #28
-          id="28"
-          x="522"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="542"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('28')"
-        >
-          2 (3)
-        </text>
-        <rect
-          #29
-          id="29"
-          x="562"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="582"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('29')"
-        >
-          2
-        </text>
-        <rect
-          #30
-          id="30"
-          x="602"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="622"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('30')"
-        >
-          1
-        </text>
+        <text x="462" y="266" class="matrix-danger-text">3 (4)</text>
+        <rect x="482" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[27])" (click)="selectCell(CELLS[27])" />
+        <text x="502" y="266" class="matrix-danger-text">3</text>
+        <rect x="522" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[28])" (click)="selectCell(CELLS[28])" />
+        <text x="542" y="266" class="matrix-danger-text">2 (3)</text>
+        <rect x="562" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[29])" (click)="selectCell(CELLS[29])" />
+        <text x="582" y="266" class="matrix-danger-text">2</text>
+        <rect x="602" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[30])" (click)="selectCell(CELLS[30])" />
+        <text x="622" y="266" class="matrix-danger-text">1</text>
 
         <path
           d="M 782 282 L 782 302 L 782 262 L 782 275.63"
@@ -1069,360 +478,104 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="782" y="146" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="782" y="146" class="matrix-danger-text">
           {{ "snowpackStability.fair" | translate }}
         </text>
 
         <rect
-          #31
-          id="31"
           x="682"
           y="162"
           width="40"
+          [attr.fill]="getColor(CELLS[31])"
+          (click)="selectCell(CELLS[31])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="702"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('31')"
-        >
-          4 (3)
-        </text>
+        <text x="702" y="186" class="matrix-danger-text">4 (3)</text>
         <rect
-          #32
-          id="32"
           x="722"
           y="162"
           width="40"
+          [attr.fill]="getColor(CELLS[32])"
+          (click)="selectCell(CELLS[32])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="742"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('32')"
-        >
-          3 (4)
-        </text>
+        <text x="742" y="186" class="matrix-danger-text">3 (4)</text>
+        <rect x="762" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[33])" (click)="selectCell(CELLS[33])" />
+        <text x="782" y="186" class="matrix-danger-text">3 (2)</text>
+        <rect x="802" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[34])" (click)="selectCell(CELLS[34])" />
+        <text x="822" y="186" class="matrix-danger-text">2</text>
+        <rect x="842" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[35])" (click)="selectCell(CELLS[35])" />
+        <text x="862" y="186" class="matrix-danger-text">1 (2)</text>
         <rect
-          #33
-          id="33"
-          x="762"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="782"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('33')"
-        >
-          3 (2)
-        </text>
-        <rect
-          #34
-          id="34"
-          x="802"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="822"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('34')"
-        >
-          2
-        </text>
-        <rect
-          #35
-          id="35"
-          x="842"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="862"
-          y="186"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('35')"
-        >
-          1 (2)
-        </text>
-        <rect
-          #36
-          id="36"
           x="682"
           y="202"
           width="40"
+          [attr.fill]="getColor(CELLS[36])"
+          (click)="selectCell(CELLS[36])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="702"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('36')"
-        >
-          3 (4)
-        </text>
+        <text x="702" y="226" class="matrix-danger-text">3 (4)</text>
         <rect
-          #37
-          id="37"
           x="722"
           y="202"
           width="40"
+          [attr.fill]="getColor(CELLS[37])"
+          (click)="selectCell(CELLS[37])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="742"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('37')"
-        >
-          3
-        </text>
+        <text x="742" y="226" class="matrix-danger-text">3</text>
+        <rect x="762" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[38])" (click)="selectCell(CELLS[38])" />
+        <text x="782" y="226" class="matrix-danger-text">2 (3)</text>
+        <rect x="802" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[39])" (click)="selectCell(CELLS[39])" />
+        <text x="822" y="226" class="matrix-danger-text">2</text>
+        <rect x="842" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[40])" (click)="selectCell(CELLS[40])" />
+        <text x="862" y="226" class="matrix-danger-text">1 (2)</text>
         <rect
-          #38
-          id="38"
-          x="762"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="782"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('38')"
-        >
-          2 (3)
-        </text>
-        <rect
-          #39
-          id="39"
-          x="802"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="822"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('39')"
-        >
-          2
-        </text>
-        <rect
-          #40
-          id="40"
-          x="842"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="862"
-          y="226"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('40')"
-        >
-          1 (2)
-        </text>
-        <rect
-          #41
-          id="41"
           x="682"
           y="242"
           width="40"
+          [attr.fill]="getColor(CELLS[41])"
+          (click)="selectCell(CELLS[41])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="702"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('41')"
-        >
-          3
-        </text>
+        <text x="702" y="266" class="matrix-danger-text">3</text>
         <rect
-          #42
-          id="42"
           x="722"
           y="242"
           width="40"
+          [attr.fill]="getColor(CELLS[42])"
+          (click)="selectCell(CELLS[42])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="742"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('42')"
-        >
-          2 (3)
-        </text>
+        <text x="742" y="266" class="matrix-danger-text">2 (3)</text>
+        <rect x="762" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[43])" (click)="selectCell(CELLS[43])" />
+        <text x="782" y="266" class="matrix-danger-text">2 (1)</text>
+        <rect x="802" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[44])" (click)="selectCell(CELLS[44])" />
+        <text x="822" y="266" class="matrix-danger-text">1 (2)</text>
+        <rect x="842" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[45])" (click)="selectCell(CELLS[45])" />
+        <text x="862" y="266" class="matrix-danger-text">1</text>
         <rect
-          #43
-          id="43"
-          x="762"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="782"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('43')"
-        >
-          2 (1)
-        </text>
-        <rect
-          #44
-          id="44"
-          x="802"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="822"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('44')"
-        >
-          1 (2)
-        </text>
-        <rect
-          #45
-          id="45"
-          x="842"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
-        <text
-          x="862"
-          y="266"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('45')"
-        >
-          1
-        </text>
-        <rect
-          #46
-          id="46"
           x="682"
           y="282"
           width="200"
+          [attr.fill]="getColor(CELLS[46])"
+          (click)="selectCell(CELLS[46])"
           height="40px"
-          fill="#ccff66"
           stroke="#000000"
-          (click)="selectDangerRating($event)"
         />
-        <text
-          x="782"
-          y="306"
-          fill="#000000"
-          font-family="Calibri"
-          font-size="12px"
-          text-anchor="middle"
-          (click)="selectDangerRatingById('46')"
-        >
+        <text x="782" y="306" class="matrix-danger-text">
           {{ "matrix.label.dangerLevel1" | translate }}
         </text>
 
@@ -1441,7 +594,7 @@
           pointer-events="none"
         />
         <rect x="202" y="282" width="200" height="40px" fill="#ffffff" stroke="#000000" pointer-events="none" />
-        <text x="302" y="306" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="302" y="306" class="matrix-danger-text">
           {{ "matrix.label.referToPoorStability" | translate }}
         </text>
         <rect x="442" y="342" width="200" height="40px" fill="#ffffff" stroke="none" pointer-events="none" />
@@ -1465,7 +618,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="462" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">5</text>
+        <text x="462" y="366" class="matrix-danger-text">5</text>
         <path
           d="M 482 342 M 522 342 M 522 382 M 482 382"
           fill="none"
@@ -1474,7 +627,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="502" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">4</text>
+        <text x="502" y="366" class="matrix-danger-text">4</text>
         <path
           d="M 522 342 M 562 342 M 562 382 M 522 382"
           fill="none"
@@ -1483,7 +636,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="542" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">3</text>
+        <text x="542" y="366" class="matrix-danger-text">3</text>
         <path
           d="M 562 342 M 602 342 M 602 382 M 562 382"
           fill="none"
@@ -1492,7 +645,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="582" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">2</text>
+        <text x="582" y="366" class="matrix-danger-text">2</text>
         <path
           d="M 602 342 M 642 342 M 642 382 M 602 382"
           fill="none"
@@ -1501,7 +654,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="622" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">1</text>
+        <text x="622" y="366" class="matrix-danger-text">1</text>
         <rect x="682" y="342" width="200" height="40px" fill="#ffffff" stroke="none" pointer-events="none" />
         <path
           d="M 682 342 L 882 342 L 882 382 L 682 382 L 682 342"
@@ -1523,7 +676,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="702" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">5</text>
+        <text x="702" y="366" class="matrix-danger-text">5</text>
         <path
           d="M 722 342 M 762 342 M 762 382 M 722 382"
           fill="none"
@@ -1532,7 +685,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="742" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">4</text>
+        <text x="742" y="366" class="matrix-danger-text">4</text>
         <path
           d="M 762 342 M 802 342 M 802 382 M 762 382"
           fill="none"
@@ -1541,7 +694,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="782" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">3</text>
+        <text x="782" y="366" class="matrix-danger-text">3</text>
         <path
           d="M 802 342 M 842 342 M 842 382 M 802 382"
           fill="none"
@@ -1550,7 +703,7 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="822" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">2</text>
+        <text x="822" y="366" class="matrix-danger-text">2</text>
         <path
           d="M 842 342 M 882 342 M 882 382 M 842 382"
           fill="none"
@@ -1559,9 +712,9 @@
           stroke-miterlimit="10"
           pointer-events="none"
         />
-        <text x="862" y="366" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">1</text>
+        <text x="862" y="366" class="matrix-danger-text">1</text>
         <rect x="202" y="42" width="680" height="40px" fill="#ffffff" stroke="#000000" pointer-events="none" />
-        <text x="542" y="66" fill="#000000" font-family="Calibri" font-size="12px" text-anchor="middle">
+        <text x="542" y="66" class="matrix-danger-text">
           {{ "matrix.label.snowpackStability" | translate }}
         </text>
         <image

@@ -1,17 +1,19 @@
+import { NgClass, UpperCasePipe } from "@angular/common";
+import { Component, TemplateRef, input, output, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+
 import * as Enums from "../enums/enums";
+import { TextcatTextfield } from "../enums/enums";
 import type { BulletinModel } from "../models/bulletin.model";
-import { concatenateLangTexts, LangTexts, LANGUAGES } from "../models/text.model";
+import { concatenateLangTexts, convertLangTextsToJSON, LangTexts, LANGUAGES, toLangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { createWordDiff } from "../shared/wordDiff";
 import type { TextcatLegacyIn } from "./avalanche-bulletin.component";
 import { HtmlPipe } from "./html.pipe";
-import { NgClass, UpperCasePipe } from "@angular/common";
-import { Component, TemplateRef, input, output, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-bulletin-text",
@@ -65,8 +67,78 @@ export class BulletinTextComponent {
     });
   }
 
-  get bulletinTextKey(): `${Enums.TextcatTextfield}$` {
-    return `${this.textField()}$`;
+  get bulletinText(): LangTexts {
+    const textField = this.textField();
+    switch (textField) {
+      case TextcatTextfield.avActivityComment:
+        return toLangTexts(this.bulletin().avActivityComment);
+      case TextcatTextfield.avActivityHighlights:
+        return toLangTexts(this.bulletin().avActivityHighlights);
+      case TextcatTextfield.generalHeadlineComment:
+        return toLangTexts(this.bulletin().generalHeadlineComment);
+      case TextcatTextfield.highlights:
+        return toLangTexts(this.bulletin().highlights);
+      case TextcatTextfield.snowpackStructureComment:
+        return toLangTexts(this.bulletin().snowpackStructureComment);
+      case TextcatTextfield.snowpackStructureHighlights:
+        return toLangTexts(this.bulletin().snowpackStructureHighlights);
+      case TextcatTextfield.synopsisHighlights:
+        return toLangTexts(this.bulletin().synopsisHighlights);
+      case TextcatTextfield.synopsisComment:
+        return toLangTexts(this.bulletin().synopsisComment);
+      case TextcatTextfield.tendencyComment:
+        return toLangTexts(this.bulletin().tendencyComment);
+      case TextcatTextfield.travelAdvisoryComment:
+        return toLangTexts(this.bulletin().travelAdvisoryComment);
+      case TextcatTextfield.travelAdvisoryHighlights:
+        return toLangTexts(this.bulletin().travelAdvisoryHighlights);
+      default:
+        throw textField satisfies never;
+    }
+  }
+  set bulletinText(v: LangTexts) {
+    const textField = this.textField();
+    switch (textField) {
+      case TextcatTextfield.avActivityComment:
+        this.bulletin().avActivityComment = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.avActivityHighlights:
+        this.bulletin().avActivityHighlights = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.generalHeadlineComment:
+        this.bulletin().generalHeadlineComment = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.highlights:
+        this.bulletin().highlights = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.snowpackStructureComment:
+        this.bulletin().snowpackStructureComment = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.snowpackStructureHighlights:
+        this.bulletin().snowpackStructureHighlights = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.synopsisComment:
+        this.bulletin().synopsisComment = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.synopsisHighlights:
+        this.bulletin().synopsisHighlights = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.tendencyComment:
+        this.bulletin().tendencyComment = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.travelAdvisoryComment:
+        this.bulletin().travelAdvisoryComment = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.travelAdvisoryHighlights:
+        this.bulletin().travelAdvisoryHighlights = convertLangTextsToJSON(v);
+        break;
+      default:
+        throw textField satisfies never;
+    }
+  }
+
+  get bulletinNotesKey(): `${Enums.TextcatTextfield}Notes` {
+    return `${this.textField()}Notes`;
   }
 
   get bulletinTextcatKey(): `${Enums.TextcatTextfield}Textcat` {
@@ -77,7 +149,7 @@ export class BulletinTextComponent {
     this.copyService.setCopyTextcat(true);
     const bulletin = this.bulletin();
     this.copyService.setTextTextcat(bulletin[this.bulletinTextcatKey]);
-    this.copyService.setFromLangTexts(bulletin[this.bulletinTextKey]);
+    this.copyService.setFromLangTexts(this.bulletinText);
   }
 
   concatTextcat(text1: string | undefined, text2: string | undefined) {
@@ -91,17 +163,14 @@ export class BulletinTextComponent {
       this.bulletin()[this.bulletinTextcatKey],
       this.copyService.getTextTextcat(),
     );
-    this.bulletin()[this.bulletinTextKey] = concatenateLangTexts(
-      this.bulletin()[this.bulletinTextKey],
-      this.copyService.toLangTexts,
-    );
+    this.bulletinText = concatenateLangTexts(this.bulletinText, this.copyService.toLangTexts);
     this.copyService.resetCopyTextcat();
     this.updateBulletinOnServer.emit();
   }
 
   deleteTextcat() {
     this.bulletin()[this.bulletinTextcatKey] = undefined;
-    this.bulletin()[this.bulletinTextKey] = {} as LangTexts;
+    this.bulletinText = {} as LangTexts;
     this.updateBulletinOnServer.emit();
   }
 
@@ -125,11 +194,12 @@ export class BulletinTextComponent {
   }
 
   createText(): string {
+    const lang = this.translateService.getCurrentLang();
     const currentBulletin = this.bulletin();
-    const currentText = currentBulletin?.[this.bulletinTextKey]?.[this.translateService.getCurrentLang()] ?? "";
-    if (currentBulletin !== null && currentBulletin !== undefined) {
+    const currentText = toLangTexts(currentBulletin?.[this.textField()])?.[lang] ?? "";
+    if (currentBulletin) {
       const comparedBulletin = this.comparedBulletin();
-      const comparedText = comparedBulletin?.[this.bulletinTextKey]?.[this.translateService.getCurrentLang()] ?? "";
+      const comparedText = toLangTexts(comparedBulletin?.[this.textField()])?.[lang] ?? "";
       return createWordDiff(currentText, comparedText);
     } else {
       return "";

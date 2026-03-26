@@ -1,5 +1,6 @@
-import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-selection-config";
 import * as z from "zod/v4";
+
+import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-selection-config";
 
 export const AwsomeSourceSchema = z.object({
   name: z.string().optional().describe("Identifier shown in source multiselect"),

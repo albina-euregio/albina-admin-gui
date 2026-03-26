@@ -1,3 +1,14 @@
+import { formatDate, DatePipe } from "@angular/common";
+import { Component, OnDestroy, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { StatusInformationModel } from "app/models/status-information.model";
+import { AlertModule } from "ngx-bootstrap/alert";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { debounceTime, Subject } from "rxjs";
+import { groupBy, mergeMap } from "rxjs/operators";
+
 import * as Enums from "../enums/enums";
 import { StressLevel } from "../models/stress-level.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -9,16 +20,6 @@ import { StatusService } from "../providers/status-service/status.service";
 import { UserService } from "../providers/user-service/user.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
-import { formatDate, DatePipe } from "@angular/common";
-import { Component, OnDestroy, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { StatusInformationModel } from "app/models/status-information.model";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { debounceTime, Subject } from "rxjs";
-import { groupBy, mergeMap } from "rxjs/operators";
 
 @Component({
   templateUrl: "bulletins.component.html",

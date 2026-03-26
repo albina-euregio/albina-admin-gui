@@ -1,14 +1,3 @@
-import { environment } from "../../environments/environment";
-import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
-import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
-import { ObservationChartComponent } from "../observations/observation-chart.component";
-import { ObservationFilterService } from "../observations/observation-filter.service";
-import { ObservationMarkerService } from "../observations/observation-marker.service";
-import { BaseMapService } from "../providers/map-service/base-map.service";
-import { RegionProperties } from "../providers/regions-service/regions.service";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { AwsomeConfigSchema } from "./awsome.config";
-import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from "@angular/core";
@@ -36,6 +25,18 @@ import { firstValueFrom, type Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import Split from "split.js";
 import * as z from "zod/v4";
+
+import { environment } from "../../environments/environment";
+import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
+import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
+import { ObservationChartComponent } from "../observations/observation-chart.component";
+import { ObservationFilterService } from "../observations/observation-filter.service";
+import { ObservationMarkerService } from "../observations/observation-marker.service";
+import { BaseMapService } from "../providers/map-service/base-map.service";
+import { RegionProperties } from "../providers/regions-service/regions.service";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { AwsomeConfigSchema } from "./awsome.config";
+import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 

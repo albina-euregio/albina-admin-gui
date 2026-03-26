@@ -1,18 +1,3 @@
-import { environment } from "../../environments/environment";
-import * as Enums from "../enums/enums";
-import { AvalancheProblemModel } from "../models/avalanche-problem.model";
-// models
-import { BulletinModel } from "../models/bulletin.model";
-import { LangTexts } from "../models/text.model";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-// services
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { CopyService } from "../providers/copy-service/copy.service";
-import { RegionsService } from "../providers/regions-service/regions.service";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { AvalancheProblemComponent } from "./avalanche-problem.component";
-import { BulletinTextComponent } from "./bulletin-text.component";
 import { DatePipe } from "@angular/common";
 import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -23,7 +8,23 @@ import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-des
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+
+import { environment } from "../../environments/environment";
+import * as Enums from "../enums/enums";
+import { AvalancheProblemModel } from "../models/avalanche-problem.model";
+// models
+import { BulletinModel } from "../models/bulletin.model";
+import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+// services
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { CopyService } from "../providers/copy-service/copy.service";
+import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { AvalancheProblemComponent } from "./avalanche-problem.component";
+import { BulletinTextComponent } from "./bulletin-text.component";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -290,10 +291,10 @@ export class AvalancheBulletinComponent implements OnInit {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
       if (pmData.textDef === undefined || pmData.textDef === "") {
         this.bulletin()[`${pmData.textField}Textcat`] = "";
-        this.bulletin()[`${pmData.textField}$`] = {} as LangTexts;
+        this.bulletin()[`${pmData.textField}`] = [];
       } else {
         this.bulletin()[`${pmData.textField}Textcat`] = pmData.textDef;
-        this.bulletin()[`${pmData.textField}$`] = convertTextcatToLangTexts(pmData);
+        this.bulletin()[`${pmData.textField}`] = convertLangTextsToJSON(convertTextcatToLangTexts(pmData));
       }
       this.hideDialog();
       this.updateBulletinOnServer();
@@ -336,23 +337,23 @@ export class AvalancheBulletinComponent implements OnInit {
     daytime.isAvalancheProblemOpen = Array(5).fill(false);
     switch (count) {
       case 1:
-        daytime.avalancheProblem1 = new AvalancheProblemModel();
+        daytime.avalancheProblem1 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[0] = true;
         break;
       case 2:
-        daytime.avalancheProblem2 = new AvalancheProblemModel();
+        daytime.avalancheProblem2 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[1] = true;
         break;
       case 3:
-        daytime.avalancheProblem3 = new AvalancheProblemModel();
+        daytime.avalancheProblem3 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[2] = true;
         break;
       case 4:
-        daytime.avalancheProblem4 = new AvalancheProblemModel();
+        daytime.avalancheProblem4 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[3] = true;
         break;
       case 5:
-        daytime.avalancheProblem5 = new AvalancheProblemModel();
+        daytime.avalancheProblem5 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[4] = true;
         break;
       default:

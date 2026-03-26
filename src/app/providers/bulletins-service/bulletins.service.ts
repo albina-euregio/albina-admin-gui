@@ -1,11 +1,3 @@
-import * as Enums from "../../enums/enums";
-import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
-import { ServerModel } from "../../models/server.model";
-import { AuthenticationService } from "../authentication-service/authentication.service";
-import { ConstantsService } from "../constants-service/constants.service";
-import { LocalStorageService } from "../local-storage-service/local-storage.service";
-import { UndoRedoState } from "../undo-redo-service/undo-redo.service";
-import { UserService } from "../user-service/user.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
@@ -13,7 +5,16 @@ import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
+
+import * as Enums from "../../enums/enums";
+import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
+import { ServerModel } from "../../models/server.model";
 import { AlbinaLanguage } from "../../models/text.model";
+import { AuthenticationService } from "../authentication-service/authentication.service";
+import { ConstantsService } from "../constants-service/constants.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import { UndoRedoState } from "../undo-redo-service/undo-redo.service";
+import { UserService } from "../user-service/user.service";
 
 class TrainingModeError extends Error {}
 
@@ -53,8 +54,8 @@ export class BulletinsService {
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
 
   readonly undoRedo = new UndoRedoState<BulletinModel>(
-    (bulletin) => bulletin.toJson(),
-    (json) => BulletinModel.createFromJson(json),
+    (bulletin) => bulletin,
+    (json) => BulletinModel.parse(json),
   );
 
   init({ days } = { days: 10 }) {
@@ -219,7 +220,7 @@ export class BulletinsService {
   }
 
   getPreviewPdf(bulletins: BulletinModel[]): Observable<Blob> {
-    const body = JSON.stringify(bulletins.map((b) => b.toJson()));
+    const body = JSON.stringify(bulletins.map((b) => b));
     const url = this.constantsService.getServerUrlPOST("/bulletins/preview", {
       region: this.authenticationService.getActiveRegionId(),
       lang: this.translateService.getCurrentLang() as AlbinaLanguage,
@@ -316,7 +317,7 @@ export class BulletinsService {
 
   saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
-      const newBulletins = bulletins.map((b) => b.toJson());
+      const newBulletins = bulletins.map((b) => b);
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
@@ -324,11 +325,7 @@ export class BulletinsService {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: this.authenticationService.getActiveRegionId(),
     });
-    const jsonBulletins = [];
-    for (let i = bulletins.length - 1; i >= 0; i--) {
-      jsonBulletins.push(bulletins[i].toJson());
-    }
-    const body = JSON.stringify(jsonBulletins);
+    const body = JSON.stringify(bulletins);
     return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
 
@@ -336,7 +333,7 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       bulletin.id ??= crypto.randomUUID();
       const bulletins = this.localStorageService.getTrainingBulletins(date);
-      const newBulletins = [...bulletins, bulletin.toJson()];
+      const newBulletins = [...bulletins, bulletin];
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
@@ -344,7 +341,7 @@ export class BulletinsService {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: this.authenticationService.getActiveRegionId(),
     });
-    const body = JSON.stringify(bulletin.toJson());
+    const body = JSON.stringify(bulletin);
     return this.http.put<BulletinModelAsJSON[]>(url, body);
   }
 
@@ -352,7 +349,7 @@ export class BulletinsService {
     // check if bulletin has ID
     if (this.localStorageService.isTrainingEnabled) {
       const bulletins = this.localStorageService.getTrainingBulletins(date);
-      const newBulletins = [...bulletins.filter((b) => b.id !== bulletin.id), bulletin.toJson()];
+      const newBulletins = [...bulletins.filter((b) => b.id !== bulletin.id), bulletin];
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
@@ -364,7 +361,7 @@ export class BulletinsService {
       },
       { bulletinId: bulletin.id },
     );
-    const body = JSON.stringify(bulletin.toJson());
+    const body = JSON.stringify(bulletin);
     return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
 

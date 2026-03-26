@@ -1,23 +1,22 @@
 import "@albina-euregio/linea";
+import { FeatureCollectionSchema as FeatureCollectionSchema } from "@albina-euregio/linea/listing";
+import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { CommonModule } from "@angular/common";
 import {
+  AfterViewInit,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  viewChild,
   ElementRef,
   inject,
-  AfterViewInit,
-  ViewChildren,
   QueryList,
+  viewChild,
+  ViewChildren,
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { LineaMapService } from "app/providers/map-service/linea-map.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
-import { listingLegacy, listing } from "@albina-euregio/linea";
-import sources from "../../assets/config/stations.json";
 
-const FeatureCollectionSchema = listing.FeatureCollectionSchema;
-const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema;
+import sources from "../../assets/config/stations.json";
 
 @Component({
   selector: "app-linea-export",
@@ -72,6 +71,7 @@ export class LineaExportComponent implements AfterViewInit {
           },
           this.getModelPointOptions(false),
         ).addTo(this.mapService.stationLayer);
+        marker.bindTooltip(`${feature.properties.shortName ?? ""} ${feature.properties.name}`);
         this.mapService.showStationName(marker);
 
         marker.bindTooltip(`${feature.properties.name || feature.id}`);
@@ -81,7 +81,7 @@ export class LineaExportComponent implements AfterViewInit {
         this.stations.push({
           id,
           name: feature.properties?.name,
-          shortName: feature.properties?.shortName ?? "",
+          shortName: feature.properties?.shortName ?? feature.properties?.name,
           smetId: feature.properties?.shortName ?? id,
           smet: source.smet,
         });
@@ -253,7 +253,9 @@ export class LineaExportComponent implements AfterViewInit {
     return {
       pane: "markerPane",
       radius: 8,
-      fillColor: selected ? "red" : "blue",
+      fillColor: selected
+        ? getComputedStyle(document.documentElement).getPropertyValue("--bs-success")
+        : getComputedStyle(document.documentElement).getPropertyValue("--bs-primary-bg-subtle"),
       color: "black",
       weight: 1,
       opacity: 1,

@@ -1,13 +1,14 @@
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { CreateDangerSourcesComponent } from "./create-danger-sources.component";
-import { DangerSourcesService } from "./danger-sources.service";
-import { DangerSourceModel } from "./models/danger-source.model";
 import { DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
+
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { CreateDangerSourcesComponent } from "./create-danger-sources.component";
+import { DangerSourcesService } from "./danger-sources.service";
+import { DangerSourceModel } from "./models/danger-source.model";
 
 @Component({
   selector: "app-modal-create-danger-source",

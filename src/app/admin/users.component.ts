@@ -1,8 +1,3 @@
-import { UserModel } from "../models/user.model";
-import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { UserService } from "../providers/user-service/user.service";
-import { ChangePasswordComponent } from "./change-password.component";
-import { UpdateUserComponent } from "./update-user.component";
 import { AfterContentInit, Component, viewChild, inject } from "@angular/core";
 import { TemplateRef } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -10,6 +5,12 @@ import { Alert } from "app/models/Alert";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+
+import { UserModel } from "../models/user.model";
+import { ConfigurationService } from "../providers/configuration-service/configuration.service";
+import { UserService } from "../providers/user-service/user.service";
+import { ChangePasswordComponent } from "./change-password.component";
+import { UpdateUserComponent } from "./update-user.component";
 
 @Component({
   templateUrl: "users.component.html",

@@ -1,10 +1,11 @@
+import { formatDate } from "@angular/common";
+import { Injectable } from "@angular/core";
+
 import * as pkg from "../../../../package.json";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import type { ServerModel } from "../../models/server.model";
-import { Injectable } from "@angular/core";
 import type { paths as OpenAPI } from "../openapi";
-import { formatDate } from "@angular/common";
 
 @Injectable()
 export class ConstantsService {

@@ -1,10 +1,11 @@
+import { inject, Injectable } from "@angular/core";
+import { Marker } from "leaflet";
+
 import type { FeatureProperties } from "../../../observations-api/src/fetch/weather-stations";
 import { Aspect } from "../enums/enums";
 import { makeIcon } from "./make-icon";
 import { degreeToAspect, GenericObservation } from "./models/generic-observation.model";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { inject, Injectable } from "@angular/core";
-import { Marker } from "leaflet";
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
 const elevationColors = {

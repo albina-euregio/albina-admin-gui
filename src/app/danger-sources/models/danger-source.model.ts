@@ -1,7 +1,8 @@
-import { PolygonObject } from "./polygon-object.model";
-import { ZSchema } from "./zod-util";
 import { RegionStatus, DangerRating } from "app/enums/enums";
 import { z } from "zod/v4";
+
+import { PolygonObject } from "./polygon-object.model";
+import { ZSchema } from "./zod-util";
 
 export const DangerSourceSchema = z.object({
   id: z.string().nullish(),

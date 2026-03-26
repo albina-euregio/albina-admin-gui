@@ -1,8 +1,10 @@
-import { AwsomeConfigSchema } from "./src/app/modelling/awsome.config";
 import { writeFile } from "fs/promises";
 import { join } from "path";
+
 import * as oxfmt from "oxfmt";
 import * as z from "zod/v4";
+
+import { AwsomeConfigSchema } from "./src/app/modelling/awsome.config";
 
 main();
 

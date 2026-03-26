@@ -1,34 +1,3 @@
-import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
-import { BaseMapService } from "../providers/map-service/base-map.service";
-import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
-import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { FilterSelectionValue } from "./filter-selection-config";
-import { observationFilters } from "./filter-selection-data-data";
-import {
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationTableRow,
-  ObservationType,
-  toGeoJSON,
-  toCSV,
-  partialGenericObservationSchema,
-} from "./models/generic-observation.model";
-import { ObservationChartComponent } from "./observation-chart.component";
-import { ObservationEditorComponent } from "./observation-editor.component";
-import { ObservationFilterService } from "./observation-filter.service";
-import { ObservationGalleryComponent } from "./observation-gallery.component";
-import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
-import {
-  ObservationMarkerWeatherStationService,
-  WeatherStationParameter,
-} from "./observation-marker-weather-station.service";
-import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
-import { ObservationMarkerService } from "./observation-marker.service";
-import { ObservationTableComponent } from "./observation-table.component";
-import { AlbinaObservationsService } from "./observations.service";
-import "@albina-euregio/linea";
 import { CommonModule, formatDate } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
@@ -51,7 +20,6 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import "bootstrap";
 import { orderBy } from "es-toolkit";
 import { saveAs } from "file-saver";
 import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
@@ -60,6 +28,41 @@ import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { firstValueFrom, type Observable, type Subscription } from "rxjs";
 import Split from "split.js";
+
+import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+
+import "@albina-euregio/linea";
+import { BaseMapService } from "../providers/map-service/base-map.service";
+import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
+import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { FilterSelectionValue } from "./filter-selection-config";
+import { observationFilters } from "./filter-selection-data-data";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationTableRow,
+  ObservationType,
+  toGeoJSON,
+  toCSV,
+  partialGenericObservationSchema,
+} from "./models/generic-observation.model";
+import { ObservationChartComponent } from "./observation-chart.component";
+import { ObservationEditorComponent } from "./observation-editor.component";
+
+import "bootstrap";
+import { ObservationFilterService } from "./observation-filter.service";
+import { ObservationGalleryComponent } from "./observation-gallery.component";
+import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
+import {
+  ObservationMarkerWeatherStationService,
+  WeatherStationParameter,
+} from "./observation-marker-weather-station.service";
+import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
+import { ObservationMarkerService } from "./observation-marker.service";
+import { ObservationTableComponent } from "./observation-table.component";
+import { AlbinaObservationsService } from "./observations.service";
 
 export interface MultiselectDropdownData {
   id: string;

@@ -1,3 +1,10 @@
+import { Component, input, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { Alert } from "app/models/Alert";
+import { AlertModule } from "ngx-bootstrap/alert";
+import { TabsModule } from "ngx-bootstrap/tabs";
+
 import {
   LanguageConfiguration,
   LanguageConfigurationSchema,
@@ -8,12 +15,6 @@ import { LANGUAGES } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { ZodInputComponent } from "../shared/zod-input.component";
-import { Component, input, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { Alert } from "app/models/Alert";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { TabsModule } from "ngx-bootstrap/tabs";
 
 @Component({
   templateUrl: "region-configuration.component.html",

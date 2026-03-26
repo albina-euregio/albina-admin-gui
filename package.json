@@ -31,7 +31,7 @@
     "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },
   "dependencies": {
-    "@albina-euregio/linea": "^8.10.0",
+    "@albina-euregio/linea": "^8.12.0",
     "@angular/animations": "^21.2.0",
     "@angular/cdk": "^21.2.0",
     "@angular/common": "^21.2.0",
@@ -79,7 +79,7 @@
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
-    "@eslint/js": "^9.39.3",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.58.2",
     "@types/diff-match-patch": "^1.0.36",
     "@types/file-saver": "^2.0.5",
@@ -88,15 +88,15 @@
     "@types/mousetrap": "^1.6.15",
     "@types/node": "^20.0.0",
     "@types/which-polygon": "^2.2.3",
-    "angular-eslint": "^21.2.0",
+    "angular-eslint": "^21.3.1",
     "dotenv": "^17.2.2",
-    "eslint": "^9.39.3",
+    "eslint": "^10.1.0",
     "git-cliff": "^2.7.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "oxfmt": "^0.33.0",
+    "oxfmt": "^0.41.0",
     "typescript": "5.9.3",
-    "typescript-eslint": "^8.56.1"
+    "typescript-eslint": "^8.57.1"
   },
   "resolutions": {
     "@types/css-font-loading-module": "^0.0.13"

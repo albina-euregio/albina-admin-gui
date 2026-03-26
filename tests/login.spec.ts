@@ -1,5 +1,6 @@
-import { loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
+
+import { loginForecaster } from "./utils";
 
 test("login", async ({ page }) => {
   await page.goto("");

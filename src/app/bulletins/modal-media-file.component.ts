@@ -1,7 +1,3 @@
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { CreateBulletinComponent } from "./create-bulletin.component";
 import { DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -11,6 +7,11 @@ import { MediaFileService } from "app/providers/media-file-service/media-file.se
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { finalize } from "rxjs";
+
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { CreateBulletinComponent } from "./create-bulletin.component";
 
 @Component({
   selector: "app-modal-media-file",

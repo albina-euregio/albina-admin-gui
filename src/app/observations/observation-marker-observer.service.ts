@@ -1,8 +1,9 @@
+import { Injectable, inject } from "@angular/core";
+import { Marker } from "leaflet";
+
 import { makeIcon } from "./make-icon";
 import { GenericObservation } from "./models/generic-observation.model";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { Injectable, inject } from "@angular/core";
-import { Marker } from "leaflet";
 
 @Injectable()
 export class ObservationMarkerObserverService<T extends Partial<GenericObservation>> {
