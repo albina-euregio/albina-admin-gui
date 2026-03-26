@@ -254,10 +254,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
 
     this.bulletinsService.statusLoaded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      const activeDate = this.bulletinsService.getActiveDate();
-      if (activeDate) {
-        this.bulletinsService.setIsEditable(this.bulletinsService.isDateEditable(activeDate));
-      }
+      this.bulletinsService.updateEditable();
     });
   }
 
@@ -390,11 +387,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.mapService.deselectAggregatedRegion();
       }
 
-      if (this.bulletinsService.isDateEditable(this.bulletinsService.getActiveDate())) {
-        this.bulletinsService.setIsEditable(true);
-      } else {
-        this.bulletinsService.setIsEditable(false);
-      }
+      this.bulletinsService.updateEditable();
 
       if (this.copyService.isCopyBulletin()) {
         this.createBulletin(true);

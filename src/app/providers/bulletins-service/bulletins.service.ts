@@ -504,4 +504,11 @@ export class BulletinsService {
       this.getUserRegionStatus(date) === Enums.BulletinStatus.draft
     );
   }
+
+  updateEditable() {
+    const activeDate = this.getActiveDate();
+    if (activeDate) {
+      this.setIsEditable(this.isDateEditable(activeDate));
+    }
+  }
 }
