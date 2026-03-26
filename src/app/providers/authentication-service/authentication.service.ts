@@ -8,12 +8,12 @@ import { map } from "rxjs/operators";
 import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
+import { TextcatTextfield } from "../../enums/enums";
 import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
-import { TextcatTextfield } from "../../enums/enums";
 
 @Injectable()
 export class AuthenticationService {
@@ -258,16 +258,13 @@ export class AuthenticationService {
     }
   }
 
-  public isCurrentUserInRole(role: Enums.UserRole): boolean {
-    const roles = this.currentAuthor?.roles ?? [];
+  public isCurrentUserInRole(...roles0: (keyof typeof Enums.UserRole)[]): boolean {
+    let roles: Enums.UserRole[] = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
-    if (roles.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
-      const updatedRoles = roles.map((r) =>
-        r === this.constantsService.roleObserver ? this.constantsService.roleForecaster : r,
-      );
-      return updatedRoles.includes(role);
+    if (roles.includes(Enums.UserRole.OBSERVER) && this.localStorageService.isTrainingEnabled) {
+      roles = roles.map((r) => (r === Enums.UserRole.OBSERVER ? Enums.UserRole.FORECASTER : r));
     }
-    return roles.includes(role);
+    return roles0.some((role) => roles.includes(Enums.UserRole[role]));
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {

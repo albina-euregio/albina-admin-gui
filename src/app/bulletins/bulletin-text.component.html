@@ -104,7 +104,7 @@
         <textarea
           class="form-control"
           [rows]="rows()"
-          [disabled]="authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
+          [disabled]="authenticationService.isCurrentUserInRole('OBSERVER')"
           [(ngModel)]="bulletin()[bulletinNotesKey]"
           (focusout)="updateBulletinOnServer.emit()"
           placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"

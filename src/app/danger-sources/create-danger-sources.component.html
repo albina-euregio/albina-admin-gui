@@ -529,7 +529,7 @@
     </div>
 
     <div class="btn-group-vertical btn-group--border region-thumb__actions">
-      @if (!authenticationService.isCurrentUserInRole(constantsService.roleObserver)) {
+      @if (!authenticationService.isCurrentUserInRole("OBSERVER")) {
         <button
           [disabled]="loading || editRegions"
           type="button"

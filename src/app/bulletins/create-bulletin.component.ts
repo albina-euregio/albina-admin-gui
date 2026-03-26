@@ -310,7 +310,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       date.setHours(0, 0, 0, 0);
       this.bulletinsService.setActiveDate(this.bulletinsService.getValidFromUntil(date));
 
-      if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)) {
+      if (this.authenticationService.isCurrentUserInRole("OBSERVER")) {
         this.bulletinsService.setIsReadOnly(true);
       }
 
@@ -484,7 +484,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.bulletinsService.getIsEditable() ||
       this.editRegions ||
       !this.isCreator(this.activeBulletin) ||
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)
+      this.authenticationService.isCurrentUserInRole("OBSERVER")
     );
   }
 
@@ -861,8 +861,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
-      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)) &&
+      this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN") &&
       this.authenticationService.getActiveRegion()?.enableDangerSources &&
       this.dangerSourcesService.hasDangerSourceVariants(this.bulletinsService.getActiveDate())
     );
@@ -873,8 +872,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
-      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
+      this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN")
     );
   }
 
@@ -883,7 +881,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
+      this.authenticationService.isCurrentUserInRole("ADMIN")
     );
   }
 
@@ -895,7 +893,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated) &&
       !this.copying &&
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)
+      this.authenticationService.isCurrentUserInRole("FOREMAN")
     );
   }
 
@@ -904,8 +902,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
       this.authenticationService.getActiveRegion()?.enableMediaFile &&
-      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster))
+      (this.authenticationService.isCurrentUserInRole("ADMIN") ||
+        this.authenticationService.isCurrentUserInRole("FORECASTER"))
     );
   }
 
@@ -919,7 +917,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
           this.bulletinStatus.republished) &&
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
+      this.authenticationService.isCurrentUserInRole("ADMIN")
     );
   }
 
@@ -1843,9 +1841,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
           this.bulletinStatus.republished) &&
-      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
+      (this.authenticationService.isCurrentUserInRole("ADMIN") ||
+        this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN"))
     );
   }
 
@@ -2138,7 +2135,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated) &&
       this.internBulletinsList.length > 0 &&
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+      this.authenticationService.isCurrentUserInRole("FORECASTER")
     );
   }
 
@@ -2294,8 +2291,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
         (this.bulletinsService.getUserRegionStatus(date) === undefined &&
           this.bulletinsService.hasBeenPublished5PM(date))) &&
-      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
+      this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN")
     );
   }
 
@@ -2316,7 +2312,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.bulletinsService.hasBeenPublished5PM(date) &&
       (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted) &&
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+      this.authenticationService.isCurrentUserInRole("FORECASTER")
     );
   }
 

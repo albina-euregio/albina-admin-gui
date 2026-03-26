@@ -51,7 +51,7 @@ export class BulletinsComponent implements OnDestroy {
 
     this.bulletinsService.init();
 
-    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
+    if (this.authenticationService.isCurrentUserInRole("ADMIN")) {
       this.loadChannelStatusInformation();
     }
 
@@ -85,8 +85,7 @@ export class BulletinsComponent implements OnDestroy {
       this.bulletinsService.getUserRegionStatus(date) &&
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.missing &&
       !this.copying &&
-      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
+      this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN")
     );
   }
 
@@ -137,7 +136,7 @@ export class BulletinsComponent implements OnDestroy {
   }
 
   showTeamStressLevels() {
-    if (!this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
+    if (!this.authenticationService.isCurrentUserInRole("FORECASTER")) {
       return;
     }
     this.modalService.show(TeamStressLevelsComponent, {});

@@ -23,7 +23,7 @@ export class ServersConfigurationComponent implements OnInit {
   public externalServerConfigurations: ServerConfiguration[];
 
   ngOnInit() {
-    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
+    if (this.authenticationService.isCurrentUserInRole("ADMIN")) {
       this.configurationService.loadLocalServerConfiguration().subscribe(
         (data) => {
           // TODO implement

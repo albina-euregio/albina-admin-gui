@@ -87,11 +87,7 @@
             <i class="ph ph-globe-hemisphere-west"></i>
           </button>
         }
-        @if (
-          !editRegions &&
-          !copyService.isCopyBulletin() &&
-          !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
-        ) {
+        @if (!editRegions && !copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole("OBSERVER")) {
           <button
             (click)="copyBulletin()"
             data-toggle="tooltip"
@@ -195,7 +191,7 @@
         @if (
           !isComparedBulletin() &&
           !copyService.isCopyBulletin() &&
-          !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
+          !authenticationService.isCurrentUserInRole("OBSERVER")
         ) {
           <button
             (click)="copyBulletin()"
