@@ -52,8 +52,6 @@ export class BulletinsService {
 
   private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
-  private statusLoadedSubject = new Subject<void>();
-  statusLoaded$: Observable<void> = this.statusLoadedSubject.asObservable();
 
   readonly undoRedo = new UndoRedoState<BulletinModel>(
     (bulletin) => bulletin,
@@ -107,7 +105,7 @@ export class BulletinsService {
         }
         const region = this.authenticationService.getActiveRegionId();
         this.statusMap.set(region, map);
-        this.statusLoadedSubject.next();
+        this.updateEditable();
       },
       () => {
         console.error("Status {} could not be loaded!", this.authenticationService.getActiveRegionId());
@@ -121,7 +119,7 @@ export class BulletinsService {
             map.set(Date.parse(data[i].date), Enums.BulletinStatus[data[i].status]);
           }
           this.statusMap.set(neighborRegion, map);
-          this.statusLoadedSubject.next();
+          this.updateEditable();
         },
         () => {
           console.error("Status {} could not be loaded!", neighborRegion);
