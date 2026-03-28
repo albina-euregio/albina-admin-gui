@@ -1,5 +1,6 @@
-import { AuthGuard } from "../guards/auth.guard";
 import { Routes } from "@angular/router";
+
+import { AuthGuard } from "../guards/auth.guard";
 import { GraphicsComponent } from "./graphics.component";
 
 export default [

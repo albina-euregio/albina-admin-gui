@@ -2,12 +2,12 @@ import { formatDate, DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { DangerSourceVariantType } from "./models/danger-source-variant.model";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { UserService } from "../providers/user-service/user.service";
 import { DangerSourcesService } from "./danger-sources.service";
+import { DangerSourceVariantType } from "./models/danger-source-variant.model";
 
 @Component({
   templateUrl: "danger-sources.component.html",
