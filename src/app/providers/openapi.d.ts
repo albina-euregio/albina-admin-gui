@@ -54,6 +54,38 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/blogs/post": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getBlogPosts"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/blogs/posts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getBlogPosts_1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/blogs/publish/latest": {
     parameters: {
       query?: never;
@@ -1182,6 +1214,8 @@ export interface components {
       strategicMindset?: components["schemas"]["StrategicMindset"];
       forenoon?: components["schemas"]["AvalancheBulletinDaytimeDescription"] | null;
       afternoon?: components["schemas"]["AvalancheBulletinDaytimeDescription"] | null;
+      /** @description Collection containing all photos of a bulletin */
+      photos?: components["schemas"]["AvalancheBulletinPhoto"][];
       hasDaytimeDependency?: boolean;
     };
     "AvalancheBulletin.Text": {
@@ -1209,6 +1243,19 @@ export interface components {
       avalancheProblem3?: components["schemas"]["AvalancheProblem"] | null;
       avalancheProblem4?: components["schemas"]["AvalancheProblem"] | null;
       avalancheProblem5?: components["schemas"]["AvalancheProblem"] | null;
+    };
+    AvalancheBulletinPhoto: components["schemas"]["AbstractPersistentObject"] & {
+      id?: string | null;
+      url?: string;
+      copyright?: string;
+      /** Format: date */
+      date?: string;
+      microRegionId?: string;
+      locationName?: string;
+      /** Format: double */
+      latitude?: number;
+      /** Format: double */
+      longitude?: number;
     };
     "AvalancheBulletinService.Highest": {
       dangerRating: components["schemas"]["DangerRating"];
@@ -1278,6 +1325,15 @@ export interface components {
     AvalancheSize: "small" | "medium" | "large" | "very_large" | "extreme";
     /** @enum {string} */
     AvalancheType: "slab" | "loose" | "glide";
+    BlogItem: {
+      id: string;
+      title: string;
+      content: string;
+      /** Format: date-time */
+      published: string;
+      categories: string[];
+      attachmentUrl: string;
+    };
     /** @enum {string} */
     BulletinStatus: "republished" | "resubmitted" | "updated" | "published" | "submitted" | "draft" | "missing";
     /**
@@ -1593,15 +1649,14 @@ export interface components {
       enableDangerSources?: boolean;
       enableObservations?: boolean;
       enableModelling?: boolean;
+      enabledTextcatFields?: components["schemas"]["TextPart"][];
       enabledEditableFields?: components["schemas"]["TextPart"][];
-      enableWeatherTextField?: boolean;
       enableWeatherbox?: boolean;
       enableLineaExport?: boolean;
       defaultLang?: components["schemas"]["LanguageCode"];
       logoPath?: string;
       logoBwPath?: string;
       coatOfArms?: string;
-      enableGeneralHeadline?: boolean;
       serverImagesUrl?: string;
     };
     RegionLanguageConfiguration: {
@@ -1689,17 +1744,17 @@ export interface components {
       | "regions_exposed_to_heavier_precipitation";
     /** @enum {string} */
     TextPart:
-      | "avActivityComment"
-      | "avActivityHighlights"
       | "generalHeadlineComment"
       | "highlights"
-      | "snowpackStructureComment"
+      | "avActivityHighlights"
+      | "avActivityComment"
       | "snowpackStructureHighlights"
-      | "synopsisComment"
+      | "snowpackStructureComment"
       | "synopsisHighlights"
+      | "synopsisComment"
       | "tendencyComment"
-      | "travelAdvisoryComment"
-      | "travelAdvisoryHighlights";
+      | "travelAdvisoryHighlights"
+      | "travelAdvisoryComment";
     /** @enum {string} */
     Thickness: "thick" | "thin";
     User: {
@@ -1800,6 +1855,56 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["AuthenticationService.Username"];
+        };
+      };
+    };
+  };
+  getBlogPosts: {
+    parameters: {
+      query: {
+        region: string;
+        lang: components["schemas"]["LanguageCode"];
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getBlogPosts 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BlogItem"];
+        };
+      };
+    };
+  };
+  getBlogPosts_1: {
+    parameters: {
+      query: {
+        region: string;
+        lang: components["schemas"]["LanguageCode"];
+        searchText: string;
+        searchCategory: string;
+        year: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getBlogPosts_1 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BlogItem"][];
         };
       };
     };
