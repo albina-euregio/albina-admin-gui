@@ -14,12 +14,21 @@
       "regionCode": "IT-32-TN",
       "label": "Tn",
       "url": "https://blog.avalanche.report/it-32-tn/wp-json/wp/v2/posts?_fields=date&before={before}&after={after}&per_page=100&page={page}"
+    },
+    {
+      "regionCode": "AT-02",
+      "label": "Ktn",
+      "url": "https://blog.avalanche.report/at-02/wp-json/wp/v2/posts?_fields=date&before={before}&after={after}&per_page=100&page={page}"
     }
   ],
   "bulletinUrls": [
     {
       "regionCode": "AT-07",
       "url": "https://static.avalanche.report/bulletins/{date}/{date}_AT-07_{lang}_CAAMLv6.json"
+    },
+    {
+      "regionCode": "AT-02",
+      "url": "https://static.avalanche.report/bulletins/{date}/{date}_AT-02_{lang}_CAAMLv6.json"
     },
     {
       "regionCode": "IT-32-TN",
