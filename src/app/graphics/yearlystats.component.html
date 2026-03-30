@@ -41,9 +41,9 @@
           <button
             class="btn btn-sm"
             type="button"
-            [class.btn-primary]="selectedRegionCode === 'all'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'all'"
-            (click)="setRegionCode('all')"
+            [class.btn-primary]="allRegionsSelected"
+            [class.btn-outline-secondary]="!allRegionsSelected"
+            (click)="selectAllRegions()"
           >
             {{ "yearlystats.label.allRegions" | translate }}
           </button>
@@ -51,9 +51,9 @@
             <button
               class="btn btn-sm"
               type="button"
-              [class.btn-primary]="selectedRegionCode === regionCode"
-              [class.btn-outline-secondary]="selectedRegionCode !== regionCode"
-              (click)="setRegionCode(regionCode)"
+              [class.btn-primary]="isRegionButtonActive(regionCode)"
+              [class.btn-outline-secondary]="!isRegionButtonActive(regionCode)"
+              (click)="toggleRegionCode(regionCode)"
             >
               {{ regionCode }}
             </button>

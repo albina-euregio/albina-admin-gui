@@ -26,7 +26,7 @@ export class YearlystatsComponent implements AfterViewInit {
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
-  protected selectedRegionCode = "all";
+  protected selectedRegionCodes: string[] = [];
 
   protected readonly regionCodes = [...new Set(this.graphicsService.bulletinUrls.map((entry) => entry.regionCode))];
 
@@ -49,16 +49,12 @@ export class YearlystatsComponent implements AfterViewInit {
     if (!this.graphicsService.blogUrls.length) {
       return "[]";
     }
-    const filtered = this.graphicsService.blogUrls.filter(
-      (entry) => this.selectedRegionCode === "all" || entry.regionCode === this.selectedRegionCode,
-    );
+    const filtered = this.graphicsService.blogUrls.filter((entry) => this.isRegionSelected(entry.regionCode));
     return JSON.stringify(filtered);
   }
 
   private getBulletinUrlsValue(): string {
-    const filtered = this.graphicsService.bulletinUrls.filter(
-      (entry) => this.selectedRegionCode === "all" || entry.regionCode === this.selectedRegionCode,
-    );
+    const filtered = this.graphicsService.bulletinUrls.filter((entry) => this.isRegionSelected(entry.regionCode));
     return JSON.stringify(filtered.map((entry) => entry.url));
   }
 
@@ -96,12 +92,46 @@ export class YearlystatsComponent implements AfterViewInit {
     }
   }
 
-  protected setRegionCode(regionCode: string) {
-    if (this.selectedRegionCode === regionCode) return;
-    this.selectedRegionCode = regionCode;
+  protected selectAllRegions() {
+    if (this.selectedRegionCodes.length === 0) return;
+    this.selectedRegionCodes = [];
     if (this.showWrapper) {
       this.mountWrapper();
     }
+  }
+
+  protected toggleRegionCode(regionCode: string) {
+    if (this.selectedRegionCodes.length === 0) {
+      this.selectedRegionCodes = [regionCode];
+    } else if (this.selectedRegionCodes.includes(regionCode)) {
+      this.selectedRegionCodes = this.selectedRegionCodes.filter((code) => code !== regionCode);
+    } else {
+      this.selectedRegionCodes = [...this.selectedRegionCodes, regionCode];
+    }
+
+    if (this.selectedRegionCodes.length === this.regionCodes.length) {
+      this.selectedRegionCodes = [];
+    }
+
+    if (this.showWrapper) {
+      this.mountWrapper();
+    }
+  }
+
+  protected isRegionButtonActive(regionCode: string): boolean {
+    return this.isRegionSelected(regionCode);
+  }
+
+  protected get allRegionsSelected(): boolean {
+    return this.selectedRegionCodes.length === 0;
+  }
+
+  private isRegionSelected(regionCode: string): boolean {
+    return this.selectedRegionCodes.length === 0 || this.selectedRegionCodes.includes(regionCode);
+  }
+
+  private getRegionCodeValue(): string {
+    return this.selectedRegionCodes.length === 1 ? this.selectedRegionCodes[0] : "all";
   }
 
   protected updateCharts() {
@@ -138,7 +168,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("chart-type", this.getSelectedChartTypesValue());
     wrapper.setAttribute("start-date", this.startDate);
     wrapper.setAttribute("end-date", this.endDate);
-    wrapper.setAttribute("region-code", this.selectedRegionCode);
+    wrapper.setAttribute("region-code", this.getRegionCodeValue());
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
     wrapper.setAttribute("blog-urls", this.getBlogUrlsValue());
     wrapper.setAttribute("bulletin-urls", this.getBulletinUrlsValue());
