@@ -306,9 +306,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((routeParams) => {
-      const date = new Date(routeParams.date);
-      date.setHours(0, 0, 0, 0);
-      this.bulletinsService.setActiveDate(this.bulletinsService.getValidFromUntil(date));
+      this.bulletinsService.setActiveDate(routeParams.date);
 
       if (this.authenticationService.isCurrentUserInRole("OBSERVER")) {
         this.bulletinsService.setIsReadOnly(true);

@@ -66,18 +66,12 @@ export class BulletinsService {
     this.isReadOnly = false;
 
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
-    const startDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
-    startDate.setDate(startDate.getDate() - 7);
-    startDate.setHours(0, 0, 0, 0);
-
-    const endDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
-    endDate.setDate(endDate.getDate() + 3);
-    endDate.setHours(0, 0, 0, 0);
+    const endDate = isTrainingEnabled
+      ? Temporal.PlainDateTime.from(trainingTimestamp).toPlainDate().add({ days: 3 })
+      : Temporal.Now.plainDateISO().add({ days: 3 });
 
     for (let i = 0; i <= days; i++) {
-      const date = new Date(endDate.valueOf());
-      date.setDate(endDate.getDate() - i);
-      this.dates.push(this.getValidFromUntil(date));
+      this.dates.push(this.getValidFromUntil(endDate.subtract({ days: i })));
     }
 
     this.loadStressLevels();
@@ -132,7 +126,10 @@ export class BulletinsService {
     return this.activeDate;
   }
 
-  setActiveDate(date: [Date, Date]) {
+  setActiveDate(date: [Date, Date] | string) {
+    if (typeof date === "string") {
+      date = this.getValidFromUntil(Temporal.PlainDate.from(date));
+    }
     this.activeDate = date;
   }
 
@@ -150,12 +147,9 @@ export class BulletinsService {
     return new Date().getTime() >= updated.getTime();
   }
 
-  getValidFromUntil(date: Date): [Date, Date] {
-    const validFrom = new Date(date);
-    validFrom.setTime(validFrom.getTime() - 7 * 60 * 60 * 1000);
-    const validUntil = new Date(date);
-    validUntil.setTime(validUntil.getTime() + 17 * 60 * 60 * 1000);
-    return [validFrom, validUntil];
+  private getValidFromUntil(date: Temporal.PlainDate): [Date, Date] {
+    const zdt = date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" });
+    return [new Date(zdt.subtract({ days: 1 }).epochMilliseconds), new Date(zdt.epochMilliseconds)];
   }
 
   /**
