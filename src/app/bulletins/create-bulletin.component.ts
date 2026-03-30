@@ -1153,7 +1153,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   // create a copy of every bulletin (with new id)
-  private copyBulletins(response) {
+  private copyBulletins(response: BulletinModelAsJSON[]) {
     // validity
     this.mapService.resetInternalAggregatedRegions();
 
