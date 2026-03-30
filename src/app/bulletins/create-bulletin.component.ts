@@ -1159,6 +1159,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.parse(jsonBulletin);
+      bulletin.id = undefined;
+      bulletin.publicationDate = undefined;
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.additionalAuthors = new Array<string>();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
@@ -1409,7 +1411,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   copyBulletin(bulletin: BulletinModel) {
-    const newBulletin = new BulletinModel(bulletin);
+    const newBulletin = BulletinModel.parse(bulletin);
+    newBulletin.id = undefined;
+    newBulletin.publicationDate = undefined;
     newBulletin.additionalAuthors = new Array<string>();
     newBulletin.savedRegions = new Array<string>();
     newBulletin.publishedRegions = new Array<string>();
