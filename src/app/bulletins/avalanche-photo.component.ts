@@ -30,14 +30,6 @@ export class AvalanchePhotoComponent {
   readonly disabled = input<boolean>(undefined);
   readonly updateBulletinOnServer = output();
 
-  changeAvalanchePhotoDetail() {
-    this.updateBulletinOnServer.emit();
-  }
-
-  accordionChanged(isOpen: boolean, photo: BulletinPhotoModel) {
-    photo.$accordionOpen = isOpen;
-  }
-
   deletePhoto(photo: BulletinPhotoModel) {
     const photoIndex = this.bulletin().photos.indexOf(photo);
     if (photoIndex !== -1) {

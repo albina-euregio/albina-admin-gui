@@ -6,8 +6,8 @@
       type="url"
       required
       class="form-control"
-      [ngModel]="photo().url"
-      (ngModelChange)="onPhotoFieldChange('url', $event)"
+      [(ngModel)]="photo().url"
+      (change)="changeAvalanchePhotoDetailEvent.emit()"
       [class.is-invalid]="isPhotoUrlInvalid()"
       [disabled]="disabled()"
     />
@@ -20,8 +20,8 @@
       id="photoCopyright"
       type="text"
       class="form-control"
-      [ngModel]="photo().copyright"
-      (ngModelChange)="onPhotoFieldChange('copyright', $event)"
+      [(ngModel)]="photo().copyright"
+      (change)="changeAvalanchePhotoDetailEvent.emit()"
       [disabled]="disabled()"
     />
   </div>
@@ -32,8 +32,8 @@
     <select
       id="photoMicroregion"
       class="form-select"
-      [ngModel]="photo().microRegionId"
-      (ngModelChange)="onPhotoFieldChange('microRegionId', $event)"
+      [(ngModel)]="photo().microRegionId"
+      (change)="changeAvalanchePhotoDetailEvent.emit()"
       [disabled]="disabled()"
     >
       <option [ngValue]="undefined"></option>
@@ -50,8 +50,8 @@
       id="photoLocation"
       type="text"
       class="form-control"
-      [ngModel]="photo().locationName"
-      (ngModelChange)="onPhotoFieldChange('locationName', $event)"
+      [(ngModel)]="photo().locationName"
+      (change)="changeAvalanchePhotoDetailEvent.emit()"
       [disabled]="disabled()"
     />
   </div>
@@ -61,8 +61,8 @@
       id="photoDate"
       type="date"
       class="form-control"
-      [ngModel]="photo().date"
-      (ngModelChange)="onPhotoFieldChange('date', $event)"
+      [(ngModel)]="photo().date"
+      (change)="changeAvalanchePhotoDetailEvent.emit()"
       [disabled]="disabled()"
     />
   </div>

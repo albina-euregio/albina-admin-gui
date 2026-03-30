@@ -21,11 +21,6 @@ export class AvalanchePhotoDetailComponent {
   readonly disabled = input<boolean>(undefined);
   readonly changeAvalanchePhotoDetailEvent = output();
 
-  onPhotoFieldChange<K extends keyof BulletinPhotoModel>(field: K, value: BulletinPhotoModel[K]) {
-    this.photo()[field] = value;
-    this.changeAvalanchePhotoDetailEvent.emit();
-  }
-
   isPhotoUrlInvalid(): boolean {
     const photo = this.photo();
     return photo !== undefined && !z.url().safeParse(photo.url).success;
