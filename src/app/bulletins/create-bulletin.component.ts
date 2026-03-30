@@ -1165,18 +1165,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
       // reset regions
-      const saved = new Array<string>();
-      for (const region of bulletin.savedRegions) {
-        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          saved.push(region);
-        }
-      }
-      for (const region of bulletin.publishedRegions) {
-        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          saved.push(region);
-        }
-      }
-
+      const saved = [...bulletin.savedRegions, ...bulletin.publishedRegions].filter((region) =>
+        region.startsWith(this.authenticationService.getActiveRegionId()),
+      );
       if (saved.length > 0) {
         bulletin.savedRegions = saved;
 
