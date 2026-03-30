@@ -4,6 +4,14 @@ import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
+import config from "../../assets/config/blogs.json";
+
+type BlogUrlConfig = {
+  regionCode: string;
+  label: string;
+  url: string;
+};
+
 @Component({
   selector: "app-yearlystats",
   standalone: true,
@@ -25,6 +33,14 @@ export class YearlystatsComponent implements AfterViewInit {
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
   protected selectedRegionCode: YearlyRegionCode = "all";
 
+  private readonly blogUrls: BlogUrlConfig[] = Array.isArray(config.blogUrls)
+    ? config.blogUrls.filter((item): item is BlogUrlConfig => {
+        if (typeof item !== "object" || !item) return false;
+        const entry = item as Partial<BlogUrlConfig>;
+        return typeof entry.regionCode === "string" && typeof entry.label === "string" && typeof entry.url === "string";
+      })
+    : [];
+
   protected chartTypeSelection: Record<YearlyChartType, boolean> = {
     "aws-danger-rating-micro-regions-bars": true,
     "aws-danger-rating-micro-regions": false,
@@ -38,6 +54,16 @@ export class YearlystatsComponent implements AfterViewInit {
     if (this.showWrapper) {
       this.mountWrapper();
     }
+  }
+
+  private getBlogUrlsValue(): string {
+    if (!this.blogUrls.length) {
+      return "[]";
+    }
+    const filtered = this.blogUrls.filter(
+      (entry) => this.selectedRegionCode === "all" || entry.regionCode === this.selectedRegionCode,
+    );
+    return JSON.stringify(filtered);
   }
 
   protected setLastDays(days: number) {
@@ -118,6 +144,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("end-date", this.endDate);
     wrapper.setAttribute("region-code", this.selectedRegionCode);
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
+    wrapper.setAttribute("blog-urls", this.getBlogUrlsValue());
 
     if (this.showProductsTrainingInputs) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
