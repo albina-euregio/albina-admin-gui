@@ -47,33 +47,17 @@
           >
             {{ "yearlystats.label.allRegions" | translate }}
           </button>
-          <button
-            class="btn btn-sm"
-            type="button"
-            [class.btn-primary]="selectedRegionCode === 'AT-07'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'AT-07'"
-            (click)="setRegionCode('AT-07')"
-          >
-            AT-07
-          </button>
-          <button
-            class="btn btn-sm"
-            type="button"
-            [class.btn-primary]="selectedRegionCode === 'IT-32-BZ'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'IT-32-BZ'"
-            (click)="setRegionCode('IT-32-BZ')"
-          >
-            IT-32-BZ
-          </button>
-          <button
-            class="btn btn-sm"
-            type="button"
-            [class.btn-primary]="selectedRegionCode === 'IT-32-TN'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'IT-32-TN'"
-            (click)="setRegionCode('IT-32-TN')"
-          >
-            IT-32-TN
-          </button>
+          @for (regionCode of regionCodes; track regionCode) {
+            <button
+              class="btn btn-sm"
+              type="button"
+              [class.btn-primary]="selectedRegionCode === regionCode"
+              [class.btn-outline-secondary]="selectedRegionCode !== regionCode"
+              (click)="setRegionCode(regionCode)"
+            >
+              {{ regionCode }}
+            </button>
+          }
         </div>
       </div>
 

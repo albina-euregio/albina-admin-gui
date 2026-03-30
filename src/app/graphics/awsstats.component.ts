@@ -176,6 +176,15 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     return date.toISOString().slice(0, 10);
   }
 
+  private getBulletinUrlsValue(): string {
+    const filtered = this.graphicsService.bulletinUrls.filter(
+      (entry) =>
+        this.selectedMicroRegions.length === 0 ||
+        this.selectedMicroRegions.filter((region) => entry.regionCode.includes(region)).length > 0,
+    );
+    return JSON.stringify(filtered.map((entry) => entry.url));
+  }
+
   private shiftDays(date: Date, days: number): Date {
     const shifted = new Date(date);
     shifted.setDate(shifted.getDate() + days);
@@ -203,6 +212,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     wrapper.setAttribute("start-date", this.wrapperStartDate);
     wrapper.setAttribute("end-date", this.wrapperEndDate);
     wrapper.setAttribute("bulletin-filter-micro-region", this.getBulletinFilterMicroRegionValue());
+    wrapper.setAttribute("bulletin-urls", this.getBulletinUrlsValue());
 
     host.appendChild(wrapper);
   }

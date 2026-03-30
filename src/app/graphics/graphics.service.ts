@@ -1,7 +1,9 @@
 import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { Injectable } from "@angular/core";
+import { config } from "zod/v4/core";
 
+import awsstatsconfig from "../../assets/config/awsstats.json";
 import sources from "../../assets/config/stations.json";
 
 interface LineaStationSource {
@@ -20,6 +22,17 @@ export interface LineaStationFeature {
   longitude: number;
   hasPsum: boolean;
 }
+
+export type BulletinUrlConfig = {
+  regionCode: string;
+  url: string;
+};
+
+type BlogUrlConfig = {
+  regionCode: string;
+  label: string;
+  url: string;
+};
 
 @Injectable({ providedIn: "root" })
 export class GraphicsService {
@@ -60,6 +73,22 @@ export class GraphicsService {
 
     return [...stationById.values()];
   }
+
+  bulletinUrls: BulletinUrlConfig[] = Array.isArray(awsstatsconfig.bulletinUrls)
+    ? awsstatsconfig.bulletinUrls.filter((item): item is BulletinUrlConfig => {
+        if (typeof item !== "object" || !item) return false;
+        const entry = item as Partial<BulletinUrlConfig>;
+        return typeof entry.regionCode === "string" && typeof entry.url === "string";
+      })
+    : [];
+
+  blogUrls: BlogUrlConfig[] = Array.isArray(awsstatsconfig.blogUrls)
+    ? awsstatsconfig.blogUrls.filter((item): item is BlogUrlConfig => {
+        if (typeof item !== "object" || !item) return false;
+        const entry = item as Partial<BlogUrlConfig>;
+        return typeof entry.regionCode === "string" && typeof entry.label === "string" && typeof entry.url === "string";
+      })
+    : [];
 
   getSmetUrl(station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined, index: number): string | undefined {
     const template = station?.smet?.[index];

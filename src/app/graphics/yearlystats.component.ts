@@ -1,16 +1,10 @@
 import "@albina-euregio/linea/aws-stats";
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
-import config from "../../assets/config/blogs.json";
-
-type BlogUrlConfig = {
-  regionCode: string;
-  label: string;
-  url: string;
-};
+import { GraphicsService } from "./graphics.service";
 
 @Component({
   selector: "app-yearlystats",
@@ -23,6 +17,7 @@ type BlogUrlConfig = {
 export class YearlystatsComponent implements AfterViewInit {
   @ViewChild("wrapperHost", { static: false })
   private wrapperHost?: ElementRef<HTMLElement>;
+  private graphicsService = inject(GraphicsService);
 
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -30));
   protected endDate = this.toDateInputValue(new Date());
@@ -31,15 +26,9 @@ export class YearlystatsComponent implements AfterViewInit {
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
-  protected selectedRegionCode: YearlyRegionCode = "all";
+  protected selectedRegionCode = "all";
 
-  private readonly blogUrls: BlogUrlConfig[] = Array.isArray(config.blogUrls)
-    ? config.blogUrls.filter((item): item is BlogUrlConfig => {
-        if (typeof item !== "object" || !item) return false;
-        const entry = item as Partial<BlogUrlConfig>;
-        return typeof entry.regionCode === "string" && typeof entry.label === "string" && typeof entry.url === "string";
-      })
-    : [];
+  protected readonly regionCodes = [...new Set(this.graphicsService.bulletinUrls.map((entry) => entry.regionCode))];
 
   protected chartTypeSelection: Record<YearlyChartType, boolean> = {
     "aws-danger-rating-micro-regions-bars": true,
@@ -57,13 +46,20 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   private getBlogUrlsValue(): string {
-    if (!this.blogUrls.length) {
+    if (!this.graphicsService.blogUrls.length) {
       return "[]";
     }
-    const filtered = this.blogUrls.filter(
+    const filtered = this.graphicsService.blogUrls.filter(
       (entry) => this.selectedRegionCode === "all" || entry.regionCode === this.selectedRegionCode,
     );
     return JSON.stringify(filtered);
+  }
+
+  private getBulletinUrlsValue(): string {
+    const filtered = this.graphicsService.bulletinUrls.filter(
+      (entry) => this.selectedRegionCode === "all" || entry.regionCode === this.selectedRegionCode,
+    );
+    return JSON.stringify(filtered.map((entry) => entry.url));
   }
 
   protected setLastDays(days: number) {
@@ -100,7 +96,7 @@ export class YearlystatsComponent implements AfterViewInit {
     }
   }
 
-  protected setRegionCode(regionCode: YearlyRegionCode) {
+  protected setRegionCode(regionCode: string) {
     if (this.selectedRegionCode === regionCode) return;
     this.selectedRegionCode = regionCode;
     if (this.showWrapper) {
@@ -145,6 +141,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("region-code", this.selectedRegionCode);
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
     wrapper.setAttribute("blog-urls", this.getBlogUrlsValue());
+    wrapper.setAttribute("bulletin-urls", this.getBulletinUrlsValue());
 
     if (this.showProductsTrainingInputs) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
@@ -203,5 +200,3 @@ type YearlyChartType =
   | "aws-danger-pattern-micro-regions"
   | "aws-avalanche-problem-micro-regions"
   | "aws-products";
-
-type YearlyRegionCode = "all" | "AT-07" | "IT-32-BZ" | "IT-32-TN";
