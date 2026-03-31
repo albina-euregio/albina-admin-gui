@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
 
-import { changeRegion, loginAdmin, loginForecaster } from "./utils";
+import { changeRegion, loginAdmin, loginForecaster, setFixedTime } from "./utils";
 
 const waitForGetEdit = (page) =>
   page.waitForResponse(
@@ -17,12 +17,12 @@ test("Bulletin synchronization", async ({ browser }) => {
   const context2 = await browser.newContext();
   const page2 = await context2.newPage();
 
-  await page1.clock.setFixedTime(testDate);
+  await setFixedTime(page1, testDate);
   await page1.goto("");
   await loginForecaster(page1);
   await changeRegion(page1, "Tyrol");
 
-  await page2.clock.setFixedTime(testDate);
+  await setFixedTime(page2, testDate);
   await page2.goto("");
   await loginAdmin(page2);
   await changeRegion(page2, "Carinthia");

@@ -3,7 +3,7 @@ import path from "path";
 
 import { test, expect } from "@playwright/test";
 
-import { changeRegion, loginForecaster } from "./utils";
+import { changeRegion, loginForecaster, setFixedTime } from "./utils";
 
 const testDate = new Date("2024-12-24");
 
@@ -26,7 +26,8 @@ test.beforeEach(async ({ page }) => {
 
 test("filter observations", async ({ page }) => {
   test.slow();
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
+  await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
 
@@ -290,7 +291,8 @@ test("Webcams and Observers", async ({ page }) => {
 
 test("Weather stations", async ({ page }) => {
   test.slow();
-  await page.clock.setFixedTime(new Date("2025-03-05"));
+  await setFixedTime(page, new Date("2025-03-05"));
+  await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
   await expect(page.locator(".keydata")).toHaveText("734 / 734", { timeout: 7000 });

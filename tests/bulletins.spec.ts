@@ -3,7 +3,7 @@ import path from "path";
 
 import { test, expect } from "@playwright/test";
 
-import { changeRegion, loginForecaster } from "./utils";
+import { changeRegion, loginForecaster, setFixedTime } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
@@ -44,7 +44,7 @@ test("Check visible neighbors", async ({ page }) => {
 test("Upload media file", async ({ page }) => {
   const testDate = new Date("2024-12-24");
   const mediaText = "Es gibt ein Altschneeproblem.\nAlle Details und wo's günstiger ist findet ihr auf Lawinen.report.";
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("row", { name: "Wednesday, December 25, 2024" }).getByTitle("edit bulletin").click();
@@ -86,7 +86,7 @@ test("Upload media file", async ({ page }) => {
 
 test("JSON download", async ({ page }) => {
   const testDate = new Date("2024-12-24");
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("row", { name: "Thursday, December 19, 2024" }).getByTitle("read bulletin").click();
@@ -102,7 +102,7 @@ test("JSON download", async ({ page }) => {
 
 test("Preview PDF", async ({ page }) => {
   const testDate = new Date("2024-12-24");
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("row", { name: "Thursday, December 19, 2024" }).getByTitle("read bulletin").click();
@@ -118,7 +118,7 @@ test("Preview PDF", async ({ page }) => {
 
 test("View bulletin", async ({ page }) => {
   const testDate = new Date("2024-12-24");
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByTitle("Load 7 more bulletins").click();
@@ -178,7 +178,7 @@ test("View bulletin", async ({ page }) => {
 test("Edit bulletin", async ({ page }) => {
   test.slow();
   const testDate = new Date("2024-12-24");
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("cell", { name: "Wednesday, December 25, 2024" }).getByTitle("edit bulletin").click();
@@ -264,7 +264,7 @@ test("Edit bulletin", async ({ page }) => {
 
 test("Copy foreign region", async ({ page }) => {
   const testDate = new Date("2025-01-10");
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
 
@@ -298,7 +298,7 @@ test("Copy foreign region", async ({ page }) => {
 test("Load bulletin from the day before", async ({ page }) => {
   test.slow();
   const testDate = new Date("2024-12-21");
-  await page.clock.setFixedTime(testDate);
+  await setFixedTime(page, testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
   await test.step("load into empty bulletin", async () => {
