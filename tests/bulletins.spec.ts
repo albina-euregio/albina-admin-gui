@@ -100,6 +100,30 @@ test("JSON download", async ({ page }) => {
   expect(fs.statSync(downloadPath).size).toBeGreaterThan(20 * 10 ** 3); // 20 KB
 });
 
+test("JSON upload", async ({ page }) => {
+  const testDate = new Date("2024-12-24");
+  await setFixedTime(page, testDate);
+  await page.reload();
+  await changeRegion(page, "Tyrol");
+  await page.getByRole("row", { name: "Wednesday, December 18, 2024" }).getByTitle("edit bulletin").click();
+  await page.getByTitle("[b]").click();
+  const fileChooserPromise = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Upload bulletin in JSON" }).click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(path.join(__dirname, "data/2026-03-29_report.json"));
+  const postResponse = await page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/bulletins/) &&
+      response.status() === 200 &&
+      response.request().method() === "POST" &&
+      response.request().postDataJSON().length === 4,
+  );
+  const bulletinResponse = await postResponse.json();
+  expect(bulletinResponse).toHaveLength(5); // 4 regions + 1 bulletin from foreign region
+  await expect(page.locator(".region-thumb")).toHaveCount(5);
+  await expect(page.locator(".region-thumb").getByText("Incomplete")).toBeHidden();
+});
+
 test("Preview PDF", async ({ page }) => {
   const testDate = new Date("2024-12-24");
   await setFixedTime(page, testDate);
