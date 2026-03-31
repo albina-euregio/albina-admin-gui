@@ -1,6 +1,7 @@
 import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 import sources from "../../assets/config/stations.json";
 
@@ -51,6 +52,8 @@ export class GraphicsService {
   private readonly bulletinApiUrl = "https://api.avalanche.report/albina/api/bulletins/caaml/json";
   private readonly blogApiUrl = "https://api.avalanche.report/albina_dev/api/blogs/posts";
 
+  private authentificationService = inject(AuthenticationService);
+
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
 
@@ -100,11 +103,11 @@ export class GraphicsService {
   }
 
   getBulletinRegionCodes(): string[] {
-    return ["AT-07", "IT-32-BZ", "IT-32-TN"];
+    return this.authentificationService.getInternalRegionsWithoutSuperRegions((r) => r.publishBulletins);
   }
 
   getBlogRegionCodes(): string[] {
-    return ["AT-07", "IT-32-BZ", "IT-32-TN"];
+    return this.authentificationService.getInternalRegionsWithoutSuperRegions((r) => r.publishBlogs);
   }
 
   async loadBulletins(
@@ -116,12 +119,10 @@ export class GraphicsService {
     if (!startDate || !endDate) {
       return [];
     }
-
     const regions = [...new Set(regionCodes.filter(Boolean))];
     if (!regions.length) {
       return [];
     }
-
     const dates = this.getDateRange(startDate, endDate);
     const requests = dates.map((date) => this.loadBulletinsForDate(date, regions, lang));
     const results = await Promise.all(requests);
