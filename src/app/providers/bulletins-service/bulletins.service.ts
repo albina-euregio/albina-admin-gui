@@ -31,6 +31,10 @@ export enum PublicationChannel {
   Push = "push",
 }
 
+type BulletinApiResponse = {
+  bulletins?: BulletinModelAsJSON[];
+};
+
 @Injectable()
 export class BulletinsService {
   http = inject(HttpClient);
@@ -192,6 +196,21 @@ export class BulletinsService {
       region: region,
     });
     return this.http.get(url);
+  }
+
+  async loadBulletinsForDate(
+    date: string,
+    regionCodes: string[],
+    lang: AlbinaLanguage,
+  ): Promise<BulletinModelAsJSON[]> {
+    const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
+      date: `${date}T16:00:00Z`,
+      regions: regionCodes,
+      lang: lang,
+      version: "V6_JSON",
+    });
+    const data = await this.http.get<BulletinApiResponse>(url).toPromise();
+    return Array.isArray(data?.bulletins) ? data.bulletins : [];
   }
 
   loadBulletins(

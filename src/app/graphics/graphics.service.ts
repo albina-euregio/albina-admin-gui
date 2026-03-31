@@ -5,6 +5,7 @@ import { inject, Injectable } from "@angular/core";
 import { AlbinaLanguage } from "app/models/text.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
+import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 
 import sources from "../../assets/config/stations.json";
@@ -26,16 +27,11 @@ export interface LineaStationFeature {
   hasPsum: boolean;
 }
 
-type BulletinApiResponse = {
-  bulletins?: unknown[];
-};
-
 @Injectable({ providedIn: "root" })
 export class GraphicsService {
   private authentificationService = inject(AuthenticationService);
-  private constantsService = inject(ConstantsService);
   private blogService = inject(BlogService);
-  private http = inject(HttpClient);
+  private bulletinsService = inject(BulletinsService);
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -107,7 +103,7 @@ export class GraphicsService {
       return [];
     }
     const dates = this.getDateRange(startDate, endDate);
-    const requests = dates.map((date) => this.loadBulletinsForDate(date, regionCodes, lang));
+    const requests = dates.map((date) => this.bulletinsService.loadBulletinsForDate(date, regionCodes, lang));
     const results = await Promise.all(requests);
     return results.flat();
   }
@@ -184,16 +180,5 @@ export class GraphicsService {
     }
 
     return dates;
-  }
-
-  private async loadBulletinsForDate(date: string, regionCodes: string[], lang: AlbinaLanguage): Promise<unknown[]> {
-    const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
-      date: `${date}T16:00:00Z`,
-      regions: regionCodes,
-      lang: lang,
-      version: "V6_JSON",
-    });
-    const data = await this.http.get<BulletinApiResponse>(url).toPromise();
-    return Array.isArray(data?.bulletins) ? data.bulletins : [];
   }
 }
