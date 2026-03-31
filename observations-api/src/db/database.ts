@@ -18,10 +18,10 @@ import { augmentElevation } from "./elevation";
 
 interface GenericObservationTable {
   REGION_ID: string;
-  EVENT_DATE: Date;
+  EVENT_DATE: Date | string;
   ASPECTS: string;
   OBS_TYPE: string;
-  REPORT_DATE: Date;
+  REPORT_DATE: Date | string;
   STABILITY: string;
   EXTRA_DIALOG_ROWS: string;
   LONGITUDE: number;
@@ -49,6 +49,10 @@ interface GenericObservationTable {
 export class ObservationDatabaseConnection {
   constructor(private mysql: SQL) {}
   static async createConnection(): Promise<ObservationDatabaseConnection> {
+    if (!globalThis.Temporal) {
+      await import("temporal-polyfill/global");
+    }
+
     const hostname = process.env.MYSQL_HOST || "127.0.0.1";
     const port = process.env.MYSQL_PORT ? +process.env.MYSQL_PORT : 3306;
     const username = process.env.MYSQL_USER || "observations-api";
@@ -102,12 +106,12 @@ export class ObservationDatabaseConnection {
       ELEVATION: o.elevation ?? null,
       ELEVATION_LOWER_BOUND: o.elevationLowerBound ?? null,
       ELEVATION_UPPER_BOUND: o.elevationUpperBound ?? null,
-      EVENT_DATE: o.eventDate ?? null,
+      EVENT_DATE: toSqlDateString(o.eventDate) ?? null,
       LATITUDE: o.latitude ?? null,
       LOCATION_NAME: o.locationName?.slice(0, 191) ?? null,
       LONGITUDE: o.longitude ?? null,
       REGION_ID: o.region?.slice(0, 191) ?? null,
-      REPORT_DATE: o.reportDate ?? null,
+      REPORT_DATE: toSqlDateString(o.reportDate) ?? null,
       AVALANCHE_PROBLEMS: o.avalancheProblems?.join(",") ?? null,
       DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
       DANGER_SOURCE: o.dangerSource?.slice(0, 191) ?? null,
@@ -179,12 +183,12 @@ export class ObservationDatabaseConnection {
         elevation: row.ELEVATION ?? undefined,
         elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
         elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,
-        eventDate: row.EVENT_DATE ?? undefined,
+        eventDate: row.EVENT_DATE instanceof Date ? row.EVENT_DATE : undefined,
         latitude: row.LATITUDE ?? undefined,
         locationName: row.LOCATION_NAME ?? undefined,
         longitude: row.LONGITUDE ?? undefined,
         region: row.REGION_ID ?? undefined,
-        reportDate: row.REPORT_DATE ?? undefined,
+        reportDate: row.REPORT_DATE instanceof Date ? row.REPORT_DATE : undefined,
         avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
         dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
         dangerSource: row.DANGER_SOURCE ?? undefined,
@@ -197,4 +201,10 @@ export class ObservationDatabaseConnection {
   destroy() {
     return this.mysql.close();
   }
+}
+
+function toSqlDateString(date: Date): string | null {
+  return date instanceof Date
+    ? date.toTemporalInstant().toZonedDateTimeISO("Europe/Vienna").toPlainDateTime().toString()
+    : null;
 }
