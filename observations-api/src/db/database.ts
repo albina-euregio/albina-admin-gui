@@ -18,10 +18,10 @@ import { augmentElevation } from "./elevation";
 
 interface GenericObservationTable {
   REGION_ID: string;
-  EVENT_DATE: string; // Date
+  EVENT_DATE: Date | string;
   ASPECTS: string;
   OBS_TYPE: string;
-  REPORT_DATE: string; // Date
+  REPORT_DATE: Date | string;
   STABILITY: string;
   EXTRA_DIALOG_ROWS: string;
   LONGITUDE: number;
@@ -183,12 +183,12 @@ export class ObservationDatabaseConnection {
         elevation: row.ELEVATION ?? undefined,
         elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
         elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,
-        eventDate: fromSqlDateString(row.EVENT_DATE) ?? undefined,
+        eventDate: row.EVENT_DATE instanceof Date ? row.EVENT_DATE : undefined,
         latitude: row.LATITUDE ?? undefined,
         locationName: row.LOCATION_NAME ?? undefined,
         longitude: row.LONGITUDE ?? undefined,
         region: row.REGION_ID ?? undefined,
-        reportDate: fromSqlDateString(row.REPORT_DATE) ?? undefined,
+        reportDate: row.REPORT_DATE instanceof Date ? row.REPORT_DATE : undefined,
         avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
         dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
         dangerSource: row.DANGER_SOURCE ?? undefined,
@@ -207,10 +207,4 @@ function toSqlDateString(date: Date): string | null {
   return date instanceof Date
     ? date.toTemporalInstant().toZonedDateTimeISO("Europe/Vienna").toPlainDateTime().toString()
     : null;
-}
-
-function fromSqlDateString(date: string): Date | undefined {
-  return typeof date === "string"
-    ? new Date(Temporal.PlainDateTime.from(date).toZonedDateTime("Europe/Vienna").toInstant().epochMilliseconds)
-    : undefined;
 }
