@@ -117,14 +117,6 @@ export class BulletinsService {
     });
   }
 
-  get dates() {
-    return this.sourceDates.dates;
-  }
-
-  getActiveDate(): [Date, Date] {
-    return this.sourceDates.activeDate;
-  }
-
   getCopyDate(): [Date, Date] {
     return this.copyDate;
   }
@@ -149,10 +141,10 @@ export class BulletinsService {
     this.isReadOnly = isReadOnly;
   }
 
-  getUserRegionStatus(date: [Date, Date]): Enums.BulletinStatus {
+  getUserRegionStatus(date: [Date, Date] = this.sourceDates.activeDate): Enums.BulletinStatus {
     const region = this.authenticationService.getActiveRegionId();
     const regionStatusMap = this.statusMap.get(region);
-    if (regionStatusMap) return regionStatusMap.get(date[0].getTime());
+    if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
     else return Enums.BulletinStatus.missing;
   }
 
@@ -194,7 +186,7 @@ export class BulletinsService {
     return this.http.get<{ date: string; status: keyof typeof Enums.BulletinStatus }[]>(url);
   }
 
-  getPublicationStatus(region: string, date: [Date, Date]) {
+  getPublicationStatus(region: string, date: [Date, Date] = this.sourceDates.activeDate) {
     const url = this.constantsService.getServerUrlGET("/bulletins/status/publication", {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: region,
@@ -256,7 +248,7 @@ export class BulletinsService {
   }
 
   getCaamlJsonBulletins(
-    date: [Date, Date] = this.getActiveDate(),
+    date: [Date, Date] = this.sourceDates.activeDate,
     regions: string[] = this.authenticationService.getInternalRegions(),
   ): Observable<Bulletins> {
     const url = this.constantsService.getServerUrlGET("/bulletins/edit/caaml/json", {
@@ -268,7 +260,10 @@ export class BulletinsService {
     return this.http.get<Bulletins>(url);
   }
 
-  saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
+  saveBulletins(
+    bulletins: BulletinModel[],
+    date: [Date, Date] = this.sourceDates.activeDate,
+  ): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
       const newBulletins = bulletins.map((b) => b);
       this.localStorageService.setTrainingBulletins(date, newBulletins);
@@ -282,7 +277,10 @@ export class BulletinsService {
     return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
 
-  createBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
+  createBulletin(
+    bulletin: BulletinModel,
+    date: [Date, Date] = this.sourceDates.activeDate,
+  ): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
       bulletin.id ??= crypto.randomUUID();
       const bulletins = this.localStorageService.getTrainingBulletins(date);
@@ -298,7 +296,10 @@ export class BulletinsService {
     return this.http.put<BulletinModelAsJSON[]>(url, body);
   }
 
-  updateBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
+  updateBulletin(
+    bulletin: BulletinModel,
+    date: [Date, Date] = this.sourceDates.activeDate,
+  ): Observable<BulletinModelAsJSON[]> {
     // check if bulletin has ID
     if (this.localStorageService.isTrainingEnabled) {
       const bulletins = this.localStorageService.getTrainingBulletins(date);
@@ -318,7 +319,10 @@ export class BulletinsService {
     return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
 
-  deleteBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
+  deleteBulletin(
+    bulletin: BulletinModel,
+    date: [Date, Date] = this.sourceDates.activeDate,
+  ): Observable<BulletinModelAsJSON[]> {
     // check if bulletin has ID
     if (this.localStorageService.isTrainingEnabled) {
       const bulletins = this.localStorageService.getTrainingBulletins(date);
@@ -444,16 +448,11 @@ export class BulletinsService {
   }
 
   updateEditable() {
-    const activeDate = this.getActiveDate();
-    if (!activeDate) {
-      return;
-    }
     this.setIsEditable(
-      ((this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.missing ||
-        this.getUserRegionStatus(activeDate) === undefined) &&
-        !this.sourceDates.hasBeenPublished5PM(activeDate)) ||
-        this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.updated ||
-        this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.draft,
+      ((this.getUserRegionStatus() === Enums.BulletinStatus.missing || this.getUserRegionStatus() === undefined) &&
+        !this.sourceDates.hasBeenPublished5PM()) ||
+        this.getUserRegionStatus() === Enums.BulletinStatus.updated ||
+        this.getUserRegionStatus() === Enums.BulletinStatus.draft,
     );
   }
 }

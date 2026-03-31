@@ -12,9 +12,14 @@
 
       <div class="create-bulletin__date">
         <h1 class="create-bulletin__current-date font-m-bold">
-          {{ bulletinsService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.getCurrentLang()
+          {{
+            bulletinsService.sourceDates.activeValidFrom
+              | date: "EEEE," : undefined : translateService.getCurrentLang()
           }}<br />
-          {{ bulletinsService.getActiveDate()[1] | date: "longDate" : undefined : translateService.getCurrentLang() }}
+          {{
+            bulletinsService.sourceDates.activeValidUntil
+              | date: "longDate" : undefined : translateService.getCurrentLang()
+          }}
         </h1>
         <nav class="btn-group create-bulleting__days-nav">
           <button
@@ -69,41 +74,38 @@
 
         @if (!showStatusOfAllRegions) {
           <div>
-            @if (
-              getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.missing ||
-              getActiveRegionStatus(bulletinsService.getActiveDate()) === undefined
-            ) {
+            @if (getActiveRegionStatus() === bulletinStatus.missing || getActiveRegionStatus() === undefined) {
               <span class="badge bg-danger"
                 ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.draft) {
+            @if (getActiveRegionStatus() === bulletinStatus.draft) {
               <span class="badge bg-warning"
                 ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted) {
+            @if (getActiveRegionStatus() === bulletinStatus.submitted) {
               <span class="badge bg-primary"
                 ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published) {
+            @if (getActiveRegionStatus() === bulletinStatus.published) {
               <span class="badge bg-success"
                 ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated) {
+            @if (getActiveRegionStatus() === bulletinStatus.updated) {
               <span class="badge bg-orange"
                 ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted) {
+            @if (getActiveRegionStatus() === bulletinStatus.resubmitted) {
               <span class="badge bg-primary"
                 ><i class="ph-bold icon-sm ph-newspaper"></i>
                 {{ "bulletins.table.status.resubmitted" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished) {
+            @if (getActiveRegionStatus() === bulletinStatus.republished) {
               <span class="badge bg-success"
                 ><i class="ph-bold icon-sm ph-newspaper"></i>
                 {{ "bulletins.table.status.republished" | translate }}</span
@@ -121,40 +123,37 @@
             <h5 class="bulletin-status__region-name font-xs text-secondary">
               {{ regionsService.getRegionName(authenticationService.getActiveRegionId()) }}
             </h5>
-            @if (
-              getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.missing ||
-              getActiveRegionStatus(bulletinsService.getActiveDate()) === undefined
-            ) {
+            @if (getActiveRegionStatus() === bulletinStatus.missing || getActiveRegionStatus() === undefined) {
               <span class="badge bg-danger"
                 ><i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.draft) {
+            @if (getActiveRegionStatus() === bulletinStatus.draft) {
               <span class="badge bg-warning"
                 ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted) {
+            @if (getActiveRegionStatus() === bulletinStatus.submitted) {
               <span class="badge bg-primary"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published) {
+            @if (getActiveRegionStatus() === bulletinStatus.published) {
               <span class="badge bg-success"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated) {
+            @if (getActiveRegionStatus() === bulletinStatus.updated) {
               <span class="badge bg-orange"
                 ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted) {
+            @if (getActiveRegionStatus() === bulletinStatus.resubmitted) {
               <span class="badge bg-primary"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished) {
+            @if (getActiveRegionStatus() === bulletinStatus.republished) {
               <span class="badge bg-success"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
               >
@@ -165,44 +164,41 @@
               <h5 class="bulletin-status__region-name font-xs text-secondary">
                 {{ regionsService.getRegionName(region) }}
               </h5>
-              @if (
-                getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.missing ||
-                getRegionStatus(region, bulletinsService.getActiveDate()) === undefined
-              ) {
+              @if (getRegionStatus(region) === bulletinStatus.missing || getRegionStatus(region) === undefined) {
                 <span class="badge bg-danger"
                   ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.draft) {
+              @if (getRegionStatus(region) === bulletinStatus.draft) {
                 <span class="badge bg-warning"
                   ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.submitted) {
+              @if (getRegionStatus(region) === bulletinStatus.submitted) {
                 <span class="badge bg-primary"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.submitted" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.published) {
+              @if (getRegionStatus(region) === bulletinStatus.published) {
                 <span class="badge bg-success"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.published" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.updated) {
+              @if (getRegionStatus(region) === bulletinStatus.updated) {
                 <span class="badge bg-orange"
                   ><i class="ph-bold icon-sm ph-file-dashed"></i>
                   {{ "bulletins.table.status.updated" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.resubmitted) {
+              @if (getRegionStatus(region) === bulletinStatus.resubmitted) {
                 <span class="badge bg-primary"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.resubmitted" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.republished) {
+              @if (getRegionStatus(region) === bulletinStatus.republished) {
                 <span class="badge bg-success"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.republished" | translate }}</span
@@ -214,22 +210,22 @@
       }
       <!-- End status of all regions-->
 
-      @if (showPublicationHappensAt5PM(bulletinsService.getActiveDate())) {
+      @if (showPublicationHappensAt5PM()) {
         <span class="create-bulletin__bulletin-info"
           ><i class="ph ph-info"></i> {{ "bulletins.status.submittedInfo" | translate }}</span
         >
       }
-      @if (showPublicationHappensAt8AM(bulletinsService.getActiveDate())) {
+      @if (showPublicationHappensAt8AM()) {
         <span class="create-bulletin__bulletin-info"
           ><i class="ph ph-info"></i> {{ "bulletins.status.resubmittedInfo" | translate }}</span
         >
       }
-      @if (showPublicationHappened(bulletinsService.getActiveDate())) {
+      @if (showPublicationHappened()) {
         <span class="create-bulletin__bulletin-info"
           ><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span
         >
       }
-      @if (showNoPublicationWillHappen(bulletinsService.getActiveDate())) {
+      @if (showNoPublicationWillHappen()) {
         <span class="create-bulletin__bulletin-info"
           ><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span
         >
@@ -269,12 +265,12 @@
       }
 
       <!-- submit -->
-      @if (showSubmitButton(bulletinsService.getActiveDate())) {
+      @if (showSubmitButton()) {
         <button
           [disabled]="loading || editRegions"
           type="button"
           class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
-          (click)="submit($event, bulletinsService.getActiveDate())"
+          (click)="submit($event, getActiveDate())"
           ngxMousetrapKey="mod+enter"
         >
           <i class="ph ph-paper-plane-tilt"></i>
@@ -283,7 +279,7 @@
       }
 
       <!-- update -->
-      @if (showUpdateButton(bulletinsService.getActiveDate())) {
+      @if (showUpdateButton()) {
         <button
           [disabled]="loading || editRegions"
           type="button"
@@ -297,12 +293,12 @@
       }
 
       <!-- publish update (not 5PM nor 8AM) -->
-      @if (showPublishButton(bulletinsService.getActiveDate())) {
+      @if (showPublishButton()) {
         <button
           [disabled]="loading || editRegions"
           type="button"
           class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
-          (click)="publish($event, bulletinsService.getActiveDate())"
+          (click)="publish($event, getActiveDate())"
           ngxMousetrapKey="mod+enter"
         >
           <i class="ph ph-paper-plane-tilt"></i>
@@ -311,12 +307,12 @@
       }
 
       <!-- publish change (not 5PM nor 8AM, no messages) -->
-      @if (showPublishButton(bulletinsService.getActiveDate())) {
+      @if (showPublishButton()) {
         <button
           [disabled]="loading || editRegions"
           type="button"
           class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
-          (click)="publish($event, bulletinsService.getActiveDate(), true)"
+          (click)="publish($event, getActiveDate(), true)"
           ngxMousetrapKey="mod+shift+enter"
         >
           <i class="ph ph-paper-plane-tilt"></i>
@@ -325,12 +321,12 @@
       }
 
       <!-- check -->
-      @if (showCheckButton(bulletinsService.getActiveDate())) {
+      @if (showCheckButton()) {
         <button
           [disabled]="loading || editRegions"
           type="button"
           class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
-          (click)="check($event, bulletinsService.getActiveDate())"
+          (click)="check($event, getActiveDate())"
         >
           <i class="ph ph-check"></i>
           <span>{{ "bulletins.tooltip.check" | translate }}</span>

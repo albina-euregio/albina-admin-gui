@@ -69,13 +69,13 @@ export class SourceDates {
     this.activeDate = date;
   }
 
-  hasBeenPublished5PM(date: [Date, Date]): boolean {
+  hasBeenPublished5PM(date: [Date, Date] = this.activeDate): boolean {
     // date[0] = validFrom = 17:00 = published at
     const published = date[0];
     return Date.now() >= published.getTime();
   }
 
-  hasBeenPublished8AM(date: [Date, Date]): boolean {
+  hasBeenPublished8AM(date: [Date, Date] = this.activeDate): boolean {
     // date[1] = validUntil = 17:00
     // date[1] at 08:00 = updated at
     const updated = new Date(date[1]);
