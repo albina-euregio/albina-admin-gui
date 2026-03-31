@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "path";
 
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 
 import { changeRegion, loginForecaster, setFixedTime } from "./utils";
 
@@ -22,7 +22,7 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-const waitForGetEdit = (page) =>
+const waitForGetEdit = (page: Page) =>
   page.waitForResponse(
     (response) =>
       response.url().match(/\/api\/bulletins\/edit/) &&
@@ -385,9 +385,8 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   const testDate = new Date("2024-12-21");
   await setFixedTime(page, testDate);
   await page.reload();
-  const getBulletinsPromise = waitForGetEdit(page);
   await page.getByRole("row", { name: "Friday, December 20, 2024" }).getByTitle("edit bulletin").click();
-  await getBulletinsPromise;
+  await waitForGetEdit(page);
   const statusBadge = await page.locator(".badge").first();
   if (!(await statusBadge.textContent()).match(/draft|updated/)) {
     await page.getByRole("button", { name: "Edit" }).click();
@@ -433,4 +432,66 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
       response.request().postDataJSON().length === 4, // 4 bulletin regions are posted
   );
   await expect(statusBadge).toContainText("updated");
+});
+
+test("Post bulletin ahead of DST change", async ({ page }) => {
+  const testDate = new Date("2025-03-29");
+  await setFixedTime(page, testDate);
+  page.reload();
+  await changeRegion(page, "Tyrol");
+  await page.getByRole("row", { name: "Sunday, March 30, 2025" }).getByTitle("edit bulletin").click();
+
+  await test.step("Verify validity date of bulletin Sa->So", async () => {
+    await test.step("Delete all warning regions", async () => {
+      await page.getByTitle("[b]").click();
+      await page.getByRole("button", { name: "Delete all warning regions" }).click();
+      await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
+    });
+    await waitForGetEdit(page);
+    const putResponse = page.waitForResponse(
+      (response) =>
+        response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
+    );
+    await test.step("Create new region", async () => {
+      await page.getByRole("button", { name: "" }).click();
+      const region = page.locator("path.leaflet-interactive").nth(100);
+      await region.click({ force: true });
+      await page.getByRole("button", { name: "Create region" }).click();
+    });
+    // Wait for POST and verify validity in request body
+    const response = await putResponse;
+    const putBulletins = response.request().postDataJSON();
+    expect(putBulletins.validity).toEqual({ from: "2025-03-29T16:00:00.000Z", until: "2025-03-30T15:00:00.000Z" });
+    const receivedBulletin = await response.json();
+    expect(receivedBulletin).toHaveLength(1);
+    expect(receivedBulletin[0].validity).toEqual({ from: "2025-03-29T16:00:00Z", until: "2025-03-30T15:00:00Z" });
+  });
+
+  // Go one day forward and repeat
+  await test.step("Verify validity date of bulletin So->SMo", async () => {
+    await page.getByTitle("[ctrl+right]").click();
+    await test.step("Delete all warning regions", async () => {
+      await page.getByTitle("[b]").click();
+      await page.getByRole("button", { name: "Delete all warning regions" }).click();
+      await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
+    });
+    await waitForGetEdit(page);
+    const putResponse = page.waitForResponse(
+      (response) =>
+        response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
+    );
+    await test.step("Create new region", async () => {
+      await page.getByRole("button", { name: "" }).click();
+      const region = page.locator("path.leaflet-interactive").nth(100);
+      await region.click({ force: true });
+      await page.getByRole("button", { name: "Create region" }).click();
+    });
+    // Wait for POST and verify validity in request body
+    const response = await putResponse;
+    const putBulletins = response.request().postDataJSON();
+    expect(putBulletins.validity).toEqual({ from: "2025-03-30T15:00:00.000Z", until: "2025-03-31T15:00:00.000Z" });
+    const receivedBulletin = await response.json();
+    expect(receivedBulletin).toHaveLength(1);
+    expect(receivedBulletin[0].validity).toEqual({ from: "2025-03-30T15:00:00Z", until: "2025-03-31T15:00:00Z" });
+  });
 });
