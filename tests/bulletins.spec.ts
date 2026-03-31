@@ -380,3 +380,57 @@ test("Load bulletin from the day before", async ({ page }) => {
     await expect(page.locator(".region-thumb")).not.toBeVisible();
   });
 });
+
+test("Update -> Resubmit -> Republish", async ({ page }) => {
+  const testDate = new Date("2024-12-21");
+  await setFixedTime(page, testDate);
+  await page.reload();
+  const getBulletinsPromise = waitForGetEdit(page);
+  await page.getByRole("row", { name: "Friday, December 20, 2024" }).getByTitle("edit bulletin").click();
+  await getBulletinsPromise;
+  const statusBadge = await page.locator(".badge").first();
+  if (!(await statusBadge.textContent()).match(/draft|updated/)) {
+    await page.getByRole("button", { name: "Edit" }).click();
+  }
+  await page.getByRole("button", { name: "Submit" }).click();
+  await expect(page.getByRole("dialog")).toMatchAriaSnapshot(`
+    - dialog:
+      - document:
+        - paragraph: Do you want to submit the bulletin?
+        - button "Yes"
+        - button "No"
+  `);
+  await page.getByRole("button", { name: "Yes" }).click();
+  await page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/bulletins\/submit/) &&
+      response.status() === 200 &&
+      response.request().method() === "POST",
+  );
+  await expect(statusBadge).toContainText("resubmitted");
+  await page.getByRole("button", { name: "Publish now (no messages)" }).click();
+  await expect(page.getByRole("dialog")).toMatchAriaSnapshot(`
+    - dialog:
+      - document:
+        - paragraph: Do you want to publish the bulletin?
+        - button "Yes"
+        - button "No"
+  `);
+  await page.getByRole("button", { name: "Yes" }).click();
+  await page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/bulletins\/change/) &&
+      response.status() === 200 &&
+      response.request().method() === "POST",
+  );
+  await expect(statusBadge).toContainText("republished");
+  await page.getByRole("button", { name: "Edit" }).click();
+  await page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/bulletins/) &&
+      response.status() === 200 &&
+      response.request().method() === "POST" &&
+      response.request().postDataJSON().length === 4, // 4 bulletin regions are posted
+  );
+  await expect(statusBadge).toContainText("updated");
+});
