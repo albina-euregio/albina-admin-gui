@@ -1,7 +1,6 @@
 import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { Injectable } from "@angular/core";
-import { config } from "zod/v4/core";
 
 import awsstatsconfig from "../../assets/config/awsstats.json";
 import sources from "../../assets/config/stations.json";
@@ -23,19 +22,20 @@ export interface LineaStationFeature {
   hasPsum: boolean;
 }
 
-export type BulletinUrlConfig = {
-  regionCode: string;
-  url: string;
-};
-
 type BlogUrlConfig = {
   regionCode: string;
   label: string;
   url: string;
 };
 
+type BulletinApiResponse = {
+  bulletins?: unknown[];
+};
+
 @Injectable({ providedIn: "root" })
 export class GraphicsService {
+  private readonly bulletinApiUrl = "https://api.avalanche.report/albina/api/bulletins/caaml/json";
+
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
 
@@ -74,14 +74,6 @@ export class GraphicsService {
     return [...stationById.values()];
   }
 
-  bulletinUrls: BulletinUrlConfig[] = Array.isArray(awsstatsconfig.bulletinUrls)
-    ? awsstatsconfig.bulletinUrls.filter((item): item is BulletinUrlConfig => {
-        if (typeof item !== "object" || !item) return false;
-        const entry = item as Partial<BulletinUrlConfig>;
-        return typeof entry.regionCode === "string" && typeof entry.url === "string";
-      })
-    : [];
-
   blogUrls: BlogUrlConfig[] = Array.isArray(awsstatsconfig.blogUrls)
     ? awsstatsconfig.blogUrls.filter((item): item is BlogUrlConfig => {
         if (typeof item !== "object" || !item) return false;
@@ -89,6 +81,55 @@ export class GraphicsService {
         return typeof entry.regionCode === "string" && typeof entry.label === "string" && typeof entry.url === "string";
       })
     : [];
+
+  getBulletinLanguage(): string {
+    const htmlLang = document.documentElement.lang?.trim().toLowerCase();
+    if (htmlLang) {
+      return htmlLang.split("-")[0] || "de";
+    }
+
+    const browserLang = navigator.language?.trim().toLowerCase();
+    return browserLang ? browserLang.split("-")[0] || "de" : "de";
+  }
+
+  getBulletinRegionCodes(): string[] {
+    return ["AT-07", "IT-32-BZ", "IT-32-TN"];
+  }
+
+  async loadBulletins(
+    startDate: string,
+    endDate: string,
+    regionCodes: string[],
+    lang: string = "de",
+  ): Promise<unknown[]> {
+    if (!startDate || !endDate) {
+      return [];
+    }
+
+    const regions = [...new Set(regionCodes.filter(Boolean))];
+    if (!regions.length) {
+      return [];
+    }
+
+    const dates = this.getDateRange(startDate, endDate);
+    const requests = dates.map((date) => this.loadBulletinsForDate(date, regions, lang));
+    const results = await Promise.all(requests);
+    const merged = results.flat();
+
+    // API data can overlap on adjacent days, so keep only one copy per bulletin id + timestamp.
+    const seen = new Set<string>();
+    const deduped: unknown[] = [];
+    for (const bulletin of merged) {
+      const key = this.getBulletinDedupeKey(bulletin);
+      if (seen.has(key)) {
+        continue;
+      }
+      seen.add(key);
+      deduped.push(bulletin);
+    }
+
+    return deduped;
+  }
 
   getSmetUrl(station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined, index: number): string | undefined {
     const template = station?.smet?.[index];
@@ -117,5 +158,56 @@ export class GraphicsService {
       }
     }
     return fallback;
+  }
+
+  private getDateRange(startDate: string, endDate: string): string[] {
+    const start = new Date(`${startDate}T00:00:00Z`);
+    const end = new Date(`${endDate}T00:00:00Z`);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || start > end) {
+      return [];
+    }
+
+    const dates: string[] = [];
+    const current = new Date(start);
+    while (current <= end) {
+      dates.push(current.toISOString().slice(0, 10));
+      current.setUTCDate(current.getUTCDate() + 1);
+    }
+
+    return dates;
+  }
+
+  private async loadBulletinsForDate(date: string, regionCodes: string[], lang: string): Promise<unknown[]> {
+    const params = new URLSearchParams({
+      date: `${date}T16:00:00Z`,
+      regions: regionCodes.join(","),
+      lang,
+      version: "V6_JSON",
+    });
+    const response = await fetch(`${this.bulletinApiUrl}?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error(`Failed to load bulletins for ${date}: ${response.status} ${response.statusText}`);
+    }
+
+    const data = (await response.json()) as BulletinApiResponse;
+    return Array.isArray(data?.bulletins) ? data.bulletins : [];
+  }
+
+  private getBulletinDedupeKey(bulletin: unknown): string {
+    if (typeof bulletin !== "object" || bulletin === null) {
+      return JSON.stringify(bulletin);
+    }
+
+    const maybe = bulletin as Record<string, unknown>;
+    const bulletinId = typeof maybe.bulletinID === "string" ? maybe.bulletinID : "";
+    const publicationTime = typeof maybe.publicationTime === "string" ? maybe.publicationTime : "";
+    const regionIds = Array.isArray(maybe.regions)
+      ? (maybe.regions as Record<string, unknown>[])
+          .map((region) => (typeof region.regionID === "string" ? region.regionID : ""))
+          .filter(Boolean)
+          .sort()
+      : [];
+
+    return `${bulletinId}|${publicationTime}|${regionIds.join(",")}`;
   }
 }

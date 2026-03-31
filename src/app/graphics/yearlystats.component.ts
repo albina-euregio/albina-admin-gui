@@ -23,12 +23,13 @@ export class YearlystatsComponent implements AfterViewInit {
   protected endDate = this.toDateInputValue(new Date());
   protected errorMessage = "";
   protected showWrapper = false;
+  protected bulletins = "[]";
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
   protected selectedRegionCodes: string[] = [];
 
-  protected readonly regionCodes = [...new Set(this.graphicsService.bulletinUrls.map((entry) => entry.regionCode))];
+  protected readonly regionCodes = this.graphicsService.getBulletinRegionCodes();
 
   protected chartTypeSelection: Record<YearlyChartType, boolean> = {
     "aws-danger-rating-micro-regions-bars": true,
@@ -51,11 +52,6 @@ export class YearlystatsComponent implements AfterViewInit {
     }
     const filtered = this.graphicsService.blogUrls.filter((entry) => this.isRegionSelected(entry.regionCode));
     return JSON.stringify(filtered);
-  }
-
-  private getBulletinUrlsValue(): string {
-    const filtered = this.graphicsService.bulletinUrls.filter((entry) => this.isRegionSelected(entry.regionCode));
-    return JSON.stringify(filtered.map((entry) => entry.url));
   }
 
   protected setLastDays(days: number) {
@@ -134,7 +130,7 @@ export class YearlystatsComponent implements AfterViewInit {
     return this.selectedRegionCodes.length === 1 ? this.selectedRegionCodes[0] : "all";
   }
 
-  protected updateCharts() {
+  protected async updateCharts() {
     if (!this.startDate || !this.endDate) {
       this.errorMessage = "Start date and end date are required.";
       return;
@@ -146,6 +142,21 @@ export class YearlystatsComponent implements AfterViewInit {
     }
 
     this.errorMessage = "";
+    try {
+      const regionCodes = this.graphicsService.getBulletinRegionCodes();
+      const bulletins = await this.graphicsService.loadBulletins(
+        this.startDate,
+        this.endDate,
+        regionCodes,
+        this.graphicsService.getBulletinLanguage(),
+      );
+      this.bulletins = JSON.stringify(bulletins);
+    } catch (error) {
+      this.errorMessage = "Failed to load bulletins for selected date range.";
+      console.error(error);
+      return;
+    }
+
     this.showWrapper = true;
     this.mountWrapper();
   }
@@ -171,7 +182,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("region-code", this.getRegionCodeValue());
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
     wrapper.setAttribute("blog-urls", this.getBlogUrlsValue());
-    wrapper.setAttribute("bulletin-urls", this.getBulletinUrlsValue());
+    wrapper.setAttribute("bulletins", this.bulletins);
 
     if (this.showProductsTrainingInputs) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
