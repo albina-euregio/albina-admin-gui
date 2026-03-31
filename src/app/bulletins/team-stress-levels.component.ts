@@ -22,8 +22,9 @@ export class TeamStressLevelsComponent implements OnInit {
   dataset: EChartsOption;
 
   ngOnInit(): void {
-    const inputDates = this.bulletinsService.dates;
-    this.userService.getTeamStressLevels([inputDates.at(-1)[0], inputDates.at(0)[1]]).subscribe((stressLevels) => {
+    const inputDates = this.bulletinsService.sourceDates.dates;
+    const loadDates = this.bulletinsService.sourceDates.getLoadDateArray();
+    this.userService.getTeamStressLevels(loadDates).subscribe((stressLevels) => {
       const dates = inputDates
         .flat()
         .map((d) => this.constantsService.getISODateString(d))

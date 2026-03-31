@@ -98,7 +98,7 @@ export class BulletinsComponent implements OnDestroy {
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.resubmitted &&
       this.copying &&
       this.bulletinsService.getCopyDate() !== date &&
-      !this.bulletinsService.hasBeenPublished5PM(date)
+      !this.bulletinsService.sourceDates.hasBeenPublished5PM(date)
     );
   }
 
