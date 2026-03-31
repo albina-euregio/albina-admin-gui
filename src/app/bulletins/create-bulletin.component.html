@@ -33,21 +33,21 @@
           >
             <i class="ph-bold ph-caret-up"></i>
           </button>
-          @if (bulletinsService.getPreviousDate()) {
+          @if (bulletinsService.sourceDates.getPreviousDate()) {
             <button
               type="button"
               class="btn btn-icon btn-sm btn-bare--grey"
-              (click)="changeDate(bulletinsService.getPreviousDate())"
+              (click)="changeDate(bulletinsService.sourceDates.getPreviousDate())"
               ngxMousetrapKey="mod+left"
             >
               <i class="ph-bold ph-caret-left"></i>
             </button>
           }
-          @if (bulletinsService.getNextDate()) {
+          @if (bulletinsService.sourceDates.getNextDate()) {
             <button
               type="button"
               class="btn btn-icon btn-sm btn-bare--grey"
-              (click)="changeDate(bulletinsService.getNextDate())"
+              (click)="changeDate(bulletinsService.sourceDates.getNextDate())"
               ngxMousetrapKey="mod+right"
             >
               <i class="ph-bold ph-caret-right"></i>
@@ -1208,7 +1208,7 @@
   <div class="modal-body">
     <table class="table table-bordered responsive-table">
       <tbody class="bulletins-table__body">
-        @for (date of bulletinsService.dates; track date) {
+        @for (date of bulletinsService.sourceDates.dates; track date) {
           <tr [class.bulletins-table__active--day]="isActiveDate(date)">
             <td [attr.data-label]="'bulletins.table.title.date' | translate">
               <div class="bulletins-table__day--small">

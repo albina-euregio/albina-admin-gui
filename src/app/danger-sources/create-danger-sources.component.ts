@@ -154,9 +154,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.activeRoute.params.subscribe((routeParams) => {
       this.dangerSourceVariantType = routeParams.dangerSourceVariantType as DangerSourceVariantType;
-      const date = new Date(routeParams.date);
-      date.setHours(0, 0, 0, 0);
-      this.dangerSourcesService.sourceDates.activeDate = this.dangerSourcesService.sourceDates.getValidFromUntil(date);
+      this.dangerSourcesService.sourceDates.setActiveDate(routeParams.date);
 
       if (this.authenticationService.isCurrentUserInRole("OBSERVER")) {
         this.dangerSourcesService.setIsReadOnly(true);

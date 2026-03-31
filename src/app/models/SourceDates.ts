@@ -10,20 +10,10 @@ export class SourceDates {
     return this.activeDate[1];
   }
 
-  init(days = 10) {
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
-    startDate.setHours(0, 0, 0, 0);
-
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 3);
-    endDate.setHours(0, 0, 0, 0);
-
+  init(days = 10, endDate = Temporal.Now.plainDateISO().add({ days: 3 })) {
     this.dates = [];
     for (let i = 0; i <= days; i++) {
-      const date = new Date(endDate.valueOf());
-      date.setDate(endDate.getDate() - i);
-      this.dates.push(this.getValidFromUntil(date));
+      this.dates.push(this.getValidFromUntil(endDate.subtract({ days: i })));
     }
   }
 
@@ -61,17 +51,35 @@ export class SourceDates {
     return { startDate, endDate };
   }
 
-  getValidFromUntil(date: Date): [Date, Date] {
-    const validFrom = new Date(date);
-    validFrom.setTime(validFrom.getTime() - 7 * 60 * 60 * 1000);
-    const validUntil = new Date(date);
-    validUntil.setTime(validUntil.getTime() + 17 * 60 * 60 * 1000);
-    return [validFrom, validUntil];
+  getLoadDateArray(): [Date, Date] {
+    const startDate = this.dates.at(-1)[0];
+    const endDate = this.dates.at(0)[1];
+    return [startDate, endDate];
+  }
+
+  private getValidFromUntil(date: Temporal.PlainDate): [Date, Date] {
+    const zdt = date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" });
+    return [new Date(zdt.subtract({ days: 1 }).epochMilliseconds), new Date(zdt.epochMilliseconds)];
+  }
+
+  setActiveDate(date: [Date, Date] | string) {
+    if (typeof date === "string") {
+      date = this.getValidFromUntil(Temporal.PlainDate.from(date));
+    }
+    this.activeDate = date;
   }
 
   hasBeenPublished5PM(date: [Date, Date]): boolean {
     // date[0] = validFrom = 17:00 = published at
     const published = date[0];
     return Date.now() >= published.getTime();
+  }
+
+  hasBeenPublished8AM(date: [Date, Date]): boolean {
+    // date[1] = validUntil = 17:00
+    // date[1] at 08:00 = updated at
+    const updated = new Date(date[1]);
+    updated.setHours(8, 0, 0, 0);
+    return new Date().getTime() >= updated.getTime();
   }
 }

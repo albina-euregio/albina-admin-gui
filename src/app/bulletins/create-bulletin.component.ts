@@ -220,7 +220,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   TextcatTextfield = Enums.TextcatTextfield;
 
   constructor() {
-    if (!this.bulletinsService.dates?.length) {
+    if (!this.bulletinsService.sourceDates.dates?.length) {
       this.bulletinsService.init();
     }
     this.loading = false;
@@ -307,7 +307,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((routeParams) => {
-      this.bulletinsService.setActiveDate(routeParams.date);
+      this.bulletinsService.sourceDates.setActiveDate(routeParams.date);
 
       if (this.authenticationService.isCurrentUserInRole("OBSERVER")) {
         this.bulletinsService.setIsReadOnly(true);
@@ -469,7 +469,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.resetAll();
     this.mapService.removeMaps();
 
-    this.bulletinsService.setActiveDate(undefined);
+    this.bulletinsService.sourceDates.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
 
     this.loading = false;
@@ -491,7 +491,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return (
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
         this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
-      !this.bulletinsService.hasBeenPublished5PM(date)
+      !this.bulletinsService.sourceDates.hasBeenPublished5PM(date)
     );
   }
 
@@ -499,8 +499,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return (
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
         this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
-      this.bulletinsService.hasBeenPublished5PM(date) &&
-      !this.bulletinsService.hasBeenPublished8AM(date)
+      this.bulletinsService.sourceDates.hasBeenPublished5PM(date) &&
+      !this.bulletinsService.sourceDates.hasBeenPublished8AM(date)
     );
   }
 
@@ -515,7 +515,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return (
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
         this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
-      this.bulletinsService.hasBeenPublished8AM(date)
+      this.bulletinsService.sourceDates.hasBeenPublished8AM(date)
     );
   }
 
@@ -1945,7 +1945,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
     this.loadModalRef.hide();
     this.loading = true;
-    const date = this.bulletinsService.getPreviousDate();
+    const date = this.bulletinsService.sourceDates.getPreviousDate();
 
     const regions = [this.authenticationService.getActiveRegionId()];
     this.bulletinsService.loadBulletinsFromServer(date, regions).subscribe(
@@ -2296,7 +2296,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.republished ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
         (this.bulletinsService.getUserRegionStatus(date) === undefined &&
-          this.bulletinsService.hasBeenPublished5PM(date))) &&
+          this.bulletinsService.sourceDates.hasBeenPublished5PM(date))) &&
       this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN")
     );
   }
@@ -2315,7 +2315,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.submitting &&
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
-      this.bulletinsService.hasBeenPublished5PM(date) &&
+      this.bulletinsService.sourceDates.hasBeenPublished5PM(date) &&
       (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted) &&
       this.authenticationService.isCurrentUserInRole("FORECASTER")

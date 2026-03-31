@@ -9,6 +9,7 @@ import { map, switchMap } from "rxjs/operators";
 import * as Enums from "../../enums/enums";
 import { Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
+import { SourceDates } from "../../models/SourceDates";
 import { AlbinaLanguage } from "../../models/text.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -39,7 +40,7 @@ export class BulletinsService {
   private localStorageService = inject(LocalStorageService);
   private userService = inject(UserService);
 
-  private activeDate: [Date, Date];
+  public readonly sourceDates = new SourceDates();
   private copyDate: [Date, Date];
   private isEditable: boolean;
   private isReadOnly: boolean;
@@ -47,8 +48,6 @@ export class BulletinsService {
   public stress: Record<StressLevel["date"], StressLevel["stressLevel"]> = {};
 
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
-
-  public dates: [Date, Date][];
 
   private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
@@ -59,19 +58,16 @@ export class BulletinsService {
   );
 
   init({ days } = { days: 10 }) {
-    this.dates = [];
-    this.activeDate = undefined;
     this.copyDate = undefined;
     this.isEditable = false;
     this.isReadOnly = false;
 
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
-    const endDate = isTrainingEnabled
-      ? Temporal.PlainDateTime.from(trainingTimestamp).toPlainDate().add({ days: 3 })
-      : Temporal.Now.plainDateISO().add({ days: 3 });
-
-    for (let i = 0; i <= days; i++) {
-      this.dates.push(this.getValidFromUntil(endDate.subtract({ days: i })));
+    if (isTrainingEnabled) {
+      const endDate = Temporal.PlainDateTime.from(trainingTimestamp).toPlainDate().add({ days: 3 });
+      this.sourceDates.init(days, endDate);
+    } else {
+      this.sourceDates.init(days);
     }
 
     this.loadStressLevels();
@@ -82,14 +78,13 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       return;
     }
-    this.userService.getStressLevels([this.dates.at(-1)[0], this.dates.at(0)[1]]).subscribe((stressLevels) => {
+    this.userService.getStressLevels(this.sourceDates.getLoadDateArray()).subscribe((stressLevels) => {
       this.stress = Object.fromEntries(stressLevels.map((s) => [s.date, s.stressLevel]));
     });
   }
 
   public loadStatus() {
-    const startDate = this.dates[this.dates.length - 1];
-    const endDate = this.dates[0];
+    const { startDate, endDate } = this.sourceDates.getLoadDate();
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
@@ -122,62 +117,12 @@ export class BulletinsService {
     });
   }
 
+  get dates() {
+    return this.sourceDates.dates;
+  }
+
   getActiveDate(): [Date, Date] {
-    return this.activeDate;
-  }
-
-  setActiveDate(date: [Date, Date] | string) {
-    if (typeof date === "string") {
-      date = this.getValidFromUntil(Temporal.PlainDate.from(date));
-    }
-    this.activeDate = date;
-  }
-
-  hasBeenPublished5PM(date: [Date, Date]): boolean {
-    // date[0] = validFrom = 17:00 = published at
-    const published = date[0];
-    return new Date().getTime() >= published.getTime();
-  }
-
-  hasBeenPublished8AM(date: [Date, Date]): boolean {
-    // date[1] = validUntil = 17:00
-    // date[1] at 08:00 = updated at
-    const updated = new Date(date[1]);
-    updated.setHours(8, 0, 0, 0);
-    return new Date().getTime() >= updated.getTime();
-  }
-
-  private getValidFromUntil(date: Temporal.PlainDate): [Date, Date] {
-    const zdt = date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" });
-    return [new Date(zdt.subtract({ days: 1 }).epochMilliseconds), new Date(zdt.epochMilliseconds)];
-  }
-
-  /**
-   * Returns a date that's offset from the activeDate by a given amount.
-   *
-   * @param offset - Number of days to offset. Can be negative (future) or positive (past).
-   * @returns Date offset from the activeDate or null if not found or out of bounds.
-   */
-  private getDateOffset(offset: number): [Date, Date] | null {
-    if (!this.activeDate) {
-      return null;
-    }
-
-    const index = this.dates.findIndex((d) => d[0].getTime() === this.activeDate[0].getTime());
-
-    if (index === -1 || index + offset < 0 || index + offset >= this.dates.length) {
-      return null;
-    }
-
-    return this.dates[index + offset];
-  }
-
-  getNextDate(): [Date, Date] | null {
-    return this.getDateOffset(-1);
-  }
-
-  getPreviousDate(): [Date, Date] | null {
-    return this.getDateOffset(1);
+    return this.sourceDates.activeDate;
   }
 
   getCopyDate(): [Date, Date] {
@@ -233,7 +178,7 @@ export class BulletinsService {
   ): Observable<{ date: string; status: keyof typeof Enums.BulletinStatus }[]> {
     if (this.localStorageService.isTrainingEnabled) {
       return of(
-        this.dates.map((date) => {
+        this.sourceDates.dates.map((date) => {
           return {
             date: date[0].toISOString(),
             status: this.localStorageService.getTrainingBulletins(date)?.length ? "draft" : undefined,
@@ -506,7 +451,7 @@ export class BulletinsService {
     this.setIsEditable(
       ((this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.missing ||
         this.getUserRegionStatus(activeDate) === undefined) &&
-        !this.hasBeenPublished5PM(activeDate)) ||
+        !this.sourceDates.hasBeenPublished5PM(activeDate)) ||
         this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.updated ||
         this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.draft,
     );
