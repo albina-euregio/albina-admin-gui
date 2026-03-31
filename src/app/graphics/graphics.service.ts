@@ -2,7 +2,6 @@ import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { Injectable } from "@angular/core";
 
-import awsstatsconfig from "../../assets/config/awsstats.json";
 import sources from "../../assets/config/stations.json";
 
 interface LineaStationSource {
@@ -28,13 +27,29 @@ type BlogUrlConfig = {
   url: string;
 };
 
+export interface BlogData {
+  regionCode: string;
+  lang: string;
+  blogItems: BlogItem[];
+}
+
+export interface BlogItem {
+  id: number;
+  title: string;
+  published: string;
+  categories: string[];
+}
+
 type BulletinApiResponse = {
   bulletins?: unknown[];
 };
 
+type BlogApiResponse = BlogItem[];
+
 @Injectable({ providedIn: "root" })
 export class GraphicsService {
   private readonly bulletinApiUrl = "https://api.avalanche.report/albina/api/bulletins/caaml/json";
+  private readonly blogApiUrl = "https://api.avalanche.report/albina_dev/api/blogs/posts";
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -74,14 +89,6 @@ export class GraphicsService {
     return [...stationById.values()];
   }
 
-  blogUrls: BlogUrlConfig[] = Array.isArray(awsstatsconfig.blogUrls)
-    ? awsstatsconfig.blogUrls.filter((item): item is BlogUrlConfig => {
-        if (typeof item !== "object" || !item) return false;
-        const entry = item as Partial<BlogUrlConfig>;
-        return typeof entry.regionCode === "string" && typeof entry.label === "string" && typeof entry.url === "string";
-      })
-    : [];
-
   getBulletinLanguage(): string {
     const htmlLang = document.documentElement.lang?.trim().toLowerCase();
     if (htmlLang) {
@@ -93,6 +100,10 @@ export class GraphicsService {
   }
 
   getBulletinRegionCodes(): string[] {
+    return ["AT-07", "IT-32-BZ", "IT-32-TN"];
+  }
+
+  getBlogRegionCodes(): string[] {
     return ["AT-07", "IT-32-BZ", "IT-32-TN"];
   }
 
@@ -129,6 +140,29 @@ export class GraphicsService {
     }
 
     return deduped;
+  }
+
+  async loadBlogs(startDate: string, endDate: string, regionCodes: string[]): Promise<BlogData[]> {
+    const start = Date.parse(`${startDate}T00:00:00.000Z`);
+    const end = Date.parse(`${endDate}T23:59:59.999Z`);
+    if (Number.isNaN(start) || Number.isNaN(end) || start > end) {
+      return [];
+    }
+
+    const regions = [...new Set(regionCodes.filter(Boolean))];
+    if (!regions.length) {
+      return [];
+    }
+
+    const blogsByRegion = await Promise.all(regions.map((regionCode) => this.loadBlogsForRegion(regionCode)));
+
+    return blogsByRegion.map((regionBlogs) => ({
+      ...regionBlogs,
+      blogItems: regionBlogs.blogItems.filter((item) => {
+        const published = Date.parse(item.published);
+        return !Number.isNaN(published) && published >= start && published <= end;
+      }),
+    }));
   }
 
   getSmetUrl(station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined, index: number): string | undefined {
@@ -175,6 +209,23 @@ export class GraphicsService {
     }
 
     return dates;
+  }
+
+  private async loadBlogsForRegion(regionCode: string): Promise<BlogData> {
+    const lang: string = regionCode.slice(0, 2).toLowerCase().replace("at", "de");
+    const params = new URLSearchParams({ region: regionCode, lang });
+    const response = await fetch(`${this.blogApiUrl}?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error(`Failed to load blogs for ${regionCode}: ${response.status} ${response.statusText}`);
+    }
+
+    const blogItems = (await response.json()) as BlogApiResponse;
+
+    return {
+      regionCode,
+      lang,
+      blogItems,
+    };
   }
 
   private async loadBulletinsForDate(date: string, regionCodes: string[], lang: string): Promise<unknown[]> {

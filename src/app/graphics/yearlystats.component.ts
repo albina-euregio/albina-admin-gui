@@ -24,6 +24,7 @@ export class YearlystatsComponent implements AfterViewInit {
   protected errorMessage = "";
   protected showWrapper = false;
   protected bulletins = "[]";
+  protected blogs = "[]";
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
@@ -44,14 +45,6 @@ export class YearlystatsComponent implements AfterViewInit {
     if (this.showWrapper) {
       this.mountWrapper();
     }
-  }
-
-  private getBlogUrlsValue(): string {
-    if (!this.graphicsService.blogUrls.length) {
-      return "[]";
-    }
-    const filtered = this.graphicsService.blogUrls.filter((entry) => this.isRegionSelected(entry.regionCode));
-    return JSON.stringify(filtered);
   }
 
   protected setLastDays(days: number) {
@@ -143,16 +136,20 @@ export class YearlystatsComponent implements AfterViewInit {
 
     this.errorMessage = "";
     try {
-      const regionCodes = this.graphicsService.getBulletinRegionCodes();
+      const bulletinRegionCodes = this.graphicsService.getBulletinRegionCodes();
       const bulletins = await this.graphicsService.loadBulletins(
         this.startDate,
         this.endDate,
-        regionCodes,
+        bulletinRegionCodes,
         this.graphicsService.getBulletinLanguage(),
       );
       this.bulletins = JSON.stringify(bulletins);
+
+      const blogRegionCodes = this.getSelectedBlogRegionCodes();
+      const blogs = await this.graphicsService.loadBlogs(this.startDate, this.endDate, blogRegionCodes);
+      this.blogs = JSON.stringify(blogs);
     } catch (error) {
-      this.errorMessage = "Failed to load bulletins for selected date range.";
+      this.errorMessage = "Failed to load chart data for selected date range.";
       console.error(error);
       return;
     }
@@ -181,7 +178,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("end-date", this.endDate);
     wrapper.setAttribute("region-code", this.getRegionCodeValue());
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
-    wrapper.setAttribute("blog-urls", this.getBlogUrlsValue());
+    wrapper.setAttribute("blogs", this.blogs);
     wrapper.setAttribute("bulletins", this.bulletins);
 
     if (this.showProductsTrainingInputs) {
@@ -204,6 +201,15 @@ export class YearlystatsComponent implements AfterViewInit {
       (key) => this.chartTypeSelection[key],
     );
     return selected.length ? selected.join(",") : "aws-danger-rating-micro-regions-bars";
+  }
+
+  private getSelectedBlogRegionCodes(): string[] {
+    const available = this.graphicsService.getBlogRegionCodes();
+    if (this.selectedRegionCodes.length === 0) {
+      return available;
+    }
+
+    return this.selectedRegionCodes.filter((regionCode) => available.includes(regionCode));
   }
 
   private parseTrainingDates(value: string): string[] {
