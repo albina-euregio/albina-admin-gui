@@ -22,12 +22,6 @@ export interface LineaStationFeature {
   hasPsum: boolean;
 }
 
-type BlogUrlConfig = {
-  regionCode: string;
-  label: string;
-  url: string;
-};
-
 export interface BlogData {
   regionCode: string;
   lang: string;
