@@ -136,7 +136,7 @@ export class YearlystatsComponent implements AfterViewInit {
 
     this.errorMessage = "";
     try {
-      const bulletinRegionCodes = this.graphicsService.getBulletinRegionCodes();
+      const bulletinRegionCodes = this.getSelectedBulletinRegionCodes();
       const bulletins = await this.graphicsService.loadBulletins(
         this.startDate,
         this.endDate,
@@ -201,6 +201,15 @@ export class YearlystatsComponent implements AfterViewInit {
       (key) => this.chartTypeSelection[key],
     );
     return selected.length ? selected.join(",") : "aws-danger-rating-micro-regions-bars";
+  }
+
+  private getSelectedBulletinRegionCodes(): string[] {
+    const available = this.graphicsService.getBulletinRegionCodes();
+    if (this.selectedRegionCodes.length === 0) {
+      return available;
+    }
+
+    return this.selectedRegionCodes.filter((regionCode) => available.includes(regionCode));
   }
 
   private getSelectedBlogRegionCodes(): string[] {
