@@ -53,6 +53,7 @@ export class GraphicsService {
   private readonly blogApiUrl = "https://api.avalanche.report/albina_dev/api/blogs/posts";
 
   private authentificationService = inject(AuthenticationService);
+  private constantsService = inject(ConstantsService);
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -126,21 +127,7 @@ export class GraphicsService {
     const dates = this.getDateRange(startDate, endDate);
     const requests = dates.map((date) => this.loadBulletinsForDate(date, regions, lang));
     const results = await Promise.all(requests);
-    const merged = results.flat();
-
-    // API data can overlap on adjacent days, so keep only one copy per bulletin id + timestamp.
-    const seen = new Set<string>();
-    const deduped: unknown[] = [];
-    for (const bulletin of merged) {
-      const key = this.getBulletinDedupeKey(bulletin);
-      if (seen.has(key)) {
-        continue;
-      }
-      seen.add(key);
-      deduped.push(bulletin);
-    }
-
-    return deduped;
+    return results.flat();
   }
 
   async loadBlogs(startDate: string, endDate: string, regionCodes: string[]): Promise<BlogData[]> {
@@ -243,23 +230,5 @@ export class GraphicsService {
 
     const data = (await response.json()) as BulletinApiResponse;
     return Array.isArray(data?.bulletins) ? data.bulletins : [];
-  }
-
-  private getBulletinDedupeKey(bulletin: unknown): string {
-    if (typeof bulletin !== "object" || bulletin === null) {
-      return JSON.stringify(bulletin);
-    }
-
-    const maybe = bulletin as Record<string, unknown>;
-    const bulletinId = typeof maybe.bulletinID === "string" ? maybe.bulletinID : "";
-    const publicationTime = typeof maybe.publicationTime === "string" ? maybe.publicationTime : "";
-    const regionIds = Array.isArray(maybe.regions)
-      ? (maybe.regions as Record<string, unknown>[])
-          .map((region) => (typeof region.regionID === "string" ? region.regionID : ""))
-          .filter(Boolean)
-          .sort()
-      : [];
-
-    return `${bulletinId}|${publicationTime}|${regionIds.join(",")}`;
   }
 }
