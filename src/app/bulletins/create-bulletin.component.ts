@@ -991,6 +991,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishing = false;
   }
 
+  async downloadCaamlBulletin() {
+    const caaml = await this.bulletinsService.getCaamlJsonBulletins().toPromise();
+    const json = JSON.stringify(caaml, undefined, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
+    saveAs(blob, `${formattedDate}_report_CAAMLv6.json`);
+  }
+
   downloadJsonBulletin() {
     this.deselectBulletin();
 

@@ -277,6 +277,7 @@
         "discardBulletin": "Discard bulletin changes",
         "loadBulletin": "Load bulletin from the day before",
         "uploadJsonBulletin": "Upload bulletin in JSON format",
+        "downloadCaamlBulletin": "Download bulletin in CAAML format",
         "downloadJsonBulletin": "Download bulletin in JSON format",
         "daytimeDependency": "Daytime dependency",
         "treeline": "Treeline",

@@ -312,6 +312,19 @@ export class BulletinsService {
       );
   }
 
+  getCaamlJsonBulletins(
+    date: [Date, Date] = this.getActiveDate(),
+    regions: string[] = this.authenticationService.getInternalRegions(),
+  ): Observable<Bulletins> {
+    const url = this.constantsService.getServerUrlGET("/bulletins/edit/caaml/json", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      regions: regions,
+      lang: this.translateService.getCurrentLang() as AlbinaLanguage,
+      version: "V6_JSON",
+    });
+    return this.http.get<Bulletins>(url);
+  }
+
   saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
       const newBulletins = bulletins.map((b) => b);

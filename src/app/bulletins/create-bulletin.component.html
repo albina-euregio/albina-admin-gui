@@ -531,6 +531,20 @@
                   [disabled]="editRegions || loading"
                   type="button"
                   class="dropdown-item"
+                  (click)="downloadCaamlBulletin(); dropdown.hide()"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.create.tooltip.downloadCaamlBulletin' | translate }}"
+                  ngxMousetrapKey="j d"
+                >
+                  <i class="ph-bold ph-download-simple icon-md"></i>
+                  {{ "bulletins.create.tooltip.downloadCaamlBulletin" | translate }}
+                </button>
+              </li>
+              <li>
+                <button
+                  [disabled]="editRegions || loading"
+                  type="button"
+                  class="dropdown-item"
                   (click)="downloadJsonBulletin(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
