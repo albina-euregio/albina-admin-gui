@@ -2,6 +2,7 @@ import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { inject, Injectable } from "@angular/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { ConstantsService } from "app/providers/constants-service/constants.service";
 
 import sources from "../../assets/config/stations.json";
 
@@ -211,13 +212,13 @@ export class GraphicsService {
   }
 
   private async loadBulletinsForDate(date: string, regionCodes: string[], lang: string): Promise<unknown[]> {
-    const params = new URLSearchParams({
+    const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
       date: `${date}T16:00:00Z`,
-      regions: regionCodes.join(","),
-      lang,
+      regions: regionCodes,
+      lang: lang as "de" | "it" | "fr" | "en" | "es" | "oc" | "ca",
       version: "V6_JSON",
     });
-    const response = await fetch(`${this.bulletinApiUrl}?${params.toString()}`);
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to load bulletins for ${date}: ${response.status} ${response.statusText}`);
     }
