@@ -40,6 +40,7 @@ import { DangerSourcesService } from "../danger-sources/danger-sources.service";
 import * as Enums from "../enums/enums";
 // models
 import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
+import * as CAAML from "../models/CAAMLv6";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -1041,15 +1042,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     document.body.removeChild(element);
   }
 
-  uploadJsonBulletin(event: Event) {
+  uploadJsonBulletin(event: Event, format: "caaml" | "json") {
     const selectedFile = (event.target as HTMLInputElement).files[0];
     const fileReader = new FileReader();
     fileReader.readAsText(selectedFile, "UTF-8");
     fileReader.onload = () => {
       const json = JSON.parse(fileReader.result.toString());
+      const bulletins: BulletinModelAsJSON[] =
+        format === "caaml"
+          ? CAAML.toAlbinaBulletins(CAAML.BulletinsSchema.parse(json))
+          : BulletinModel.schema.array().parse(json);
 
       this.reset();
-      this.copyBulletins(json);
+      this.copyBulletins(bulletins);
       console.info("Bulletins loaded from file: " + selectedFile.name);
     };
     fileReader.onerror = (error) => {

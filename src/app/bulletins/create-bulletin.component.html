@@ -368,7 +368,20 @@
               <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
 
-            <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
+            <input
+              hidden
+              type="file"
+              accept=".json"
+              #caamlBulletinUploader
+              (change)="uploadJsonBulletin($event, 'caaml')"
+            />
+            <input
+              hidden
+              type="file"
+              accept=".json"
+              #jsonBulletinUploader
+              (change)="uploadJsonBulletin($event, 'json')"
+            />
             <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
               <!-- map above / map aside -->
               <li>
@@ -508,8 +521,28 @@
               </li>
 
               <!-- upload json -->
-              <li>
-                @if (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) {
+              @if (
+                bulletinsService.getIsEditable() &&
+                !bulletinsService.getIsReadOnly() &&
+                authenticationService.isCurrentUserInRole("ADMIN") // experimental feature for now
+              ) {
+                <li>
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="caamlBulletinUploader.click(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.uploadCaamlBulletin' | translate }}"
+                    ngxMousetrapKey="j u"
+                  >
+                    <i class="ph-bold ph-upload-simple icon-md"></i>
+                    {{ "bulletins.create.tooltip.uploadCaamlBulletin" | translate }}
+                  </button>
+                </li>
+              }
+              @if (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) {
+                <li>
                   <button
                     [disabled]="editRegions || loading"
                     type="button"
@@ -522,8 +555,8 @@
                     <i class="ph-bold ph-upload-simple icon-md"></i>
                     {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
                   </button>
-                }
-              </li>
+                </li>
+              }
 
               <!-- download json -->
               <li>
