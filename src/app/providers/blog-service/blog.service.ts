@@ -26,8 +26,6 @@ export interface BlogData {
   blogItems: BlogItem[];
 }
 
-export type BlogLanguage = "de" | "en" | "fr" | "it" | "es" | "oc" | "ca";
-
 type BlogApiResponse = BlogItem[];
 
 @Injectable()
@@ -51,7 +49,7 @@ export class BlogService {
     return this.http.post<Response>(url, body);
   }
 
-  async loadBlogsForRegion(regionCode: string, lang: BlogLanguage): Promise<BlogData> {
+  async loadBlogsForRegion(regionCode: string, lang: AlbinaLanguage): Promise<BlogData> {
     const url = this.constantsService.getServerUrlGET("/blogs/posts" as `/blogs/posts`, {
       region: regionCode,
       lang,

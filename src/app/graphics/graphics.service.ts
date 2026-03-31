@@ -1,8 +1,10 @@
 import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
+import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { AlbinaLanguage } from "app/models/text.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { BlogData, BlogLanguage, BlogService } from "app/providers/blog-service/blog.service";
+import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 
 import sources from "../../assets/config/stations.json";
@@ -33,6 +35,7 @@ export class GraphicsService {
   private authentificationService = inject(AuthenticationService);
   private constantsService = inject(ConstantsService);
   private blogService = inject(BlogService);
+  private http = inject(HttpClient);
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -72,14 +75,14 @@ export class GraphicsService {
     return [...stationById.values()];
   }
 
-  getBulletinLanguage(): string {
+  getBulletinLanguage(): AlbinaLanguage {
     const htmlLang = document.documentElement.lang?.trim().toLowerCase();
     if (htmlLang) {
-      return htmlLang.split("-")[0] || "de";
+      return (htmlLang.split("-")[0] || "de") as AlbinaLanguage;
     }
 
     const browserLang = navigator.language?.trim().toLowerCase();
-    return browserLang ? browserLang.split("-")[0] || "de" : "de";
+    return (browserLang ? browserLang.split("-")[0] || "de" : "de") as AlbinaLanguage;
   }
 
   getBulletinRegionCodes(): string[] {
@@ -94,7 +97,7 @@ export class GraphicsService {
     startDate: string,
     endDate: string,
     regionCodes: string[],
-    lang: string = "de",
+    lang: AlbinaLanguage = "de",
   ): Promise<unknown[]> {
     if (!startDate || !endDate) {
       return [];
@@ -104,7 +107,7 @@ export class GraphicsService {
       return [];
     }
     const dates = this.getDateRange(startDate, endDate);
-    const requests = dates.map((date) => this.loadBulletinsForDate(date, regions, lang));
+    const requests = dates.map((date) => this.loadBulletinsForDate(date, regionCodes, lang));
     const results = await Promise.all(requests);
     return results.flat();
   }
@@ -124,7 +127,7 @@ export class GraphicsService {
     const blogsByRegion = await Promise.all(
       regions.map((regionCode) => {
         const lang: string = regionCode.slice(0, 2).toLowerCase().replace("at", "de");
-        return this.blogService.loadBlogsForRegion(regionCode, lang as BlogLanguage);
+        return this.blogService.loadBlogsForRegion(regionCode, lang as AlbinaLanguage);
       }),
     );
 
@@ -183,19 +186,14 @@ export class GraphicsService {
     return dates;
   }
 
-  private async loadBulletinsForDate(date: string, regionCodes: string[], lang: string): Promise<unknown[]> {
+  private async loadBulletinsForDate(date: string, regionCodes: string[], lang: AlbinaLanguage): Promise<unknown[]> {
     const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
       date: `${date}T16:00:00Z`,
       regions: regionCodes,
-      lang: lang as "de" | "it" | "fr" | "en" | "es" | "oc" | "ca",
+      lang: lang,
       version: "V6_JSON",
     });
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to load bulletins for ${date}: ${response.status} ${response.statusText}`);
-    }
-
-    const data = (await response.json()) as BulletinApiResponse;
+    const data = await this.http.get<BulletinApiResponse>(url).toPromise();
     return Array.isArray(data?.bulletins) ? data.bulletins : [];
   }
 }
