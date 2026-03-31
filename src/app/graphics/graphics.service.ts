@@ -2,6 +2,7 @@ import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { inject, Injectable } from "@angular/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { BlogData, BlogLanguage, BlogService } from "app/providers/blog-service/blog.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 
 import sources from "../../assets/config/stations.json";
@@ -23,32 +24,15 @@ export interface LineaStationFeature {
   hasPsum: boolean;
 }
 
-export interface BlogData {
-  regionCode: string;
-  lang: string;
-  blogItems: BlogItem[];
-}
-
-export interface BlogItem {
-  id: number;
-  title: string;
-  published: string;
-  categories: string[];
-}
-
 type BulletinApiResponse = {
   bulletins?: unknown[];
 };
 
-type BlogApiResponse = BlogItem[];
-
 @Injectable({ providedIn: "root" })
 export class GraphicsService {
-  private readonly bulletinApiUrl = "https://api.avalanche.report/albina/api/bulletins/caaml/json";
-  private readonly blogApiUrl = "https://api.avalanche.report/albina_dev/api/blogs/posts";
-
   private authentificationService = inject(AuthenticationService);
   private constantsService = inject(ConstantsService);
+  private blogService = inject(BlogService);
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -137,7 +121,12 @@ export class GraphicsService {
       return [];
     }
 
-    const blogsByRegion = await Promise.all(regions.map((regionCode) => this.loadBlogsForRegion(regionCode)));
+    const blogsByRegion = await Promise.all(
+      regions.map((regionCode) => {
+        const lang: string = regionCode.slice(0, 2).toLowerCase().replace("at", "de");
+        return this.blogService.loadBlogsForRegion(regionCode, lang as BlogLanguage);
+      }),
+    );
 
     return blogsByRegion.map((regionBlogs) => ({
       ...regionBlogs,
@@ -192,23 +181,6 @@ export class GraphicsService {
     }
 
     return dates;
-  }
-
-  private async loadBlogsForRegion(regionCode: string): Promise<BlogData> {
-    const lang: string = regionCode.slice(0, 2).toLowerCase().replace("at", "de");
-    const params = new URLSearchParams({ region: regionCode, lang });
-    const response = await fetch(`${this.blogApiUrl}?${params.toString()}`);
-    if (!response.ok) {
-      throw new Error(`Failed to load blogs for ${regionCode}: ${response.status} ${response.statusText}`);
-    }
-
-    const blogItems = (await response.json()) as BlogApiResponse;
-
-    return {
-      regionCode,
-      lang,
-      blogItems,
-    };
   }
 
   private async loadBulletinsForDate(date: string, regionCodes: string[], lang: string): Promise<unknown[]> {

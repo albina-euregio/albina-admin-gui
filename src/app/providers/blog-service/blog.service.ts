@@ -13,6 +13,23 @@ export enum PublicationChannel {
   All = "",
 }
 
+export interface BlogItem {
+  id: number;
+  title: string;
+  published: string;
+  categories: string[];
+}
+
+export interface BlogData {
+  regionCode: string;
+  lang: string;
+  blogItems: BlogItem[];
+}
+
+export type BlogLanguage = "de" | "en" | "fr" | "it" | "es" | "oc" | "ca";
+
+type BlogApiResponse = BlogItem[];
+
 @Injectable()
 export class BlogService {
   http = inject(HttpClient);
@@ -32,5 +49,27 @@ export class BlogService {
     );
     const body = JSON.stringify("");
     return this.http.post<Response>(url, body);
+  }
+
+  async loadBlogsForRegion(regionCode: string, lang: BlogLanguage): Promise<BlogData> {
+    const url = this.constantsService.getServerUrlGET("/blogs/posts" as `/blogs/posts`, {
+      region: regionCode,
+      lang,
+      searchCategory: "",
+      searchText: "",
+      year: "",
+    });
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to load blogs for ${regionCode}: ${response.status} ${response.statusText}`);
+    }
+
+    const blogItems = (await response.json()) as BlogApiResponse;
+
+    return {
+      regionCode,
+      lang,
+      blogItems,
+    };
   }
 }
