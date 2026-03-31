@@ -7,7 +7,7 @@ import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 
 import * as Enums from "../../enums/enums";
-import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
+import { Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
 import { AlbinaLanguage } from "../../models/text.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -291,9 +291,7 @@ export class BulletinsService {
     const headers = new HttpHeaders({ Authorization: "Bearer " + server.accessToken });
     if (server.apiUrl.includes("/api/bulletin-preview/caaml/")) {
       const params = { activeAt: new Date(+date0 / 2 + +date1 / 2).toISOString() };
-      return this.http
-        .get<Bulletins>(server.apiUrl, { headers, params })
-        .pipe(map((data) => data.bulletins.map((b) => toAlbinaBulletin(b))));
+      return this.http.get<Bulletins>(server.apiUrl, { headers, params }).pipe(map((data) => toAlbinaBulletins(data)));
     }
     return this.http
       .get<{ date: string }>(this.constantsService.getExternalServerUrlGET(server, "/bulletins/latest"), { headers })
@@ -310,6 +308,19 @@ export class BulletinsService {
           return this.http.get<BulletinModelAsJSON[]>(url, { headers });
         }),
       );
+  }
+
+  getCaamlJsonBulletins(
+    date: [Date, Date] = this.getActiveDate(),
+    regions: string[] = this.authenticationService.getInternalRegions(),
+  ): Observable<Bulletins> {
+    const url = this.constantsService.getServerUrlGET("/bulletins/edit/caaml/json", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      regions: regions,
+      lang: this.translateService.getCurrentLang() as AlbinaLanguage,
+      version: "V6_JSON",
+    });
+    return this.http.get<Bulletins>(url);
   }
 
   saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {

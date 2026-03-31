@@ -40,6 +40,7 @@ import { DangerSourcesService } from "../danger-sources/danger-sources.service";
 import * as Enums from "../enums/enums";
 // models
 import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
+import * as CAAML from "../models/CAAMLv6";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -991,6 +992,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishing = false;
   }
 
+  async downloadCaamlBulletin() {
+    const caaml = await this.bulletinsService.getCaamlJsonBulletins().toPromise();
+    const json = JSON.stringify(caaml, undefined, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
+    saveAs(blob, `${formattedDate}_report_CAAMLv6.json`);
+  }
+
   downloadJsonBulletin() {
     this.deselectBulletin();
 
@@ -1033,15 +1042,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     document.body.removeChild(element);
   }
 
-  uploadJsonBulletin(event: Event) {
+  uploadJsonBulletin(event: Event, format: "caaml" | "json") {
     const selectedFile = (event.target as HTMLInputElement).files[0];
     const fileReader = new FileReader();
     fileReader.readAsText(selectedFile, "UTF-8");
     fileReader.onload = () => {
       const json = JSON.parse(fileReader.result.toString());
+      const bulletins: BulletinModelAsJSON[] =
+        format === "caaml"
+          ? CAAML.toAlbinaBulletins(CAAML.BulletinsSchema.parse(json))
+          : BulletinModel.schema.array().parse(json);
 
       this.reset();
-      this.copyBulletins(json);
+      this.copyBulletins(bulletins);
       console.info("Bulletins loaded from file: " + selectedFile.name);
     };
     fileReader.onerror = (error) => {

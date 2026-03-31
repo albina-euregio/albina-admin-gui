@@ -142,6 +142,10 @@ export const BulletinsSchema = z.object({
 });
 export type Bulletins = z.infer<typeof BulletinsSchema>;
 
+export function toAlbinaBulletins({ bulletins }: Bulletins): BulletinModelAsJSON[] {
+  return bulletins.map((b) => toAlbinaBulletin(b));
+}
+
 export function toAlbinaBulletin(b: Bulletin): BulletinModelAsJSON {
   return {
     id: b.bulletinID,
