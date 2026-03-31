@@ -493,9 +493,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showPublicationHappensAt5PM() {
     return (
-      (this.bulletinsService.getUserRegionStatus(null) === Enums.BulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus(null) === Enums.BulletinStatus.resubmitted) &&
-      !this.bulletinsService.sourceDates.hasBeenPublished5PM(null)
+      (this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.resubmitted) &&
+      !this.bulletinsService.sourceDates.hasBeenPublished5PM()
     );
   }
 
