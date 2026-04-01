@@ -61,7 +61,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["getBlogPosts"];
+    get: operations["getBlogPost"];
     put?: never;
     post?: never;
     delete?: never;
@@ -77,7 +77,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["getBlogPosts_1"];
+    get: operations["getBlogPosts"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1859,7 +1859,7 @@ export interface operations {
       };
     };
   };
-  getBlogPosts: {
+  getBlogPost: {
     parameters: {
       query: {
         region: string;
@@ -1872,7 +1872,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description getBlogPosts 200 response */
+      /** @description getBlogPost 200 response */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1883,14 +1883,15 @@ export interface operations {
       };
     };
   };
-  getBlogPosts_1: {
+  getBlogPosts: {
     parameters: {
       query: {
         region: string;
         lang: components["schemas"]["LanguageCode"];
         searchText: string;
         searchCategory: string;
-        year: string;
+        startDate: string;
+        endDate: string;
       };
       header?: never;
       path?: never;
@@ -1898,7 +1899,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description getBlogPosts_1 200 response */
+      /** @description getBlogPosts 200 response */
       200: {
         headers: {
           [name: string]: unknown;
