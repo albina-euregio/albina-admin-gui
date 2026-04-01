@@ -13,7 +13,7 @@
       <div class="create-bulletin__date">
         <h1 class="create-bulletin__current-date font-m-bold">
           {{
-            bulletinsService.sourceDates.activeValidFrom
+            bulletinsService.sourceDates.activeValidUntil
               | date: "EEEE," : undefined : translateService.getCurrentLang()
           }}<br />
           {{
