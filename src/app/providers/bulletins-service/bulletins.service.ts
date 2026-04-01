@@ -198,9 +198,9 @@ export class BulletinsService {
     return this.http.get(url);
   }
 
-  loadBulletinsForDate(date: string, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
+  loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
     const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
-      date: `${date}T16:00:00Z`,
+      date: date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).toString(),
       regions: regionCodes,
       lang: lang,
       version: "V6_JSON",

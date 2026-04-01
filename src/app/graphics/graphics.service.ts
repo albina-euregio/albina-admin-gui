@@ -174,18 +174,26 @@ export class GraphicsService {
     return fallback;
   }
 
-  private getDateRange(startDate: string, endDate: string): string[] {
-    const start = new Date(`${startDate}T00:00:00Z`);
-    const end = new Date(`${endDate}T00:00:00Z`);
-    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || start > end) {
+  private getDateRange(startDate: string, endDate: string): Temporal.PlainDate[] {
+    let start: Temporal.PlainDate;
+    let end: Temporal.PlainDate;
+
+    try {
+      start = Temporal.PlainDate.from(startDate);
+      end = Temporal.PlainDate.from(endDate);
+    } catch {
       return [];
     }
 
-    const dates: string[] = [];
-    const current = new Date(start);
-    while (current <= end) {
-      dates.push(current.toISOString().slice(0, 10));
-      current.setUTCDate(current.getUTCDate() + 1);
+    if (Temporal.PlainDate.compare(start, end) > 0) {
+      return [];
+    }
+
+    const dates: Temporal.PlainDate[] = [];
+    let current = start;
+    while (Temporal.PlainDate.compare(current, end) <= 0) {
+      dates.push(current);
+      current = current.add({ days: 1 });
     }
 
     return dates;
