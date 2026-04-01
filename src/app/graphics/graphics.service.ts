@@ -128,7 +128,9 @@ export class GraphicsService {
           .toLowerCase()
           .replace("at", "de")
           .replace("ch", "de") as AlbinaLanguage;
-        return await lastValueFrom(this.blogService.loadBlogsForRegion(regionCode, lang));
+        const startDate = new Date(start).toISOString();
+        const endDate = new Date(end).toISOString();
+        return await lastValueFrom(this.blogService.loadBlogsForRegion(regionCode, lang, startDate, endDate));
       }),
     );
 

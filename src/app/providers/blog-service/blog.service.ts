@@ -47,13 +47,19 @@ export class BlogService {
     return this.http.post<Response>(url, body);
   }
 
-  loadBlogsForRegion(regionCode: string, lang: AlbinaLanguage): Observable<BlogData> {
+  loadBlogsForRegion(
+    regionCode: string,
+    lang: AlbinaLanguage,
+    startDate: string,
+    endDate: string,
+  ): Observable<BlogData> {
     const url = this.constantsService.getServerUrlGET("/blogs/posts" as `/blogs/posts`, {
       region: regionCode,
       lang,
+      startDate,
+      endDate,
       searchCategory: "",
       searchText: "",
-      year: "",
     });
     return this.http
       .get<BlogItem[]>(url)
