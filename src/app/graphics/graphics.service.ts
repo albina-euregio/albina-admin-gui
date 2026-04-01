@@ -109,12 +109,7 @@ export class GraphicsService {
     return results.flat();
   }
 
-  async loadBlogs(
-    startDate: string,
-    endDate: string,
-    regionCodes: string[],
-    lang: AlbinaLanguage = "de",
-  ): Promise<BlogData[]> {
+  async loadBlogs(startDate: string, endDate: string, regionCodes: string[]): Promise<BlogData[]> {
     const start = Date.parse(`${startDate}T00:00:00.000Z`);
     const end = Date.parse(`${endDate}T23:59:59.999Z`);
     if (Number.isNaN(start) || Number.isNaN(end) || start > end) {
@@ -128,6 +123,13 @@ export class GraphicsService {
 
     const blogsByRegion = await Promise.all(
       regions.map(async (regionCode) => {
+        // TODO: This language derivation is a bit hacky, but it works for all current regions. If we ever have a region with a different language than the first two letters of the region code, we should add an explicit language property to the region data.
+        // Issue Nr. albina-euregio/albina-admin-gui#457
+        const lang: AlbinaLanguage = regionCode
+          .slice(0, 2)
+          .toLowerCase()
+          .replace("at", "de")
+          .replace("ch", "de") as AlbinaLanguage;
         return await lastValueFrom(this.blogService.loadBlogsForRegion(regionCode, lang));
       }),
     );
