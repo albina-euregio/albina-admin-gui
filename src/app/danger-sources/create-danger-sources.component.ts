@@ -393,7 +393,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   loadVariantsFromYesterday(dangerSourceId?: string) {
-    const date = this.dangerSourcesService.sourceDates.getNextDate();
+    const date = this.dangerSourcesService.sourceDates.getPreviousDate();
 
     if (dangerSourceId) {
       this.dangerSourcesService
