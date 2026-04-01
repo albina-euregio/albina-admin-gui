@@ -1,13 +1,11 @@
 import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { AlbinaLanguage } from "app/models/text.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { lastValueFrom } from "rxjs";
 
 import sources from "../../assets/config/stations.json";
