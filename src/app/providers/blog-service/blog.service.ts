@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 
 import { AlbinaLanguage } from "../../models/text.model";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -49,7 +49,7 @@ export class BlogService {
     return this.http.post<Response>(url, body);
   }
 
-  async loadBlogsForRegion(regionCode: string, lang: AlbinaLanguage): Promise<BlogData> {
+  loadBlogsForRegion(regionCode: string, lang: AlbinaLanguage): Observable<BlogData> {
     const url = this.constantsService.getServerUrlGET("/blogs/posts" as `/blogs/posts`, {
       region: regionCode,
       lang,
@@ -57,17 +57,8 @@ export class BlogService {
       searchText: "",
       year: "",
     });
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to load blogs for ${regionCode}: ${response.status} ${response.statusText}`);
-    }
-
-    const blogItems = (await response.json()) as BlogApiResponse;
-
-    return {
-      regionCode,
-      lang,
-      blogItems,
-    };
+    return this.http
+      .get<BlogItem[]>(url)
+      .pipe(map((response) => ({ regionCode, lang, blogItems: response as BlogItem[] }) as BlogData));
   }
 }

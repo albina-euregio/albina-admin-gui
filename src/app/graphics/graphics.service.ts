@@ -7,6 +7,7 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { lastValueFrom } from "rxjs";
 
 import sources from "../../assets/config/stations.json";
 
@@ -108,7 +109,12 @@ export class GraphicsService {
     return results.flat();
   }
 
-  async loadBlogs(startDate: string, endDate: string, regionCodes: string[]): Promise<BlogData[]> {
+  async loadBlogs(
+    startDate: string,
+    endDate: string,
+    regionCodes: string[],
+    lang: AlbinaLanguage = "de",
+  ): Promise<BlogData[]> {
     const start = Date.parse(`${startDate}T00:00:00.000Z`);
     const end = Date.parse(`${endDate}T23:59:59.999Z`);
     if (Number.isNaN(start) || Number.isNaN(end) || start > end) {
@@ -121,9 +127,8 @@ export class GraphicsService {
     }
 
     const blogsByRegion = await Promise.all(
-      regions.map((regionCode) => {
-        const lang: string = regionCode.slice(0, 2).toLowerCase().replace("at", "de");
-        return this.blogService.loadBlogsForRegion(regionCode, lang as AlbinaLanguage);
+      regions.map(async (regionCode) => {
+        return await lastValueFrom(this.blogService.loadBlogsForRegion(regionCode, lang));
       }),
     );
 
