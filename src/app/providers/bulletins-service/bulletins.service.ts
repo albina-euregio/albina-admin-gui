@@ -7,7 +7,7 @@ import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 
 import * as Enums from "../../enums/enums";
-import { Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
+import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
 import { SourceDates } from "../../models/SourceDates";
 import { AlbinaLanguage } from "../../models/text.model";
@@ -198,18 +198,14 @@ export class BulletinsService {
     return this.http.get(url);
   }
 
-  async loadBulletinsForDate(
-    date: string,
-    regionCodes: string[],
-    lang: AlbinaLanguage,
-  ): Promise<BulletinModelAsJSON[]> {
+  async loadBulletinsForDate(date: string, regionCodes: string[], lang: AlbinaLanguage): Promise<Bulletin[]> {
     const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
       date: `${date}T16:00:00Z`,
       regions: regionCodes,
       lang: lang,
       version: "V6_JSON",
     });
-    const data = await this.http.get<BulletinApiResponse>(url).toPromise();
+    const data = await this.http.get<Bulletins>(url).toPromise();
     return Array.isArray(data?.bulletins) ? data.bulletins : [];
   }
 
