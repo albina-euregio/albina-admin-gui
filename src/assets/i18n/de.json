@@ -34,7 +34,10 @@
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
-    "lineaexport": "LINEA"
+    "lineaexport": "LINEA",
+    "awsstats": "AWS Stats",
+    "yearlystats": "Yearly Stats",
+    "graphics": "Grafiken"
   },
   "menu": {
     "logout": "Logout",
@@ -75,7 +78,8 @@
       "loading": "Gefahrenquellen werden geladen ...",
       "saveError": "Gefahrenquelle konnte nicht gespeichert werden!",
       "loadDangerSourcesError": "Gefahrenquellen konnten nicht geladen werden!",
-      "loadVariantsError": "Varianten der Gefahrenquellen konnten nicht geladen werden!"
+      "loadVariantsError": "Varianten der Gefahrenquellen konnten nicht geladen werden!",
+      "noTitle": "<no title>"
     },
     "variantStatus": {
       "active": "aktiv",
@@ -272,8 +276,10 @@
         "saveBulletin": "Lawinenvorhersage speichern",
         "discardBulletin": "Änderungen an der Lawinenvorhersage verwerfen",
         "loadBulletin": "Lawinenvorhersage vom Vortag laden",
+        "uploadCaamlBulletin": "Upload bulletin in CAAML format",
         "uploadJsonBulletin": "Upload Bulletin in JSON Format",
-        "downloadJsonBulletin": "Download Bulletin in JSON Format",
+        "downloadCaamlBulletin": "Download bulletin in CAAML format",
+        "downloadJsonBulletin": "Bulletin in JSON-Format herunterladen",
         "daytimeDependency": "Tageszeitliche Abhängigkeit",
         "treeline": "Waldgrenze",
         "tendency": {
@@ -292,7 +298,10 @@
         "moveUpAvalancheProblem": "Lawinenproblem nach oben schieben",
         "moveDownAvalancheProblem": "Lawinenproblem nach unten schieben",
         "dangerRatingDirectionUp": "Aufwärts",
-        "dangerRatingDirectionDown": "Abwärts"
+        "dangerRatingDirectionDown": "Abwärts",
+        "addPhoto": "Foto hinzufügen",
+        "removePhoto": "Foto entfernen",
+        "editPhoto": "Foto bearbeiten"
       },
       "save": " Speichern",
       "discard": " Verwerfen",
@@ -331,6 +340,8 @@
         "highlights": "Besondere Warnung",
         "avActivityHighlights": "Schlagzeile Gefahrensituation",
         "avActivityComment": "Beurteilung der Lawinengefahr",
+        "travelAdvisoryHighlights": "Schlagzeile der Verhaltensempfehlung",
+        "travelAdvisoryComment": "Beschreibung der Verhaltensempfehlung",
         "snowpackStructureComment": "Beschreibung des Schneedeckenaufbaus",
         "dangerPatterns": "Gefahrenmuster",
         "tendencyComment": "Beschreibung der Tendenz",
@@ -347,11 +358,19 @@
         "dangerDescription": "Gefahrenbeurteilung",
         "forenoon": "Vormittag",
         "afternoon": "Nachmittag",
+        "photos": "Fotos",
         "snowpackStructure": "Schneedeckenaufbau",
         "tendency": "Tendenz",
         "synopsis": "Wetter",
         "showTranslations": " Übersetzungen anzeigen",
         "hideTranslations": " Übersetzungen verbergen"
+      },
+      "photos": {
+        "url": "Foto-URL",
+        "locationName": "Ort",
+        "microregion": "Kleinstregion",
+        "copyright": "Copyright",
+        "date": "Datum"
       },
       "placeholder": {
         "notes": "Schreib deine Notizen hier ..."
@@ -1442,5 +1461,52 @@
   "lineaexport": {
     "searchfieldplaceholder": "Stationen suchen...",
     "hint": "Zum Hinzufügen die Eingabetaste drücken"
+  },
+  "awsstats": {
+    "title": "AWS statistics",
+    "label": {
+      "loading": "Daten werden geladen...",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "selectWeatherStation": "Wetterstation auswählen",
+      "selectMicroRegions": "Kleinstregionen auswählen",
+      "clearselection": "Clear selection",
+      "noMicroRegionsSelected": "keine",
+      "last7days": "Letzte 7 Tage",
+      "last30days": "Letzte 30 Tage",
+      "last90days": "Letzte 90 Tage",
+      "loadData": "Daten laden",
+      "charttypes": "Chart types"
+    },
+    "charts": {
+      "aws-observations": "AWS observations",
+      "aws-danger-rating": "Gefahrenstufe",
+      "aws-danger-rating-altitude": "Danger rating by altitude",
+      "aws-avalanche-activity-index": "Avalanche activity index"
+    }
+  },
+  "yearlystats": {
+    "title": "Yearly Statistics",
+    "label": {
+      "startDate": "Start date",
+      "endDate": "End date",
+      "loaddata": "Daten laden",
+      "last90Days": "Letzte 90 Tage",
+      "last180Days": "Letzte 180 Tage",
+      "currentSeason": "Aktuelle Saison",
+      "regionCode": "Region code",
+      "allRegions": "ALLE",
+      "virtualTrainings": "Virtual trainings (dates)",
+      "fieldTrainings": "Field trainings (dates)",
+      "dangerRatingReference": "Danger rating reference"
+    },
+    "charts": {
+      "aws-danger-rating-micro-regions-bars": "AWS Danger Rating - Micro Regions - Bars",
+      "aws-danger-rating-micro-regions": "AWS Danger Rating - Micro Regions",
+      "aws-danger-rating-distribution": "AWS Danger Rating - Distribution",
+      "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
+      "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
+      "aws-products": "AWS Products"
+    }
   }
 }

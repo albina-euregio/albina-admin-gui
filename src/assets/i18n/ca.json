@@ -34,7 +34,10 @@
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
-    "lineaexport": "LINEA"
+    "lineaexport": "LINEA",
+    "awsstats": "AWS Stats",
+    "yearlystats": "Yearly Stats",
+    "graphics": "Graphics"
   },
   "menu": {
     "logout": "Surt",
@@ -75,7 +78,8 @@
       "loading": "Carregant fonts de perill ...",
       "saveError": "No s'ha pogut desar la font de perill!",
       "loadDangerSourcesError": "No s'han pogut carregar les fonts de perill!",
-      "loadVariantsError": "No s'han pogut carregar les variants de la font de perill!"
+      "loadVariantsError": "No s'han pogut carregar les variants de la font de perill!",
+      "noTitle": "<no title>"
     },
     "variantStatus": {
       "active": "actiu",
@@ -118,7 +122,8 @@
         "glide": "Lliscament de neu",
         "matrix": "Matriu",
         "characteristics": "Característiques",
-        "comment": "Comentari"
+        "comment": "Comentari",
+        "uncertainties": "Incerteses"
       },
       "label": {
         "glidingSnowActivity": "Activitat de lliscament de neu",
@@ -271,7 +276,9 @@
         "saveBulletin": "Guardar el butlletí",
         "discardBulletin": "Descartar els canvis al butlletí",
         "loadBulletin": "Carregar el butlletí d'ahir",
+        "uploadCaamlBulletin": "Upload bulletin in CAAML format",
         "uploadJsonBulletin": "Carregar el butlletí en format JSON",
+        "downloadCaamlBulletin": "Download bulletin in CAAML format",
         "downloadJsonBulletin": "Descarregar el butlletí en format JSON",
         "daytimeDependency": "Dependència de l'hora",
         "treeline": "Límit del bosc",
@@ -291,7 +298,10 @@
         "moveUpAvalancheProblem": "Moure el problema d'allaus cap amunt",
         "moveDownAvalancheProblem": "Moure el problema d'allaus cap avall",
         "dangerRatingDirectionUp": "Cap amunt",
-        "dangerRatingDirectionDown": "Cap avall"
+        "dangerRatingDirectionDown": "Cap avall",
+        "addPhoto": "Add photo",
+        "removePhoto": "Remove photo",
+        "editPhoto": "Edit photo"
       },
       "save": "Desar",
       "discard": "Descartar",
@@ -330,6 +340,8 @@
         "highlights": "Alerta especial",
         "avActivityHighlights": "Titular de la situació d'allaus",
         "avActivityComment": "Descripció del perill d'allaus",
+        "travelAdvisoryHighlights": "Headline travel advisory",
+        "travelAdvisoryComment": "Description of travel advisory",
         "snowpackStructureComment": "Descripció de l'estructura del mantell",
         "dangerPatterns": "Patrons de perill",
         "tendencyComment": "Descripció de la tendència",
@@ -346,11 +358,19 @@
         "dangerDescription": "Descripció del perill d'allaus",
         "forenoon": "Matí",
         "afternoon": "Tarda",
+        "photos": "Photos",
         "snowpackStructure": "Estructura del mantell",
         "tendency": "Tendència",
         "synopsis": "Temps atmosfèric",
         "showTranslations": "-mostra traduccions",
         "hideTranslations": "Amaga traduccions"
+      },
+      "photos": {
+        "url": "Image URL",
+        "locationName": "Localitat",
+        "microregion": "Microregion",
+        "copyright": "Copyright",
+        "date": "Data"
       },
       "placeholder": {
         "notes": "Escriu aquí..."
@@ -694,7 +714,7 @@
           "enableObservations": "Habilitar les observacions",
           "enableModelling": "Habilitar la modelització",
           "enableWeatherbox": "Activar caixa meteorològica",
-          "enableLineaExport": "Enable LINEA export"
+          "enableLineaExport": "Activar l'exportació LINEA"
         },
         "configuration": {
           "title": "Configuració",
@@ -745,8 +765,8 @@
         "error": "No s'ha pogut crear l'usuari"
       },
       "updateUser": {
-        "success": "User saved",
-        "error": "User could not be saved"
+        "success": "Usuari guardat",
+        "error": "No s'ha pogut desar l'usuari"
       }
     },
     "createUser": {
@@ -1250,7 +1270,7 @@
     }
   },
   "button": {
-    "true": "yes",
+    "true": "sí",
     "false": "no",
     "yes": "sí",
     "no": "no"
@@ -1435,11 +1455,58 @@
     "Wet instability": "Inestabilitat de neu humida"
   },
   "channelStatus": {
-    "loading": "Loading channel status information...",
-    "triggerStatusChecks": "Trigger status checks"
+    "loading": "S'està carregant la informació de l'estat del canal...",
+    "triggerStatusChecks": "Desencadenar comprovacions d'estat"
   },
   "lineaexport": {
-    "searchfieldplaceholder": "Search stations...",
-    "hint": "Press Enter to add"
+    "searchfieldplaceholder": "Cercar estacions...",
+    "hint": "Prémer Intro per afegir"
+  },
+  "awsstats": {
+    "title": "AWS statistics",
+    "label": {
+      "loading": "Loading data...",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "selectWeatherStation": "Select weather station",
+      "selectMicroRegions": "Select micro-regions",
+      "clearselection": "Clear selection",
+      "noMicroRegionsSelected": "cap",
+      "last7days": "Last 7 days",
+      "last30days": "Last 30 days",
+      "last90days": "Last 90 days",
+      "loadData": "Load data",
+      "charttypes": "Chart types"
+    },
+    "charts": {
+      "aws-observations": "AWS observations",
+      "aws-danger-rating": "Grau de perill",
+      "aws-danger-rating-altitude": "Danger rating by altitude",
+      "aws-avalanche-activity-index": "Avalanche activity index"
+    }
+  },
+  "yearlystats": {
+    "title": "Yearly Statistics",
+    "label": {
+      "startDate": "Start date",
+      "endDate": "End date",
+      "loaddata": "Load data",
+      "last90Days": "Last 90 days",
+      "last180Days": "Last 180 days",
+      "currentSeason": "Current season",
+      "regionCode": "Region code",
+      "allRegions": "TOTS",
+      "virtualTrainings": "Virtual trainings (dates)",
+      "fieldTrainings": "Field trainings (dates)",
+      "dangerRatingReference": "Danger rating reference"
+    },
+    "charts": {
+      "aws-danger-rating-micro-regions-bars": "AWS Danger Rating - Micro Regions - Bars",
+      "aws-danger-rating-micro-regions": "AWS Danger Rating - Micro Regions",
+      "aws-danger-rating-distribution": "AWS Danger Rating - Distribution",
+      "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
+      "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
+      "aws-products": "AWS Products"
+    }
   }
 }
