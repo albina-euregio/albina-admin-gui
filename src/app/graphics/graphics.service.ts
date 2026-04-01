@@ -2,6 +2,7 @@ import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { AlbinaLanguage } from "app/models/text.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
@@ -33,6 +34,7 @@ export class GraphicsService {
   private authentificationService = inject(AuthenticationService);
   private blogService = inject(BlogService);
   private bulletinsService = inject(BulletinsService);
+  private translateService = inject(TranslateService);
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -73,13 +75,7 @@ export class GraphicsService {
   }
 
   getBulletinLanguage(): AlbinaLanguage {
-    const htmlLang = document.documentElement.lang?.trim().toLowerCase();
-    if (htmlLang) {
-      return (htmlLang.split("-")[0] || "de") as AlbinaLanguage;
-    }
-
-    const browserLang = navigator.language?.trim().toLowerCase();
-    return (browserLang ? browserLang.split("-")[0] || "de" : "de") as AlbinaLanguage;
+    return this.translateService.getCurrentLang() as AlbinaLanguage;
   }
 
   getBulletinRegionCodes(): string[] {
