@@ -31,10 +31,6 @@ export enum PublicationChannel {
   Push = "push",
 }
 
-type BulletinApiResponse = {
-  bulletins?: BulletinModelAsJSON[];
-};
-
 @Injectable()
 export class BulletinsService {
   http = inject(HttpClient);
