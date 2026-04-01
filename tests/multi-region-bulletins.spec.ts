@@ -51,12 +51,13 @@ test("Bulletin synchronization", async ({ browser }) => {
   await test.step("add a warning region in Tyrol from browser1, check that it appears in browser2", async () => {
     await page1.getByRole("button", { name: "" }).click();
     const region = page1.locator("path.leaflet-interactive").nth(100);
-    await region.click({ force: true });
-    await page1.getByRole("button", { name: "Create region" }).click();
-    await page1.waitForResponse(
+    const responsePromise = page1.waitForResponse(
       (response) =>
         response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
     );
+    await region.click({ force: true });
+    await page1.getByRole("button", { name: "Create region" }).click();
+    await responsePromise;
     await expect(page1.locator(".region-thumb").first()).toContainText("Brandenberg Alps");
     await waitForGetEdit(page2);
     await expect(page2.getByText("Foreign regions (1)")).toBeVisible({ timeout: 7000 });
