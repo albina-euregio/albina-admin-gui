@@ -26,8 +26,6 @@ export interface BlogData {
   blogItems: BlogItem[];
 }
 
-type BlogApiResponse = BlogItem[];
-
 @Injectable()
 export class BlogService {
   http = inject(HttpClient);
