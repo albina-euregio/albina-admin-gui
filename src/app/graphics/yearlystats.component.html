@@ -18,7 +18,6 @@
 
     <div class="yearlystats-selection-grid mt-3">
       <div class="yearlystats-selection-card">
-        <div class="small text-muted">{{ "awsstats.label.loading" | translate }}</div>
         <div class="yearlystats-actions mt-1">
           <button class="btn btn-primary" type="button" (click)="updateCharts()">
             {{ "yearlystats.label.loaddata" | translate }}
@@ -41,39 +40,23 @@
           <button
             class="btn btn-sm"
             type="button"
-            [class.btn-primary]="selectedRegionCode === 'all'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'all'"
-            (click)="setRegionCode('all')"
+            [class.btn-primary]="allRegionsSelected"
+            [class.btn-outline-secondary]="!allRegionsSelected"
+            (click)="selectAllRegions()"
           >
             {{ "yearlystats.label.allRegions" | translate }}
           </button>
-          <button
-            class="btn btn-sm"
-            type="button"
-            [class.btn-primary]="selectedRegionCode === 'AT-07'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'AT-07'"
-            (click)="setRegionCode('AT-07')"
-          >
-            AT-07
-          </button>
-          <button
-            class="btn btn-sm"
-            type="button"
-            [class.btn-primary]="selectedRegionCode === 'IT-32-BZ'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'IT-32-BZ'"
-            (click)="setRegionCode('IT-32-BZ')"
-          >
-            IT-32-BZ
-          </button>
-          <button
-            class="btn btn-sm"
-            type="button"
-            [class.btn-primary]="selectedRegionCode === 'IT-32-TN'"
-            [class.btn-outline-secondary]="selectedRegionCode !== 'IT-32-TN'"
-            (click)="setRegionCode('IT-32-TN')"
-          >
-            IT-32-TN
-          </button>
+          @for (regionCode of regionCodes; track regionCode) {
+            <button
+              class="btn btn-sm"
+              type="button"
+              [class.btn-primary]="isRegionButtonActive(regionCode)"
+              [class.btn-outline-secondary]="!isRegionButtonActive(regionCode)"
+              (click)="toggleRegionCode(regionCode)"
+            >
+              {{ regionCode }}
+            </button>
+          }
         </div>
       </div>
 

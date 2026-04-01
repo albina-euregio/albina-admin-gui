@@ -51,6 +51,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected wrapperStartDate = "2026-03-10";
   protected wrapperEndDate = "2026-03-17";
   protected observationsUrl = "";
+  protected bulletins = "[]";
   protected showWrapper = false;
   protected loading = false;
   protected errorMessage = "";
@@ -151,11 +152,20 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       this.revokeObservationsUrl();
       this.wrapperStartDate = this.startDate;
       this.wrapperEndDate = this.endDate;
+      const regionCodes = this.graphicsService.getBulletinRegionCodes();
+      const bulletins = await this.graphicsService.loadBulletins(
+        this.startDate,
+        this.endDate,
+        regionCodes,
+        this.graphicsService.getBulletinLanguage(),
+      );
+      this.bulletins = JSON.stringify(bulletins);
       this.observationsUrl = URL.createObjectURL(blob);
       this.showWrapper = true;
       this.mountWrapper();
     } catch (error) {
       this.revokeObservationsUrl();
+      this.bulletins = "[]";
       this.showWrapper = false;
       this.errorMessage = "Failed to load observations for selected date range.";
       console.error(error);
@@ -203,6 +213,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     wrapper.setAttribute("start-date", this.wrapperStartDate);
     wrapper.setAttribute("end-date", this.wrapperEndDate);
     wrapper.setAttribute("bulletin-filter-micro-region", this.getBulletinFilterMicroRegionValue());
+    wrapper.setAttribute("bulletins", this.bulletins);
 
     host.appendChild(wrapper);
   }

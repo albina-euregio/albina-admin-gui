@@ -7,7 +7,7 @@ import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 
 import * as Enums from "../../enums/enums";
-import { Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
+import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
 import { SourceDates } from "../../models/SourceDates";
 import { AlbinaLanguage } from "../../models/text.model";
@@ -192,6 +192,16 @@ export class BulletinsService {
       region: region,
     });
     return this.http.get(url);
+  }
+
+  loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
+    const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
+      date: date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).toString(),
+      regions: regionCodes,
+      lang: lang,
+      version: "V6_JSON",
+    });
+    return this.http.get<Bulletins>(url).pipe(map((response) => response.bulletins));
   }
 
   loadBulletins(

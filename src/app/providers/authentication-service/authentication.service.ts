@@ -271,13 +271,17 @@ export class AuthenticationService {
     return this.authentication?.regions.sort((a, b) => a.id.localeCompare(b.id)) || [];
   }
 
-  public getInternalRegions(): string[] {
-    return this.internalRegions.map((r) => r.id).sort((a, b) => a.localeCompare(b));
+  public getInternalRegions(filter?: (r: RegionConfiguration) => boolean): string[] {
+    return this.internalRegions
+      .filter(filter || (() => true))
+      .map((r) => r.id)
+      .sort((a, b) => a.localeCompare(b));
   }
 
-  public getInternalRegionsWithoutSuperRegions(): string[] {
+  public getInternalRegionsWithoutSuperRegions(filter?: (r: RegionConfiguration) => boolean): string[] {
     return this.internalRegions
       .filter((r) => r.subRegions && r.subRegions.length === 0)
+      .filter(filter || (() => true))
       .map((r) => r.id)
       .sort((a, b) => a.localeCompare(b));
   }

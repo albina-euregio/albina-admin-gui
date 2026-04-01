@@ -1,8 +1,10 @@
 import "@albina-euregio/linea/aws-stats";
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+
+import { GraphicsService } from "./graphics.service";
 
 @Component({
   selector: "app-yearlystats",
@@ -15,15 +17,20 @@ import { TranslateModule } from "@ngx-translate/core";
 export class YearlystatsComponent implements AfterViewInit {
   @ViewChild("wrapperHost", { static: false })
   private wrapperHost?: ElementRef<HTMLElement>;
+  private graphicsService = inject(GraphicsService);
 
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -30));
   protected endDate = this.toDateInputValue(new Date());
   protected errorMessage = "";
   protected showWrapper = false;
+  protected bulletins = "[]";
+  protected blogs = "[]";
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
-  protected selectedRegionCode: YearlyRegionCode = "all";
+  protected selectedRegionCodes: string[] = [];
+
+  protected readonly regionCodes = this.graphicsService.getBulletinRegionCodes();
 
   protected chartTypeSelection: Record<YearlyChartType, boolean> = {
     "aws-danger-rating-micro-regions-bars": true,
@@ -74,15 +81,49 @@ export class YearlystatsComponent implements AfterViewInit {
     }
   }
 
-  protected setRegionCode(regionCode: YearlyRegionCode) {
-    if (this.selectedRegionCode === regionCode) return;
-    this.selectedRegionCode = regionCode;
+  protected selectAllRegions() {
+    if (this.selectedRegionCodes.length === 0) return;
+    this.selectedRegionCodes = [];
     if (this.showWrapper) {
       this.mountWrapper();
     }
   }
 
-  protected updateCharts() {
+  protected toggleRegionCode(regionCode: string) {
+    if (this.selectedRegionCodes.length === 0) {
+      this.selectedRegionCodes = [regionCode];
+    } else if (this.selectedRegionCodes.includes(regionCode)) {
+      this.selectedRegionCodes = this.selectedRegionCodes.filter((code) => code !== regionCode);
+    } else {
+      this.selectedRegionCodes = [...this.selectedRegionCodes, regionCode];
+    }
+
+    if (this.selectedRegionCodes.length === this.regionCodes.length) {
+      this.selectedRegionCodes = [];
+    }
+
+    if (this.showWrapper) {
+      this.mountWrapper();
+    }
+  }
+
+  protected isRegionButtonActive(regionCode: string): boolean {
+    return this.isRegionSelected(regionCode);
+  }
+
+  protected get allRegionsSelected(): boolean {
+    return this.selectedRegionCodes.length === 0;
+  }
+
+  private isRegionSelected(regionCode: string): boolean {
+    return this.selectedRegionCodes.length === 0 || this.selectedRegionCodes.includes(regionCode);
+  }
+
+  private getRegionCodeValue(): string {
+    return this.selectedRegionCodes.length === 1 ? this.selectedRegionCodes[0] : "all";
+  }
+
+  protected async updateCharts() {
     if (!this.startDate || !this.endDate) {
       this.errorMessage = "Start date and end date are required.";
       return;
@@ -94,6 +135,25 @@ export class YearlystatsComponent implements AfterViewInit {
     }
 
     this.errorMessage = "";
+    try {
+      const bulletinRegionCodes = this.getSelectedBulletinRegionCodes();
+      const bulletins = await this.graphicsService.loadBulletins(
+        this.startDate,
+        this.endDate,
+        bulletinRegionCodes,
+        this.graphicsService.getBulletinLanguage(),
+      );
+      this.bulletins = JSON.stringify(bulletins);
+
+      const blogRegionCodes = this.getSelectedBlogRegionCodes();
+      const blogs = await this.graphicsService.loadBlogs(this.startDate, this.endDate, blogRegionCodes);
+      this.blogs = JSON.stringify(blogs);
+    } catch (error) {
+      this.errorMessage = "Failed to load chart data for selected date range.";
+      console.error(error);
+      return;
+    }
+
     this.showWrapper = true;
     this.mountWrapper();
   }
@@ -116,8 +176,10 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("chart-type", this.getSelectedChartTypesValue());
     wrapper.setAttribute("start-date", this.startDate);
     wrapper.setAttribute("end-date", this.endDate);
-    wrapper.setAttribute("region-code", this.selectedRegionCode);
+    wrapper.setAttribute("region-code", this.getRegionCodeValue());
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
+    wrapper.setAttribute("blogs", this.blogs);
+    wrapper.setAttribute("bulletins", this.bulletins);
 
     if (this.showProductsTrainingInputs) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
@@ -139,6 +201,24 @@ export class YearlystatsComponent implements AfterViewInit {
       (key) => this.chartTypeSelection[key],
     );
     return selected.length ? selected.join(",") : "aws-danger-rating-micro-regions-bars";
+  }
+
+  private getSelectedBulletinRegionCodes(): string[] {
+    const available = this.graphicsService.getBulletinRegionCodes();
+    if (this.selectedRegionCodes.length === 0) {
+      return available;
+    }
+
+    return this.selectedRegionCodes.filter((regionCode) => available.includes(regionCode));
+  }
+
+  private getSelectedBlogRegionCodes(): string[] {
+    const available = this.graphicsService.getBlogRegionCodes();
+    if (this.selectedRegionCodes.length === 0) {
+      return available;
+    }
+
+    return this.selectedRegionCodes.filter((regionCode) => available.includes(regionCode));
   }
 
   private parseTrainingDates(value: string): string[] {
@@ -176,5 +256,3 @@ type YearlyChartType =
   | "aws-danger-pattern-micro-regions"
   | "aws-avalanche-problem-micro-regions"
   | "aws-products";
-
-type YearlyRegionCode = "all" | "AT-07" | "IT-32-BZ" | "IT-32-TN";

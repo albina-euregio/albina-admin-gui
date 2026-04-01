@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 
 import { AlbinaLanguage } from "../../models/text.model";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -11,6 +11,19 @@ export enum PublicationChannel {
   WhatsApp = "whatsapp",
   Push = "push",
   All = "",
+}
+
+export interface BlogItem {
+  id: number;
+  title: string;
+  published: string;
+  categories: string[];
+}
+
+export interface BlogData {
+  regionCode: string;
+  lang: string;
+  blogItems: BlogItem[];
 }
 
 @Injectable()
@@ -32,5 +45,24 @@ export class BlogService {
     );
     const body = JSON.stringify("");
     return this.http.post<Response>(url, body);
+  }
+
+  loadBlogsForRegion(
+    regionCode: string,
+    lang: AlbinaLanguage,
+    startDate: string,
+    endDate: string,
+  ): Observable<BlogData> {
+    const url = this.constantsService.getServerUrlGET("/blogs/posts" as `/blogs/posts`, {
+      region: regionCode,
+      lang,
+      startDate,
+      endDate,
+      searchCategory: "",
+      searchText: "",
+    });
+    return this.http
+      .get<BlogItem[]>(url)
+      .pipe(map((response) => ({ regionCode, lang, blogItems: response as BlogItem[] }) as BlogData));
   }
 }
