@@ -38,11 +38,11 @@ export class SourceDates {
   }
 
   getNextDate(): [Date, Date] | null {
-    return this.getDateOffset(1);
+    return this.getDateOffset(-1);
   }
 
   getPreviousDate(): [Date, Date] | null {
-    return this.getDateOffset(-1);
+    return this.getDateOffset(1);
   }
 
   getLoadDate() {
