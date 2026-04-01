@@ -104,7 +104,9 @@ export class GraphicsService {
       return [];
     }
     const dates = this.getDateRange(startDate, endDate);
-    const requests = dates.map((date) => this.bulletinsService.loadBulletinsForDate(date, regionCodes, lang));
+    const requests = dates.map(
+      async (date) => await lastValueFrom(this.bulletinsService.loadBulletinsForDate(date, regionCodes, lang)),
+    );
     const results = await Promise.all(requests);
     return results.flat();
   }

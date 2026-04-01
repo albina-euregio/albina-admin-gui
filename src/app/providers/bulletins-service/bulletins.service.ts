@@ -198,15 +198,14 @@ export class BulletinsService {
     return this.http.get(url);
   }
 
-  async loadBulletinsForDate(date: string, regionCodes: string[], lang: AlbinaLanguage): Promise<Bulletin[]> {
+  loadBulletinsForDate(date: string, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
     const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
       date: `${date}T16:00:00Z`,
       regions: regionCodes,
       lang: lang,
       version: "V6_JSON",
     });
-    const data = await this.http.get<Bulletins>(url).toPromise();
-    return Array.isArray(data?.bulletins) ? data.bulletins : [];
+    return this.http.get<Bulletins>(url).pipe(map((response) => response.bulletins));
   }
 
   loadBulletins(
