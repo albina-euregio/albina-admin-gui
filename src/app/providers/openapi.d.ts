@@ -524,22 +524,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/bulletins/status/publications": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["getPublicationsStatus"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/bulletins/submit": {
     parameters: {
       query?: never;
@@ -960,8 +944,8 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Save VR statistics */
-    post: operations["saveMediaFile_1"];
+    /** Save virtual reality statistics */
+    post: operations["saveVirtualRealityStatistics"];
     delete?: never;
     options?: never;
     head?: never;
@@ -1267,8 +1251,9 @@ export interface components {
     "AvalancheBulletinStatusService.Status": {
       /** Format: date-time */
       date: string;
+      /** Format: date-time */
+      timestamp: string;
       status: components["schemas"]["BulletinStatus"];
-      report: components["schemas"]["AvalancheReport"];
     };
     AvalancheProblem: components["schemas"]["AbstractPersistentObject"] & {
       id?: string | null;
@@ -1297,30 +1282,6 @@ export interface components {
       | "favourable_situation"
       | "cornices"
       | "no_distinct_avalanche_problem";
-    /** @description This class holds all information about one avalanche report. */
-    AvalancheReport: components["schemas"]["AbstractPersistentObject"] & {
-      id?: string | null;
-      bulletins?: components["schemas"]["AvalancheBulletin"][];
-      region?: components["schemas"]["Region"] | null;
-      /** Format: date-time */
-      date?: string;
-      /** Format: date-time */
-      timestamp?: string;
-      status?: components["schemas"]["BulletinStatus"];
-      caamlV5Created?: boolean;
-      caamlV6Created?: boolean;
-      jsonCreated?: boolean;
-      pdfCreated?: boolean;
-      htmlCreated?: boolean;
-      mapCreated?: boolean;
-      emailCreated?: boolean;
-      telegramSent?: boolean;
-      whatsAppSent?: boolean;
-      pushSent?: boolean;
-      mediaFileUploaded?: boolean;
-      globalBulletins?: components["schemas"]["AvalancheBulletin"][];
-      serverInstance?: components["schemas"]["LocalServerInstance"];
-    };
     /** @enum {string} */
     AvalancheSize: "small" | "medium" | "large" | "very_large" | "extreme";
     /** @enum {string} */
@@ -2020,8 +1981,8 @@ export interface operations {
       query: {
         regions: string[];
         region: string;
-        lang: components["schemas"]["LanguageCode"];
         version: components["schemas"]["CaamlVersion"];
+        lang: components["schemas"]["LanguageCode"];
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         date: string;
       };
@@ -2585,32 +2546,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["AvalancheBulletinStatusService.Status"];
-        };
-      };
-    };
-  };
-  getPublicationsStatus: {
-    parameters: {
-      query: {
-        region: string;
-        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
-        startDate: string;
-        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
-        endDate: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description getPublicationsStatus 200 response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AvalancheBulletinStatusService.Status"][];
         };
       };
     };
@@ -3329,7 +3264,7 @@ export interface operations {
       };
     };
   };
-  saveMediaFile_1: {
+  saveVirtualRealityStatistics: {
     parameters: {
       query?: never;
       header?: never;
@@ -3338,14 +3273,11 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          /** Format: binary */
-          inputStream?: string;
-        };
+        "application/json": string;
       };
     };
     responses: {
-      /** @description saveMediaFile_1 200 response */
+      /** @description saveVirtualRealityStatistics 200 response */
       200: {
         headers: {
           [name: string]: unknown;
