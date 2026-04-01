@@ -929,6 +929,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error("Publication status could not be loaded!", error);
+        // open modal regardless since it works without the data as well
+        this.openPublicationStatusModal(undefined);
       },
     );
   }
