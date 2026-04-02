@@ -117,6 +117,11 @@ export class BulletinsComponent implements OnDestroy {
     this.router.navigate(["/bulletins/" + formattedDate], { queryParams: { readOnly: isReadOnly } });
   }
 
+  showPublicationChecklist(date: [Date, Date]) {
+    const formattedDate = this.constantsService.getISODateString(date[1]);
+    this.router.navigate([`/bulletins/${formattedDate}/publication`]);
+  }
+
   copy(event, date: [Date, Date]) {
     event.stopPropagation();
     this.copying = true;

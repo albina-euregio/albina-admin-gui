@@ -248,7 +248,8 @@
       "deleteAllWarningRegions": "Alle Warnregionen löschen",
       "publishAll": "Alle Regionen publizieren",
       "publishAllNoMessages": "Alle Regionen publizieren (keine Nachrichten)",
-      "mediaFile": "Mediendatei hochladen"
+      "mediaFile": "Mediendatei hochladen",
+      "publicationChecklist": "Publikations-Checkliste öffnen"
     },
     "status": {
       "submittedInfo": "Wird um 17 Uhr publiziert",

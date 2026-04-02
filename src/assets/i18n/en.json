@@ -248,7 +248,8 @@
       "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Publish all regions",
       "publishAllNoMessages": "Publish all regions (no messages)",
-      "mediaFile": "Upload media file"
+      "mediaFile": "Upload media file",
+      "publicationChecklist": "Open publication checklist"
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",

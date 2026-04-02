@@ -188,6 +188,20 @@
             </td>
           }
           <td class="bulletins-table__region-publishing-tools">
+            @if (
+              authenticationService.isCurrentUserInRole("FORECASTER", "ADMIN") &&
+              bulletinsService.sourceDates.hasBeenPublished5PM(date)
+            ) {
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm me-2"
+                (click)="showPublicationChecklist(date)"
+                data-toggle="tooltip"
+                title="{{ 'bulletins.tooltip.publicationChecklist' | translate }}"
+              >
+                <i class="ph ph-list-checks"></i>
+              </button>
+            }
             <!-- copy -->
             @if (showCopyButton(date)) {
               <button
