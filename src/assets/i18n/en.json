@@ -251,6 +251,12 @@
       "mediaFile": "Upload media file",
       "publicationChecklist": "Open publication checklist"
     },
+    "publicationChecklist": {
+      "title": "Publication checklist",
+      "descWebsite": "The danger level is marked on the map. Clicking on a region shows the avalanche problems and texts.",
+      "descEmail": "An email was sent and contains a report.",
+      "descMessage": "A message containing a link to the website was posted."
+    },
     "status": {
       "submittedInfo": "Will be published at 5PM",
       "resubmittedInfo": "Will be published at 8AM",
