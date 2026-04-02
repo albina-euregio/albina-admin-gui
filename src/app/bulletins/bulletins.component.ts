@@ -111,6 +111,14 @@ export class BulletinsComponent implements OnDestroy {
     }
   }
 
+  isOwnRegionPublished(date: [Date, Date]) {
+    const userRegion = this.authenticationService.getActiveRegionId();
+    return (
+      this.getRegionStatus(userRegion, date) === this.bulletinStatus.published ||
+      this.getRegionStatus(userRegion, date) === this.bulletinStatus.republished
+    );
+  }
+
   editBulletin(date: [Date, Date], isReadOnly?: boolean) {
     const formattedDate = this.constantsService.getISODateString(date[1]);
     this.bulletinsService.setIsReadOnly(isReadOnly);

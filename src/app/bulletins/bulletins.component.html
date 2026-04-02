@@ -194,7 +194,9 @@
             ) {
               <button
                 type="button"
-                class="btn btn-secondary btn-sm me-2"
+                class="btn btn-sm me-2"
+                [class.btn-warning]="isOwnRegionPublished(date)"
+                [class.btn-outline-secondary]="!isOwnRegionPublished(date)"
                 (click)="showPublicationChecklist(date)"
                 data-toggle="tooltip"
                 title="{{ 'bulletins.tooltip.publicationChecklist' | translate }}"
