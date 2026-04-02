@@ -1,18 +1,28 @@
-import { Component, computed, inject } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { DatePipe } from "@angular/common";
+import { Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
-import { map } from "rxjs";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
-  imports: [TranslateModule],
+  imports: [DatePipe, TranslateModule],
 })
-export class PublicationChecklistComponent {
-  private route = inject(ActivatedRoute);
+export class PublicationChecklistComponent implements OnInit {
+  private activeRoute = inject(ActivatedRoute);
+  bulletinsService = inject(BulletinsService);
+  translateService = inject(TranslateService);
+  date = "";
 
-  readonly date = toSignal(this.route.paramMap.pipe(map((params) => params.get("date") ?? "")), { initialValue: "" });
+  websiteLink() {
+    return `https://avalanche.report/bulletin/${this.date}`;
+  }
 
-  readonly websiteLink = computed(() => `https://avalanche.report/bulletin/${this.date()}`);
+  ngOnInit() {
+    this.activeRoute.params.subscribe((routeParams) => {
+      this.date = routeParams.date;
+      this.bulletinsService.sourceDates.setActiveDate(routeParams.date);
+    });
+  }
 }

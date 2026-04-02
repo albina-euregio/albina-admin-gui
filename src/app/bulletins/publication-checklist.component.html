@@ -2,7 +2,15 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6">
       <div class="card">
-        <div class="card-header">{{ "bulletins.publicationChecklist.title" | translate }} &ndash; {{ date() }}</div>
+        <div class="card-header">
+          {{ "bulletins.publicationChecklist.title" | translate }}
+          <time class="create-bulletin__current-date font-m-bold">
+            {{
+              bulletinsService.sourceDates.activeValidUntil
+                | date: "fullDate" : undefined : translateService.getCurrentLang()
+            }}
+          </time>
+        </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between align-items-start">
             <div class="pe-3">
