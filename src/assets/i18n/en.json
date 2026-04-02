@@ -255,7 +255,11 @@
       "title": "Publication checklist for",
       "descWebsite": "The danger level is marked on the map. Clicking on a region shows the avalanche problems and texts.",
       "descEmail": "An email was sent and contains a report.",
-      "descMessage": "A message containing a link to the website was posted."
+      "descMessage": "A message containing a link to the website was posted.",
+      "ok": "Ok",
+      "problem": "Problem",
+      "problemDescription": "Description",
+      "problemPlaceholder": "Describe the encountered problem"
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",

@@ -14,9 +14,34 @@ export class PublicationChecklistComponent implements OnInit {
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
   date = "";
+  checklistState = {
+    website: { ok: false, problem: false, problemDescription: "" },
+    email: { ok: false, problem: false, problemDescription: "" },
+    whatsApp: { ok: false, problem: false, problemDescription: "" },
+    telegram: { ok: false, problem: false, problemDescription: "" },
+  };
 
   websiteLink() {
     return `https://avalanche.report/bulletin/${this.date}`;
+  }
+
+  onOkChange(item: keyof PublicationChecklistComponent["checklistState"], event: Event) {
+    const isOk = (event.target as HTMLInputElement).checked;
+    this.checklistState[item].ok = isOk;
+    if (isOk) {
+      this.checklistState[item].problem = false;
+    }
+  }
+
+  onProblemChange(item: keyof PublicationChecklistComponent["checklistState"], event: Event) {
+    const hasProblem = (event.target as HTMLInputElement).checked;
+    this.checklistState[item].problem = hasProblem;
+    if (hasProblem) {
+      this.checklistState[item].ok = false;
+      return;
+    }
+
+    this.checklistState[item].problemDescription = "";
   }
 
   ngOnInit() {
