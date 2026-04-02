@@ -1,22 +1,22 @@
-import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
+import { CommonModule, formatDate, KeyValuePipe } from "@angular/common";
 import {
-  Component,
-  AfterViewInit,
-  ElementRef,
-  OnDestroy,
   AfterContentInit,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
   TemplateRef,
   viewChild,
-  inject,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
-import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
+import { RegionProperties, RegionsService } from "app/providers/regions-service/regions.service";
 import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
 import { BsModalService } from "ngx-bootstrap/modal";
 import type { Observable } from "rxjs";
@@ -26,14 +26,7 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import "bootstrap";
 import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
 import type { ModellingRouteData } from "./routes";
-import {
-  type AlpsolutObservation,
-  AlpsolutProfileService,
-  MeteogramSourceService,
-  MultimodelSourceService,
-  ObservedProfileSourceService,
-  ZamgMeteoSourceService,
-} from "./sources";
+import { MeteogramSourceService, MultimodelSourceService, ZamgMeteoSourceService } from "./sources";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;
@@ -45,13 +38,7 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
-  providers: [
-    AlpsolutProfileService,
-    MeteogramSourceService,
-    MultimodelSourceService,
-    ObservedProfileSourceService,
-    ZamgMeteoSourceService,
-  ],
+  providers: [MeteogramSourceService, MultimodelSourceService, ZamgMeteoSourceService],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
@@ -62,8 +49,6 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   authenticationService = inject(AuthenticationService);
   private multimodelSource = inject(MultimodelSourceService);
   private meteogramSource = inject(MeteogramSourceService);
-  private observedProfileSource = inject(ObservedProfileSourceService);
-  private alpsolutProfileSource = inject(AlpsolutProfileService);
   zamgMeteoSourceService = inject(ZamgMeteoSourceService);
   private qfaService = inject(QfaService);
   paramService = inject(ParamService);
@@ -82,11 +67,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     multimodel: [],
     meteogram: [],
     qfa: [],
-    observed_profile: [],
-    alpsolut_profile: [],
   };
-  observationConfigurations = new Set<string>();
-  observationConfiguration: string | undefined;
 
   public allSources: MultiselectDropdownData[] = [];
 
@@ -143,22 +124,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
               name: this.translateService.instant("sidebar.qfa"),
             },
           ]
-        : modelling === "snowpack"
-          ? [
-              {
-                id: ForecastSource.observed_profile,
-                loader: () => this.observedProfileSource.getObservedProfiles(),
-                fillColor: "#f8d229",
-                name: this.translateService.instant("sidebar.modellingSnowpack"),
-              },
-              {
-                id: ForecastSource.alpsolut_profile,
-                loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
-                fillColor: "#d95f0e",
-                name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
-              },
-            ]
-          : [];
+        : [];
     this.selectedSources = Object.fromEntries(this.allSources.map((s) => [s.id, true]));
 
     this.modelPoints = [];
@@ -190,7 +156,6 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       if ($source === "qfa") this.setQfa(this.files[locationName][0], 0);
       this.selectedModelPoint = $source === "qfa" ? undefined : point;
       this.selectedModelType = $source as ForecastSource;
-      this.observationConfiguration = (point as AlpsolutObservation).$data?.configuration;
       this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
     };
 
@@ -214,17 +179,12 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   async loadAll() {
     await initAugmentRegion();
-    this.observationConfigurations.clear();
     this.allSources.forEach((source) => {
       if (typeof source.loader !== "function") return;
       source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
           augmentRegion(point);
-          const configuration = (point as AlpsolutObservation)?.$data?.configuration;
-          if (configuration) {
-            this.observationConfigurations.add(configuration);
-          }
           try {
             this.drawMarker(point);
             this.modelPoints.push(point);
@@ -372,41 +332,17 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     }
   }
 
-  changeRun(type: -1 | 1, changeType: "" | "observationConfiguration" = "") {
-    if (changeType === "observationConfiguration") {
-      const configurations = [...this.observationConfigurations];
-      const index = configurations.indexOf(this.observationConfiguration);
-      this.observationConfiguration = configurations.at((index + type) % configurations.length);
-    } else if (this.selectedModelType === "qfa") {
+  changeRun(type: -1 | 1) {
+    if (this.selectedModelType === "qfa") {
       const filenames = this.files[this.selectedCity].map((file) => file.filename);
       const index = filenames.indexOf(this.qfa.file.filename);
       this.setQfa(filenames.at((index + type) % filenames.length), 0);
     } else if (this.selectedModelPoint) {
-      let points = this.dropDownOptions[this.selectedModelType];
-      if (this.showObservationConfigurations && this.observationConfiguration) {
-        points = points.filter(
-          (p) => (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration,
-        );
-      }
+      const points = this.dropDownOptions[this.selectedModelType];
       const index = points.findIndex(
         (p) => p.region === this.selectedModelPoint.region && p.locationName === this.selectedModelPoint.locationName,
       );
       this.selectedModelPoint = points.at((index + type) % points.length);
     }
-  }
-
-  setObservationConfiguration() {
-    if (!this.showObservationConfigurations) return;
-    this.selectedModelPoint =
-      this.dropDownOptions[this.selectedModelType].find(
-        (p) =>
-          p.region === this.selectedModelPoint.region &&
-          p.locationName === this.selectedModelPoint.locationName &&
-          (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration,
-      ) ?? this.selectedModelPoint;
-  }
-
-  get showObservationConfigurations(): boolean {
-    return !!(this.selectedModelPoint as AlpsolutObservation)?.$data?.configuration;
   }
 }

@@ -28,10 +28,8 @@ export enum ObservationSource {
 }
 
 export enum ForecastSource {
-  alpsolut_profile = "alpsolut_profile",
   meteogram = "meteogram",
   multimodel = "multimodel",
-  observed_profile = "observed_profile",
   qfa = "qfa",
 }
 

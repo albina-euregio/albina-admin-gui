@@ -51,18 +51,6 @@
           }
           @if (authenticationService.getActiveRegion()?.enableModelling) {
             <li class="nav-item">
-              <a
-                class="nav-link"
-                routerLinkActive="active"
-                [routerLink]="['/modelling/snowpack']"
-                ngxMousetrapKey="g s"
-              >
-                {{ "sidebar.snowpack" | translate }}
-              </a>
-            </li>
-          }
-          @if (authenticationService.getActiveRegion()?.enableModelling) {
-            <li class="nav-item">
               <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']" ngxMousetrapKey="g a">
                 {{ "sidebar.awsome" | translate }}
               </a>

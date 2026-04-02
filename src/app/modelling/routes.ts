@@ -21,15 +21,6 @@ export default [
     canActivate: [AuthGuard],
   },
   {
-    path: "snowpack",
-    data: {
-      title: "SNOWPACK",
-      modelling: "snowpack",
-    } satisfies ModellingRouteData,
-    component: ForecastComponent,
-    canActivate: [], // no authentication
-  },
-  {
     path: "awsome",
     data: {
       title: "AWSOME",
