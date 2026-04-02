@@ -4,6 +4,15 @@ import { ActivatedRoute } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 
+export interface ChecklistItem {
+  title: string;
+  link?: string;
+  description: string;
+  ok: boolean;
+  problem: boolean;
+  problemDescription: string;
+}
+
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
@@ -13,41 +22,76 @@ export class PublicationChecklistComponent implements OnInit {
   private activeRoute = inject(ActivatedRoute);
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
-  date = "";
-  checklistState = {
-    website: { ok: false, problem: false, problemDescription: "" },
-    email: { ok: false, problem: false, problemDescription: "" },
-    whatsApp: { ok: false, problem: false, problemDescription: "" },
-    telegram: { ok: false, problem: false, problemDescription: "" },
-  };
 
-  websiteLink() {
-    return `https://avalanche.report/bulletin/${this.date}`;
+  date = "";
+  checklistItems: ChecklistItem[] = [];
+
+  private createChecklistItems(date: string): ChecklistItem[] {
+    return [
+      {
+        title: "Website",
+        description: "bulletins.publicationChecklist.descWebsite",
+        link: `https://lawinen.report/bulletin/${date}`,
+        ok: false,
+        problem: false,
+        problemDescription: "",
+      },
+      {
+        title: "Email",
+        description: "bulletins.publicationChecklist.descEmail",
+        ok: false,
+        problem: false,
+        problemDescription: "",
+      },
+      {
+        title: "WhatsApp",
+        description: "bulletins.publicationChecklist.descMessage",
+        link: "https://www.whatsapp.com/channel/0029Vb9EFivJUM2ShOiocj3h",
+        ok: false,
+        problem: false,
+        problemDescription: "",
+      },
+      {
+        title: "Telegram",
+        description: "bulletins.publicationChecklist.descMessage",
+        link: "https://t.me/s/lawinenwarndienst_tirol",
+        ok: false,
+        problem: false,
+        problemDescription: "",
+      },
+    ];
   }
 
-  onOkChange(item: keyof PublicationChecklistComponent["checklistState"], event: Event) {
+  onOkChange(index: number, event: Event) {
+    const item = this.checklistItems[index];
     const isOk = (event.target as HTMLInputElement).checked;
-    this.checklistState[item].ok = isOk;
+    item.ok = isOk;
     if (isOk) {
-      this.checklistState[item].problem = false;
+      item.problem = false;
     }
   }
 
-  onProblemChange(item: keyof PublicationChecklistComponent["checklistState"], event: Event) {
+  onProblemChange(index: number, event: Event) {
+    const item = this.checklistItems[index];
     const hasProblem = (event.target as HTMLInputElement).checked;
-    this.checklistState[item].problem = hasProblem;
+    item.problem = hasProblem;
     if (hasProblem) {
-      this.checklistState[item].ok = false;
+      item.ok = false;
       return;
     }
 
-    this.checklistState[item].problemDescription = "";
+    item.problemDescription = "";
+  }
+
+  onProblemDescriptionChange(index: number, event: Event) {
+    this.checklistItems[index].problemDescription = (event.target as HTMLInputElement).value;
   }
 
   ngOnInit() {
-    this.activeRoute.params.subscribe((routeParams) => {
-      this.date = routeParams.date;
-      this.bulletinsService.sourceDates.setActiveDate(routeParams.date);
+    this.activeRoute.params.subscribe(({ date }) => {
+      this.date = date;
+      this.checklistItems = this.createChecklistItems(date);
+      this.bulletinsService.sourceDates.setActiveDate(date);
     });
   }
 }

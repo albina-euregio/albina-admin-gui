@@ -1,6 +1,6 @@
 <div class="container py-4">
   <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
+    <div class="col-12 col-md-10 col-lg-8">
       <div class="card">
         <div class="card-header">
           {{ "bulletins.publicationChecklist.title" | translate }}
@@ -12,235 +12,82 @@
           </time>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between align-items-start gap-3">
-              <div class="pe-3">
-                <div>
-                  Website &ndash;
-                  <a [href]="websiteLink()" target="_blank" rel="noopener noreferrer">{{ websiteLink() }}</a>
+          @for (item of checklistItems; track $index; let index = $index) {
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-start gap-3">
+                <div class="pe-3">
+                  <div>
+                    {{ item.title }}
+                    @if (item.link) {
+                      <a
+                        class="ms-1 text-decoration-none"
+                        [href]="item.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        [attr.aria-label]="item.title + ' link'"
+                      >
+                        <i class="ph ph-link"></i>
+                      </a>
+                    }
+                  </div>
+                  <small class="text-muted"> {{ item.description | translate }} </small>
                 </div>
-                <small class="text-muted">
-                  {{ "bulletins.publicationChecklist.descWebsite" | translate }}
-                </small>
-              </div>
-              <div class="btn-group mt-1 text-nowrap" role="group" aria-label="Website checklist status">
-                <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkWebsiteOk"
-                  [checked]="checklistState.website.ok"
-                  (change)="onOkChange('website', $event)"
-                />
-                <label
-                  class="btn btn-sm rounded-pill me-2"
-                  [class.btn-success]="checklistState.website.ok"
-                  [class.btn-outline-dark]="!checklistState.website.ok"
-                  for="checkWebsiteOk"
+                <div
+                  class="btn-group mt-1 text-nowrap"
+                  role="group"
+                  [attr.aria-label]="item.title + ' checklist status'"
                 >
-                  <i class="ph ph-check-circle"></i>
-                  {{ "bulletins.publicationChecklist.ok" | translate }}
-                </label>
+                  <input
+                    class="btn-check"
+                    type="checkbox"
+                    [id]="'check' + index + 'Ok'"
+                    [checked]="item.ok"
+                    (change)="onOkChange(index, $event)"
+                  />
+                  <label
+                    class="btn btn-sm rounded-pill me-2"
+                    [class.btn-success]="item.ok"
+                    [class.btn-outline-dark]="!item.ok"
+                    [for]="'check' + index + 'Ok'"
+                  >
+                    <i class="ph ph-check-circle"></i>
+                    {{ "bulletins.publicationChecklist.ok" | translate }}
+                  </label>
 
-                <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkWebsiteProblem"
-                  [checked]="checklistState.website.problem"
-                  (change)="onProblemChange('website', $event)"
-                />
-                <label
-                  class="btn btn-sm rounded-pill"
-                  [class.btn-danger]="checklistState.website.problem"
-                  [class.btn-outline-dark]="!checklistState.website.problem"
-                  for="checkWebsiteProblem"
-                >
-                  <i class="ph ph-warning-circle"></i>
-                  {{ "bulletins.publicationChecklist.problem" | translate }}
-                </label>
+                  <input
+                    class="btn-check"
+                    type="checkbox"
+                    [id]="'check' + index + 'Problem'"
+                    [checked]="item.problem"
+                    (change)="onProblemChange(index, $event)"
+                  />
+                  <label
+                    class="btn btn-sm rounded-pill"
+                    [class.btn-danger]="item.problem"
+                    [class.btn-outline-dark]="!item.problem"
+                    [for]="'check' + index + 'Problem'"
+                  >
+                    <i class="ph ph-warning-circle"></i>
+                    {{ "bulletins.publicationChecklist.problem" | translate }}
+                  </label>
+                </div>
               </div>
-            </div>
-            <div class="mt-2" [hidden]="!checklistState.website.problem">
-              <label class="form-label" for="problemWebsite">
-                {{ "bulletins.publicationChecklist.problemDescription" | translate }}
-              </label>
-              <input
-                class="form-control"
-                type="text"
-                id="problemWebsite"
-                [value]="checklistState.website.problemDescription"
-                (input)="checklistState.website.problemDescription = $any($event.target).value"
-                [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
-              />
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between align-items-start gap-3">
-              <div class="pe-3">
-                <div>Email</div>
-                <small class="text-muted"> {{ "bulletins.publicationChecklist.descEmail" | translate }} </small>
-              </div>
-              <div class="btn-group mt-1 text-nowrap" role="group" aria-label="Email checklist status">
-                <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkEmailOk"
-                  [checked]="checklistState.email.ok"
-                  (change)="onOkChange('email', $event)"
-                />
-                <label
-                  class="btn btn-sm rounded-pill me-2"
-                  [class.btn-success]="checklistState.email.ok"
-                  [class.btn-outline-dark]="!checklistState.email.ok"
-                  for="checkEmailOk"
-                >
-                  <i class="ph ph-check-circle"></i>
-                  {{ "bulletins.publicationChecklist.ok" | translate }}
-                </label>
 
-                <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkEmailProblem"
-                  [checked]="checklistState.email.problem"
-                  (change)="onProblemChange('email', $event)"
-                />
-                <label
-                  class="btn btn-sm rounded-pill"
-                  [class.btn-danger]="checklistState.email.problem"
-                  [class.btn-outline-dark]="!checklistState.email.problem"
-                  for="checkEmailProblem"
-                >
-                  <i class="ph ph-warning-circle"></i>
-                  {{ "bulletins.publicationChecklist.problem" | translate }}
+              <div class="mt-2" [hidden]="!item.problem">
+                <label class="form-label" [for]="'problem' + index">
+                  {{ "bulletins.publicationChecklist.problemDescription" | translate }}
                 </label>
-              </div>
-            </div>
-            <div class="mt-2" [hidden]="!checklistState.email.problem">
-              <label class="form-label" for="problemEmail">
-                {{ "bulletins.publicationChecklist.problemDescription" | translate }}
-              </label>
-              <input
-                class="form-control"
-                type="text"
-                id="problemEmail"
-                [value]="checklistState.email.problemDescription"
-                (input)="checklistState.email.problemDescription = $any($event.target).value"
-                [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
-              />
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between align-items-start gap-3">
-              <div class="pe-3">
-                <div>WhatsApp</div>
-                <small class="text-muted"> {{ "bulletins.publicationChecklist.descMessage" | translate }} </small>
-              </div>
-              <div class="btn-group mt-1 text-nowrap" role="group" aria-label="WhatsApp checklist status">
                 <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkWhatsAppOk"
-                  [checked]="checklistState.whatsApp.ok"
-                  (change)="onOkChange('whatsApp', $event)"
+                  class="form-control"
+                  type="text"
+                  [id]="'problem' + index"
+                  [value]="item.problemDescription"
+                  (input)="onProblemDescriptionChange(index, $event)"
+                  [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
                 />
-                <label
-                  class="btn btn-sm rounded-pill me-2"
-                  [class.btn-success]="checklistState.whatsApp.ok"
-                  [class.btn-outline-dark]="!checklistState.whatsApp.ok"
-                  for="checkWhatsAppOk"
-                >
-                  <i class="ph ph-check-circle"></i>
-                  {{ "bulletins.publicationChecklist.ok" | translate }}
-                </label>
-
-                <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkWhatsAppProblem"
-                  [checked]="checklistState.whatsApp.problem"
-                  (change)="onProblemChange('whatsApp', $event)"
-                />
-                <label
-                  class="btn btn-sm rounded-pill"
-                  [class.btn-danger]="checklistState.whatsApp.problem"
-                  [class.btn-outline-dark]="!checklistState.whatsApp.problem"
-                  for="checkWhatsAppProblem"
-                >
-                  <i class="ph ph-warning-circle"></i>
-                  {{ "bulletins.publicationChecklist.problem" | translate }}
-                </label>
               </div>
-            </div>
-            <div class="mt-2" [hidden]="!checklistState.whatsApp.problem">
-              <label class="form-label" for="problemWhatsApp">
-                {{ "bulletins.publicationChecklist.problemDescription" | translate }}
-              </label>
-              <input
-                class="form-control"
-                type="text"
-                id="problemWhatsApp"
-                [value]="checklistState.whatsApp.problemDescription"
-                (input)="checklistState.whatsApp.problemDescription = $any($event.target).value"
-                [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
-              />
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between align-items-start gap-3">
-              <div class="pe-3">
-                <div>Telegram</div>
-                <small class="text-muted"> {{ "bulletins.publicationChecklist.descMessage" | translate }} </small>
-              </div>
-              <div class="btn-group mt-1 text-nowrap" role="group" aria-label="Telegram checklist status">
-                <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkTelegramOk"
-                  [checked]="checklistState.telegram.ok"
-                  (change)="onOkChange('telegram', $event)"
-                />
-                <label
-                  class="btn btn-sm rounded-pill me-2"
-                  [class.btn-success]="checklistState.telegram.ok"
-                  [class.btn-outline-dark]="!checklistState.telegram.ok"
-                  for="checkTelegramOk"
-                >
-                  <i class="ph ph-check-circle"></i>
-                  {{ "bulletins.publicationChecklist.ok" | translate }}
-                </label>
-
-                <input
-                  class="btn-check"
-                  type="checkbox"
-                  id="checkTelegramProblem"
-                  [checked]="checklistState.telegram.problem"
-                  (change)="onProblemChange('telegram', $event)"
-                />
-                <label
-                  class="btn btn-sm rounded-pill"
-                  [class.btn-danger]="checklistState.telegram.problem"
-                  [class.btn-outline-dark]="!checklistState.telegram.problem"
-                  for="checkTelegramProblem"
-                >
-                  <i class="ph ph-warning-circle"></i>
-                  {{ "bulletins.publicationChecklist.problem" | translate }}
-                </label>
-              </div>
-            </div>
-            <div class="mt-2" [hidden]="!checklistState.telegram.problem">
-              <label class="form-label" for="problemTelegram">
-                {{ "bulletins.publicationChecklist.problemDescription" | translate }}
-              </label>
-              <input
-                class="form-control"
-                type="text"
-                id="problemTelegram"
-                [value]="checklistState.telegram.problemDescription"
-                (input)="checklistState.telegram.problemDescription = $any($event.target).value"
-                [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
-              />
-            </div>
-          </li>
+            </li>
+          }
         </ul>
       </div>
     </div>
