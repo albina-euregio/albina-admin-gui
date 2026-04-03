@@ -14,16 +14,17 @@
 
       <div class="awsstats-actions">
         <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateObservations()">
-          Load data
+          {{ "awsstats.label.loadData" | translate }}
         </button>
         <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(7)">
-          Last 7 days
+          {{ "awsstats.label.last7days" | translate }}
         </button>
         <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(30)">
+          {{ "awsstats.label.last30days" | translate }}
           Last 30 days
         </button>
         <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
-          Last 90 days
+          {{ "awsstats.label.last90days" | translate }}
         </button>
       </div>
     </div>
