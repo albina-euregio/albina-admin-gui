@@ -35,8 +35,8 @@
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
     "lineaexport": "LINEA",
-    "awsstats": "AWS Stats",
-    "yearlystats": "Yearly Stats",
+    "awsstats": "LWD-Statistiken",
+    "yearlystats": "Jahresstatistiken",
     "graphics": "Grafiken"
   },
   "menu": {
@@ -276,9 +276,9 @@
         "saveBulletin": "Lawinenvorhersage speichern",
         "discardBulletin": "Änderungen an der Lawinenvorhersage verwerfen",
         "loadBulletin": "Lawinenvorhersage vom Vortag laden",
-        "uploadCaamlBulletin": "Upload bulletin in CAAML format",
-        "uploadJsonBulletin": "Upload Bulletin in JSON Format",
-        "downloadCaamlBulletin": "Download bulletin in CAAML format",
+        "uploadCaamlBulletin": "Bulletin in CAAML-Format hochladen",
+        "uploadJsonBulletin": "Bulletin in JSON-Format hochladen",
+        "downloadCaamlBulletin": "Bulletin in CAAML-Format herunterladen",
         "downloadJsonBulletin": "Bulletin in JSON-Format herunterladen",
         "daytimeDependency": "Tageszeitliche Abhängigkeit",
         "treeline": "Waldgrenze",
@@ -576,7 +576,7 @@
         "headline": "Mediendatei",
         "important": "WICHTIG",
         "missingFile": "Keine Datei ausgewählt!",
-        "uploadError": "Upload fehlgeschlagen!",
+        "uploadError": "Hochladen fehlgeschlagen!",
         "accept": "Senden",
         "reject": "Abbrechen"
       },
@@ -1463,50 +1463,50 @@
     "hint": "Zum Hinzufügen die Eingabetaste drücken"
   },
   "awsstats": {
-    "title": "AWS statistics",
+    "title": "LWD-Statistiken",
     "label": {
       "loading": "Daten werden geladen...",
-      "startDate": "Start date",
-      "endDate": "End date",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
       "selectWeatherStation": "Wetterstation auswählen",
       "selectMicroRegions": "Kleinstregionen auswählen",
-      "clearselection": "Clear selection",
+      "clearselection": "Auswahl löschen",
       "noMicroRegionsSelected": "keine",
       "last7days": "Letzte 7 Tage",
       "last30days": "Letzte 30 Tage",
       "last90days": "Letzte 90 Tage",
       "loadData": "Daten laden",
-      "charttypes": "Chart types"
+      "charttypes": "Diagramm-Typen"
     },
     "charts": {
-      "aws-observations": "AWS observations",
+      "aws-observations": "LWD-Beobachtungen",
       "aws-danger-rating": "Gefahrenstufe",
-      "aws-danger-rating-altitude": "Danger rating by altitude",
-      "aws-avalanche-activity-index": "Avalanche activity index"
+      "aws-danger-rating-altitude": "Gefahrenstufen nach Seehöhe",
+      "aws-avalanche-activity-index": "Lawinen-Aktivitätsindex"
     }
   },
   "yearlystats": {
-    "title": "Yearly Statistics",
+    "title": "Jahresstatistiken",
     "label": {
-      "startDate": "Start date",
-      "endDate": "End date",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
       "loaddata": "Daten laden",
       "last90Days": "Letzte 90 Tage",
       "last180Days": "Letzte 180 Tage",
       "currentSeason": "Aktuelle Saison",
-      "regionCode": "Region code",
+      "regionCode": "Region-ID",
       "allRegions": "ALLE",
-      "virtualTrainings": "Virtual trainings (dates)",
-      "fieldTrainings": "Field trainings (dates)",
-      "dangerRatingReference": "Danger rating reference"
+      "virtualTrainings": "Virtuelle Trainings (Datum)",
+      "fieldTrainings": "Training im Gelände (Tage)",
+      "dangerRatingReference": "Gefahrenstufe-Referenz"
     },
     "charts": {
-      "aws-danger-rating-micro-regions-bars": "AWS Danger Rating - Micro Regions - Bars",
-      "aws-danger-rating-micro-regions": "AWS Danger Rating - Micro Regions",
-      "aws-danger-rating-distribution": "AWS Danger Rating - Distribution",
-      "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
-      "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
-      "aws-products": "AWS Products"
+      "aws-danger-rating-micro-regions-bars": "Gefahrenstufen nach Kleinstregionen als Balken",
+      "aws-danger-rating-micro-regions": "Gefahrenstufen nach Kleinstregionen",
+      "aws-danger-rating-distribution": "Verteilung der Gefahrenstufe",
+      "aws-danger-pattern-micro-regions": "Gefahrenmuster nach Kleinstregionen",
+      "aws-avalanche-problem-micro-regions": "Lawinenprobleme nach Kleinstregionen",
+      "aws-products": "LWD-Produkte"
     }
   }
 }
