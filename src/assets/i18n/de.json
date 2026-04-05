@@ -238,7 +238,7 @@
       "preview": "Vorschau anzeigen (PDF)",
       "check": "Lawinenvorhersage prüfen",
       "info": "Publikationsstatus anzeigen",
-      "loadSuggestionFromDangerSources": "Vorschlag laden",
+      "loadSuggestionFromDangerSources": "Vorschlag aus Gefahrenquellen laden",
       "deleteAllWarningRegions": "Alle Warnregionen löschen",
       "publishAll": "Alle Regionen publizieren",
       "publishAllNoMessages": "Alle Regionen publizieren (keine Nachrichten)",
@@ -393,12 +393,17 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Willst du die Lawinenvorhersage vom Vortag laden?",
+        "message": "Willst du die Lawinenvorhersage vom Vortag laden?<br><strong>Alle derzeitigen Warnregionen werden gelöscht!</strong>",
         "accept": "Ja",
         "reject": "Nein"
       },
       "deleteAllWarningRegionsDialog": {
         "message": "Willst du alle Regionen löschen?",
+        "accept": "Ja",
+        "reject": "Nein"
+      },
+      "loadSuggestionsFromDangerSourcesDialog": {
+        "message": "Willst du einen Vorschlag aus den Gefahrenquellen laden?<br><strong>Alle derzeitigen Warnregionen werden gelöscht!</strong>",
         "accept": "Ja",
         "reject": "Nein"
       },

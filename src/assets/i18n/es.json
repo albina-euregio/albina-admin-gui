@@ -238,7 +238,7 @@
       "preview": "Vista previa del boletín (PDF)",
       "check": "Comprobar boletín",
       "info": "Muestra estado de la publicación",
-      "loadSuggestionFromDangerSources": "Cargar sugerencia",
+      "loadSuggestionFromDangerSources": "Load suggestion from danger sources",
       "deleteAllWarningRegions": "Borrar todas las regiones de alerta",
       "publishAll": "Publicar todas las regiones",
       "publishAllNoMessages": "Publicar todas las regiones (sin mensajes)",
@@ -393,12 +393,17 @@
         "accept": "De acuerdo"
       },
       "loadDialog": {
-        "message": "¿Quieres cargar los boletines del día anterior?",
+        "message": "Do you want to load the bulletins from the day before?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Si",
         "reject": "No"
       },
       "deleteAllWarningRegionsDialog": {
         "message": "¿Quieres eliminar todas las regiones de alerta?",
+        "accept": "Si",
+        "reject": "No"
+      },
+      "loadSuggestionsFromDangerSourcesDialog": {
+        "message": "Do you want to load suggestions from danger sources?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Si",
         "reject": "No"
       },

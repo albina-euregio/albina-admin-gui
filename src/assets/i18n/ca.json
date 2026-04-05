@@ -238,7 +238,7 @@
       "preview": "Previsualitzar el butlletí (PDF)",
       "check": "Comprovar el butlletí",
       "info": "Mostrar l'estat de publicació",
-      "loadSuggestionFromDangerSources": "Carregar el suggeriment",
+      "loadSuggestionFromDangerSources": "Load suggestion from danger sources",
       "deleteAllWarningRegions": "Suprimeix totes les regions de predicció",
       "publishAll": "Publicar totes les regions",
       "publishAllNoMessages": "Publica totes les regions (sense missatges)",
@@ -393,12 +393,17 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Vols carregar els butlletins d'ahir?",
+        "message": "Do you want to load the bulletins from the day before?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Si",
         "reject": "No"
       },
       "deleteAllWarningRegionsDialog": {
         "message": "Voleu suprimir totes les regions de predicció?",
+        "accept": "Si",
+        "reject": "No"
+      },
+      "loadSuggestionsFromDangerSourcesDialog": {
+        "message": "Do you want to load suggestions from danger sources?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Si",
         "reject": "No"
       },

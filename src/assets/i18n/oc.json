@@ -238,7 +238,7 @@
       "preview": "Vista previa deth bulletin (PDF)",
       "check": "Verificar bulletin",
       "info": "Mostrar er estat de publicacion",
-      "loadSuggestionFromDangerSources": "Cargar suggerència",
+      "loadSuggestionFromDangerSources": "Load suggestion from danger sources",
       "deleteAllWarningRegions": "Suprimir totes es regions d'alèrta",
       "publishAll": "Publicar totes es regions",
       "publishAllNoMessages": "Publicar totes es regions (sense missatges)",
@@ -393,12 +393,17 @@
         "accept": "D'acòrd"
       },
       "loadDialog": {
-        "message": "Vòs cargar es bulletins deth dia anterior?",
+        "message": "Do you want to load the bulletins from the day before?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Òc",
         "reject": "Non"
       },
       "deleteAllWarningRegionsDialog": {
         "message": "Vòs suprimir totes es regions d'alèrta ?",
+        "accept": "Òc",
+        "reject": "Non"
+      },
+      "loadSuggestionsFromDangerSourcesDialog": {
+        "message": "Do you want to load suggestions from danger sources?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Òc",
         "reject": "Non"
       },

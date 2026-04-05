@@ -419,6 +419,54 @@
                 </button>
               </li>
 
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+
+              <!-- preview -->
+              <li>
+                @if (showPreviewButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="preview(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.preview' | translate }}"
+                    ngxMousetrapKey="p"
+                  >
+                    <i class="ph-bold ph-eye icon-md"></i>
+                    {{ "bulletins.tooltip.preview" | translate }}
+                  </button>
+                }
+              </li>
+
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+
+              <!-- media file -->
+              <li>
+                @if (showMediaFileButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="openMediaFileModal(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
+                    ngxMousetrapKey="m"
+                  >
+                    <i class="ph-bold ph-microphone icon-md"></i>
+                    {{ "bulletins.tooltip.mediaFile" | translate }}
+                  </button>
+                }
+              </li>
+
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+
               <!-- load bulletin from yesterday -->
               <li>
                 @if (
@@ -440,42 +488,6 @@
                 }
               </li>
 
-              <!-- preview -->
-              <li>
-                @if (showPreviewButton()) {
-                  <button
-                    [disabled]="editRegions || loading"
-                    type="reset"
-                    class="dropdown-item"
-                    (click)="preview(); dropdown.hide()"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.tooltip.preview' | translate }}"
-                    ngxMousetrapKey="p"
-                  >
-                    <i class="ph-bold ph-eye icon-md"></i>
-                    {{ "bulletins.tooltip.preview" | translate }}
-                  </button>
-                }
-              </li>
-
-              <!-- media file -->
-              <li>
-                @if (showMediaFileButton()) {
-                  <button
-                    [disabled]="editRegions || loading"
-                    type="reset"
-                    class="dropdown-item"
-                    (click)="openMediaFileModal(); dropdown.hide()"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
-                    ngxMousetrapKey="m"
-                  >
-                    <i class="ph-bold ph-microphone icon-md"></i>
-                    {{ "bulletins.tooltip.mediaFile" | translate }}
-                  </button>
-                }
-              </li>
-
               <!-- load suggestion from danger sources  -->
               <li>
                 @if (showLoadSuggestionFromDangerSourcesButton()) {
@@ -483,31 +495,13 @@
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="loadSuggestionFromDangerSources()"
+                    (click)="showLoadSuggestionFromDangerSourcesModal(); dropdown.hide()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.loadSuggestionFromDangerSources' | translate }}"
                     ngxMousetrapKey="d"
                   >
                     <i class="ph-bold ph-magic-wand icon-md"></i>
                     {{ "bulletins.tooltip.loadSuggestionFromDangerSources" | translate }}
-                  </button>
-                }
-              </li>
-
-              <!-- delete all warning regions  -->
-              <li>
-                @if (showDeleteAllWarningRegionsButton()) {
-                  <button
-                    [disabled]="editRegions || loading"
-                    type="button"
-                    class="dropdown-item"
-                    (click)="deleteAllWarningRegions()"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.tooltip.deleteAllWarningRegions' | translate }}"
-                    ngxMousetrapKey="del"
-                  >
-                    <i class="ph-bold ph-trash icon-md"></i>
-                    {{ "bulletins.tooltip.deleteAllWarningRegions" | translate }}
                   </button>
                 }
               </li>
@@ -595,7 +589,7 @@
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="showPublicationInfo()"
+                    (click)="showPublicationInfo(); dropdown.hide()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.info' | translate }}"
                     ngxMousetrapKey="s"
@@ -613,7 +607,7 @@
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="publishAll(false)"
+                    (click)="publishAll(false); dropdown.hide()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.publishAll' | translate }}"
                     ngxMousetrapKey="p"
@@ -629,13 +623,31 @@
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="publishAll(true)"
+                    (click)="publishAll(true); dropdown.hide()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.publishAllNoMessages' | translate }}"
                     ngxMousetrapKey="p"
                   >
                     <i class="ph-bold ph-warning icon-md"></i>
                     {{ "bulletins.tooltip.publishAllNoMessages" | translate }}
+                  </button>
+                }
+              </li>
+
+              <!-- delete all warning regions  -->
+              <li>
+                @if (showDeleteAllWarningRegionsButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="deleteAllWarningRegions(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.deleteAllWarningRegions' | translate }}"
+                    ngxMousetrapKey="del"
+                  >
+                    <i class="ph-bold ph-trash icon-md"></i>
+                    {{ "bulletins.tooltip.deleteAllWarningRegions" | translate }}
                   </button>
                 }
               </li>
@@ -1084,7 +1096,7 @@
 
 <ng-template #loadTemplate>
   <div class="modal-body text-center">
-    <p>{{ "bulletins.create.loadDialog.message" | translate }}</p>
+    <p [innerHTML]="'bulletins.create.loadDialog.message' | translate"></p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="loadModalConfirm($event)" ngxMousetrapKey="enter">
@@ -1111,6 +1123,25 @@
     </button>
     <button type="button" class="btn btn-default" (click)="deleteAllWarningRegionsModalDecline($event)">
       {{ "bulletins.create.deleteAllWarningRegionsDialog.reject" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #loadSuggestionFromDangerSourcesTemplate>
+  <div class="modal-body text-center">
+    <p [innerHTML]="'bulletins.create.loadSuggestionsFromDangerSourcesDialog.message' | translate"></p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSuggestionFromDangerSourcesModalConfirm($event)"
+      ngxMousetrapKey="enter"
+    >
+      {{ "bulletins.create.loadSuggestionsFromDangerSourcesDialog.accept" | translate }}
+    </button>
+    <button type="button" class="btn btn-default" (click)="loadSuggestionFromDangerSourcesModalDecline($event)">
+      {{ "bulletins.create.loadSuggestionsFromDangerSourcesDialog.reject" | translate }}
     </button>
   </div>
 </ng-template>

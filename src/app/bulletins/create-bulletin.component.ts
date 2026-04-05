@@ -198,6 +198,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public checkBulletinsErrorModalRef: BsModalRef;
   readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsErrorTemplate");
 
+  public loadSuggestionFromDangerSourcesModalRef: BsModalRef;
+  readonly loadSuggestionFromDangerSourcesTemplate = viewChild<TemplateRef<unknown>>(
+    "loadSuggestionFromDangerSourcesTemplate",
+  );
+
   @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
   internalBulletinsSubscription!: Subscription;
@@ -875,7 +880,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
-      this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN")
+      this.authenticationService.isCurrentUserInRole("ADMIN")
     );
   }
 
@@ -1159,6 +1164,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   loadBulletinsFromYesterday() {
     this.openLoadModal(this.loadTemplate());
+  }
+
+  showLoadSuggestionFromDangerSourcesModal() {
+    this.openLoadSuggestionFromDangerSourcesModal(this.loadSuggestionFromDangerSourcesTemplate());
   }
 
   deleteAllWarningRegions() {
@@ -1936,6 +1945,21 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   openLoadModal(template: TemplateRef<unknown>) {
     this.loadModalRef = this.modalService.show(template, this.config);
+  }
+
+  openLoadSuggestionFromDangerSourcesModal(template: TemplateRef<unknown>) {
+    this.loadSuggestionFromDangerSourcesModalRef = this.modalService.show(template, this.config);
+  }
+
+  loadSuggestionFromDangerSourcesModalConfirm(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+    this.loadSuggestionFromDangerSourcesModalRef.hide();
+    this.loadSuggestionFromDangerSources();
+  }
+
+  loadSuggestionFromDangerSourcesModalDecline(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+    this.loadSuggestionFromDangerSourcesModalRef.hide();
   }
 
   loadModalConfirm(event: Event): void {

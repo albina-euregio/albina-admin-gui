@@ -238,7 +238,7 @@
       "preview": "Anteprima del bollettino valanghe (PDF)",
       "check": "Controlla bollettino valanghe",
       "info": "Mostra lo stato pubblicazione",
-      "loadSuggestionFromDangerSources": "Caricare proposta",
+      "loadSuggestionFromDangerSources": "Load suggestion from danger sources",
       "deleteAllWarningRegions": "Elimina tutte le meteo-nivo zone",
       "publishAll": "Pubblica tutte le meteo-nivo zone",
       "publishAllNoMessages": "Pubblica tutte le meteo-nivo zone (senza messaggi)",
@@ -393,12 +393,17 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Vuoi caricare il bollettino valanghe del giorno precedente?",
+        "message": "Do you want to load the bulletins from the day before?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Sí",
         "reject": "No"
       },
       "deleteAllWarningRegionsDialog": {
         "message": "Vuoi cancellare tutte le meteo-nivo zone?",
+        "accept": "Sì",
+        "reject": "No"
+      },
+      "loadSuggestionsFromDangerSourcesDialog": {
+        "message": "Do you want to load suggestions from danger sources?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Sì",
         "reject": "No"
       },
