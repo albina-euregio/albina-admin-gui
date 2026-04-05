@@ -936,7 +936,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openPublicationStatusModal(json) {
-    const initialState = {
+    const initialState: Partial<ModalPublicationStatusComponent> = {
       json: json,
       date: this.getActiveDate(),
       component: this,
@@ -945,7 +945,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openMediaFileModal() {
-    const initialState = {
+    const initialState: Partial<ModalMediaFileComponent> = {
       date: this.getActiveDate(),
       component: this,
     };
@@ -961,7 +961,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openPublishAllModal(change: boolean) {
-    const initialState = {
+    const initialState: Partial<ModalPublishAllComponent> = {
       text: change
         ? this.translateService.instant("bulletins.table.publishAllDialog.changeMessage")
         : this.translateService.instant("bulletins.table.publishAllDialog.message"),
@@ -2224,7 +2224,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openSubmitBulletinsModal(template: TemplateRef<unknown>, message: string, date: [Date, Date]) {
-    const initialState = {
+    const initialState: Partial<ModalSubmitComponent> = {
       text: message,
       date: date,
       component: this,
@@ -2385,7 +2385,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openPublishBulletinsModal(message: string, date: [Date, Date], change: boolean) {
-    const initialState = {
+    const initialState: Partial<ModalPublishComponent> = {
       text: message,
       date: date,
       change: change,
@@ -2459,7 +2459,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openCheckBulletinsModal(message: string) {
-    const initialState = {
+    const initialState: Partial<ModalCheckComponent> = {
       text: message,
       component: this,
     };
