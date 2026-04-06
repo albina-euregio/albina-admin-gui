@@ -130,6 +130,14 @@ export class BulletinsComponent implements OnDestroy {
     this.router.navigate([`/bulletins/${formattedDate}/publication`]);
   }
 
+  isChecklistComplete(date: [Date, Date]) {
+    const checklist = this.localStorageService.getPublicationChecklist(
+      this.constantsService.getISODateString(date[1]),
+      this.authenticationService.getActiveRegionId(),
+    );
+    return checklist.length > 0 && checklist.every((item) => item.ok || item.problem);
+  }
+
   copy(event, date: [Date, Date]) {
     event.stopPropagation();
     this.copying = true;

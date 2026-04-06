@@ -32,7 +32,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   constructor() {
     this.routeParamsSubscription = new Subscription();
     this.checklistSaveSubscription = this.saveChecklist
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(500))
       .subscribe(({ date, regionId, checklist }) => {
         this.localStorageService.setPublicationChecklist(date, regionId, checklist);
       });
