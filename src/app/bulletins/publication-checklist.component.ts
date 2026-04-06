@@ -5,8 +5,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
-import { debounceTime, Subject, Subscription } from "rxjs";
-import { groupBy, mergeMap } from "rxjs/operators";
+import { combineLatest, debounceTime, distinctUntilChanged, filter, map, Subject, Subscription } from "rxjs";
 
 import { ChecklistItemModel } from "../models/checklist.model";
 
@@ -121,11 +120,21 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.routeParamsSubscription = this.activeRoute.params.subscribe(({ date }) => {
+    // update checklist when date or region changes
+    this.routeParamsSubscription = combineLatest([
+      this.activeRoute.params.pipe(
+        map(({ date }) => date as string),
+        distinctUntilChanged(),
+      ),
+      this.authenticationService.activeRegion$.pipe(
+        map((region) => region?.id),
+        distinctUntilChanged(),
+      ),
+    ]).subscribe(([date, regionId]) => {
       this.date = date;
+      this.regionId = regionId;
       this.bulletinsService.sourceDates.setActiveDate(date);
-      this.regionId = this.authenticationService.getActiveRegionId();
-      this.checklistItems = this.getInitialChecklistItems(this.date, this.regionId);
+      this.checklistItems = this.getInitialChecklistItems(date, regionId);
     });
   }
 
