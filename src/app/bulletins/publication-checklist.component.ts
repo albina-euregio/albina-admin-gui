@@ -5,7 +5,8 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
-import { combineLatest, debounceTime, distinctUntilChanged, filter, map, Subject, Subscription } from "rxjs";
+import { RegionsService } from "app/providers/regions-service/regions.service";
+import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription } from "rxjs";
 
 import { ChecklistItemModel } from "../models/checklist.model";
 
@@ -20,6 +21,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
   localStorageService = inject(LocalStorageService);
+  regionsService = inject(RegionsService);
 
   private routeParamsSubscription: Subscription;
   private checklistSaveSubscription: Subscription;

@@ -9,6 +9,8 @@
               bulletinsService.sourceDates.activeValidUntil
                 | date: "fullDate" : undefined : translateService.getCurrentLang()
             }}
+            &ndash;
+            {{ regionsService.getRegionName(regionId) | translate }}
           </time>
         </div>
         <ul class="list-group list-group-flush">
