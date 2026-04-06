@@ -1,32 +1,45 @@
 import { DatePipe } from "@angular/common";
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
+import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
+import { debounceTime, Subject, Subscription } from "rxjs";
+import { groupBy, mergeMap } from "rxjs/operators";
 
-export interface ChecklistItem {
-  title: string;
-  link?: string;
-  description: string;
-  ok: boolean;
-  problem: boolean;
-  problemDescription: string;
-}
+import { ChecklistItemModel } from "../models/checklist.model";
 
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
   imports: [DatePipe, TranslateModule],
 })
-export class PublicationChecklistComponent implements OnInit {
+export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private activeRoute = inject(ActivatedRoute);
+  private authenticationService = inject(AuthenticationService);
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
+  localStorageService = inject(LocalStorageService);
+
+  private routeParamsSubscription: Subscription;
+  private checklistSaveSubscription: Subscription;
+  private saveChecklist = new Subject<{ date: string; regionId: string; checklist: ChecklistItemModel[] }>();
 
   date = "";
-  checklistItems: ChecklistItem[] = [];
+  checklistItems: ChecklistItemModel[] = [];
+  regionId: string;
 
-  private createChecklistItems(date: string): ChecklistItem[] {
+  constructor() {
+    this.routeParamsSubscription = new Subscription();
+    this.checklistSaveSubscription = this.saveChecklist
+      .pipe(debounceTime(1000))
+      .subscribe(({ date, regionId, checklist }) => {
+        this.localStorageService.setPublicationChecklist(date, regionId, checklist);
+      });
+  }
+
+  private createChecklistItems(date: string): ChecklistItemModel[] {
     return [
       {
         title: "Website",
@@ -69,6 +82,7 @@ export class PublicationChecklistComponent implements OnInit {
     if (isOk) {
       item.problem = false;
     }
+    this.queueChecklistSave();
   }
 
   onProblemChange(index: number, event: Event) {
@@ -77,21 +91,46 @@ export class PublicationChecklistComponent implements OnInit {
     item.problem = hasProblem;
     if (hasProblem) {
       item.ok = false;
+      this.queueChecklistSave();
       return;
     }
 
     item.problemDescription = "";
+    this.queueChecklistSave();
   }
 
   onProblemDescriptionChange(index: number, event: Event) {
     this.checklistItems[index].problemDescription = (event.target as HTMLInputElement).value;
+    this.queueChecklistSave();
+  }
+
+  private queueChecklistSave() {
+    this.saveChecklist.next({
+      date: this.date,
+      regionId: this.regionId,
+      checklist: this.checklistItems,
+    });
+  }
+
+  private getInitialChecklistItems(date: string, regionId: string): ChecklistItemModel[] {
+    const savedChecklist = this.localStorageService.getPublicationChecklist(date, regionId);
+    if (savedChecklist.length > 0) {
+      return savedChecklist;
+    }
+    return this.createChecklistItems(date);
   }
 
   ngOnInit() {
-    this.activeRoute.params.subscribe(({ date }) => {
+    this.routeParamsSubscription = this.activeRoute.params.subscribe(({ date }) => {
       this.date = date;
-      this.checklistItems = this.createChecklistItems(date);
       this.bulletinsService.sourceDates.setActiveDate(date);
+      this.regionId = this.authenticationService.getActiveRegionId();
+      this.checklistItems = this.getInitialChecklistItems(this.date, this.regionId);
     });
+  }
+
+  ngOnDestroy() {
+    this.routeParamsSubscription.unsubscribe();
+    this.checklistSaveSubscription.unsubscribe();
   }
 }

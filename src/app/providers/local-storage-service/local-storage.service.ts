@@ -6,6 +6,7 @@ import * as z from "zod/v4";
 
 import { environment } from "../../../environments/environment";
 import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
+import { ChecklistItemModel } from "../../models/checklist.model";
 import { RegionConfiguration } from "../../models/region-configuration.model";
 import type { ServerModel } from "../../models/server.model";
 import { AuthenticationResponse, AuthenticationResponseSchema } from "../authentication-service/authentication.service";
@@ -142,5 +143,13 @@ export class LocalStorageService {
       filter((event) => event.key === this.key("mapCenter")),
       map(() => this.getMapCenter()),
     );
+  }
+
+  getPublicationChecklist(date: string, regionId: string): ChecklistItemModel[] {
+    return this.get("publicationChecklist_" + date + "_" + regionId) ?? [];
+  }
+
+  setPublicationChecklist(date: string, regionId: string, checklist: ChecklistItemModel[]): void {
+    return this.set("publicationChecklist_" + date + "_" + regionId, checklist);
   }
 }
