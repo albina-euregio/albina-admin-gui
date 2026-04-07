@@ -1,7 +1,10 @@
 {
-  "i18n-ally.localesPaths": "src/assets/i18n",
-  "i18n-ally.regex.usageMatchAppend": ["\\bt\\(['\"`]({key})['\"`]"],
-  "i18n-ally.keystyle": "nested",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  },
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
   "i18n-ally.keysInUse": [
     "avalancheProblem.*",
     "dangerRating.*",
@@ -15,7 +18,8 @@
     "snowpack.meteo.*",
     "role.*"
   ],
-  "nuxt.isNuxtApp": false,
-  "editor.defaultFormatter": "oxc.oxc-vscode",
-  "editor.formatOnSave": true
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.localesPaths": "src/assets/i18n",
+  "i18n-ally.regex.usageMatchAppend": ["\\bt\\(['\"`]({key})['\"`]"],
+  "oxc.fmt.configPath": "./vite.config.ts"
 }
