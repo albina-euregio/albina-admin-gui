@@ -2,6 +2,49 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.4.0] - 2026-04-08
+
+### 🚀 Features
+
+- Extend LINEA export functionality (menu entry Graphics)
+- Separate /forecast and /analysis for danger sources
+- Store images for bulletins
+- Add upload/download functionality for bulletins in CAAML format
+- Fetch observations from SNOBS as JSON
+
+### 🐛 Bug Fixes
+
+- Fix ordering of danger sources
+- Set default values for dangerRating and BulletinDaytimeDescriptionSchema
+- Nasty topy in CreateBulletinComponent.save
+- Fix status loading logic for bulletins
+- Clear id and publicationDate in copyBulletin
+- GetValidFromUntil on date of DST change
+- Mirror bulletin status update from server
+- Fix date is undefined while creating bulletins
+
+### 🚜 Refactor
+
+- Parse AvalancheProblem using zod
+- Parse BulletinDaytimeDescription using zod
+- Parse BulletinModel using zod
+- Remove unused terrainFeature
+- Remove superseded /modelling/snowpack
+- Config textfields (free text, textcat) via lists in region object
+- Remove unused setTendency
+- Add confirmation dialog when loading suggestions
+- Restructure bulletin menu
+
+### ⚙️ Miscellaneous Tasks
+
+- Migrate to vite-plus
+- Update to eslint 10.1.0
+- Update openapi.d.ts
+- Update to oxfmt 0.42.0
+- Update to pnpm 10.33.0
+- Update to linea v8.16.0
+- Update to angular 21.2.6
+
 ## [8.3.0] - 2026-03-05
 
 ### 🚀 Features
