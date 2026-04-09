@@ -1,4 +1,4 @@
-import type { QfaFilename } from "./qfa.service";
+import type { QfaItem } from "./qfa.service";
 
 export interface coordinates {
   lat: number;
@@ -23,7 +23,7 @@ export class QfaFile {
   public metadata = {} as metadata;
   public parameters = {} as parameters;
 
-  constructor(public file: QfaFilename) {}
+  constructor(public readonly file: QfaItem) {}
 
   get coordinates() {
     return this.metadata.coords;

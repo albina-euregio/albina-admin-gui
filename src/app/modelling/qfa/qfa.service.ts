@@ -33,12 +33,6 @@ const QfaItemSchema = z.object({
 
 export type QfaItem = z.infer<typeof QfaItemSchema>;
 
-export const QfaFilenameSchema = z.object({
-  filename: z.string(),
-});
-
-export type QfaFilename = z.infer<typeof QfaFilenameSchema>;
-
 export type City = "bozen" | "innsbruck" | "lienz";
 
 @Injectable()
@@ -135,10 +129,11 @@ export class QfaService {
     return this.files;
   }
 
-  async getRun(file: QfaFilename, startDay: number, first: boolean): Promise<QfaFile> {
+  async getRun(file: QfaItem, startDay: number, first: boolean): Promise<QfaFile> {
     const days = `0${startDay}0${startDay + 2}`;
     const filename = file.filename.replace(/\d{4}\.txt/g, `${days}.txt`);
-    const run = new QfaFile({ filename });
+    const file0 = this.parseFilename(filename);
+    const run = new QfaFile(file0);
     const plainText = await firstValueFrom(
       this.http.get(`${this.baseUrl}/${filename}`, { responseType: "text", observe: "body" }),
     );

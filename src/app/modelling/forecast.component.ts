@@ -24,7 +24,7 @@ import type { Observable } from "rxjs";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 import "bootstrap";
-import { City, ParamService, QfaFile, QfaFilename, QfaService } from "./qfa";
+import { City, ParamService, QfaFile, QfaItem, QfaService } from "./qfa";
 import type { ModellingRouteData } from "./routes";
 import { MeteogramSourceService, MultimodelSourceService, ZamgMeteoSourceService } from "./sources";
 
@@ -291,13 +291,11 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     this.applyFilter();
   }
 
-  async setQfa(file: QfaFilename | string, startDay = 0) {
+  async setQfa(file: QfaItem, startDay = 0) {
     this.qfaStartDay = startDay;
-    const fileMap = typeof file === "string" ? { filename: file } : file;
-    const city = fileMap.filename.split("_")[3];
-    const first = this.qfaService.files[city][0].filename === fileMap.filename;
-    this.qfa = await this.qfaService.getRun(fileMap, startDay, first);
-    this.selectedCity = this.qfa.metadata.location.split(" ").pop().toLowerCase() as City;
+    this.selectedCity = file.city as City;
+    const first = this.qfaService.files[this.selectedCity][0].filename === file.filename;
+    this.qfa = await this.qfaService.getRun(file, startDay, first);
     this.paramService.setParameterClasses(this.qfa.parameterKeys);
   }
 
@@ -332,8 +330,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   changeRun(type: -1 | 1) {
     if (this.selectedModelType === "qfa") {
-      const filenames = this.qfaService.files[this.selectedCity].map((file) => file.filename);
-      const index = filenames.indexOf(this.qfa.file.filename);
+      const filenames = this.qfaService.files[this.selectedCity];
+      const index = filenames.indexOf(this.qfa.file);
       this.setQfa(filenames.at((index + type) % filenames.length), 0);
     } else if (this.selectedModelPoint) {
       const points = this.dropDownOptions[this.selectedModelType];

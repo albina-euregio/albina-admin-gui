@@ -187,11 +187,11 @@
           #qfaSelect
           class="custom-select"
           style="max-width: 70vw"
-          [(ngModel)]="qfa.file.filename"
-          (change)="setQfa(qfa.file.filename)"
+          [ngModel]="qfa.file"
+          (ngModelChange)="setQfa($event)"
         >
-          @for (file of qfaService.files[selectedCity]; track file) {
-            <option [value]="file.filename">{{ file.date }} {{ file.city }}</option>
+          @for (file of qfaService.files[selectedCity]; track file.filename) {
+            <option [ngValue]="file">{{ file.date }} {{ file.city }}</option>
           }
         </select>
       </div>
@@ -236,13 +236,13 @@
     @if (selectedModelType === "qfa") {
       <div id="qfa_div">
         <div class="day-button-wrapper">
-          <span class="day-button" [class.active-day]="qfaStartDay === 0" (click)="setQfa(qfa.file.filename, 0)">
+          <span class="day-button" [class.active-day]="qfaStartDay === 0" (click)="setQfa(qfa.file, 0)">
             {{ "qfa.day" | translate }} 0-2
           </span>
-          <span class="day-button" [class.active-day]="qfaStartDay === 3" (click)="setQfa(qfa.file.filename, 3)">
+          <span class="day-button" [class.active-day]="qfaStartDay === 3" (click)="setQfa(qfa.file, 3)">
             {{ "qfa.day" | translate }} 3-5
           </span>
-          <span class="day-button" [class.active-day]="qfaStartDay === 6" (click)="setQfa(qfa.file.filename, 6)">
+          <span class="day-button" [class.active-day]="qfaStartDay === 6" (click)="setQfa(qfa.file, 6)">
             {{ "qfa.day" | translate }} 6-8
           </span>
         </div>
