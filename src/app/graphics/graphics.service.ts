@@ -115,18 +115,18 @@ export class GraphicsService {
     endDate: string,
     region: string,
   ): Promise<unknown[]> {
-    if (!startDate || !endDate) {
+    if (!startDate || !endDate || !region) {
       return [];
     }
-    const dates = this.getDateRange(startDate, endDate);
-    const requests = dates.map(
-      async (date) => 
-        await lastValueFrom(
-          this.dangerSourceService.loadDangerSourceVariants(
-            [new Date(Date.parse(date.toString()+"T16:00:00Z")), undefined], region
-          )
-        ),
+
+    const dates = this.getDateRange(startDate, endDate).map((date) =>
+      new Date(date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).epochMilliseconds),
     );
+
+    const requests = dates.map((date) =>
+      lastValueFrom(this.dangerSourceService.loadDangerSourceVariants([date, undefined], region)),
+    );
+
     const results = await Promise.all(requests);
     return results.flat();
   }
