@@ -11,6 +11,7 @@ import { lastValueFrom } from "rxjs";
 import sources from "../../assets/config/stations.json";
 import { UserService } from "app/providers/user-service/user.service";
 import { TeamStressLevels } from "app/models/stress-level.model";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 
 interface LineaStationSource {
   stations: string;
@@ -34,6 +35,7 @@ export class GraphicsService {
   private authentificationService = inject(AuthenticationService);
   private blogService = inject(BlogService);
   private bulletinsService = inject(BulletinsService);
+  private dangerSourceService = inject(DangerSourcesService);
   private translateService = inject(TranslateService);
   private userService = inject(UserService);
 
@@ -103,6 +105,27 @@ export class GraphicsService {
     const dates = this.getDateRange(startDate, endDate);
     const requests = dates.map(
       async (date) => await lastValueFrom(this.bulletinsService.loadBulletinsForDate(date, regionCodes, lang)),
+    );
+    const results = await Promise.all(requests);
+    return results.flat();
+  }
+
+  async loadDangerSourceVariants(
+    startDate: string,
+    endDate: string,
+    region: string,
+  ): Promise<unknown[]> {
+    if (!startDate || !endDate) {
+      return [];
+    }
+    const dates = this.getDateRange(startDate, endDate);
+    const requests = dates.map(
+      async (date) => 
+        await lastValueFrom(
+          this.dangerSourceService.loadDangerSourceVariants(
+            [new Date(Date.parse(date.toString()+"T16:00:00Z")), undefined], region
+          )
+        ),
     );
     const results = await Promise.all(requests);
     return results.flat();
