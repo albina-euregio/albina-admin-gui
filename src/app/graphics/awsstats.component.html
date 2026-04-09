@@ -13,7 +13,7 @@
       </div>
 
       <div class="awsstats-actions">
-        <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateObservations()">
+        <button class="btn btn-primary" type="button" [disabled]="loading" (click)="update()">
           {{ "awsstats.label.loadData" | translate }}
         </button>
         <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(7)">
@@ -74,6 +74,50 @@
           (ngModelChange)="setChartType('aws-avalanche-activity-index', $event)"
         />
         <span class="form-check-label">{{ "awsstats.charts.aws-avalanche-activity-index" | translate }}</span>
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-rating-danger-source-variants']"
+          [disabled]='selectedMicroRegions.length !== 1 || loading || !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? "")'
+          (ngModelChange)="setChartType('aws-danger-rating-danger-source-variants', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-danger-rating-danger-source-variants" | translate }} ({{authentificationService.getActiveRegionId()}})</span>
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-stability']"
+          [disabled]='selectedMicroRegions.length !== 1 || loading || !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? "")'
+          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-stability', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-stability" | translate }} ({{authentificationService.getActiveRegionId()}})</span>
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-frequency']"
+          [disabled]='selectedMicroRegions.length !== 1 || loading || !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? "")'
+          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-frequency', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-frequency" | translate }} ({{authentificationService.getActiveRegionId()}})</span>
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-avalanche-size']"
+          [disabled]='selectedMicroRegions.length !== 1 || loading || !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? "")'
+          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-avalanche-size', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-avalanche-size" | translate }} ({{authentificationService.getActiveRegionId()}})</span>
       </label>
     </div>
   </div>

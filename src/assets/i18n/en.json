@@ -1487,7 +1487,11 @@
       "aws-observations": "AWS observations",
       "aws-danger-rating": "Danger rating",
       "aws-danger-rating-altitude": "Danger rating by altitude",
-      "aws-avalanche-activity-index": "Avalanche activity index"
+      "aws-avalanche-activity-index": "Avalanche activity index",
+      "aws-danger-rating-danger-source-variants": "Danger source variants",
+      "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
     }
   },
   "yearlystats": {
