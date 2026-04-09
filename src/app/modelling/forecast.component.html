@@ -187,11 +187,11 @@
           #qfaSelect
           class="custom-select"
           style="max-width: 70vw"
-          [(ngModel)]="qfa.file.filename"
-          (change)="setQfa(qfa.file.filename)"
+          [ngModel]="qfa.file"
+          (ngModelChange)="setQfa($event)"
         >
-          @for (file of files[selectedCity]; track file) {
-            <option [value]="file.filename">{{ file.date }} {{ file.city }}</option>
+          @for (file of qfaService.files[selectedCity]; track file.filename) {
+            <option [ngValue]="file">{{ file.date }} {{ file.city }}</option>
           }
         </select>
       </div>
@@ -236,13 +236,13 @@
     @if (selectedModelType === "qfa") {
       <div id="qfa_div">
         <div class="day-button-wrapper">
-          <span class="day-button" [class.active-day]="qfaStartDay === 0" (click)="setQfa(qfa.file.filename, 0)">
+          <span class="day-button" [class.active-day]="qfaStartDay === 0" (click)="setQfa(qfa.file, 0)">
             {{ "qfa.day" | translate }} 0-2
           </span>
-          <span class="day-button" [class.active-day]="qfaStartDay === 3" (click)="setQfa(qfa.file.filename, 3)">
+          <span class="day-button" [class.active-day]="qfaStartDay === 3" (click)="setQfa(qfa.file, 3)">
             {{ "qfa.day" | translate }} 3-5
           </span>
-          <span class="day-button" [class.active-day]="qfaStartDay === 6" (click)="setQfa(qfa.file.filename, 6)">
+          <span class="day-button" [class.active-day]="qfaStartDay === 6" (click)="setQfa(qfa.file, 6)">
             {{ "qfa.day" | translate }} 6-8
           </span>
         </div>
@@ -250,7 +250,7 @@
           <table class="table table-sm qfatable">
             <tr>
               <th>{{ "qfa.day" | translate }}</th>
-              @for (date of qfa.dates; track date) {
+              @for (date of qfa.paramDates; track date) {
                 <th class="text-center">
                   <span style="background-color: #60afff; padding: 0">
                     {{ date }}
@@ -260,7 +260,7 @@
             </tr>
             <tr>
               <th>{{ "qfa.time" | translate }}</th>
-              @for (_ of qfa.dates; track _) {
+              @for (_ of qfa.paramDates; track _) {
                 <th class="table-entry">
                   <div style="padding: 0">
                     <span style="background-color: #60afff">00</span>
@@ -281,12 +281,12 @@
                   </div>
                 </td>
               </tr> -->
-            @for (param of qfa.parameters; track param) {
+            @for (param of qfa.parameterKeys; track param) {
               <tr [ngClass]="[paramService.parameterClasses[param]]">
                 <td class="header">
                   <abbr title="{{ paramService.getFullName(param) }}">{{ param }}</abbr>
                 </td>
-                @for (day of qfa.data.parameters[param] | keyvalue; track day) {
+                @for (day of qfa.parameters[param] | keyvalue; track day) {
                   <td class="table-entry" [ngClass]="[paramService.parameterClasses[param]]">
                     @if (!["W500", "W700", "W850"].includes(paramService.parameterClasses[param])) {
                       <div>

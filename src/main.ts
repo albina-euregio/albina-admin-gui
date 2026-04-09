@@ -38,7 +38,7 @@ import { provideEchartsCore } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
-import { GetDustParamService, GetFilenamesService, ParamService, QfaService } from "./app/modelling/qfa";
+import { GetDustParamService, ParamService, QfaService } from "./app/modelling/qfa";
 import { GeocodingService } from "./app/observations/geocoding.service";
 import { ObservationFilterService } from "./app/observations/observation-filter.service";
 import { ObservationMarkerObserverService } from "./app/observations/observation-marker-observer.service";
@@ -126,7 +126,6 @@ bootstrapApplication(AppComponent, {
     ElevationService,
     GeocodingService,
     GetDustParamService,
-    GetFilenamesService,
     LocalStorageService,
     MapService,
     MediaFileService,

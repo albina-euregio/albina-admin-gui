@@ -24,7 +24,7 @@ import type { Observable } from "rxjs";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 import "bootstrap";
-import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
+import { City, ParamService, QfaFile, QfaItem, QfaService } from "./qfa";
 import type { ModellingRouteData } from "./routes";
 import { MeteogramSourceService, MultimodelSourceService, ZamgMeteoSourceService } from "./sources";
 
@@ -50,7 +50,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private multimodelSource = inject(MultimodelSourceService);
   private meteogramSource = inject(MeteogramSourceService);
   zamgMeteoSourceService = inject(ZamgMeteoSourceService);
-  private qfaService = inject(QfaService);
+  qfaService = inject(QfaService);
   paramService = inject(ParamService);
   translateService = inject(TranslateService);
   modalService = inject(BsModalService);
@@ -59,8 +59,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   layout = "map" as const;
   selectedModelPoint: GenericObservation;
   selectedModelType: ForecastSource;
-  selectedCity: string;
-  qfa: QfaResult;
+  selectedCity: City;
+  qfa: QfaFile;
   qfaStartDay: number;
   loading = true;
   dropDownOptions: Record<ForecastSource, GenericObservation<unknown>[]> = {
@@ -84,8 +84,6 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   readonly observationsMap = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   readonly qfaSelect = viewChild<ElementRef<HTMLSelectElement>>("qfaSelect");
   readonly observationPopupTemplate = viewChild<TemplateRef<unknown>>("observationPopupTemplate");
-
-  files = {};
 
   async ngAfterContentInit() {
     this.allRegions = (await this.regionsService.getInternalServerRegionsAsync()).features
@@ -153,7 +151,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   drawMarker(point: GenericObservation) {
     const { $source, region, locationName, latitude, longitude, eventDate } = point;
     const click = () => {
-      if ($source === "qfa") this.setQfa(this.files[locationName][0], 0);
+      if ($source === "qfa") this.setQfa(this.qfaService.files[locationName][0], 0);
       this.selectedModelPoint = $source === "qfa" ? undefined : point;
       this.selectedModelType = $source as ForecastSource;
       this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
@@ -210,7 +208,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       this.drawMarker(point);
       this.modelPoints.push(point);
     }
-    this.files = await this.qfaService.getFiles();
+    await this.qfaService.getFiles();
   }
 
   async initMaps() {
@@ -293,14 +291,12 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     this.applyFilter();
   }
 
-  async setQfa(file: QfaFilename | string, startDay = 0) {
+  async setQfa(file: QfaItem, startDay = 0) {
     this.qfaStartDay = startDay;
-    const fileMap = typeof file === "string" ? { filename: file } : file;
-    const city = fileMap.filename.split("_")[3];
-    const first = this.files[city][0].filename === fileMap.filename;
-    this.qfa = await this.qfaService.getRun(fileMap, startDay, first);
-    this.selectedCity = this.qfa.data.metadata.location.split(" ").pop().toLowerCase();
-    this.paramService.setParameterClasses(this.qfa.parameters);
+    this.selectedCity = file.city as City;
+    const first = this.qfaService.files[this.selectedCity][0].filename === file.filename;
+    this.qfa = await this.qfaService.getRun(file, startDay, first);
+    this.paramService.setParameterClasses(this.qfa.parameterKeys);
   }
 
   // Source: https://stackoverflow.com/a/44511007/9947071
@@ -334,8 +330,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   changeRun(type: -1 | 1) {
     if (this.selectedModelType === "qfa") {
-      const filenames = this.files[this.selectedCity].map((file) => file.filename);
-      const index = filenames.indexOf(this.qfa.file.filename);
+      const filenames = this.qfaService.files[this.selectedCity];
+      const index = filenames.indexOf(this.qfa.file);
       this.setQfa(filenames.at((index + type) % filenames.length), 0);
     } else if (this.selectedModelPoint) {
       const points = this.dropDownOptions[this.selectedModelType];
