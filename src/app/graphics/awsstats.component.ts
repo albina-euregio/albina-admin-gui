@@ -263,7 +263,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private getBulletinFilterMicroRegionValue(): string {
     return this.selectedMicroRegions.length
       ? JSON.stringify(this.normalizeSelectedMicroRegions(this.selectedMicroRegions))
-      : "all";
+      : "[]";
   }
 
   private normalizeSelectedMicroRegions(regions: string[]): string[] {
