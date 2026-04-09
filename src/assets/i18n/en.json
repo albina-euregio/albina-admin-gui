@@ -1511,7 +1511,8 @@
       "aws-danger-rating-distribution": "AWS Danger Rating - Distribution",
       "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
       "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
-      "aws-products": "AWS Products"
+      "aws-products": "AWS Products",
+      "aws-stress": "Team Stress Level"
     }
   }
 }

@@ -128,6 +128,17 @@
             />
             <span class="form-check-label">{{ "yearlystats.charts.aws-products" | translate }}</span>
           </label>
+
+          <label class="form-check mb-0">
+            <input
+              class="yearlystats-chart-checkbox"
+              type="checkbox"
+              [(ngModel)]="chartTypeSelection['aws-stress']"
+              (ngModelChange)="setChartType('aws-stress', $event)"
+              [disabled]="selectedRegionCodes.length !== 1 || authenticationService.getActiveRegionId() !== selectedRegionCodes[0]"
+            />
+            <span class="form-check-label">{{ "yearlystats.charts.aws-stress" | translate }}</span>
+          </label>
         </div>
       </div>
 

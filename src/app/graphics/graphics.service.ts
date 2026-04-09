@@ -9,6 +9,8 @@ import { BulletinsService } from "app/providers/bulletins-service/bulletins.serv
 import { lastValueFrom } from "rxjs";
 
 import sources from "../../assets/config/stations.json";
+import { UserService } from "app/providers/user-service/user.service";
+import { TeamStressLevels } from "app/models/stress-level.model";
 
 interface LineaStationSource {
   stations: string;
@@ -33,6 +35,7 @@ export class GraphicsService {
   private blogService = inject(BlogService);
   private bulletinsService = inject(BulletinsService);
   private translateService = inject(TranslateService);
+  private userService = inject(UserService);
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -139,6 +142,15 @@ export class GraphicsService {
         return !Number.isNaN(published) && published >= start && published <= end;
       }),
     }));
+  }
+
+  async loadTeamStressLevels(startDate: string, endDate: string): Promise<TeamStressLevels> {
+    const start = Date.parse(`${startDate}T00:00:00.000Z`);
+    const end = Date.parse(`${endDate}T23:59:59.999Z`);
+    if (Number.isNaN(start) || Number.isNaN(end) || start > end) {
+      return {};
+    }
+    return await lastValueFrom(this.userService.getTeamStressLevels([new Date(start), new Date(end)]));
   }
 
   getSmetUrl(station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined, index: number): string | undefined {

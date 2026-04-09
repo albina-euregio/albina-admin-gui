@@ -5,6 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { GraphicsService } from "./graphics.service";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 @Component({
   selector: "app-yearlystats",
@@ -19,12 +20,14 @@ export class YearlystatsComponent implements AfterViewInit {
   private wrapperHost?: ElementRef<HTMLElement>;
   private graphicsService = inject(GraphicsService);
 
+  protected authenticationService = inject(AuthenticationService);
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -30));
   protected endDate = this.toDateInputValue(new Date());
   protected errorMessage = "";
   protected showWrapper = false;
   protected bulletins = "[]";
   protected blogs = "[]";
+  protected stress = "[]";
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
@@ -39,6 +42,7 @@ export class YearlystatsComponent implements AfterViewInit {
     "aws-danger-pattern-micro-regions": false,
     "aws-avalanche-problem-micro-regions": false,
     "aws-products": false,
+    "aws-stress": false,
   };
 
   ngAfterViewInit() {
@@ -148,6 +152,9 @@ export class YearlystatsComponent implements AfterViewInit {
       const blogRegionCodes = this.getSelectedBlogRegionCodes();
       const blogs = await this.graphicsService.loadBlogs(this.startDate, this.endDate, blogRegionCodes);
       this.blogs = JSON.stringify(blogs);
+
+      const stress = await this.graphicsService.loadTeamStressLevels(this.startDate, this.endDate);
+      this.stress = JSON.stringify(stress);
     } catch (error) {
       this.errorMessage = "Failed to load chart data for selected date range.";
       console.error(error);
@@ -180,6 +187,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
     wrapper.setAttribute("blogs", this.blogs);
     wrapper.setAttribute("bulletins", this.bulletins);
+    wrapper.setAttribute("stress", this.stress);
 
     if (this.showProductsTrainingInputs) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
@@ -255,4 +263,5 @@ type YearlyChartType =
   | "aws-danger-rating-distribution"
   | "aws-danger-pattern-micro-regions"
   | "aws-avalanche-problem-micro-regions"
-  | "aws-products";
+  | "aws-products"
+  | "aws-stress";
