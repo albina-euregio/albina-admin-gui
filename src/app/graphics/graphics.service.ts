@@ -205,6 +205,27 @@ export class GraphicsService {
     return fallback;
   }
 
+  getCurrentSeason(): { start: string; end: string } {
+    let start: string;
+    let seasonEnd: string;
+    const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (now.getMonth() < 11) {
+      start = `${now.getFullYear() - 1}-11-01`;
+      seasonEnd = `${now.getFullYear()}-05-31`;
+    } else {
+      start = `${now.getFullYear()}-11-01`;
+      seasonEnd = `${now.getFullYear() + 1}-05-31`;
+    }
+
+    const seasonEndDate = new Date(`${seasonEnd}T00:00:00`);
+    const effectiveEndDate = seasonEndDate > nowDate ? nowDate : seasonEndDate;
+    const end = `${effectiveEndDate.getFullYear()}-${String(effectiveEndDate.getMonth() + 1).padStart(2, "0")}-${String(effectiveEndDate.getDate()).padStart(2, "0")}`;
+
+    return { start, end };
+  }
+
   private getDateRange(startDate: string, endDate: string): Temporal.PlainDate[] {
     let start: Temporal.PlainDate;
     let end: Temporal.PlainDate;

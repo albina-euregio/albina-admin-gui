@@ -98,6 +98,12 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     this.endDate = this.toDateInputValue(new Date());
   }
 
+  protected setCurrentSeason() {
+    const {start, end } = this.graphicsService.getCurrentSeason();
+    this.startDate = start;
+    this.endDate = end;
+  }
+
   protected clearSelectedRegions() {
     this.selectedMicroRegions = [];
     this.mapService.overlayMaps?.editSelection?.clearSelectedRegions();

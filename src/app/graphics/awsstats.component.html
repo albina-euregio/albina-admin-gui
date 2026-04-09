@@ -25,6 +25,9 @@
         <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
           {{ "awsstats.label.last90days" | translate }}
         </button>
+        <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setCurrentSeason()">
+          {{ "yearlystats.label.currentSeason" | translate }}
+        </button>
       </div>
     </div>
 

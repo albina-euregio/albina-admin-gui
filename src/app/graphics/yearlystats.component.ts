@@ -57,13 +57,9 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   protected setCurrentSeason() {
-    const now = new Date();
-    if (now.getMonth() < 7) {
-      this.startDate = `${now.getFullYear() - 1}-11-01`;
-    } else {
-      this.startDate = `${now.getFullYear()}-11-01`;
-    }
-    this.endDate = this.toDateInputValue(now);
+    const {start, end} = this.graphicsService.getCurrentSeason();
+    this.startDate = start;
+    this.endDate = end;
   }
 
   protected setChartType(chartType: YearlyChartType, checked: boolean) {
