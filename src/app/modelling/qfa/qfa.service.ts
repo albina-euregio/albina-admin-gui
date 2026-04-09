@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
+import type { LatLngExpression } from "leaflet";
 
 import { GetDustParamService } from "./dust.service";
-import { GetFilenamesService } from "./filenames.service";
+import { GetFilenamesService, QfaItem } from "./filenames.service";
 import { ParamService } from "./param.service";
 import { QfaFile } from "./qfa-file.model";
 import * as types from "./qfa-types";
@@ -18,6 +19,8 @@ export interface QfaResult {
   parameters: string[];
   file: QfaFilename;
 }
+
+type City = "bozen" | "innsbruck" | "lienz";
 
 @Injectable()
 export class QfaService {
@@ -41,13 +44,13 @@ export class QfaService {
       lng: 12.8,
       lat: 46.83,
     },
-  };
+  } satisfies Record<City, LatLngExpression>;
   files = {
-    innsbruck: [],
-    bozen: [],
-    lienz: [],
-  };
-  cities = Object.keys(this.files);
+    innsbruck: [] as QfaItem[],
+    bozen: [] as QfaItem[],
+    lienz: [] as QfaItem[],
+  } satisfies Record<City, QfaItem[]>;
+  cities = Object.keys(this.files) as City[];
 
   async loadDustParams() {
     this.dustParams = await this.dustParamService.parseDustParams();
