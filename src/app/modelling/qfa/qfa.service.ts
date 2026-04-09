@@ -34,17 +34,21 @@ const QfaItemSchema = z.object({
 
 export type QfaItem = z.infer<typeof QfaItemSchema>;
 
-export interface QfaFilename {
-  filename: string;
-}
+export const QfaFilenameSchema = z.object({
+  filename: z.string(),
+});
 
-export interface QfaResult {
-  data: types.data;
-  date: string;
-  dates: string[];
-  parameters: string[];
-  file: QfaFilename;
-}
+export type QfaFilename = z.infer<typeof QfaFilenameSchema>;
+
+export const QfaResultSchema = z.object({
+  data: z.custom<types.data>(),
+  date: z.string(),
+  dates: z.array(z.string()),
+  parameters: z.array(z.string()),
+  file: QfaFilenameSchema,
+});
+
+export type QfaResult = z.infer<typeof QfaResultSchema>;
 
 type City = "bozen" | "innsbruck" | "lienz";
 
@@ -162,14 +166,12 @@ export class QfaService {
       }
     }
 
-    const qfa = {
+    return QfaResultSchema.parse({
       data: run.data,
       date: run.date,
       dates: run.paramDates,
       parameters: parameters,
       file: file,
-    };
-
-    return qfa;
+    });
   }
 }
