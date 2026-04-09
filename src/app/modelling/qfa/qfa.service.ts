@@ -39,7 +39,7 @@ export const QfaFilenameSchema = z.object({
 
 export type QfaFilename = z.infer<typeof QfaFilenameSchema>;
 
-type City = "bozen" | "innsbruck" | "lienz";
+export type City = "bozen" | "innsbruck" | "lienz";
 
 @Injectable()
 export class QfaService {
