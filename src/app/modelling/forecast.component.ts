@@ -24,7 +24,7 @@ import type { Observable } from "rxjs";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 import "bootstrap";
-import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
+import { ParamService, QfaFile, QfaFilename, QfaService } from "./qfa";
 import type { ModellingRouteData } from "./routes";
 import { MeteogramSourceService, MultimodelSourceService, ZamgMeteoSourceService } from "./sources";
 
@@ -60,7 +60,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   selectedModelPoint: GenericObservation;
   selectedModelType: ForecastSource;
   selectedCity: string;
-  qfa: QfaResult;
+  qfa: QfaFile;
   qfaStartDay: number;
   loading = true;
   dropDownOptions: Record<ForecastSource, GenericObservation<unknown>[]> = {
@@ -299,8 +299,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     const city = fileMap.filename.split("_")[3];
     const first = this.files[city][0].filename === fileMap.filename;
     this.qfa = await this.qfaService.getRun(fileMap, startDay, first);
-    this.selectedCity = this.qfa.data.metadata.location.split(" ").pop().toLowerCase();
-    this.paramService.setParameterClasses(this.qfa.parameters);
+    this.selectedCity = this.qfa.metadata.location.split(" ").pop().toLowerCase();
+    this.paramService.setParameterClasses(this.qfa.parameterKeys);
   }
 
   // Source: https://stackoverflow.com/a/44511007/9947071

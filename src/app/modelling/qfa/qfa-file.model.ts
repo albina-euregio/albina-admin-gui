@@ -1,15 +1,11 @@
-import * as types from "./qfa-types";
+import type * as types from "./qfa-types";
+import type { QfaFilename } from "./qfa.service";
 
 export class QfaFile implements types.QFA {
   public metadata = {} as types.metadata;
   public parameters = {} as types.parameters;
 
-  get data(): types.data {
-    return {
-      metadata: this.metadata,
-      parameters: this.parameters,
-    };
-  }
+  constructor(public file: QfaFilename) {}
 
   get coordinates() {
     return this.metadata.coords;
@@ -47,7 +43,7 @@ export class QfaFile implements types.QFA {
     return prettyDates;
   }
 
-  public listParameters() {
+  get parameterKeys() {
     return Object.keys(this.parameters);
   }
 

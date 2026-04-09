@@ -17,24 +17,11 @@ export interface metadata {
 
 export type parameters = Record<string, any[]>;
 
-export interface data {
-  metadata: metadata;
-  parameters: parameters;
-}
-
 export interface QFA {
-  data: data;
   metadata: metadata;
   parameters: parameters;
   coordinates: coordinates;
   height: number;
   date: string;
   paramDates: string[];
-}
-
-export type markers = Record<string, coordinates>;
-
-export interface MarkerData {
-  markers: markers;
-  getCityName: (ll: coordinates) => string;
 }

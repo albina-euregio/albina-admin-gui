@@ -40,16 +40,6 @@ export const QfaFilenameSchema = z.object({
 
 export type QfaFilename = z.infer<typeof QfaFilenameSchema>;
 
-export const QfaResultSchema = z.object({
-  data: z.custom<types.data>(),
-  date: z.string(),
-  dates: z.array(z.string()),
-  parameters: z.array(z.string()),
-  file: QfaFilenameSchema,
-});
-
-export type QfaResult = z.infer<typeof QfaResultSchema>;
-
 type City = "bozen" | "innsbruck" | "lienz";
 
 @Injectable()
@@ -146,32 +136,23 @@ export class QfaService {
     return this.files;
   }
 
-  async getRun(file: QfaFilename, startDay: number, first: boolean): Promise<QfaResult> {
+  async getRun(file: QfaFilename, startDay: number, first: boolean): Promise<QfaFile> {
     const days = `0${startDay}0${startDay + 2}`;
     const filename = file.filename.replace(/\d{4}\.txt/g, `${days}.txt`);
-    const run = new QfaFile();
+    const run = new QfaFile({ filename });
     const plainText = await firstValueFrom(
       this.http.get(`${this.baseUrl}/${filename}`, { responseType: "text", observe: "body" }),
     );
     run.parseText(plainText);
 
-    const parameters = Object.keys(run.data.parameters);
-
     if (first) {
-      const city = run.data.metadata.location.split(" ")[2].toLowerCase();
+      const city = run.metadata.location.split(" ")[2].toLowerCase();
       if (this.dustParams) {
         const dust = this.dustParams[city][startDay / 3];
-        run.data.parameters["DUST"] = dust;
-        parameters.unshift("DUST");
+        run.parameters["DUST"] = dust;
       }
     }
 
-    return QfaResultSchema.parse({
-      data: run.data,
-      date: run.date,
-      dates: run.paramDates,
-      parameters: parameters,
-      file: file,
-    });
+    return run;
   }
 }
