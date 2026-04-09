@@ -50,7 +50,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private multimodelSource = inject(MultimodelSourceService);
   private meteogramSource = inject(MeteogramSourceService);
   zamgMeteoSourceService = inject(ZamgMeteoSourceService);
-  private qfaService = inject(QfaService);
+  qfaService = inject(QfaService);
   paramService = inject(ParamService);
   translateService = inject(TranslateService);
   modalService = inject(BsModalService);
@@ -84,8 +84,6 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   readonly observationsMap = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   readonly qfaSelect = viewChild<ElementRef<HTMLSelectElement>>("qfaSelect");
   readonly observationPopupTemplate = viewChild<TemplateRef<unknown>>("observationPopupTemplate");
-
-  files = {};
 
   async ngAfterContentInit() {
     this.allRegions = (await this.regionsService.getInternalServerRegionsAsync()).features
@@ -153,7 +151,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   drawMarker(point: GenericObservation) {
     const { $source, region, locationName, latitude, longitude, eventDate } = point;
     const click = () => {
-      if ($source === "qfa") this.setQfa(this.files[locationName][0], 0);
+      if ($source === "qfa") this.setQfa(this.qfaService.files[locationName][0], 0);
       this.selectedModelPoint = $source === "qfa" ? undefined : point;
       this.selectedModelType = $source as ForecastSource;
       this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
@@ -210,7 +208,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       this.drawMarker(point);
       this.modelPoints.push(point);
     }
-    this.files = await this.qfaService.getFiles();
+    await this.qfaService.getFiles();
   }
 
   async initMaps() {
@@ -297,7 +295,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     this.qfaStartDay = startDay;
     const fileMap = typeof file === "string" ? { filename: file } : file;
     const city = fileMap.filename.split("_")[3];
-    const first = this.files[city][0].filename === fileMap.filename;
+    const first = this.qfaService.files[city][0].filename === fileMap.filename;
     this.qfa = await this.qfaService.getRun(fileMap, startDay, first);
     this.selectedCity = this.qfa.metadata.location.split(" ").pop().toLowerCase();
     this.paramService.setParameterClasses(this.qfa.parameterKeys);
@@ -334,7 +332,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   changeRun(type: -1 | 1) {
     if (this.selectedModelType === "qfa") {
-      const filenames = this.files[this.selectedCity].map((file) => file.filename);
+      const filenames = this.qfaService.files[this.selectedCity].map((file) => file.filename);
       const index = filenames.indexOf(this.qfa.file.filename);
       this.setQfa(filenames.at((index + type) % filenames.length), 0);
     } else if (this.selectedModelPoint) {

@@ -190,7 +190,7 @@
           [(ngModel)]="qfa.file.filename"
           (change)="setQfa(qfa.file.filename)"
         >
-          @for (file of files[selectedCity]; track file) {
+          @for (file of qfaService.files[selectedCity]; track file) {
             <option [value]="file.filename">{{ file.date }} {{ file.city }}</option>
           }
         </select>
