@@ -57,6 +57,11 @@ export class QfaService {
       lat: 46.83,
     },
   } satisfies Record<City, LatLngExpression>;
+  allFiles = {
+    innsbruck: [] as QfaItem[],
+    bozen: [] as QfaItem[],
+    lienz: [] as QfaItem[],
+  } satisfies Record<City, QfaItem[]>;
   files = {
     innsbruck: [] as QfaItem[],
     bozen: [] as QfaItem[],
@@ -118,6 +123,7 @@ export class QfaService {
   async getFiles() {
     for (const city of this.cities) {
       const parsedFiles = await this.getFilenames(this.baseUrl, city);
+      this.allFiles[city] = parsedFiles;
       this.files[city] = parsedFiles.filter((el) => el.startDay === "00");
     }
 
@@ -125,12 +131,20 @@ export class QfaService {
   }
 
   async getRun(file: QfaItem, startDay: number, first: boolean): Promise<QfaFile> {
-    const days = `0${startDay}0${startDay + 2}`;
-    const filename = file.filename.replace(/\d{4}\.txt/g, `${days}.txt`);
-    const file0 = this.parseFilename(filename);
+    const file0 = this.allFiles[file.city as City].find(
+      (f) =>
+        f.date === file.date &&
+        // sometimes hours/minute differs by 1, see albina-euregio/albina-admin-gui#463
+        // 2026-04-09_0656_QFA00_innsbruck_0002.txt
+        // 2026-04-09_0657_QFA00_innsbruck_0305.txt
+        (f.hours === file.hours || f.hours === (+file.hours + 1).toString().padStart(2, "0")) &&
+        f.qfa === file.qfa &&
+        f.city === file.city &&
+        f.startDay === startDay.toString().padStart(2, "0"),
+    );
     const run = new QfaFile(file0);
     const plainText = await firstValueFrom(
-      this.http.get(`${this.baseUrl}/${filename}`, { responseType: "text", observe: "body" }),
+      this.http.get(`${this.baseUrl}/${file0.filename}`, { responseType: "text", observe: "body" }),
     );
     run.parseText(plainText);
 
