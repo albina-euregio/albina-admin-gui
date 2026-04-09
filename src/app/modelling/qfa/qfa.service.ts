@@ -7,7 +7,6 @@ import { z } from "zod";
 import { GetDustParamService } from "./dust.service";
 import { ParamService } from "./param.service";
 import { QfaFile } from "./qfa-file.model";
-import * as types from "./qfa-types";
 
 export const CaddyListingItemSchema = z.object({
   name: z.string(),

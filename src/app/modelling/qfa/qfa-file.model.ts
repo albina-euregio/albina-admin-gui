@@ -1,9 +1,27 @@
-import type * as types from "./qfa-types";
 import type { QfaFilename } from "./qfa.service";
 
-export class QfaFile implements types.QFA {
-  public metadata = {} as types.metadata;
-  public parameters = {} as types.parameters;
+export interface coordinates {
+  lat: number;
+  lng: number;
+}
+
+export interface metadata {
+  location: string;
+  coords: coordinates;
+  height: number;
+  orog: number;
+  date: Date;
+  timezone: string;
+  model: string;
+  nDays: number;
+  dates?: Date[];
+}
+
+export type parameters = Record<string, any[]>;
+
+export class QfaFile {
+  public metadata = {} as metadata;
+  public parameters = {} as parameters;
 
   constructor(public file: QfaFilename) {}
 
@@ -11,11 +29,11 @@ export class QfaFile implements types.QFA {
     return this.metadata.coords;
   }
 
-  get height() {
+  get height(): number {
     return this.metadata.height;
   }
 
-  get date() {
+  get date(): string {
     const date = new Intl.DateTimeFormat("de", {
       weekday: "short",
       day: "2-digit",
@@ -28,7 +46,7 @@ export class QfaFile implements types.QFA {
     return stringDate;
   }
 
-  get paramDates() {
+  get paramDates(): string[] {
     const intlDates = this.metadata.dates.map((date) =>
       new Intl.DateTimeFormat("de", {
         weekday: "short",
@@ -47,7 +65,7 @@ export class QfaFile implements types.QFA {
     return Object.keys(this.parameters);
   }
 
-  private parseMetaData = (plainText: string): types.metadata => {
+  private parseMetaData = (plainText: string): metadata => {
     const plainMetadata = plainText.split(
       "=======================================================================================",
     )[0];
@@ -57,7 +75,7 @@ export class QfaFile implements types.QFA {
     const nDays = Number(days![1]) - Number(days![0] || 0) + 1;
     const date = this.parseDate(data[6]);
 
-    const parameters: types.metadata = {
+    return {
       location: data[1],
       coords: {
         lng: Number(data[2]),
@@ -70,7 +88,6 @@ export class QfaFile implements types.QFA {
       model: data[8],
       nDays: nDays,
     };
-    return parameters;
   };
 
   private parseDate = (date: string): Date => {
@@ -82,7 +99,7 @@ export class QfaFile implements types.QFA {
     return parameters;
   };
 
-  private parseParameters = (plainText: string): types.parameters => {
+  private parseParameters = (plainText: string): parameters => {
     let data = plainText.split(
       "=======================================================================================",
     )[1];
@@ -95,7 +112,7 @@ export class QfaFile implements types.QFA {
     const dateStrings = this.metadata.dates.map((el) => el.toISOString().split("T")[0]);
     const lines = allLines.filter((el, i) => el !== "" && i > 3);
 
-    const parameters = {} as types.parameters;
+    const parameters = {} as parameters;
     for (const line of lines) {
       let sub = line.substring(0, line.length - 2);
       sub = sub.replace(/[\s]{24,}/g, " --- --- --- --- ");
