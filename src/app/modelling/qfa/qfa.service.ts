@@ -74,13 +74,13 @@ export class QfaService {
     return this.http.get(this.baseUrl).pipe(map((r) => CaddyListingItemSchema.array().parse(r)));
   }
 
-  async getFilenames(baseUrl: string, city: string) {
+  async getFilenames(baseUrl: string, city: string): Promise<QfaItem[]> {
     this.baseUrl = baseUrl;
     const response = await firstValueFrom(this.getHTMLResponse());
     const files = response.reverse();
     // console.log(files);
     const filteredFiles = files.filter((file) => file.name.includes(city));
-    return filteredFiles;
+    return filteredFiles.map((file) => this.parseFilename(file.name));
   }
 
   parseFilename(filename: string): QfaItem {
@@ -117,12 +117,7 @@ export class QfaService {
 
   async getFiles() {
     for (const city of this.cities) {
-      const filenames = await this.getFilenames(this.baseUrl, city);
-      const parsedFiles = [];
-      for (const file of filenames) {
-        const parsedFile = this.parseFilename(file.name);
-        parsedFiles.push(parsedFile);
-      }
+      const parsedFiles = await this.getFilenames(this.baseUrl, city);
       this.files[city] = parsedFiles.filter((el) => el.startDay === "00");
     }
 
