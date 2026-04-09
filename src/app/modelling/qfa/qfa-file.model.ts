@@ -1,13 +1,8 @@
-import { HttpClient } from "@angular/common/http";
-import { firstValueFrom } from "rxjs";
-
 import * as types from "./qfa-types";
 
 export class QfaFile implements types.QFA {
   public metadata = {} as types.metadata;
   public parameters = {} as types.parameters;
-
-  constructor(private http: HttpClient) {}
 
   get data(): types.data {
     return {
@@ -55,21 +50,6 @@ export class QfaFile implements types.QFA {
   public listParameters() {
     return Object.keys(this.parameters);
   }
-
-  private getHTMLFile = (url: string) => {
-    return this.http.get(url, {
-      responseType: "text",
-      observe: "body",
-    });
-  };
-
-  public loadFromURL = async (url: string) => {
-    const fullUrl = `https://static.avalanche.report/zamg_qfa/${url}`;
-    const response = await firstValueFrom(this.getHTMLFile(fullUrl));
-    this.parseText(response);
-    // console.log(this.data);
-    return;
-  };
 
   private parseMetaData = (plainText: string): types.metadata => {
     const plainMetadata = plainText.split(
@@ -150,7 +130,7 @@ export class QfaFile implements types.QFA {
     return parameters;
   };
 
-  private parseText = (plainText: string) => {
+  public parseText = (plainText: string) => {
     this.metadata = this.parseMetaData(plainText);
     this.parameters = this.parseParameters(plainText);
   };

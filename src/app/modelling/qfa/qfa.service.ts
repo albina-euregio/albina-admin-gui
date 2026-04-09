@@ -145,8 +145,11 @@ export class QfaService {
   async getRun(file: QfaFilename, startDay: number, first: boolean): Promise<QfaResult> {
     const days = `0${startDay}0${startDay + 2}`;
     const filename = file.filename.replace(/\d{4}\.txt/g, `${days}.txt`);
-    const run = new QfaFile(this.http);
-    await run.loadFromURL(filename);
+    const run = new QfaFile();
+    const plainText = await firstValueFrom(
+      this.http.get(`${this.baseUrl}/${filename}`, { responseType: "text", observe: "body" }),
+    );
+    run.parseText(plainText);
 
     const parameters = Object.keys(run.data.parameters);
 

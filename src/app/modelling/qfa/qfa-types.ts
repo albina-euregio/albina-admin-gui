@@ -30,8 +30,6 @@ export interface QFA {
   height: number;
   date: string;
   paramDates: string[];
-  loadFromURL: (url: string) => Promise<void>;
-  listParameters(): string[];
 }
 
 export type markers = Record<string, coordinates>;
