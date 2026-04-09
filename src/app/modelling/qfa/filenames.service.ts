@@ -1,27 +1,32 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, map } from "rxjs";
+import { z } from "zod";
 
-export interface CaddyListingItem {
-  name: string;
-  size: number;
-  url: string;
-  mod_time: Date;
-  mode: number;
-  is_dir: boolean;
-  is_symlink: boolean;
-}
+export const CaddyListingItemSchema = z.object({
+  name: z.string(),
+  size: z.number(),
+  url: z.string(),
+  mod_time: z.coerce.date(),
+  mode: z.number(),
+  is_dir: z.boolean(),
+  is_symlink: z.boolean(),
+});
 
-interface QfaItem {
-  date: string;
-  hours: string;
-  minutes: string;
-  startDay: string;
-  endDay: string;
-  city: string;
-  qfa: string;
-  filename: string;
-}
+export type CaddyListingItem = z.infer<typeof CaddyListingItemSchema>;
+
+const QfaItemSchema = z.object({
+  date: z.string(),
+  hours: z.string(),
+  minutes: z.string(),
+  startDay: z.string(),
+  endDay: z.string(),
+  city: z.string(),
+  qfa: z.string(),
+  filename: z.string(),
+});
+
+export type QfaItem = z.infer<typeof QfaItemSchema>;
 
 @Injectable()
 export class GetFilenamesService {
@@ -32,9 +37,7 @@ export class GetFilenamesService {
   private getHTMLResponse() {
     // Caddy serves directory index as JSON for Accept=application/json
     // https://github.com/caddyserver/caddy/blob/e8ad9b32c9730ddb162b6fb1443fc0b36fcef7dc/modules/caddyhttp/fileserver/browse.go#L105-L109
-    return this.http.get<CaddyListingItem[]>(this.baseUrl, {
-      observe: "body",
-    });
+    return this.http.get(this.baseUrl).pipe(map((r) => CaddyListingItemSchema.array().parse(r)));
   }
 
   public getFilenames = async (baseUrl: string, city: string) => {
@@ -48,7 +51,7 @@ export class GetFilenamesService {
 
   public parseFilename = (filename: string): QfaItem => {
     const parts = filename.split("_");
-    return {
+    return QfaItemSchema.parse({
       date: parts[0],
       hours: parts[1].substring(0, 2),
       minutes: parts[1].substring(2, 4),
@@ -57,7 +60,7 @@ export class GetFilenamesService {
       city: parts[3],
       qfa: parts[2],
       filename: filename,
-    };
+    });
   };
 
   public stringifyFile = (file: QfaItem): string => {
