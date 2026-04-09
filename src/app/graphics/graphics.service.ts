@@ -2,16 +2,16 @@ import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { TeamStressLevels } from "app/models/stress-level.model";
 import { AlbinaLanguage } from "app/models/text.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
+import { UserService } from "app/providers/user-service/user.service";
 import { lastValueFrom } from "rxjs";
 
 import sources from "../../assets/config/stations.json";
-import { UserService } from "app/providers/user-service/user.service";
-import { TeamStressLevels } from "app/models/stress-level.model";
-import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 
 interface LineaStationSource {
   stations: string;
@@ -110,17 +110,13 @@ export class GraphicsService {
     return results.flat();
   }
 
-  async loadDangerSourceVariants(
-    startDate: string,
-    endDate: string,
-    region: string,
-  ): Promise<unknown[]> {
+  async loadDangerSourceVariants(startDate: string, endDate: string, region: string): Promise<unknown[]> {
     if (!startDate || !endDate || !region) {
       return [];
     }
 
-    const dates = this.getDateRange(startDate, endDate).map((date) =>
-      new Date(date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).epochMilliseconds),
+    const dates = this.getDateRange(startDate, endDate).map(
+      (date) => new Date(date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).epochMilliseconds),
     );
 
     const requests = dates.map((date) =>
