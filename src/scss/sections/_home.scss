@@ -29,6 +29,11 @@
   float: right;
 }
 
+.bulletins-table__day-buttons--without-edit {
+  //width: calc(#{$space-8} * 2 + #{$space-2});
+  margin-left: calc(#{$space-8} + #{$space-2} * 2);
+}
+
 .bulletins-table__day-buttons-div {
   justify-content: space-between;
 }

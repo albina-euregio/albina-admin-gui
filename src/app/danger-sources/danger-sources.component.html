@@ -43,20 +43,25 @@
             }
             <button
               class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+              [class.bulletins-table__day-buttons--without-edit]="
+                dangerSourcesService.sourceDates.hasBeenPublished5PM(date)
+              "
               type="button"
               (click)="editDangerSources(date, DangerSourceVariantType.forecast, true)"
               title="{{ 'dangerSources.tooltip.read' | translate }}"
             >
               <i class="ph ph-eye"></i>
             </button>
-            <button
-              class="btn btn-secondary btn-icon bulletins-table__day-buttons"
-              type="button"
-              (click)="editDangerSources(date, DangerSourceVariantType.forecast, false)"
-              title="{{ 'dangerSources.tooltip.edit' | translate }}"
-            >
-              <i class="ph ph-pencil-line"></i>
-            </button>
+            @if (!dangerSourcesService.sourceDates.hasBeenPublished5PM(date)) {
+              <button
+                class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+                type="button"
+                (click)="editDangerSources(date, DangerSourceVariantType.forecast, false)"
+                title="{{ 'dangerSources.tooltip.edit' | translate }}"
+              >
+                <i class="ph ph-pencil-line"></i>
+              </button>
+            }
           </td>
           <td
             class="bulletins-table__region-status"
