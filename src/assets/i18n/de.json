@@ -259,7 +259,13 @@
       "ok": "Ok",
       "problem": "Problem",
       "problemDescription": "Beschreibung",
-      "problemPlaceholder": "Beschreibe das aufgetretene Problem"
+      "problemPlaceholder": "Beschreibe das aufgetretene Problem",
+      "options": "Optionen",
+      "resend": {
+        "email": "E-Mail neu senden:",
+        "telegram": "Telegram neu senden:",
+        "whatsapp": "WhatsApp neu senden:"
+      }
     },
     "status": {
       "submittedInfo": "Wird um 17 Uhr publiziert",

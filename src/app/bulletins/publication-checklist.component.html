@@ -13,84 +13,125 @@
             {{ regionsService.getRegionName(regionId) | translate }}
           </time>
         </div>
-        <ul class="list-group list-group-flush">
+        <div class="d-grid gap-3 p-3">
           @for (item of checklistItems; track $index; let index = $index) {
-            <li class="list-group-item">
-              <div class="d-flex justify-content-between align-items-start gap-3">
-                <div class="pe-3">
-                  <div>
-                    {{ item.title }}
-                    @if (item.link) {
-                      <a
-                        class="ms-1 text-decoration-none"
-                        [href]="item.link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        [attr.aria-label]="item.title + ' link'"
-                      >
-                        <i class="ph ph-link"></i>
-                      </a>
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                  <div class="pe-3">
+                    <div class="fw-semibold mb-1">
+                      {{ item.title }}
+                      @if (item.link) {
+                        <a
+                          class="ms-1 text-decoration-none"
+                          [href]="item.link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          [attr.aria-label]="item.title + ' link'"
+                        >
+                          <i class="ph ph-link"></i>
+                        </a>
+                      }
+                    </div>
+                    <small class="text-muted d-block">
+                      {{ item.description | translate }}
+                    </small>
+                  </div>
+                  <div
+                    class="btn-group mt-1 text-nowrap"
+                    role="group"
+                    [attr.aria-label]="item.title + ' checklist status'"
+                  >
+                    <input
+                      class="btn-check"
+                      type="checkbox"
+                      [id]="'check' + index + 'Ok'"
+                      [checked]="item.ok"
+                      (change)="onOkChange(index, $event)"
+                    />
+                    <label
+                      class="btn btn-sm rounded-pill me-2"
+                      [class.btn-success]="item.ok"
+                      [class.btn-outline-dark]="!item.ok"
+                      [for]="'check' + index + 'Ok'"
+                    >
+                      <i class="ph ph-check-circle"></i>
+                      {{ "bulletins.publicationChecklist.ok" | translate }}
+                    </label>
+
+                    <input
+                      class="btn-check"
+                      type="checkbox"
+                      [id]="'check' + index + 'Problem'"
+                      [checked]="item.problem"
+                      (change)="onProblemChange(index, $event)"
+                    />
+                    <label
+                      class="btn btn-sm rounded-pill"
+                      [class.btn-danger]="item.problem"
+                      [class.btn-outline-dark]="!item.problem"
+                      [for]="'check' + index + 'Problem'"
+                    >
+                      <i class="ph ph-warning-circle"></i>
+                      {{ "bulletins.publicationChecklist.problem" | translate }}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mt-3" [hidden]="!item.problem">
+                  <label class="form-label" [for]="'problem' + index">
+                    {{ "bulletins.publicationChecklist.problemDescription" | translate }}
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [id]="'problem' + index"
+                    [value]="item.problemDescription"
+                    (input)="onProblemDescriptionChange(index, $event)"
+                    [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
+                  />
+
+                  <div class="mt-3">
+                    <div class="form-label">{{ "bulletins.publicationChecklist.options" | translate }}</div>
+
+                    @if (item.title === "E-Mail") {
+                      <div class="border-top pt-3">
+                        <app-publication-trigger-notifications
+                          [date]="bulletinsService.sourceDates.activeDate"
+                          [regionId]="regionId"
+                          [publicationChannel]="PublicationChannel.Email"
+                          iconClass="ph ph-envelope-simple"
+                        ></app-publication-trigger-notifications>
+                      </div>
+                    }
+
+                    @if (item.title === "Telegram") {
+                      <div class="border-top pt-3">
+                        <app-publication-trigger-notifications
+                          [date]="bulletinsService.sourceDates.activeDate"
+                          [regionId]="regionId"
+                          [publicationChannel]="PublicationChannel.Telegram"
+                          iconClass="ph ph-telegram-logo"
+                        ></app-publication-trigger-notifications>
+                      </div>
+                    }
+
+                    @if (item.title === "WhatsApp") {
+                      <div class="border-top pt-3">
+                        <app-publication-trigger-notifications
+                          [date]="bulletinsService.sourceDates.activeDate"
+                          [regionId]="regionId"
+                          [publicationChannel]="PublicationChannel.WhatsApp"
+                          iconClass="ph ph-whatsapp-logo"
+                        ></app-publication-trigger-notifications>
+                      </div>
                     }
                   </div>
-                  <small class="text-muted"> {{ item.description | translate }} </small>
-                </div>
-                <div
-                  class="btn-group mt-1 text-nowrap"
-                  role="group"
-                  [attr.aria-label]="item.title + ' checklist status'"
-                >
-                  <input
-                    class="btn-check"
-                    type="checkbox"
-                    [id]="'check' + index + 'Ok'"
-                    [checked]="item.ok"
-                    (change)="onOkChange(index, $event)"
-                  />
-                  <label
-                    class="btn btn-sm rounded-pill me-2"
-                    [class.btn-success]="item.ok"
-                    [class.btn-outline-dark]="!item.ok"
-                    [for]="'check' + index + 'Ok'"
-                  >
-                    <i class="ph ph-check-circle"></i>
-                    {{ "bulletins.publicationChecklist.ok" | translate }}
-                  </label>
-
-                  <input
-                    class="btn-check"
-                    type="checkbox"
-                    [id]="'check' + index + 'Problem'"
-                    [checked]="item.problem"
-                    (change)="onProblemChange(index, $event)"
-                  />
-                  <label
-                    class="btn btn-sm rounded-pill"
-                    [class.btn-danger]="item.problem"
-                    [class.btn-outline-dark]="!item.problem"
-                    [for]="'check' + index + 'Problem'"
-                  >
-                    <i class="ph ph-warning-circle"></i>
-                    {{ "bulletins.publicationChecklist.problem" | translate }}
-                  </label>
                 </div>
               </div>
-
-              <div class="mt-2" [hidden]="!item.problem">
-                <label class="form-label" [for]="'problem' + index">
-                  {{ "bulletins.publicationChecklist.problemDescription" | translate }}
-                </label>
-                <input
-                  class="form-control"
-                  type="text"
-                  [id]="'problem' + index"
-                  [value]="item.problemDescription"
-                  (input)="onProblemDescriptionChange(index, $event)"
-                  [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
-                />
-              </div>
-            </li>
+            </div>
           }
-        </ul>
+        </div>
       </div>
     </div>
   </div>

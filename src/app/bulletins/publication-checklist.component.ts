@@ -3,17 +3,18 @@ import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
+import { BulletinsService, PublicationChannel } from "app/providers/bulletins-service/bulletins.service";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription } from "rxjs";
 
 import { ChecklistItemModel } from "../models/checklist.model";
+import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
-  imports: [DatePipe, TranslateModule],
+  imports: [DatePipe, TranslateModule, PublicationTriggerNotificationsComponent],
 })
 export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private activeRoute = inject(ActivatedRoute);
@@ -29,7 +30,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
   date = "";
   checklistItems: ChecklistItemModel[] = [];
-  regionId: string;
+  regionId = "";
+  readonly PublicationChannel = PublicationChannel;
 
   constructor() {
     this.routeParamsSubscription = new Subscription();
@@ -51,7 +53,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
         problemDescription: "",
       },
       {
-        title: "Email",
+        title: "E-Mail",
         description: "bulletins.publicationChecklist.descEmail",
         ok: false,
         problem: false,

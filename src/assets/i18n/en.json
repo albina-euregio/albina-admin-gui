@@ -259,7 +259,13 @@
       "ok": "Ok",
       "problem": "Problem",
       "problemDescription": "Description",
-      "problemPlaceholder": "Describe the encountered problem"
+      "problemPlaceholder": "Describe the encountered problem",
+      "options": "Options",
+      "resend": {
+        "email": "Resend email:",
+        "telegram": "Resend Telegram:",
+        "whatsapp": "Resend WhatsApp:"
+      }
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",
