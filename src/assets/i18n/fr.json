@@ -105,6 +105,7 @@
       "tooltip": {
         "editDangerSource": "Éditer source de danger",
         "loadVariants": "Charger les types de source de la veille",
+        "loadVariantsFromForecast": "Load variants from forecast",
         "showVariantsOnMap": "Show variants on map",
         "edit": "Éditer les microrégions",
         "copy": "Copier type de source",
@@ -194,7 +195,12 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Charger tous les types de sources de danger de la veille ?",
+        "message": "Do you want to load all danger source variants from the day before?<br><strong>Existing analysis variants will be overwritten.</strong>",
+        "accept": "Oui",
+        "reject": "Non"
+      },
+      "loadFromForecastDialog": {
+        "message": "Do you want to load all variants from the forecast?<br><strong>Existing analysis variants will be overwritten.</strong>",
         "accept": "Oui",
         "reject": "Non"
       }

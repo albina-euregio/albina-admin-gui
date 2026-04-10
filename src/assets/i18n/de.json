@@ -105,6 +105,7 @@
       "tooltip": {
         "editDangerSource": "Gefahrenquelle bearbeiten",
         "loadVariants": "Varianten von gestern laden",
+        "loadVariantsFromForecast": "Varianten der Vorhersage laden",
         "showVariantsOnMap": "Varianten auf Karte anzeigen",
         "edit": "Kleinstregionen editieren",
         "copy": "Variante kopieren",
@@ -194,7 +195,12 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Willst du alle Gefahrenquellen Varianten vom Vortrag laden?",
+        "message": "Willst du alle Gefahrenquellen Varianten vom Vortag laden?<br><strong>Alle derzeitigen Varianten der Analayse werden gelöscht!</strong>",
+        "accept": "Ja",
+        "reject": "Nein"
+      },
+      "loadFromForecastDialog": {
+        "message": "Willst du alle Gefahrenquellen Varianten der Vorhersage laden?<br><strong>Alle derzeitigen Varianten der Analayse werden gelöscht!</strong>",
         "accept": "Ja",
         "reject": "Nein"
       }

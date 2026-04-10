@@ -105,6 +105,7 @@
       "tooltip": {
         "editDangerSource": "Editar hònt de perilh",
         "loadVariants": "Cargar es variantes deth dia d'abans",
+        "loadVariantsFromForecast": "Load variants from forecast",
         "showVariantsOnMap": "Mostrar es variantes en mapa",
         "edit": "Editar micro-regions",
         "copy": "Copiar varianta",
@@ -194,7 +195,12 @@
         "accept": "D'acòrd"
       },
       "loadDialog": {
-        "message": "Vòs cargar totes es variantes d'hònt de perilh deth dia d'abans?",
+        "message": "Do you want to load all danger source variants from the day before?<br><strong>Existing analysis variants will be overwritten.</strong>",
+        "accept": "Òc",
+        "reject": "Non"
+      },
+      "loadFromForecastDialog": {
+        "message": "Do you want to load all variants from the forecast?<br><strong>Existing analysis variants will be overwritten.</strong>",
         "accept": "Òc",
         "reject": "Non"
       }
