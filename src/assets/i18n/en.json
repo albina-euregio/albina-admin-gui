@@ -105,6 +105,7 @@
       "tooltip": {
         "editDangerSource": "Edit danger source",
         "loadVariants": "Load variants from the day before",
+        "loadVariantsFromForecast": "Load variants from forecast",
         "showVariantsOnMap": "Show variants on map",
         "edit": "Edit micro regions",
         "copy": "Copy variant",
@@ -195,6 +196,11 @@
       },
       "loadDialog": {
         "message": "Do you want to load all danger source variants from the day before?",
+        "accept": "Yes",
+        "reject": "No"
+      },
+      "loadFromForecastDialog": {
+        "message": "Do you want to load all variants from the forecast? Existing analysis variants will be overwritten.",
         "accept": "Yes",
         "reject": "No"
       }
