@@ -195,12 +195,12 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Do you want to load all danger source variants from the day before?",
+        "message": "Do you want to load all danger source variants from the day before?<br><strong>Existing analysis variants will be overwritten.</strong>",
         "accept": "Yes",
         "reject": "No"
       },
       "loadFromForecastDialog": {
-        "message": "Do you want to load all variants from the forecast? Existing analysis variants will be overwritten.",
+        "message": "Do you want to load all variants from the forecast?<br><strong>Existing analysis variants will be overwritten.</strong>",
         "accept": "Yes",
         "reject": "No"
       }

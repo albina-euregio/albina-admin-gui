@@ -386,17 +386,41 @@
                   {{ "dangerSources.create.tooltip.editDangerSource" | translate }}
                 </button>
               }
+            </li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <li>
               @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
                 <button
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
-                  (click)="loadVariantsFromYesterday(dangerSource.id)"
+                  (click)="loadDangerSourceVariantsFromYesterday(dangerSource.id); dropdown.hide()"
                   data-toggle="tooltip"
-                  title="{{ 'dangerSources.create.tooltip.loadVariants' | translate }}"
+                  title="{{ 'dangerSources.create.tooltip.loadVariantsFromYesterday' | translate }}"
                 >
                   <i class="ph-bold ph-copy icon-md"></i>
                   {{ "dangerSources.create.tooltip.loadVariants" | translate }}
+                </button>
+              }
+            </li>
+            <li>
+              @if (
+                dangerSourcesService.getIsEditable() &&
+                !dangerSourcesService.getIsReadOnly() &&
+                hasForecastVariantsForDangerSource(dangerSource.id)
+              ) {
+                <button
+                  [disabled]="editRegions || loading"
+                  type="reset"
+                  class="dropdown-item"
+                  (click)="loadVariantsFromForecast(dangerSource.id); dropdown.hide()"
+                  data-toggle="tooltip"
+                  title="{{ 'dangerSources.create.tooltip.loadVariantsFromForecast' | translate }}"
+                >
+                  <i class="ph ph-trend-up icon-md"></i>
+                  {{ "dangerSources.create.tooltip.loadVariantsFromForecast" | translate }}
                 </button>
               }
             </li>
@@ -621,7 +645,7 @@
 
 <ng-template #loadFromForecastTemplate>
   <div class="modal-body text-center">
-    <p>{{ "dangerSources.create.loadFromForecastDialog.message" | translate }}</p>
+    <p [innerHTML]="'dangerSources.create.loadFromForecastDialog.message' | translate"></p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="loadFromForecastModalConfirm()" ngxMousetrapKey="enter">
@@ -635,7 +659,7 @@
 
 <ng-template #loadTemplate>
   <div class="modal-body text-center">
-    <p>{{ "dangerSources.create.loadDialog.message" | translate }}</p>
+    <p [innerHTML]="'dangerSources.create.loadDialog.message' | translate"></p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="loadModalConfirm()" ngxMousetrapKey="enter">

@@ -403,22 +403,41 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  hasForecastVariantsForDangerSource(dangerSourceId: string): boolean {
+    return this.internVariantsList.some(
+      (v) => v.dangerSource.id === dangerSourceId && v.dangerSourceVariantType === DangerSourceVariantType.forecast,
+    );
+  }
+
   loadAllVariantsFromYesterday() {
     this.openLoadModal();
   }
 
-  loadVariantsFromForecast() {
-    this.openLoadFromForecastModal();
+  loadDangerSourceVariantsFromYesterday(dangerSourceId: string) {
+    this.openLoadModal(dangerSourceId);
   }
 
-  private doLoadVariantsFromForecast() {
-    const resultVariants = this.internVariantsList.filter(
-      (v) =>
-        !v.ownerRegion.startsWith(this.authenticationService.getActiveRegionId()) ||
-        v.dangerSourceVariantType !== DangerSourceVariantType.analysis,
-    );
+  loadVariantsFromForecast(dangerSourceId?: string) {
+    this.openLoadFromForecastModal(dangerSourceId);
+  }
+
+  private doLoadVariantsFromForecast(dangerSourceId?: string) {
+    const resultVariants = this.internVariantsList.filter((v) => {
+      if (!v.ownerRegion.startsWith(this.authenticationService.getActiveRegionId())) {
+        return true;
+      }
+      if (v.dangerSourceVariantType !== DangerSourceVariantType.analysis) {
+        return true;
+      }
+      if (!dangerSourceId) {
+        return false;
+      }
+      return v.dangerSource.id !== dangerSourceId;
+    });
     const forecastVariants = this.internVariantsList.filter(
-      (v) => v.dangerSourceVariantType === DangerSourceVariantType.forecast,
+      (v) =>
+        v.dangerSourceVariantType === DangerSourceVariantType.forecast &&
+        (!dangerSourceId || v.dangerSource.id === dangerSourceId),
     );
     this.copyVariants(forecastVariants, true).forEach((v) => resultVariants.push(v));
     this.save(resultVariants);
@@ -426,19 +445,23 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private loadFromForecastModalRef: BsModalRef;
   private readonly loadFromForecastTemplate = viewChild<TemplateRef<unknown>>("loadFromForecastTemplate");
+  private forecastDangerSourceToLoad?: string;
 
-  openLoadFromForecastModal() {
+  openLoadFromForecastModal(dangerSourceId?: string) {
+    this.forecastDangerSourceToLoad = dangerSourceId;
     this.loadFromForecastModalRef = this.modalService.show(this.loadFromForecastTemplate(), this.config);
   }
 
   loadFromForecastModalConfirm(): void {
     this.loadFromForecastModalRef.hide();
     this.loading = true;
-    this.doLoadVariantsFromForecast();
+    this.doLoadVariantsFromForecast(this.forecastDangerSourceToLoad);
+    this.forecastDangerSourceToLoad = undefined;
   }
 
   loadFromForecastModalDecline(): void {
     this.loadFromForecastModalRef.hide();
+    this.forecastDangerSourceToLoad = undefined;
   }
 
   loadVariantsFromYesterday(dangerSourceId?: string) {
@@ -1022,19 +1045,23 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private loadModalRef: BsModalRef;
   private readonly loadTemplate = viewChild<TemplateRef<unknown>>("loadTemplate");
+  private dangerSourceToLoadFromYesterday?: string;
 
-  openLoadModal() {
+  openLoadModal(dangerSourceId?: string) {
+    this.dangerSourceToLoadFromYesterday = dangerSourceId;
     this.loadModalRef = this.modalService.show(this.loadTemplate(), this.config);
   }
 
   loadModalConfirm(): void {
     this.loadModalRef.hide();
     this.loading = true;
-    this.loadVariantsFromYesterday();
+    this.loadVariantsFromYesterday(this.dangerSourceToLoadFromYesterday);
+    this.dangerSourceToLoadFromYesterday = undefined;
   }
 
   loadModalDecline(): void {
     this.loadModalRef.hide();
+    this.dangerSourceToLoadFromYesterday = undefined;
   }
 
   private loadingErrorModalRef: BsModalRef;
