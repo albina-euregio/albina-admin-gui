@@ -1,11 +1,21 @@
 import { DatePipe, NgClass, NgTemplateOutlet } from "@angular/common";
-import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  viewChild,
+  ViewChild,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { orderBy } from "es-toolkit";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Subscription } from "rxjs";
 
@@ -91,6 +101,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   readonly scrollActiveVariant = viewChild<ElementRef>("scrollActiveVariant");
   readonly scrollComparedVariant = viewChild<ElementRef>("scrollComparedVariant");
+  @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
   public config = {
     animated: false,
@@ -359,6 +370,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  get hasForecastVariantsInList(): boolean {
+    return this.internVariantsList.some((v) => v.dangerSourceVariantType === DangerSourceVariantType.forecast);
+  }
+
   hasForecast(variant: DangerSourceVariantModel): boolean {
     return (
       variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
@@ -390,6 +405,40 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   loadAllVariantsFromYesterday() {
     this.openLoadModal();
+  }
+
+  loadVariantsFromForecast() {
+    this.openLoadFromForecastModal();
+  }
+
+  private doLoadVariantsFromForecast() {
+    const resultVariants = this.internVariantsList.filter(
+      (v) =>
+        !v.ownerRegion.startsWith(this.authenticationService.getActiveRegionId()) ||
+        v.dangerSourceVariantType !== DangerSourceVariantType.analysis,
+    );
+    const forecastVariants = this.internVariantsList.filter(
+      (v) => v.dangerSourceVariantType === DangerSourceVariantType.forecast,
+    );
+    this.copyVariants(forecastVariants, true).forEach((v) => resultVariants.push(v));
+    this.save(resultVariants);
+  }
+
+  private loadFromForecastModalRef: BsModalRef;
+  private readonly loadFromForecastTemplate = viewChild<TemplateRef<unknown>>("loadFromForecastTemplate");
+
+  openLoadFromForecastModal() {
+    this.loadFromForecastModalRef = this.modalService.show(this.loadFromForecastTemplate(), this.config);
+  }
+
+  loadFromForecastModalConfirm(): void {
+    this.loadFromForecastModalRef.hide();
+    this.loading = true;
+    this.doLoadVariantsFromForecast();
+  }
+
+  loadFromForecastModalDecline(): void {
+    this.loadFromForecastModalRef.hide();
   }
 
   loadVariantsFromYesterday(dangerSourceId?: string) {

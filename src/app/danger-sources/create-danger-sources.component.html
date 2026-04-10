@@ -104,12 +104,12 @@
     <div class="create-bulletin__regions">
       <!-- Own danger sources -->
       <header class="create-bulletin__region-divider" style="background: none; border-top: none">
-        <h5 class="font-s-bold">
+        <h5 class="font-s-bold w-100">
           @if (dangerSourcesService.getIsEditable()) {
             <button
               [disabled]="editRegions || loading"
               (click)="createDangerSource()"
-              class="btn btn-sm btn-primary"
+              class="btn btn-sm btn-primary w-100"
               type="button"
               title="{{ 'dangerSources.create.createDangerSource' | translate }}"
               ngxMousetrapKey="c d"
@@ -119,45 +119,67 @@
           }
         </h5>
         <div class="btn-group region-divider__actions">
-          <!-- map above / map aside -->
-          @if (!isCompactMapLayout) {
-            <button
-              (click)="toggleCompactMapLayout()"
-              class="btn btn-sm btn-bare btn-sm btn-icon"
-              type="button"
-              data-toggle="tooltip"
-              title="{{ 'bulletins.create.mapTop' | translate }}"
-              ngxMousetrapKey="v"
-            >
-              <i class="ph ph-bold icon-md ph-square-split-vertical"></i>
+          <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
+            <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle ngxMousetrapKey="d">
+              <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
-          }
-          @if (isCompactMapLayout) {
-            <button
-              (click)="toggleCompactMapLayout()"
-              class="btn btn-sm btn-bare btn-sm btn-icon"
-              type="button"
-              data-toggle="tooltip"
-              title="{{ 'bulletins.create.mapLeft' | translate }}"
-              ngxMousetrapKey="v"
-            >
-              <i class="ph ph-bold icon-md ph-square-split-horizontal"></i>
-            </button>
-          }
-          <!-- load danger sources from yesterday -->
-          @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
-            <button
-              [disabled]="editRegions || loading"
-              (click)="loadAllVariantsFromYesterday()"
-              class="btn btn-sm btn-bare btn-sm btn-icon"
-              type="button"
-              data-toggle="tooltip"
-              title="{{ 'dangerSources.create.tooltip.loadVariants' | translate }}"
-              ngxMousetrapKey="y"
-            >
-              <i class="ph-bold ph-copy icon-md"></i>
-            </button>
-          }
+            <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
+              <!-- map above / map aside -->
+              <li>
+                <button class="dropdown-item" (click)="toggleCompactMapLayout(); dropdown.hide()" ngxMousetrapKey="v">
+                  @if (isCompactMapLayout) {
+                    <i class="ph icon-md ph-square-split-horizontal"></i>
+                  }
+                  @if (!isCompactMapLayout) {
+                    <i class="ph icon-md ph-square-split-vertical"></i>
+                  }
+                  @if (isCompactMapLayout) {
+                    <span>{{ "bulletins.create.mapLeft" | translate }}</span>
+                  }
+                  @if (!isCompactMapLayout) {
+                    <span>{{ "bulletins.create.mapTop" | translate }}</span>
+                  }
+                </button>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <!-- load danger sources from yesterday -->
+              <li>
+                @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="loadAllVariantsFromYesterday(); dropdown.hide()"
+                    ngxMousetrapKey="y"
+                  >
+                    <i class="ph-bold ph-copy icon-md"></i>
+                    {{ "dangerSources.create.tooltip.loadVariants" | translate }}
+                  </button>
+                }
+              </li>
+              <!-- load variants from forecast of the same day -->
+              <li>
+                @if (
+                  dangerSourcesService.getIsEditable() &&
+                  !dangerSourcesService.getIsReadOnly() &&
+                  hasForecastVariantsInList
+                ) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="loadVariantsFromForecast(); dropdown.hide()"
+                    ngxMousetrapKey="f"
+                  >
+                    <i class="ph ph-trend-up icon-md"></i>
+                    {{ "dangerSources.create.tooltip.loadVariantsFromForecast" | translate }}
+                  </button>
+                }
+              </li>
+            </ul>
+          </div>
         </div>
       </header>
       <!-- End own danger sources header -->
@@ -593,6 +615,20 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="loadingErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.loadingErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #loadFromForecastTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "dangerSources.create.loadFromForecastDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="loadFromForecastModalConfirm()" ngxMousetrapKey="enter">
+      {{ "dangerSources.create.loadFromForecastDialog.accept" | translate }}
+    </button>
+    <button type="button" class="btn btn-default" (click)="loadFromForecastModalDecline()" ngxMousetrapKey="esc">
+      {{ "dangerSources.create.loadFromForecastDialog.reject" | translate }}
     </button>
   </div>
 </ng-template>
