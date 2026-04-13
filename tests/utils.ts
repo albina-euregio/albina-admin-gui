@@ -54,6 +54,38 @@ export async function changeRegion(page: Page, region: string) {
     .click();
 }
 
+export const waitForGetEdit = (page: Page) =>
+  page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/bulletins\/edit/) &&
+      response.url().includes("regions=PLAYWRIGHT") &&
+      response.status() === 200 &&
+      response.request().method() === "GET",
+  );
+
+/**
+ * To be used as a substitute for the "Clear all warning regions" button in the UI, which is only visible to admins.
+ * @param page
+ */
+export async function clearWarningRegions(page: Page) {
+  const deleteRegionButton = page.getByTitle("Delete region").first();
+
+  while (await deleteRegionButton.isVisible()) {
+    await deleteRegionButton.click();
+    await expect(page.getByText("Do you want to delete this region?")).toBeVisible();
+
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().match(/\/api\/bulletins/) &&
+        response.status() === 200 &&
+        response.request().method() === "DELETE",
+    );
+
+    await page.getByRole("button", { name: "Yes" }).click();
+    await responsePromise;
+  }
+}
+
 /**
  * Sets a fixed time for both the legacy Date API and the Temporal API.
  * This should be used instead of `page.clock.setFixedTime()` when the app uses Temporal.
