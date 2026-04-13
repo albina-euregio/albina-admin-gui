@@ -4,14 +4,16 @@
       <div class="card">
         <div class="card-header">
           {{ "bulletins.publicationChecklist.title" | translate }}
-          <time class="create-bulletin__current-date font-m-bold">
-            {{
-              bulletinsService.sourceDates.activeValidUntil
-                | date: "fullDate" : undefined : translateService.getCurrentLang()
-            }}
+          <div class="font-m-bold">
+            <time class="create-bulletin__current-date">
+              {{
+                bulletinsService.sourceDates.activeValidUntil
+                  | date: "fullDate" : undefined : translateService.getCurrentLang()
+              }}
+            </time>
             &ndash;
-            {{ regionsService.getRegionName(regionId) | translate }}
-          </time>
+            <span>{{ regionsService.getRegionName(regionId) | translate }}</span>
+          </div>
         </div>
         <div class="d-grid gap-3 p-3">
           @for (item of checklistItems; track $index; let index = $index) {
