@@ -1516,7 +1516,7 @@
       "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
       "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
       "aws-products": "AWS Products",
-      "aws-stress": "Team Stress Level"
+      "aws-stress-level": "Team Stress Level"
     }
   }
 }

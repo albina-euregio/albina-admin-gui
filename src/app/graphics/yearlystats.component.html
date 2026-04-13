@@ -134,11 +134,18 @@
               <input
                 class="yearlystats-chart-checkbox"
                 type="checkbox"
-                [(ngModel)]="chartTypeSelection['aws-stress']"
-                (ngModelChange)="setChartType('aws-stress', $event)"
-                [disabled]="selectedRegionCodes.length !== 1 || authenticationService.getActiveRegionId() !== selectedRegionCodes[0]"
+                [(ngModel)]="chartTypeSelection['aws-stress-level']"
+                (ngModelChange)="setChartType('aws-stress-level', $event)"
+                [disabled]="
+                  selectedRegionCodes.length !== 1 ||
+                  authenticationService.getActiveRegionId() !== selectedRegionCodes[0]
+                "
               />
-              <span class="form-check-label">{{ "yearlystats.charts.aws-stress" | translate }} ({{authenticationService.getActiveRegionId()}})</span>
+              <span class="form-check-label"
+                >{{ "yearlystats.charts.aws-stress-level" | translate }} ({{
+                  authenticationService.getActiveRegionId()
+                }})</span
+              >
             </label>
           }
         </div>

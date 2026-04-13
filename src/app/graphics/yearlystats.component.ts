@@ -3,9 +3,9 @@ import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 import { GraphicsService } from "./graphics.service";
-import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 @Component({
   selector: "app-yearlystats",
@@ -42,7 +42,7 @@ export class YearlystatsComponent implements AfterViewInit {
     "aws-danger-pattern-micro-regions": false,
     "aws-avalanche-problem-micro-regions": false,
     "aws-products": false,
-    "aws-stress": false,
+    "aws-stress-level": false,
   };
 
   ngAfterViewInit() {
@@ -57,7 +57,7 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   protected setCurrentSeason() {
-    const {start, end} = this.graphicsService.getCurrentSeason();
+    const { start, end } = this.graphicsService.getCurrentSeason();
     this.startDate = start;
     this.endDate = end;
   }
@@ -183,7 +183,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
     wrapper.setAttribute("blogs", this.blogs);
     wrapper.setAttribute("bulletins", this.bulletins);
-    wrapper.setAttribute("stress", this.stress);
+    wrapper.setAttribute("stress-level", this.stress);
 
     if (this.showProductsTrainingInputs) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
@@ -260,4 +260,4 @@ type YearlyChartType =
   | "aws-danger-pattern-micro-regions"
   | "aws-avalanche-problem-micro-regions"
   | "aws-products"
-  | "aws-stress";
+  | "aws-stress-level";
