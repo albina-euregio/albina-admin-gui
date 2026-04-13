@@ -107,6 +107,13 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     this.queueChecklistSave();
   }
 
+  copyToClipboard(text: string | null) {
+    if (!text?.trim()) {
+      return;
+    }
+    void navigator.clipboard.writeText(text.trim());
+  }
+
   private queueChecklistSave() {
     this.saveChecklist.next({
       date: this.date,

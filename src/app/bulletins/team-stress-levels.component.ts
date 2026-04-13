@@ -8,9 +8,7 @@ import { UserService } from "../providers/user-service/user.service";
 
 @Component({
   selector: "app-team-stress-levels",
-  template: `
-    <div echarts [options]="dataset"></div>
-  `,
+  template: ` <div echarts [options]="dataset"></div> `,
   standalone: true,
   imports: [NgxEchartsDirective],
 })

@@ -10,16 +10,15 @@ import { BulletinsService, PublicationChannel } from "../providers/bulletins-ser
   standalone: true,
   imports: [AlertModule, TranslateModule],
   template: `
-    <div class="d-flex flex-wrap gap-2 align-items-center">
-      <span class="text-muted me-1">{{ "bulletins.publicationChecklist.resend." + publicationChannel() | translate }}</span>
+    <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
       @for (language of languages; track language) {
         <button
           type="button"
-          class="btn btn-outline-secondary btn-sm"
+          class="btn btn-secondary btn-sm"
           (click)="triggerPublicationChannel($event, language)"
           [title]="'bulletins.table.publicationStatusDialog.title.language.' + language | translate"
         >
-          <i [class]="iconClass()"></i>
+          <i class="mx-1" [class]="iconClass()"></i>
           {{ "bulletins.table.publicationStatusDialog.title.language." + language | translate }}
         </button>
       }
@@ -43,7 +42,7 @@ export class PublicationTriggerNotificationsComponent {
   readonly publicationChannel = input.required<PublicationChannel>();
   readonly iconClass = input.required<string>();
 
-  readonly languages = ["all", "de", "it", "en"];
+  readonly languages = ["de", "it", "en", "all"];
 
   alerts: Alert[] = [];
 

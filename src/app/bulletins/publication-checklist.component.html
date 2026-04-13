@@ -109,12 +109,113 @@
 
                     @if (item.title === "Telegram") {
                       <div class="border-top pt-3">
-                        <app-publication-trigger-notifications
-                          [date]="bulletinsService.sourceDates.activeDate"
-                          [regionId]="regionId"
-                          [publicationChannel]="PublicationChannel.Telegram"
-                          iconClass="ph ph-telegram-logo"
-                        ></app-publication-trigger-notifications>
+                        <ol class="mb-0 ps-3">
+                          <li class="mt-2">
+                            <div class="fw-semibold">
+                              {{ "bulletins.publicationChecklist.resend.telegram" | translate }}
+                            </div>
+                            <app-publication-trigger-notifications
+                              [date]="bulletinsService.sourceDates.activeDate"
+                              [regionId]="regionId"
+                              [publicationChannel]="PublicationChannel.Telegram"
+                              iconClass="ph ph-telegram-logo"
+                            ></app-publication-trigger-notifications>
+                          </li>
+                          <li class="mt-2">
+                            <div class="fw-semibold">Manuell senden:</div>
+                            <div class="small text-muted mb-2">
+                              Kopiere den untenstehenden Text und sende ihn an die angegebene Telegram-Gruppe.
+                            </div>
+
+                            <div class="vstack gap-2">
+                              <div class="border rounded p-2">
+                                <div class="mb-2">
+                                  <a
+                                    class="small d-inline-flex align-items-center gap-1 text-decoration-none"
+                                    href="https://t.me/lawinenwarndienst_tirol"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <i class="ph ph-telegram-logo"></i>
+                                    <span class="fw-semibold">DE</span>
+                                    <span class="text-decoration-underline">https://t.me/lawinenwarndienst_tirol</span>
+                                  </a>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                  <pre
+                                    class="flex-grow-1 mb-0 p-2 border rounded bg-light"
+                                  ><code #telegramManualTextDe>Lawinenvorhersage für Sonntag, 12. April 2026: https://lawinen.report/2026-04-12</code></pre>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-secondary"
+                                    (click)="copyToClipboard(telegramManualTextDe.textContent)"
+                                    aria-label="Deutschen Telegram-Text kopieren"
+                                  >
+                                    <i class="ph ph-copy"></i>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div class="border rounded p-2">
+                                <div class="mb-2">
+                                  <a
+                                    class="small d-inline-flex align-items-center gap-1 text-decoration-none"
+                                    href="https://t.me/lawinenwarndienst_tirol"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <i class="ph ph-telegram-logo"></i>
+                                    <span class="fw-semibold">EN</span>
+                                    <span class="text-decoration-underline"
+                                      >https://t.me/avalanche_warning_service_tirol</span
+                                    >
+                                  </a>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                  <pre
+                                    class="flex-grow-1 mb-0 p-2 border rounded bg-light"
+                                  ><code #telegramManualTextEn>Avalanche forecast for Sunday, 12 April 2026: https://avalanche.report/2026-04-12</code></pre>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-secondary"
+                                    (click)="copyToClipboard(telegramManualTextEn.textContent)"
+                                    aria-label="Copy English Telegram text"
+                                  >
+                                    <i class="ph ph-copy"></i>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div class="border rounded p-2">
+                                <div class="mb-2">
+                                  <a
+                                    class="small d-inline-flex align-items-center gap-1 text-decoration-none"
+                                    href="https://t.me/lawinenwarndienst_tirol"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <i class="ph ph-telegram-logo"></i>
+                                    <span class="fw-semibold">IT</span>
+                                    <span class="text-decoration-underline">https://t.me/servizio_valanghe_tirolo</span>
+                                  </a>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                  <pre
+                                    class="flex-grow-1 mb-0 p-2 border rounded bg-light"
+                                  ><code #telegramManualTextIt>Previsione valanghe per domenica 12 aprile 2026: https://valanghe.report/2026-04-12</code></pre>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-secondary"
+                                    (click)="copyToClipboard(telegramManualTextIt.textContent)"
+                                    aria-label="Copia testo Telegram in italiano"
+                                  >
+                                    <i class="ph ph-copy"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ol>
                       </div>
                     }
 
