@@ -13,28 +13,69 @@
           type="date"
           [disabled]="loading"
           [(ngModel)]="startDate"
+          (ngModelChange)="onDateChanged()"
         />
       </div>
 
       <div>
         <label class="form-label mb-1" for="yearlystats-end-date">{{ "yearlystats.label.endDate" | translate }}</label>
-        <input id="yearlystats-end-date" class="form-control" type="date" [disabled]="loading" [(ngModel)]="endDate" />
+        <input
+          id="yearlystats-end-date"
+          class="form-control"
+          type="date"
+          [disabled]="loading"
+          [(ngModel)]="endDate"
+          (ngModelChange)="onDateChanged()"
+        />
       </div>
     </div>
 
     <div class="yearlystats-actions mt-3">
-      <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateCharts()">
+      <button
+        class="btn"
+        type="button"
+        [disabled]="loading"
+        [class.btn-primary]="pendingLoad"
+        [class.btn-outline-primary]="!pendingLoad"
+        (click)="updateCharts()"
+      >
         {{ "yearlystats.label.loaddata" | translate }}
       </button>
-      <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
+      <button
+        class="btn"
+        type="button"
+        [disabled]="loading"
+        [class.btn-primary]="activeQuickRange === 'last90'"
+        [class.btn-outline-secondary]="activeQuickRange !== 'last90'"
+        (click)="setLastDays(90)"
+      >
         {{ "yearlystats.label.last90Days" | translate }}
       </button>
-      <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(180)">
+      <button
+        class="btn"
+        type="button"
+        [disabled]="loading"
+        [class.btn-primary]="activeQuickRange === 'last180'"
+        [class.btn-outline-secondary]="activeQuickRange !== 'last180'"
+        (click)="setLastDays(180)"
+      >
         {{ "yearlystats.label.last180Days" | translate }}
       </button>
-      <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setCurrentSeason()">
+      <button
+        class="btn"
+        type="button"
+        [disabled]="loading"
+        [class.btn-primary]="activeQuickRange === 'season'"
+        [class.btn-outline-secondary]="activeQuickRange !== 'season'"
+        (click)="setCurrentSeason()"
+      >
         {{ "yearlystats.label.currentSeason" | translate }}
       </button>
+      @if (showDateChangeHint) {
+        <span class="small text-muted align-self-center">
+          {{ "yearlystats.hint.dateChange" | translate }}
+        </span>
+      }
     </div>
 
     <div class="yearlystats-main-grid mt-3">
@@ -75,9 +116,7 @@
             <label class="form-label mb-1" for="yearlystats-danger-rating-reference">{{
               "yearlystats.label.dangerRatingReference" | translate
             }}</label
-            ><br /><span class="small text-muted"
-              >Reference values for a danger rating distribution over different seasons, shown in grey</span
-            >
+            ><br /><span class="small text-muted">{{ "yearlystats.hint.dangerRatingReference" | translate }}</span>
             <input
               id="yearlystats-danger-rating-reference"
               class="form-control mt-2"

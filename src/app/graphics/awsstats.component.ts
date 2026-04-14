@@ -61,6 +61,9 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected dangerSourceVariants = "[]";
   protected showWrapper = false;
   protected loading = false;
+  protected pendingLoad = true;
+  protected showDateChangeHint = false;
+  protected activeQuickRange: "last7" | "last30" | "last90" | "season" | null = null;
   protected errorMessage = "";
   protected selectedMicroRegions: string[] = [];
   protected selectedStationId = "";
@@ -94,16 +97,28 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   }
 
   protected setLastDays(days: number) {
+    this.activeQuickRange = days === 7 ? "last7" : days === 30 ? "last30" : days === 90 ? "last90" : null;
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
     this.startDate = this.toDateInputValue(this.shiftDays(new Date(), -days));
     this.endDate = this.toDateInputValue(new Date());
     this.update();
   }
 
   protected setCurrentSeason() {
+    this.activeQuickRange = "season";
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
     const { start, end } = this.graphicsService.getCurrentSeason();
     this.startDate = start;
     this.endDate = end;
     this.update();
+  }
+
+  protected onDateChanged() {
+    this.pendingLoad = true;
+    this.showDateChangeHint = true;
+    this.activeQuickRange = null;
   }
 
   protected clearSelectedRegions() {
@@ -189,6 +204,8 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       this.observationsUrl = URL.createObjectURL(blob);
       this.showWrapper = true;
       this.mountWrapper();
+      this.pendingLoad = false;
+      this.showDateChangeHint = false;
     } catch (error) {
       this.revokeObservationsUrl();
       this.bulletins = "[]";

@@ -1517,6 +1517,10 @@
       "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
       "aws-products": "AWS Products",
       "aws-stress-level": "Team Stress Level"
+    },
+    "hint": {
+      "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
+      "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
   }
 }

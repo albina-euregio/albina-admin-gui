@@ -26,6 +26,9 @@ export class YearlystatsComponent implements AfterViewInit {
   protected errorMessage = "";
   protected showWrapper = false;
   protected loading = false;
+  protected pendingLoad = true;
+  protected showDateChangeHint = false;
+  protected activeQuickRange: "last90" | "last180" | "season" | null = null;
   protected bulletins = "[]";
   protected blogs = "[]";
   protected stress = "[]";
@@ -53,16 +56,28 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   protected setLastDays(days: number) {
+    this.activeQuickRange = days === 90 ? "last90" : days === 180 ? "last180" : null;
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
     this.startDate = this.toDateInputValue(this.shiftDays(new Date(), -days));
     this.endDate = this.toDateInputValue(new Date());
     this.updateCharts();
   }
 
   protected setCurrentSeason() {
+    this.activeQuickRange = "season";
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
     const { start, end } = this.graphicsService.getCurrentSeason();
     this.startDate = start;
     this.endDate = end;
     this.updateCharts();
+  }
+
+  protected onDateChanged() {
+    this.pendingLoad = true;
+    this.showDateChangeHint = true;
+    this.activeQuickRange = null;
   }
 
   protected setChartType(chartType: YearlyChartType, checked: boolean) {
@@ -73,12 +88,14 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   protected onTrainingInputsChanged() {
+    this.pendingLoad = true;
     if (this.showWrapper) {
       this.mountWrapper();
     }
   }
 
   protected onReferenceChanged() {
+    this.pendingLoad = true;
     if (this.showWrapper) {
       this.mountWrapper();
     }
@@ -164,6 +181,8 @@ export class YearlystatsComponent implements AfterViewInit {
 
     this.showWrapper = true;
     this.mountWrapper();
+    this.pendingLoad = false;
+    this.showDateChangeHint = false;
     this.loading = false;
   }
 
