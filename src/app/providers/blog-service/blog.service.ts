@@ -1,17 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { PublicationChannel } from "app/enums/enums";
 import { map, Observable } from "rxjs";
 
 import { AlbinaLanguage } from "../../models/text.model";
 import { ConstantsService } from "../constants-service/constants.service";
-
-export enum PublicationChannel {
-  Email = "email",
-  Telegram = "telegram",
-  WhatsApp = "whatsapp",
-  Push = "push",
-  All = "",
-}
 
 export interface BlogItem {
   id: number;

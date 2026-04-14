@@ -148,3 +148,12 @@ export enum TextcatTextfield {
   travelAdvisoryComment = "travelAdvisoryComment",
   travelAdvisoryHighlights = "travelAdvisoryHighlights",
 }
+
+export enum PublicationChannel {
+  Website = "website",
+  Email = "email",
+  Telegram = "telegram",
+  WhatsApp = "whatsapp",
+  Push = "push",
+  All = "",
+}

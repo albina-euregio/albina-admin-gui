@@ -1,9 +1,10 @@
 import { Component, inject, input } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { PublicationChannel } from "app/enums/enums";
 import { AlertModule } from "ngx-bootstrap/alert";
 
 import { Alert } from "../models/Alert";
-import { BulletinsService, PublicationChannel } from "../providers/bulletins-service/bulletins.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 
 @Component({
   selector: "app-publication-trigger-notifications",

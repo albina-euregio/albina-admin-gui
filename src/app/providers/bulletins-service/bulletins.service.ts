@@ -25,13 +25,6 @@ interface AccordionChangeEvent {
   groupName: string;
 }
 
-export enum PublicationChannel {
-  Email = "email",
-  Telegram = "telegram",
-  WhatsApp = "whatsapp",
-  Push = "push",
-}
-
 @Injectable()
 export class BulletinsService {
   http = inject(HttpClient);
@@ -417,7 +410,7 @@ export class BulletinsService {
     return this.http.post<void>(url, body);
   }
 
-  triggerPublicationChannel(date: [Date, Date], region: string, language: string, channel: PublicationChannel) {
+  triggerPublicationChannel(date: [Date, Date], region: string, language: string, channel: Enums.PublicationChannel) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }

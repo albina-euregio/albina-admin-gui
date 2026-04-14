@@ -1,11 +1,12 @@
 import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { PublicationChannel } from "app/enums/enums";
 import { Alert } from "app/models/Alert";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { AlertModule } from "ngx-bootstrap/alert";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { BlogService, PublicationChannel } from "../providers/blog-service/blog.service";
+import { BlogService } from "../providers/blog-service/blog.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 
 interface PublicationInformation {
