@@ -15,32 +15,39 @@
               <span class="mx-1">&ndash;</span>
               <span>{{ regionsService.getRegionName(regionId) | translate }}</span>
             </div>
-
-            @if (publicationStatus) {
-              <div class="border-top pt-2 mt-1">
-                <div class="d-flex flex-column gap-1 small">
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="fw-semibold">Status of the bulletin:</span>
-                    <app-bulletin-status-badge [status]="publicationStatus.status"></app-bulletin-status-badge>
-                  </div>
-
-                  <div>
-                    <span class="fw-semibold">Published at:</span>
-                    <span>
-                      {{ publicationStatus.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
-                    </span>
-                  </div>
-
-                  @if (publicationStatus.isBeingPublished) {
-                    <div class="text-warning-emphasis">Publication still in progress</div>
-                  } @else {
-                    <div class="text-success">Finished publication on server</div>
-                  }
-                </div>
-              </div>
-            }
           </div>
         </div>
+
+        @if (publicationStatus) {
+          <div class="card-body py-3 border-bottom">
+            <div class="d-flex flex-column gap-2 small">
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="font-s-medium text-secondary">Status of the bulletin:</span>
+                <app-bulletin-status-badge [status]="publicationStatus.status"></app-bulletin-status-badge>
+              </div>
+
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="font-s-medium text-secondary">Published at:</span>
+                <span>
+                  {{ publicationStatus.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
+                </span>
+              </div>
+
+              @if (publicationStatus.isBeingPublished) {
+                <div class="d-inline-flex align-items-center gap-2 text-body-secondary">
+                  <i class="ph ph-spinner-gap ph-spin" aria-hidden="true"></i>
+                  <span>Publication still in progress</span>
+                </div>
+              } @else {
+                <div class="d-inline-flex align-items-center gap-2 text-body-secondary">
+                  <i class="ph ph-check-circle" aria-hidden="true"></i>
+                  <span>Finished publication on server</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
         <div class="d-grid gap-3 p-3">
           @for (item of checklistItems; track $index; let index = $index) {
             <div
@@ -51,12 +58,24 @@
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start gap-3">
                   <div class="pe-3">
-                    <div class="fw-semibold">
-                      {{ item.title }}
+                    <div class="d-flex align-items-center gap-2 fw-semibold">
+                      @if (item.title === "Website") {
+                        <i class="ph ph-globe" aria-hidden="true"></i>
+                      }
+                      @if (item.title === "WhatsApp") {
+                        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i>
+                      }
+                      @if (item.title === "Telegram") {
+                        <i class="ph ph-telegram-logo" aria-hidden="true"></i>
+                      }
+                      @if (item.title === "E-Mail") {
+                        <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+                      }
+                      <span>{{ item.title }}</span>
                     </div>
                     @if (item.link) {
                       <a
-                        class="small"
+                        class="small text-break"
                         [href]="item.link"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -65,7 +84,7 @@
                         {{ item.link }}
                       </a>
                     }
-                    <small class="text-muted d-block">
+                    <small class="text-muted d-block mt-1">
                       {{ item.description | translate }}
                     </small>
                   </div>
@@ -82,7 +101,7 @@
                       (change)="onOkChange(index, $event)"
                     />
                     <label
-                      class="btn btn-sm rounded-pill me-2"
+                      class="btn btn-sm rounded-pill me-2 d-inline-flex align-items-center gap-1"
                       [class.btn-success]="item.ok"
                       [class.btn-outline-dark]="!item.ok"
                       [for]="'check' + index + 'Ok'"
@@ -99,7 +118,7 @@
                       (change)="onProblemChange(index, $event)"
                     />
                     <label
-                      class="btn btn-sm rounded-pill"
+                      class="btn btn-sm rounded-pill d-inline-flex align-items-center gap-1"
                       [class.btn-danger]="item.problem"
                       [class.btn-outline-dark]="!item.problem"
                       [for]="'check' + index + 'Problem'"
