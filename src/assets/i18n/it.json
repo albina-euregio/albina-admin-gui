@@ -105,7 +105,7 @@
       "tooltip": {
         "editDangerSource": "Modifica l'origine di pericolo",
         "loadVariants": "Carica le variazioni del giorno precedente",
-        "loadVariantsFromForecast": "Load variants from forecast",
+        "loadVariantsFromForecast": "Carica le varianti dalla previsione",
         "showVariantsOnMap": "Mostrare varianti sulla mappa",
         "edit": "Modifica le micro-zone",
         "copy": "Copia variazione",
@@ -195,12 +195,12 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Do you want to load all danger source variants from the day before?<br><strong>Existing analysis variants will be overwritten.</strong>",
+        "message": "Vuoi caricare tutte le varianti delle origini di pericolo relative al giorno precedente?<br><strong>Le varianti di analisi esistenti verranno sovrascritte.</strong>",
         "accept": "Sì",
         "reject": "No"
       },
       "loadFromForecastDialog": {
-        "message": "Do you want to load all variants from the forecast?<br><strong>Existing analysis variants will be overwritten.</strong>",
+        "message": "Vuoi caricare tutte le varianti dalla previsione?<br><strong>Le varianti di analisi esistenti verranno sovrascritte.</strong>",
         "accept": "Sì",
         "reject": "No"
       }
@@ -1493,7 +1493,11 @@
       "aws-observations": "Osservazione servizi valanghe",
       "aws-danger-rating": "Grado pericolo valanghe",
       "aws-danger-rating-altitude": "Grado di pericolo a base di quota",
-      "aws-avalanche-activity-index": "Indice attività valanghe"
+      "aws-avalanche-activity-index": "Indice attività valanghe",
+      "aws-danger-rating-danger-source-variants": "Danger source variants",
+      "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
     }
   },
   "yearlystats": {
@@ -1517,7 +1521,12 @@
       "aws-danger-rating-distribution": "Valutazione grado di pericolo servizio valanghe - distribuzione",
       "aws-danger-pattern-micro-regions": "Valutazione situazione tipo servizio valanghe - micro-zone",
       "aws-avalanche-problem-micro-regions": "Valutazione problemi valanghivi servizio valanghe - micro-zone",
-      "aws-products": "Prodotti servizi valanghe"
+      "aws-products": "Prodotti servizi valanghe",
+      "aws-stress-level": "Team Stress Level"
+    },
+    "hint": {
+      "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
+      "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
   }
 }

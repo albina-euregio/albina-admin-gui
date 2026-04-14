@@ -1493,7 +1493,11 @@
       "aws-observations": "LWD-Beobachtungen",
       "aws-danger-rating": "Gefahrenstufe",
       "aws-danger-rating-altitude": "Gefahrenstufen nach Seehöhe",
-      "aws-avalanche-activity-index": "Lawinen-Aktivitätsindex"
+      "aws-avalanche-activity-index": "Lawinen-Aktivitätsindex",
+      "aws-danger-rating-danger-source-variants": "Varianten der Gefahrenquellen",
+      "aws-danger-source-variants-matrix-parameter-stability": "Stabilität der Varianten der Gefahrenquellen",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Häufigkeit der Varianten der Gefahrenquellen",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Lawinengrößen der Varianten der Gefahrenquellen"
     }
   },
   "yearlystats": {
@@ -1517,7 +1521,12 @@
       "aws-danger-rating-distribution": "Verteilung der Gefahrenstufe",
       "aws-danger-pattern-micro-regions": "Gefahrenmuster nach Kleinstregionen",
       "aws-avalanche-problem-micro-regions": "Lawinenprobleme nach Kleinstregionen",
-      "aws-products": "LWD-Produkte"
+      "aws-products": "LWD-Produkte",
+      "aws-stress-level": "Team-Stresslevel"
+    },
+    "hint": {
+      "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
+      "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
   }
 }
