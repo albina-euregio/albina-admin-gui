@@ -203,6 +203,10 @@ export class LineaExportComponent implements AfterViewInit {
     return JSON.stringify(this.graphicsService.getSmetUrlsByIds(this.selectedIds, this.stations, 2));
   }
 
+  get forecastLatLon(): string {
+    return JSON.stringify(this.graphicsService.getLatLongPairsByIds(this.selectedIds, this.stations));
+  }
+
   // Marker style
   getModelPointOptions(selected: boolean): CircleMarkerOptions {
     return {
