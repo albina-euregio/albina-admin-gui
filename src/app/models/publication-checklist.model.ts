@@ -1,11 +1,11 @@
 import { z } from "zod/v4";
 
-import { BulletinStatus } from "../enums/enums";
+import { BulletinStatus, PublicationChannel } from "../enums/enums";
 import { DateSchema } from "./bulletin.model";
 
 export const ChecklistItemSchema = z.object({
+  publicationChannel: z.enum(PublicationChannel),
   title: z.string(),
-  link: z.string().optional(),
   description: z.string(),
   ok: z.boolean(),
   problem: z.boolean(),
@@ -26,7 +26,7 @@ export const PublicationStatusSchema = z.object({
   date: DateSchema.nullish(),
   timestamp: DateSchema.nullish(),
   status: PublicationBulletinStatusSchema,
-  isBeingPublished: z.boolean(),
+  isBeingPublished: z.boolean().optional(),
 });
 
 export type PublicationStatusModel = z.infer<typeof PublicationStatusSchema>;

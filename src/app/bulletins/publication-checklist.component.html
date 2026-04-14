@@ -33,16 +33,18 @@
                 </span>
               </div>
 
-              @if (publicationStatus.isBeingPublished) {
-                <div class="d-inline-flex align-items-center gap-2 text-body-secondary">
-                  <i class="ph ph-spinner-gap ph-spin" aria-hidden="true"></i>
-                  <span>Publication still in progress</span>
-                </div>
-              } @else {
-                <div class="d-inline-flex align-items-center gap-2 text-body-secondary">
-                  <i class="ph ph-check-circle" aria-hidden="true"></i>
-                  <span>Finished publication on server</span>
-                </div>
+              @if (publicationStatus.isBeingPublished !== undefined) {
+                @if (publicationStatus.isBeingPublished) {
+                  <div class="d-inline-flex align-items-center gap-2 text-body-secondary">
+                    <i class="ph ph-spinner-gap ph-spin" aria-hidden="true"></i>
+                    <span>Publication still in progress</span>
+                  </div>
+                } @else {
+                  <div class="d-inline-flex align-items-center gap-2 text-body-secondary">
+                    <i class="ph ph-check-circle" aria-hidden="true"></i>
+                    <span>Finished publication on server</span>
+                  </div>
+                }
               }
             </div>
           </div>
@@ -73,15 +75,15 @@
                       }
                       <span>{{ item.title }}</span>
                     </div>
-                    @if (item.link) {
+                    @if (getPublicationLink(item.publicationChannel)) {
                       <a
                         class="small text-break"
-                        [href]="item.link"
+                        [href]="getPublicationLink(item.publicationChannel)"
                         target="_blank"
                         rel="noopener noreferrer"
                         [attr.aria-label]="item.title + ' link'"
                       >
-                        {{ item.link }}
+                        {{ getPublicationLink(item.publicationChannel) }}
                       </a>
                     }
                     <small class="text-muted d-block mt-1">
@@ -220,31 +222,31 @@
                             </div>
 
                             <app-publication-trigger-notifications
-                              [date]="bulletinsService.sourceDates.activeDate"
+                              [date]="getActiveDate()"
                               [regionId]="regionId"
-                              [publicationChannel]="getSocialPublicationChannel(item.title)"
-                              [iconClass]="getSocialIconClass(item.title)"
+                              [publicationChannel]="item.publicationChannel"
+                              [iconClass]="getSocialIconClass(item.publicationChannel)"
                             ></app-publication-trigger-notifications>
                           </li>
                           <li class="mt-2">
                             <div class="fw-semibold">Manuell senden:</div>
                             <div class="small text-muted mb-2">
-                              {{ getManualSendDescription(item.title) }}
+                              {{ getManualSendDescription(item.publicationChannel) }}
                             </div>
 
                             <div class="vstack gap-2">
-                              @for (entry of getManualSendEntries(item.title); track entry.language) {
+                              @for (entry of getManualSendEntries(item.publicationChannel); track entry.language) {
                                 <div class="border rounded p-2">
                                   <div class="mb-2">
                                     <a
                                       class="small d-inline-flex align-items-center gap-1 text-decoration-none"
-                                      [href]="entry.link"
+                                      [href]="entry.url"
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
-                                      <i [class]="getSocialIconClass(item.title)"></i>
+                                      <i [class]="getSocialIconClass(item.publicationChannel)"></i>
                                       <span class="fw-semibold">{{ entry.language.toUpperCase() }}</span>
-                                      <span class="text-decoration-underline">{{ entry.link }}</span>
+                                      <span class="text-decoration-underline">{{ entry.url }}</span>
                                     </a>
                                   </div>
                                   <div class="d-flex align-items-center gap-1">
@@ -257,7 +259,7 @@
                                       (click)="copyToClipboard(getManualSendMessage(entry.language))"
                                       [title]="
                                         'bulletins.publicationChecklist.manualSend.copyText.' +
-                                          item.title.toLowerCase() +
+                                          item.publicationChannel +
                                           '.' +
                                           entry.language.toLowerCase() | translate
                                       "
@@ -288,9 +290,9 @@
                               {{ "bulletins.publicationChecklist.resend" | translate }}
                             </div>
                             <app-publication-trigger-notifications
-                              [date]="bulletinsService.sourceDates.activeDate"
+                              [date]="getActiveDate()"
                               [regionId]="regionId"
-                              [publicationChannel]="PublicationChannel.Email"
+                              [publicationChannel]="item.publicationChannel"
                               iconClass="ph ph-envelope-simple"
                             ></app-publication-trigger-notifications>
                           </li>

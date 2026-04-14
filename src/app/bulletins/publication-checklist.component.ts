@@ -1,9 +1,10 @@
-import { DatePipe } from "@angular/common";
+import { DatePipe, formatDate } from "@angular/common";
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { PublicationChannel } from "app/enums/enums";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { BulletinsService, PublicationChannel } from "app/providers/bulletins-service/bulletins.service";
+import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -14,12 +15,7 @@ import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.co
 import { ModalPublishComponent } from "./modal-publish.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
-type ManualSendLanguage = "de" | "en" | "it";
-
-interface ManualSendEntry {
-  language: ManualSendLanguage;
-  link: string;
-}
+const PUBLICATION_LANGUAGES: string[] = ["de", "it", "en"];
 
 @Component({
   templateUrl: "publication-checklist.component.html",
@@ -33,14 +29,14 @@ interface ManualSendEntry {
   ],
 })
 export class PublicationChecklistComponent implements OnInit, OnDestroy {
-  private activeRoute = inject(ActivatedRoute);
   private authenticationService = inject(AuthenticationService);
   private modalService = inject(BsModalService);
+  private localStorageService = inject(LocalStorageService);
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
-  localStorageService = inject(LocalStorageService);
   regionsService = inject(RegionsService);
 
+  private activeRoute = inject(ActivatedRoute);
   private routeParamsSubscription: Subscription;
   private checklistSaveSubscription: Subscription;
   private saveChecklist = new Subject<{
@@ -55,19 +51,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   publicationStatus: PublicationStatusModel;
 
   publishBulletinsModalRef: BsModalRef;
-  readonly PublicationChannel = PublicationChannel;
-  private readonly manualSendEntriesByChannel: Record<"WhatsApp" | "Telegram", ManualSendEntry[]> = {
-    WhatsApp: [
-      { language: "de", link: "https://www.whatsapp.com/channel/0029Vb9EFivJUM2ShOiocj3h" },
-      { language: "en", link: "https://www.whatsapp.com/channel/0029Vb5ry3RDOQIZDZuS3p26" },
-      { language: "it", link: "https://www.whatsapp.com/channel/0029VbAybBt8vd1XOKzGPN2S" },
-    ],
-    Telegram: [
-      { language: "de", link: "https://t.me/lawinenwarndienst_tirol" },
-      { language: "en", link: "https://t.me/avalanche_warning_service_tirol" },
-      { language: "it", link: "https://t.me/servizio_valanghe_tirolo" },
-    ],
-  };
 
   get isWebsiteChecked(): boolean {
     return !!(this.checklistItems[0]?.ok || this.checklistItems[0]?.problem);
@@ -82,33 +65,94 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       });
   }
 
-  private createChecklistItems(date: string): ChecklistItemModel[] {
+  ngOnInit() {
+    const date$ = this.activeRoute.params.pipe(
+      map(({ date }) => date as string),
+      distinctUntilChanged(),
+    );
+    const regionId$ = this.authenticationService.activeRegion$.pipe(
+      map((region) => region?.id),
+      distinctUntilChanged(),
+    );
+
+    // update checklist when date or region changes and load publication status for the region
+    this.routeParamsSubscription = combineLatest([date$, regionId$])
+      .pipe(
+        tap(([date, regionId]) => {
+          this.date = date;
+          this.regionId = regionId;
+          this.bulletinsService.sourceDates.setActiveDate(date);
+          this.checklistItems = this.getInitialChecklistItems(date, regionId);
+        }),
+        switchMap(([, regionId]) => {
+          return this.bulletinsService.getPublicationStatus(regionId);
+        }),
+      )
+      .subscribe({
+        next: (data) => {
+          this.publicationStatus = data;
+        },
+        error: (error) => {
+          console.error("Publication status could not be loaded!", error);
+        },
+      });
+  }
+
+  ngOnDestroy() {
+    this.routeParamsSubscription.unsubscribe();
+    this.checklistSaveSubscription.unsubscribe();
+  }
+
+  getSocialMediaUrl(publicationChannel: PublicationChannel, language?: string) {
+    const lang = language ?? this.translateService.getCurrentLang();
+    const urls = this.regionsService.eawsRegion(this.regionId)?.aws[0].url;
+    if (!urls) return;
+    return urls[`${publicationChannel}:${lang}`];
+  }
+
+  getWebsiteUrl(publicationLanguage?: string): string {
+    const lang = publicationLanguage ?? this.translateService.getCurrentLang();
+    const urls = this.regionsService.eawsRegion(this.regionId)?.aws[0].url;
+    if (!urls) return;
+    return urls[lang];
+  }
+
+  getPublicationLink(publicationChannel: PublicationChannel, publicationLanguage?: string): string | undefined {
+    const lang = publicationLanguage ?? this.translateService.getCurrentLang();
+    if (publicationChannel === PublicationChannel.Website) {
+      return `${this.getWebsiteUrl(lang)}/${this.date}`;
+    }
+    return this.getSocialMediaUrl(publicationChannel, lang);
+  }
+
+  private createChecklistItems(): ChecklistItemModel[] {
     return [
       {
+        publicationChannel: PublicationChannel.Website,
         title: "Website",
         description: "bulletins.publicationChecklist.descWebsite",
-        link: `https://lawinen.report/bulletin/${date}`,
         ok: false,
         problem: false,
         problemDescription: "",
       },
       {
+        publicationChannel: PublicationChannel.WhatsApp,
         title: "WhatsApp",
         description: "bulletins.publicationChecklist.descMessage",
-        link: "https://www.whatsapp.com/channel/0029Vb9EFivJUM2ShOiocj3h",
         ok: false,
         problem: false,
         problemDescription: "",
       },
       {
+        publicationChannel: PublicationChannel.Telegram,
         title: "Telegram",
         description: "bulletins.publicationChecklist.descMessage",
-        link: "https://t.me/s/lawinenwarndienst_tirol",
         ok: false,
         problem: false,
         problemDescription: "",
       },
       {
+        publicationChannel: PublicationChannel.Email,
         title: "E-Mail",
         description: "bulletins.publicationChecklist.descEmail",
         ok: false,
@@ -154,32 +198,20 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     void navigator.clipboard.writeText(text.trim());
   }
 
-  getSocialPublicationChannel(itemTitle: string): PublicationChannel.Telegram | PublicationChannel.WhatsApp {
-    return itemTitle === "Telegram" ? PublicationChannel.Telegram : PublicationChannel.WhatsApp;
+  getSocialIconClass(publicationChannel: PublicationChannel): "ph ph-telegram-logo" | "ph ph-whatsapp-logo" {
+    return publicationChannel === PublicationChannel.Telegram ? "ph ph-telegram-logo" : "ph ph-whatsapp-logo";
   }
 
-  getSocialIconClass(itemTitle: string): "ph ph-telegram-logo" | "ph ph-whatsapp-logo" {
-    return itemTitle === "Telegram" ? "ph ph-telegram-logo" : "ph ph-whatsapp-logo";
-  }
-
-  getManualSendDescription(itemTitle: string): string {
-    if (itemTitle === "Telegram") {
+  getManualSendDescription(publicationChannel: PublicationChannel): string {
+    if (publicationChannel === PublicationChannel.Telegram) {
       return this.translateService.instant("bulletins.publicationChecklist.manualSend.description.telegram");
     }
     return this.translateService.instant("bulletins.publicationChecklist.manualSend.description.whatsapp");
   }
 
-  getManualSendEntries(itemTitle: string): ManualSendEntry[] {
-    if (itemTitle === "Telegram") {
-      return this.manualSendEntriesByChannel.Telegram;
-    }
-    return this.manualSendEntriesByChannel.WhatsApp;
-  }
-
-  getManualSendMessage(language: ManualSendLanguage): string {
-    const bulletinDate = this.parseRouteDate(this.date);
-    const bulletinDateLabel = this.formatDateForLanguage(language, bulletinDate);
-    const bulletinLink = this.getBulletinLink(language);
+  getManualSendMessage(language: string): string {
+    const bulletinDateLabel = formatDate(this.getActiveDate()[1], "fullDate", language, "UTC");
+    const bulletinLink = `${this.getWebsiteUrl(language)}/${this.date}`;
 
     switch (language) {
       case "de":
@@ -191,31 +223,20 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     }
   }
 
-  getManualSendCopyAriaLabel(itemTitle: string, language: ManualSendLanguage): string {
-    const channel = itemTitle === "Telegram" ? "telegram" : "whatsapp";
-    return this.translateService.instant(`bulletins.publicationChecklist.manualSend.copyAria.${channel}.${language}`);
-  }
-
-  private getBulletinLink(language: ManualSendLanguage): string {
-    const domain = language === "de" ? "lawinen.report" : language === "en" ? "avalanche.report" : "valanghe.report";
-    return `https://${domain}/${this.date}`;
-  }
-
-  private parseRouteDate(routeDate: string): Date {
-    const [year, month, day] = routeDate.split("-").map(Number);
-    return new Date(Date.UTC(year, month - 1, day));
-  }
-
-  private formatDateForLanguage(language: ManualSendLanguage, date: Date): string {
-    const locale = language === "de" ? "de-AT" : language === "en" ? "en-GB" : "it-IT";
-
-    return new Intl.DateTimeFormat(locale, {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      timeZone: "UTC",
-    }).format(date);
+  getManualSendEntries(publicationChannel: PublicationChannel): { language: string; url: string; message: string }[] {
+    const entries: { language: string; url: string; message: string }[] = [];
+    for (const language of PUBLICATION_LANGUAGES) {
+      const url = this.getSocialMediaUrl(publicationChannel, language);
+      if (!url) {
+        continue;
+      }
+      entries.push({
+        language,
+        url,
+        message: this.getManualSendMessage(language),
+      });
+    }
+    return entries;
   }
 
   getActiveDate(): [Date, Date] {
@@ -259,44 +280,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     if (savedChecklist.length > 0) {
       return savedChecklist;
     }
-    return this.createChecklistItems(date);
-  }
-
-  ngOnInit() {
-    const date$ = this.activeRoute.params.pipe(
-      map(({ date }) => date as string),
-      distinctUntilChanged(),
-    );
-    const regionId$ = this.authenticationService.activeRegion$.pipe(
-      map((region) => region?.id),
-      distinctUntilChanged(),
-    );
-
-    // update checklist when date or region changes and load publication status for the region
-    this.routeParamsSubscription = combineLatest([date$, regionId$])
-      .pipe(
-        tap(([date, regionId]) => {
-          this.date = date;
-          this.regionId = regionId;
-          this.bulletinsService.sourceDates.setActiveDate(date);
-          this.checklistItems = this.getInitialChecklistItems(date, regionId);
-        }),
-        switchMap(([, regionId]) => {
-          return this.bulletinsService.getPublicationStatus(regionId);
-        }),
-      )
-      .subscribe({
-        next: (data) => {
-          this.publicationStatus = data;
-        },
-        error: (error) => {
-          console.error("Publication status could not be loaded!", error);
-        },
-      });
-  }
-
-  ngOnDestroy() {
-    this.routeParamsSubscription.unsubscribe();
-    this.checklistSaveSubscription.unsubscribe();
+    return this.createChecklistItems();
   }
 }

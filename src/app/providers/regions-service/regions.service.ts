@@ -8,8 +8,11 @@ import { default as regionsNamesEs } from "@eaws/micro-regions_names/es.json";
 import { default as regionsNamesFr } from "@eaws/micro-regions_names/fr.json";
 import { default as regionsNamesIt } from "@eaws/micro-regions_names/it.json";
 import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
+import outline_properties from "@eaws/outline_properties/index.json";
 import { TranslateService } from "@ngx-translate/core";
+import { LanguageSchema } from "app/models/text.model";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
+import z from "zod";
 
 import aggregatedRegions from "../../../assets/aggregated_regions.json";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -19,6 +22,12 @@ import { loadRegions } from "./regions-loader.mjs";
 export class RegionsService {
   private translateService = inject(TranslateService);
   private authenticationService = inject(AuthenticationService);
+
+  private eawsRegions = z.array(RegionOutlineSchema).parse(outline_properties, { reportInput: true });
+
+  eawsRegion(id: string) {
+    return this.eawsRegions.find((r) => r.id === id);
+  }
 
   // Level 1 regions: parts of provinces
   getLevel1Regions(id: string): string[] {
@@ -94,3 +103,35 @@ export interface RegionWithElevationProperties extends RegionProperties {
   elevation: "high" | "low" | "low_high";
   threshold?: number;
 }
+
+export const RegionOutlineSchema = z.object({
+  id: z.string(),
+  bbox: z.tuple([z.number(), z.number(), z.number(), z.number()]),
+  aws: z.array(
+    z.object({
+      name: z.string(),
+      url: z.partialRecord(
+        z.union([
+          LanguageSchema,
+          z.enum([
+            "api",
+            "api:date",
+            "facebook",
+            "flickr",
+            "instagram",
+            "linkedin",
+            "mail",
+            "telegram",
+            "whatsapp",
+            "twitter",
+            "youtube",
+          ]),
+          z.string(),
+        ]),
+        z.string(),
+      ),
+    }),
+  ),
+});
+
+export type RegionOutlineProperties = z.infer<typeof RegionOutlineSchema>;
