@@ -18,13 +18,14 @@ import { LocalStorageService } from "../providers/local-storage-service/local-st
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { StatusService } from "../providers/status-service/status.service";
 import { UserService } from "../providers/user-service/user.service";
+import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 
 @Component({
   templateUrl: "bulletins.component.html",
   standalone: true,
-  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule],
+  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule, BulletinStatusBadgeComponent],
 })
 export class BulletinsComponent implements OnDestroy {
   translate = inject(TranslateService);

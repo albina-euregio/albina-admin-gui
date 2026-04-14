@@ -49,6 +49,7 @@ import { MapService } from "../providers/map-service/map.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
@@ -69,6 +70,7 @@ import { ModalSubmitComponent } from "./modal-submit.component";
     NgTemplateOutlet,
     AvalancheBulletinComponent,
     DangerRatingIconComponent,
+    BulletinStatusBadgeComponent,
     AvalancheProblemIconsComponent,
     DatePipe,
     KeyValuePipe,
