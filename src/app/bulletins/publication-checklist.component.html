@@ -17,7 +17,11 @@
         </div>
         <div class="d-grid gap-3 p-3">
           @for (item of checklistItems; track $index; let index = $index) {
-            <div class="card shadow-sm">
+            <div
+              class="card shadow-sm"
+              [class.opacity-50]="index > 0 && !isWebsiteChecked"
+              [style.pointer-events]="index > 0 && !isWebsiteChecked ? 'none' : null"
+            >
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start gap-3">
                   <div class="pe-3">

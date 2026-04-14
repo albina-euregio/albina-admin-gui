@@ -26,12 +26,20 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
   private routeParamsSubscription: Subscription;
   private checklistSaveSubscription: Subscription;
-  private saveChecklist = new Subject<{ date: string; regionId: string; checklist: ChecklistItemModel[] }>();
+  private saveChecklist = new Subject<{
+    date: string;
+    regionId: string;
+    checklist: ChecklistItemModel[];
+  }>();
 
   date = "";
   checklistItems: ChecklistItemModel[] = [];
   regionId = "";
   readonly PublicationChannel = PublicationChannel;
+
+  get isWebsiteChecked(): boolean {
+    return !!(this.checklistItems[0]?.ok || this.checklistItems[0]?.problem);
+  }
 
   constructor() {
     this.routeParamsSubscription = new Subscription();
