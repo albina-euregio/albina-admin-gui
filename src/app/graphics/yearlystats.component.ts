@@ -25,6 +25,7 @@ export class YearlystatsComponent implements AfterViewInit {
   protected endDate = this.toDateInputValue(new Date());
   protected errorMessage = "";
   protected showWrapper = false;
+  protected loading = false;
   protected bulletins = "[]";
   protected blogs = "[]";
   protected stress = "[]";
@@ -137,6 +138,7 @@ export class YearlystatsComponent implements AfterViewInit {
     }
 
     this.errorMessage = "";
+    this.loading = true;
     try {
       const bulletinRegionCodes = this.getSelectedBulletinRegionCodes();
       const bulletins = await this.graphicsService.loadBulletins(
@@ -156,11 +158,13 @@ export class YearlystatsComponent implements AfterViewInit {
     } catch (error) {
       this.errorMessage = "Failed to load chart data for selected date range.";
       console.error(error);
+      this.loading = false;
       return;
     }
 
     this.showWrapper = true;
     this.mountWrapper();
+    this.loading = false;
   }
 
   protected get showProductsTrainingInputs(): boolean {
