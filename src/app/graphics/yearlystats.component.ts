@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 import { GraphicsService } from "./graphics.service";
 
@@ -19,12 +20,18 @@ export class YearlystatsComponent implements AfterViewInit {
   private wrapperHost?: ElementRef<HTMLElement>;
   private graphicsService = inject(GraphicsService);
 
+  protected authenticationService = inject(AuthenticationService);
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -30));
   protected endDate = this.toDateInputValue(new Date());
   protected errorMessage = "";
   protected showWrapper = false;
+  protected loading = false;
+  protected pendingLoad = true;
+  protected showDateChangeHint = false;
+  protected activeQuickRange: "last90" | "last180" | "season" | null = null;
   protected bulletins = "[]";
   protected blogs = "[]";
+  protected stress = "[]";
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
@@ -39,6 +46,7 @@ export class YearlystatsComponent implements AfterViewInit {
     "aws-danger-pattern-micro-regions": false,
     "aws-avalanche-problem-micro-regions": false,
     "aws-products": false,
+    "aws-stress-level": false,
   };
 
   ngAfterViewInit() {
@@ -48,18 +56,28 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   protected setLastDays(days: number) {
+    this.activeQuickRange = days === 90 ? "last90" : days === 180 ? "last180" : null;
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
     this.startDate = this.toDateInputValue(this.shiftDays(new Date(), -days));
     this.endDate = this.toDateInputValue(new Date());
+    this.updateCharts();
   }
 
   protected setCurrentSeason() {
-    const now = new Date();
-    if (now.getMonth() < 7) {
-      this.startDate = `${now.getFullYear() - 1}-11-01`;
-    } else {
-      this.startDate = `${now.getFullYear()}-11-01`;
-    }
-    this.endDate = this.toDateInputValue(now);
+    this.activeQuickRange = "season";
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
+    const { start, end } = this.graphicsService.getCurrentSeason();
+    this.startDate = start;
+    this.endDate = end;
+    this.updateCharts();
+  }
+
+  protected onDateChanged() {
+    this.pendingLoad = true;
+    this.showDateChangeHint = true;
+    this.activeQuickRange = null;
   }
 
   protected setChartType(chartType: YearlyChartType, checked: boolean) {
@@ -70,12 +88,14 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   protected onTrainingInputsChanged() {
+    this.pendingLoad = true;
     if (this.showWrapper) {
       this.mountWrapper();
     }
   }
 
   protected onReferenceChanged() {
+    this.pendingLoad = true;
     if (this.showWrapper) {
       this.mountWrapper();
     }
@@ -135,6 +155,7 @@ export class YearlystatsComponent implements AfterViewInit {
     }
 
     this.errorMessage = "";
+    this.loading = true;
     try {
       const bulletinRegionCodes = this.getSelectedBulletinRegionCodes();
       const bulletins = await this.graphicsService.loadBulletins(
@@ -148,14 +169,21 @@ export class YearlystatsComponent implements AfterViewInit {
       const blogRegionCodes = this.getSelectedBlogRegionCodes();
       const blogs = await this.graphicsService.loadBlogs(this.startDate, this.endDate, blogRegionCodes);
       this.blogs = JSON.stringify(blogs);
+
+      const stress = await this.graphicsService.loadTeamStressLevels(this.startDate, this.endDate);
+      this.stress = JSON.stringify(stress);
     } catch (error) {
       this.errorMessage = "Failed to load chart data for selected date range.";
       console.error(error);
+      this.loading = false;
       return;
     }
 
     this.showWrapper = true;
     this.mountWrapper();
+    this.pendingLoad = false;
+    this.showDateChangeHint = false;
+    this.loading = false;
   }
 
   protected get showProductsTrainingInputs(): boolean {
@@ -180,6 +208,7 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("bulletin-filter-micro-region", "all");
     wrapper.setAttribute("blogs", this.blogs);
     wrapper.setAttribute("bulletins", this.bulletins);
+    wrapper.setAttribute("stress-level", this.stress);
 
     if (this.showProductsTrainingInputs) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
@@ -255,4 +284,5 @@ type YearlyChartType =
   | "aws-danger-rating-distribution"
   | "aws-danger-pattern-micro-regions"
   | "aws-avalanche-problem-micro-regions"
-  | "aws-products";
+  | "aws-products"
+  | "aws-stress-level";

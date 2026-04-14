@@ -134,7 +134,7 @@ export class DangerSourcesService {
   }
 
   loadDangerSourceVariants(
-    date: [Date, Date],
+    date: [Date, Date | undefined],
     region: string,
     dangerSourceId?: string,
   ): Observable<DangerSourceVariantModel[]> {

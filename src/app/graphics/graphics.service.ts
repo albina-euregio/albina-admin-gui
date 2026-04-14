@@ -2,10 +2,13 @@ import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { TeamStressLevels } from "app/models/stress-level.model";
 import { AlbinaLanguage } from "app/models/text.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
+import { UserService } from "app/providers/user-service/user.service";
 import { lastValueFrom } from "rxjs";
 
 import sources from "../../assets/config/stations.json";
@@ -32,7 +35,9 @@ export class GraphicsService {
   private authentificationService = inject(AuthenticationService);
   private blogService = inject(BlogService);
   private bulletinsService = inject(BulletinsService);
+  private dangerSourceService = inject(DangerSourcesService);
   private translateService = inject(TranslateService);
+  private userService = inject(UserService);
 
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
@@ -105,6 +110,23 @@ export class GraphicsService {
     return results.flat();
   }
 
+  async loadDangerSourceVariants(startDate: string, endDate: string, region: string): Promise<unknown[]> {
+    if (!startDate || !endDate || !region) {
+      return [];
+    }
+
+    const dates = this.getDateRange(startDate, endDate).map(
+      (date) => new Date(date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).epochMilliseconds),
+    );
+
+    const requests = dates.map((date) =>
+      lastValueFrom(this.dangerSourceService.loadDangerSourceVariants([date, undefined], region)),
+    );
+
+    const results = await Promise.all(requests);
+    return results.flat();
+  }
+
   async loadBlogs(startDate: string, endDate: string, regionCodes: string[]): Promise<BlogData[]> {
     const start = Date.parse(`${startDate}T00:00:00.000Z`);
     const end = Date.parse(`${endDate}T23:59:59.999Z`);
@@ -141,6 +163,15 @@ export class GraphicsService {
     }));
   }
 
+  async loadTeamStressLevels(startDate: string, endDate: string): Promise<TeamStressLevels> {
+    const start = Date.parse(`${startDate}T00:00:00.000Z`);
+    const end = Date.parse(`${endDate}T23:59:59.999Z`);
+    if (Number.isNaN(start) || Number.isNaN(end) || start > end) {
+      return {};
+    }
+    return await lastValueFrom(this.userService.getTeamStressLevels([new Date(start), new Date(end)]));
+  }
+
   getSmetUrl(station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined, index: number): string | undefined {
     const template = station?.smet?.[index];
     const smetId = station?.smetId;
@@ -168,6 +199,27 @@ export class GraphicsService {
       }
     }
     return fallback;
+  }
+
+  getCurrentSeason(): { start: string; end: string } {
+    let start: string;
+    let seasonEnd: string;
+    const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (now.getMonth() < 11) {
+      start = `${now.getFullYear() - 1}-11-01`;
+      seasonEnd = `${now.getFullYear()}-05-31`;
+    } else {
+      start = `${now.getFullYear()}-11-01`;
+      seasonEnd = `${now.getFullYear() + 1}-05-31`;
+    }
+
+    const seasonEndDate = new Date(`${seasonEnd}T00:00:00`);
+    const effectiveEndDate = seasonEndDate > nowDate ? nowDate : seasonEndDate;
+    const end = `${effectiveEndDate.getFullYear()}-${String(effectiveEndDate.getMonth() + 1).padStart(2, "0")}-${String(effectiveEndDate.getDate()).padStart(2, "0")}`;
+
+    return { start, end };
   }
 
   private getDateRange(startDate: string, endDate: string): Temporal.PlainDate[] {

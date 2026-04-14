@@ -11,8 +11,9 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
-import { firstValueFrom } from "rxjs";
+import { lastValueFrom } from "rxjs";
 
 import { AlbinaObservationsService } from "../observations/observations.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
@@ -23,7 +24,11 @@ type ChartType =
   | "aws-observations"
   | "aws-danger-rating"
   | "aws-danger-rating-altitude"
-  | "aws-avalanche-activity-index";
+  | "aws-avalanche-activity-index"
+  | "aws-danger-rating-danger-source-variants"
+  | "aws-danger-source-variants-matrix-parameter-stability"
+  | "aws-danger-source-variants-matrix-parameter-frequency"
+  | "aws-danger-source-variants-matrix-parameter-avalanche-size";
 
 @Component({
   selector: "app-awsstats",
@@ -38,6 +43,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private graphicsService = inject(GraphicsService);
   protected mapService = inject(BaseMapService);
   protected stationsMapService = inject(LineaMapService);
+  protected authentificationService = inject(AuthenticationService);
 
   @ViewChild("regionMapHost", { static: false })
   private regionMapHost?: ElementRef<HTMLElement>;
@@ -52,8 +58,12 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected wrapperEndDate = "2026-03-17";
   protected observationsUrl = "";
   protected bulletins = "[]";
+  protected dangerSourceVariants = "[]";
   protected showWrapper = false;
   protected loading = false;
+  protected pendingLoad = true;
+  protected showDateChangeHint = false;
+  protected activeQuickRange: "last7" | "last30" | "last90" | "season" | null = null;
   protected errorMessage = "";
   protected selectedMicroRegions: string[] = [];
   protected selectedStationId = "";
@@ -63,6 +73,10 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     "aws-danger-rating": false,
     "aws-danger-rating-altitude": false,
     "aws-avalanche-activity-index": false,
+    "aws-danger-rating-danger-source-variants": false,
+    "aws-danger-source-variants-matrix-parameter-stability": false,
+    "aws-danger-source-variants-matrix-parameter-frequency": false,
+    "aws-danger-source-variants-matrix-parameter-avalanche-size": false,
   };
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
@@ -83,8 +97,28 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   }
 
   protected setLastDays(days: number) {
+    this.activeQuickRange = days === 7 ? "last7" : days === 30 ? "last30" : days === 90 ? "last90" : null;
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
     this.startDate = this.toDateInputValue(this.shiftDays(new Date(), -days));
     this.endDate = this.toDateInputValue(new Date());
+    this.update();
+  }
+
+  protected setCurrentSeason() {
+    this.activeQuickRange = "season";
+    this.showDateChangeHint = false;
+    this.pendingLoad = false;
+    const { start, end } = this.graphicsService.getCurrentSeason();
+    this.startDate = start;
+    this.endDate = end;
+    this.update();
+  }
+
+  protected onDateChanged() {
+    this.pendingLoad = true;
+    this.showDateChangeHint = true;
+    this.activeQuickRange = null;
   }
 
   protected clearSelectedRegions() {
@@ -131,7 +165,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     return station.shortName || station.name || station.id;
   }
 
-  protected async updateObservations() {
+  protected async update() {
     if (!this.startDate || !this.endDate) {
       this.errorMessage = "Start date and end date are required.";
       return;
@@ -147,7 +181,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     try {
       this.showWrapper = false;
       const params = this.getObservationDateRangeParams(this.startDate, this.endDate);
-      const collection = await firstValueFrom(this.observationsService.getGenericObservationsGeoJSON(params));
+      const collection = await lastValueFrom(this.observationsService.getGenericObservationsGeoJSON(params));
       const blob = new Blob([JSON.stringify(collection, undefined, 2)], { type: "application/geo+json" });
       this.revokeObservationsUrl();
       this.wrapperStartDate = this.startDate;
@@ -160,12 +194,22 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
         this.graphicsService.getBulletinLanguage(),
       );
       this.bulletins = JSON.stringify(bulletins);
+      const dangerSourceVariants = await this.graphicsService.loadDangerSourceVariants(
+        this.startDate,
+        this.endDate,
+        "AT-07",
+      );
+      this.dangerSourceVariants = JSON.stringify(dangerSourceVariants);
+
       this.observationsUrl = URL.createObjectURL(blob);
       this.showWrapper = true;
       this.mountWrapper();
+      this.pendingLoad = false;
+      this.showDateChangeHint = false;
     } catch (error) {
       this.revokeObservationsUrl();
       this.bulletins = "[]";
+      this.dangerSourceVariants = "[]";
       this.showWrapper = false;
       this.errorMessage = "Failed to load observations for selected date range.";
       console.error(error);
@@ -203,7 +247,6 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   private mountWrapper() {
     if (!this.wrapperHost || !this.observationsUrl || !this.wrapperStartDate || !this.wrapperEndDate) return;
-
     const host = this.wrapperHost.nativeElement;
     host.replaceChildren();
     const wrapper = document.createElement("aws-stats-wrapper");
@@ -212,8 +255,9 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     wrapper.setAttribute("stationsrc", this.getSelectedStationSrc());
     wrapper.setAttribute("start-date", this.wrapperStartDate);
     wrapper.setAttribute("end-date", this.wrapperEndDate);
-    wrapper.setAttribute("bulletin-filter-micro-region", this.getBulletinFilterMicroRegionValue());
+    wrapper.setAttribute("filter-micro-region", this.getBulletinFilterMicroRegionValue());
     wrapper.setAttribute("bulletins", this.bulletins);
+    wrapper.setAttribute("danger-source-variants", this.dangerSourceVariants);
 
     host.appendChild(wrapper);
   }
@@ -221,6 +265,13 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected setChartType(chartType: ChartType, checked: boolean) {
     if (checked && chartType === "aws-danger-rating" && this.selectedMicroRegions.length === 0) return;
     if (checked && chartType === "aws-danger-rating-altitude" && this.selectedMicroRegions.length !== 1) return;
+    if (
+      checked &&
+      chartType === "aws-danger-rating-danger-source-variants" &&
+      this.selectedMicroRegions.length !== 1 &&
+      this.selectedMicroRegions[0].startsWith(this.authentificationService.getActiveRegionId() ?? "")
+    )
+      return;
 
     this.chartTypeSelection[chartType] = checked;
 
@@ -241,7 +292,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private getBulletinFilterMicroRegionValue(): string {
     return this.selectedMicroRegions.length
       ? JSON.stringify(this.normalizeSelectedMicroRegions(this.selectedMicroRegions))
-      : "";
+      : "[]";
   }
 
   private normalizeSelectedMicroRegions(regions: string[]): string[] {

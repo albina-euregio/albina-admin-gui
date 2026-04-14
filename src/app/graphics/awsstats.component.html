@@ -4,27 +4,84 @@
     <div class="awsstats-controls-grid">
       <div>
         <label class="form-label mb-1" for="awsstats-start-date">{{ "awsstats.label.startDate" | translate }}</label>
-        <input id="awsstats-start-date" class="form-control" type="date" [disabled]="loading" [(ngModel)]="startDate" />
+        <input
+          id="awsstats-start-date"
+          class="form-control"
+          type="date"
+          [disabled]="loading"
+          [(ngModel)]="startDate"
+          (ngModelChange)="onDateChanged()"
+        />
       </div>
 
       <div>
         <label class="form-label mb-1" for="awsstats-end-date">{{ "awsstats.label.endDate" | translate }}</label>
-        <input id="awsstats-end-date" class="form-control" type="date" [disabled]="loading" [(ngModel)]="endDate" />
+        <input
+          id="awsstats-end-date"
+          class="form-control"
+          type="date"
+          [disabled]="loading"
+          [(ngModel)]="endDate"
+          (ngModelChange)="onDateChanged()"
+        />
       </div>
 
       <div class="awsstats-actions">
-        <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateObservations()">
+        <button
+          class="btn"
+          type="button"
+          [disabled]="loading"
+          [class.btn-primary]="pendingLoad"
+          [class.btn-outline-primary]="!pendingLoad"
+          (click)="update()"
+        >
           {{ "awsstats.label.loadData" | translate }}
         </button>
-        <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(7)">
+        <button
+          class="btn"
+          type="button"
+          [disabled]="loading"
+          [class.btn-primary]="activeQuickRange === 'last7'"
+          [class.btn-outline-secondary]="activeQuickRange !== 'last7'"
+          (click)="setLastDays(7)"
+        >
           {{ "awsstats.label.last7days" | translate }}
         </button>
-        <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(30)">
+        <button
+          class="btn"
+          type="button"
+          [disabled]="loading"
+          [class.btn-primary]="activeQuickRange === 'last30'"
+          [class.btn-outline-secondary]="activeQuickRange !== 'last30'"
+          (click)="setLastDays(30)"
+        >
           {{ "awsstats.label.last30days" | translate }}
         </button>
-        <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
+        <button
+          class="btn"
+          type="button"
+          [disabled]="loading"
+          [class.btn-primary]="activeQuickRange === 'last90'"
+          [class.btn-outline-secondary]="activeQuickRange !== 'last90'"
+          (click)="setLastDays(90)"
+        >
           {{ "awsstats.label.last90days" | translate }}
         </button>
+        <button
+          class="btn"
+          type="button"
+          [disabled]="loading"
+          [class.btn-primary]="activeQuickRange === 'season'"
+          [class.btn-outline-secondary]="activeQuickRange !== 'season'"
+          (click)="setCurrentSeason()"
+        >
+          {{ "yearlystats.label.currentSeason" | translate }}
+        </button>
+        @if (showDateChangeHint) {
+          <span class="small text-muted align-self-center">
+            Nach jeder Datumsanderung muss der 'Daten laden'-Button gedruckt werden.
+          </span>
+        }
       </div>
     </div>
 
@@ -74,6 +131,82 @@
           (ngModelChange)="setChartType('aws-avalanche-activity-index', $event)"
         />
         <span class="form-check-label">{{ "awsstats.charts.aws-avalanche-activity-index" | translate }}</span>
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-rating-danger-source-variants']"
+          [disabled]="
+            selectedMicroRegions.length !== 1 ||
+            loading ||
+            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
+          "
+          (ngModelChange)="setChartType('aws-danger-rating-danger-source-variants', $event)"
+        />
+        <span class="form-check-label"
+          >{{ "awsstats.charts.aws-danger-rating-danger-source-variants" | translate }} ({{
+            authentificationService.getActiveRegionId()
+          }})</span
+        >
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-stability']"
+          [disabled]="
+            selectedMicroRegions.length !== 1 ||
+            loading ||
+            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
+          "
+          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-stability', $event)"
+        />
+        <span class="form-check-label"
+          >{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-stability" | translate }} ({{
+            authentificationService.getActiveRegionId()
+          }})</span
+        >
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-frequency']"
+          [disabled]="
+            selectedMicroRegions.length !== 1 ||
+            loading ||
+            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
+          "
+          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-frequency', $event)"
+        />
+        <span class="form-check-label"
+          >{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-frequency" | translate }} ({{
+            authentificationService.getActiveRegionId()
+          }})</span
+        >
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-avalanche-size']"
+          [disabled]="
+            selectedMicroRegions.length !== 1 ||
+            loading ||
+            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
+          "
+          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-avalanche-size', $event)"
+        />
+        <span class="form-check-label"
+          >{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-avalanche-size" | translate }} ({{
+            authentificationService.getActiveRegionId()
+          }})</span
+        >
       </label>
     </div>
   </div>
