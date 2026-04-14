@@ -1,11 +1,21 @@
 import { DatePipe, NgClass, NgTemplateOutlet } from "@angular/common";
-import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  viewChild,
+  ViewChild,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { orderBy } from "es-toolkit";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Subscription } from "rxjs";
 
@@ -91,6 +101,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   readonly scrollActiveVariant = viewChild<ElementRef>("scrollActiveVariant");
   readonly scrollComparedVariant = viewChild<ElementRef>("scrollComparedVariant");
+  @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
   public config = {
     animated: false,
@@ -359,6 +370,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  get hasForecastVariantsInList(): boolean {
+    return this.internVariantsList.some((v) => v.dangerSourceVariantType === DangerSourceVariantType.forecast);
+  }
+
   hasForecast(variant: DangerSourceVariantModel): boolean {
     return (
       variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
@@ -388,8 +403,65 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  hasForecastVariantsForDangerSource(dangerSourceId: string): boolean {
+    return this.internVariantsList.some(
+      (v) => v.dangerSource.id === dangerSourceId && v.dangerSourceVariantType === DangerSourceVariantType.forecast,
+    );
+  }
+
   loadAllVariantsFromYesterday() {
     this.openLoadModal();
+  }
+
+  loadDangerSourceVariantsFromYesterday(dangerSourceId: string) {
+    this.openLoadModal(dangerSourceId);
+  }
+
+  loadVariantsFromForecast(dangerSourceId?: string) {
+    this.openLoadFromForecastModal(dangerSourceId);
+  }
+
+  private doLoadVariantsFromForecast(dangerSourceId?: string) {
+    const resultVariants = this.internVariantsList.filter((v) => {
+      if (!v.ownerRegion.startsWith(this.authenticationService.getActiveRegionId())) {
+        return true;
+      }
+      if (v.dangerSourceVariantType !== DangerSourceVariantType.analysis) {
+        return true;
+      }
+      if (!dangerSourceId) {
+        return false;
+      }
+      return v.dangerSource.id !== dangerSourceId;
+    });
+    const forecastVariants = this.internVariantsList.filter(
+      (v) =>
+        v.dangerSourceVariantType === DangerSourceVariantType.forecast &&
+        (!dangerSourceId || v.dangerSource.id === dangerSourceId),
+    );
+    this.copyVariants(forecastVariants, true).forEach((v) => resultVariants.push(v));
+    this.save(resultVariants);
+  }
+
+  private loadFromForecastModalRef: BsModalRef;
+  private readonly loadFromForecastTemplate = viewChild<TemplateRef<unknown>>("loadFromForecastTemplate");
+  private forecastDangerSourceToLoad?: string;
+
+  openLoadFromForecastModal(dangerSourceId?: string) {
+    this.forecastDangerSourceToLoad = dangerSourceId;
+    this.loadFromForecastModalRef = this.modalService.show(this.loadFromForecastTemplate(), this.config);
+  }
+
+  loadFromForecastModalConfirm(): void {
+    this.loadFromForecastModalRef.hide();
+    this.loading = true;
+    this.doLoadVariantsFromForecast(this.forecastDangerSourceToLoad);
+    this.forecastDangerSourceToLoad = undefined;
+  }
+
+  loadFromForecastModalDecline(): void {
+    this.loadFromForecastModalRef.hide();
+    this.forecastDangerSourceToLoad = undefined;
   }
 
   loadVariantsFromYesterday(dangerSourceId?: string) {
@@ -973,19 +1045,23 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private loadModalRef: BsModalRef;
   private readonly loadTemplate = viewChild<TemplateRef<unknown>>("loadTemplate");
+  private dangerSourceToLoadFromYesterday?: string;
 
-  openLoadModal() {
+  openLoadModal(dangerSourceId?: string) {
+    this.dangerSourceToLoadFromYesterday = dangerSourceId;
     this.loadModalRef = this.modalService.show(this.loadTemplate(), this.config);
   }
 
   loadModalConfirm(): void {
     this.loadModalRef.hide();
     this.loading = true;
-    this.loadVariantsFromYesterday();
+    this.loadVariantsFromYesterday(this.dangerSourceToLoadFromYesterday);
+    this.dangerSourceToLoadFromYesterday = undefined;
   }
 
   loadModalDecline(): void {
     this.loadModalRef.hide();
+    this.dangerSourceToLoadFromYesterday = undefined;
   }
 
   private loadingErrorModalRef: BsModalRef;

@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
 
-import { changeRegion, loginAdmin, loginForecaster, setFixedTime } from "./utils";
+import { changeRegion, clearWarningRegions, loginAdmin, loginForecaster, setFixedTime } from "./utils";
 
 const waitForGetEdit = (page) =>
   page.waitForResponse(
@@ -30,20 +30,8 @@ test("Bulletin synchronization", async ({ browser }) => {
   await test.step("first delete all warning regions in Tyrol", async () => {
     await page1.getByRole("row", { name: "Monday, December 23, 2024" }).getByTitle("edit bulletin").click();
     await page2.getByRole("row", { name: "Monday, December 23, 2024" }).getByTitle("edit bulletin").click();
-    const getBulletinsPromise = waitForGetEdit(page1);
-    const bulletinResponse = await getBulletinsPromise;
-    if ((await bulletinResponse.body()).length > 2) {
-      await page1.getByTitle("[b]").click();
-      await page1.getByRole("button", { name: "Delete all warning regions" }).click();
-      const responsePromise = page1.waitForResponse(
-        (response) =>
-          response.url().match(/\/api\/bulletins/) &&
-          response.status() === 200 &&
-          response.request().method() === "DELETE",
-      );
-      await page1.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-      await responsePromise;
-    }
+    await waitForGetEdit(page1);
+    await clearWarningRegions(page1);
     await waitForGetEdit(page2);
     await expect(page2.getByText("Foreign regions (0)")).toBeVisible({ timeout: 7000 });
   });

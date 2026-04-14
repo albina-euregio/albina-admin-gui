@@ -2,6 +2,16 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.4.1] - 2026-04-10
+
+### 🚀 Features
+
+- Allow to load danger source variants from forecast
+
+### 🐛 Bug Fixes
+
+- Fix QFA
+
 ## [8.4.0] - 2026-04-08
 
 ### 🚀 Features

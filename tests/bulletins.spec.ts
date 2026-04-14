@@ -3,7 +3,7 @@ import path from "path";
 
 import { test, expect, Page } from "@playwright/test";
 
-import { changeRegion, loginForecaster, setFixedTime } from "./utils";
+import { changeRegion, clearWarningRegions, loginForecaster, setFixedTime, waitForGetEdit } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
@@ -21,14 +21,6 @@ test.beforeEach(async ({ page }) => {
   `,
   });
 });
-
-const waitForGetEdit = (page: Page) =>
-  page.waitForResponse(
-    (response) =>
-      response.url().match(/\/api\/bulletins\/edit/) &&
-      response.status() === 200 &&
-      response.request().method() === "GET",
-  );
 
 test("Check visible neighbors", async ({ page }) => {
   await test.step("Tyrol sees Carinthia and South Tyrol", async () => {
@@ -207,11 +199,7 @@ test("Edit bulletin", async ({ page }) => {
   await changeRegion(page, "Tyrol");
   await page.getByRole("cell", { name: "Wednesday, December 25, 2024" }).getByTitle("edit bulletin").click();
   await expect(page.locator(".badge").first()).toContainText("draft", { timeout: 7000 });
-  await test.step("Delete all warning regions", async () => {
-    await page.getByTitle("[b]").click();
-    await page.getByRole("button", { name: "Delete all warning regions" }).click();
-    await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-  });
+  await clearWarningRegions(page);
   const regionProblem = page.locator(".region-thumb").first();
   await test.step("Create new region", async () => {
     await page.getByRole("button", { name: "" }).click();
@@ -326,26 +314,10 @@ test("Load bulletin from the day before", async ({ page }) => {
   await page.reload();
   await changeRegion(page, "Tyrol");
   await test.step("load into empty bulletin", async () => {
-    const getBulletinsPromise = waitForGetEdit(page);
     await page.getByRole("row", { name: "Sunday, December 22, 2024" }).getByTitle("edit bulletin").click();
-    const bulletinResponse = await getBulletinsPromise;
     await expect(page.locator(".badge").first()).toContainText(/missing|draft/, { timeout: 7000 });
-    if ((await bulletinResponse.body()).length > 2) {
-      await test.step("Delete all warning regions", async () => {
-        await page.getByTitle("[b]").click();
-        await page.getByRole("button", { name: "Delete all warning regions" }).click();
-        const responsePromise = page.waitForResponse(
-          (response) =>
-            response.url().match(/\/api\/bulletins/) &&
-            response.status() === 200 &&
-            response.request().method() === "DELETE",
-        );
-        await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-        await responsePromise;
-        await waitForGetEdit(page);
-      });
-    }
-    await waitForGetEdit(page);
+    await clearWarningRegions(page);
+    await expect(page.locator(".region-thumb")).not.toBeVisible();
     await test.step("Load from the day before", async () => {
       await page.getByTitle("[b]").click();
       await page.getByRole("button", { name: "Load bulletin from the day before" }).click();
@@ -389,20 +361,8 @@ test("Load bulletin from the day before", async ({ page }) => {
     ]);
     await waitForGetEdit(page);
   });
-  await test.step("Delete all warning regions", async () => {
-    await page.getByTitle("[b]").click();
-    await page.getByRole("button", { name: "Delete all warning regions" }).click();
-    const responsePromise = page.waitForResponse(
-      (response) =>
-        response.url().match(/\/api\/bulletins/) &&
-        response.status() === 200 &&
-        response.request().method() === "DELETE",
-    );
-    await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-    await responsePromise;
-    await waitForGetEdit(page);
-    await expect(page.locator(".region-thumb")).not.toBeVisible();
-  });
+  await clearWarningRegions(page);
+  await expect(page.locator(".region-thumb")).not.toBeVisible();
 });
 
 test("Update -> Resubmit -> Republish", async ({ page }) => {
@@ -466,12 +426,7 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
   await page.getByRole("row", { name: "Sunday, March 30, 2025" }).getByTitle("edit bulletin").click();
 
   await test.step("Verify validity date of bulletin Sa->So", async () => {
-    await test.step("Delete all warning regions", async () => {
-      await page.getByTitle("[b]").click();
-      await page.getByRole("button", { name: "Delete all warning regions" }).click();
-      await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-    });
-    await waitForGetEdit(page);
+    await clearWarningRegions(page);
     const putResponse = page.waitForResponse(
       (response) =>
         response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
@@ -485,21 +440,22 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
     // Wait for POST and verify validity in request body
     const response = await putResponse;
     const putBulletins = response.request().postDataJSON();
-    expect(putBulletins.validity).toEqual({ from: "2025-03-29T16:00:00.000Z", until: "2025-03-30T15:00:00.000Z" });
+    expect(putBulletins.validity).toEqual({
+      from: "2025-03-29T16:00:00.000Z",
+      until: "2025-03-30T15:00:00.000Z",
+    });
     const receivedBulletin = await response.json();
     expect(receivedBulletin).toHaveLength(1);
-    expect(receivedBulletin[0].validity).toEqual({ from: "2025-03-29T16:00:00Z", until: "2025-03-30T15:00:00Z" });
+    expect(receivedBulletin[0].validity).toEqual({
+      from: "2025-03-29T16:00:00Z",
+      until: "2025-03-30T15:00:00Z",
+    });
   });
 
   // Go one day forward and repeat
   await test.step("Verify validity date of bulletin So->SMo", async () => {
     await page.getByTitle("[ctrl+right]").click();
-    await test.step("Delete all warning regions", async () => {
-      await page.getByTitle("[b]").click();
-      await page.getByRole("button", { name: "Delete all warning regions" }).click();
-      await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-    });
-    await waitForGetEdit(page);
+    await clearWarningRegions(page);
     const putResponse = page.waitForResponse(
       (response) =>
         response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
@@ -513,9 +469,15 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
     // Wait for POST and verify validity in request body
     const response = await putResponse;
     const putBulletins = response.request().postDataJSON();
-    expect(putBulletins.validity).toEqual({ from: "2025-03-30T15:00:00.000Z", until: "2025-03-31T15:00:00.000Z" });
+    expect(putBulletins.validity).toEqual({
+      from: "2025-03-30T15:00:00.000Z",
+      until: "2025-03-31T15:00:00.000Z",
+    });
     const receivedBulletin = await response.json();
     expect(receivedBulletin).toHaveLength(1);
-    expect(receivedBulletin[0].validity).toEqual({ from: "2025-03-30T15:00:00Z", until: "2025-03-31T15:00:00Z" });
+    expect(receivedBulletin[0].validity).toEqual({
+      from: "2025-03-30T15:00:00Z",
+      until: "2025-03-31T15:00:00Z",
+    });
   });
 });
