@@ -54,12 +54,14 @@ export class YearlystatsComponent implements AfterViewInit {
   protected setLastDays(days: number) {
     this.startDate = this.toDateInputValue(this.shiftDays(new Date(), -days));
     this.endDate = this.toDateInputValue(new Date());
+    this.updateCharts();
   }
 
   protected setCurrentSeason() {
     const { start, end } = this.graphicsService.getCurrentSeason();
     this.startDate = start;
     this.endDate = end;
+    this.updateCharts();
   }
 
   protected setChartType(chartType: YearlyChartType, checked: boolean) {

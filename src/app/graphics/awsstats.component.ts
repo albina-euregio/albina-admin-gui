@@ -11,6 +11,7 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 import { lastValueFrom } from "rxjs";
 
@@ -18,7 +19,6 @@ import { AlbinaObservationsService } from "../observations/observations.service"
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
 import { GraphicsService, type LineaStationFeature } from "./graphics.service";
-import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 type ChartType =
   | "aws-observations"
@@ -96,12 +96,14 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected setLastDays(days: number) {
     this.startDate = this.toDateInputValue(this.shiftDays(new Date(), -days));
     this.endDate = this.toDateInputValue(new Date());
+    this.update();
   }
 
   protected setCurrentSeason() {
-    const {start, end } = this.graphicsService.getCurrentSeason();
+    const { start, end } = this.graphicsService.getCurrentSeason();
     this.startDate = start;
     this.endDate = end;
+    this.update();
   }
 
   protected clearSelectedRegions() {
@@ -246,9 +248,13 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected setChartType(chartType: ChartType, checked: boolean) {
     if (checked && chartType === "aws-danger-rating" && this.selectedMicroRegions.length === 0) return;
     if (checked && chartType === "aws-danger-rating-altitude" && this.selectedMicroRegions.length !== 1) return;
-    if (checked && chartType === "aws-danger-rating-danger-source-variants" && this.selectedMicroRegions.length !== 1
-        && this.selectedMicroRegions[0].startsWith(this.authentificationService.getActiveRegionId() ?? "")
-    ) return;
+    if (
+      checked &&
+      chartType === "aws-danger-rating-danger-source-variants" &&
+      this.selectedMicroRegions.length !== 1 &&
+      this.selectedMicroRegions[0].startsWith(this.authentificationService.getActiveRegionId() ?? "")
+    )
+      return;
 
     this.chartTypeSelection[chartType] = checked;
 
