@@ -2,17 +2,43 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8">
       <div class="card">
-        <div class="card-header">
-          {{ "bulletins.publicationChecklist.title" | translate }}
-          <div class="font-m-bold">
-            <time class="create-bulletin__current-date">
-              {{
-                bulletinsService.sourceDates.activeValidUntil
-                  | date: "fullDate" : undefined : translateService.getCurrentLang()
-              }}
-            </time>
-            &ndash;
-            <span>{{ regionsService.getRegionName(regionId) | translate }}</span>
+        <div class="card-header py-3">
+          <div class="d-flex flex-column gap-2">
+            <h2 class="mb-0">{{ "bulletins.publicationChecklist.title" | translate }}</h2>
+            <div class="text-body-secondary fw-semibold">
+              <time>
+                {{
+                  bulletinsService.sourceDates.activeValidUntil
+                    | date: "fullDate" : undefined : translateService.getCurrentLang()
+                }}
+              </time>
+              <span class="mx-1">&ndash;</span>
+              <span>{{ regionsService.getRegionName(regionId) | translate }}</span>
+            </div>
+
+            @if (publicationStatus) {
+              <div class="border-top pt-2 mt-1">
+                <div class="d-flex flex-column gap-1 small">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="fw-semibold">Status of the bulletin:</span>
+                    <app-bulletin-status-badge [status]="publicationStatus.status"></app-bulletin-status-badge>
+                  </div>
+
+                  <div>
+                    <span class="fw-semibold">Published at:</span>
+                    <span>
+                      {{ publicationStatus.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
+                    </span>
+                  </div>
+
+                  @if (publicationStatus.isBeingPublished) {
+                    <div class="text-warning-emphasis">Publication still in progress</div>
+                  } @else {
+                    <div class="text-success">Finished publication on server</div>
+                  }
+                </div>
+              </div>
+            }
           </div>
         </div>
         <div class="d-grid gap-3 p-3">

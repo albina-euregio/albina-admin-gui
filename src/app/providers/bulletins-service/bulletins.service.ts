@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
+import { PublicationStatusModel, PublicationStatusSchema } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap, tap } from "rxjs/operators";
@@ -186,12 +187,15 @@ export class BulletinsService {
     return this.http.get<{ date: string; status: keyof typeof Enums.BulletinStatus }[]>(url);
   }
 
-  getPublicationStatus(region: string, date: [Date, Date] = this.sourceDates.activeDate) {
+  getPublicationStatus(
+    region: string,
+    date: [Date, Date] = this.sourceDates.activeDate,
+  ): Observable<PublicationStatusModel> {
     const url = this.constantsService.getServerUrlGET("/bulletins/status/publication", {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: region,
     });
-    return this.http.get(url);
+    return this.http.get(url).pipe(map((data) => PublicationStatusSchema.parse(data)));
   }
 
   loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {

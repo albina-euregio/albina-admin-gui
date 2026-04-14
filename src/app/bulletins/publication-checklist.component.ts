@@ -7,9 +7,10 @@ import { BulletinsService, PublicationChannel } from "app/providers/bulletins-se
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription } from "rxjs";
+import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription, switchMap, tap } from "rxjs";
 
-import { ChecklistItemModel } from "../models/checklist.model";
+import { ChecklistItemModel, PublicationStatusModel } from "../models/publication-checklist.model";
+import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { ModalPublishComponent } from "./modal-publish.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
@@ -23,7 +24,13 @@ interface ManualSendEntry {
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
-  imports: [DatePipe, RouterLink, TranslateModule, PublicationTriggerNotificationsComponent],
+  imports: [
+    DatePipe,
+    RouterLink,
+    TranslateModule,
+    PublicationTriggerNotificationsComponent,
+    BulletinStatusBadgeComponent,
+  ],
 })
 export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private activeRoute = inject(ActivatedRoute);
@@ -45,6 +52,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   date = "";
   checklistItems: ChecklistItemModel[] = [];
   regionId = "";
+  publicationStatus: PublicationStatusModel;
+
   publishBulletinsModalRef: BsModalRef;
   readonly PublicationChannel = PublicationChannel;
   private readonly manualSendEntriesByChannel: Record<"WhatsApp" | "Telegram", ManualSendEntry[]> = {
@@ -254,22 +263,36 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // update checklist when date or region changes
-    this.routeParamsSubscription = combineLatest([
-      this.activeRoute.params.pipe(
-        map(({ date }) => date as string),
-        distinctUntilChanged(),
-      ),
-      this.authenticationService.activeRegion$.pipe(
-        map((region) => region?.id),
-        distinctUntilChanged(),
-      ),
-    ]).subscribe(([date, regionId]) => {
-      this.date = date;
-      this.regionId = regionId;
-      this.bulletinsService.sourceDates.setActiveDate(date);
-      this.checklistItems = this.getInitialChecklistItems(date, regionId);
-    });
+    const date$ = this.activeRoute.params.pipe(
+      map(({ date }) => date as string),
+      distinctUntilChanged(),
+    );
+    const regionId$ = this.authenticationService.activeRegion$.pipe(
+      map((region) => region?.id),
+      distinctUntilChanged(),
+    );
+
+    // update checklist when date or region changes and load publication status for the region
+    this.routeParamsSubscription = combineLatest([date$, regionId$])
+      .pipe(
+        tap(([date, regionId]) => {
+          this.date = date;
+          this.regionId = regionId;
+          this.bulletinsService.sourceDates.setActiveDate(date);
+          this.checklistItems = this.getInitialChecklistItems(date, regionId);
+        }),
+        switchMap(([, regionId]) => {
+          return this.bulletinsService.getPublicationStatus(regionId);
+        }),
+      )
+      .subscribe({
+        next: (data) => {
+          this.publicationStatus = data;
+        },
+        error: (error) => {
+          console.error("Publication status could not be loaded!", error);
+        },
+      });
   }
 
   ngOnDestroy() {

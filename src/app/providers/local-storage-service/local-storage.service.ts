@@ -6,7 +6,7 @@ import * as z from "zod/v4";
 
 import { environment } from "../../../environments/environment";
 import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
-import { ChecklistItemModel } from "../../models/checklist.model";
+import { ChecklistItemModel } from "../../models/publication-checklist.model";
 import { RegionConfiguration } from "../../models/region-configuration.model";
 import type { ServerModel } from "../../models/server.model";
 import { AuthenticationResponse, AuthenticationResponseSchema } from "../authentication-service/authentication.service";

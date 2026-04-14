@@ -12,7 +12,7 @@ import { BulletinPhotoSchema } from "./bulletin-photo.model";
 import { TextSchema } from "./text.model";
 import { UserSchema } from "./user.model";
 
-const DateSchema = z.preprocess((value) => {
+export const DateSchema = z.preprocess((value) => {
   if (typeof value === "string") {
     return value.replace(/\[UTC\]$/, "");
   }
