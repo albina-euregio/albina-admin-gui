@@ -4,7 +4,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { map, switchMap, tap } from "rxjs/operators";
 
 import * as Enums from "../../enums/enums";
 import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
@@ -386,6 +386,19 @@ export class BulletinsService {
     const jsonBulletins = [];
     const body = JSON.stringify(jsonBulletins);
     return this.http.post<void>(url, body);
+  }
+
+  publishOrChangeBulletins(date: [Date, Date], region: string, change: boolean): Observable<void> {
+    const request$ = change ? this.changeBulletins(date, region) : this.publishBulletins(date, region);
+    return request$.pipe(
+      tap(() => {
+        if (this.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+          this.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+        } else if (this.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+          this.setUserRegionStatus(date, Enums.BulletinStatus.published);
+        }
+      }),
+    );
   }
 
   publishAllBulletins(date: [Date, Date], change: boolean) {
