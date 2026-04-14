@@ -291,11 +291,17 @@ export class AvalancheBulletinComponent implements OnInit {
     const e = e0 as MessageEvent;
     e.preventDefault();
     if (
-      e.data.type !== "webpackInvalid" &&
-      e.data.type !== "webpackOk" &&
-      e.data.source !== "react-devtools-content-script"
+      e.data?.type !== "webpackInvalid" &&
+      e.data?.type !== "webpackOk" &&
+      e.data?.source !== "react-devtools-content-script"
     ) {
-      const pmData: TextcatLegacyOut = JSON.parse(e.data);
+      let pmData: TextcatLegacyOut;
+      try {
+        pmData = JSON.parse(e.data) as TextcatLegacyOut;
+      } catch {
+        return;
+      }
+
       if (pmData.textDef === undefined || pmData.textDef === "") {
         this.bulletin()[`${pmData.textField}Textcat`] = "";
         this.bulletin()[`${pmData.textField}`] = [];
