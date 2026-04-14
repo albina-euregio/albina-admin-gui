@@ -166,137 +166,90 @@
                       </div>
                     }
 
-                    @if (item.title === "E-Mail") {
-                      <div class="border-top pt-3">
-                        <app-publication-trigger-notifications
-                          [date]="bulletinsService.sourceDates.activeDate"
-                          [regionId]="regionId"
-                          [publicationChannel]="PublicationChannel.Email"
-                          iconClass="ph ph-envelope-simple"
-                        ></app-publication-trigger-notifications>
-                      </div>
-                    }
-
-                    @if (item.title === "Telegram") {
+                    @if (item.title === "WhatsApp" || item.title === "Telegram") {
                       <div class="border-top pt-3">
                         <ol class="mb-0 ps-3">
                           <li class="mt-2">
                             <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.resend.telegram" | translate }}
+                              {{ "bulletins.publicationChecklist.resend" | translate }}
                             </div>
+
                             <app-publication-trigger-notifications
                               [date]="bulletinsService.sourceDates.activeDate"
                               [regionId]="regionId"
-                              [publicationChannel]="PublicationChannel.Telegram"
-                              iconClass="ph ph-telegram-logo"
+                              [publicationChannel]="getSocialPublicationChannel(item.title)"
+                              [iconClass]="getSocialIconClass(item.title)"
                             ></app-publication-trigger-notifications>
                           </li>
                           <li class="mt-2">
                             <div class="fw-semibold">Manuell senden:</div>
                             <div class="small text-muted mb-2">
-                              Kopiere den untenstehenden Text und sende ihn an die angegebene Telegram-Gruppe.
+                              {{ getManualSendDescription(item.title) }}
                             </div>
 
                             <div class="vstack gap-2">
-                              <div class="border rounded p-2">
-                                <div class="mb-2">
-                                  <a
-                                    class="small d-inline-flex align-items-center gap-1 text-decoration-none"
-                                    href="https://t.me/lawinenwarndienst_tirol"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <i class="ph ph-telegram-logo"></i>
-                                    <span class="fw-semibold">DE</span>
-                                    <span class="text-decoration-underline">https://t.me/lawinenwarndienst_tirol</span>
-                                  </a>
-                                </div>
-                                <div class="d-flex align-items-center gap-1">
-                                  <pre
-                                    class="flex-grow-1 mb-0 p-2 border rounded bg-light"
-                                  ><code #telegramManualTextDe>Lawinenvorhersage für Sonntag, 12. April 2026: https://lawinen.report/2026-04-12</code></pre>
-                                  <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-secondary"
-                                    (click)="copyToClipboard(telegramManualTextDe.textContent)"
-                                    aria-label="Deutschen Telegram-Text kopieren"
-                                  >
-                                    <i class="ph ph-copy"></i>
-                                  </button>
-                                </div>
-                              </div>
-
-                              <div class="border rounded p-2">
-                                <div class="mb-2">
-                                  <a
-                                    class="small d-inline-flex align-items-center gap-1 text-decoration-none"
-                                    href="https://t.me/lawinenwarndienst_tirol"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <i class="ph ph-telegram-logo"></i>
-                                    <span class="fw-semibold">EN</span>
-                                    <span class="text-decoration-underline"
-                                      >https://t.me/avalanche_warning_service_tirol</span
+                              @for (entry of getManualSendEntries(item.title); track entry.language) {
+                                <div class="border rounded p-2">
+                                  <div class="mb-2">
+                                    <a
+                                      class="small d-inline-flex align-items-center gap-1 text-decoration-none"
+                                      [href]="entry.link"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
                                     >
-                                  </a>
+                                      <i [class]="getSocialIconClass(item.title)"></i>
+                                      <span class="fw-semibold">{{ entry.language.toUpperCase() }}</span>
+                                      <span class="text-decoration-underline">{{ entry.link }}</span>
+                                    </a>
+                                  </div>
+                                  <div class="d-flex align-items-center gap-1">
+                                    <pre
+                                      class="flex-grow-1 mb-0 p-2 border rounded bg-light"
+                                    ><code>{{ getManualSendMessage(entry.language) }}</code></pre>
+                                    <button
+                                      type="button"
+                                      class="btn btn-sm btn-outline-secondary"
+                                      (click)="copyToClipboard(getManualSendMessage(entry.language))"
+                                      [title]="
+                                        'bulletins.publicationChecklist.manualSend.copyText.' +
+                                          item.title.toLowerCase() +
+                                          '.' +
+                                          entry.language.toLowerCase() | translate
+                                      "
+                                    >
+                                      <i class="ph ph-copy"></i>
+                                    </button>
+                                  </div>
                                 </div>
-                                <div class="d-flex align-items-center gap-1">
-                                  <pre
-                                    class="flex-grow-1 mb-0 p-2 border rounded bg-light"
-                                  ><code #telegramManualTextEn>Avalanche forecast for Sunday, 12 April 2026: https://avalanche.report/2026-04-12</code></pre>
-                                  <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-secondary"
-                                    (click)="copyToClipboard(telegramManualTextEn.textContent)"
-                                    aria-label="Copy English Telegram text"
-                                  >
-                                    <i class="ph ph-copy"></i>
-                                  </button>
-                                </div>
-                              </div>
-
-                              <div class="border rounded p-2">
-                                <div class="mb-2">
-                                  <a
-                                    class="small d-inline-flex align-items-center gap-1 text-decoration-none"
-                                    href="https://t.me/lawinenwarndienst_tirol"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <i class="ph ph-telegram-logo"></i>
-                                    <span class="fw-semibold">IT</span>
-                                    <span class="text-decoration-underline">https://t.me/servizio_valanghe_tirolo</span>
-                                  </a>
-                                </div>
-                                <div class="d-flex align-items-center gap-1">
-                                  <pre
-                                    class="flex-grow-1 mb-0 p-2 border rounded bg-light"
-                                  ><code #telegramManualTextIt>Previsione valanghe per domenica 12 aprile 2026: https://valanghe.report/2026-04-12</code></pre>
-                                  <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-secondary"
-                                    (click)="copyToClipboard(telegramManualTextIt.textContent)"
-                                    aria-label="Copia testo Telegram in italiano"
-                                  >
-                                    <i class="ph ph-copy"></i>
-                                  </button>
-                                </div>
-                              </div>
+                              }
                             </div>
                           </li>
                         </ol>
                       </div>
                     }
 
-                    @if (item.title === "WhatsApp") {
+                    @if (item.title === "E-Mail") {
                       <div class="border-top pt-3">
-                        <app-publication-trigger-notifications
-                          [date]="bulletinsService.sourceDates.activeDate"
-                          [regionId]="regionId"
-                          [publicationChannel]="PublicationChannel.WhatsApp"
-                          iconClass="ph ph-whatsapp-logo"
-                        ></app-publication-trigger-notifications>
+                        <ol class="mb-0 ps-3">
+                          <li class="mt-2">
+                            <div class="fw-semibold">Abwarten:</div>
+                            <div class="small text-muted mb-2">
+                              E-Mail Versand dauert meist länger als die Social Media Nachrichten. Zumindest 5 Minuten
+                              sollten seit der Publikation vergangen sein, bevor du zum nächsten Schritt gehst.
+                            </div>
+                          </li>
+                          <li class="mt-2">
+                            <div class="fw-semibold">
+                              {{ "bulletins.publicationChecklist.resend" | translate }}
+                            </div>
+                            <app-publication-trigger-notifications
+                              [date]="bulletinsService.sourceDates.activeDate"
+                              [regionId]="regionId"
+                              [publicationChannel]="PublicationChannel.Email"
+                              iconClass="ph ph-envelope-simple"
+                            ></app-publication-trigger-notifications>
+                          </li>
+                        </ol>
                       </div>
                     }
                   </div>

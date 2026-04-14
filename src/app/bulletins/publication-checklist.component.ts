@@ -13,6 +13,13 @@ import { ChecklistItemModel } from "../models/checklist.model";
 import { ModalPublishComponent } from "./modal-publish.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
+type ManualSendLanguage = "de" | "en" | "it";
+
+interface ManualSendEntry {
+  language: ManualSendLanguage;
+  link: string;
+}
+
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
@@ -40,6 +47,18 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   regionId = "";
   publishBulletinsModalRef: BsModalRef;
   readonly PublicationChannel = PublicationChannel;
+  private readonly manualSendEntriesByChannel: Record<"WhatsApp" | "Telegram", ManualSendEntry[]> = {
+    WhatsApp: [
+      { language: "de", link: "https://www.whatsapp.com/channel/0029Vb9EFivJUM2ShOiocj3h" },
+      { language: "en", link: "https://www.whatsapp.com/channel/0029Vb5ry3RDOQIZDZuS3p26" },
+      { language: "it", link: "https://www.whatsapp.com/channel/0029VbAybBt8vd1XOKzGPN2S" },
+    ],
+    Telegram: [
+      { language: "de", link: "https://t.me/lawinenwarndienst_tirol" },
+      { language: "en", link: "https://t.me/avalanche_warning_service_tirol" },
+      { language: "it", link: "https://t.me/servizio_valanghe_tirolo" },
+    ],
+  };
 
   get isWebsiteChecked(): boolean {
     return !!(this.checklistItems[0]?.ok || this.checklistItems[0]?.problem);
@@ -65,13 +84,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
         problemDescription: "",
       },
       {
-        title: "E-Mail",
-        description: "bulletins.publicationChecklist.descEmail",
-        ok: false,
-        problem: false,
-        problemDescription: "",
-      },
-      {
         title: "WhatsApp",
         description: "bulletins.publicationChecklist.descMessage",
         link: "https://www.whatsapp.com/channel/0029Vb9EFivJUM2ShOiocj3h",
@@ -83,6 +95,13 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
         title: "Telegram",
         description: "bulletins.publicationChecklist.descMessage",
         link: "https://t.me/s/lawinenwarndienst_tirol",
+        ok: false,
+        problem: false,
+        problemDescription: "",
+      },
+      {
+        title: "E-Mail",
+        description: "bulletins.publicationChecklist.descEmail",
         ok: false,
         problem: false,
         problemDescription: "",
@@ -124,6 +143,70 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       return;
     }
     void navigator.clipboard.writeText(text.trim());
+  }
+
+  getSocialPublicationChannel(itemTitle: string): PublicationChannel.Telegram | PublicationChannel.WhatsApp {
+    return itemTitle === "Telegram" ? PublicationChannel.Telegram : PublicationChannel.WhatsApp;
+  }
+
+  getSocialIconClass(itemTitle: string): "ph ph-telegram-logo" | "ph ph-whatsapp-logo" {
+    return itemTitle === "Telegram" ? "ph ph-telegram-logo" : "ph ph-whatsapp-logo";
+  }
+
+  getManualSendDescription(itemTitle: string): string {
+    if (itemTitle === "Telegram") {
+      return this.translateService.instant("bulletins.publicationChecklist.manualSend.description.telegram");
+    }
+    return this.translateService.instant("bulletins.publicationChecklist.manualSend.description.whatsapp");
+  }
+
+  getManualSendEntries(itemTitle: string): ManualSendEntry[] {
+    if (itemTitle === "Telegram") {
+      return this.manualSendEntriesByChannel.Telegram;
+    }
+    return this.manualSendEntriesByChannel.WhatsApp;
+  }
+
+  getManualSendMessage(language: ManualSendLanguage): string {
+    const bulletinDate = this.parseRouteDate(this.date);
+    const bulletinDateLabel = this.formatDateForLanguage(language, bulletinDate);
+    const bulletinLink = this.getBulletinLink(language);
+
+    switch (language) {
+      case "de":
+        return "Lawinenvorhersage für " + bulletinDateLabel + ": " + bulletinLink;
+      case "en":
+        return "Avalanche forecast for " + bulletinDateLabel + ": " + bulletinLink;
+      case "it":
+        return "Previsione valanghe per " + bulletinDateLabel + ": " + bulletinLink;
+    }
+  }
+
+  getManualSendCopyAriaLabel(itemTitle: string, language: ManualSendLanguage): string {
+    const channel = itemTitle === "Telegram" ? "telegram" : "whatsapp";
+    return this.translateService.instant(`bulletins.publicationChecklist.manualSend.copyAria.${channel}.${language}`);
+  }
+
+  private getBulletinLink(language: ManualSendLanguage): string {
+    const domain = language === "de" ? "lawinen.report" : language === "en" ? "avalanche.report" : "valanghe.report";
+    return `https://${domain}/${this.date}`;
+  }
+
+  private parseRouteDate(routeDate: string): Date {
+    const [year, month, day] = routeDate.split("-").map(Number);
+    return new Date(Date.UTC(year, month - 1, day));
+  }
+
+  private formatDateForLanguage(language: ManualSendLanguage, date: Date): string {
+    const locale = language === "de" ? "de-AT" : language === "en" ? "en-GB" : "it-IT";
+
+    return new Intl.DateTimeFormat(locale, {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(date);
   }
 
   getActiveDate(): [Date, Date] {
