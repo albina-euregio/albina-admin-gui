@@ -25,20 +25,20 @@
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start gap-3">
                   <div class="pe-3">
-                    <div class="fw-semibold mb-1">
+                    <div class="fw-semibold">
                       {{ item.title }}
-                      @if (item.link) {
-                        <a
-                          class="ms-1 text-decoration-none"
-                          [href]="item.link"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          [attr.aria-label]="item.title + ' link'"
-                        >
-                          <i class="ph ph-link"></i>
-                        </a>
-                      }
                     </div>
+                    @if (item.link) {
+                      <a
+                        class="small"
+                        [href]="item.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        [attr.aria-label]="item.title + ' link'"
+                      >
+                        {{ item.link }}
+                      </a>
+                    }
                     <small class="text-muted d-block">
                       {{ item.description | translate }}
                     </small>
@@ -99,6 +99,72 @@
 
                   <div class="mt-3">
                     <div class="form-label">{{ "bulletins.publicationChecklist.options" | translate }}</div>
+
+                    @if (item.title === "Website") {
+                      <div class="border-top pt-3">
+                        <ol class="mb-0 ps-3">
+                          <li class="mt-2">
+                            <div class="fw-semibold">Check Internetverbindung:</div>
+                            <div class="small text-muted mb-2">
+                              Wie ist die Internetverbindung auf deinem Gerät? Navigiere in einem privaten Fenster zu
+                              <a href="https://lawinen.report" target="_blank" rel="noopener noreferrer"
+                                >https://lawinen.report</a
+                              >. Wird das Bulletin von gestern korrekt angezeigt?
+                            </div>
+                          </li>
+                          <li class="mt-2">
+                            <div class="fw-semibold">
+                              {{ "bulletins.publicationChecklist.republish" | translate }}
+                            </div>
+                            <div class="small text-muted mb-2">
+                              Führe diesen Schritt nur aus, wenn <strong>«Check Internetverbindung»</strong> erfolgreich
+                              war und mindestens <strong>5 Minuten</strong> seit dem letzten Publikationsversuch
+                              vergangen sind.
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+                              <button
+                                type="button"
+                                class="btn btn-outline-primary btn-sm"
+                                (click)="publish($event, getActiveDate())"
+                                ngxMousetrapKey="mod+enter"
+                              >
+                                <i class="ph ph-paper-plane-tilt"></i>
+                                <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-outline-primary btn-sm"
+                                (click)="publish($event, getActiveDate(), true)"
+                              >
+                                <i class="ph ph-paper-plane-tilt"></i>
+                                <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
+                              </button>
+                            </div>
+                          </li>
+                          <li class="mt-2">
+                            <div class="fw-semibold">Bearbeiten und erneut senden:</div>
+                            <div class="small text-muted">
+                              <ol>
+                                <li>
+                                  Öffne das Bulletin
+                                  <button
+                                    class="btn btn-secondary btn-icon ms-2"
+                                    type="button"
+                                    [routerLink]="['/bulletins', date]"
+                                    title="{{ 'bulletins.tooltip.edit' | translate }}"
+                                  >
+                                    <i class="ph ph-pencil-line"></i>
+                                  </button>
+                                </li>
+                                <li>Klicke auf <strong>«Bearbeiten»</strong></li>
+                                <li>Klicke auf <strong>«Abschicken»</strong></li>
+                                <li>Klicke auf <strong>«Sofort publizieren»</strong></li>
+                              </ol>
+                            </div>
+                          </li>
+                        </ol>
+                      </div>
+                    }
 
                     @if (item.title === "E-Mail") {
                       <div class="border-top pt-3">

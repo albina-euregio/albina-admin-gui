@@ -261,6 +261,7 @@
       "problemDescription": "Description",
       "problemPlaceholder": "Describe the encountered problem",
       "options": "Options",
+      "republish": "Republish:",
       "resend": {
         "email": "Resend email:",
         "telegram": "Resend Telegram:",

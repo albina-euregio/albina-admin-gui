@@ -261,6 +261,7 @@
       "problemDescription": "Beschreibung",
       "problemPlaceholder": "Beschreibe das aufgetretene Problem",
       "options": "Optionen",
+      "republish": "Erneut publizieren:",
       "resend": {
         "email": "E-Mail neu senden:",
         "telegram": "Telegram neu senden:",

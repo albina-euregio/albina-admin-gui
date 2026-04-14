@@ -1,24 +1,27 @@
 import { DatePipe } from "@angular/common";
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService, PublicationChannel } from "app/providers/bulletins-service/bulletins.service";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription } from "rxjs";
 
 import { ChecklistItemModel } from "../models/checklist.model";
+import { ModalPublishComponent } from "./modal-publish.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
-  imports: [DatePipe, TranslateModule, PublicationTriggerNotificationsComponent],
+  imports: [DatePipe, RouterLink, TranslateModule, PublicationTriggerNotificationsComponent],
 })
 export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private activeRoute = inject(ActivatedRoute);
   private authenticationService = inject(AuthenticationService);
+  private modalService = inject(BsModalService);
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
   localStorageService = inject(LocalStorageService);
@@ -35,6 +38,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   date = "";
   checklistItems: ChecklistItemModel[] = [];
   regionId = "";
+  publishBulletinsModalRef: BsModalRef;
   readonly PublicationChannel = PublicationChannel;
 
   get isWebsiteChecked(): boolean {
@@ -120,6 +124,34 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       return;
     }
     void navigator.clipboard.writeText(text.trim());
+  }
+
+  getActiveDate(): [Date, Date] {
+    return this.bulletinsService.sourceDates.activeDate;
+  }
+
+  publish(event: Event, date: [Date, Date], change = false) {
+    event.stopPropagation();
+    const message =
+      "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
+    this.openPublishBulletinsModal(message, date, change);
+  }
+
+  openPublishBulletinsModal(message: string, date: [Date, Date], change: boolean) {
+    const initialState: Partial<ModalPublishComponent> = {
+      text: message,
+      date: date,
+      change: change,
+      callbacks: {
+        onError: (error, isChange) => {
+          console.error(
+            isChange ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
+            error,
+          );
+        },
+      },
+    };
+    this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
   }
 
   private queueChecklistSave() {
