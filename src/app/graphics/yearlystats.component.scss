@@ -24,11 +24,17 @@
   gap: 0.75rem;
 }
 
-.yearlystats-selection-grid {
+.yearlystats-main-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 1fr);
   gap: 0.75rem;
   align-items: start;
+}
+
+.yearlystats-inputs-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .yearlystats-selection-card {
@@ -115,7 +121,7 @@
     grid-template-columns: 1fr;
   }
 
-  .yearlystats-selection-grid {
+  .yearlystats-main-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -22,55 +22,107 @@
       </div>
     </div>
 
-    <div class="yearlystats-selection-grid mt-3">
-      <div class="yearlystats-selection-card">
-        <div class="yearlystats-actions mt-1">
-          <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateCharts()">
-            {{ "yearlystats.label.loaddata" | translate }}
-          </button>
-          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
-            {{ "yearlystats.label.last90Days" | translate }}
-          </button>
-          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(180)">
-            {{ "yearlystats.label.last180Days" | translate }}
-          </button>
-          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setCurrentSeason()">
-            {{ "yearlystats.label.currentSeason" | translate }}
-          </button>
-        </div>
-      </div>
+    <div class="yearlystats-actions mt-3">
+      <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateCharts()">
+        {{ "yearlystats.label.loaddata" | translate }}
+      </button>
+      <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
+        {{ "yearlystats.label.last90Days" | translate }}
+      </button>
+      <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(180)">
+        {{ "yearlystats.label.last180Days" | translate }}
+      </button>
+      <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setCurrentSeason()">
+        {{ "yearlystats.label.currentSeason" | translate }}
+      </button>
+    </div>
 
-      <div class="yearlystats-selection-card">
-        <div class="small text-muted">{{ "yearlystats.label.regionCode" | translate }}</div>
-        <div class="yearlystats-region-actions mt-1">
-          <button
-            class="btn btn-sm"
-            type="button"
-            [disabled]="loading"
-            [class.btn-primary]="allRegionsSelected"
-            [class.btn-outline-secondary]="!allRegionsSelected"
-            (click)="selectAllRegions()"
-          >
-            {{ "yearlystats.label.allRegions" | translate }}
-          </button>
-          @for (regionCode of regionCodes; track regionCode) {
+    <div class="yearlystats-main-grid mt-3">
+      <!-- Left column: Inputs -->
+      <div class="yearlystats-inputs-column">
+        <!-- Region selection -->
+        <div class="yearlystats-selection-card">
+          <div class="small text-muted">{{ "yearlystats.label.regionCode" | translate }}</div>
+          <div class="yearlystats-region-actions mt-1">
             <button
               class="btn btn-sm"
               type="button"
               [disabled]="loading"
-              [class.btn-primary]="isRegionButtonActive(regionCode)"
-              [class.btn-outline-secondary]="!isRegionButtonActive(regionCode)"
-              (click)="toggleRegionCode(regionCode)"
+              [class.btn-primary]="allRegionsSelected"
+              [class.btn-outline-secondary]="!allRegionsSelected"
+              (click)="selectAllRegions()"
             >
-              {{ regionCode }}
+              {{ "yearlystats.label.allRegions" | translate }}
             </button>
-          }
+            @for (regionCode of regionCodes; track regionCode) {
+              <button
+                class="btn btn-sm"
+                type="button"
+                [disabled]="loading"
+                [class.btn-primary]="isRegionButtonActive(regionCode)"
+                [class.btn-outline-secondary]="!isRegionButtonActive(regionCode)"
+                (click)="toggleRegionCode(regionCode)"
+              >
+                {{ regionCode }}
+              </button>
+            }
+          </div>
         </div>
+
+        <!-- Distribution reference input -->
+        @if (showDistributionReferenceInput) {
+          <div class="yearlystats-selection-card mt-2">
+            <label class="form-label mb-1" for="yearlystats-danger-rating-reference">{{
+              "yearlystats.label.dangerRatingReference" | translate
+            }}</label
+            ><br /><span class="small text-muted"
+              >Reference values for a danger rating distribution over different seasons, shown in grey</span
+            >
+            <input
+              id="yearlystats-danger-rating-reference"
+              class="form-control mt-2"
+              type="text"
+              value="19, 42, 37, 2.2, 0.1"
+              [(ngModel)]="dangerRatingReference"
+              (ngModelChange)="onReferenceChanged()"
+            />
+          </div>
+        }
+
+        <!-- Training inputs -->
+        @if (showProductsTrainingInputs) {
+          <div class="yearlystats-selection-card mt-2">
+            <label class="form-label mb-1" for="yearlystats-virtual-trainings">{{
+              "yearlystats.label.virtualTrainings" | translate
+            }}</label>
+            <input
+              id="yearlystats-virtual-trainings"
+              class="form-control"
+              type="text"
+              placeholder="2026-01-15, 2026-02-10"
+              [(ngModel)]="virtualTrainings"
+              (ngModelChange)="onTrainingInputsChanged()"
+            />
+
+            <label class="form-label mb-1 mt-2" for="yearlystats-field-trainings">{{
+              "yearlystats.label.fieldTrainings" | translate
+            }}</label>
+            <input
+              id="yearlystats-field-trainings"
+              class="form-control"
+              type="text"
+              placeholder="2026-01-20, 2026-03-05"
+              [(ngModel)]="fieldTrainings"
+              (ngModelChange)="onTrainingInputsChanged()"
+            />
+          </div>
+        }
       </div>
 
+      <!-- Right column: Chart types -->
       <div class="yearlystats-selection-card">
         <div class="small text-muted">{{ "awsstats.label.charttypes" | translate }}</div>
-        <div class="yearlystats-chart-types mt-1">
+        <div class="yearlystats-chart-types mt-2">
           <label class="form-check mb-0">
             <input
               class="yearlystats-chart-checkbox"
@@ -165,60 +217,7 @@
           }
         </div>
       </div>
-
-      @if (showDistributionReferenceInput) {
-        <div class="yearlystats-controls-grid mt-3">
-          <div>
-            <label class="form-label mb-1" for="yearlystats-danger-rating-reference">{{
-              "yearlystats.label.dangerRatingReference" | translate
-            }}</label
-            ><br /><span class="small text-muted"
-              >Reference values for a danger rating distribution over different seasons, shown in grey</span
-            >
-            <input
-              id="yearlystats-danger-rating-reference"
-              class="form-control"
-              type="text"
-              value="19, 42, 37, 2.2, 0.1"
-              [(ngModel)]="dangerRatingReference"
-              (ngModelChange)="onReferenceChanged()"
-            />
-          </div>
-        </div>
-      }
     </div>
-
-    @if (showProductsTrainingInputs) {
-      <div class="yearlystats-controls-grid mt-3">
-        <div>
-          <label class="form-label mb-1" for="yearlystats-virtual-trainings">{{
-            "yearlystats.label.virtualTrainings" | translate
-          }}</label>
-          <input
-            id="yearlystats-virtual-trainings"
-            class="form-control"
-            type="text"
-            placeholder="2026-01-15, 2026-02-10"
-            [(ngModel)]="virtualTrainings"
-            (ngModelChange)="onTrainingInputsChanged()"
-          />
-        </div>
-
-        <div>
-          <label class="form-label mb-1" for="yearlystats-field-trainings">{{
-            "yearlystats.label.fieldTrainings" | translate
-          }}</label>
-          <input
-            id="yearlystats-field-trainings"
-            class="form-control"
-            type="text"
-            placeholder="2026-01-20, 2026-03-05"
-            [(ngModel)]="fieldTrainings"
-            (ngModelChange)="onTrainingInputsChanged()"
-          />
-        </div>
-      </div>
-    }
   </div>
 </div>
 
