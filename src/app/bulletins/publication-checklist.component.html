@@ -175,7 +175,7 @@
                                 type="button"
                                 class="btn btn-outline-primary btn-sm"
                                 (click)="publish($event, getActiveDate())"
-                                ngxMousetrapKey="mod+enter"
+                                [disabled]="isPublicationDisabled"
                               >
                                 <i class="ph ph-paper-plane-tilt"></i>
                                 <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
@@ -184,6 +184,7 @@
                                 type="button"
                                 class="btn btn-outline-primary btn-sm"
                                 (click)="publish($event, getActiveDate(), true)"
+                                [disabled]="isPublicationDisabled"
                               >
                                 <i class="ph ph-paper-plane-tilt"></i>
                                 <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>

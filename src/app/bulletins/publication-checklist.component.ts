@@ -56,6 +56,16 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     return this.checklistItems[0]?.ok !== undefined;
   }
 
+  get isPublicationDisabled(): boolean {
+    return (
+      this.publicationStatus?.isBeingPublished ||
+      (this.publicationStatus?.status !== BulletinStatus.published &&
+        this.publicationStatus?.status !== BulletinStatus.republished &&
+        this.publicationStatus?.status !== BulletinStatus.submitted &&
+        this.publicationStatus?.status !== BulletinStatus.resubmitted)
+    );
+  }
+
   constructor() {
     this.routeParamsSubscription = new Subscription();
     this.checklistSaveSubscription = this.saveChecklist
