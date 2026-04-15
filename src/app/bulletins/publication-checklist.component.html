@@ -100,13 +100,13 @@
                       class="btn-check"
                       type="checkbox"
                       [id]="'check' + index + 'Ok'"
-                      [checked]="item.ok"
+                      [checked]="item.ok === true"
                       (change)="onOkChange(index, $event)"
                     />
                     <label
                       class="btn btn-sm rounded-pill me-2 d-inline-flex align-items-center gap-1"
-                      [class.btn-success]="item.ok"
-                      [class.btn-outline-dark]="!item.ok"
+                      [class.btn-success]="item.ok === true"
+                      [class.btn-outline-dark]="item.ok !== true"
                       [for]="'check' + index + 'Ok'"
                     >
                       <i class="ph ph-check-circle"></i>
@@ -117,13 +117,13 @@
                       class="btn-check"
                       type="checkbox"
                       [id]="'check' + index + 'Problem'"
-                      [checked]="item.problem"
+                      [checked]="item.ok === false"
                       (change)="onProblemChange(index, $event)"
                     />
                     <label
                       class="btn btn-sm rounded-pill d-inline-flex align-items-center gap-1"
-                      [class.btn-danger]="item.problem"
-                      [class.btn-outline-dark]="!item.problem"
+                      [class.btn-danger]="item.ok === false"
+                      [class.btn-outline-dark]="item.ok !== false"
                       [for]="'check' + index + 'Problem'"
                     >
                       <i class="ph ph-warning-circle"></i>
@@ -132,7 +132,7 @@
                   </div>
                 </div>
 
-                <div class="mt-3" [hidden]="!item.problem">
+                <div class="mt-3" [hidden]="item.ok !== false">
                   <label class="form-label" [for]="'problem' + index">
                     {{ "bulletins.publicationChecklist.problemDescription" | translate }}
                   </label>

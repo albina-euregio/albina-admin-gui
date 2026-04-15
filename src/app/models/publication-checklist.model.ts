@@ -6,8 +6,7 @@ import { DateSchema } from "./bulletin.model";
 export const ChecklistItemSchema = z.object({
   publicationChannel: z.enum(PublicationChannel),
   title: z.string(),
-  ok: z.boolean(),
-  problem: z.boolean(),
+  ok: z.boolean().optional(),
   problemDescription: z.string(),
 });
 

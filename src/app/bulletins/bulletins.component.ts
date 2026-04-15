@@ -136,7 +136,7 @@ export class BulletinsComponent implements OnDestroy {
       this.constantsService.getISODateString(date[1]),
       this.authenticationService.getActiveRegionId(),
     );
-    return checklist.length > 0 && checklist.every((item) => item.ok || item.problem);
+    return checklist.length > 0 && checklist.every((item) => item.ok !== undefined);
   }
 
   copy(event, date: [Date, Date]) {

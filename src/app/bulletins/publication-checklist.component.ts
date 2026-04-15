@@ -53,7 +53,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   publishBulletinsModalRef: BsModalRef;
 
   get isWebsiteChecked(): boolean {
-    return !!(this.checklistItems[0]?.ok || this.checklistItems[0]?.problem);
+    return this.checklistItems[0]?.ok !== undefined;
   }
 
   constructor() {
@@ -130,29 +130,25 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       {
         publicationChannel: PublicationChannel.Website,
         title: "Website",
-        ok: false,
-        problem: false,
+        ok: undefined,
         problemDescription: "",
       },
       {
         publicationChannel: PublicationChannel.WhatsApp,
         title: "WhatsApp",
-        ok: false,
-        problem: false,
+        ok: undefined,
         problemDescription: "",
       },
       {
         publicationChannel: PublicationChannel.Telegram,
         title: "Telegram",
-        ok: false,
-        problem: false,
+        ok: undefined,
         problemDescription: "",
       },
       {
         publicationChannel: PublicationChannel.Email,
         title: "E-Mail",
-        ok: false,
-        problem: false,
+        ok: undefined,
         problemDescription: "",
       },
     ];
@@ -161,9 +157,10 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   onOkChange(index: number, event: Event) {
     const item = this.checklistItems[index];
     const isOk = (event.target as HTMLInputElement).checked;
-    item.ok = isOk;
     if (isOk) {
-      item.problem = false;
+      item.ok = true;
+    } else if (item.ok === true) {
+      item.ok = undefined;
     }
     this.queueChecklistSave();
   }
@@ -171,14 +168,16 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   onProblemChange(index: number, event: Event) {
     const item = this.checklistItems[index];
     const hasProblem = (event.target as HTMLInputElement).checked;
-    item.problem = hasProblem;
     if (hasProblem) {
       item.ok = false;
       this.queueChecklistSave();
       return;
     }
 
-    item.problemDescription = "";
+    if (item.ok === false) {
+      item.ok = undefined;
+      item.problemDescription = "";
+    }
     this.queueChecklistSave();
   }
 
