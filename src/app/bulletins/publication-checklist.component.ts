@@ -5,10 +5,20 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinStatus, PublicationChannel } from "app/enums/enums";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
-import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription, tap } from "rxjs";
+import {
+  catchError,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  EMPTY,
+  map,
+  Subject,
+  Subscription,
+  switchMap,
+  tap,
+} from "rxjs";
 
 import { ChecklistItemModel, PublicationStatusModel } from "../models/publication-checklist.model";
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
@@ -39,7 +49,6 @@ const PUBLICATION_STATUS_SLOW_POLL_MS = 10000; // otherwise, poll every 10 secon
 export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private authenticationService = inject(AuthenticationService);
   private modalService = inject(BsModalService);
-  private localStorageService = inject(LocalStorageService);
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
   regionsService = inject(RegionsService);
@@ -47,16 +56,19 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private activeRoute = inject(ActivatedRoute);
   private routeParamsSubscription: Subscription;
   private checklistSaveSubscription: Subscription;
+  private checklistLoadSubscription: Subscription;
   private publicationStatusSubscription: Subscription;
   private publicationStatusPollTimeout: ReturnType<typeof setTimeout> | null = null;
   private saveChecklist = new Subject<{
     date: string;
     regionId: string;
     checklist: ChecklistItemModel[];
+    checklistId?: string;
   }>();
 
   date = "";
   checklistItems: ChecklistItemModel[] = [];
+  activeChecklistId: string | undefined;
   regionId = "";
   publicationStatus: PublicationStatusModel;
 
@@ -86,11 +98,26 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   constructor() {
     this.routeParamsSubscription = new Subscription();
     this.publicationStatusSubscription = new Subscription();
+    this.checklistLoadSubscription = new Subscription();
     this.checklistSaveSubscription = this.saveChecklist
-      .pipe(debounceTime(500))
-      .subscribe(({ date, regionId, checklist }) => {
-        this.localStorageService.setPublicationChecklist(date, regionId, checklist);
-      });
+      .pipe(
+        debounceTime(500),
+        switchMap(({ date, regionId, checklist, checklistId }) => {
+          if (!date || !regionId) {
+            return EMPTY;
+          }
+          return this.bulletinsService.savePublicationChecklist(date, regionId, checklist, checklistId).pipe(
+            tap((savedChecklist) => {
+              this.activeChecklistId = savedChecklist.checklistId;
+            }),
+            catchError((error) => {
+              console.error("Publication checklist could not be saved to server!", error);
+              return EMPTY;
+            }),
+          );
+        }),
+      )
+      .subscribe();
   }
 
   ngOnInit() {
@@ -109,8 +136,10 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
         tap(([date, regionId]) => {
           this.date = date;
           this.regionId = regionId;
+          this.activeChecklistId = undefined;
           this.bulletinsService.sourceDates.setActiveDate(date);
-          this.checklistItems = this.getInitialChecklistItems(date, regionId);
+          this.checklistItems = this.createChecklistItems();
+          this.loadChecklistItems(date, regionId);
           this.startPublicationStatusPolling();
         }),
       )
@@ -123,6 +152,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopPublicationStatusPolling();
+    this.checklistLoadSubscription.unsubscribe();
     this.publicationStatusSubscription.unsubscribe();
     this.routeParamsSubscription.unsubscribe();
     this.checklistSaveSubscription.unsubscribe();
@@ -163,6 +193,11 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       return `${this.getWebsiteUrl(lang)}/${this.date}`;
     }
     return this.getSocialMediaUrl(publicationChannel, lang);
+  }
+
+  private mergeChecklistItems(saved: ChecklistItemModel[]): ChecklistItemModel[] {
+    const savedByChannel = new Map(saved.map((item) => [item.publicationChannel, item]));
+    return this.createChecklistItems().map((item) => savedByChannel.get(item.publicationChannel) ?? item);
   }
 
   private createChecklistItems(): ChecklistItemModel[] {
@@ -298,6 +333,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
           .publishOrChangeBulletins(date, this.authenticationService.getActiveRegionId(), change)
           .subscribe({
             next: () => {
+              this.activeChecklistId = undefined;
+              this.checklistItems = this.createChecklistItems();
               this.refreshPublicationStatusNow();
             },
             error: (error) => {
@@ -362,14 +399,30 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       date: this.date,
       regionId: this.regionId,
       checklist: this.checklistItems,
+      checklistId: this.activeChecklistId,
     });
   }
 
-  private getInitialChecklistItems(date: string, regionId: string): ChecklistItemModel[] {
-    const savedChecklist = this.localStorageService.getPublicationChecklist(date, regionId);
-    if (savedChecklist.length > 0) {
-      return savedChecklist;
+  private loadChecklistItems(date: string, regionId: string): void {
+    if (!date || !regionId) {
+      this.checklistItems = this.createChecklistItems();
+      return;
     }
-    return this.createChecklistItems();
+
+    this.checklistLoadSubscription.unsubscribe();
+    this.checklistLoadSubscription = this.bulletinsService.getPublicationChecklists(date, regionId).subscribe({
+      next: (savedChecklists) => {
+        const latestChecklist = savedChecklists[0];
+        this.activeChecklistId = latestChecklist?.checklistId;
+        this.checklistItems = latestChecklist?.checklist?.length
+          ? this.mergeChecklistItems(latestChecklist.checklist)
+          : this.createChecklistItems();
+      },
+      error: (error) => {
+        console.error("Publication checklist could not be loaded from server!", error);
+        this.activeChecklistId = undefined;
+        this.checklistItems = this.createChecklistItems();
+      },
+    });
   }
 }

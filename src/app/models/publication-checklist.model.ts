@@ -11,6 +11,21 @@ export const ChecklistItemSchema = z.object({
 
 export type ChecklistItemModel = z.infer<typeof ChecklistItemSchema>;
 
+export const PublicationChecklistSchema = z.object({
+  checklistId: z.string(),
+  timestamp: DateSchema.nullish(),
+  checklist: ChecklistItemSchema.array(),
+});
+
+export type PublicationChecklistModel = z.infer<typeof PublicationChecklistSchema>;
+
+export const SavePublicationChecklistSchema = z.object({
+  checklistId: z.string().optional(),
+  checklist: ChecklistItemSchema.array(),
+});
+
+export type SavePublicationChecklistModel = z.infer<typeof SavePublicationChecklistSchema>;
+
 const PublicationBulletinStatusSchema = z.preprocess((value) => {
   if (typeof value === "string") {
     return BulletinStatus[value as keyof typeof BulletinStatus];

@@ -2,11 +2,20 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
-import { PublicationStatusModel, PublicationStatusSchema } from "app/models/publication-checklist.model";
+import {
+  ChecklistItemModel,
+  ChecklistItemSchema,
+  PublicationChecklistModel,
+  PublicationChecklistSchema,
+  PublicationStatusModel,
+  PublicationStatusSchema,
+  SavePublicationChecklistModel,
+} from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap, tap } from "rxjs/operators";
 
+import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
@@ -191,6 +200,76 @@ export class BulletinsService {
     return this.http.get(url).pipe(map((data) => PublicationStatusSchema.parse(data)));
   }
 
+  getPublicationChecklists(date: string, region: string): Observable<PublicationChecklistModel[]> {
+    if (this.localStorageService.isTrainingEnabled) {
+      return of([
+        {
+          checklistId: "training",
+          timestamp: null,
+          checklist: this.localStorageService.getPublicationChecklist(date, region),
+        },
+      ]);
+    }
+
+    const url = this.getChecklistUrl(date, region);
+    return this.http.get(url).pipe(
+      map((data) => {
+        if (Array.isArray(data) && data.every((item) => item && typeof item === "object" && "checklist" in item)) {
+          return PublicationChecklistSchema.array().parse(data);
+        }
+        if (Array.isArray(data)) {
+          return [
+            {
+              checklistId: "legacy",
+              timestamp: null,
+              checklist: ChecklistItemSchema.array().parse(data),
+            },
+          ];
+        }
+
+        const checklists = (data as { checklists?: unknown })?.checklists;
+        if (Array.isArray(checklists)) {
+          return PublicationChecklistSchema.array().parse(checklists);
+        }
+
+        const checklist = ChecklistItemSchema.array().parse((data as { checklist?: unknown })?.checklist ?? []);
+        return [{ checklistId: "legacy", timestamp: null, checklist }];
+      }),
+    );
+  }
+
+  getPublicationChecklist(date: string, region: string): Observable<ChecklistItemModel[]> {
+    return this.getPublicationChecklists(date, region).pipe(map((checklists) => checklists[0]?.checklist ?? []));
+  }
+
+  savePublicationChecklist(
+    date: string,
+    region: string,
+    checklist: ChecklistItemModel[],
+    checklistId?: string,
+  ): Observable<PublicationChecklistModel> {
+    if (this.localStorageService.isTrainingEnabled) {
+      this.localStorageService.setPublicationChecklist(date, region, checklist);
+      return of({ checklistId: checklistId ?? "training", timestamp: new Date(), checklist });
+    }
+
+    const url = this.getChecklistUrl(date, region);
+    const payload: SavePublicationChecklistModel = { checklistId, checklist };
+    const body = JSON.stringify(payload);
+    return this.http.post(url, body).pipe(
+      map((data) => {
+        if (Array.isArray(data)) {
+          return {
+            checklistId: checklistId ?? "legacy",
+            timestamp: null,
+            checklist: ChecklistItemSchema.array().parse(data),
+          };
+        }
+        return PublicationChecklistSchema.parse(data);
+      }),
+    );
+  }
+
   loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
     const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
       date: date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).toString(),
@@ -199,6 +278,13 @@ export class BulletinsService {
       version: "V6_JSON",
     });
     return this.http.get<Bulletins>(url).pipe(map((response) => response.bulletins));
+  }
+
+  private getChecklistUrl(date: string, region: string): string {
+    const url = new URL("./checklist", environment.apiBaseUrl);
+    url.searchParams.set("date", date);
+    url.searchParams.set("region", region);
+    return url.toString();
   }
 
   loadBulletins(

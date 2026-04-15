@@ -560,6 +560,24 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/checklist": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get checklist items */
+    get: operations["getChecklist"];
+    put?: never;
+    /** Store checklist items */
+    post: operations["saveChecklist"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/danger-sources": {
     parameters: {
       query?: never;
@@ -1306,6 +1324,17 @@ export interface components {
     CaamlVersion: "V5" | "V6" | "V6_JSON";
     /** @enum {string} */
     Characteristic: "low" | "medium" | "high" | "very_high";
+    "ChecklistService.Checklist": {
+      checklistId: string;
+      /** Format: date-time */
+      timestamp: string;
+      checklist: components["schemas"]["ChecklistService.ChecklistItem"][];
+    };
+    "ChecklistService.ChecklistItem": {
+      publicationChannel: string;
+      ok?: boolean | null;
+      problemDescription: string;
+    };
     /** @enum {string} */
     Complexity: "easy" | "challenging" | "complex";
     /** @enum {string} */
@@ -2648,6 +2677,58 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["AvalancheBulletin"][];
+        };
+      };
+    };
+  };
+  getChecklist: {
+    parameters: {
+      query: {
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        date: string;
+        region: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getChecklist 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChecklistService.Checklist"][];
+        };
+      };
+    };
+  };
+  saveChecklist: {
+    parameters: {
+      query: {
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        date: string;
+        region: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChecklistService.Checklist"];
+      };
+    };
+    responses: {
+      /** @description saveChecklist 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChecklistService.Checklist"];
         };
       };
     };
