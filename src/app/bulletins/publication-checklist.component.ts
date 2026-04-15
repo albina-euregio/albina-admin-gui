@@ -16,6 +16,12 @@ import { ModalPublishComponent } from "./modal-publish.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
 const PUBLICATION_LANGUAGES: string[] = ["de", "it", "en"];
+const CHECKLIST_CHANNELS: PublicationChannel[] = [
+  PublicationChannel.Website,
+  PublicationChannel.WhatsApp,
+  PublicationChannel.Telegram,
+  PublicationChannel.Email,
+];
 const PUBLICATION_STATUS_FAST_POLL_MS = 1000; // when publication is in progress, poll every second to update status as fast as possible
 const PUBLICATION_STATUS_SLOW_POLL_MS = 10000; // otherwise, poll every 10 seconds (to detect new publication attempts)
 
@@ -153,32 +159,12 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   private createChecklistItems(): ChecklistItemModel[] {
-    const defaultItems = [
-      {
-        publicationChannel: PublicationChannel.Website,
-        title: "Website",
-        ok: undefined,
-        problemDescription: "",
-      },
-      {
-        publicationChannel: PublicationChannel.WhatsApp,
-        title: "WhatsApp",
-        ok: undefined,
-        problemDescription: "",
-      },
-      {
-        publicationChannel: PublicationChannel.Telegram,
-        title: "Telegram",
-        ok: undefined,
-        problemDescription: "",
-      },
-      {
-        publicationChannel: PublicationChannel.Email,
-        title: "E-Mail",
-        ok: undefined,
-        problemDescription: "",
-      },
-    ];
+    const defaultItems = CHECKLIST_CHANNELS.map((publicationChannel) => ({
+      publicationChannel,
+      ok: undefined,
+      problemDescription: "",
+    }));
+
     return defaultItems.filter((item) => {
       if (item.publicationChannel === PublicationChannel.Website) {
         return true; // website should always be in the checklist
