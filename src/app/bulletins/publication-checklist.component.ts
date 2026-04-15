@@ -131,7 +131,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   getEnabledLanguages(publicationChannel: PublicationChannel): string[] {
     let enabledLanguages: string[];
     if (publicationChannel === PublicationChannel.Email) {
-      enabledLanguages = PUBLICATION_LANGUAGES; // email per default available for all publication languages
+      enabledLanguages = [...PUBLICATION_LANGUAGES]; // email per default available for all publication languages
     } else {
       const urls = this.regionsService.eawsRegion(this.regionId)?.aws[0].url;
       if (!urls) return [];
