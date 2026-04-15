@@ -130,7 +130,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       {
         publicationChannel: PublicationChannel.Website,
         title: "Website",
-        description: "bulletins.publicationChecklist.descWebsite",
         ok: false,
         problem: false,
         problemDescription: "",
@@ -138,7 +137,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       {
         publicationChannel: PublicationChannel.WhatsApp,
         title: "WhatsApp",
-        description: "bulletins.publicationChecklist.descMessage",
         ok: false,
         problem: false,
         problemDescription: "",
@@ -146,7 +144,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       {
         publicationChannel: PublicationChannel.Telegram,
         title: "Telegram",
-        description: "bulletins.publicationChecklist.descMessage",
         ok: false,
         problem: false,
         problemDescription: "",
@@ -154,7 +151,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       {
         publicationChannel: PublicationChannel.Email,
         title: "E-Mail",
-        description: "bulletins.publicationChecklist.descEmail",
         ok: false,
         problem: false,
         problemDescription: "",

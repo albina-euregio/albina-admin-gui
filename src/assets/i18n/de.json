@@ -253,17 +253,44 @@
     },
     "publicationChecklist": {
       "title": "Publikations-Checkliste",
-      "descWebsite": "Die Gefahrenstufen sind auf der Karte markiert. Klick auf eine Region zeigt die Lawinenprobleme und Texte.",
-      "descEmail": "Eine E-Mail wurde versendet und enthält einen Bericht.",
-      "descMessage": "Eine Nachricht mit Link zur Website wurde veröffentlicht.",
+      "description": {
+        "website": "Die Gefahrenstufen sind auf der Karte markiert. Klick auf eine Region zeigt die Lawinenprobleme und Texte.",
+        "email": "Eine E-Mail wurde versendet und enthält einen Bericht.",
+        "telegram": "Eine Nachricht mit Link zur Website wurde veröffentlicht.",
+        "whatsapp": "Eine Nachricht mit Link zur Website wurde veröffentlicht."
+      },
       "ok": "Ok",
       "problem": "Problem",
       "problemDescription": "Beschreibung",
       "problemPlaceholder": "Beschreibe das aufgetretene Problem",
+      "channel": {
+        "website": "Website",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram",
+        "email": "E-Mail"
+      },
+      "publicationInProgress": "Publikation läuft noch",
+      "publicationFinishedOnServer": "Publikation auf dem Server abgeschlossen",
+      "emailWaitHint": "E-Mail Versand dauert meist länger als die Social Media Nachrichten. Zumindest 5 Minuten sollten seit der Publikation vergangen sein, bevor du zum nächsten Schritt gehst.",
+      "email": {
+        "waitTitle": "Abwarten:"
+      },
       "options": "Optionen",
       "republish": "Erneut publizieren:",
       "resend": "Erneut senden:",
+      "website": {
+        "checkInternetTitle": "Check Internetverbindung:",
+        "checkInternetDescriptionPrefix": "Wie ist die Internetverbindung auf deinem Gerät? Navigiere in einem privaten Fenster zu",
+        "checkInternetDescriptionSuffix": "Wird das Bulletin von gestern korrekt angezeigt?",
+        "republishHint": "Führe diesen Schritt nur aus, wenn «Check Internetverbindung» erfolgreich war und mindestens 5 Minuten seit dem letzten Publikationsversuch vergangen sind.",
+        "editAndResendTitle": "Bearbeiten und erneut senden:",
+        "openBulletin": "Öffne das Bulletin",
+        "clickEdit": "Klicke auf «Bearbeiten»",
+        "clickSubmit": "Klicke auf «Abschicken»",
+        "clickPublishNow": "Klicke auf «Sofort publizieren»"
+      },
       "manualSend": {
+        "title": "Manuell senden:",
         "description": {
           "telegram": "Kopiere den untenstehenden Text und sende ihn an die angegebene Telegram-Gruppe.",
           "whatsapp": "Kopiere den untenstehenden Text in den angegebenen WhatsApp-Channel."
