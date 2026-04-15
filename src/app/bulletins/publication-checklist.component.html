@@ -1,6 +1,6 @@
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-8">
+<div class="container-fluid px-0 px-md-3 py-3 py-md-4">
+  <div class="row justify-content-center mx-0">
+    <div class="col-12 col-md-10 col-lg-8 px-0 px-md-3">
       <div class="card">
         <div class="card-header py-3">
           <div class="d-flex flex-column gap-2">
@@ -126,6 +126,7 @@
                   >
                     {{ getPublicationLink(item.publicationChannel) }}
                   </a>
+                  <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
                 }
                 <small class="text-muted d-block mt-1">
                   {{ `bulletins.publicationChecklist.description.${item.publicationChannel}` | translate }}
@@ -159,6 +160,7 @@
                               <a [href]="getWebsiteUrl()" target="_blank" rel="noopener noreferrer">
                                 {{ getWebsiteUrl() }}
                               </a>
+                              <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
                               {{ "bulletins.publicationChecklist.website.checkInternetDescriptionSuffix" | translate }}
                             </div>
                           </li>
@@ -246,7 +248,7 @@
                                 <div class="border rounded p-2">
                                   <div class="mb-2">
                                     <a
-                                      class="small d-inline-flex align-items-center gap-1 text-decoration-none"
+                                      class="small d-inline-flex align-items-center gap-1 text-decoration-none w-100 text-truncate"
                                       [href]="entry.url"
                                       target="_blank"
                                       rel="noopener noreferrer"
@@ -254,6 +256,11 @@
                                       <i [class]="getSocialIconClass(item.publicationChannel)"></i>
                                       <span class="fw-semibold">{{ entry.language.toUpperCase() }}</span>
                                       <span class="text-decoration-underline">{{ entry.url }}</span>
+                                      <i
+                                        class="ph ph-arrow-up-right small text-primary opacity-75"
+                                        style="margin-left: -2px"
+                                        aria-hidden="true"
+                                      ></i>
                                     </a>
                                   </div>
                                   <div class="d-flex align-items-center gap-1">
