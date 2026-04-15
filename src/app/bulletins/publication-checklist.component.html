@@ -231,6 +231,7 @@
                               [regionId]="regionId"
                               [publicationChannel]="item.publicationChannel"
                               [iconClass]="getSocialIconClass(item.publicationChannel)"
+                              [languages]="getEnabledLanguages(item.publicationChannel)"
                             ></app-publication-trigger-notifications>
                           </li>
                           <li class="mt-2">
@@ -302,6 +303,7 @@
                               [regionId]="regionId"
                               [publicationChannel]="item.publicationChannel"
                               iconClass="ph ph-envelope-simple"
+                              [languages]="getEnabledLanguages(item.publicationChannel)"
                             ></app-publication-trigger-notifications>
                           </li>
                         </ol>

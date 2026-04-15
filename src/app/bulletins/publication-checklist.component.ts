@@ -122,6 +122,21 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     return urls[`${publicationChannel}:${lang}`];
   }
 
+  getEnabledLanguages(publicationChannel: PublicationChannel): string[] {
+    let enabledLanguages: string[];
+    if (publicationChannel === PublicationChannel.Email) {
+      enabledLanguages = PUBLICATION_LANGUAGES; // email per default available for all publication languages
+    } else {
+      const urls = this.regionsService.eawsRegion(this.regionId)?.aws[0].url;
+      if (!urls) return [];
+      enabledLanguages = PUBLICATION_LANGUAGES.filter((lang) => !!urls[`${publicationChannel}:${lang}`]);
+    }
+    if (enabledLanguages.length > 0) {
+      enabledLanguages.push("all"); // add "all" option if there is at least one enabled language
+    }
+    return enabledLanguages;
+  }
+
   getWebsiteUrl(publicationLanguage?: string): string {
     const lang = publicationLanguage ?? this.translateService.getCurrentLang();
     const urls = this.regionsService.eawsRegion(this.regionId)?.aws[0].url;
@@ -138,7 +153,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   private createChecklistItems(): ChecklistItemModel[] {
-    return [
+    const defaultItems = [
       {
         publicationChannel: PublicationChannel.Website,
         title: "Website",
@@ -164,6 +179,15 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
         problemDescription: "",
       },
     ];
+    return defaultItems.filter((item) => {
+      if (item.publicationChannel === PublicationChannel.Website) {
+        return true; // website should always be in the checklist
+      } else if (item.publicationChannel === PublicationChannel.Email) {
+        return true; // no reliable way to filter out email at the moment
+      } else {
+        return !!this.getSocialMediaUrl(item.publicationChannel);
+      }
+    });
   }
 
   onOkChange(index: number, event: Event) {

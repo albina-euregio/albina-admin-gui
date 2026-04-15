@@ -12,10 +12,10 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
   imports: [AlertModule, TranslateModule],
   template: `
     <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
-      @for (language of languages; track language) {
+      @for (language of languages(); track language) {
         <button
           type="button"
-          class="btn btn-secondary btn-sm"
+          class="btn btn-outline-primary btn-sm"
           (click)="triggerPublicationChannel($event, language)"
           [title]="'bulletins.table.publicationStatusDialog.title.language.' + language | translate"
         >
@@ -42,8 +42,7 @@ export class PublicationTriggerNotificationsComponent {
   readonly regionId = input.required<string>();
   readonly publicationChannel = input.required<PublicationChannel>();
   readonly iconClass = input.required<string>();
-
-  readonly languages = ["de", "it", "en", "all"];
+  readonly languages = input.required<string[]>();
 
   alerts: Alert[] = [];
 
