@@ -64,38 +64,23 @@
               [style.pointer-events]="index > 0 && !isWebsiteChecked ? 'none' : null"
             >
               <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start gap-3">
-                  <div class="pe-3">
-                    <div class="d-flex align-items-center gap-2 fw-semibold">
-                      @if (item.publicationChannel === "website") {
-                        <i class="ph ph-globe" aria-hidden="true"></i>
-                      }
-                      @if (item.publicationChannel === "whatsapp") {
-                        <i class="ph ph-whatsapp-logo" aria-hidden="true"></i>
-                      }
-                      @if (item.publicationChannel === "telegram") {
-                        <i class="ph ph-telegram-logo" aria-hidden="true"></i>
-                      }
-                      @if (item.publicationChannel === "email") {
-                        <i class="ph ph-envelope-simple" aria-hidden="true"></i>
-                      }
-                      <span>{{ `bulletins.publicationChecklist.channel.${item.publicationChannel}` | translate }}</span>
-                    </div>
-                    @if (getPublicationLink(item.publicationChannel)) {
-                      <a
-                        class="small text-break"
-                        [href]="getPublicationLink(item.publicationChannel)"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {{ getPublicationLink(item.publicationChannel) }}
-                      </a>
+                <div class="d-flex justify-content-between align-items-center gap-3">
+                  <div class="d-flex align-items-center gap-2 fw-semibold">
+                    @if (item.publicationChannel === "website") {
+                      <i class="ph ph-globe" aria-hidden="true"></i>
                     }
-                    <small class="text-muted d-block mt-1">
-                      {{ `bulletins.publicationChecklist.description.${item.publicationChannel}` | translate }}
-                    </small>
+                    @if (item.publicationChannel === "whatsapp") {
+                      <i class="ph ph-whatsapp-logo" aria-hidden="true"></i>
+                    }
+                    @if (item.publicationChannel === "telegram") {
+                      <i class="ph ph-telegram-logo" aria-hidden="true"></i>
+                    }
+                    @if (item.publicationChannel === "email") {
+                      <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+                    }
+                    <span>{{ `bulletins.publicationChecklist.channel.${item.publicationChannel}` | translate }}</span>
                   </div>
-                  <div class="btn-group mt-1 text-nowrap" role="group">
+                  <div class="btn-group text-nowrap flex-shrink-0" role="group">
                     <input
                       class="btn-check"
                       type="checkbox"
@@ -109,7 +94,7 @@
                       [class.btn-outline-dark]="item.ok !== true"
                       [for]="'check' + index + 'Ok'"
                     >
-                      <i class="ph ph-check-circle"></i>
+                      <i class="ph ph-check-circle ms-0"></i>
                       {{ "bulletins.publicationChecklist.ok" | translate }}
                     </label>
 
@@ -126,11 +111,25 @@
                       [class.btn-outline-dark]="item.ok !== false"
                       [for]="'check' + index + 'Problem'"
                     >
-                      <i class="ph ph-warning-circle"></i>
+                      <i class="ph ph-warning-circle ms-0"></i>
                       {{ "bulletins.publicationChecklist.problem" | translate }}
                     </label>
                   </div>
                 </div>
+
+                @if (getPublicationLink(item.publicationChannel)) {
+                  <a
+                    class="small text-break"
+                    [href]="getPublicationLink(item.publicationChannel)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ getPublicationLink(item.publicationChannel) }}
+                  </a>
+                }
+                <small class="text-muted d-block mt-1">
+                  {{ `bulletins.publicationChecklist.description.${item.publicationChannel}` | translate }}
+                </small>
 
                 <div class="mt-3" [hidden]="item.ok !== false">
                   <label class="form-label" [for]="'problem' + index">
