@@ -178,6 +178,14 @@ export class GraphicsService {
     return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
   }
 
+  getLatLongPairsByIds(
+    ids: string[],
+    stations: Pick<LineaStationFeature, "id" | "latitude" | "longitude">[],
+  ): string[] {
+    const stationById = new Map(stations.map((station) => [station.id, station]));
+    return ids.map((id) => `${stationById.get(id).latitude},${stationById.get(id).longitude}`);
+  }
+
   getSmetUrlsByIds(
     ids: string[],
     stations: Pick<LineaStationFeature, "id" | "smet" | "smetId">[],
