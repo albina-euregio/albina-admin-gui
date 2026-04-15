@@ -2,13 +2,13 @@ import { DatePipe, formatDate } from "@angular/common";
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { PublicationChannel } from "app/enums/enums";
+import { BulletinStatus, PublicationChannel } from "app/enums/enums";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription, switchMap, tap } from "rxjs";
+import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription, tap } from "rxjs";
 
 import { ChecklistItemModel, PublicationStatusModel } from "../models/publication-checklist.model";
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
@@ -16,6 +16,8 @@ import { ModalPublishComponent } from "./modal-publish.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
 const PUBLICATION_LANGUAGES: string[] = ["de", "it", "en"];
+const PUBLICATION_STATUS_FAST_POLL_MS = 1000; // when publication is in progress, poll every second to update status as fast as possible
+const PUBLICATION_STATUS_SLOW_POLL_MS = 10000; // otherwise, poll every 10 seconds (to detect new publication attempts)
 
 @Component({
   templateUrl: "publication-checklist.component.html",
@@ -39,6 +41,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private activeRoute = inject(ActivatedRoute);
   private routeParamsSubscription: Subscription;
   private checklistSaveSubscription: Subscription;
+  private publicationStatusSubscription: Subscription;
+  private publicationStatusPollTimeout: ReturnType<typeof setTimeout> | null = null;
   private saveChecklist = new Subject<{
     date: string;
     regionId: string;
@@ -68,6 +72,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.routeParamsSubscription = new Subscription();
+    this.publicationStatusSubscription = new Subscription();
     this.checklistSaveSubscription = this.saveChecklist
       .pipe(debounceTime(500))
       .subscribe(({ date, regionId, checklist }) => {
@@ -85,7 +90,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
     );
 
-    // update checklist when date or region changes and load publication status for the region
+    // update checklist when date or region changes and start publication status polling
     this.routeParamsSubscription = combineLatest([date$, regionId$])
       .pipe(
         tap(([date, regionId]) => {
@@ -93,22 +98,19 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
           this.regionId = regionId;
           this.bulletinsService.sourceDates.setActiveDate(date);
           this.checklistItems = this.getInitialChecklistItems(date, regionId);
-        }),
-        switchMap(([, regionId]) => {
-          return this.bulletinsService.getPublicationStatus(regionId);
+          this.startPublicationStatusPolling();
         }),
       )
       .subscribe({
-        next: (data) => {
-          this.publicationStatus = data;
-        },
         error: (error) => {
-          console.error("Publication status could not be loaded!", error);
+          console.error("Publication checklist context could not be initialized!", error);
         },
       });
   }
 
   ngOnDestroy() {
+    this.stopPublicationStatusPolling();
+    this.publicationStatusSubscription.unsubscribe();
     this.routeParamsSubscription.unsubscribe();
     this.checklistSaveSubscription.unsubscribe();
   }
@@ -261,15 +263,63 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       date: date,
       change: change,
       callbacks: {
+        onSuccess: () => {
+          this.refreshPublicationStatusNow();
+        },
         onError: (error, isChange) => {
           console.error(
             isChange ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
             error,
           );
+          this.refreshPublicationStatusNow();
         },
       },
     };
     this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
+  }
+
+  private startPublicationStatusPolling() {
+    this.clearPublicationStatusPollTimeout();
+    this.publicationStatusSubscription.unsubscribe();
+    this.refreshPublicationStatusNow();
+  }
+
+  private stopPublicationStatusPolling() {
+    this.clearPublicationStatusPollTimeout();
+  }
+
+  private clearPublicationStatusPollTimeout() {
+    if (this.publicationStatusPollTimeout) {
+      clearTimeout(this.publicationStatusPollTimeout);
+      this.publicationStatusPollTimeout = null;
+    }
+  }
+
+  private refreshPublicationStatusNow() {
+    if (!this.regionId) {
+      return;
+    }
+
+    this.clearPublicationStatusPollTimeout();
+    this.publicationStatusSubscription.unsubscribe();
+
+    this.publicationStatusSubscription = this.bulletinsService.getPublicationStatus(this.regionId).subscribe({
+      next: (data) => {
+        this.publicationStatus = data;
+        const pollingIntervalMs = data?.isBeingPublished
+          ? PUBLICATION_STATUS_FAST_POLL_MS
+          : PUBLICATION_STATUS_SLOW_POLL_MS;
+        this.publicationStatusPollTimeout = setTimeout(() => {
+          this.refreshPublicationStatusNow();
+        }, pollingIntervalMs);
+      },
+      error: (error) => {
+        console.error("Publication status could not be loaded!", error);
+        this.publicationStatusPollTimeout = setTimeout(() => {
+          this.refreshPublicationStatusNow();
+        }, PUBLICATION_STATUS_SLOW_POLL_MS);
+      },
+    });
   }
 
   private queueChecklistSave() {

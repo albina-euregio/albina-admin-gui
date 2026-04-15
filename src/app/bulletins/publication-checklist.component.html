@@ -41,7 +41,7 @@
                 @if (publicationStatus.isBeingPublished !== undefined) {
                   @if (publicationStatus.isBeingPublished) {
                     <div class="d-inline-flex align-items-center gap-2 text-body-secondary">
-                      <i class="ph ph-spinner-gap ph-spin" aria-hidden="true"></i>
+                      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                       <span>{{ "bulletins.publicationChecklist.publicationInProgress" | translate }}</span>
                     </div>
                   } @else {

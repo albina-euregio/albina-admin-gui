@@ -137,7 +137,7 @@ export class BulletinsService {
 
   getUserRegionStatus(date: [Date, Date] = this.sourceDates.activeDate): Enums.BulletinStatus {
     const region = this.authenticationService.getActiveRegionId();
-    const regionStatusMap = this.statusMap.get(region);
+    const regionStatusMap = this.statusMap?.get(region);
     if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
     else return Enums.BulletinStatus.missing;
   }
