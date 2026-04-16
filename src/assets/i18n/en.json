@@ -286,12 +286,12 @@
         "checkInternetTitle": "Check internet connection:",
         "checkInternetDescriptionPrefix": "How is the internet connection on your device? Open",
         "checkInternetDescriptionSuffix": "in a private window. Is yesterday's bulletin displayed correctly?",
-        "republishHint": "Only perform this step if «Check internet connection» was successful and at least 5 minutes have passed since the last publication attempt.",
+        "republishHint": "Only perform this step if “Check internet connection” was successful and at least 5 minutes have passed since the last publication attempt.",
         "editAndResendTitle": "Edit and resend:",
         "openBulletin": "Open the bulletin",
-        "clickEdit": "Click «Edit»",
-        "clickSubmit": "Click «Submit»",
-        "clickPublishNow": "Click «Publish now»"
+        "clickEdit": "Click “Edit”",
+        "clickSubmit": "Click “Submit”",
+        "clickPublishNow": "Click “Publish now”"
       },
       "manualSend": {
         "title": "Manual send:",

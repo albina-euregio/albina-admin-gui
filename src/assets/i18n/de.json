@@ -286,12 +286,12 @@
         "checkInternetTitle": "Check Internetverbindung:",
         "checkInternetDescriptionPrefix": "Wie ist die Internetverbindung auf deinem Gerät? Navigiere in einem privaten Fenster zu",
         "checkInternetDescriptionSuffix": "Wird das Bulletin von gestern korrekt angezeigt?",
-        "republishHint": "Führe diesen Schritt nur aus, wenn «Check Internetverbindung» erfolgreich war und mindestens 5 Minuten seit dem letzten Publikationsversuch vergangen sind.",
+        "republishHint": "Führe diesen Schritt nur aus, wenn »Check Internetverbindung« erfolgreich war und mindestens 5 Minuten seit dem letzten Publikationsversuch vergangen sind.",
         "editAndResendTitle": "Bearbeiten und erneut senden:",
         "openBulletin": "Öffne das Bulletin",
-        "clickEdit": "Klicke auf «Bearbeiten»",
-        "clickSubmit": "Klicke auf «Abschicken»",
-        "clickPublishNow": "Klicke auf «Sofort publizieren»"
+        "clickEdit": "Klicke auf »Bearbeiten«",
+        "clickSubmit": "Klicke auf »Abschicken«",
+        "clickPublishNow": "Klicke auf »Sofort publizieren«"
       },
       "manualSend": {
         "title": "Manuell senden:",
