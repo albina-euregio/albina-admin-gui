@@ -226,6 +226,14 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     return publicationChannel === PublicationChannel.Telegram ? "ph ph-telegram-logo" : "ph ph-whatsapp-logo";
   }
 
+  getChannelName(publicationChannel: PublicationChannel): string {
+    return this.translateService.instant(`bulletins.publicationChecklist.channel.${publicationChannel}`);
+  }
+
+  getLanguageName(language: string): string {
+    return this.translateService.instant(`menu.${language}`);
+  }
+
   getManualSendDescription(publicationChannel: PublicationChannel): string {
     if (publicationChannel === PublicationChannel.Telegram) {
       return this.translateService.instant("bulletins.publicationChecklist.manualSend.description.telegram");

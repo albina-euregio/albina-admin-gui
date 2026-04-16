@@ -299,18 +299,7 @@
           "telegram": "Kopiere den untenstehenden Text und sende ihn an die angegebene Telegram-Gruppe.",
           "whatsapp": "Kopiere den untenstehenden Text in den angegebenen WhatsApp-Channel."
         },
-        "copyText": {
-          "telegram": {
-            "de": "Deutschen Telegram Text kopieren",
-            "en": "Englischen Telegram Text kopieren",
-            "it": "Italienischen Telegram Text kopieren"
-          },
-          "whatsapp": {
-            "de": "Deutschen WhatsApp Text kopieren",
-            "en": "Englischen WhatsApp Text kopieren",
-            "it": "Italienischen WhatsApp Text kopieren"
-          }
-        }
+        "copyText": "{{language}}en {{channel}} Text kopieren"
       }
     },
     "status": {

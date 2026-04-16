@@ -299,18 +299,7 @@
           "telegram": "Copy the text below and send it to the specified Telegram group.",
           "whatsapp": "Copy the text below to the specified WhatsApp channel."
         },
-        "copyText": {
-          "telegram": {
-            "de": "Copy German Telegram text",
-            "en": "Copy English Telegram text",
-            "it": "Copy Italian Telegram text"
-          },
-          "whatsapp": {
-            "de": "Copy German WhatsApp text",
-            "en": "Copy English WhatsApp text",
-            "it": "Copy Italian WhatsApp text"
-          }
-        }
+        "copyText": "Copy {{language}} {{channel}} text"
       }
     },
     "status": {

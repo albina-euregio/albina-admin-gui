@@ -275,10 +275,12 @@
                                       class="btn btn-sm btn-outline-secondary"
                                       (click)="copyToClipboard(getManualSendMessage(entry.language))"
                                       [title]="
-                                        'bulletins.publicationChecklist.manualSend.copyText.' +
-                                          item.publicationChannel +
-                                          '.' +
-                                          entry.language.toLowerCase() | translate
+                                        'bulletins.publicationChecklist.manualSend.copyText'
+                                          | translate
+                                            : {
+                                                channel: getChannelName(item.publicationChannel),
+                                                language: getLanguageName(entry.language),
+                                              }
                                       "
                                     >
                                       <i class="ph ph-copy"></i>
