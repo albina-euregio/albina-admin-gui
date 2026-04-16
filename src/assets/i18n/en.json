@@ -633,7 +633,8 @@
           "success": "Push Notifications successfully sent!",
           "error": "Push Notifications could not be sent!"
         },
-        "accept": "Ok"
+        "accept": "Ok",
+        "confirm": "Do you really want to send {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Media File",

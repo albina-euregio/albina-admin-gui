@@ -2,9 +2,11 @@ import { Component, inject, input } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { PublicationChannel } from "app/enums/enums";
 import { AlertModule } from "ngx-bootstrap/alert";
+import { BsModalService } from "ngx-bootstrap/modal";
 
 import { Alert } from "../models/Alert";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { ModalConfirmTriggerComponent } from "./modal-confirm.component";
 
 @Component({
   selector: "app-publication-trigger-notifications",
@@ -37,6 +39,7 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 export class PublicationTriggerNotificationsComponent {
   private bulletinsService = inject(BulletinsService);
   private translateService = inject(TranslateService);
+  private modalService = inject(BsModalService);
 
   readonly date = input.required<[Date, Date]>();
   readonly regionId = input.required<string>();
@@ -49,6 +52,25 @@ export class PublicationTriggerNotificationsComponent {
   triggerPublicationChannel(event: Event, language: string) {
     event.stopPropagation();
 
+    const languageName = this.translateService.instant(
+      "bulletins.table.publicationStatusDialog.title.language." + language,
+    );
+    const channelName = this.translateService.instant(
+      "bulletins.publicationChecklist.channel." + this.publicationChannel(),
+    );
+    const text = this.translateService.instant("bulletins.table.publicationStatusDialog.confirm", {
+      channel: channelName,
+      language: languageName,
+    });
+
+    const initialState: Partial<ModalConfirmTriggerComponent> = {
+      text,
+      onConfirm: () => this.doTrigger(language),
+    };
+    this.modalService.show(ModalConfirmTriggerComponent, { initialState });
+  }
+
+  private doTrigger(language: string) {
     this.bulletinsService
       .triggerPublicationChannel(this.date(), this.regionId(), language, this.publicationChannel())
       .subscribe({
