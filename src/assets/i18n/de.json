@@ -634,7 +634,7 @@
           "error": "Push Nachrichten konnten nicht verschickt werden!"
         },
         "accept": "Ok",
-        "confirm": "Willst du {{channel}} ({{language}}) wirklich verschicken?"
+        "confirm": "Willst du {{channel}} ({{language}}) verschicken?"
       },
       "mediaFileDialog": {
         "headline": "Mediendatei",
