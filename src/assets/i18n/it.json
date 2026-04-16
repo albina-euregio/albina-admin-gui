@@ -248,7 +248,59 @@
       "deleteAllWarningRegions": "Elimina tutte le meteo-nivo zone",
       "publishAll": "Pubblica tutte le meteo-nivo zone",
       "publishAllNoMessages": "Pubblica tutte le meteo-nivo zone (senza messaggi)",
-      "mediaFile": "Carica file media"
+      "mediaFile": "Carica file media",
+      "publicationChecklist": "Open publication checklist"
+    },
+    "publicationChecklist": {
+      "title": "Publication checklist",
+      "description": {
+        "website": "The danger level is marked on the map. Clicking on a region shows the avalanche problems and texts.",
+        "email": "An email was sent and contains a report.",
+        "telegram": "A message containing a link to the website was posted.",
+        "whatsapp": "A message containing a link to the website was posted."
+      },
+      "ok": "Ok",
+      "problem": "Problem",
+      "problemDescription": "Descrizione",
+      "problemPlaceholder": "Describe the encountered problem",
+      "channel": {
+        "website": "Website",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram",
+        "email": "Email"
+      },
+      "publicationInProgress": "Publication still in progress",
+      "publicationFinishedOnServer": "Finished publication on server",
+      "publishDisabled": {
+        "inProgress": "Publication is currently in progress.",
+        "wrongStatus": "The bulletin must be submitted or published."
+      },
+      "emailWaitHint": "Email delivery usually takes longer than social media messages. At least 5 minutes should have passed since publication before you proceed to the next step.",
+      "email": {
+        "waitTitle": "Wait:"
+      },
+      "options": "Options",
+      "republish": "Republish:",
+      "resend": "Resend:",
+      "website": {
+        "checkInternetTitle": "Check internet connection:",
+        "checkInternetDescriptionPrefix": "How is the internet connection on your device? Open",
+        "checkInternetDescriptionSuffix": "in a private window. Is yesterday's bulletin displayed correctly?",
+        "republishHint": "Only perform this step if “Check internet connection” was successful and at least 5 minutes have passed since the last publication attempt.",
+        "editAndResendTitle": "Edit and resend:",
+        "openBulletin": "Open the bulletin",
+        "clickEdit": "Click “Edit”",
+        "clickSubmit": "Click “Submit”",
+        "clickPublishNow": "Click “Publish now”"
+      },
+      "manualSend": {
+        "title": "Manual send:",
+        "description": {
+          "telegram": "Copy the text below and send it to the specified Telegram group.",
+          "whatsapp": "Copy the text below to the specified WhatsApp channel."
+        },
+        "copyText": "Copy {{language}} {{channel}} text"
+      }
     },
     "status": {
       "submittedInfo": "Verrà pubblicato alle 17:00",

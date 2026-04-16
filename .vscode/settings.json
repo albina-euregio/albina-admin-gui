@@ -21,5 +21,8 @@
   "i18n-ally.keystyle": "nested",
   "i18n-ally.localesPaths": "src/assets/i18n",
   "i18n-ally.regex.usageMatchAppend": ["\\bt\\(['\"`]({key})['\"`]"],
-  "oxc.fmt.configPath": "./vite.config.ts"
+  "oxc.fmt.configPath": "./vite.config.ts",
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }

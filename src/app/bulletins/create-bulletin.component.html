@@ -74,43 +74,7 @@
 
         @if (!showStatusOfAllRegions) {
           <div>
-            @if (getActiveRegionStatus() === bulletinStatus.missing || getActiveRegionStatus() === undefined) {
-              <span class="badge bg-danger"
-                ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
-              >
-            }
-            @if (getActiveRegionStatus() === bulletinStatus.draft) {
-              <span class="badge bg-warning"
-                ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
-              >
-            }
-            @if (getActiveRegionStatus() === bulletinStatus.submitted) {
-              <span class="badge bg-primary"
-                ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
-              >
-            }
-            @if (getActiveRegionStatus() === bulletinStatus.published) {
-              <span class="badge bg-success"
-                ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
-              >
-            }
-            @if (getActiveRegionStatus() === bulletinStatus.updated) {
-              <span class="badge bg-orange"
-                ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
-              >
-            }
-            @if (getActiveRegionStatus() === bulletinStatus.resubmitted) {
-              <span class="badge bg-primary"
-                ><i class="ph-bold icon-sm ph-newspaper"></i>
-                {{ "bulletins.table.status.resubmitted" | translate }}</span
-              >
-            }
-            @if (getActiveRegionStatus() === bulletinStatus.republished) {
-              <span class="badge bg-success"
-                ><i class="ph-bold icon-sm ph-newspaper"></i>
-                {{ "bulletins.table.status.republished" | translate }}</span
-              >
-            }
+            <app-bulletin-status-badge [status]="getActiveRegionStatus()"></app-bulletin-status-badge>
           </div>
         }
       </div>

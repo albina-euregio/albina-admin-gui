@@ -1,0 +1,37 @@
+@if (status() === bulletinStatus.missing || status() === undefined) {
+  <span class="badge bg-danger"
+    ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
+  >
+}
+@if (status() === bulletinStatus.draft) {
+  <span class="badge bg-warning"
+    ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
+  >
+}
+@if (status() === bulletinStatus.submitted) {
+  <span class="badge bg-primary"
+    ><i [class]="'ph-bold icon-sm ph-' + submittedIcon()"></i>
+    {{ "bulletins.table.status.submitted" | translate }}</span
+  >
+}
+@if (status() === bulletinStatus.published) {
+  <span class="badge bg-success"
+    ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
+  >
+}
+@if (status() === bulletinStatus.updated) {
+  <span class="badge bg-orange"
+    ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
+  >
+}
+@if (status() === bulletinStatus.resubmitted) {
+  <span class="badge bg-primary"
+    ><i [class]="'ph-bold icon-sm ph-' + submittedIcon()"></i>
+    {{ "bulletins.table.status.resubmitted" | translate }}</span
+  >
+}
+@if (status() === bulletinStatus.republished) {
+  <span class="badge bg-success"
+    ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
+  >
+}

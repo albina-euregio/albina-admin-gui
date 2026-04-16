@@ -2,9 +2,10 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
+import { PublicationStatusModel, PublicationStatusSchema } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { map, switchMap, tap } from "rxjs/operators";
 
 import * as Enums from "../../enums/enums";
 import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
@@ -22,13 +23,6 @@ class TrainingModeError extends Error {}
 interface AccordionChangeEvent {
   isOpen: boolean;
   groupName: string;
-}
-
-export enum PublicationChannel {
-  Email = "email",
-  Telegram = "telegram",
-  WhatsApp = "whatsapp",
-  Push = "push",
 }
 
 @Injectable()
@@ -143,7 +137,7 @@ export class BulletinsService {
 
   getUserRegionStatus(date: [Date, Date] = this.sourceDates.activeDate): Enums.BulletinStatus {
     const region = this.authenticationService.getActiveRegionId();
-    const regionStatusMap = this.statusMap.get(region);
+    const regionStatusMap = this.statusMap?.get(region);
     if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
     else return Enums.BulletinStatus.missing;
   }
@@ -186,12 +180,15 @@ export class BulletinsService {
     return this.http.get<{ date: string; status: keyof typeof Enums.BulletinStatus }[]>(url);
   }
 
-  getPublicationStatus(region: string, date: [Date, Date] = this.sourceDates.activeDate) {
+  getPublicationStatus(
+    region: string,
+    date: [Date, Date] = this.sourceDates.activeDate,
+  ): Observable<PublicationStatusModel> {
     const url = this.constantsService.getServerUrlGET("/bulletins/status/publication", {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: region,
     });
-    return this.http.get(url);
+    return this.http.get(url).pipe(map((data) => PublicationStatusSchema.parse(data)));
   }
 
   loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
@@ -388,6 +385,19 @@ export class BulletinsService {
     return this.http.post<void>(url, body);
   }
 
+  publishOrChangeBulletins(date: [Date, Date], region: string, change: boolean): Observable<void> {
+    const request$ = change ? this.changeBulletins(date, region) : this.publishBulletins(date, region);
+    return request$.pipe(
+      tap(() => {
+        if (this.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+          this.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+        } else if (this.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+          this.setUserRegionStatus(date, Enums.BulletinStatus.published);
+        }
+      }),
+    );
+  }
+
   publishAllBulletins(date: [Date, Date], change: boolean) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
@@ -400,7 +410,7 @@ export class BulletinsService {
     return this.http.post<void>(url, body);
   }
 
-  triggerPublicationChannel(date: [Date, Date], region: string, language: string, channel: PublicationChannel) {
+  triggerPublicationChannel(date: [Date, Date], region: string, language: string, channel: Enums.PublicationChannel) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }

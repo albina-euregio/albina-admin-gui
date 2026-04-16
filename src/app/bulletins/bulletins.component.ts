@@ -18,13 +18,14 @@ import { LocalStorageService } from "../providers/local-storage-service/local-st
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { StatusService } from "../providers/status-service/status.service";
 import { UserService } from "../providers/user-service/user.service";
+import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 
 @Component({
   templateUrl: "bulletins.component.html",
   standalone: true,
-  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule],
+  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule, BulletinStatusBadgeComponent],
 })
 export class BulletinsComponent implements OnDestroy {
   translate = inject(TranslateService);
@@ -111,10 +112,31 @@ export class BulletinsComponent implements OnDestroy {
     }
   }
 
+  isOwnRegionPublished(date: [Date, Date]) {
+    const userRegion = this.authenticationService.getActiveRegionId();
+    return (
+      this.getRegionStatus(userRegion, date) === this.bulletinStatus.published ||
+      this.getRegionStatus(userRegion, date) === this.bulletinStatus.republished
+    );
+  }
+
   editBulletin(date: [Date, Date], isReadOnly?: boolean) {
     const formattedDate = this.constantsService.getISODateString(date[1]);
     this.bulletinsService.setIsReadOnly(isReadOnly);
     this.router.navigate(["/bulletins/" + formattedDate], { queryParams: { readOnly: isReadOnly } });
+  }
+
+  showPublicationChecklist(date: [Date, Date]) {
+    const formattedDate = this.constantsService.getISODateString(date[1]);
+    this.router.navigate([`/bulletins/${formattedDate}/publication`]);
+  }
+
+  isChecklistComplete(date: [Date, Date]) {
+    const checklist = this.localStorageService.getPublicationChecklist(
+      this.constantsService.getISODateString(date[1]),
+      this.authenticationService.getActiveRegionId(),
+    );
+    return checklist.length > 0 && checklist.every((item) => item.ok !== undefined);
   }
 
   copy(event, date: [Date, Date]) {

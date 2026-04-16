@@ -3,7 +3,7 @@ import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { UserModel, UserSchema } from "app/models/user.model";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { z } from "zod/v4";
 
@@ -27,6 +27,8 @@ export class AuthenticationService {
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
+  private activeRegionSubject = new BehaviorSubject<RegionConfiguration | undefined>(undefined);
+  public readonly activeRegion$ = this.activeRegionSubject.asObservable();
 
   constructor() {
     this.externalServers = [];
@@ -90,6 +92,7 @@ export class AuthenticationService {
     console.debug("[" + this.currentAuthor?.name + "] Logged out!");
     this.authentication = null;
     this.activeRegion = undefined;
+    this.activeRegionSubject.next(undefined);
     this.localStorageService.setCurrentAuthor(undefined);
     this.localStorageService.setInternalRegions(undefined);
     this.localStorageService.setExternalServers(undefined);
@@ -252,6 +255,7 @@ export class AuthenticationService {
     region = this.getCurrentAuthorRegions().find((r) => r.id === (typeof region === "string" ? region : region.id));
     if (region) {
       this.activeRegion = region;
+      this.activeRegionSubject.next(this.activeRegion);
       this.localStorageService.setActiveRegion(this.activeRegion);
     } else {
       this.logout();

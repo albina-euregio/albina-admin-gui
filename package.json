@@ -45,6 +45,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@eaws/micro-regions": "^8.2.0",
     "@eaws/micro-regions_names": "^8.2.0",
+    "@eaws/outline_properties": "^8.4.0",
     "@eaws/pmtiles": "^8.2.0",
     "@mapbox/point-geometry": "^1.1.0",
     "@ngx-translate/core": "^17.0.0",

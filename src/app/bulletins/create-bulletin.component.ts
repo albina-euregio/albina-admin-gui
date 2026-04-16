@@ -49,6 +49,7 @@ import { MapService } from "../providers/map-service/map.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
@@ -69,6 +70,7 @@ import { ModalSubmitComponent } from "./modal-submit.component";
     NgTemplateOutlet,
     AvalancheBulletinComponent,
     DangerRatingIconComponent,
+    BulletinStatusBadgeComponent,
     AvalancheProblemIconsComponent,
     DatePipe,
     KeyValuePipe,
@@ -600,10 +602,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
           // create bulletin for each aggregated region
           const bulletins = new Array<BulletinModel>();
-          for (const {
-            dangerSourceVariants: dangerSourceVariants,
-            microRegionIds: microRegionIds,
-          } of clusterMap.values()) {
+          for (const { dangerSourceVariants, microRegionIds } of clusterMap.values()) {
             const bulletin = this.createBulletinFromDangerSourceVariants(microRegionIds, dangerSourceVariants);
             bulletins.push(bulletin);
             this.addInternalBulletin(bulletin);
@@ -2413,55 +2412,24 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       text: message,
       date: date,
       change: change,
-      component: this,
+      callbacks: {
+        onSuccess: () => {
+          console.log(change ? "Bulletins published (no messages)." : "Bulletins published.");
+        },
+        onError: (error, isChange) => {
+          console.error(
+            isChange ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
+            error,
+          );
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
+        },
+      },
     };
     this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
 
     this.modalService.onHide.subscribe(() => {
       this.publishing = false;
     });
-  }
-
-  publishBulletinsModalConfirm(date: [Date, Date], change: boolean): void {
-    this.publishBulletinsModalRef.hide();
-    if (change) {
-      this.bulletinsService.changeBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-        () => {
-          console.log("Bulletins published (no messages).");
-          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
-          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
-          }
-          this.publishing = false;
-        },
-        (error) => {
-          console.error("Bulletins could not be published (no messages)!", error);
-          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
-        },
-      );
-    } else {
-      this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-        () => {
-          console.log("Bulletins published.");
-          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
-          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
-          }
-          this.publishing = false;
-        },
-        (error) => {
-          console.error("Bulletins could not be published!", error);
-          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
-        },
-      );
-    }
-  }
-
-  publishBulletinsModalDecline(): void {
-    this.publishBulletinsModalRef.hide();
-    this.publishing = false;
   }
 
   openPublishBulletinsErrorModal(template: TemplateRef<unknown>) {

@@ -1,12 +1,13 @@
 import { DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { PublicationChannel } from "app/enums/enums";
 import { Alert } from "app/models/Alert";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { BulletinsService, PublicationChannel } from "../providers/bulletins-service/bulletins.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 
