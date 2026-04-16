@@ -234,7 +234,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   getManualSendMessage(language: string): string {
-    const bulletinDateLabel = formatDate(this.getActiveDate()[1], "fullDate", language, "UTC");
+    const bulletinDateLabel = this.getFormattedDate(language);
     const bulletinLink = `${this.getWebsiteUrl(language)}/${this.date}`;
 
     switch (language) {
@@ -267,10 +267,17 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     return this.bulletinsService.sourceDates.activeDate;
   }
 
+  getFormattedDate(language = this.translateService.getCurrentLang()): string {
+    return formatDate(this.getActiveDate()[1], "fullDate", language, "UTC");
+  }
+
   publish(event: Event, date: [Date, Date], change = false) {
     event.stopPropagation();
-    const message =
-      "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
+    const regionName = this.translateService.instant(this.regionsService.getRegionName(this.regionId));
+    const message = [
+      `<b>${this.translateService.instant("bulletins.table.publishBulletinsDialog.message")}</b>`,
+      `<span class="text-body-secondary">${regionName} (${this.regionId})<br>${this.getFormattedDate()}</span>`,
+    ].join("<br>");
     this.openPublishBulletinsModal(message, date, change);
   }
 

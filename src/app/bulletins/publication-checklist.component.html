@@ -7,10 +7,7 @@
             <h2 class="mb-0">{{ "bulletins.publicationChecklist.title" | translate }}</h2>
             <div class="text-body-secondary fw-semibold">
               <time>
-                {{
-                  bulletinsService.sourceDates.activeValidUntil
-                    | date: "fullDate" : undefined : translateService.getCurrentLang()
-                }}
+                {{ getFormattedDate() }}
               </time>
               <span class="mx-1">&ndash;</span>
               <span>{{ regionsService.getRegionName(regionId) | translate }}</span>
