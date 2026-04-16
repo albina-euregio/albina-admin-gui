@@ -54,13 +54,9 @@ import { DangerRatingIconComponent } from "../shared/danger-rating-icon.componen
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
-import { ModalCheckComponent } from "./modal-check.component";
+import { ModalConfirmComponent } from "./modal-confirm.component";
 import { ModalMediaFileComponent } from "./modal-media-file.component";
 import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
-import { ModalPublishAllComponent } from "./modal-publish-all.component";
-import { ModalPublishComponent } from "./modal-publish.component";
-// modals
-import { ModalSubmitComponent } from "./modal-submit.component";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -965,37 +961,29 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openPublishAllModal(change: boolean) {
-    const initialState: Partial<ModalPublishAllComponent> = {
+    const initialState: Partial<ModalConfirmComponent> = {
       text: change
         ? this.translateService.instant("bulletins.table.publishAllDialog.changeMessage")
         : this.translateService.instant("bulletins.table.publishAllDialog.message"),
-      change: change,
-      component: this,
+      acceptKey: "button.yes",
+      onConfirm: () => {
+        this.bulletinsService.publishAllBulletins(this.getActiveDate(), change).subscribe({
+          next: () => {
+            console.log("All bulletins published.");
+            this.publishing = false;
+          },
+          error: (error) => {
+            console.error("All bulletins could not be published!", error);
+            this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
+          },
+        });
+      },
     };
-    this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
+    this.publishAllModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
 
     this.modalService.onHide.subscribe(() => {
       this.publishing = false;
     });
-  }
-
-  publishAllModalConfirm(change: boolean): void {
-    this.publishAllModalRef.hide();
-    this.bulletinsService.publishAllBulletins(this.getActiveDate(), change).subscribe(
-      () => {
-        console.log("All bulletins published.");
-        this.publishing = false;
-      },
-      (error) => {
-        console.error("All bulletins could not be published!", error);
-        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
-      },
-    );
-  }
-
-  publishAllModalDecline(): void {
-    this.publishAllModalRef.hide();
-    this.publishing = false;
   }
 
   async downloadCaamlBulletin() {
@@ -2247,12 +2235,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openSubmitBulletinsModal(template: TemplateRef<unknown>, message: string, date: [Date, Date]) {
-    const initialState: Partial<ModalSubmitComponent> = {
+    const initialState: Partial<ModalConfirmComponent> = {
       text: message,
-      date: date,
-      component: this,
+      acceptKey: "button.yes",
+      onConfirm: () => this.submitBulletinsModalConfirm(date),
     };
-    this.submitBulletinsModalRef = this.modalService.show(ModalSubmitComponent, { initialState });
+    this.submitBulletinsModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
 
     this.modalService.onHide.subscribe(() => {
       this.submitting = false;
@@ -2271,8 +2259,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   submitBulletinsModalConfirm(date: [Date, Date]): void {
     this.submitBulletinsModalRef.hide();
-    this.bulletinsService.submitBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-      () => {
+    this.bulletinsService.submitBulletins(date, this.authenticationService.getActiveRegionId()).subscribe({
+      next: () => {
         console.log("Bulletins submitted.");
         if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.resubmitted);
@@ -2282,11 +2270,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.setIsEditable(false);
         this.submitting = false;
       },
-      (error) => {
+      error: (error) => {
         console.error("Bulletins could not be submitted!", error);
         this.openSubmitBulletinsErrorModal(this.submitBulletinsErrorTemplate());
       },
-    );
+    });
   }
 
   submitBulletinsModalDecline(): void {
@@ -2408,24 +2396,27 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openPublishBulletinsModal(message: string, date: [Date, Date], change: boolean) {
-    const initialState: Partial<ModalPublishComponent> = {
+    const initialState: Partial<ModalConfirmComponent> = {
       text: message,
-      date: date,
-      change: change,
-      callbacks: {
-        onSuccess: () => {
-          console.log(change ? "Bulletins published (no messages)." : "Bulletins published.");
-        },
-        onError: (error, isChange) => {
-          console.error(
-            isChange ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
-            error,
-          );
-          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
-        },
+      acceptKey: "button.yes",
+      onConfirm: () => {
+        this.bulletinsService
+          .publishOrChangeBulletins(date, this.authenticationService.getActiveRegionId(), change)
+          .subscribe({
+            next: () => {
+              console.log(change ? "Bulletins published (no messages)." : "Bulletins published.");
+            },
+            error: (error) => {
+              console.error(
+                change ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
+                error,
+              );
+              this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
+            },
+          });
       },
     };
-    this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
+    this.publishBulletinsModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
 
     this.modalService.onHide.subscribe(() => {
       this.publishing = false;
@@ -2451,20 +2442,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openCheckBulletinsModal(message: string) {
-    const initialState: Partial<ModalCheckComponent> = {
+    const initialState: Partial<ModalConfirmComponent> = {
       text: message,
-      component: this,
+      acceptKey: "button.ok",
+      rejectKey: undefined,
     };
-    this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });
+    this.checkBulletinsModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
 
     this.modalService.onHide.subscribe(() => {
       this.publishing = false;
       this.submitting = false;
     });
-  }
-
-  checkBulletinsModalConfirm(): void {
-    this.checkBulletinsModalRef.hide();
   }
 
   asBulletin(bulletin: unknown): BulletinModel {

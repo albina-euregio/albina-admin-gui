@@ -6,7 +6,7 @@ import { BsModalService } from "ngx-bootstrap/modal";
 
 import { Alert } from "../models/Alert";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { ModalConfirmTriggerComponent } from "./modal-confirm.component";
+import { ModalConfirmComponent } from "./modal-confirm.component";
 
 @Component({
   selector: "app-publication-trigger-notifications",
@@ -63,11 +63,11 @@ export class PublicationTriggerNotificationsComponent {
       language: languageName,
     });
 
-    const initialState: Partial<ModalConfirmTriggerComponent> = {
+    const initialState: Partial<ModalConfirmComponent> = {
       text,
       onConfirm: () => this.doTrigger(language),
     };
-    this.modalService.show(ModalConfirmTriggerComponent, { initialState });
+    this.modalService.show(ModalConfirmComponent, { initialState });
   }
 
   private doTrigger(language: string) {

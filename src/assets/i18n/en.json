@@ -589,9 +589,7 @@
         "missingSnowpackStructureHighlights": "Headline snowpack structure missing",
         "missingSnowpackStructureComment": "Description of snowpack structure missing",
         "pendingSuggestions": "Pending suggestions",
-        "incompleteTranslation": "Incomplete translation",
-        "accept": "Yes",
-        "reject": "No"
+        "incompleteTranslation": "Incomplete translation"
       },
       "publicationStatusDialog": {
         "headline": "Publication Status",
@@ -656,9 +654,7 @@
         "missingAvActivityComment": "Description of avalanche danger missing",
         "missingSnowpackStructureHighlights": "Headline snowpack structure missing",
         "missingSnowpackStructureComment": "Description of snowpack structure missing",
-        "pendingSuggestions": "Pending suggestions",
-        "accept": "Yes",
-        "reject": "No"
+        "pendingSuggestions": "Pending suggestions"
       },
       "submitBulletinsErrorDialog": {
         "message": "There was an error submitting the bulletins!",
@@ -686,14 +682,11 @@
         "missingSnowpackStructureComment": "Description of snowpack structure missing",
         "pendingSuggestions": "Pending suggestions",
         "incompleteTranslation": "Incomplete translation",
-        "ok": "(everything alright)",
-        "accept": "Ok"
+        "ok": "(everything alright)"
       },
       "publishAllDialog": {
         "message": "Do you want to publish all regions?",
-        "changeMessage": "Do you want to publish all regions? (no messages)",
-        "accept": "Yes",
-        "reject": "No"
+        "changeMessage": "Do you want to publish all regions? (no messages)"
       }
     }
   },
@@ -1334,10 +1327,11 @@
     }
   },
   "button": {
-    "true": "yes",
-    "false": "no",
-    "yes": "yes",
-    "no": "no"
+    "true": "Yes",
+    "false": "No",
+    "ok": "Ok",
+    "yes": "Yes",
+    "no": "No"
   },
   "observations": {
     "allowEdit": "Edit external observation",
