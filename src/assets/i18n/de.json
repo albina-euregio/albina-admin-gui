@@ -195,12 +195,12 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Willst du alle Gefahrenquellen Varianten vom Vortag laden?<br><strong>Alle derzeitigen Varianten der Analayse werden gelöscht!</strong>",
+        "message": "Willst du alle Gefahrenquellen Varianten vom Vortag laden?<br><strong>Alle derzeitigen Varianten der Analyse werden gelöscht!</strong>",
         "accept": "Ja",
         "reject": "Nein"
       },
       "loadFromForecastDialog": {
-        "message": "Willst du alle Gefahrenquellen Varianten der Vorhersage laden?<br><strong>Alle derzeitigen Varianten der Analayse werden gelöscht!</strong>",
+        "message": "Willst du alle Gefahrenquellen Varianten der Vorhersage laden?<br><strong>Alle derzeitigen Varianten der Analyse werden gelöscht!</strong>",
         "accept": "Ja",
         "reject": "Nein"
       }

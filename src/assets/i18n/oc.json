@@ -248,7 +248,59 @@
       "deleteAllWarningRegions": "Suprimir totes es regions d'alèrta",
       "publishAll": "Publicar totes es regions",
       "publishAllNoMessages": "Publicar totes es regions (sense missatges)",
-      "mediaFile": "Cargar un fichèr multimèdia"
+      "mediaFile": "Cargar un fichèr multimèdia",
+      "publicationChecklist": "Open publication checklist"
+    },
+    "publicationChecklist": {
+      "title": "Publication checklist",
+      "description": {
+        "website": "The danger level is marked on the map. Clicking on a region shows the avalanche problems and texts.",
+        "email": "An email was sent and contains a report.",
+        "telegram": "A message containing a link to the website was posted.",
+        "whatsapp": "A message containing a link to the website was posted."
+      },
+      "ok": "Òc ben",
+      "problem": "Problem",
+      "problemDescription": "Descripcion",
+      "problemPlaceholder": "Describe the encountered problem",
+      "channel": {
+        "website": "Website",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram",
+        "email": "Corrèu electronic"
+      },
+      "publicationInProgress": "Publication still in progress",
+      "publicationFinishedOnServer": "Finished publication on server",
+      "publishDisabled": {
+        "inProgress": "Publication is currently in progress.",
+        "wrongStatus": "The bulletin must be submitted or published."
+      },
+      "emailWaitHint": "Email delivery usually takes longer than social media messages. At least 5 minutes should have passed since publication before you proceed to the next step.",
+      "email": {
+        "waitTitle": "Wait:"
+      },
+      "options": "Options",
+      "republish": "Republish:",
+      "resend": "Resend:",
+      "website": {
+        "checkInternetTitle": "Check internet connection:",
+        "checkInternetDescriptionPrefix": "How is the internet connection on your device? Open",
+        "checkInternetDescriptionSuffix": "in a private window. Is yesterday's bulletin displayed correctly?",
+        "republishHint": "Only perform this step if “Check internet connection” was successful and at least 5 minutes have passed since the last publication attempt.",
+        "editAndResendTitle": "Edit and resend:",
+        "openBulletin": "Open the bulletin",
+        "clickEdit": "Click “Edit”",
+        "clickSubmit": "Click “Submit”",
+        "clickPublishNow": "Click “Publish now”"
+      },
+      "manualSend": {
+        "title": "Manual send:",
+        "description": {
+          "telegram": "Copy the text below and send it to the specified Telegram group.",
+          "whatsapp": "Copy the text below to the specified WhatsApp channel."
+        },
+        "copyText": "Copy {{language}} {{channel}} text"
+      }
     },
     "status": {
       "submittedInfo": "Serà publicat tàs 5PM",
@@ -1493,7 +1545,11 @@
       "aws-observations": "AWS observations",
       "aws-danger-rating": "Grad de perilh",
       "aws-danger-rating-altitude": "Danger rating by altitude",
-      "aws-avalanche-activity-index": "Avalanche activity index"
+      "aws-avalanche-activity-index": "Avalanche activity index",
+      "aws-danger-rating-danger-source-variants": "Danger source variants",
+      "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
     }
   },
   "yearlystats": {
@@ -1517,7 +1573,12 @@
       "aws-danger-rating-distribution": "AWS Danger Rating - Distribution",
       "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
       "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
-      "aws-products": "AWS Products"
+      "aws-products": "AWS Products",
+      "aws-stress-level": "Team Stress Level"
+    },
+    "hint": {
+      "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
+      "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
   }
 }
