@@ -86,12 +86,12 @@
                       (change)="onOkChange(index, $event)"
                     />
                     <label
-                      class="btn btn-sm rounded-pill me-2 d-inline-flex align-items-center gap-1"
+                      class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
                       [class.btn-success]="item.ok === true"
                       [class.btn-outline-dark]="item.ok !== true"
                       [for]="'check' + index + 'Ok'"
                     >
-                      <i class="ph ph-check-circle ms-0"></i>
+                      <i class="ph ph-check-circle ms-1"></i>
                       {{ "bulletins.publicationChecklist.ok" | translate }}
                     </label>
 
@@ -103,12 +103,12 @@
                       (change)="onProblemChange(index, $event)"
                     />
                     <label
-                      class="btn btn-sm rounded-pill d-inline-flex align-items-center gap-1"
+                      class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
                       [class.btn-danger]="item.ok === false"
                       [class.btn-outline-dark]="item.ok !== false"
                       [for]="'check' + index + 'Problem'"
                     >
-                      <i class="ph ph-warning-circle ms-0"></i>
+                      <i class="ph ph-warning-circle ms-1"></i>
                       {{ "bulletins.publicationChecklist.problem" | translate }}
                     </label>
                   </div>
