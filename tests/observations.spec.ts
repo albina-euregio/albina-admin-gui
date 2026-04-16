@@ -291,11 +291,11 @@ test("Webcams and Observers", async ({ page }) => {
 
 test("Weather stations", async ({ page }) => {
   test.slow();
-  await setFixedTime(page, new Date("2025-03-05"));
+  await setFixedTime(page, new Date("2026-03-05"));
   await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  await expect(page.locator(".keydata")).toHaveText("734 / 734", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("830 / 830", { timeout: 7000 });
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
   await expect
@@ -334,28 +334,28 @@ test("Weather stations", async ({ page }) => {
     await page.getByTitle("Dry snowfall level", { exact: true }).click();
     await page.locator("#observationsMap").press("+");
     await page.locator("#observationsMap").press("+");
-    await expect(page.getByRole("button", { name: "AvalancheWarningService-ABIR1" })).toHaveScreenshot(
+    await expect(page.getByRole("button", { name: "AvalancheWarningService-TLAE2" })).toHaveScreenshot(
       "drySnowfallIcon.png",
     );
-    await page.getByRole("button", { name: "AvalancheWarningService-ABIR1" }).click({ force: true });
+    await page.getByRole("button", { name: "AvalancheWarningService-TLAE2" }).click({ force: true });
     await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
       "src",
-      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-04/AT-07-14-04.png",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2026-03-04/AT-07-16.png",
     );
     await page.keyboard.press("ArrowDown");
     await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
       "src",
-      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-01/AT-07-14-04.png",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2026-03-01/AT-07-16.png",
     );
     await page.keyboard.press("ArrowLeft");
     await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
       "src",
-      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-04/AT-07-14-03.png",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2026-03-04/AT-07-15.png",
     );
     await page.keyboard.press("ArrowRight");
     await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
       "src",
-      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-04/AT-07-14-04.png",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2026-03-04/AT-07-16.png",
     );
     await page.getByRole("button", { name: "Close" }).click();
   });
