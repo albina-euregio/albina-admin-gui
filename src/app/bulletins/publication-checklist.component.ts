@@ -76,6 +76,13 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     );
   }
 
+  get publicationDisabledReason(): string {
+    if (this.publicationStatus?.isBeingPublished) {
+      return this.translateService.instant("bulletins.publicationChecklist.publishDisabled.inProgress");
+    }
+    return this.translateService.instant("bulletins.publicationChecklist.publishDisabled.wrongStatus");
+  }
+
   constructor() {
     this.routeParamsSubscription = new Subscription();
     this.publicationStatusSubscription = new Subscription();

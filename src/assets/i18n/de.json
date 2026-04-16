@@ -271,6 +271,10 @@
       },
       "publicationInProgress": "Publikation läuft noch",
       "publicationFinishedOnServer": "Publikation auf dem Server abgeschlossen",
+      "publishDisabled": {
+        "inProgress": "Publikation läuft gerade.",
+        "wrongStatus": "Das Bulletin muss gesendet oder publiziert sein."
+      },
       "emailWaitHint": "E-Mail Versand dauert meist länger als die Social Media Nachrichten. Zumindest 5 Minuten sollten seit der Publikation vergangen sein, bevor du zum nächsten Schritt gehst.",
       "email": {
         "waitTitle": "Abwarten:"

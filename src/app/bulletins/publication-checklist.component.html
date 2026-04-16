@@ -177,6 +177,9 @@
                                 class="btn btn-outline-primary btn-sm"
                                 (click)="publish($event, getActiveDate())"
                                 [disabled]="isPublicationDisabled"
+                                [title]="isPublicationDisabled ? publicationDisabledReason : ''"
+                                [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
+                                [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
                               >
                                 <i class="ph ph-paper-plane-tilt"></i>
                                 <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
@@ -186,6 +189,9 @@
                                 class="btn btn-outline-primary btn-sm"
                                 (click)="publish($event, getActiveDate(), true)"
                                 [disabled]="isPublicationDisabled"
+                                [title]="isPublicationDisabled ? publicationDisabledReason : ''"
+                                [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
+                                [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
                               >
                                 <i class="ph ph-paper-plane-tilt"></i>
                                 <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
