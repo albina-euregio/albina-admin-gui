@@ -216,6 +216,14 @@ playwright:dev:
   environment:
     name: dev
   rules:
+    - when: manual
+      allow_failure: true
+
+playwright:dev:chromium:
+  extends: .playwright
+  environment:
+    name: dev
+  rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - when: manual
       allow_failure: true
