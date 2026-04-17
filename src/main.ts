@@ -64,10 +64,6 @@ import { StatisticsService } from "./app/providers/statistics-service/statistics
 import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
 
-if (!globalThis.Temporal) {
-  await import("temporal-polyfill/global");
-}
-
 echarts.use([
   BarChart,
   CanvasRenderer,
@@ -92,61 +88,71 @@ registerLocaleData(localeEs, "es");
 registerLocaleData(localeCa, "ca");
 registerLocaleData(localeOc, "oc");
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    importProvidersFrom(
-      BrowserModule,
-      BsDropdownModule.forRoot(),
-      CollapseModule.forRoot(),
-      TabsModule.forRoot(),
-      AlertModule.forRoot(),
-      FormsModule,
-      ReactiveFormsModule,
-      ModalModule.forRoot(),
-      TranslateModule.forRoot(),
-    ),
-    {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy,
-    },
-    AlbinaObservationsService,
-    AuthenticationService,
-    AuthGuard,
-    BaseMapService,
-    LineaMapService,
-    BlogService,
-    BulletinsService,
-    DangerSourcesService,
-    StatisticsService,
-    RegionsService,
-    LocalStorageService,
-    ConfigurationService,
-    ConstantsService,
-    CoordinateDataService,
-    CopyService,
-    DatePipe,
-    ElevationService,
-    GeocodingService,
-    GetDustParamService,
-    LocalStorageService,
-    MapService,
-    MediaFileService,
-    ObservationFilterService,
-    ObservationMarkerService,
-    ObservationMarkerObserverService,
-    ObservationMarkerWeatherStationService,
-    ObservationMarkerWebcamService,
-    ParamService,
-    provideEchartsCore({ echarts }),
-    QfaService,
-    RegionsService,
-    StatisticsService,
-    StatusService,
-    TranslateService,
-    UserService,
-    provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
-    provideAnimations(),
-  ],
-});
+loadTemporalPolyfill().then(() => bootstrapApplication0());
+
+async function loadTemporalPolyfill() {
+  if (!globalThis.Temporal) {
+    await import("temporal-polyfill/global");
+  }
+}
+
+function bootstrapApplication0() {
+  return bootstrapApplication(AppComponent, {
+    providers: [
+      provideZoneChangeDetection({ eventCoalescing: true }),
+      provideRouter(routes),
+      importProvidersFrom(
+        BrowserModule,
+        BsDropdownModule.forRoot(),
+        CollapseModule.forRoot(),
+        TabsModule.forRoot(),
+        AlertModule.forRoot(),
+        FormsModule,
+        ReactiveFormsModule,
+        ModalModule.forRoot(),
+        TranslateModule.forRoot(),
+      ),
+      {
+        provide: LocationStrategy,
+        useClass: HashLocationStrategy,
+      },
+      AlbinaObservationsService,
+      AuthenticationService,
+      AuthGuard,
+      BaseMapService,
+      LineaMapService,
+      BlogService,
+      BulletinsService,
+      DangerSourcesService,
+      StatisticsService,
+      RegionsService,
+      LocalStorageService,
+      ConfigurationService,
+      ConstantsService,
+      CoordinateDataService,
+      CopyService,
+      DatePipe,
+      ElevationService,
+      GeocodingService,
+      GetDustParamService,
+      LocalStorageService,
+      MapService,
+      MediaFileService,
+      ObservationFilterService,
+      ObservationMarkerService,
+      ObservationMarkerObserverService,
+      ObservationMarkerWeatherStationService,
+      ObservationMarkerWebcamService,
+      ParamService,
+      provideEchartsCore({ echarts }),
+      QfaService,
+      RegionsService,
+      StatisticsService,
+      StatusService,
+      TranslateService,
+      UserService,
+      provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
+      provideAnimations(),
+    ],
+  });
+}
