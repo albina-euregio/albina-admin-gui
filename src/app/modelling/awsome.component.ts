@@ -105,10 +105,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async ngOnInit() {
-    if (!globalThis.Temporal) {
-      await import("temporal-polyfill/global");
-    }
-
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
     this.route.queryParamMap.subscribe((params) => {
       this.configURL = params.get("config") || this.configURL;
