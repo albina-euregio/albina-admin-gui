@@ -64,6 +64,10 @@ import { StatisticsService } from "./app/providers/statistics-service/statistics
 import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
 
+if (!globalThis.Temporal) {
+  await import("temporal-polyfill/global");
+}
+
 echarts.use([
   BarChart,
   CanvasRenderer,

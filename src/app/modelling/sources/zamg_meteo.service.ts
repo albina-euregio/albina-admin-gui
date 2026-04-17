@@ -199,9 +199,6 @@ class MapLink {
   }
 
   async fetchDate(): Promise<void> {
-    if (!globalThis.Temporal) {
-      await import("temporal-polyfill/global");
-    }
     if (!this.dateHref) {
       return;
     }

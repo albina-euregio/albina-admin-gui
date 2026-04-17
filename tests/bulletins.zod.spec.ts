@@ -2,10 +2,6 @@ import { test, expect } from "@playwright/test";
 import { BulletinSchema } from "src/app/models/bulletin.model";
 
 test.skip("Bulletin schema validation", async () => {
-  if (!globalThis.Temporal) {
-    await import("temporal-polyfill/global");
-  }
-
   const start = Temporal.PlainDate.from({ year: 2025, month: 12, day: 1 });
   const end = Temporal.PlainDate.from({ year: 2026, month: 3, day: 24 });
 
