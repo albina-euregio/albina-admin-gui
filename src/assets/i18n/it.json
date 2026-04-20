@@ -249,57 +249,57 @@
       "publishAll": "Pubblica tutte le meteo-nivo zone",
       "publishAllNoMessages": "Pubblica tutte le meteo-nivo zone (senza messaggi)",
       "mediaFile": "Carica file media",
-      "publicationChecklist": "Open publication checklist"
+      "publicationChecklist": "Apri lista di controllo per la pubblicazione"
     },
     "publicationChecklist": {
-      "title": "Publication checklist",
+      "title": "Lista di controllo per la pubblicazione",
       "description": {
-        "website": "The danger level is marked on the map. Clicking on a region shows the avalanche problems and texts.",
-        "email": "An email was sent and contains a report.",
-        "telegram": "A message containing a link to the website was posted.",
-        "whatsapp": "A message containing a link to the website was posted."
+        "website": "La mappa sul sito web mostra i gradi di pericolo con i relativi colori. Cliccando su una regione vengono visualizzati i problemi valanghivi e i relativi testi.",
+        "email": "È stata inviata un'e-mail che contiene il bollettino.",
+        "telegram": "È stato pubblicato un messaggio che contiene un link al sito web.",
+        "whatsapp": "È stato pubblicato un messaggio che contiene un link al sito web."
       },
       "ok": "Ok",
-      "problem": "Problem",
+      "problem": "Problema",
       "problemDescription": "Descrizione",
-      "problemPlaceholder": "Describe the encountered problem",
+      "problemPlaceholder": "Descrivi il problema che hai notato",
       "channel": {
-        "website": "Website",
+        "website": "Sito web",
         "whatsapp": "WhatsApp",
         "telegram": "Telegram",
         "email": "Email"
       },
-      "publicationInProgress": "Publication still in progress",
-      "publicationFinishedOnServer": "Finished publication on server",
+      "publicationInProgress": "Pubblicazione ancora in corso",
+      "publicationFinishedOnServer": "Pubblicazione completata sul server",
       "publishDisabled": {
-        "inProgress": "Publication is currently in progress.",
-        "wrongStatus": "The bulletin must be submitted or published."
+        "inProgress": "La pubblicazione è attualmente in corso.",
+        "wrongStatus": "Il bollettino deve essere inviato o pubblicato."
       },
-      "emailWaitHint": "Email delivery usually takes longer than social media messages. At least 5 minutes should have passed since publication before you proceed to the next step.",
+      "emailWaitHint": "La distribuzione delle e-mail richiede solitamente più tempo rispetto ai messaggi sui social media. Prima di passare alla fase successiva, dovresti attendere almeno 5 minuti dalla pubblicazione.",
       "email": {
-        "waitTitle": "Wait:"
+        "waitTitle": "Aspetta:"
       },
-      "options": "Options",
-      "republish": "Republish:",
-      "resend": "Resend:",
+      "options": "Opzioni",
+      "republish": "Ripubblica:",
+      "resend": "Invia nuovamente:",
       "website": {
-        "checkInternetTitle": "Check internet connection:",
-        "checkInternetDescriptionPrefix": "How is the internet connection on your device? Open",
-        "checkInternetDescriptionSuffix": "in a private window. Is yesterday's bulletin displayed correctly?",
-        "republishHint": "Only perform this step if “Check internet connection” was successful and at least 5 minutes have passed since the last publication attempt.",
-        "editAndResendTitle": "Edit and resend:",
-        "openBulletin": "Open the bulletin",
-        "clickEdit": "Click “Edit”",
-        "clickSubmit": "Click “Submit”",
-        "clickPublishNow": "Click “Publish now”"
+        "checkInternetTitle": "Verifica la connessione a Internet:",
+        "checkInternetDescriptionPrefix": "Com'è la connessione a Internet sul tuo dispositivo? Apri",
+        "checkInternetDescriptionSuffix": "in una finestra separata. Il bollettino di ieri viene visualizzato correttamente?",
+        "republishHint": "Esegui questo step solo se l'operazione “Verifica connessione Internet” è risultata positiva e sono trascorsi almeno 5 minuti dall'ultimo tentativo di pubblicazione.",
+        "editAndResendTitle": "Modifica e invia nuovamente:",
+        "openBulletin": "Apri il bollettino",
+        "clickEdit": "Clicca su \"Modifica\"",
+        "clickSubmit": "Clicca su \"Invia\"",
+        "clickPublishNow": "Clicca su \"Pubblica ora\""
       },
       "manualSend": {
-        "title": "Manual send:",
+        "title": "Invio manuale:",
         "description": {
-          "telegram": "Copy the text below and send it to the specified Telegram group.",
-          "whatsapp": "Copy the text below to the specified WhatsApp channel."
+          "telegram": "Copia il testo qui sotto e invialo al gruppo Telegram indicato.",
+          "whatsapp": "Copia il testo qui sotto nel canale WhatsApp indicato."
         },
-        "copyText": "Copy {{language}} {{channel}} text"
+        "copyText": "Copia {{language}} {{channel}} testo"
       }
     },
     "status": {
@@ -633,7 +633,8 @@
           "success": "Notifiche push inviate con successo!",
           "error": "Non è stato possibile inviare le notifiche push!"
         },
-        "accept": "Ok"
+        "accept": "Ok",
+        "confirm": "Voi inviare al canale {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "File media",
@@ -1546,10 +1547,10 @@
       "aws-danger-rating": "Grado pericolo valanghe",
       "aws-danger-rating-altitude": "Grado di pericolo a base di quota",
       "aws-avalanche-activity-index": "Indice attività valanghe",
-      "aws-danger-rating-danger-source-variants": "Danger source variants",
-      "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
-      "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
-      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
+      "aws-danger-rating-danger-source-variants": "Variazioni dell'origine di pericolo",
+      "aws-danger-source-variants-matrix-parameter-stability": "Stabilità delle variazioni dell'origine di pericolo",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Frequenza delle variazioni dell'origine di pericolo",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Dimensione valanga delle variazioni dell'origine di pericolo"
     }
   },
   "yearlystats": {
@@ -1574,11 +1575,11 @@
       "aws-danger-pattern-micro-regions": "Valutazione situazione tipo servizio valanghe - micro-zone",
       "aws-avalanche-problem-micro-regions": "Valutazione problemi valanghivi servizio valanghe - micro-zone",
       "aws-products": "Prodotti servizi valanghe",
-      "aws-stress-level": "Team Stress Level"
+      "aws-stress-level": "Livello di stress del team"
     },
     "hint": {
-      "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
-      "dateChange": "After changing the date, the 'Load data' button must be pressed."
+      "dangerRatingReference": "Valori di riferimento per la distribuzione dei gradi di pericolo nelle diverse stagioni, indicati in grigio",
+      "dateChange": "Dopo aver modificato la data, è necessario premere il pulsante \"Carica dati\"."
     }
   }
 }

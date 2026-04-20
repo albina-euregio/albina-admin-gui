@@ -633,7 +633,8 @@
           "success": "Notificacions Push enviades corrèctaments!",
           "error": "Non s'an pogut enviar es notificacions Push!"
         },
-        "accept": "Òc ben"
+        "accept": "Òc ben",
+        "confirm": "Do you want to send {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Fichèr multimèdia",

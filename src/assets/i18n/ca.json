@@ -633,7 +633,8 @@
           "success": "Notificacions push enviades correctament!",
           "error": "No s'han pogut enviar les notificacions push!"
         },
-        "accept": "D'acord"
+        "accept": "D'acord",
+        "confirm": "Do you want to send {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Fitxer multimèdia",

@@ -35,7 +35,7 @@
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
     "lineaexport": "LINEA",
-    "awsstats": "AWS Stats",
+    "awsstats": "Statistiques SPA",
     "yearlystats": "Statistiques annuelles",
     "graphics": "Graphiques"
   },
@@ -155,7 +155,7 @@
         "hasDaytimeDependency": "Selon le moment de la journée",
         "dangerIncreaseWithElevation": "Augmentation du danger avec l'altitude",
         "runoutIntoGreen": "Zone de dépôt hors neige",
-        "penetrateDeepLayers": "Penetrate deep layers",
+        "penetrateDeepLayers": "entraîner des couches profondes",
         "highestDangerAspect": "Risque le plus élevé",
         "dangerPeak": "Pic de danger",
         "slopeGradient": "Pente",
@@ -248,58 +248,58 @@
       "deleteAllWarningRegions": "Effacer toutes les régions de prévision",
       "publishAll": "Publier toutes les régions de prévision",
       "publishAllNoMessages": "Publier toutes les régions (pas de messages)",
-      "mediaFile": "Télécharger un fichier média",
-      "publicationChecklist": "Open publication checklist"
+      "mediaFile": "Mise en ligne d'un fichier média",
+      "publicationChecklist": "Afficher checklist publications"
     },
     "publicationChecklist": {
-      "title": "Publication checklist",
+      "title": "Checklist publications",
       "description": {
-        "website": "The danger level is marked on the map. Clicking on a region shows the avalanche problems and texts.",
-        "email": "An email was sent and contains a report.",
-        "telegram": "A message containing a link to the website was posted.",
-        "whatsapp": "A message containing a link to the website was posted."
+        "website": "L'indice de danger est signalé sur la carte. Cliquer sur une région indique les situations avalancheuses et les descriptions.",
+        "email": "Un mail a été envoyé et contient un rapport.",
+        "telegram": "Un message avec un lien vers le site web a été publié.",
+        "whatsapp": "Un message avec un lien vers le site web a été publié."
       },
       "ok": "Ok",
-      "problem": "Problem",
+      "problem": "Problème",
       "problemDescription": "Description",
-      "problemPlaceholder": "Describe the encountered problem",
+      "problemPlaceholder": "Décrivez le problème rencontré",
       "channel": {
-        "website": "Website",
+        "website": "Site web",
         "whatsapp": "WhatsApp",
         "telegram": "Telegram",
         "email": "Mail"
       },
-      "publicationInProgress": "Publication still in progress",
-      "publicationFinishedOnServer": "Finished publication on server",
+      "publicationInProgress": "Publication toujours en cours",
+      "publicationFinishedOnServer": "Publication sur le serveur terminée",
       "publishDisabled": {
-        "inProgress": "Publication is currently in progress.",
-        "wrongStatus": "The bulletin must be submitted or published."
+        "inProgress": "Publication en cours",
+        "wrongStatus": "Le bulletin doit être envoyé ou publié."
       },
-      "emailWaitHint": "Email delivery usually takes longer than social media messages. At least 5 minutes should have passed since publication before you proceed to the next step.",
+      "emailWaitHint": "L'envoi de mails prend généralement plus de temps que la publication de messages sur les réseaux sociaux. Il faut patienter au moins 5 minutes après la publication avant de passer à l'étape suivante.",
       "email": {
-        "waitTitle": "Wait:"
+        "waitTitle": "Attendre :"
       },
       "options": "Options",
-      "republish": "Republish:",
-      "resend": "Resend:",
+      "republish": "Publier à nouveau :",
+      "resend": "Envoyer à nouveau :",
       "website": {
-        "checkInternetTitle": "Check internet connection:",
-        "checkInternetDescriptionPrefix": "How is the internet connection on your device? Open",
-        "checkInternetDescriptionSuffix": "in a private window. Is yesterday's bulletin displayed correctly?",
-        "republishHint": "Only perform this step if “Check internet connection” was successful and at least 5 minutes have passed since the last publication attempt.",
-        "editAndResendTitle": "Edit and resend:",
-        "openBulletin": "Open the bulletin",
-        "clickEdit": "Click “Edit”",
-        "clickSubmit": "Click “Submit”",
-        "clickPublishNow": "Click “Publish now”"
+        "checkInternetTitle": "Vérifier la connexion Internet :",
+        "checkInternetDescriptionPrefix": "La connexion Internet sur votre appareil, est-elle bonne ? Ouvrir une fenêtre de navigation privée et aller sur",
+        "checkInternetDescriptionSuffix": "Le bulletin d'hier s'affiche-t-il correctement ?",
+        "republishHint": "N'effectuez cette étape que si la « vérification de la connexion Internet » s'est déroulée avec succès et qu'au moins 5 minutes se sont écoulées depuis la dernière tentative de publication.",
+        "editAndResendTitle": "Éditer et envoyer à nouveau :",
+        "openBulletin": "Afficher le bulletin",
+        "clickEdit": "Cliquer sur « Éditer »",
+        "clickSubmit": "Cliquer sur « Envoyer »",
+        "clickPublishNow": "Cliquer sur « Publier maintenant »"
       },
       "manualSend": {
-        "title": "Manual send:",
+        "title": "Envoyer manuellement :",
         "description": {
-          "telegram": "Copy the text below and send it to the specified Telegram group.",
-          "whatsapp": "Copy the text below to the specified WhatsApp channel."
+          "telegram": "Copiez le texte ci-dessous et envoyez-le au groupe Telegram indiqué.",
+          "whatsapp": "Copiez le texte ci-dessous dans le canal WhatsApp indiqué."
         },
-        "copyText": "Copy {{language}} {{channel}} text"
+        "copyText": "Copiez {{language}} {{channel}} texte"
       }
     },
     "status": {
@@ -633,7 +633,8 @@
           "success": "Notifications push envoyées !",
           "error": "Échec envoi notifications push !"
         },
-        "accept": "Ok"
+        "accept": "Ok",
+        "confirm": "Envoyer {{channel}} ({{language}}) ?"
       },
       "mediaFileDialog": {
         "headline": "Fichier média",
@@ -1081,7 +1082,7 @@
     "VeryLightNewSnow": "Neige fraîche très légère"
   },
   "elevationTolerance": {
-    "exact": "exact",
+    "exact": "exacte",
     "50m": "±50m",
     "100m": "±100m",
     "200": "±200m"
@@ -1352,7 +1353,7 @@
     "search": "Rechercher",
     "count": "# observations :",
     "elevationTolerance": "Précision des données altimétriques",
-    "elevationPeriod": "Elevation time period",
+    "elevationPeriod": "Altitude laps de temps",
     "layers": {
       "observers": "Observateurs",
       "weatherStations": "Stations météo ",
@@ -1498,7 +1499,7 @@
     "Date": "Date",
     "Datetag": "Datetag",
     "Depth": "Profondeur",
-    "Dry instability": "Instabilité du manteau neigeux humide",
+    "Dry instability": "Instabilité du manteau neigeux sec",
     "fair (<0.77)": "moyen (<0,77)",
     "fair (<1.05)": "moyen (<1,05)",
     "Grain type": "Type de grain",
@@ -1515,7 +1516,7 @@
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0,8)",
     "very poor (<=0.5)": "très mauvaise (<=0,5)",
     "very poor (>3)": "très mauvaise (>3)",
-    "Wet instability": "Wet instability"
+    "Wet instability": "Instabilité humide"
   },
   "channelStatus": {
     "loading": "Chargement d'informations sur l'état du canal...",
@@ -1526,7 +1527,7 @@
     "hint": "Appuyez sur la touche Entrée pour ajouter"
   },
   "awsstats": {
-    "title": "AWS statistics",
+    "title": "Statistiques SPA",
     "label": {
       "loading": "Chargement des données...",
       "startDate": "Date de début",
@@ -1534,7 +1535,7 @@
       "selectWeatherStation": "Sélectionner la station météo ",
       "selectMicroRegions": "Sélectionner les microrégions",
       "clearselection": "Effacer la sélection",
-      "noMicroRegionsSelected": "none",
+      "noMicroRegionsSelected": "aucune",
       "last7days": "7 derniers jours",
       "last30days": "30 derniers jours",
       "last90days": "90 derniers jours",
@@ -1542,7 +1543,7 @@
       "charttypes": "types de diagrammes"
     },
     "charts": {
-      "aws-observations": "Observations AWS",
+      "aws-observations": "Observations SPA",
       "aws-danger-rating": "Indice de risques",
       "aws-danger-rating-altitude": "Indice de risque en fonction de l'altitude",
       "aws-avalanche-activity-index": "Indice d'activité avalancheuse",
@@ -1568,12 +1569,12 @@
       "dangerRatingReference": "Référence indice de risque"
     },
     "charts": {
-      "aws-danger-rating-micro-regions-bars": "Indice de risques AWS  par microrégions, en barres",
-      "aws-danger-rating-micro-regions": "Indice de risques AWS  par microrégions",
-      "aws-danger-rating-distribution": "Répartition de l'indice de risques AWS",
-      "aws-danger-pattern-micro-regions": "Modèle de risques AWS par microrégions",
-      "aws-avalanche-problem-micro-regions": "Situations avalancheuses AWS par microrégions",
-      "aws-products": "Produits AWS",
+      "aws-danger-rating-micro-regions-bars": "Indice de risques SPA  par microrégions, en barres",
+      "aws-danger-rating-micro-regions": "Indice de risques SPA  par microrégions",
+      "aws-danger-rating-distribution": "Répartition de l'indice de risques SPA",
+      "aws-danger-pattern-micro-regions": "Modèle de risques SPA par microrégions",
+      "aws-avalanche-problem-micro-regions": "Situations avalancheuses SPA par microrégions",
+      "aws-products": "Produits SPA",
       "aws-stress-level": "Niveau de stress de l'équipe"
     },
     "hint": {

@@ -633,7 +633,8 @@
           "success": "¡Notificaciones push enviadas exitosamente!",
           "error": "¡No se pudieron enviar notificaciones push!"
         },
-        "accept": "De acuerdo"
+        "accept": "De acuerdo",
+        "confirm": "Do you want to send {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Archivo multimedia",
