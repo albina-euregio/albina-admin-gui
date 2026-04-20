@@ -31,7 +31,7 @@
     "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },
   "dependencies": {
-    "@albina-euregio/linea": "^8.21.0",
+    "@albina-euregio/linea": "^8.23.1",
     "@angular/animations": "^21.2.6",
     "@angular/cdk": "^21.2.4",
     "@angular/common": "^21.2.6",
