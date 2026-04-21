@@ -68,8 +68,8 @@ build:development:
   extends: .envsubst
   variables:
     INITIAL_URL: ""
-    API_BASE_URL: "https://admin.avalanche.report/albina_dev/api/"
-    TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng-dev/"
+    API_BASE_URL: "https://dev.avalanche.report/api/"
+    TEXTCAT_URL: "https://dev.avalanche.report/textcat-ng/"
     AWSOME_CONFIG_URL: "https://models.avalanche.report/dcfg/awsome.json"
     HEADER_BG_COLOR: "#f4ea12"
     FAVICON_PATH: "assets/img/admin-favicon-dev.ico"
