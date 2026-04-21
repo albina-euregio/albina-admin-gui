@@ -221,7 +221,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private pendingDangerSourcesVariants: Subscription;
   public loadDangerSourcesFromServer() {
     console.group("Loading danger sources");
-    this.internVariantsList = new Array<DangerSourceVariantModel>();
     this.pendingDangerSources?.unsubscribe();
     this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources(
@@ -697,6 +696,12 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       const existing = this.internVariantsList.find((item) => item.id === v.id);
       if (existing) {
         Object.assign(existing, v);
+        // Keep activeVariant pointing to the object in the list so the identity
+        // check in the template (variant === activeVariant) keeps working after
+        // saveVariantOnServer replaces activeVariant with a new server object.
+        if (this.activeVariant && v.id === this.activeVariant.id) {
+          this.activeVariant = existing;
+        }
       } else {
         this.internVariantsList.splice(idx, 0, v);
       }
