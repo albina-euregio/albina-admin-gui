@@ -33,7 +33,7 @@ test("Check visible neighbors", async ({ page }) => {
   });
 });
 
-test("Upload media file", async ({ page }) => {
+test("Upload media file", async ({ page, baseURL }) => {
   const testDate = new Date("2024-12-24");
   const mediaText = "Es gibt ein Altschneeproblem.\nAlle Details und wo's günstiger ist findet ihr auf Lawinen.report.";
   await setFixedTime(page, testDate);
@@ -65,7 +65,10 @@ test("Upload media file", async ({ page }) => {
   const uploadedAtPattern = new RegExp(
     `${getPart("month")}/${getPart("day")}/${getPart("year")},\\s${getPart("hour")}:${getPart("minute")}:\\d{2}\\s${getPart("dayPeriod")}`,
   );
-  await page.goto("https://static.avalanche.report/media_files_dev/AT-07/en/");
+  const mediaUrl = baseURL?.includes("admin.avalanche.report")
+    ? "https://static.avalanche.report/media_files_dev/AT-07/en/"
+    : "https://dev.avalanche.report/media_files/AT-07/en/";
+  await page.goto(mediaUrl);
   await expect(page.getByRole("row", { name: "2024-12-25_avalanchereport_playwright.mp3" })).toContainText(
     uploadedAtPattern,
   );
@@ -132,7 +135,7 @@ test("Preview PDF", async ({ page }) => {
   expect(fs.statSync(downloadPath).size).toBeGreaterThan(10 ** 5 * 5); // 500 KB
 });
 
-test("View bulletin", async ({ page }) => {
+test("View bulletin", async ({ page, baseURL }) => {
   const testDate = new Date("2024-12-24");
   await setFixedTime(page, testDate);
   await page.reload();
@@ -180,14 +183,18 @@ test("View bulletin", async ({ page }) => {
       - text: / \\d+ m/
       - button ""
     `);
-    await page.locator("header").filter({ hasText: "SLF (7)" }).getByRole("button").click();
-    await expect(page.locator(".region-thumb").filter({ hasText: "Münstertal + 45" })).toMatchAriaSnapshot(`
+
+    // TODO fix SLF login on dev.avalanche.report and reenable test for all environments
+    if (baseURL?.includes("admin.avalanche.report")) {
+      await page.locator("header").filter({ hasText: "SLF (7)" }).getByRole("button").click();
+      await expect(page.locator(".region-thumb").filter({ hasText: "Münstertal + 45" })).toMatchAriaSnapshot(`
       - button /Münstertal \\+ \\d+/
       - button
       - text: 
       - button "Incomplete"
       - button ""
     `);
+    }
   });
 });
 

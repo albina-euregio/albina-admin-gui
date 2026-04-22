@@ -289,7 +289,11 @@ test("Webcams and Observers", async ({ page }) => {
   });
 });
 
-test("Weather stations", async ({ page }) => {
+test("Weather stations", async ({ page, baseURL }) => {
+  test.skip(
+    !baseURL.includes("admin.avalanche.report"),
+    "Not set up in dev environment yet. Will probably use linea in the future.",
+  );
   test.slow();
   await setFixedTime(page, new Date("2026-03-05"));
   await page.reload();

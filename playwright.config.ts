@@ -20,7 +20,7 @@ export default defineConfig({
   timeout: 40000,
   use: {
     baseURL: process.env.CI_ENVIRONMENT_URL || "http://localhost:4200",
-    // baseURL: "https://admin.avalanche.report/dev/",
+    // baseURL: "https://dev.avalanche.report/admin/",
 
     timezoneId: "Europe/Vienna",
 

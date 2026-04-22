@@ -24,10 +24,10 @@
           - cell "Image URL for coat of arms"
           - cell "https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg":
             - textbox: https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg
-        - row "URL to static avalanche files https://static.avalanche.report":
+        - row:
           - cell "URL to static avalanche files"
-          - cell "https://static.avalanche.report":
-            - textbox: https://static.avalanche.report
+          - cell /avalanche\.report/:
+            - textbox: /avalanche\.report/
         - row /Number of micro regions \d+/:
           - cell "Number of micro regions"
           - cell /\d+/:
