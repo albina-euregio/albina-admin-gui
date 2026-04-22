@@ -12,7 +12,7 @@ import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscr
 
 import { ChecklistItemModel, PublicationStatusModel } from "../models/publication-checklist.model";
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
-import { ModalPublishComponent } from "./modal-publish.component";
+import { ModalConfirmComponent } from "./modal-confirm.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
 
 const PUBLICATION_LANGUAGES: string[] = ["de", "it", "en"];
@@ -290,24 +290,27 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   openPublishBulletinsModal(message: string, date: [Date, Date], change: boolean) {
-    const initialState: Partial<ModalPublishComponent> = {
+    const initialState: Partial<ModalConfirmComponent> = {
       text: message,
-      date: date,
-      change: change,
-      callbacks: {
-        onSuccess: () => {
-          this.refreshPublicationStatusNow();
-        },
-        onError: (error, isChange) => {
-          console.error(
-            isChange ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
-            error,
-          );
-          this.refreshPublicationStatusNow();
-        },
+      acceptKey: "button.yes",
+      onConfirm: () => {
+        this.bulletinsService
+          .publishOrChangeBulletins(date, this.authenticationService.getActiveRegionId(), change)
+          .subscribe({
+            next: () => {
+              this.refreshPublicationStatusNow();
+            },
+            error: (error) => {
+              console.error(
+                change ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
+                error,
+              );
+              this.refreshPublicationStatusNow();
+            },
+          });
       },
     };
-    this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
+    this.publishBulletinsModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
   }
 
   private startPublicationStatusPolling() {

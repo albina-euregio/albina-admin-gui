@@ -9,22 +9,26 @@ import { BsModalRef } from "ngx-bootstrap/modal";
   imports: [TranslateModule, NgxMousetrapDirective],
   template: `
     <div class="modal-body text-center">
-      <p class="fw-bold" [innerHTML]="text"></p>
+      <p [innerHTML]="text"></p>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" (click)="confirm()" ngxMousetrapKey="enter">
-        {{ "bulletins.table.publishBulletinsDialog.accept" | translate }}
+        {{ acceptKey | translate }}
       </button>
-      <button type="button" class="btn btn-default" (click)="decline()">
-        {{ "bulletins.table.publishBulletinsDialog.reject" | translate }}
-      </button>
+      @if (rejectKey) {
+        <button type="button" class="btn btn-default" (click)="decline()">
+          {{ rejectKey | translate }}
+        </button>
+      }
     </div>
   `,
 })
-export class ModalConfirmTriggerComponent {
+export class ModalConfirmComponent {
   bsModalRef = inject(BsModalRef);
 
   text: string;
+  acceptKey = "button.ok";
+  rejectKey: string | undefined = "button.no";
   onConfirm?: () => void;
 
   confirm(): void {
