@@ -254,7 +254,7 @@
     "publicationChecklist": {
       "title": "Checklist publications",
       "description": {
-        "website": "L'indice de danger est signalé sur la carte. Cliquer sur une région indique les situations avalancheuses et les descriptions.",
+        "website": "La carte indique les degrés de danger à l'aide de couleurs correspondantes. Cliquer sur une région vous affiche les situations avalancheuses et les descriptions associées.",
         "email": "Un mail a été envoyé et contient un rapport.",
         "telegram": "Un message avec un lien vers le site web a été publié.",
         "whatsapp": "Un message avec un lien vers le site web a été publié."

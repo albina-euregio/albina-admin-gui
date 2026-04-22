@@ -254,7 +254,7 @@
     "publicationChecklist": {
       "title": "Publication checklist",
       "description": {
-        "website": "The danger level is marked on the map. Clicking on a region shows the avalanche problems and texts.",
+        "website": "The map on the website shows the danger levels with their corresponding colors. Clicking on a region shows the avalanche problems and texts.",
         "email": "An email was sent and contains a report.",
         "telegram": "A message containing a link to the website was posted.",
         "whatsapp": "A message containing a link to the website was posted."
