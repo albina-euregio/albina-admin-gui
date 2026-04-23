@@ -39,7 +39,7 @@ There are different [environments](src/environments/) defined for different vers
 Once the app is started with one of the environments it is available at `http://localhost:4200/`.
 It will automatically reload if you change any of the source files.
 
-#### Start frontend with dev server (admin.avalanche.report/albina_dev)
+#### Start frontend with dev server (dev.avalanche.report)
 
 Use:
 
