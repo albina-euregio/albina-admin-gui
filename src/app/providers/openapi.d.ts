@@ -1192,6 +1192,7 @@ export interface components {
       suggestedRegions?: string[];
       /** @description The saved regions the avalanche bulletin is for. */
       savedRegions?: string[];
+      savedOrPublishedRegions?: string[];
       regions?: string[];
       /** @description The published regions the avalanche bulletin is for. */
       publishedRegions?: string[];
@@ -1254,6 +1255,7 @@ export interface components {
       /** Format: date-time */
       timestamp: string;
       status: components["schemas"]["BulletinStatus"];
+      isBeingPublished: boolean;
     };
     AvalancheProblem: components["schemas"]["AbstractPersistentObject"] & {
       id?: string | null;
