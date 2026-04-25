@@ -134,10 +134,6 @@ export class QfaService {
     const file0 = this.allFiles[file.city as City].find(
       (f) =>
         f.date === file.date &&
-        // sometimes hours/minute differs by 1, see albina-euregio/albina-admin-gui#463
-        // 2026-04-09_0656_QFA00_innsbruck_0002.txt
-        // 2026-04-09_0657_QFA00_innsbruck_0305.txt
-        (f.hours === file.hours || f.hours === (+file.hours + 1).toString().padStart(2, "0")) &&
         f.qfa === file.qfa &&
         f.city === file.city &&
         f.startDay === startDay.toString().padStart(2, "0"),
