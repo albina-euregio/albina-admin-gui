@@ -9,7 +9,11 @@ import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription, tap } from "rxjs";
 
-import { ChecklistItemModel, PublicationStatusModel } from "../models/publication-checklist.model";
+import {
+  ChecklistItemModel,
+  PublicationChecklistModel,
+  PublicationStatusModel,
+} from "../models/publication-checklist.model";
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { ModalConfirmComponent } from "./modal-confirm.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
@@ -55,6 +59,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   isReadOnly = false;
   checklistItems: ChecklistItemModel[] = [];
   activeChecklistId: string | undefined;
+  savedChecklists: PublicationChecklistModel[] = [];
+  expandedIds = new Set<string>();
   regionId = "";
   publicationStatus: PublicationStatusModel;
 
@@ -62,6 +68,14 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
   get isWebsiteChecked(): boolean {
     return this.checklistItems[0]?.ok !== undefined;
+  }
+
+  get olderSavedChecklists(): PublicationChecklistModel[] {
+    return this.isReadOnly ? this.savedChecklists.slice(1) : this.savedChecklists;
+  }
+
+  get newestSavedChecklist(): PublicationChecklistModel | undefined {
+    return this.isReadOnly ? this.savedChecklists[0] : undefined;
   }
 
   get isPublicationDisabled(): boolean {
@@ -111,6 +125,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
           this.date = date;
           this.regionId = regionId;
           this.activeChecklistId = undefined;
+          this.savedChecklists = [];
+          this.expandedIds = new Set();
           this.bulletinsService.sourceDates.setActiveDate(date);
           this.checklistItems = this.createChecklistItems();
           this.loadChecklistItems(date, regionId);
@@ -326,6 +342,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
           .subscribe({
             next: () => {
               this.activeChecklistId = undefined;
+              this.savedChecklists = [];
+              this.expandedIds = new Set();
               this.checklistItems = this.createChecklistItems();
               this.isReadOnly = false;
               localStorage.removeItem(this.draftKey);
@@ -395,6 +413,12 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (saved) => {
           this.activeChecklistId = saved.checklistId;
+          const existingIdx = this.savedChecklists.findIndex((c) => c.checklistId === saved.checklistId);
+          if (existingIdx >= 0) {
+            this.savedChecklists = [saved, ...this.savedChecklists.slice(existingIdx + 1)];
+          } else {
+            this.savedChecklists = [saved, ...this.savedChecklists];
+          }
           this.isReadOnly = true;
           localStorage.removeItem(this.draftKey);
         },
@@ -408,6 +432,24 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     this.isReadOnly = false;
   }
 
+  createNewChecklist(): void {
+    this.checklistItems = this.createChecklistItems();
+    this.activeChecklistId = undefined;
+    this.isReadOnly = false;
+  }
+
+  toggleExpanded(checklistId: string): void {
+    if (this.expandedIds.has(checklistId)) {
+      this.expandedIds.delete(checklistId);
+    } else {
+      this.expandedIds.add(checklistId);
+    }
+  }
+
+  isExpanded(checklistId: string): boolean {
+    return this.expandedIds.has(checklistId);
+  }
+
   private loadChecklistItems(date: string, regionId: string): void {
     if (!date || !regionId) {
       this.checklistItems = this.createChecklistItems();
@@ -416,8 +458,9 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
     this.checklistLoadSubscription.unsubscribe();
     this.checklistLoadSubscription = this.bulletinsService.getPublicationChecklists(date, regionId).subscribe({
-      next: (savedChecklists) => {
-        const latestChecklist = savedChecklists[0];
+      next: (serverChecklists) => {
+        this.savedChecklists = serverChecklists;
+        const latestChecklist = serverChecklists[0];
         this.activeChecklistId = latestChecklist?.checklistId;
         const hasSaved = !!latestChecklist?.checklist?.length;
         if (hasSaved) {
@@ -431,6 +474,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error("Publication checklist could not be loaded from server!", error);
         this.activeChecklistId = undefined;
+        this.savedChecklists = [];
         this.checklistItems = this.loadDraftFromLocalStorage() ?? this.createChecklistItems();
         this.isReadOnly = false;
       },

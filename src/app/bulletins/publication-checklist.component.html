@@ -1,6 +1,7 @@
 <div class="container-fluid px-0 px-md-3 py-3 py-md-4">
   <div class="row justify-content-center mx-0">
-    <div class="col-12 col-md-10 col-lg-8 px-0 px-md-3">
+    <div class="col-12 col-md-10 col-lg-8 px-0 px-md-3 d-flex flex-column gap-3">
+      <!-- Active checklist (editable or newest saved) -->
       <div class="card">
         <div class="card-header py-3">
           <div class="d-flex flex-column gap-2">
@@ -133,210 +134,236 @@
                   {{ `bulletins.publicationChecklist.description.${item.publicationChannel}` | translate }}
                 </small>
 
-                <div class="mt-3" [hidden]="item.ok !== false">
-                  <label class="form-label" [for]="'problem' + index">
-                    {{ "bulletins.publicationChecklist.problemDescription" | translate }}
-                  </label>
-                  <input
-                    class="form-control"
-                    type="text"
-                    [id]="'problem' + index"
-                    [value]="item.problemDescription"
-                    [disabled]="isReadOnly"
-                    (input)="onProblemDescriptionChange(index, $event)"
-                    [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
-                  />
+                @if (!isReadOnly) {
+                  <div class="mt-3" [hidden]="item.ok !== false">
+                    <label class="form-label" [for]="'problem' + index">
+                      {{ "bulletins.publicationChecklist.problemDescription" | translate }}
+                    </label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      [id]="'problem' + index"
+                      [value]="item.problemDescription"
+                      [disabled]="isReadOnly"
+                      (input)="onProblemDescriptionChange(index, $event)"
+                      [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
+                    />
 
-                  <div class="mt-3">
-                    <div class="form-label">{{ "bulletins.publicationChecklist.options" | translate }}</div>
+                    <div class="mt-3">
+                      <div class="form-label">{{ "bulletins.publicationChecklist.options" | translate }}</div>
 
-                    @if (item.publicationChannel === "website") {
-                      <div class="border-top pt-3">
-                        <ol class="mb-0 ps-3">
-                          <li class="mt-2">
-                            <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.website.checkInternetTitle" | translate }}
-                            </div>
-                            <div class="small text-muted mb-2">
-                              {{ "bulletins.publicationChecklist.website.checkInternetDescriptionPrefix" | translate }}
-                              <a [href]="getWebsiteUrl()" target="_blank" rel="noopener noreferrer">
-                                {{ getWebsiteUrl() }}
-                              </a>
-                              <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
-                              {{ "bulletins.publicationChecklist.website.checkInternetDescriptionSuffix" | translate }}
-                            </div>
-                          </li>
-                          <li class="mt-2">
-                            <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.republish" | translate }}
-                            </div>
-                            <div class="small text-muted mb-2">
-                              {{ "bulletins.publicationChecklist.website.republishHint" | translate }}
-                            </div>
-                            <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
-                              <button
-                                type="button"
-                                class="btn btn-outline-primary btn-sm"
-                                (click)="publish($event, getActiveDate())"
-                                [disabled]="isPublicationDisabled"
-                                [title]="isPublicationDisabled ? publicationDisabledReason : ''"
-                                [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
-                                [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
-                              >
-                                <i class="ph ph-paper-plane-tilt"></i>
-                                <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-outline-primary btn-sm"
-                                (click)="publish($event, getActiveDate(), true)"
-                                [disabled]="isPublicationDisabled"
-                                [title]="isPublicationDisabled ? publicationDisabledReason : ''"
-                                [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
-                                [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
-                              >
-                                <i class="ph ph-paper-plane-tilt"></i>
-                                <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
-                              </button>
-                            </div>
-                          </li>
-                          <li class="mt-2">
-                            <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.website.editAndResendTitle" | translate }}
-                            </div>
-                            <div class="small text-muted">
-                              <ol>
-                                <li>
-                                  {{ "bulletins.publicationChecklist.website.openBulletin" | translate }}
-                                  <button
-                                    class="btn btn-secondary btn-icon ms-2"
-                                    type="button"
-                                    [routerLink]="['/bulletins', date]"
-                                    title="{{ 'bulletins.tooltip.edit' | translate }}"
-                                  >
-                                    <i class="ph ph-pencil-line"></i>
-                                  </button>
-                                </li>
-                                <li>{{ "bulletins.publicationChecklist.website.clickEdit" | translate }}</li>
-                                <li>{{ "bulletins.publicationChecklist.website.clickSubmit" | translate }}</li>
-                                <li>{{ "bulletins.publicationChecklist.website.clickPublishNow" | translate }}</li>
-                              </ol>
-                            </div>
-                          </li>
-                        </ol>
-                      </div>
-                    }
-
-                    @if (item.publicationChannel === "whatsapp" || item.publicationChannel === "telegram") {
-                      <div class="border-top pt-3">
-                        <ol class="mb-0 ps-3">
-                          <li class="mt-2">
-                            <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.resend" | translate }}
-                            </div>
-
-                            <app-publication-trigger-notifications
-                              [date]="getActiveDate()"
-                              [regionId]="regionId"
-                              [publicationChannel]="item.publicationChannel"
-                              [iconClass]="getSocialIconClass(item.publicationChannel)"
-                              [languages]="getEnabledLanguages(item.publicationChannel)"
-                            ></app-publication-trigger-notifications>
-                          </li>
-                          <li class="mt-2">
-                            <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.manualSend.title" | translate }}
-                            </div>
-                            <div class="small text-muted mb-2">
-                              {{ getManualSendDescription(item.publicationChannel) }}
-                            </div>
-
-                            <div class="vstack gap-2">
-                              @for (entry of getManualSendEntries(item.publicationChannel); track entry.language) {
-                                <div class="border rounded p-2">
-                                  <div class="mb-2">
-                                    <a
-                                      class="small d-inline-flex align-items-center gap-1 text-decoration-none w-100 text-truncate"
-                                      [href]="entry.url"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      <i [class]="getSocialIconClass(item.publicationChannel)"></i>
-                                      <span class="fw-semibold">{{ entry.language.toUpperCase() }}</span>
-                                      <span class="text-decoration-underline">{{ entry.url }}</span>
-                                      <i
-                                        class="ph ph-arrow-up-right small text-primary opacity-75"
-                                        style="margin-left: -2px"
-                                        aria-hidden="true"
-                                      ></i>
-                                    </a>
-                                  </div>
-                                  <div class="d-flex align-items-center gap-1">
-                                    <pre
-                                      class="flex-grow-1 mb-0 p-2 border rounded bg-light"
-                                    ><code>{{ getManualSendMessage(entry.language) }}</code></pre>
+                      @if (item.publicationChannel === "website") {
+                        <div class="border-top pt-3">
+                          <ol class="mb-0 ps-3">
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.website.checkInternetTitle" | translate }}
+                              </div>
+                              <div class="small text-muted mb-2">
+                                {{
+                                  "bulletins.publicationChecklist.website.checkInternetDescriptionPrefix" | translate
+                                }}
+                                <a [href]="getWebsiteUrl()" target="_blank" rel="noopener noreferrer">
+                                  {{ getWebsiteUrl() }}
+                                </a>
+                                <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
+                                {{
+                                  "bulletins.publicationChecklist.website.checkInternetDescriptionSuffix" | translate
+                                }}
+                              </div>
+                            </li>
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.republish" | translate }}
+                              </div>
+                              <div class="small text-muted mb-2">
+                                {{ "bulletins.publicationChecklist.website.republishHint" | translate }}
+                              </div>
+                              <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+                                <button
+                                  type="button"
+                                  class="btn btn-outline-primary btn-sm"
+                                  (click)="publish($event, getActiveDate())"
+                                  [disabled]="isPublicationDisabled"
+                                  [title]="isPublicationDisabled ? publicationDisabledReason : ''"
+                                  [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
+                                  [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
+                                >
+                                  <i class="ph ph-paper-plane-tilt"></i>
+                                  <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  class="btn btn-outline-primary btn-sm"
+                                  (click)="publish($event, getActiveDate(), true)"
+                                  [disabled]="isPublicationDisabled"
+                                  [title]="isPublicationDisabled ? publicationDisabledReason : ''"
+                                  [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
+                                  [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
+                                >
+                                  <i class="ph ph-paper-plane-tilt"></i>
+                                  <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
+                                </button>
+                              </div>
+                            </li>
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.website.editAndResendTitle" | translate }}
+                              </div>
+                              <div class="small text-muted">
+                                <ol>
+                                  <li>
+                                    {{ "bulletins.publicationChecklist.website.openBulletin" | translate }}
                                     <button
+                                      class="btn btn-secondary btn-icon ms-2"
                                       type="button"
-                                      class="btn btn-sm btn-outline-secondary"
-                                      (click)="copyToClipboard(getManualSendMessage(entry.language))"
-                                      [title]="
-                                        'bulletins.publicationChecklist.manualSend.copyText'
-                                          | translate
-                                            : {
-                                                channel: getChannelName(item.publicationChannel),
-                                                language: getLanguageName(entry.language),
-                                              }
-                                      "
+                                      [routerLink]="['/bulletins', date]"
+                                      title="{{ 'bulletins.tooltip.edit' | translate }}"
                                     >
-                                      <i class="ph ph-copy"></i>
+                                      <i class="ph ph-pencil-line"></i>
                                     </button>
-                                  </div>
-                                </div>
-                              }
-                            </div>
-                          </li>
-                        </ol>
-                      </div>
-                    }
+                                  </li>
+                                  <li>{{ "bulletins.publicationChecklist.website.clickEdit" | translate }}</li>
+                                  <li>{{ "bulletins.publicationChecklist.website.clickSubmit" | translate }}</li>
+                                  <li>{{ "bulletins.publicationChecklist.website.clickPublishNow" | translate }}</li>
+                                </ol>
+                              </div>
+                            </li>
+                          </ol>
+                        </div>
+                      }
 
-                    @if (item.publicationChannel === "email") {
-                      <div class="border-top pt-3">
-                        <ol class="mb-0 ps-3">
-                          <li class="mt-2">
-                            <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.email.waitTitle" | translate }}
-                            </div>
-                            <div class="small text-muted mb-2">
-                              {{ "bulletins.publicationChecklist.emailWaitHint" | translate }}
-                            </div>
-                          </li>
-                          <li class="mt-2">
-                            <div class="fw-semibold">
-                              {{ "bulletins.publicationChecklist.resend" | translate }}
-                            </div>
-                            <app-publication-trigger-notifications
-                              [date]="getActiveDate()"
-                              [regionId]="regionId"
-                              [publicationChannel]="item.publicationChannel"
-                              iconClass="ph ph-envelope-simple"
-                              [languages]="getEnabledLanguages(item.publicationChannel)"
-                            ></app-publication-trigger-notifications>
-                          </li>
-                        </ol>
-                      </div>
-                    }
+                      @if (item.publicationChannel === "whatsapp" || item.publicationChannel === "telegram") {
+                        <div class="border-top pt-3">
+                          <ol class="mb-0 ps-3">
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.resend" | translate }}
+                              </div>
+
+                              <app-publication-trigger-notifications
+                                [date]="getActiveDate()"
+                                [regionId]="regionId"
+                                [publicationChannel]="item.publicationChannel"
+                                [iconClass]="getSocialIconClass(item.publicationChannel)"
+                                [languages]="getEnabledLanguages(item.publicationChannel)"
+                              ></app-publication-trigger-notifications>
+                            </li>
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.manualSend.title" | translate }}
+                              </div>
+                              <div class="small text-muted mb-2">
+                                {{ getManualSendDescription(item.publicationChannel) }}
+                              </div>
+
+                              <div class="vstack gap-2">
+                                @for (entry of getManualSendEntries(item.publicationChannel); track entry.language) {
+                                  <div class="border rounded p-2">
+                                    <div class="mb-2">
+                                      <a
+                                        class="small d-inline-flex align-items-center gap-1 text-decoration-none w-100 text-truncate"
+                                        [href]="entry.url"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        <i [class]="getSocialIconClass(item.publicationChannel)"></i>
+                                        <span class="fw-semibold">{{ entry.language.toUpperCase() }}</span>
+                                        <span class="text-decoration-underline">{{ entry.url }}</span>
+                                        <i
+                                          class="ph ph-arrow-up-right small text-primary opacity-75"
+                                          style="margin-left: -2px"
+                                          aria-hidden="true"
+                                        ></i>
+                                      </a>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-1">
+                                      <pre
+                                        class="flex-grow-1 mb-0 p-2 border rounded bg-light"
+                                      ><code>{{ getManualSendMessage(entry.language) }}</code></pre>
+                                      <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-secondary"
+                                        (click)="copyToClipboard(getManualSendMessage(entry.language))"
+                                        [title]="
+                                          'bulletins.publicationChecklist.manualSend.copyText'
+                                            | translate
+                                              : {
+                                                  channel: getChannelName(item.publicationChannel),
+                                                  language: getLanguageName(entry.language),
+                                                }
+                                        "
+                                      >
+                                        <i class="ph ph-copy"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                }
+                              </div>
+                            </li>
+                          </ol>
+                        </div>
+                      }
+
+                      @if (item.publicationChannel === "email") {
+                        <div class="border-top pt-3">
+                          <ol class="mb-0 ps-3">
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.email.waitTitle" | translate }}
+                              </div>
+                              <div class="small text-muted mb-2">
+                                {{ "bulletins.publicationChecklist.emailWaitHint" | translate }}
+                              </div>
+                            </li>
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.resend" | translate }}
+                              </div>
+                              <app-publication-trigger-notifications
+                                [date]="getActiveDate()"
+                                [regionId]="regionId"
+                                [publicationChannel]="item.publicationChannel"
+                                iconClass="ph ph-envelope-simple"
+                                [languages]="getEnabledLanguages(item.publicationChannel)"
+                              ></app-publication-trigger-notifications>
+                            </li>
+                          </ol>
+                        </div>
+                      }
+                    </div>
                   </div>
-                </div>
+                }
+
+                @if (isReadOnly && item.ok === false && item.problemDescription) {
+                  <div class="mt-2 small text-danger">
+                    <i class="ph ph-note" aria-hidden="true"></i>
+                    {{ item.problemDescription }}
+                  </div>
+                }
               </div>
             </div>
           }
         </div>
 
-        <div class="card-footer d-flex justify-content-end">
+        @if (newestSavedChecklist) {
+          <div class="px-3 pb-2 small text-body-secondary">
+            {{ "bulletins.publicationChecklist.savedAt" | translate }}
+            {{ newestSavedChecklist.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
+            {{ "bulletins.publicationChecklist.savedBy" | translate }}
+            {{ newestSavedChecklist.user }}
+          </div>
+        }
+
+        <div class="card-footer d-flex justify-content-end gap-2">
           @if (isReadOnly) {
             <button type="button" class="btn btn-outline-secondary" (click)="enterEditMode()">
               <i class="ph ph-pencil-line" aria-hidden="true"></i>
               {{ "bulletins.publicationChecklist.edit" | translate }}
+            </button>
+            <button type="button" class="btn btn-outline-primary" (click)="createNewChecklist()">
+              <i class="ph ph-plus" aria-hidden="true"></i>
+              {{ "bulletins.publicationChecklist.newChecklist" | translate }}
             </button>
           } @else {
             <button type="button" class="btn btn-primary" (click)="saveAndLock()">
@@ -346,6 +373,80 @@
           }
         </div>
       </div>
+
+      <!-- Older saved checklists -->
+      @for (checklist of olderSavedChecklists; track checklist.checklistId) {
+        <div class="card">
+          <button
+            type="button"
+            class="card-header d-flex justify-content-between align-items-center gap-3 border-0 bg-transparent text-start w-100 py-3"
+            (click)="toggleExpanded(checklist.checklistId)"
+            [attr.aria-expanded]="isExpanded(checklist.checklistId)"
+          >
+            <div class="d-flex flex-wrap align-items-center gap-3 small text-body-secondary">
+              <span>
+                {{ "bulletins.publicationChecklist.savedAt" | translate }}
+                {{ checklist.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
+              </span>
+              <span>
+                {{ "bulletins.publicationChecklist.savedBy" | translate }}
+                {{ checklist.user }}
+              </span>
+            </div>
+            <i
+              class="ph flex-shrink-0"
+              [class.ph-caret-down]="!isExpanded(checklist.checklistId)"
+              [class.ph-caret-up]="isExpanded(checklist.checklistId)"
+              aria-hidden="true"
+            ></i>
+          </button>
+
+          @if (isExpanded(checklist.checklistId)) {
+            <div class="card-body border-top pt-3 d-flex flex-column gap-2">
+              @for (item of checklist.checklist; track $index) {
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                  <div class="d-flex align-items-center gap-2 fw-semibold small">
+                    @if (item.publicationChannel === "website") {
+                      <i class="ph ph-globe" aria-hidden="true"></i>
+                    }
+                    @if (item.publicationChannel === "whatsapp") {
+                      <i class="ph ph-whatsapp-logo" aria-hidden="true"></i>
+                    }
+                    @if (item.publicationChannel === "telegram") {
+                      <i class="ph ph-telegram-logo" aria-hidden="true"></i>
+                    }
+                    @if (item.publicationChannel === "email") {
+                      <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+                    }
+                    <span>{{ `bulletins.publicationChecklist.channel.${item.publicationChannel}` | translate }}</span>
+                  </div>
+                  <div class="d-flex flex-column align-items-end gap-1 text-end">
+                    @if (item.ok === true) {
+                      <span class="badge text-bg-success d-inline-flex align-items-center gap-1">
+                        <i class="ph ph-check-circle" aria-hidden="true"></i>
+                        {{ "bulletins.publicationChecklist.ok" | translate }}
+                      </span>
+                    } @else if (item.ok === false) {
+                      <span class="badge text-bg-danger d-inline-flex align-items-center gap-1">
+                        <i class="ph ph-warning-circle" aria-hidden="true"></i>
+                        {{ "bulletins.publicationChecklist.problem" | translate }}
+                      </span>
+                      @if (item.problemDescription) {
+                        <span class="small text-danger">{{ item.problemDescription }}</span>
+                      }
+                    } @else {
+                      <span class="badge text-bg-secondary d-inline-flex align-items-center gap-1">
+                        <i class="ph ph-minus-circle" aria-hidden="true"></i>
+                        &ndash;
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
     </div>
   </div>
 </div>

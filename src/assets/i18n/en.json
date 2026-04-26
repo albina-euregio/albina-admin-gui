@@ -302,7 +302,10 @@
         "copyText": "Copy {{language}} {{channel}} text"
       },
       "save": "Save checklist",
-      "edit": "Edit checklist"
+      "edit": "Edit checklist",
+      "newChecklist": "New checklist",
+      "savedAt": "Saved",
+      "savedBy": "by"
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",

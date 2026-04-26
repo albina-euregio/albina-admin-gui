@@ -15,6 +15,7 @@ export const PublicationChecklistSchema = z.object({
   checklistId: z.string(),
   timestamp: DateSchema.nullish(),
   checklist: ChecklistItemSchema.array(),
+  user: z.string().optional(),
 });
 
 export type PublicationChecklistModel = z.infer<typeof PublicationChecklistSchema>;
