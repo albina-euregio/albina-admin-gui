@@ -7,18 +7,7 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import {
-  catchError,
-  combineLatest,
-  debounceTime,
-  distinctUntilChanged,
-  EMPTY,
-  map,
-  Subject,
-  Subscription,
-  switchMap,
-  tap,
-} from "rxjs";
+import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription, tap } from "rxjs";
 
 import { ChecklistItemModel, PublicationStatusModel } from "../models/publication-checklist.model";
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
@@ -55,18 +44,15 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
   private activeRoute = inject(ActivatedRoute);
   private routeParamsSubscription: Subscription;
-  private checklistSaveSubscription: Subscription;
   private checklistLoadSubscription: Subscription;
+  private checklistDraftSubscription: Subscription;
+  private checklistServerSaveSubscription: Subscription;
   private publicationStatusSubscription: Subscription;
   private publicationStatusPollTimeout: ReturnType<typeof setTimeout> | null = null;
-  private saveChecklist = new Subject<{
-    date: string;
-    regionId: string;
-    checklist: ChecklistItemModel[];
-    checklistId?: string;
-  }>();
+  private draftSave = new Subject<void>();
 
   date = "";
+  isReadOnly = false;
   checklistItems: ChecklistItemModel[] = [];
   activeChecklistId: string | undefined;
   regionId = "";
@@ -99,23 +85,11 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     this.routeParamsSubscription = new Subscription();
     this.publicationStatusSubscription = new Subscription();
     this.checklistLoadSubscription = new Subscription();
-    this.checklistSaveSubscription = this.saveChecklist
+    this.checklistServerSaveSubscription = new Subscription();
+    this.checklistDraftSubscription = this.draftSave
       .pipe(
         debounceTime(500),
-        switchMap(({ date, regionId, checklist, checklistId }) => {
-          if (!date || !regionId) {
-            return EMPTY;
-          }
-          return this.bulletinsService.savePublicationChecklist(date, regionId, checklist, checklistId).pipe(
-            tap((savedChecklist) => {
-              this.activeChecklistId = savedChecklist.checklistId;
-            }),
-            catchError((error) => {
-              console.error("Publication checklist could not be saved to server!", error);
-              return EMPTY;
-            }),
-          );
-        }),
+        tap(() => localStorage.setItem(this.draftKey, JSON.stringify(this.checklistItems))),
       )
       .subscribe();
   }
@@ -153,9 +127,10 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopPublicationStatusPolling();
     this.checklistLoadSubscription.unsubscribe();
+    this.checklistDraftSubscription.unsubscribe();
+    this.checklistServerSaveSubscription.unsubscribe();
     this.publicationStatusSubscription.unsubscribe();
     this.routeParamsSubscription.unsubscribe();
-    this.checklistSaveSubscription.unsubscribe();
   }
 
   getSocialMediaUrl(publicationChannel: PublicationChannel, language?: string) {
@@ -226,7 +201,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     } else if (item.ok === true) {
       item.ok = undefined;
     }
-    this.queueChecklistSave();
+    this.queueDraftSave();
   }
 
   onProblemChange(index: number, event: Event) {
@@ -234,7 +209,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     const hasProblem = (event.target as HTMLInputElement).checked;
     if (hasProblem) {
       item.ok = false;
-      this.queueChecklistSave();
+      this.queueDraftSave();
       return;
     }
 
@@ -242,12 +217,29 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       item.ok = undefined;
       item.problemDescription = "";
     }
-    this.queueChecklistSave();
+    this.queueDraftSave();
   }
 
   onProblemDescriptionChange(index: number, event: Event) {
     this.checklistItems[index].problemDescription = (event.target as HTMLInputElement).value;
-    this.queueChecklistSave();
+    this.queueDraftSave();
+  }
+
+  private get draftKey(): string {
+    return `publication_checklist_draft_${this.date}_${this.regionId}`;
+  }
+
+  private queueDraftSave(): void {
+    this.draftSave.next();
+  }
+
+  private loadDraftFromLocalStorage(): ChecklistItemModel[] | null {
+    try {
+      const raw = localStorage.getItem(this.draftKey);
+      return raw ? (JSON.parse(raw) as ChecklistItemModel[]) : null;
+    } catch {
+      return null;
+    }
   }
 
   copyToClipboard(text: string | null) {
@@ -335,6 +327,8 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
             next: () => {
               this.activeChecklistId = undefined;
               this.checklistItems = this.createChecklistItems();
+              this.isReadOnly = false;
+              localStorage.removeItem(this.draftKey);
               this.refreshPublicationStatusNow();
             },
             error: (error) => {
@@ -394,13 +388,24 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     });
   }
 
-  private queueChecklistSave() {
-    this.saveChecklist.next({
-      date: this.date,
-      regionId: this.regionId,
-      checklist: this.checklistItems,
-      checklistId: this.activeChecklistId,
-    });
+  saveAndLock(): void {
+    this.checklistServerSaveSubscription.unsubscribe();
+    this.checklistServerSaveSubscription = this.bulletinsService
+      .savePublicationChecklist(this.date, this.regionId, this.checklistItems, this.activeChecklistId)
+      .subscribe({
+        next: (saved) => {
+          this.activeChecklistId = saved.checklistId;
+          this.isReadOnly = true;
+          localStorage.removeItem(this.draftKey);
+        },
+        error: (error) => {
+          console.error("Publication checklist could not be saved to server!", error);
+        },
+      });
+  }
+
+  enterEditMode(): void {
+    this.isReadOnly = false;
   }
 
   private loadChecklistItems(date: string, regionId: string): void {
@@ -414,14 +419,20 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       next: (savedChecklists) => {
         const latestChecklist = savedChecklists[0];
         this.activeChecklistId = latestChecklist?.checklistId;
-        this.checklistItems = latestChecklist?.checklist?.length
-          ? this.mergeChecklistItems(latestChecklist.checklist)
-          : this.createChecklistItems();
+        const hasSaved = !!latestChecklist?.checklist?.length;
+        if (hasSaved) {
+          this.checklistItems = this.mergeChecklistItems(latestChecklist.checklist);
+          this.isReadOnly = true;
+        } else {
+          this.checklistItems = this.loadDraftFromLocalStorage() ?? this.createChecklistItems();
+          this.isReadOnly = false;
+        }
       },
       error: (error) => {
         console.error("Publication checklist could not be loaded from server!", error);
         this.activeChecklistId = undefined;
-        this.checklistItems = this.createChecklistItems();
+        this.checklistItems = this.loadDraftFromLocalStorage() ?? this.createChecklistItems();
+        this.isReadOnly = false;
       },
     });
   }

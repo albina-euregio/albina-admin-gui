@@ -83,12 +83,14 @@
                       type="checkbox"
                       [id]="'check' + index + 'Ok'"
                       [checked]="item.ok === true"
+                      [disabled]="isReadOnly"
                       (change)="onOkChange(index, $event)"
                     />
                     <label
                       class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
                       [class.btn-success]="item.ok === true"
                       [class.btn-outline-dark]="item.ok !== true"
+                      [class.disabled]="isReadOnly"
                       [for]="'check' + index + 'Ok'"
                     >
                       <i class="ph ph-check-circle ms-1"></i>
@@ -100,12 +102,14 @@
                       type="checkbox"
                       [id]="'check' + index + 'Problem'"
                       [checked]="item.ok === false"
+                      [disabled]="isReadOnly"
                       (change)="onProblemChange(index, $event)"
                     />
                     <label
                       class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
                       [class.btn-danger]="item.ok === false"
                       [class.btn-outline-dark]="item.ok !== false"
+                      [class.disabled]="isReadOnly"
                       [for]="'check' + index + 'Problem'"
                     >
                       <i class="ph ph-warning-circle ms-1"></i>
@@ -138,6 +142,7 @@
                     type="text"
                     [id]="'problem' + index"
                     [value]="item.problemDescription"
+                    [disabled]="isReadOnly"
                     (input)="onProblemDescriptionChange(index, $event)"
                     [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
                   />
@@ -324,6 +329,20 @@
                 </div>
               </div>
             </div>
+          }
+        </div>
+
+        <div class="card-footer d-flex justify-content-end">
+          @if (isReadOnly) {
+            <button type="button" class="btn btn-outline-secondary" (click)="enterEditMode()">
+              <i class="ph ph-pencil-line" aria-hidden="true"></i>
+              {{ "bulletins.publicationChecklist.edit" | translate }}
+            </button>
+          } @else {
+            <button type="button" class="btn btn-primary" (click)="saveAndLock()">
+              <i class="ph ph-floppy-disk" aria-hidden="true"></i>
+              {{ "bulletins.publicationChecklist.save" | translate }}
+            </button>
           }
         </div>
       </div>

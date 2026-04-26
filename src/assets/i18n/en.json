@@ -300,7 +300,9 @@
           "whatsapp": "Copy the text below to the specified WhatsApp channel."
         },
         "copyText": "Copy {{language}} {{channel}} text"
-      }
+      },
+      "save": "Save checklist",
+      "edit": "Edit checklist"
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",
