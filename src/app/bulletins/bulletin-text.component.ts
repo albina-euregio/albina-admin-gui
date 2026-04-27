@@ -61,7 +61,7 @@ export class BulletinTextComponent {
     const activeRegion = this.authenticationService.getActiveRegionId();
     this.showDialog.emit({
       textField: this.textField(),
-      textDef: this.bulletin()[this.bulletinTextcatKey] || "",
+      textDef: this.normalizeTextcat(this.bulletin()[this.bulletinTextcatKey]),
       currentLang: this.translateService.getCurrentLang(),
       region: regions[activeRegion] || "",
     });
@@ -153,9 +153,29 @@ export class BulletinTextComponent {
   }
 
   concatTextcat(text1: string | undefined, text2: string | undefined) {
-    if (!text1) return text2;
-    if (!text2) return text1;
-    return text1.slice(0, -1).concat(",", text2.substring(1));
+    const parsedText1 = this.parseTextcat(text1);
+    const parsedText2 = this.parseTextcat(text2);
+
+    if (!parsedText1 && !parsedText2) return undefined;
+    if (!parsedText1) return JSON.stringify(parsedText2);
+    if (!parsedText2) return JSON.stringify(parsedText1);
+
+    return JSON.stringify([...parsedText1, ...parsedText2]);
+  }
+
+  private normalizeTextcat(text: string | undefined): string {
+    return JSON.stringify(this.parseTextcat(text) ?? []);
+  }
+
+  private parseTextcat(text: string | undefined): unknown[] | undefined {
+    if (!text?.trim()) return [];
+
+    try {
+      const parsed = JSON.parse(text);
+      return Array.isArray(parsed) ? parsed : undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   pasteTextcat() {
