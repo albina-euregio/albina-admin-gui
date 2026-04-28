@@ -1,4 +1,4 @@
-import { DatePipe, formatDate } from "@angular/common";
+import { CommonModule, DatePipe, formatDate } from "@angular/common";
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -43,6 +43,7 @@ const PUBLICATION_STATUS_SLOW_POLL_MS = 10000; // otherwise, poll every 10 secon
   templateUrl: "publication-checklist.component.html",
   standalone: true,
   imports: [
+    CommonModule,
     DatePipe,
     RouterLink,
     TranslateModule,
@@ -302,6 +303,16 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
 
   getFormattedDate(language = this.translateService.getCurrentLang()): string {
     return formatDate(this.getActiveDate()[1], "fullDate", language, "UTC");
+  }
+
+  getSavedInfo(checklist: PublicationChecklistModel): string {
+    const time = new DatePipe(this.translateService.getCurrentLang()).transform(
+      checklist.timestamp,
+      "short",
+      undefined,
+      this.translateService.getCurrentLang(),
+    );
+    return this.translateService.instant("bulletins.publicationChecklist.savedInfo", { user: checklist.user, time });
   }
 
   publish(event: Event, date: [Date, Date], change = false) {

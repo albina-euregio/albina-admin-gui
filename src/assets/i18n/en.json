@@ -261,7 +261,7 @@
       },
       "ok": "Ok",
       "problem": "Problem",
-      "problemDescription": "Description",
+      "problemDescription": "Problem description",
       "problemPlaceholder": "Describe the encountered problem",
       "channel": {
         "website": "Website",
@@ -301,11 +301,8 @@
         },
         "copyText": "Copy {{language}} {{channel}} text"
       },
-      "save": "Save checklist",
-      "edit": "Edit checklist",
       "newChecklist": "New checklist",
-      "savedAt": "Saved",
-      "savedBy": "by"
+      "savedInfo": "Saved by {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",
