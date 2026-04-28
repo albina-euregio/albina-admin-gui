@@ -12,20 +12,13 @@ export const ChecklistItemSchema = z.object({
 export type ChecklistItemModel = z.infer<typeof ChecklistItemSchema>;
 
 export const PublicationChecklistSchema = z.object({
-  checklistId: z.string(),
+  checklistId: z.string().optional(),
   timestamp: DateSchema.nullish(),
-  checklist: ChecklistItemSchema.array(),
+  checklistItems: ChecklistItemSchema.array(),
   user: z.string().optional(),
 });
 
 export type PublicationChecklistModel = z.infer<typeof PublicationChecklistSchema>;
-
-export const SavePublicationChecklistSchema = z.object({
-  checklistId: z.string().optional(),
-  checklist: ChecklistItemSchema.array(),
-});
-
-export type SavePublicationChecklistModel = z.infer<typeof SavePublicationChecklistSchema>;
 
 const PublicationBulletinStatusSchema = z.preprocess((value) => {
   if (typeof value === "string") {
@@ -34,7 +27,6 @@ const PublicationBulletinStatusSchema = z.preprocess((value) => {
   return value;
 }, z.enum(BulletinStatus));
 
-// public record Status(Instant date, Instant timestamp, BulletinStatus status, Boolean isBeingPublished) {
 export const PublicationStatusSchema = z.object({
   date: DateSchema.nullish(),
   timestamp: DateSchema.nullish(),

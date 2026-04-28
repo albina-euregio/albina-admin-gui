@@ -4,12 +4,10 @@ import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import {
   ChecklistItemModel,
-  ChecklistItemSchema,
   PublicationChecklistModel,
   PublicationChecklistSchema,
   PublicationStatusModel,
   PublicationStatusSchema,
-  SavePublicationChecklistModel,
 } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
@@ -201,73 +199,29 @@ export class BulletinsService {
   }
 
   getPublicationChecklists(date: string, region: string): Observable<PublicationChecklistModel[]> {
-    if (this.localStorageService.isTrainingEnabled) {
-      return of([
-        {
-          checklistId: "training",
-          timestamp: null,
-          checklist: this.localStorageService.getPublicationChecklist(date, region),
-        },
-      ]);
-    }
-
     const url = this.getChecklistUrl(date, region);
     return this.http.get(url).pipe(
       map((data) => {
-        if (Array.isArray(data) && data.every((item) => item && typeof item === "object" && "checklist" in item)) {
+        if (Array.isArray(data)) {
           return PublicationChecklistSchema.array().parse(data);
         }
-        if (Array.isArray(data)) {
-          return [
-            {
-              checklistId: "legacy",
-              timestamp: null,
-              checklist: ChecklistItemSchema.array().parse(data),
-            },
-          ];
-        }
-
-        const checklists = (data as { checklists?: unknown })?.checklists;
-        if (Array.isArray(checklists)) {
-          return PublicationChecklistSchema.array().parse(checklists);
-        }
-
-        const checklist = ChecklistItemSchema.array().parse((data as { checklist?: unknown })?.checklist ?? []);
-        return [{ checklistId: "legacy", timestamp: null, checklist }];
+        return [];
       }),
     );
   }
 
   getPublicationChecklist(date: string, region: string): Observable<ChecklistItemModel[]> {
-    return this.getPublicationChecklists(date, region).pipe(map((checklists) => checklists[0]?.checklist ?? []));
+    return this.getPublicationChecklists(date, region).pipe(map((checklists) => checklists[0]?.checklistItems ?? []));
   }
 
   savePublicationChecklist(
     date: string,
     region: string,
-    checklist: ChecklistItemModel[],
-    checklistId?: string,
+    checklist: PublicationChecklistModel,
   ): Observable<PublicationChecklistModel> {
-    if (this.localStorageService.isTrainingEnabled) {
-      this.localStorageService.setPublicationChecklist(date, region, checklist);
-      return of({ checklistId: checklistId ?? "training", timestamp: new Date(), checklist });
-    }
-
     const url = this.getChecklistUrl(date, region);
-    const payload: SavePublicationChecklistModel = { checklistId, checklist };
-    const body = JSON.stringify(payload);
-    return this.http.post(url, body).pipe(
-      map((data) => {
-        if (Array.isArray(data)) {
-          return {
-            checklistId: checklistId ?? "legacy",
-            timestamp: null,
-            checklist: ChecklistItemSchema.array().parse(data),
-          };
-        }
-        return PublicationChecklistSchema.parse(data);
-      }),
-    );
+    const body = JSON.stringify(checklist);
+    return this.http.post(url, body).pipe(map((data) => PublicationChecklistSchema.parse(data)));
   }
 
   loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
