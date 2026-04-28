@@ -191,9 +191,9 @@
         >
       }
       @if (showPublicationHappened()) {
-        <span class="create-bulletin__bulletin-info"
-          ><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span
-        >
+        <div class="mb-3">
+          <app-publication-in-progress />
+        </div>
       }
       @if (showNoPublicationWillHappen()) {
         <span class="create-bulletin__bulletin-info"

@@ -52,6 +52,7 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { PublicationInProgressComponent } from "../shared/publication-in-progress.component";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
 import { ModalConfirmComponent } from "./modal-confirm.component";
@@ -73,6 +74,7 @@ import { ModalPublicationStatusComponent } from "./modal-publication-status.comp
     TranslateModule,
     NgxMousetrapDirective,
     BulletinTextComponent,
+    PublicationInProgressComponent,
   ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
@@ -352,6 +354,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (this.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
       this.reset();
       this.bulletinsService.loadStatus();
+      this.bulletinsService.startPublicationStatusPolling();
 
       // copy bulletins from other date
       if (this.bulletinsService.getCopyDate()) {

@@ -9,7 +9,7 @@ import {
   PublicationStatusSchema,
 } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
-import { Observable, of, Subject } from "rxjs";
+import { BehaviorSubject, Observable, of, Subject } from "rxjs";
 import { map, switchMap, tap } from "rxjs/operators";
 
 import { environment } from "../../../environments/environment";
@@ -52,6 +52,14 @@ export class BulletinsService {
   private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
 
+  private publicationStatusSubject = new BehaviorSubject<PublicationStatusModel | undefined>(undefined);
+  readonly publicationStatus$: Observable<PublicationStatusModel | undefined> =
+    this.publicationStatusSubject.asObservable();
+  private publicationStatusPollTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  private static readonly PUBLICATION_STATUS_FAST_POLL_MS = 1000;
+  private static readonly PUBLICATION_STATUS_SLOW_POLL_MS = 10000;
+
   readonly undoRedo = new UndoRedoState<BulletinModel>(
     (bulletin) => bulletin,
     (json) => BulletinModel.parse(json),
@@ -85,9 +93,13 @@ export class BulletinsService {
 
   public loadStatus() {
     const { startDate, endDate } = this.sourceDates.getLoadDate();
+    this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     if (
       this.sourceDates.activeDate &&
-      (this.sourceDates.activeDate[0] < startDate[0] || this.sourceDates.activeDate[0] > endDate[0])
+      (!startDate ||
+        !endDate ||
+        this.sourceDates.activeDate[0] < startDate[0] ||
+        this.sourceDates.activeDate[0] > endDate[0])
     ) {
       // if active date is outside of loaded date range, load status separately only for the active date and region
       const region = this.authenticationService.getActiveRegionId();
@@ -101,7 +113,6 @@ export class BulletinsService {
       });
       return;
     }
-    this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
         const map = new Map<number, Enums.BulletinStatus>();
@@ -518,6 +529,43 @@ export class BulletinsService {
           : stress0 <= 100
             ? "ph-smiley-x-eyes"
             : "ph-circle-dashed";
+  }
+
+  startPublicationStatusPolling() {
+    this.pollPublicationStatus();
+  }
+
+  stopPublicationStatusPolling() {
+    if (this.publicationStatusPollTimeout) {
+      clearTimeout(this.publicationStatusPollTimeout);
+      this.publicationStatusPollTimeout = null;
+    }
+  }
+
+  refreshPublicationStatus() {
+    this.stopPublicationStatusPolling();
+    this.pollPublicationStatus();
+  }
+
+  private pollPublicationStatus() {
+    const regionId = this.authenticationService.getActiveRegionId();
+    if (!regionId) return;
+    this.getPublicationStatus(regionId).subscribe({
+      next: (data) => {
+        this.publicationStatusSubject.next(data);
+        const interval = data?.isBeingPublished
+          ? BulletinsService.PUBLICATION_STATUS_FAST_POLL_MS
+          : BulletinsService.PUBLICATION_STATUS_SLOW_POLL_MS;
+        this.publicationStatusPollTimeout = setTimeout(() => this.pollPublicationStatus(), interval);
+      },
+      error: (error) => {
+        console.error("Publication status could not be loaded!", error);
+        this.publicationStatusPollTimeout = setTimeout(
+          () => this.pollPublicationStatus(),
+          BulletinsService.PUBLICATION_STATUS_SLOW_POLL_MS,
+        );
+      },
+    });
   }
 
   emitAccordionChanged(event: AccordionChangeEvent) {
