@@ -567,10 +567,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get checklist items */
-    get: operations["getChecklist"];
+    /** Get checklists for a given date and region */
+    get: operations["getChecklists"];
     put?: never;
-    /** Store checklist items */
+    /** Store checklist for a given date and region */
     post: operations["saveChecklist"];
     delete?: never;
     options?: never;
@@ -1328,12 +1328,8 @@ export interface components {
       checklistId: string;
       /** Format: date-time */
       timestamp: string;
-      checklist: components["schemas"]["ChecklistService.ChecklistItem"][];
-    };
-    "ChecklistService.ChecklistItem": {
-      publicationChannel: string;
-      ok?: boolean | null;
-      problemDescription: string;
+      checklist: components["schemas"]["PublicationChecklistItem"][];
+      user: string;
     };
     /** @enum {string} */
     Complexity: "easy" | "challenging" | "complex";
@@ -1571,6 +1567,12 @@ export interface components {
     Position: "topleft" | "topright" | "bottomleft" | "bottomright";
     /** @enum {string} */
     Probability: "likely" | "possible" | "unlikely";
+    PublicationChecklistItem: components["schemas"]["AbstractPersistentObject"] & {
+      id?: string | null;
+      publicationChannel?: string;
+      ok?: boolean;
+      problemDescription?: string;
+    };
     PushSubscription: {
       /** Format: int64 */
       id?: number | null;
@@ -2681,7 +2683,7 @@ export interface operations {
       };
     };
   };
-  getChecklist: {
+  getChecklists: {
     parameters: {
       query: {
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
@@ -2694,7 +2696,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description getChecklist 200 response */
+      /** @description getChecklists 200 response */
       200: {
         headers: {
           [name: string]: unknown;
