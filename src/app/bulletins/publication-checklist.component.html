@@ -16,7 +16,12 @@
               <span class="mx-1">&ndash;</span>
               <span>{{ regionsService.getRegionName(regionId) | translate }}</span>
             </div>
-            <button type="button" class="btn btn-outline-primary btn-sm" (click)="createNewChecklist()">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm"
+              (click)="createNewChecklist()"
+              [disabled]="!hasContent"
+            >
               <i class="ph ph-plus" aria-hidden="true"></i>
               {{ "bulletins.publicationChecklist.newChecklist" | translate }}
             </button>
@@ -107,8 +112,8 @@
           @for (item of checklist.checklistItems; track $index; let index = $index) {
             <div
               class="card shadow-sm"
-              [class.opacity-50]="index > 0 && checklist.checklistItems[0].ok === undefined"
-              [style.pointer-events]="index > 0 && checklist.checklistItems[0].ok === undefined ? 'none' : null"
+              [class.opacity-50]="index > 0 && !isWebsiteChecked"
+              [style.pointer-events]="index > 0 && !isWebsiteChecked ? 'none' : null"
             >
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center gap-3">

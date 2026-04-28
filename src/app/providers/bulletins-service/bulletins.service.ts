@@ -3,7 +3,6 @@ import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import {
-  ChecklistItemModel,
   PublicationChecklistModel,
   PublicationChecklistSchema,
   PublicationStatusModel,
@@ -208,10 +207,6 @@ export class BulletinsService {
         return [];
       }),
     );
-  }
-
-  getPublicationChecklist(date: string, region: string): Observable<ChecklistItemModel[]> {
-    return this.getPublicationChecklists(date, region).pipe(map((checklists) => checklists[0]?.checklistItems ?? []));
   }
 
   savePublicationChecklist(

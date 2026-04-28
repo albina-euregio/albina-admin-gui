@@ -224,11 +224,11 @@ export class BulletinsComponent implements OnDestroy {
     for (const date of dates) {
       const dateString = this.constantsService.getISODateString(date[1]);
       this.publicationChecklistLoadSubscription.add(
-        this.bulletinsService.getPublicationChecklist(dateString, regionId).subscribe({
-          next: (checklist) => {
+        this.bulletinsService.getPublicationChecklists(dateString, regionId).subscribe({
+          next: (checklists) => {
             this.checklistCompletionByDate.set(
               dateString,
-              checklist.length > 0 && checklist.every((item) => item.ok !== undefined),
+              checklists.length > 0 && checklists[0].checklistItems.every((item) => item.ok !== undefined),
             );
           },
           error: (error) => {
