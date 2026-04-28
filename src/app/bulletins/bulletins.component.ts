@@ -6,7 +6,7 @@ import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { StatusInformationModel } from "app/models/status-information.model";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { debounceTime, Subject } from "rxjs";
+import { debounceTime, Subject, Subscription } from "rxjs";
 import { groupBy, mergeMap } from "rxjs/operators";
 
 import * as Enums from "../enums/enums";
@@ -40,6 +40,9 @@ export class BulletinsComponent implements OnDestroy {
   userService = inject(UserService);
   statusService = inject(StatusService);
   private modalService = inject(BsModalService);
+  private publicationChecklistLoadSubscription = new Subscription();
+  private activeRegionSubscription = new Subscription();
+  private checklistCompletionByDate = new Map<string, boolean>();
 
   public bulletinStatus = Enums.BulletinStatus;
   public copying: boolean;
@@ -51,6 +54,10 @@ export class BulletinsComponent implements OnDestroy {
     this.copying = false;
 
     this.bulletinsService.init();
+    this.loadChecklistCompletion();
+    this.activeRegionSubscription = this.authenticationService.activeRegion$.subscribe(() => {
+      this.loadChecklistCompletion();
+    });
 
     if (this.authenticationService.isCurrentUserInRole("ADMIN")) {
       this.loadChannelStatusInformation();
@@ -66,6 +73,8 @@ export class BulletinsComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.copying = false;
+    this.activeRegionSubscription.unsubscribe();
+    this.publicationChecklistLoadSubscription.unsubscribe();
   }
 
   getActiveRegionStatus(date: [Date, Date]) {
@@ -132,11 +141,8 @@ export class BulletinsComponent implements OnDestroy {
   }
 
   isChecklistComplete(date: [Date, Date]) {
-    const checklist = this.localStorageService.getPublicationChecklist(
-      this.constantsService.getISODateString(date[1]),
-      this.authenticationService.getActiveRegionId(),
-    );
-    return checklist.length > 0 && checklist.every((item) => item.ok !== undefined);
+    const dateString = this.constantsService.getISODateString(date[1]);
+    return this.checklistCompletionByDate.get(dateString) ?? false;
   }
 
   copy(event, date: [Date, Date]) {
@@ -203,4 +209,34 @@ export class BulletinsComponent implements OnDestroy {
   }
 
   protected readonly formatDate = formatDate;
+
+  private loadChecklistCompletion() {
+    const regionId = this.authenticationService.getActiveRegionId();
+    this.publicationChecklistLoadSubscription.unsubscribe();
+    this.publicationChecklistLoadSubscription = new Subscription();
+    this.checklistCompletionByDate.clear();
+
+    if (!regionId) {
+      return;
+    }
+
+    const dates = this.bulletinsService.sourceDates.dates;
+    for (const date of dates) {
+      const dateString = this.constantsService.getISODateString(date[1]);
+      this.publicationChecklistLoadSubscription.add(
+        this.bulletinsService.getPublicationChecklists(dateString, regionId).subscribe({
+          next: (checklists) => {
+            this.checklistCompletionByDate.set(
+              dateString,
+              checklists.length > 0 && checklists[0].checklistItems.every((item) => item.ok !== undefined),
+            );
+          },
+          error: (error) => {
+            console.error("Publication checklist could not be loaded from server!", error);
+            this.checklistCompletionByDate.set(dateString, false);
+          },
+        }),
+      );
+    }
+  }
 }

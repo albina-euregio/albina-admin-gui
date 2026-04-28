@@ -560,6 +560,24 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/checklist": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get checklists for a given date and region */
+    get: operations["getChecklists"];
+    put?: never;
+    /** Store checklist for a given date and region */
+    post: operations["saveChecklist"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/danger-sources": {
     parameters: {
       query?: never;
@@ -1192,6 +1210,7 @@ export interface components {
       suggestedRegions?: string[];
       /** @description The saved regions the avalanche bulletin is for. */
       savedRegions?: string[];
+      savedOrPublishedRegions?: string[];
       regions?: string[];
       /** @description The published regions the avalanche bulletin is for. */
       publishedRegions?: string[];
@@ -1254,6 +1273,7 @@ export interface components {
       /** Format: date-time */
       timestamp: string;
       status: components["schemas"]["BulletinStatus"];
+      isBeingPublished: boolean;
     };
     AvalancheProblem: components["schemas"]["AbstractPersistentObject"] & {
       id?: string | null;
@@ -1304,6 +1324,13 @@ export interface components {
     CaamlVersion: "V5" | "V6" | "V6_JSON";
     /** @enum {string} */
     Characteristic: "low" | "medium" | "high" | "very_high";
+    "ChecklistService.Checklist": {
+      checklistId: string;
+      /** Format: date-time */
+      timestamp: string;
+      checklist: components["schemas"]["PublicationChecklistItem"][];
+      user: string;
+    };
     /** @enum {string} */
     Complexity: "easy" | "challenging" | "complex";
     /** @enum {string} */
@@ -1540,6 +1567,12 @@ export interface components {
     Position: "topleft" | "topright" | "bottomleft" | "bottomright";
     /** @enum {string} */
     Probability: "likely" | "possible" | "unlikely";
+    PublicationChecklistItem: components["schemas"]["AbstractPersistentObject"] & {
+      id?: string | null;
+      publicationChannel?: string;
+      ok?: boolean;
+      problemDescription?: string;
+    };
     PushSubscription: {
       /** Format: int64 */
       id?: number | null;
@@ -2646,6 +2679,58 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["AvalancheBulletin"][];
+        };
+      };
+    };
+  };
+  getChecklists: {
+    parameters: {
+      query: {
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        date: string;
+        region: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getChecklists 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChecklistService.Checklist"][];
+        };
+      };
+    };
+  };
+  saveChecklist: {
+    parameters: {
+      query: {
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        date: string;
+        region: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChecklistService.Checklist"];
+      };
+    };
+    responses: {
+      /** @description saveChecklist 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChecklistService.Checklist"];
         };
       };
     };

@@ -2,11 +2,17 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
-import { PublicationStatusModel, PublicationStatusSchema } from "app/models/publication-checklist.model";
+import {
+  PublicationChecklistModel,
+  PublicationChecklistSchema,
+  PublicationStatusModel,
+  PublicationStatusSchema,
+} from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap, tap } from "rxjs/operators";
 
+import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
@@ -191,6 +197,28 @@ export class BulletinsService {
     return this.http.get(url).pipe(map((data) => PublicationStatusSchema.parse(data)));
   }
 
+  getPublicationChecklists(date: string, region: string): Observable<PublicationChecklistModel[]> {
+    const url = this.getChecklistUrl(date, region);
+    return this.http.get(url).pipe(
+      map((data) => {
+        if (Array.isArray(data)) {
+          return PublicationChecklistSchema.array().parse(data);
+        }
+        return [];
+      }),
+    );
+  }
+
+  savePublicationChecklist(
+    date: string,
+    region: string,
+    checklist: PublicationChecklistModel,
+  ): Observable<PublicationChecklistModel> {
+    const url = this.getChecklistUrl(date, region);
+    const body = JSON.stringify(checklist);
+    return this.http.post(url, body).pipe(map((data) => PublicationChecklistSchema.parse(data)));
+  }
+
   loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
     const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
       date: date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).toString(),
@@ -199,6 +227,13 @@ export class BulletinsService {
       version: "V6_JSON",
     });
     return this.http.get<Bulletins>(url).pipe(map((response) => response.bulletins));
+  }
+
+  private getChecklistUrl(date: string, region: string): string {
+    const url = new URL("./checklist", environment.apiBaseUrl);
+    url.searchParams.set("date", date);
+    url.searchParams.set("region", region);
+    return url.toString();
   }
 
   loadBulletins(

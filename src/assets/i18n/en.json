@@ -261,7 +261,7 @@
       },
       "ok": "Ok",
       "problem": "Problem",
-      "problemDescription": "Description",
+      "problemDescription": "Problem description",
       "problemPlaceholder": "Describe the encountered problem",
       "channel": {
         "website": "Website",
@@ -300,7 +300,9 @@
           "whatsapp": "Copy the text below to the specified WhatsApp channel."
         },
         "copyText": "Copy {{language}} {{channel}} text"
-      }
+      },
+      "newChecklist": "New checklist",
+      "savedInfo": "Saved by {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",

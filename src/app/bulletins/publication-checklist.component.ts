@@ -1,16 +1,31 @@
-import { DatePipe, formatDate } from "@angular/common";
+import { CommonModule, DatePipe, formatDate } from "@angular/common";
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinStatus, PublicationChannel } from "app/enums/enums";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
-import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { combineLatest, debounceTime, distinctUntilChanged, map, Subject, Subscription, tap } from "rxjs";
+import {
+  catchError,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  EMPTY,
+  map,
+  of,
+  Subject,
+  Subscription,
+  switchMap,
+  tap,
+} from "rxjs";
 
-import { ChecklistItemModel, PublicationStatusModel } from "../models/publication-checklist.model";
+import {
+  ChecklistItemModel,
+  PublicationChecklistModel,
+  PublicationStatusModel,
+} from "../models/publication-checklist.model";
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { ModalConfirmComponent } from "./modal-confirm.component";
 import { PublicationTriggerNotificationsComponent } from "./publication-trigger-notifications.component";
@@ -29,6 +44,7 @@ const PUBLICATION_STATUS_SLOW_POLL_MS = 10000; // otherwise, poll every 10 secon
   templateUrl: "publication-checklist.component.html",
   standalone: true,
   imports: [
+    CommonModule,
     DatePipe,
     RouterLink,
     TranslateModule,
@@ -39,31 +55,34 @@ const PUBLICATION_STATUS_SLOW_POLL_MS = 10000; // otherwise, poll every 10 secon
 export class PublicationChecklistComponent implements OnInit, OnDestroy {
   private authenticationService = inject(AuthenticationService);
   private modalService = inject(BsModalService);
-  private localStorageService = inject(LocalStorageService);
   bulletinsService = inject(BulletinsService);
   translateService = inject(TranslateService);
   regionsService = inject(RegionsService);
 
   private activeRoute = inject(ActivatedRoute);
-  private routeParamsSubscription: Subscription;
-  private checklistSaveSubscription: Subscription;
-  private publicationStatusSubscription: Subscription;
+  private subscriptions = new Subscription();
+  private checklistServerSaveSubscription = new Subscription();
+  private publicationStatusSubscription = new Subscription();
   private publicationStatusPollTimeout: ReturnType<typeof setTimeout> | null = null;
-  private saveChecklist = new Subject<{
-    date: string;
-    regionId: string;
-    checklist: ChecklistItemModel[];
-  }>();
+  private autosaveChecklist = new Subject<void>();
 
   date = "";
-  checklistItems: ChecklistItemModel[] = [];
+  activeChecklist: PublicationChecklistModel;
+  previousChecklists: PublicationChecklistModel[] = [];
+  expandedIds = new Set<string>();
   regionId = "";
   publicationStatus: PublicationStatusModel;
 
   publishBulletinsModalRef: BsModalRef;
 
   get isWebsiteChecked(): boolean {
-    return this.checklistItems[0]?.ok !== undefined;
+    return this.activeChecklist.checklistItems[0].ok !== undefined;
+  }
+
+  get hasContent(): boolean {
+    return this.activeChecklist.checklistItems.some(
+      (item) => item.ok !== undefined || item.problemDescription.trim().length > 0,
+    );
   }
 
   get isPublicationDisabled(): boolean {
@@ -84,13 +103,14 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.routeParamsSubscription = new Subscription();
-    this.publicationStatusSubscription = new Subscription();
-    this.checklistSaveSubscription = this.saveChecklist
-      .pipe(debounceTime(500))
-      .subscribe(({ date, regionId, checklist }) => {
-        this.localStorageService.setPublicationChecklist(date, regionId, checklist);
-      });
+    this.subscriptions.add(
+      this.autosaveChecklist
+        .pipe(
+          debounceTime(500),
+          switchMap(() => this.saveOnServer$()),
+        )
+        .subscribe(),
+    );
   }
 
   ngOnInit() {
@@ -104,28 +124,53 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     );
 
     // update checklist when date or region changes and start publication status polling
-    this.routeParamsSubscription = combineLatest([date$, regionId$])
-      .pipe(
-        tap(([date, regionId]) => {
-          this.date = date;
-          this.regionId = regionId;
-          this.bulletinsService.sourceDates.setActiveDate(date);
-          this.checklistItems = this.getInitialChecklistItems(date, regionId);
-          this.startPublicationStatusPolling();
+    this.subscriptions.add(
+      combineLatest([date$, regionId$])
+        .pipe(
+          tap(([date, regionId]) => {
+            this.date = date;
+            this.regionId = regionId;
+            this.previousChecklists = [];
+            this.expandedIds = new Set();
+            this.bulletinsService.sourceDates.setActiveDate(date);
+            this.activeChecklist = { checklistItems: this.createChecklistItems() };
+            this.startPublicationStatusPolling();
+          }),
+          switchMap(([date, regionId]) =>
+            regionId
+              ? this.bulletinsService.getPublicationChecklists(date, regionId).pipe(
+                  catchError((error) => {
+                    console.error("Publication checklist could not be loaded from server!", error);
+                    return of(null);
+                  }),
+                )
+              : of(null),
+          ),
+        )
+        .subscribe({
+          next: (serverChecklists) => {
+            if (!serverChecklists) {
+              this.previousChecklists = [];
+              this.activeChecklist = { checklistItems: this.createChecklistItems() };
+              return;
+            }
+            this.activeChecklist = serverChecklists[0]
+              ? this.normalizeChecklistOrder(serverChecklists[0])
+              : { checklistItems: this.createChecklistItems() };
+            this.previousChecklists = serverChecklists.slice(1).map((c) => this.normalizeChecklistOrder(c));
+          },
+          error: (error) => {
+            console.error("Publication checklist context could not be initialized!", error);
+          },
         }),
-      )
-      .subscribe({
-        error: (error) => {
-          console.error("Publication checklist context could not be initialized!", error);
-        },
-      });
+    );
   }
 
   ngOnDestroy() {
-    this.stopPublicationStatusPolling();
+    this.clearPublicationStatusPollTimeout();
+    this.subscriptions.unsubscribe();
+    this.checklistServerSaveSubscription.unsubscribe();
     this.publicationStatusSubscription.unsubscribe();
-    this.routeParamsSubscription.unsubscribe();
-    this.checklistSaveSubscription.unsubscribe();
   }
 
   getSocialMediaUrl(publicationChannel: PublicationChannel, language?: string) {
@@ -184,22 +229,22 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   }
 
   onOkChange(index: number, event: Event) {
-    const item = this.checklistItems[index];
+    const item = this.activeChecklist.checklistItems[index];
     const isOk = (event.target as HTMLInputElement).checked;
     if (isOk) {
       item.ok = true;
     } else if (item.ok === true) {
       item.ok = undefined;
     }
-    this.queueChecklistSave();
+    this.autosaveChecklist.next();
   }
 
   onProblemChange(index: number, event: Event) {
-    const item = this.checklistItems[index];
+    const item = this.activeChecklist.checklistItems[index];
     const hasProblem = (event.target as HTMLInputElement).checked;
     if (hasProblem) {
       item.ok = false;
-      this.queueChecklistSave();
+      this.autosaveChecklist.next();
       return;
     }
 
@@ -207,12 +252,12 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       item.ok = undefined;
       item.problemDescription = "";
     }
-    this.queueChecklistSave();
+    this.autosaveChecklist.next();
   }
 
   onProblemDescriptionChange(index: number, event: Event) {
-    this.checklistItems[index].problemDescription = (event.target as HTMLInputElement).value;
-    this.queueChecklistSave();
+    this.activeChecklist.checklistItems[index].problemDescription = (event.target as HTMLInputElement).value;
+    this.autosaveChecklist.next();
   }
 
   copyToClipboard(text: string | null) {
@@ -279,6 +324,16 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     return formatDate(this.getActiveDate()[1], "fullDate", language, "UTC");
   }
 
+  getSavedInfo(checklist: PublicationChecklistModel): string {
+    const time = new DatePipe(this.translateService.getCurrentLang()).transform(
+      checklist.timestamp,
+      "short",
+      undefined,
+      this.translateService.getCurrentLang(),
+    );
+    return this.translateService.instant("bulletins.publicationChecklist.savedInfo", { user: checklist.user, time });
+  }
+
   publish(event: Event, date: [Date, Date], change = false) {
     event.stopPropagation();
     const regionName = this.translateService.instant(this.regionsService.getRegionName(this.regionId));
@@ -319,10 +374,6 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     this.refreshPublicationStatusNow();
   }
 
-  private stopPublicationStatusPolling() {
-    this.clearPublicationStatusPollTimeout();
-  }
-
   private clearPublicationStatusPollTimeout() {
     if (this.publicationStatusPollTimeout) {
       clearTimeout(this.publicationStatusPollTimeout);
@@ -357,19 +408,53 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     });
   }
 
-  private queueChecklistSave() {
-    this.saveChecklist.next({
-      date: this.date,
-      regionId: this.regionId,
-      checklist: this.checklistItems,
+  private normalizeChecklistOrder(checklist: PublicationChecklistModel): PublicationChecklistModel {
+    const sorted = checklist.checklistItems.sort(
+      (a, b) => CHECKLIST_CHANNELS.indexOf(a.publicationChannel) - CHECKLIST_CHANNELS.indexOf(b.publicationChannel),
+    );
+    return { ...checklist, checklistItems: sorted };
+  }
+
+  private saveOnServer$(checklist: PublicationChecklistModel = this.activeChecklist) {
+    const date = this.date;
+    const regionId = this.regionId;
+
+    if (!date || !regionId || !checklist) {
+      return EMPTY;
+    }
+
+    return this.bulletinsService.savePublicationChecklist(date, regionId, checklist).pipe(
+      tap((saved) => {
+        if (this.date === date && this.regionId === regionId && this.activeChecklist === checklist) {
+          this.activeChecklist = this.normalizeChecklistOrder(saved);
+        }
+      }),
+      catchError((error) => {
+        console.error("Publication checklist could not be saved to server!", error);
+        return EMPTY;
+      }),
+    );
+  }
+
+  createNewChecklist(): void {
+    this.checklistServerSaveSubscription.unsubscribe();
+    this.checklistServerSaveSubscription = this.saveOnServer$(this.activeChecklist).subscribe({
+      next: (saved) => {
+        this.previousChecklists.unshift(this.normalizeChecklistOrder(saved));
+        this.activeChecklist = { checklistItems: this.createChecklistItems() };
+      },
     });
   }
 
-  private getInitialChecklistItems(date: string, regionId: string): ChecklistItemModel[] {
-    const savedChecklist = this.localStorageService.getPublicationChecklist(date, regionId);
-    if (savedChecklist.length > 0) {
-      return savedChecklist;
+  toggleExpanded(checklistId: string): void {
+    if (this.expandedIds.has(checklistId)) {
+      this.expandedIds.delete(checklistId);
+    } else {
+      this.expandedIds.add(checklistId);
     }
-    return this.createChecklistItems();
+  }
+
+  isExpanded(checklistId: string): boolean {
+    return this.expandedIds.has(checklistId);
   }
 }
