@@ -1,5 +1,5 @@
 import { NgClass, UpperCasePipe } from "@angular/common";
-import { Component, TemplateRef, input, output, inject } from "@angular/core";
+import { Component, TemplateRef, input, output, inject, effect } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -39,6 +39,20 @@ export class BulletinTextComponent {
   showNotes = false;
   modalRef: BsModalRef;
   createWordDiff = createWordDiff;
+  private comparedSnapshotText: LangTexts | undefined;
+
+  constructor() {
+    effect(() => {
+      const bulletin = this.bulletin();
+      const hasComparedBulletin = !!this.comparedBulletin();
+
+      if (bulletin && hasComparedBulletin) {
+        this.comparedSnapshotText = structuredClone(this.bulletinText);
+      } else {
+        this.comparedSnapshotText = undefined;
+      }
+    });
+  }
 
   get translationLanguages() {
     return LANGUAGES.filter((l) => l !== this.translateService.getCurrentLang());
@@ -214,10 +228,9 @@ export class BulletinTextComponent {
   }
 
   createText(): string {
-    const lang = this.translateService.getCurrentLang();
-    const currentBulletin = this.bulletin();
-    const currentText = toLangTexts(currentBulletin?.[this.textField()])?.[lang] ?? "";
-    if (currentBulletin) {
+    const lang = this.translateService.getCurrentLang() as keyof LangTexts;
+    const currentText = this.comparedSnapshotText?.[lang] ?? this.bulletinText?.[lang] ?? "";
+    if (this.bulletin()) {
       const comparedBulletin = this.comparedBulletin();
       const comparedText = toLangTexts(comparedBulletin?.[this.textField()])?.[lang] ?? "";
       return createWordDiff(currentText, comparedText);
