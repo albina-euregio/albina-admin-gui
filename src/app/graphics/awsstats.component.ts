@@ -230,9 +230,56 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   }
 
   private async loadObservationsDataBlob(): Promise<Blob> {
-    const params = this.getObservationDateRangeParams(this.startDate, this.endDate);
-    const collection = await lastValueFrom(this.observationsService.getGenericObservationsGeoJSON(params));
-    return new Blob([JSON.stringify(collection, undefined, 2)], { type: "application/geo+json" });
+    const chunks = this.chunkDateRange(this.startDate, this.endDate, 14);
+    const allFeatures: any[] = [];
+
+    for (const chunk of chunks) {
+      const params = this.getObservationDateRangeParams(chunk.start, chunk.end);
+      const collection = await lastValueFrom(this.observationsService.getGenericObservationsGeoJSON(params));
+
+      if (collection?.features && Array.isArray(collection.features)) {
+        allFeatures.push(...collection.features);
+      }
+    }
+
+    const mergedCollection = {
+      type: "FeatureCollection",
+      features: allFeatures,
+    };
+
+    return new Blob([JSON.stringify(mergedCollection)], { type: "application/geo+json" });
+  }
+
+  private chunkDateRange(
+    startDate: string,
+    endDate: string,
+    chunkDays: number = 14,
+  ): Array<{ start: string; end: string }> {
+    const chunks: Array<{ start: string; end: string }> = [];
+    const endDateObj = new Date(endDate);
+    let currentStart = new Date(startDate);
+
+    while (this.toDateInputValue(currentStart) <= endDate) {
+      const currentEnd = new Date(currentStart);
+      currentEnd.setDate(currentEnd.getDate() + chunkDays - 1);
+
+      if (currentEnd >= endDateObj) {
+        chunks.push({
+          start: this.toDateInputValue(currentStart),
+          end: endDate,
+        });
+        break;
+      }
+
+      chunks.push({
+        start: this.toDateInputValue(currentStart),
+        end: this.toDateInputValue(currentEnd),
+      });
+
+      currentStart.setDate(currentStart.getDate() + chunkDays);
+    }
+
+    return chunks;
   }
 
   private revokeObservationsUrl() {
