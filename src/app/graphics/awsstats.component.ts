@@ -15,7 +15,7 @@ import {
   inject,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
@@ -42,6 +42,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected mapService = inject(BaseMapService);
   protected stationsMapService = inject(LineaMapService);
   protected authentificationService = inject(AuthenticationService);
+  private translateService = inject(TranslateService);
 
   @ViewChild("regionMapHost", { static: false })
   private regionMapHost?: ElementRef<HTMLElement>;
@@ -168,12 +169,12 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   protected async update() {
     if (!this.startDate || !this.endDate) {
-      this.errorMessage = "Start date and end date are required.";
+      this.errorMessage = this.translateService.instant("awsstats.error.startDateEndDateRequired");
       return;
     }
 
     if (this.startDate > this.endDate) {
-      this.errorMessage = "Start date must be before or equal to end date.";
+      this.errorMessage = this.translateService.instant("awsstats.error.startDateBeforeEndDate");
       return;
     }
 
@@ -222,7 +223,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       this.dangerSourceVariants = "[]";
       this.observations = "[]";
       this.showWrapper = false;
-      this.errorMessage = "Failed to load data for selected date range.";
+      this.errorMessage = this.translateService.instant("awsstats.error.failedLoadData");
       console.error(error);
     } finally {
       this.loading = false;

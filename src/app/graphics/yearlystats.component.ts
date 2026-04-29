@@ -7,7 +7,7 @@ import {
 import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
@@ -27,6 +27,7 @@ export class YearlystatsComponent implements AfterViewInit {
   @ViewChild("wrapperHost", { static: false })
   private wrapperHost?: ElementRef<HTMLElement>;
   private graphicsService = inject(GraphicsService);
+  private translateService = inject(TranslateService);
 
   protected authenticationService = inject(AuthenticationService);
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -30));
@@ -187,12 +188,12 @@ export class YearlystatsComponent implements AfterViewInit {
 
   protected async updateCharts() {
     if (!this.startDate || !this.endDate) {
-      this.errorMessage = "Start date and end date are required.";
+      this.errorMessage = this.translateService.instant("awsstats.error.startDateEndDateRequired");
       return;
     }
 
     if (this.startDate > this.endDate) {
-      this.errorMessage = "Start date must be before or equal to end date.";
+      this.errorMessage = this.translateService.instant("awsstats.error.startDateBeforeEndDate");
       return;
     }
 
@@ -227,7 +228,7 @@ export class YearlystatsComponent implements AfterViewInit {
         this.observations = "[]";
       }
     } catch (error) {
-      this.errorMessage = "Failed to load chart data for selected date range.";
+      this.errorMessage = this.translateService.instant("awsstats.error.failedLoadData");
       console.error(error);
       this.loading = false;
       return;
