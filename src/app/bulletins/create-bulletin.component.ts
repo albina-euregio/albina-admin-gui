@@ -351,6 +351,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     if (this.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
       this.reset();
+      this.bulletinsService.loadStatus();
 
       // copy bulletins from other date
       if (this.bulletinsService.getCopyDate()) {

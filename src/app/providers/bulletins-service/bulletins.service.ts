@@ -85,6 +85,22 @@ export class BulletinsService {
 
   public loadStatus() {
     const { startDate, endDate } = this.sourceDates.getLoadDate();
+    if (
+      this.sourceDates.activeDate &&
+      (this.sourceDates.activeDate[0] < startDate[0] || this.sourceDates.activeDate[0] > endDate[0])
+    ) {
+      // if active date is outside of loaded date range, load status separately only for the active date and region
+      const region = this.authenticationService.getActiveRegionId();
+      this.getStatus(region, this.sourceDates.activeDate, this.sourceDates.activeDate).subscribe((data) => {
+        const map = this.statusMap.get(region) ?? new Map<number, Enums.BulletinStatus>();
+        for (let i = data.length - 1; i >= 0; i--) {
+          map.set(Date.parse(data[i].date), Enums.BulletinStatus[data[i].status]);
+        }
+        this.statusMap.set(region, map);
+        this.updateEditable();
+      });
+      return;
+    }
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
