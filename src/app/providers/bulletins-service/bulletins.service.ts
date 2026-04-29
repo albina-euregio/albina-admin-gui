@@ -157,14 +157,20 @@ export class BulletinsService {
     this.isReadOnly = isReadOnly;
   }
 
-  getUserRegionStatus(date: [Date, Date] = this.sourceDates.activeDate): Enums.BulletinStatus {
+  getActiveRegionStatus(date: [Date, Date] = this.sourceDates.activeDate): Enums.BulletinStatus {
     const region = this.authenticationService.getActiveRegionId();
     const regionStatusMap = this.statusMap?.get(region);
     if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
     else return Enums.BulletinStatus.missing;
   }
 
-  setUserRegionStatus(date: [Date, Date], status: Enums.BulletinStatus) {
+  getRegionStatus(region: string, date: [Date, Date] = this.sourceDates.activeDate) {
+    const regionStatusMap = this.statusMap.get(region);
+    if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
+    else return Enums.BulletinStatus.missing;
+  }
+
+  setActiveRegionStatus(date: [Date, Date], status: Enums.BulletinStatus) {
     const region = this.authenticationService.getActiveRegionId();
     this.statusMap.get(region).set(date[0].getTime(), status);
   }
@@ -440,10 +446,10 @@ export class BulletinsService {
     const request$ = change ? this.changeBulletins(date, region) : this.publishBulletins(date, region);
     return request$.pipe(
       tap(() => {
-        if (this.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-          this.setUserRegionStatus(date, Enums.BulletinStatus.republished);
-        } else if (this.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-          this.setUserRegionStatus(date, Enums.BulletinStatus.published);
+        if (this.getActiveRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+          this.setActiveRegionStatus(date, Enums.BulletinStatus.republished);
+        } else if (this.getActiveRegionStatus(date) === Enums.BulletinStatus.submitted) {
+          this.setActiveRegionStatus(date, Enums.BulletinStatus.published);
         }
       }),
     );
@@ -520,10 +526,10 @@ export class BulletinsService {
 
   updateEditable() {
     this.setIsEditable(
-      ((this.getUserRegionStatus() === Enums.BulletinStatus.missing || this.getUserRegionStatus() === undefined) &&
+      ((this.getActiveRegionStatus() === Enums.BulletinStatus.missing || this.getActiveRegionStatus() === undefined) &&
         !this.sourceDates.hasBeenPublished5PM()) ||
-        this.getUserRegionStatus() === Enums.BulletinStatus.updated ||
-        this.getUserRegionStatus() === Enums.BulletinStatus.draft,
+        this.getActiveRegionStatus() === Enums.BulletinStatus.updated ||
+        this.getActiveRegionStatus() === Enums.BulletinStatus.draft,
     );
   }
 }

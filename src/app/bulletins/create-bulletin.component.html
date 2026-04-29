@@ -74,7 +74,7 @@
 
         @if (!showStatusOfAllRegions) {
           <div>
-            <app-bulletin-status-badge [status]="getActiveRegionStatus()"></app-bulletin-status-badge>
+            <app-bulletin-status-badge [status]="bulletinsService.getActiveRegionStatus()"></app-bulletin-status-badge>
           </div>
         }
       </div>
@@ -87,37 +87,40 @@
             <h5 class="bulletin-status__region-name font-xs text-secondary">
               {{ regionsService.getRegionName(authenticationService.getActiveRegionId()) }}
             </h5>
-            @if (getActiveRegionStatus() === bulletinStatus.missing || getActiveRegionStatus() === undefined) {
+            @if (
+              bulletinsService.getActiveRegionStatus() === bulletinStatus.missing ||
+              bulletinsService.getActiveRegionStatus() === undefined
+            ) {
               <span class="badge bg-danger"
                 ><i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus() === bulletinStatus.draft) {
+            @if (bulletinsService.getActiveRegionStatus() === bulletinStatus.draft) {
               <span class="badge bg-warning"
                 ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus() === bulletinStatus.submitted) {
+            @if (bulletinsService.getActiveRegionStatus() === bulletinStatus.submitted) {
               <span class="badge bg-primary"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus() === bulletinStatus.published) {
+            @if (bulletinsService.getActiveRegionStatus() === bulletinStatus.published) {
               <span class="badge bg-success"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus() === bulletinStatus.updated) {
+            @if (bulletinsService.getActiveRegionStatus() === bulletinStatus.updated) {
               <span class="badge bg-orange"
                 ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus() === bulletinStatus.resubmitted) {
+            @if (bulletinsService.getActiveRegionStatus() === bulletinStatus.resubmitted) {
               <span class="badge bg-primary"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
               >
             }
-            @if (getActiveRegionStatus() === bulletinStatus.republished) {
+            @if (bulletinsService.getActiveRegionStatus() === bulletinStatus.republished) {
               <span class="badge bg-success"
                 ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
               >
@@ -128,41 +131,44 @@
               <h5 class="bulletin-status__region-name font-xs text-secondary">
                 {{ regionsService.getRegionName(region) }}
               </h5>
-              @if (getRegionStatus(region) === bulletinStatus.missing || getRegionStatus(region) === undefined) {
+              @if (
+                bulletinsService.getRegionStatus(region) === bulletinStatus.missing ||
+                bulletinsService.getRegionStatus(region) === undefined
+              ) {
                 <span class="badge bg-danger"
                   ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region) === bulletinStatus.draft) {
+              @if (bulletinsService.getRegionStatus(region) === bulletinStatus.draft) {
                 <span class="badge bg-warning"
                   ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region) === bulletinStatus.submitted) {
+              @if (bulletinsService.getRegionStatus(region) === bulletinStatus.submitted) {
                 <span class="badge bg-primary"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.submitted" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region) === bulletinStatus.published) {
+              @if (bulletinsService.getRegionStatus(region) === bulletinStatus.published) {
                 <span class="badge bg-success"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.published" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region) === bulletinStatus.updated) {
+              @if (bulletinsService.getRegionStatus(region) === bulletinStatus.updated) {
                 <span class="badge bg-orange"
                   ><i class="ph-bold icon-sm ph-file-dashed"></i>
                   {{ "bulletins.table.status.updated" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region) === bulletinStatus.resubmitted) {
+              @if (bulletinsService.getRegionStatus(region) === bulletinStatus.resubmitted) {
                 <span class="badge bg-primary"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.resubmitted" | translate }}</span
                 >
               }
-              @if (getRegionStatus(region) === bulletinStatus.republished) {
+              @if (bulletinsService.getRegionStatus(region) === bulletinStatus.republished) {
                 <span class="badge bg-success"
                   ><i class="ph-bold icon-sm ph-newspaper"></i>
                   {{ "bulletins.table.status.republished" | translate }}</span
@@ -1213,42 +1219,43 @@
               [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion()?.id)"
             >
               @if (
-                getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined
+                bulletinsService.getActiveRegionStatus(date) === bulletinStatus.missing ||
+                bulletinsService.getActiveRegionStatus(date) === undefined
               ) {
                 <span class="badge bg-danger">
                   <i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}
                 </span>
               }
-              @if (getActiveRegionStatus(date) === bulletinStatus.draft) {
+              @if (bulletinsService.getActiveRegionStatus(date) === bulletinStatus.draft) {
                 <span class="badge bg-warning">
                   <i class="ph-bold ph-file-dashed"></i>
                   {{ "bulletins.table.status.draft" | translate }}
                 </span>
               }
-              @if (getActiveRegionStatus(date) === bulletinStatus.submitted) {
+              @if (bulletinsService.getActiveRegionStatus(date) === bulletinStatus.submitted) {
                 <span class="badge bg-primary">
                   <i class="ph-bold ph-clock-countdown"></i>
                   {{ "bulletins.table.status.submitted" | translate }}
                 </span>
               }
-              @if (getActiveRegionStatus(date) === bulletinStatus.published) {
+              @if (bulletinsService.getActiveRegionStatus(date) === bulletinStatus.published) {
                 <span class="badge bg-success">
                   <i class="ph-bold ph-newspaper"></i>
                   {{ "bulletins.table.status.published" | translate }}
                 </span>
               }
-              @if (getActiveRegionStatus(date) === bulletinStatus.updated) {
+              @if (bulletinsService.getActiveRegionStatus(date) === bulletinStatus.updated) {
                 <span class="badge bg-orange">
                   <i class="ph-bold ph-file-dashed"></i>
                   {{ "bulletins.table.status.updated" | translate }}
                 </span>
               }
-              @if (getActiveRegionStatus(date) === bulletinStatus.resubmitted) {
+              @if (bulletinsService.getActiveRegionStatus(date) === bulletinStatus.resubmitted) {
                 <span class="badge bg-primary">
                   <i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.resubmitted" | translate }}
                 </span>
               }
-              @if (getActiveRegionStatus(date) === bulletinStatus.republished) {
+              @if (bulletinsService.getActiveRegionStatus(date) === bulletinStatus.republished) {
                 <span class="badge bg-success">
                   <i class="ph-bold ph-newspaper"></i>
                   {{ "bulletins.table.status.republished" | translate }}
@@ -1257,10 +1264,10 @@
             </td>
             <td class="bulletins-table__region-status">
               @if (
-                getActiveRegionStatus(date) === bulletinStatus.draft ||
-                getActiveRegionStatus(date) === bulletinStatus.updated ||
-                getActiveRegionStatus(date) === bulletinStatus.missing ||
-                getActiveRegionStatus(date) === undefined
+                bulletinsService.getActiveRegionStatus(date) === bulletinStatus.draft ||
+                bulletinsService.getActiveRegionStatus(date) === bulletinStatus.updated ||
+                bulletinsService.getActiveRegionStatus(date) === bulletinStatus.missing ||
+                bulletinsService.getActiveRegionStatus(date) === undefined
               ) {
                 <button class="btn btn-primary btn-icon" type="button" (click)="copyRegionModalConfirm(date)">
                   <i class="ph ph-arrow-right"></i>

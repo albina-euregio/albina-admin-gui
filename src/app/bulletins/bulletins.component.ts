@@ -92,8 +92,8 @@ export class BulletinsComponent implements OnDestroy {
   showCopyButton(date: [Date, Date]) {
     return (
       this.authenticationService.getActiveRegionId() !== undefined &&
-      this.bulletinsService.getUserRegionStatus(date) &&
-      this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.missing &&
+      this.bulletinsService.getActiveRegionStatus(date) &&
+      this.bulletinsService.getActiveRegionStatus(date) !== this.bulletinStatus.missing &&
       !this.copying &&
       this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN")
     );
@@ -102,10 +102,10 @@ export class BulletinsComponent implements OnDestroy {
   showPasteButton(date: [Date, Date]) {
     return (
       this.authenticationService.getActiveRegionId() !== undefined &&
-      this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.published &&
-      this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.republished &&
-      this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.submitted &&
-      this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.resubmitted &&
+      this.bulletinsService.getActiveRegionStatus(date) !== this.bulletinStatus.published &&
+      this.bulletinsService.getActiveRegionStatus(date) !== this.bulletinStatus.republished &&
+      this.bulletinsService.getActiveRegionStatus(date) !== this.bulletinStatus.submitted &&
+      this.bulletinsService.getActiveRegionStatus(date) !== this.bulletinStatus.resubmitted &&
       this.copying &&
       this.bulletinsService.getCopyDate() !== date &&
       !this.bulletinsService.sourceDates.hasBeenPublished5PM(date)
