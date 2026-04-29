@@ -1,4 +1,9 @@
 import "@albina-euregio/linea/aws-stats";
+import {
+  CONFIGURED_PLOTS,
+  type AwsstatsDatatype,
+  type AwsstatsPlotConfig,
+} from "@albina-euregio/linea/aws-stats-plot-config";
 import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -6,6 +11,8 @@ import { TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 import { GraphicsService } from "./graphics.service";
+
+const AVAILABLE_YEARLY_CHART_TYPES = CONFIGURED_PLOTS.yearlystats.map((c) => c.id);
 
 @Component({
   selector: "app-yearlystats",
@@ -32,22 +39,19 @@ export class YearlystatsComponent implements AfterViewInit {
   protected bulletins = "[]";
   protected blogs = "[]";
   protected stress = "[]";
+  protected observations = "[]";
   protected fieldTrainings = "";
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
   protected selectedRegionCodes: string[] = [];
 
   protected readonly regionCodes = this.graphicsService.getBulletinRegionCodes();
+  protected readonly chartConfigs = CONFIGURED_PLOTS.yearlystats;
 
-  protected chartTypeSelection: Record<YearlyChartType, boolean> = {
-    "aws-danger-rating-micro-regions-bars": true,
-    "aws-danger-rating-micro-regions": false,
-    "aws-danger-rating-distribution": false,
-    "aws-danger-pattern-micro-regions": false,
-    "aws-avalanche-problem-micro-regions": false,
-    "aws-products": false,
-    "aws-stress-level": false,
-  };
+  // derive available yearly chart types from config and initialize selection dynamically
+  protected chartTypeSelection: Record<string, boolean> = Object.fromEntries(
+    this.chartConfigs.map((c) => [c.id, c.id === "aws-danger-rating-micro-regions-bars"]),
+  );
 
   ngAfterViewInit() {
     if (this.showWrapper) {
@@ -80,7 +84,7 @@ export class YearlystatsComponent implements AfterViewInit {
     this.activeQuickRange = null;
   }
 
-  protected setChartType(chartType: YearlyChartType, checked: boolean) {
+  protected setChartType(chartType: string, checked: boolean) {
     this.chartTypeSelection[chartType] = checked;
     if (this.showWrapper) {
       this.mountWrapper();
@@ -127,6 +131,33 @@ export class YearlystatsComponent implements AfterViewInit {
     }
   }
 
+  private getSelectedChartConfigs(): AwsstatsPlotConfig[] {
+    return (Object.keys(this.chartTypeSelection) as string[])
+      .filter((key) => this.chartTypeSelection[key] && (AVAILABLE_YEARLY_CHART_TYPES as string[]).includes(key))
+      .map((id) => CONFIGURED_PLOTS.yearlystats.find((config: AwsstatsPlotConfig) => config.id === id))
+      .filter((config): config is AwsstatsPlotConfig => !!config);
+  }
+
+  protected isChartDisabled(config: AwsstatsPlotConfig): boolean {
+    if (config.regions === "userRegion") {
+      return (
+        this.selectedRegionCodes.length !== 1 ||
+        this.selectedRegionCodes[0] !== this.authenticationService.getActiveRegionId()
+      );
+    }
+
+    return false;
+  }
+
+  private getRequiredParameters(): Set<AwsstatsDatatype> {
+    const configs = this.getSelectedChartConfigs();
+    const params = new Set<AwsstatsDatatype>();
+    configs.forEach((config) => {
+      config.parameters.forEach((param) => params.add(param));
+    });
+    return params;
+  }
+
   protected isRegionButtonActive(regionCode: string): boolean {
     return this.isRegionSelected(regionCode);
   }
@@ -157,21 +188,33 @@ export class YearlystatsComponent implements AfterViewInit {
     this.errorMessage = "";
     this.loading = true;
     try {
-      const bulletinRegionCodes = this.getSelectedBulletinRegionCodes();
-      const bulletins = await this.graphicsService.loadBulletins(
-        this.startDate,
-        this.endDate,
-        bulletinRegionCodes,
-        this.graphicsService.getBulletinLanguage(),
-      );
-      this.bulletins = JSON.stringify(bulletins);
+      const requiredParams = this.getRequiredParameters();
 
-      const blogRegionCodes = this.getSelectedBlogRegionCodes();
-      const blogs = await this.graphicsService.loadBlogs(this.startDate, this.endDate, blogRegionCodes);
-      this.blogs = JSON.stringify(blogs);
+      if (requiredParams.has("bulletins")) {
+        const bulletinRegionCodes = this.getSelectedBulletinRegionCodes();
+        const bulletins = await this.graphicsService.loadBulletins(
+          this.startDate,
+          this.endDate,
+          bulletinRegionCodes,
+          this.graphicsService.getBulletinLanguage(),
+        );
+        this.bulletins = JSON.stringify(bulletins);
+      }
 
-      const stress = await this.graphicsService.loadTeamStressLevels(this.startDate, this.endDate);
-      this.stress = JSON.stringify(stress);
+      if (requiredParams.has("blogs")) {
+        const blogRegionCodes = this.getSelectedBlogRegionCodes();
+        const blogs = await this.graphicsService.loadBlogs(this.startDate, this.endDate, blogRegionCodes);
+        this.blogs = JSON.stringify(blogs);
+      }
+
+      if (requiredParams.has("stress-level")) {
+        const stress = await this.graphicsService.loadTeamStressLevels(this.startDate, this.endDate);
+        this.stress = JSON.stringify(stress);
+      }
+
+      if (requiredParams.has("observations")) {
+        this.observations = "[]";
+      }
     } catch (error) {
       this.errorMessage = "Failed to load chart data for selected date range.";
       console.error(error);
@@ -187,11 +230,12 @@ export class YearlystatsComponent implements AfterViewInit {
   }
 
   protected get showProductsTrainingInputs(): boolean {
-    return this.chartTypeSelection["aws-products"];
+    const params = this.getRequiredParameters();
+    return params.has("field-trainings") || params.has("virtual-trainings");
   }
 
   protected get showDistributionReferenceInput(): boolean {
-    return this.chartTypeSelection["aws-danger-rating-distribution"];
+    return this.getRequiredParameters().has("danger-rating-reference");
   }
 
   private mountWrapper() {
@@ -210,26 +254,39 @@ export class YearlystatsComponent implements AfterViewInit {
     wrapper.setAttribute("bulletins", this.bulletins);
     wrapper.setAttribute("stress-level", this.stress);
 
-    if (this.showProductsTrainingInputs) {
+    const requiredParams = this.getRequiredParameters();
+
+    if (requiredParams.has("field-trainings")) {
       wrapper.setAttribute("field-trainings", JSON.stringify(this.parseTrainingDates(this.fieldTrainings)));
+    }
+
+    if (requiredParams.has("virtual-trainings")) {
       wrapper.setAttribute("virtual-trainings", JSON.stringify(this.parseTrainingDates(this.virtualTrainings)));
     }
 
-    if (this.showDistributionReferenceInput) {
+    if (requiredParams.has("danger-rating-reference")) {
       wrapper.setAttribute(
         "danger-rating-reference",
         JSON.stringify(this.parseDangerRatingReference(this.dangerRatingReference)),
       );
     }
 
+    if (requiredParams.has("observations")) {
+      wrapper.setAttribute("observations", this.observations);
+    }
+
     host.appendChild(wrapper);
   }
 
   private getSelectedChartTypesValue(): string {
-    const selected = (Object.keys(this.chartTypeSelection) as YearlyChartType[]).filter(
-      (key) => this.chartTypeSelection[key],
+    const selected = (Object.keys(this.chartTypeSelection) as string[]).filter(
+      (key) => this.chartTypeSelection[key] && (AVAILABLE_YEARLY_CHART_TYPES as string[]).includes(key),
     );
-    return selected.length ? selected.join(",") : "aws-danger-rating-micro-regions-bars";
+    return selected.length
+      ? selected.join(",")
+      : AVAILABLE_YEARLY_CHART_TYPES.includes("aws-danger-rating-micro-regions-bars")
+        ? "aws-danger-rating-micro-regions-bars"
+        : (AVAILABLE_YEARLY_CHART_TYPES[0] ?? "");
   }
 
   private getSelectedBulletinRegionCodes(): string[] {
@@ -277,12 +334,3 @@ export class YearlystatsComponent implements AfterViewInit {
     return shifted;
   }
 }
-
-type YearlyChartType =
-  | "aws-danger-rating-micro-regions-bars"
-  | "aws-danger-rating-micro-regions"
-  | "aws-danger-rating-distribution"
-  | "aws-danger-pattern-micro-regions"
-  | "aws-avalanche-problem-micro-regions"
-  | "aws-products"
-  | "aws-stress-level";

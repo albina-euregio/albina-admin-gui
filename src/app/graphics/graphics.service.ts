@@ -73,17 +73,9 @@ export class GraphicsService {
     return [...stationById.values()];
   }
 
-  getBulletinLanguage(): AlbinaLanguage {
-    return this.translateService.getCurrentLang() as AlbinaLanguage;
-  }
-
-  getBulletinRegionCodes(): string[] {
-    return this.authentificationService.getInternalRegionsWithoutSuperRegions((r) => r.publishBulletins);
-  }
-
-  getBlogRegionCodes(): string[] {
-    return this.authentificationService.getInternalRegionsWithoutSuperRegions((r) => r.publishBlogs);
-  }
+  // ============================================
+  // Data Loading - Bulletins, Blogs, Stress
+  // ============================================
 
   async loadBulletins(
     startDate: string,
@@ -94,7 +86,7 @@ export class GraphicsService {
     if (!startDate || !endDate) {
       return [];
     }
-    const regions = [...new Set(regionCodes.filter(Boolean))];
+    const regions = this.normalizeRegionCodes(regionCodes);
     if (!regions.length) {
       return [];
     }
@@ -106,23 +98,6 @@ export class GraphicsService {
     return results.flat();
   }
 
-  async loadDangerSourceVariants(startDate: string, endDate: string, region: string): Promise<unknown[]> {
-    if (!startDate || !endDate || !region) {
-      return [];
-    }
-
-    const dates = this.getDateRange(startDate, endDate).map(
-      (date) => new Date(date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).epochMilliseconds),
-    );
-
-    const requests = dates.map((date) =>
-      lastValueFrom(this.dangerSourceService.loadDangerSourceVariants([date, undefined], region)),
-    );
-
-    const results = await Promise.all(requests);
-    return results.flat();
-  }
-
   async loadBlogs(startDate: string, endDate: string, regionCodes: string[]): Promise<BlogData[]> {
     const start = Date.parse(`${startDate}T00:00:00.000Z`);
     const end = Date.parse(`${endDate}T23:59:59.999Z`);
@@ -130,7 +105,7 @@ export class GraphicsService {
       return [];
     }
 
-    const regions = [...new Set(regionCodes.filter(Boolean))];
+    const regions = this.normalizeRegionCodes(regionCodes);
     if (!regions.length) {
       return [];
     }
@@ -168,18 +143,68 @@ export class GraphicsService {
     return await lastValueFrom(this.userService.getTeamStressLevels([new Date(start), new Date(end)]));
   }
 
+  async loadDangerSourceVariants(startDate: string, endDate: string, region: string): Promise<unknown[]> {
+    if (!startDate || !endDate || !region) {
+      return [];
+    }
+
+    const dates = this.getDateRange(startDate, endDate).map(
+      (date) => new Date(date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).epochMilliseconds),
+    );
+
+    const requests = dates.map((date) =>
+      lastValueFrom(this.dangerSourceService.loadDangerSourceVariants([date, undefined], region)),
+    );
+
+    const results = await Promise.all(requests);
+    return results.flat();
+  }
+
+  // ============================================
+  // Configuration & Metadata
+  // ============================================
+
+  getBulletinLanguage(): AlbinaLanguage {
+    return this.translateService.getCurrentLang() as AlbinaLanguage;
+  }
+
+  getBulletinRegionCodes(): string[] {
+    return this.authentificationService.getInternalRegionsWithoutSuperRegions((r) => r.publishBulletins);
+  }
+
+  getBlogRegionCodes(): string[] {
+    return this.authentificationService.getInternalRegionsWithoutSuperRegions((r) => r.publishBlogs);
+  }
+
+  getCurrentSeason(): { start: string; end: string } {
+    let start: string;
+    let seasonEnd: string;
+    const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (now.getMonth() < 11) {
+      start = `${now.getFullYear() - 1}-11-01`;
+      seasonEnd = `${now.getFullYear()}-05-31`;
+    } else {
+      start = `${now.getFullYear()}-11-01`;
+      seasonEnd = `${now.getFullYear() + 1}-05-31`;
+    }
+
+    const seasonEndDate = new Date(`${seasonEnd}T00:00:00`);
+    const effectiveEndDate = seasonEndDate > nowDate ? nowDate : seasonEndDate;
+    const end = `${effectiveEndDate.getFullYear()}-${String(effectiveEndDate.getMonth() + 1).padStart(2, "0")}-${String(effectiveEndDate.getDate()).padStart(2, "0")}`;
+
+    return { start, end };
+  }
+
+  // ============================================
+  // SMET URL Utilities
+  // ============================================
+
   getSmetUrl(station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined, index: number): string | undefined {
     const template = station?.smet?.[index];
     const smetId = station?.smetId;
     return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
-  }
-
-  getLatLongPairsByIds(
-    ids: string[],
-    stations: Pick<LineaStationFeature, "id" | "latitude" | "longitude">[],
-  ): string[] {
-    const stationById = new Map(stations.map((station) => [station.id, station]));
-    return ids.map((id) => `${stationById.get(id).latitude},${stationById.get(id).longitude}`);
   }
 
   getSmetUrlsByIds(
@@ -205,26 +230,17 @@ export class GraphicsService {
     return fallback;
   }
 
-  getCurrentSeason(): { start: string; end: string } {
-    let start: string;
-    let seasonEnd: string;
-    const now = new Date();
-    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-    if (now.getMonth() < 11) {
-      start = `${now.getFullYear() - 1}-11-01`;
-      seasonEnd = `${now.getFullYear()}-05-31`;
-    } else {
-      start = `${now.getFullYear()}-11-01`;
-      seasonEnd = `${now.getFullYear() + 1}-05-31`;
-    }
-
-    const seasonEndDate = new Date(`${seasonEnd}T00:00:00`);
-    const effectiveEndDate = seasonEndDate > nowDate ? nowDate : seasonEndDate;
-    const end = `${effectiveEndDate.getFullYear()}-${String(effectiveEndDate.getMonth() + 1).padStart(2, "0")}-${String(effectiveEndDate.getDate()).padStart(2, "0")}`;
-
-    return { start, end };
+  getLatLongPairsByIds(
+    ids: string[],
+    stations: Pick<LineaStationFeature, "id" | "latitude" | "longitude">[],
+  ): string[] {
+    const stationById = new Map(stations.map((station) => [station.id, station]));
+    return ids.map((id) => `${stationById.get(id).latitude},${stationById.get(id).longitude}`);
   }
+
+  // ============================================
+  // Private Utilities
+  // ============================================
 
   private getDateRange(startDate: string, endDate: string): Temporal.PlainDate[] {
     let start: Temporal.PlainDate;
@@ -249,5 +265,9 @@ export class GraphicsService {
     }
 
     return dates;
+  }
+
+  private normalizeRegionCodes(regionCodes: string[]): string[] {
+    return [...new Set(regionCodes.filter(Boolean))];
   }
 }
