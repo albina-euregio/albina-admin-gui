@@ -9,6 +9,7 @@ import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, V
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { TooltipModule } from "ngx-bootstrap/tooltip";
 
 import { GraphicsService } from "./graphics.service";
 
@@ -17,7 +18,7 @@ const AVAILABLE_YEARLY_CHART_TYPES = CONFIGURED_PLOTS.yearlystats.map((c) => c.i
 @Component({
   selector: "app-yearlystats",
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, TooltipModule],
   templateUrl: "./yearlystats.component.html",
   styleUrls: ["./yearlystats.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -44,6 +45,7 @@ export class YearlystatsComponent implements AfterViewInit {
   protected virtualTrainings = "";
   protected dangerRatingReference = "19, 42, 37, 2.2, 0.1";
   protected selectedRegionCodes: string[] = [];
+  protected openTooltipId: string | null = null;
 
   protected readonly regionCodes = this.graphicsService.getBulletinRegionCodes();
   protected readonly chartConfigs = CONFIGURED_PLOTS.yearlystats;
@@ -103,6 +105,15 @@ export class YearlystatsComponent implements AfterViewInit {
     if (this.showWrapper) {
       this.mountWrapper();
     }
+  }
+
+  protected toggleChartTooltip(event: MouseEvent, chartId: string) {
+    event.stopPropagation();
+    this.openTooltipId = this.openTooltipId === chartId ? null : chartId;
+  }
+
+  protected closeChartTooltips() {
+    this.openTooltipId = null;
   }
 
   protected selectAllRegions() {

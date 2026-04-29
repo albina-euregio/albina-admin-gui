@@ -88,7 +88,7 @@
     <div class="awsstats-selection-row mt-3">
       <div class="small text-muted">{{ "awsstats.label.charttypes" | translate }}</div>
     </div>
-    <div class="awsstats-chart-types">
+    <div class="awsstats-chart-types" (document:click)="closeChartTooltips()">
       @for (config of chartConfigs; track config.id) {
         <label class="form-check mb-0">
           <input
@@ -98,6 +98,19 @@
             [disabled]="loading || isChartDisabled(config)"
             (ngModelChange)="setChartType(config.id, $event)"
           />
+          <button
+            type="button"
+            class="btn btn-sm btn-bare--grey btn-icon awsstats-chart-tooltip"
+            [tooltip]="config.describtion"
+            placement="top"
+            triggers="manual"
+            [isOpen]="openTooltipId === config.id"
+            (click)="toggleChartTooltip($event, config.id)"
+            container="body"
+            aria-label="Chart description"
+          >
+            <i class="ph ph-question"></i>
+          </button>
           <span class="form-check-label">{{ "awsstats.charts." + config.id | translate }}</span>
         </label>
       }

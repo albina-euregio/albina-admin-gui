@@ -161,7 +161,7 @@
       <!-- Right column: Chart types -->
       <div class="yearlystats-selection-card">
         <div class="small text-muted">{{ "awsstats.label.charttypes" | translate }}</div>
-        <div class="yearlystats-chart-types mt-2">
+        <div class="yearlystats-chart-types mt-2" (document:click)="closeChartTooltips()">
           @for (config of chartConfigs; track config.id) {
             @if (
               config.regions !== "userRegion" ||
@@ -175,6 +175,19 @@
                   [(ngModel)]="chartTypeSelection[config.id]"
                   (ngModelChange)="setChartType(config.id, $event)"
                 />
+                <button
+                  type="button"
+                  class="btn btn-sm btn-bare--grey btn-icon yearlystats-chart-tooltip"
+                  [tooltip]="config.describtion"
+                  placement="top"
+                  triggers="manual"
+                  [isOpen]="openTooltipId === config.id"
+                  (click)="toggleChartTooltip($event, config.id)"
+                  container="body"
+                  aria-label="Chart description"
+                >
+                  <i class="ph ph-question"></i>
+                </button>
                 <span class="form-check-label">
                   {{ "yearlystats.charts." + config.id | translate }}
                   @if (config.regions === "userRegion") {

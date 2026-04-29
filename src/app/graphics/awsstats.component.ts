@@ -18,6 +18,7 @@ import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
+import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { lastValueFrom } from "rxjs";
 
 import { AlbinaObservationsService } from "../observations/observations.service";
@@ -30,7 +31,7 @@ const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id
 @Component({
   selector: "app-awsstats",
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, TooltipModule],
   templateUrl: "./awsstats.component.html",
   styleUrls: ["./awsstats.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -64,6 +65,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected selectedMicroRegions: string[] = [];
   protected selectedStationId = "";
   protected showPrecipitationOnly = false;
+  protected openTooltipId: string | null = null;
   protected readonly chartConfigs = CONFIGURED_PLOTS.awsstats;
   protected chartTypeSelection: Record<string, boolean> = Object.fromEntries(
     this.chartConfigs.map((c) => [c.id, c.id === "aws-observations"]),
@@ -129,6 +131,15 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     if (this.showWrapper) {
       this.mountWrapper();
     }
+  }
+
+  protected toggleChartTooltip(event: MouseEvent, chartId: string) {
+    event.stopPropagation();
+    this.openTooltipId = this.openTooltipId === chartId ? null : chartId;
+  }
+
+  protected closeChartTooltips() {
+    this.openTooltipId = null;
   }
 
   protected togglePrecipitationFilter() {
