@@ -1,5 +1,4 @@
 import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
-import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
@@ -46,10 +45,7 @@ export class GraphicsService {
     for (source of sources) {
       const response = await fetch(source.stations);
       const json = await response.json();
-      const searchParams = new URL(source.stations, location.href).searchParams;
-      const isLegacy = searchParams.get("v") === "legacy";
-      const schema = isLegacy ? LegacyFeatureCollectionSchema : FeatureCollectionSchema;
-      const collection = schema.parse(json, { reportInput: true });
+      const collection = FeatureCollectionSchema.parse(json, { reportInput: true });
 
       for (const feature of collection.features) {
         if (!new RegExp(source.smetOperators).test(feature.properties.operator)) {
