@@ -85,10 +85,10 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   get isPublicationDisabled(): boolean {
     return (
       this.publicationStatus?.isBeingPublished ||
-      (this.publicationStatus?.status !== BulletinStatus.published &&
-        this.publicationStatus?.status !== BulletinStatus.republished &&
-        this.publicationStatus?.status !== BulletinStatus.submitted &&
-        this.publicationStatus?.status !== BulletinStatus.resubmitted)
+      (this.bulletinsService.getActiveRegionStatus() !== BulletinStatus.published &&
+        this.bulletinsService.getActiveRegionStatus() !== BulletinStatus.republished &&
+        this.bulletinsService.getActiveRegionStatus() !== BulletinStatus.submitted &&
+        this.bulletinsService.getActiveRegionStatus() !== BulletinStatus.resubmitted)
     );
   }
 
