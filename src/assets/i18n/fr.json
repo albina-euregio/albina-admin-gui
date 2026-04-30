@@ -261,7 +261,7 @@
       },
       "ok": "Ok",
       "problem": "Problème",
-      "problemDescription": "Description",
+      "problemDescription": "Problem description",
       "problemPlaceholder": "Décrivez le problème rencontré",
       "channel": {
         "website": "Site web",
@@ -300,7 +300,9 @@
           "whatsapp": "Copiez le texte ci-dessous dans le canal WhatsApp indiqué."
         },
         "copyText": "Copiez {{language}} {{channel}} texte"
-      }
+      },
+      "newChecklist": "New checklist",
+      "savedInfo": "Saved by {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Publication prévue à 17h00",
@@ -589,9 +591,7 @@
         "missingSnowpackStructureHighlights": "Titre structure du manteau neigeux manque",
         "missingSnowpackStructureComment": "Description structure du manteau neigeux manque",
         "pendingSuggestions": "Propositions en attente",
-        "incompleteTranslation": "Traduction incomplète",
-        "accept": "Oui",
-        "reject": "Non"
+        "incompleteTranslation": "Traduction incomplète"
       },
       "publicationStatusDialog": {
         "headline": "Statut de publication",
@@ -656,9 +656,7 @@
         "missingAvActivityComment": "Description du danger d'avalanche manque",
         "missingSnowpackStructureHighlights": "Titre structure du manteau neigeux manque",
         "missingSnowpackStructureComment": "Description structure du manteau neigeux manque",
-        "pendingSuggestions": "Propositions en attente",
-        "accept": "Oui",
-        "reject": "Non"
+        "pendingSuggestions": "Propositions en attente"
       },
       "submitBulletinsErrorDialog": {
         "message": "Erreur lors de l'envoi des bulletins !",
@@ -686,14 +684,11 @@
         "missingSnowpackStructureComment": "Description structure du manteau neigeux manque",
         "pendingSuggestions": "Propositions en attente",
         "incompleteTranslation": "Traduction incomplète",
-        "ok": "(tout bon)",
-        "accept": "Ok"
+        "ok": "(tout bon)"
       },
       "publishAllDialog": {
         "message": "Publier toutes les régions ?",
-        "changeMessage": "Publier toutes les régions ? (pas de messages)",
-        "accept": "Oui",
-        "reject": "Non"
+        "changeMessage": "Publier toutes les régions ? (pas de messages)"
       }
     }
   },
@@ -1334,10 +1329,11 @@
     }
   },
   "button": {
-    "true": "oui",
-    "false": "non",
-    "yes": "oui",
-    "no": "non"
+    "true": "Oui",
+    "false": "Non",
+    "ok": "Ok",
+    "yes": "Oui",
+    "no": "Non"
   },
   "observations": {
     "allowEdit": "Éditer observations externes",
@@ -1551,6 +1547,11 @@
       "aws-danger-source-variants-matrix-parameter-stability": "Stabilité des types de sources de danger",
       "aws-danger-source-variants-matrix-parameter-frequency": "Fréquence des différents types de sources de danger",
       "aws-danger-source-variants-matrix-parameter-avalanche-size": "Taille des avalanches selon les différentes sources de danger"
+    },
+    "error": {
+      "startDateBeforeEndDate": "Start date must be before or equal to end date.",
+      "failedLoadData": "Failed to load data for selected date range.",
+      "startDateEndDateRequired": "Start date and end date are required."
     }
   },
   "yearlystats": {

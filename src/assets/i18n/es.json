@@ -261,7 +261,7 @@
       },
       "ok": "De acuerdo",
       "problem": "Problem",
-      "problemDescription": "Descripción",
+      "problemDescription": "Problem description",
       "problemPlaceholder": "Describe the encountered problem",
       "channel": {
         "website": "Website",
@@ -300,7 +300,9 @@
           "whatsapp": "Copy the text below to the specified WhatsApp channel."
         },
         "copyText": "Copy {{language}} {{channel}} text"
-      }
+      },
+      "newChecklist": "New checklist",
+      "savedInfo": "Saved by {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Será publicado a las 5PM",
@@ -589,9 +591,7 @@
         "missingSnowpackStructureHighlights": "Falta el titular de la estructura del manto",
         "missingSnowpackStructureComment": "Falta la descripción de la estructura del manto",
         "pendingSuggestions": "Sugerencias pendientes",
-        "incompleteTranslation": "Traducción incompleta",
-        "accept": "Si",
-        "reject": "No"
+        "incompleteTranslation": "Traducción incompleta"
       },
       "publicationStatusDialog": {
         "headline": "Estado de publicación",
@@ -656,9 +656,7 @@
         "missingAvActivityComment": "Falta la descripción del peligro de aludes",
         "missingSnowpackStructureHighlights": "Falta el titular de la estructura del manto",
         "missingSnowpackStructureComment": "Falta la descripción de la estructura del manto",
-        "pendingSuggestions": "Sugerencias pendientes",
-        "accept": "Si",
-        "reject": "No"
+        "pendingSuggestions": "Sugerencias pendientes"
       },
       "submitBulletinsErrorDialog": {
         "message": "¡Se ha producido un error enviando los boletines!",
@@ -686,14 +684,11 @@
         "missingSnowpackStructureComment": "Falta la descripción de la estructura del manto",
         "pendingSuggestions": "Sugerencias pendientes",
         "incompleteTranslation": "Traducción incompleta",
-        "ok": "(todo bien)",
-        "accept": "De acuerdo"
+        "ok": "(todo bien)"
       },
       "publishAllDialog": {
         "message": "¿Quieres publicar todas las regiones?",
-        "changeMessage": "¿Quieres publicar todas las regiones? (sin mensajes)",
-        "accept": "Si",
-        "reject": "No"
+        "changeMessage": "¿Quieres publicar todas las regiones? (sin mensajes)"
       }
     }
   },
@@ -1334,10 +1329,11 @@
     }
   },
   "button": {
-    "true": "sí",
-    "false": "no",
-    "yes": "sí",
-    "no": "no"
+    "true": "Si",
+    "false": "No",
+    "ok": "De acuerdo",
+    "yes": "Si",
+    "no": "No"
   },
   "observations": {
     "allowEdit": "Editar la observación externa",
@@ -1551,6 +1547,11 @@
       "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
       "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
       "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
+    },
+    "error": {
+      "startDateBeforeEndDate": "Start date must be before or equal to end date.",
+      "failedLoadData": "Failed to load data for selected date range.",
+      "startDateEndDateRequired": "Start date and end date are required."
     }
   },
   "yearlystats": {

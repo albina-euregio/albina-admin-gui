@@ -261,7 +261,7 @@
       },
       "ok": "Ok",
       "problem": "Problema",
-      "problemDescription": "Descrizione",
+      "problemDescription": "Problem description",
       "problemPlaceholder": "Descrivi il problema che hai notato",
       "channel": {
         "website": "Sito web",
@@ -300,7 +300,9 @@
           "whatsapp": "Copia il testo qui sotto nel canale WhatsApp indicato."
         },
         "copyText": "Copia {{language}} {{channel}} testo"
-      }
+      },
+      "newChecklist": "New checklist",
+      "savedInfo": "Saved by {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Verrà pubblicato alle 17:00",
@@ -589,9 +591,7 @@
         "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
         "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
         "pendingSuggestions": "Proposta non confermata",
-        "incompleteTranslation": "Traduzione incompleta",
-        "accept": "Sí",
-        "reject": "No"
+        "incompleteTranslation": "Traduzione incompleta"
       },
       "publicationStatusDialog": {
         "headline": "Stato della pubblicazione",
@@ -656,9 +656,7 @@
         "missingAvActivityComment": "Manca valutazione pericolo valanghe",
         "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
         "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
-        "pendingSuggestions": "Proposta non confermata",
-        "accept": "Sí",
-        "reject": "No"
+        "pendingSuggestions": "Proposta non confermata"
       },
       "submitBulletinsErrorDialog": {
         "message": "Errore durante l'invio del bollettino valanghe!",
@@ -686,14 +684,11 @@
         "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
         "pendingSuggestions": "Proposta non confermata",
         "incompleteTranslation": "Traduzione incompleta",
-        "ok": "(tutto va bene)",
-        "accept": "Ok"
+        "ok": "(tutto va bene)"
       },
       "publishAllDialog": {
         "message": "Vuoi pubblicare tutte le meteo-nivo zone?",
-        "changeMessage": "Vuoi pubblicare tutte le meteo-nivo zone? (senza messaggi)",
-        "accept": "Sí",
-        "reject": "No"
+        "changeMessage": "Vuoi pubblicare tutte le meteo-nivo zone? (senza messaggi)"
       }
     }
   },
@@ -1334,10 +1329,11 @@
     }
   },
   "button": {
-    "true": "si",
-    "false": "no",
-    "yes": "si",
-    "no": "no"
+    "true": "Sì",
+    "false": "No",
+    "ok": "Ok",
+    "yes": "Sì",
+    "no": "No"
   },
   "observations": {
     "allowEdit": "Modifica osservazione esterna",
@@ -1551,6 +1547,11 @@
       "aws-danger-source-variants-matrix-parameter-stability": "Stabilità delle variazioni dell'origine di pericolo",
       "aws-danger-source-variants-matrix-parameter-frequency": "Frequenza delle variazioni dell'origine di pericolo",
       "aws-danger-source-variants-matrix-parameter-avalanche-size": "Dimensione valanga delle variazioni dell'origine di pericolo"
+    },
+    "error": {
+      "startDateBeforeEndDate": "Start date must be before or equal to end date.",
+      "failedLoadData": "Failed to load data for selected date range.",
+      "startDateEndDateRequired": "Start date and end date are required."
     }
   },
   "yearlystats": {

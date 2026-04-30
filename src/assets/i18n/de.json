@@ -261,7 +261,7 @@
       },
       "ok": "Ok",
       "problem": "Problem",
-      "problemDescription": "Beschreibung",
+      "problemDescription": "Problembeschreibung",
       "problemPlaceholder": "Beschreibe das aufgetretene Problem",
       "channel": {
         "website": "Website",
@@ -300,7 +300,9 @@
           "whatsapp": "Kopiere den untenstehenden Text in den angegebenen WhatsApp-Channel."
         },
         "copyText": "{{language}}en {{channel}} Text kopieren"
-      }
+      },
+      "newChecklist": "Neue Checkliste",
+      "savedInfo": "Gespeichert von {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Wird um 17 Uhr publiziert",
@@ -589,9 +591,7 @@
         "missingSnowpackStructureHighlights": "Schlagzeile des Schneedeckenaufbaus fehlt",
         "missingSnowpackStructureComment": "Beurteilung des Schneedeckenaufbaus fehlt",
         "pendingSuggestions": "Unbeantwortete Vorschläge",
-        "incompleteTranslation": "Unvollständige Übersetzung",
-        "accept": "Ja",
-        "reject": "Nein"
+        "incompleteTranslation": "Unvollständige Übersetzung"
       },
       "publicationStatusDialog": {
         "headline": "Status der Publikation",
@@ -656,9 +656,7 @@
         "missingAvActivityComment": "Beurteilung der Lawinengefahr fehlt",
         "missingSnowpackStructureHighlights": "Schlagzeile des Schneedeckenaufbaus fehlt",
         "missingSnowpackStructureComment": "Beurteilung des Schneedeckenaufbaus fehlt",
-        "pendingSuggestions": "Unbeantwortete Vorschläge",
-        "accept": "Ja",
-        "reject": "Nein"
+        "pendingSuggestions": "Unbeantwortete Vorschläge"
       },
       "submitBulletinsErrorDialog": {
         "message": "Beim Absenden der Lawinenvorhersage ist ein Fehler aufgetreten!",
@@ -686,14 +684,11 @@
         "missingSnowpackStructureComment": "Beurteilung des Schneedeckenaufbaus fehlt",
         "pendingSuggestions": "Unbeantwortete Vorschläge",
         "incompleteTranslation": "Unvollständige Übersetzung",
-        "ok": "(alles ok)",
-        "accept": "Ok"
+        "ok": "(alles ok)"
       },
       "publishAllDialog": {
         "message": "Willst du alle Regionen publizieren?",
-        "changeMessage": "Willst du alle Regionen publizieren? (keine Nachrichten)",
-        "accept": "Ja",
-        "reject": "Nein"
+        "changeMessage": "Willst du alle Regionen publizieren? (keine Nachrichten)"
       }
     }
   },
@@ -1334,10 +1329,11 @@
     }
   },
   "button": {
-    "true": "ja",
-    "false": "nein",
-    "yes": "ja",
-    "no": "nein"
+    "true": "Ja",
+    "false": "Nein",
+    "ok": "Ok",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "observations": {
     "allowEdit": "Externe Beobachtung bearbeiten",
@@ -1551,6 +1547,11 @@
       "aws-danger-source-variants-matrix-parameter-stability": "Stabilität der Varianten der Gefahrenquellen",
       "aws-danger-source-variants-matrix-parameter-frequency": "Häufigkeit der Varianten der Gefahrenquellen",
       "aws-danger-source-variants-matrix-parameter-avalanche-size": "Lawinengrößen der Varianten der Gefahrenquellen"
+    },
+    "error": {
+      "startDateBeforeEndDate": "Startdatum muss vor oder gleich dem Enddatum sein.",
+      "failedLoadData": "Daten für den gewünschten Zeitraum konnten nicht geladen werden.",
+      "startDateEndDateRequired": "Startdatum und Enddatum sind notwendig."
     }
   },
   "yearlystats": {

@@ -261,7 +261,7 @@
       },
       "ok": "D'acord",
       "problem": "Problem",
-      "problemDescription": "Descripció",
+      "problemDescription": "Problem description",
       "problemPlaceholder": "Describe the encountered problem",
       "channel": {
         "website": "Website",
@@ -300,7 +300,9 @@
           "whatsapp": "Copy the text below to the specified WhatsApp channel."
         },
         "copyText": "Copy {{language}} {{channel}} text"
-      }
+      },
+      "newChecklist": "New checklist",
+      "savedInfo": "Saved by {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Serà publicat a les 5PM",
@@ -589,9 +591,7 @@
         "missingSnowpackStructureHighlights": "Falta titular estructura mantell",
         "missingSnowpackStructureComment": "Falta la descripció de l'estructura del mantell",
         "pendingSuggestions": "Suggeriments pendents",
-        "incompleteTranslation": "Traducció incompleta",
-        "accept": "Si",
-        "reject": "No"
+        "incompleteTranslation": "Traducció incompleta"
       },
       "publicationStatusDialog": {
         "headline": "Estat de la publicació",
@@ -656,9 +656,7 @@
         "missingAvActivityComment": "Falta la descripció del perill d'allaus",
         "missingSnowpackStructureHighlights": "Falta titular estructura mantell",
         "missingSnowpackStructureComment": "Falta la descripció de l'estructura del mantell",
-        "pendingSuggestions": "Suggeriments pendents",
-        "accept": "Si",
-        "reject": "No"
+        "pendingSuggestions": "Suggeriments pendents"
       },
       "submitBulletinsErrorDialog": {
         "message": "Hi ha hagut un error pujant els butlletins!",
@@ -686,14 +684,11 @@
         "missingSnowpackStructureComment": "Falta la descripció de l'estructura del mantell",
         "pendingSuggestions": "Suggeriments pendents",
         "incompleteTranslation": "Traducció incompleta",
-        "ok": "(tot correcte)",
-        "accept": "D'acord"
+        "ok": "(tot correcte)"
       },
       "publishAllDialog": {
         "message": "Vols publicar totes les regions?",
-        "changeMessage": "Voleu publicar totes les regions? (sense missatges)",
-        "accept": "Si",
-        "reject": "No"
+        "changeMessage": "Voleu publicar totes les regions? (sense missatges)"
       }
     }
   },
@@ -1334,10 +1329,11 @@
     }
   },
   "button": {
-    "true": "sí",
-    "false": "no",
-    "yes": "sí",
-    "no": "no"
+    "true": "Si",
+    "false": "No",
+    "ok": "D'acord",
+    "yes": "Si",
+    "no": "No"
   },
   "observations": {
     "allowEdit": "Editar observació externa",
@@ -1551,6 +1547,11 @@
       "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
       "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
       "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
+    },
+    "error": {
+      "startDateBeforeEndDate": "Start date must be before or equal to end date.",
+      "failedLoadData": "Failed to load data for selected date range.",
+      "startDateEndDateRequired": "Start date and end date are required."
     }
   },
   "yearlystats": {
