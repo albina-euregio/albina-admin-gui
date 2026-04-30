@@ -232,7 +232,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   private async loadObservationsDataBlob(): Promise<Blob> {
     const chunks = this.chunkDateRange(this.startDate, this.endDate, 14);
-    const allFeatures: any[] = [];
+    const allFeatures: GeoJSON.Feature[] = [];
 
     for (const chunk of chunks) {
       const params = this.getObservationDateRangeParams(chunk.start, chunk.end);
@@ -251,14 +251,10 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     return new Blob([JSON.stringify(mergedCollection)], { type: "application/geo+json" });
   }
 
-  private chunkDateRange(
-    startDate: string,
-    endDate: string,
-    chunkDays: number = 14,
-  ): Array<{ start: string; end: string }> {
-    const chunks: Array<{ start: string; end: string }> = [];
+  private chunkDateRange(startDate: string, endDate: string, chunkDays = 14): { start: string; end: string }[] {
+    const chunks: { start: string; end: string }[] = [];
     const endDateObj = new Date(endDate);
-    let currentStart = new Date(startDate);
+    const currentStart = new Date(startDate);
 
     while (this.toDateInputValue(currentStart) <= endDate) {
       const currentEnd = new Date(currentStart);
