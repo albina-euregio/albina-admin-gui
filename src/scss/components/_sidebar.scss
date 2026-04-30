@@ -39,14 +39,14 @@
 }
 
 /* Hide sidebar on larger screens */
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .sidebar {
     display: none;
   }
 }
 
 /* Hide navbar content on smaller screens if sidebar is open */
-@media (max-width: 991px) {
+@media (max-width: 1199px) {
   .navbar .navbar-collapse {
     display: none;
   }
