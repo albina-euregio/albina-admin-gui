@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, HostListener, OnInit } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 
 interface IconParameter {
   code: string;
@@ -14,7 +15,7 @@ interface IconFile {
 @Component({
   selector: "app-icon",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: "./icon.component.html",
   styleUrls: ["./icon.component.css"],
 })

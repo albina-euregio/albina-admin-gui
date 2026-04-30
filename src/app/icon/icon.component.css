@@ -2,6 +2,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 1rem;
+  min-height: calc(100dvh - 180px);
+  align-items: stretch;
 }
 
 .icon-image-area {
@@ -27,16 +29,17 @@
 }
 
 .icon-parameters {
-  max-height: calc(100vh - 220px);
+  max-height: 100%;
   overflow-y: auto;
 }
 
 .parameter-description {
+  font-size: 0.85rem;
   font-weight: 700;
 }
 
 .parameter-code {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   opacity: 0.9;
 }
 
