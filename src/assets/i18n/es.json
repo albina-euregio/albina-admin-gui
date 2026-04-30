@@ -37,7 +37,8 @@
     "lineaexport": "LINEA",
     "awsstats": "AWS Stats",
     "yearlystats": "Yearly Stats",
-    "graphics": "Graphics"
+    "graphics": "Gráficos",
+    "icon": "ICON"
   },
   "menu": {
     "logout": "Cerrar sesión",

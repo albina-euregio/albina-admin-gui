@@ -37,7 +37,8 @@
     "lineaexport": "LINEA",
     "awsstats": "LWD-Statistiken",
     "yearlystats": "Jahresstatistiken",
-    "graphics": "Grafiken"
+    "graphics": "Grafiken",
+    "icon": "ICON"
   },
   "menu": {
     "logout": "Logout",

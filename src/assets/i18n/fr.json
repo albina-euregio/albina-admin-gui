@@ -37,7 +37,8 @@
     "lineaexport": "LINEA",
     "awsstats": "Statistiques SPA",
     "yearlystats": "Statistiques annuelles",
-    "graphics": "Graphiques"
+    "graphics": "Graphiques",
+    "icon": "ICON"
   },
   "menu": {
     "logout": "Se déconnecter",

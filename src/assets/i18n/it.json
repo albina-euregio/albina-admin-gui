@@ -37,7 +37,8 @@
     "lineaexport": "LINEA",
     "awsstats": "Statistiche servizi valanghe",
     "yearlystats": "Statistiche annuali",
-    "graphics": "Grafici"
+    "graphics": "Grafici",
+    "icon": "ICON"
   },
   "menu": {
     "logout": "Logout",
