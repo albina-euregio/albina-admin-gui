@@ -1,4 +1,9 @@
 import "@albina-euregio/linea/aws-stats";
+import {
+  CONFIGURED_PLOTS,
+  type AwsstatsDatatype,
+  type AwsstatsPlotConfig,
+} from "@albina-euregio/linea/aws-stats-plot-config";
 import { CommonModule } from "@angular/common";
 import {
   AfterViewInit,
@@ -10,9 +15,10 @@ import {
   inject,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
+import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { lastValueFrom } from "rxjs";
 
 import { AlbinaObservationsService } from "../observations/observations.service";
@@ -20,20 +26,12 @@ import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
 import { GraphicsService, type LineaStationFeature } from "./graphics.service";
 
-type ChartType =
-  | "aws-observations"
-  | "aws-danger-rating"
-  | "aws-danger-rating-altitude"
-  | "aws-avalanche-activity-index"
-  | "aws-danger-rating-danger-source-variants"
-  | "aws-danger-source-variants-matrix-parameter-stability"
-  | "aws-danger-source-variants-matrix-parameter-frequency"
-  | "aws-danger-source-variants-matrix-parameter-avalanche-size";
+const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id);
 
 @Component({
   selector: "app-awsstats",
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, TooltipModule],
   templateUrl: "./awsstats.component.html",
   styleUrls: ["./awsstats.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -44,6 +42,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected mapService = inject(BaseMapService);
   protected stationsMapService = inject(LineaMapService);
   protected authentificationService = inject(AuthenticationService);
+  private translateService = inject(TranslateService);
 
   @ViewChild("regionMapHost", { static: false })
   private regionMapHost?: ElementRef<HTMLElement>;
@@ -54,11 +53,10 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -7));
   protected endDate = this.toDateInputValue(new Date());
-  protected wrapperStartDate = "2026-03-10";
-  protected wrapperEndDate = "2026-03-17";
   protected observationsUrl = "";
   protected bulletins = "[]";
   protected dangerSourceVariants = "[]";
+  protected observations = "[]";
   protected showWrapper = false;
   protected loading = false;
   protected pendingLoad = true;
@@ -68,16 +66,11 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected selectedMicroRegions: string[] = [];
   protected selectedStationId = "";
   protected showPrecipitationOnly = false;
-  protected chartTypeSelection: Record<ChartType, boolean> = {
-    "aws-observations": true,
-    "aws-danger-rating": false,
-    "aws-danger-rating-altitude": false,
-    "aws-avalanche-activity-index": false,
-    "aws-danger-rating-danger-source-variants": false,
-    "aws-danger-source-variants-matrix-parameter-stability": false,
-    "aws-danger-source-variants-matrix-parameter-frequency": false,
-    "aws-danger-source-variants-matrix-parameter-avalanche-size": false,
-  };
+  protected openTooltipId: string | null = null;
+  protected readonly chartConfigs = CONFIGURED_PLOTS.awsstats;
+  protected chartTypeSelection: Record<string, boolean> = Object.fromEntries(
+    this.chartConfigs.map((c) => [c.id, c.id === "aws-observations"]),
+  );
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
   readonly stationById = new Map<string, LineaStationFeature>();
@@ -141,6 +134,15 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  protected toggleChartTooltip(event: MouseEvent, chartId: string) {
+    event.stopPropagation();
+    this.openTooltipId = this.openTooltipId === chartId ? null : chartId;
+  }
+
+  protected closeChartTooltips() {
+    this.openTooltipId = null;
+  }
+
   protected togglePrecipitationFilter() {
     this.showPrecipitationOnly = !this.showPrecipitationOnly;
     this.applyStationVisibilityFilter();
@@ -167,12 +169,12 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   protected async update() {
     if (!this.startDate || !this.endDate) {
-      this.errorMessage = "Start date and end date are required.";
+      this.errorMessage = this.translateService.instant("awsstats.error.startDateEndDateRequired");
       return;
     }
 
     if (this.startDate > this.endDate) {
-      this.errorMessage = "Start date must be before or equal to end date.";
+      this.errorMessage = this.translateService.instant("awsstats.error.startDateBeforeEndDate");
       return;
     }
 
@@ -180,28 +182,37 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     this.errorMessage = "";
     try {
       this.showWrapper = false;
-      const params = this.getObservationDateRangeParams(this.startDate, this.endDate);
-      const collection = await lastValueFrom(this.observationsService.getGenericObservationsGeoJSON(params));
-      const blob = new Blob([JSON.stringify(collection, undefined, 2)], { type: "application/geo+json" });
-      this.revokeObservationsUrl();
-      this.wrapperStartDate = this.startDate;
-      this.wrapperEndDate = this.endDate;
-      const regionCodes = this.graphicsService.getBulletinRegionCodes();
-      const bulletins = await this.graphicsService.loadBulletins(
-        this.startDate,
-        this.endDate,
-        regionCodes,
-        this.graphicsService.getBulletinLanguage(),
-      );
-      this.bulletins = JSON.stringify(bulletins);
-      const dangerSourceVariants = await this.graphicsService.loadDangerSourceVariants(
-        this.startDate,
-        this.endDate,
-        "AT-07",
-      );
-      this.dangerSourceVariants = JSON.stringify(dangerSourceVariants);
+      const requiredParams = this.getRequiredParameters();
 
-      this.observationsUrl = URL.createObjectURL(blob);
+      // Load observations if needed
+      if (requiredParams.has("observations")) {
+        const blob = await this.loadObservationsDataBlob();
+        this.revokeObservationsUrl();
+        this.observationsUrl = URL.createObjectURL(blob);
+      }
+
+      // Load bulletins if needed
+      if (requiredParams.has("bulletins")) {
+        const regionCodes = this.graphicsService.getBulletinRegionCodes();
+        const bulletins = await this.graphicsService.loadBulletins(
+          this.startDate,
+          this.endDate,
+          regionCodes,
+          this.graphicsService.getBulletinLanguage(),
+        );
+        this.bulletins = JSON.stringify(bulletins);
+      }
+
+      // Load danger source variants if needed
+      if (requiredParams.has("danger-source-variants")) {
+        const dangerSourceVariants = await this.graphicsService.loadDangerSourceVariants(
+          this.startDate,
+          this.endDate,
+          "AT-07",
+        );
+        this.dangerSourceVariants = JSON.stringify(dangerSourceVariants);
+      }
+
       this.showWrapper = true;
       this.mountWrapper();
       this.pendingLoad = false;
@@ -210,12 +221,62 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       this.revokeObservationsUrl();
       this.bulletins = "[]";
       this.dangerSourceVariants = "[]";
+      this.observations = "[]";
       this.showWrapper = false;
-      this.errorMessage = "Failed to load observations for selected date range.";
+      this.errorMessage = this.translateService.instant("awsstats.error.failedLoadData");
       console.error(error);
     } finally {
       this.loading = false;
     }
+  }
+
+  private async loadObservationsDataBlob(): Promise<Blob> {
+    const chunks = this.chunkDateRange(this.startDate, this.endDate, 14);
+    const allFeatures: GeoJSON.Feature[] = [];
+
+    for (const chunk of chunks) {
+      const params = this.getObservationDateRangeParams(chunk.start, chunk.end);
+      const collection = await lastValueFrom(this.observationsService.getGenericObservationsGeoJSON(params));
+
+      if (collection?.features && Array.isArray(collection.features)) {
+        allFeatures.push(...collection.features);
+      }
+    }
+
+    const mergedCollection = {
+      type: "FeatureCollection",
+      features: allFeatures,
+    };
+
+    return new Blob([JSON.stringify(mergedCollection)], { type: "application/geo+json" });
+  }
+
+  private chunkDateRange(startDate: string, endDate: string, chunkDays = 14): { start: string; end: string }[] {
+    const chunks: { start: string; end: string }[] = [];
+    const endDateObj = new Date(endDate);
+    const currentStart = new Date(startDate);
+
+    while (this.toDateInputValue(currentStart) <= endDate) {
+      const currentEnd = new Date(currentStart);
+      currentEnd.setDate(currentEnd.getDate() + chunkDays - 1);
+
+      if (currentEnd >= endDateObj) {
+        chunks.push({
+          start: this.toDateInputValue(currentStart),
+          end: endDate,
+        });
+        break;
+      }
+
+      chunks.push({
+        start: this.toDateInputValue(currentStart),
+        end: this.toDateInputValue(currentEnd),
+      });
+
+      currentStart.setDate(currentStart.getDate() + chunkDays);
+    }
+
+    return chunks;
   }
 
   private revokeObservationsUrl() {
@@ -246,32 +307,52 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   }
 
   private mountWrapper() {
-    if (!this.wrapperHost || !this.observationsUrl || !this.wrapperStartDate || !this.wrapperEndDate) return;
+    if (!this.wrapperHost?.nativeElement) return;
+
     const host = this.wrapperHost.nativeElement;
     host.replaceChildren();
+
     const wrapper = document.createElement("aws-stats-wrapper");
     wrapper.setAttribute("chart-type", this.getSelectedChartTypesValue());
-    wrapper.setAttribute("observations", this.observationsUrl);
-    wrapper.setAttribute("stationsrc", this.getSelectedStationSrc());
-    wrapper.setAttribute("start-date", this.wrapperStartDate);
-    wrapper.setAttribute("end-date", this.wrapperEndDate);
+    wrapper.setAttribute("start-date", this.startDate);
+    wrapper.setAttribute("end-date", this.endDate);
     wrapper.setAttribute("filter-micro-region", this.getBulletinFilterMicroRegionValue());
-    wrapper.setAttribute("bulletins", this.bulletins);
-    wrapper.setAttribute("danger-source-variants", this.dangerSourceVariants);
+
+    const requiredParams = this.getRequiredParameters();
+
+    if (requiredParams.has("observations")) {
+      wrapper.setAttribute("observations", this.observationsUrl);
+    }
+
+    if (requiredParams.has("bulletins")) {
+      wrapper.setAttribute("bulletins", this.bulletins);
+    }
+
+    if (requiredParams.has("danger-source-variants")) {
+      wrapper.setAttribute("danger-source-variants", this.dangerSourceVariants);
+    }
+
+    wrapper.setAttribute("stationsrc", this.getSelectedStationSrc());
 
     host.appendChild(wrapper);
   }
 
-  protected setChartType(chartType: ChartType, checked: boolean) {
-    if (checked && chartType === "aws-danger-rating" && this.selectedMicroRegions.length === 0) return;
-    if (checked && chartType === "aws-danger-rating-altitude" && this.selectedMicroRegions.length !== 1) return;
-    if (
-      checked &&
-      chartType === "aws-danger-rating-danger-source-variants" &&
-      this.selectedMicroRegions.length !== 1 &&
-      this.selectedMicroRegions[0].startsWith(this.authentificationService.getActiveRegionId() ?? "")
-    )
+  protected setChartType(chartType: string, checked: boolean) {
+    const config = this.getChartConfigById(chartType);
+    if (!config) {
+      this.chartTypeSelection[chartType] = checked;
       return;
+    }
+
+    // Validate microRegion count constraints
+    if (checked) {
+      if (
+        config.microRegionCountRange[0] > this.selectedMicroRegions.length ||
+        this.selectedMicroRegions.length > config.microRegionCountRange[1]
+      ) {
+        return;
+      }
+    }
 
     this.chartTypeSelection[chartType] = checked;
 
@@ -280,13 +361,44 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  private getSelectedChartConfigs(): AwsstatsPlotConfig[] {
+    return this.getSelectedChartTypes()
+      .map((id) => this.getChartConfigById(id))
+      .filter((config): config is AwsstatsPlotConfig => !!config);
+  }
+
+  private getChartConfigById(id: string): AwsstatsPlotConfig | undefined {
+    return CONFIGURED_PLOTS.awsstats.find((config: AwsstatsPlotConfig) => config.id === id);
+  }
+
+  protected isChartDisabled(config: AwsstatsPlotConfig): boolean {
+    if (config.supportsFilteringBy === "none") {
+      return false;
+    }
+
+    const selectedCount = this.selectedMicroRegions.length;
+    const [min, max] = config.microRegionCountRange;
+    return selectedCount < min || selectedCount > max;
+  }
+
+  private getRequiredParameters(): Set<AwsstatsDatatype> {
+    const configs = this.getSelectedChartConfigs();
+    const params = new Set<AwsstatsDatatype>();
+    configs.forEach((config: AwsstatsPlotConfig) => {
+      config.parameters.forEach((param: AwsstatsDatatype) => params.add(param));
+    });
+    return params;
+  }
+
   private getSelectedChartTypesValue(): string {
     const selected = this.getSelectedChartTypes();
     return selected.length ? selected.join(",") : "aws-observations";
   }
 
-  private getSelectedChartTypes(): ChartType[] {
-    return (Object.keys(this.chartTypeSelection) as ChartType[]).filter((key) => this.chartTypeSelection[key]);
+  private getSelectedChartTypes(): string[] {
+    return (Object.keys(this.chartTypeSelection) as string[]).filter(
+      (key) => this.chartTypeSelection[key] && AVAILABLE_AWSSTATS_CHART_TYPES.includes(key),
+    );
   }
 
   private getBulletinFilterMicroRegionValue(): string {

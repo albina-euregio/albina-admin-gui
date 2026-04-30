@@ -79,7 +79,7 @@
         </button>
         @if (showDateChangeHint) {
           <span class="small text-muted align-self-center">
-            Nach jeder Datumsanderung muss der 'Daten laden'-Button gedruckt werden.
+            {{ "yearlystats.label.dateChangeHint" | translate }}
           </span>
         }
       </div>
@@ -88,126 +88,32 @@
     <div class="awsstats-selection-row mt-3">
       <div class="small text-muted">{{ "awsstats.label.charttypes" | translate }}</div>
     </div>
-    <div class="awsstats-chart-types">
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-observations']"
-          [disabled]="loading"
-          (ngModelChange)="setChartType('aws-observations', $event)"
-        />
-        <span class="form-check-label">{{ "awsstats.charts.aws-observations" | translate }}</span>
-      </label>
-
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-danger-rating']"
-          [disabled]="selectedMicroRegions.length === 0 || loading"
-          (ngModelChange)="setChartType('aws-danger-rating', $event)"
-        />
-        <span class="form-check-label">{{ "awsstats.charts.aws-danger-rating" | translate }}</span>
-      </label>
-
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-danger-rating-altitude']"
-          [disabled]="selectedMicroRegions.length !== 1 || loading"
-          (ngModelChange)="setChartType('aws-danger-rating-altitude', $event)"
-        />
-        <span class="form-check-label">{{ "awsstats.charts.aws-danger-rating-altitude" | translate }}</span>
-      </label>
-
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-avalanche-activity-index']"
-          [disabled]="loading"
-          (ngModelChange)="setChartType('aws-avalanche-activity-index', $event)"
-        />
-        <span class="form-check-label">{{ "awsstats.charts.aws-avalanche-activity-index" | translate }}</span>
-      </label>
-
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-danger-rating-danger-source-variants']"
-          [disabled]="
-            selectedMicroRegions.length !== 1 ||
-            loading ||
-            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
-          "
-          (ngModelChange)="setChartType('aws-danger-rating-danger-source-variants', $event)"
-        />
-        <span class="form-check-label"
-          >{{ "awsstats.charts.aws-danger-rating-danger-source-variants" | translate }} ({{
-            authentificationService.getActiveRegionId()
-          }})</span
-        >
-      </label>
-
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-stability']"
-          [disabled]="
-            selectedMicroRegions.length !== 1 ||
-            loading ||
-            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
-          "
-          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-stability', $event)"
-        />
-        <span class="form-check-label"
-          >{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-stability" | translate }} ({{
-            authentificationService.getActiveRegionId()
-          }})</span
-        >
-      </label>
-
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-frequency']"
-          [disabled]="
-            selectedMicroRegions.length !== 1 ||
-            loading ||
-            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
-          "
-          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-frequency', $event)"
-        />
-        <span class="form-check-label"
-          >{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-frequency" | translate }} ({{
-            authentificationService.getActiveRegionId()
-          }})</span
-        >
-      </label>
-
-      <label class="form-check mb-0">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          [(ngModel)]="chartTypeSelection['aws-danger-source-variants-matrix-parameter-avalanche-size']"
-          [disabled]="
-            selectedMicroRegions.length !== 1 ||
-            loading ||
-            !selectedMicroRegions[0].startsWith(authentificationService.getActiveRegionId() ?? '')
-          "
-          (ngModelChange)="setChartType('aws-danger-source-variants-matrix-parameter-avalanche-size', $event)"
-        />
-        <span class="form-check-label"
-          >{{ "awsstats.charts.aws-danger-source-variants-matrix-parameter-avalanche-size" | translate }} ({{
-            authentificationService.getActiveRegionId()
-          }})</span
-        >
-      </label>
+    <div class="awsstats-chart-types" (document:click)="closeChartTooltips()">
+      @for (config of chartConfigs; track config.id) {
+        <label class="form-check mb-0">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            [(ngModel)]="chartTypeSelection[config.id]"
+            [disabled]="loading || isChartDisabled(config)"
+            (ngModelChange)="setChartType(config.id, $event)"
+          />
+          <button
+            type="button"
+            class="btn btn-sm btn-bare--grey btn-icon awsstats-chart-tooltip"
+            [tooltip]="config.describtion"
+            placement="top"
+            triggers="manual"
+            [isOpen]="openTooltipId === config.id"
+            (click)="toggleChartTooltip($event, config.id)"
+            container="body"
+            aria-label="Chart description"
+          >
+            <i class="ph ph-question"></i>
+          </button>
+          <span class="form-check-label">{{ "awsstats.charts." + config.id | translate }}</span>
+        </label>
+      }
     </div>
   </div>
 

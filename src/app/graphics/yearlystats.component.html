@@ -161,98 +161,41 @@
       <!-- Right column: Chart types -->
       <div class="yearlystats-selection-card">
         <div class="small text-muted">{{ "awsstats.label.charttypes" | translate }}</div>
-        <div class="yearlystats-chart-types mt-2">
-          <label class="form-check mb-0">
-            <input
-              class="yearlystats-chart-checkbox"
-              type="checkbox"
-              [disabled]="loading"
-              [(ngModel)]="chartTypeSelection['aws-danger-rating-micro-regions-bars']"
-              (ngModelChange)="setChartType('aws-danger-rating-micro-regions-bars', $event)"
-            />
-            <span class="form-check-label">{{
-              "yearlystats.charts.aws-danger-rating-micro-regions-bars" | translate
-            }}</span>
-          </label>
-
-          <label class="form-check mb-0">
-            <input
-              class="yearlystats-chart-checkbox"
-              type="checkbox"
-              [disabled]="loading"
-              [(ngModel)]="chartTypeSelection['aws-danger-rating-micro-regions']"
-              (ngModelChange)="setChartType('aws-danger-rating-micro-regions', $event)"
-            />
-            <span class="form-check-label">{{ "yearlystats.charts.aws-danger-rating-micro-regions" | translate }}</span>
-          </label>
-
-          <label class="form-check mb-0">
-            <input
-              class="yearlystats-chart-checkbox"
-              type="checkbox"
-              [disabled]="loading"
-              [(ngModel)]="chartTypeSelection['aws-danger-rating-distribution']"
-              (ngModelChange)="setChartType('aws-danger-rating-distribution', $event)"
-            />
-            <span class="form-check-label">{{ "yearlystats.charts.aws-danger-rating-distribution" | translate }}</span>
-          </label>
-
-          <label class="form-check mb-0">
-            <input
-              class="yearlystats-chart-checkbox"
-              type="checkbox"
-              [disabled]="loading"
-              [(ngModel)]="chartTypeSelection['aws-danger-pattern-micro-regions']"
-              (ngModelChange)="setChartType('aws-danger-pattern-micro-regions', $event)"
-            />
-            <span class="form-check-label">{{
-              "yearlystats.charts.aws-danger-pattern-micro-regions" | translate
-            }}</span>
-          </label>
-
-          <label class="form-check mb-0">
-            <input
-              class="yearlystats-chart-checkbox"
-              type="checkbox"
-              [disabled]="loading"
-              [(ngModel)]="chartTypeSelection['aws-avalanche-problem-micro-regions']"
-              (ngModelChange)="setChartType('aws-avalanche-problem-micro-regions', $event)"
-            />
-            <span class="form-check-label">{{
-              "yearlystats.charts.aws-avalanche-problem-micro-regions" | translate
-            }}</span>
-          </label>
-
-          <label class="form-check mb-0">
-            <input
-              class="yearlystats-chart-checkbox"
-              type="checkbox"
-              [disabled]="loading"
-              [(ngModel)]="chartTypeSelection['aws-products']"
-              (ngModelChange)="setChartType('aws-products', $event)"
-            />
-            <span class="form-check-label">{{ "yearlystats.charts.aws-products" | translate }}</span>
-          </label>
-
-          @if (authenticationService.isCurrentUserInRole("FORECASTER", "ADMIN", "SUPERADMIN")) {
-            <label class="form-check mb-0">
-              <input
-                class="yearlystats-chart-checkbox"
-                type="checkbox"
-                [disabled]="
-                  loading ||
-                  selectedRegionCodes.length !== 1 ||
-                  authenticationService.getActiveRegionId() !== selectedRegionCodes[0]
-                "
-                [(ngModel)]="chartTypeSelection['aws-stress-level']"
-                (ngModelChange)="setChartType('aws-stress-level', $event)"
-              />
-              <span class="form-check-label"
-                >{{ "yearlystats.charts.aws-stress-level" | translate }} ({{
-                  authenticationService.getActiveRegionId()
-                }})</span
-              >
-            </label>
+        <div class="yearlystats-chart-types mt-2" (document:click)="closeChartTooltips()">
+          @for (config of chartConfigs; track config.id) {
+            @if (
+              config.regions !== "userRegion" ||
+              authenticationService.isCurrentUserInRole("FORECASTER", "ADMIN", "SUPERADMIN")
+            ) {
+              <label class="form-check mb-0">
+                <input
+                  class="yearlystats-chart-checkbox"
+                  type="checkbox"
+                  [disabled]="loading || isChartDisabled(config)"
+                  [(ngModel)]="chartTypeSelection[config.id]"
+                  (ngModelChange)="setChartType(config.id, $event)"
+                />
+                <button
+                  type="button"
+                  class="btn btn-sm btn-bare--grey btn-icon yearlystats-chart-tooltip"
+                  [tooltip]="config.describtion"
+                  placement="top"
+                  triggers="manual"
+                  [isOpen]="openTooltipId === config.id"
+                  (click)="toggleChartTooltip($event, config.id)"
+                  container="body"
+                  aria-label="Chart description"
+                >
+                  <i class="ph ph-question"></i>
+                </button>
+                <span class="form-check-label">
+                  {{ "yearlystats.charts." + config.id | translate }}
+                  @if (config.regions === "userRegion") {
+                    ({{ authenticationService.getActiveRegionId() }})
+                  }
+                </span>
+              </label>
+            }
           }
         </div>
       </div>
