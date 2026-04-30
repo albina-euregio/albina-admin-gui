@@ -112,7 +112,8 @@ export class FullLayoutComponent {
     if (
       (this.router.url.startsWith("/modelling/zamg-wbt") && !region.enableWeatherbox) ||
       (this.router.url.startsWith("/modelling/geosphere") && !region.enableModelling) ||
-      (this.router.url.startsWith("/observations") && !region.enableObservations)
+      (this.router.url.startsWith("/observations") && !region.enableObservations) ||
+      (this.router.url.startsWith("/icon") && !region.enableIcon)
     ) {
       this.router.navigate(["/bulletins"]);
     }

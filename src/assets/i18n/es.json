@@ -774,6 +774,7 @@
           "enableObservations": "Habilitar observaciones",
           "enableModelling": "Habilitar modelado",
           "enableWeatherbox": "Habilitar caja meteorológica",
+          "enableIcon": "Habilitar ICON",
           "enableLineaExport": "Activar exportación LINEA"
         },
         "configuration": {

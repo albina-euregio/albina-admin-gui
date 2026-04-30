@@ -73,11 +73,13 @@
               {{ "sidebar.graphics" | translate }}
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/icon']" ngxMousetrapKey="g i">
-              {{ "sidebar.icon" | translate }}
-            </a>
-          </li>
+          @if (authenticationService.getActiveRegion()?.enableIcon && authenticationService.isUserLoggedIn()) {
+            <li class="nav-item">
+              <a class="nav-link" routerLinkActive="active" [routerLink]="['/icon']" ngxMousetrapKey="g i">
+                {{ "sidebar.icon" | translate }}
+              </a>
+            </li>
+          }
           <!-- dummy button for keyboard shortcut to place focus on map -->
           <li class="nav-item invisible">
             <button class="btn" type="button" (click)="focusMap()" ngxMousetrapKey="f m">Focus Map</button>
@@ -277,12 +279,14 @@
           {{ "sidebar.graphics" | translate }}
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/icon']">
-          <i class="ph ph-image"></i>
-          {{ "sidebar.icon" | translate }}
-        </a>
-      </li>
+      @if (authenticationService.getActiveRegion()?.enableIcon && authenticationService.isUserLoggedIn()) {
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/icon']">
+            <i class="ph ph-image"></i>
+            {{ "sidebar.icon" | translate }}
+          </a>
+        </li>
+      }
     </ul>
   </div>
 </div>

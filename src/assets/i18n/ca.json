@@ -774,6 +774,7 @@
           "enableObservations": "Habilitar les observacions",
           "enableModelling": "Habilitar la modelització",
           "enableWeatherbox": "Activar caixa meteorològica",
+          "enableIcon": "Activar ICON",
           "enableLineaExport": "Activar l'exportació LINEA"
         },
         "configuration": {

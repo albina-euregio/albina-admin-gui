@@ -1646,6 +1646,7 @@ export interface components {
       enabledTextcatFields?: components["schemas"]["TextPart"][];
       enabledEditableFields?: components["schemas"]["TextPart"][];
       enableWeatherbox?: boolean;
+      enableIcon?: boolean;
       enableLineaExport?: boolean;
       defaultLang?: components["schemas"]["LanguageCode"];
       logoPath?: string;

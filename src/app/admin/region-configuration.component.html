@@ -534,6 +534,19 @@
           <tr>
             <td>
               <label class="col-form-label">{{
+                "admin.region-configuration.table.components.enableIcon" | translate
+              }}</label>
+            </td>
+            <td>
+              <label class="switch switch-primary">
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableIcon" />
+                <span class="switch-slider"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{
                 "admin.region-configuration.table.components.enableLineaExport" | translate
               }}</label>
             </td>
