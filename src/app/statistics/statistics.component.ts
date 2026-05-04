@@ -1,11 +1,10 @@
-import { HttpErrorResponse } from "@angular/common/http";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { saveAs } from "file-saver";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { TimeoutError, firstValueFrom } from "rxjs";
+import { firstValueFrom } from "rxjs";
 
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { StatisticsService } from "../providers/statistics-service/statistics.service";

@@ -248,7 +248,7 @@ test("Create new observation", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Save" })).toBeDisabled();
 });
 
-test("Edit existing observation", async ({ page }) => {
+test("Edit existing observation", async () => {
   // TODO
 });
 

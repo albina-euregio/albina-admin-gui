@@ -42,7 +42,9 @@ async function* fetchFotoWebcamsEU(): AsyncGenerator<GenericObservation, void, u
     const json = await readFile("./private.foto-webcam.eu.json", { encoding: "utf-8" });
     const data2: FotoWebcamEUResponse = JSON.parse(json);
     data.cams.push(...data2.cams);
-  } catch (ignore) {}
+  } catch {
+    /* empty */
+  }
   for (const webcam of data.cams) {
     yield convertFotoWebcamEU(webcam);
   }
