@@ -9,7 +9,7 @@ import {
   PublicationStatusSchema,
 } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
-import { Observable, of, Subject } from "rxjs";
+import { BehaviorSubject, Observable, of, Subject } from "rxjs";
 import { map, switchMap, tap } from "rxjs/operators";
 
 import { environment } from "../../../environments/environment";
@@ -52,6 +52,14 @@ export class BulletinsService {
   private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
 
+  private publicationStatusSubject = new BehaviorSubject<PublicationStatusModel | undefined>(undefined);
+  readonly publicationStatus$: Observable<PublicationStatusModel | undefined> =
+    this.publicationStatusSubject.asObservable();
+  private publicationStatusPollTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  private static readonly PUBLICATION_STATUS_FAST_POLL_MS = 1000;
+  private static readonly PUBLICATION_STATUS_SLOW_POLL_MS = 10000;
+
   readonly undoRedo = new UndoRedoState<BulletinModel>(
     (bulletin) => bulletin,
     (json) => BulletinModel.parse(json),
@@ -86,6 +94,25 @@ export class BulletinsService {
   public loadStatus() {
     const { startDate, endDate } = this.sourceDates.getLoadDate();
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
+    if (
+      this.sourceDates.activeDate &&
+      (!startDate ||
+        !endDate ||
+        this.sourceDates.activeDate[0] < startDate[0] ||
+        this.sourceDates.activeDate[0] > endDate[0])
+    ) {
+      // if active date is outside of loaded date range, load status separately only for the active date and region
+      const region = this.authenticationService.getActiveRegionId();
+      this.getStatus(region, this.sourceDates.activeDate, this.sourceDates.activeDate).subscribe((data) => {
+        const map = this.statusMap.get(region) ?? new Map<number, Enums.BulletinStatus>();
+        for (let i = data.length - 1; i >= 0; i--) {
+          map.set(Date.parse(data[i].date), Enums.BulletinStatus[data[i].status]);
+        }
+        this.statusMap.set(region, map);
+        this.updateEditable();
+      });
+      return;
+    }
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
         const map = new Map<number, Enums.BulletinStatus>();
@@ -141,14 +168,20 @@ export class BulletinsService {
     this.isReadOnly = isReadOnly;
   }
 
-  getUserRegionStatus(date: [Date, Date] = this.sourceDates.activeDate): Enums.BulletinStatus {
+  getActiveRegionStatus(date: [Date, Date] = this.sourceDates.activeDate): Enums.BulletinStatus {
     const region = this.authenticationService.getActiveRegionId();
     const regionStatusMap = this.statusMap?.get(region);
     if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
     else return Enums.BulletinStatus.missing;
   }
 
-  setUserRegionStatus(date: [Date, Date], status: Enums.BulletinStatus) {
+  getRegionStatus(region: string, date: [Date, Date] = this.sourceDates.activeDate) {
+    const regionStatusMap = this.statusMap.get(region);
+    if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
+    else return Enums.BulletinStatus.missing;
+  }
+
+  setActiveRegionStatus(date: [Date, Date], status: Enums.BulletinStatus) {
     const region = this.authenticationService.getActiveRegionId();
     this.statusMap.get(region).set(date[0].getTime(), status);
   }
@@ -424,10 +457,10 @@ export class BulletinsService {
     const request$ = change ? this.changeBulletins(date, region) : this.publishBulletins(date, region);
     return request$.pipe(
       tap(() => {
-        if (this.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-          this.setUserRegionStatus(date, Enums.BulletinStatus.republished);
-        } else if (this.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-          this.setUserRegionStatus(date, Enums.BulletinStatus.published);
+        if (this.getActiveRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+          this.setActiveRegionStatus(date, Enums.BulletinStatus.republished);
+        } else if (this.getActiveRegionStatus(date) === Enums.BulletinStatus.submitted) {
+          this.setActiveRegionStatus(date, Enums.BulletinStatus.published);
         }
       }),
     );
@@ -498,16 +531,53 @@ export class BulletinsService {
             : "ph-circle-dashed";
   }
 
+  startPublicationStatusPolling() {
+    this.pollPublicationStatus();
+  }
+
+  stopPublicationStatusPolling() {
+    if (this.publicationStatusPollTimeout) {
+      clearTimeout(this.publicationStatusPollTimeout);
+      this.publicationStatusPollTimeout = null;
+    }
+  }
+
+  refreshPublicationStatus() {
+    this.stopPublicationStatusPolling();
+    this.pollPublicationStatus();
+  }
+
+  private pollPublicationStatus() {
+    const regionId = this.authenticationService.getActiveRegionId();
+    if (!regionId) return;
+    this.getPublicationStatus(regionId).subscribe({
+      next: (data) => {
+        this.publicationStatusSubject.next(data);
+        const interval = data?.isBeingPublished
+          ? BulletinsService.PUBLICATION_STATUS_FAST_POLL_MS
+          : BulletinsService.PUBLICATION_STATUS_SLOW_POLL_MS;
+        this.publicationStatusPollTimeout = setTimeout(() => this.pollPublicationStatus(), interval);
+      },
+      error: (error) => {
+        console.error("Publication status could not be loaded!", error);
+        this.publicationStatusPollTimeout = setTimeout(
+          () => this.pollPublicationStatus(),
+          BulletinsService.PUBLICATION_STATUS_SLOW_POLL_MS,
+        );
+      },
+    });
+  }
+
   emitAccordionChanged(event: AccordionChangeEvent) {
     this.accordionChangedSubject.next(event);
   }
 
   updateEditable() {
     this.setIsEditable(
-      ((this.getUserRegionStatus() === Enums.BulletinStatus.missing || this.getUserRegionStatus() === undefined) &&
+      ((this.getActiveRegionStatus() === Enums.BulletinStatus.missing || this.getActiveRegionStatus() === undefined) &&
         !this.sourceDates.hasBeenPublished5PM()) ||
-        this.getUserRegionStatus() === Enums.BulletinStatus.updated ||
-        this.getUserRegionStatus() === Enums.BulletinStatus.draft,
+        this.getActiveRegionStatus() === Enums.BulletinStatus.updated ||
+        this.getActiveRegionStatus() === Enums.BulletinStatus.draft,
     );
   }
 }

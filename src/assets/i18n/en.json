@@ -269,7 +269,7 @@
         "telegram": "Telegram",
         "email": "Email"
       },
-      "publicationInProgress": "Publication still in progress",
+      "publicationInProgress": "Publication in progress",
       "publicationFinishedOnServer": "Finished publication on server",
       "publishDisabled": {
         "inProgress": "Publication is currently in progress.",
