@@ -10,6 +10,10 @@
   min-width: 0;
 }
 
+.icon-parameter-select {
+  display: none;
+}
+
 .icon-image-wrapper {
   display: inline-block;
   max-width: 100%;
@@ -48,7 +52,12 @@
     grid-template-columns: 1fr;
   }
 
+  .icon-parameter-select {
+    display: block;
+  }
+
   .icon-parameters {
+    display: none;
     max-height: none;
   }
 }

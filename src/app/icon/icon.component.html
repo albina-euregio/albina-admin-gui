@@ -7,6 +7,21 @@
         } @else if (error) {
           <div class="alert alert-danger mb-0" role="alert">{{ error }}</div>
         } @else {
+          <div class="icon-parameter-select mb-3">
+            <label for="icon-parameter-select" class="form-label mb-1">Parameter</label>
+            <select
+              id="icon-parameter-select"
+              #parameterSelect
+              class="form-select"
+              [value]="selectedIndex"
+              (change)="selectParameterByIndex(+$any(parameterSelect).value)"
+            >
+              @for (parameter of parameters; track parameter.code; let i = $index) {
+                <option [value]="i">{{ parameter.description }} ({{ parameter.code }})</option>
+              }
+            </select>
+          </div>
+
           <div class="icon-current mb-2">
             <strong>{{ parameters[selectedIndex].description }}</strong>
             <span class="text-muted"> ({{ parameters[selectedIndex].code }})</span>
