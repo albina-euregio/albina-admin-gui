@@ -1006,6 +1006,9 @@
       "dateRange": "Period",
       "extended": "Extended",
       "duplicates": "Duplicates"
+    },
+    "error": {
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
   "dangerRating": {
