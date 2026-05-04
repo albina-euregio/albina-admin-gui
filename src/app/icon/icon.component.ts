@@ -22,6 +22,8 @@ interface IconFile {
 export class IconComponent implements OnInit {
   private readonly baseUrl = "https://extra.avalanche.report/meteo-bz/meteo-bz/";
   private readonly parameterUrl = `${this.baseUrl}Parameter.txt`;
+  private swipeCoord?: [number, number];
+  private swipeTime?: number;
 
   parameters: IconParameter[] = [];
   selectedIndex = 0;
@@ -63,6 +65,41 @@ export class IconComponent implements OnInit {
 
     this.selectedIndex = (index + parameterCount) % parameterCount;
     this.updateSelectedImage();
+  }
+
+  onSwipe(event: TouchEvent, when: "start" | "end") {
+    if (!this.parameters.length) {
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    if (!touch) {
+      return;
+    }
+
+    const coord: [number, number] = [touch.clientX, touch.clientY];
+    const time = Date.now();
+
+    if (when === "start") {
+      this.swipeCoord = coord;
+      this.swipeTime = time;
+      return;
+    }
+
+    if (!this.swipeCoord || this.swipeTime === undefined) {
+      return;
+    }
+
+    const direction: [number, number] = [coord[0] - this.swipeCoord[0], coord[1] - this.swipeCoord[1]];
+    const duration = time - this.swipeTime;
+
+    if (duration < 1000 && Math.abs(direction[0]) > 30 && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) {
+      const swipe = direction[0] < 0 ? +1 : -1;
+      this.selectParameterByIndex(this.selectedIndex + swipe);
+    }
+
+    this.swipeCoord = undefined;
+    this.swipeTime = undefined;
   }
 
   private async loadData() {

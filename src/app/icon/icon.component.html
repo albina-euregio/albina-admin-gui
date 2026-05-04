@@ -1,7 +1,7 @@
 <div class="icon-page card">
   <div class="card-body">
     <div class="icon-layout">
-      <div class="icon-image-area">
+      <div class="icon-image-area" (touchstart)="onSwipe($event, 'start')" (touchend)="onSwipe($event, 'end')">
         @if (loading) {
           <p>{{ "icon.loading" | translate }}</p>
         } @else if (error) {
