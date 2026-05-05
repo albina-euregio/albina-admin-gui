@@ -1,41 +1,56 @@
 <div class="icon-page card">
-  <div class="card-body">
-    <div class="icon-layout">
-      <div class="icon-image-area" (touchstart)="onSwipe($event, 'start')" (touchend)="onSwipe($event, 'end')">
-        @if (loading) {
-          <p>{{ "icon.loading" | translate }}</p>
-        } @else if (error) {
-          <div class="alert alert-danger mb-0" role="alert">{{ error }}</div>
-        } @else {
-          <div class="icon-parameter-select mb-3">
-            <label for="icon-parameter-select" class="form-label mb-1">Parameter</label>
-            <select
-              id="icon-parameter-select"
-              #parameterSelect
-              class="form-select"
-              [value]="selectedIndex"
-              (change)="selectParameterByIndex(+$any(parameterSelect).value)"
-            >
-              @for (parameter of parameters; track parameter.code; let i = $index) {
-                <option [value]="i">{{ parameter.description }} ({{ parameter.code }})</option>
-              }
-            </select>
-          </div>
+  <div class="card-body p-0">
+    @if (loading) {
+      <div class="p-3">
+        <p>{{ "icon.loading" | translate }}</p>
+      </div>
+    } @else if (error) {
+      <div class="p-3">
+        <div class="alert alert-danger mb-0" role="alert">{{ error }}</div>
+      </div>
+    } @else {
+      <!-- Timeline bar -->
+      <div class="icon-timeline-wrapper">
+        <div class="icon-timeline" role="toolbar" aria-label="Forecast timesteps">
+          @for (day of dayGroups; track day.date) {
+            <div class="timeline-day-group">
+              <div class="timeline-day-header">
+                <span class="timeline-day-name">{{ day.dayLabel }}</span>
+                <span class="timeline-day-date">{{ day.dateLabel }}</span>
+              </div>
+              <div class="timeline-hours">
+                @for (hour of day.hours; track hour) {
+                  <button
+                    type="button"
+                    class="timeline-hour-btn"
+                    [class.active]="selectedDate === day.date && selectedHour === hour"
+                    (click)="selectTimestamp(day.date, hour)"
+                    [attr.aria-label]="day.dayLabel + ' ' + day.dateLabel + ' ' + hour + ':00 UTC'"
+                    [attr.aria-pressed]="selectedDate === day.date && selectedHour === hour"
+                  >
+                    {{ hour }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
 
+      <!-- Main content -->
+      <div class="icon-main" (touchstart)="onSwipe($event, 'start')" (touchend)="onSwipe($event, 'end')">
+        <!-- Image area -->
+        <div class="icon-image-area">
           <div class="icon-current mb-2">
             <strong>{{ parameters[selectedIndex].description }}</strong>
             <span class="text-muted"> ({{ parameters[selectedIndex].code }})</span>
           </div>
 
-          @if (selectedImageTimestamp) {
-            <div class="text-muted small mb-2">Latest run: {{ formatTimestamp(selectedImageTimestamp) }}</div>
-          }
-
           @if (selectedImageUrl) {
             <div class="icon-image-wrapper">
               <img
                 [src]="selectedImageUrl"
-                [alt]="'ICON parameter ' + parameters[selectedIndex].code"
+                [alt]="'ICON ' + parameters[selectedIndex].description + ' ' + selectedDate + ' ' + selectedHour + 'Z'"
                 class="icon-image"
               />
             </div>
@@ -44,25 +59,26 @@
               {{ "icon.noPng" | translate }}
             </div>
           }
-        }
-      </div>
-
-      <aside class="icon-parameters" aria-label="ICON parameters">
-        <h6 class="mb-2">Parameters</h6>
-        <div class="list-group">
-          @for (parameter of parameters; track parameter.code; let i = $index) {
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              [class.active]="i === selectedIndex"
-              (click)="selectParameterByIndex(i)"
-            >
-              <div class="parameter-description">{{ parameter.description }}</div>
-              <div class="parameter-code">{{ parameter.code }}</div>
-            </button>
-          }
         </div>
-      </aside>
-    </div>
+
+        <!-- Parameters sidebar -->
+        <aside class="icon-parameters" aria-label="ICON parameters">
+          <h6 class="sidebar-heading">Parameters</h6>
+          <div class="list-group list-group-flush">
+            @for (parameter of parameters; track parameter.code; let i = $index) {
+              <button
+                type="button"
+                class="list-group-item list-group-item-action"
+                [class.active]="i === selectedIndex"
+                (click)="selectParameterByIndex(i)"
+              >
+                <div class="parameter-description">{{ parameter.description }}</div>
+                <div class="parameter-code">{{ parameter.code }}</div>
+              </button>
+            }
+          </div>
+        </aside>
+      </div>
+    }
   </div>
 </div>
