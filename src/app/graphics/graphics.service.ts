@@ -1,4 +1,5 @@
-import { FeatureCollectionSchema } from "@albina-euregio/linea/listing";
+import { type Feature } from "@albina-euregio/linea/listing";
+import { SmetDataProvider } from "@albina-euregio/linea/providers";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
@@ -27,6 +28,7 @@ export interface LineaStationFeature {
   latitude: number;
   longitude: number;
   hasPsum: boolean;
+  feature: Feature;
 }
 
 @Injectable({ providedIn: "root" })
@@ -43,12 +45,13 @@ export class GraphicsService {
 
     let source: LineaStationSource;
     for (source of sources) {
-      const response = await fetch(source.stations);
-      const json = await response.json();
-      const collection = FeatureCollectionSchema.parse(json, { reportInput: true });
+      const provider = new SmetDataProvider("ALBINA", [], source.stations, (id) =>
+        source.smet.map((t) => t.replace(/\{id\}/g, id)),
+      );
+      const collection = await provider.fetchStationListing();
 
       for (const feature of collection.features) {
-        if (!new RegExp(source.smetOperators).test(feature.properties.operator)) {
+        if (source.smetOperators && !new RegExp(source.smetOperators).test(feature.properties.operator ?? "")) {
           continue;
         }
 
@@ -66,6 +69,7 @@ export class GraphicsService {
           latitude: feature.geometry.coordinates[1],
           longitude: feature.geometry.coordinates[0],
           hasPsum: feature.properties.PSUM_6.value != undefined,
+          feature,
         });
       }
     }
@@ -236,6 +240,11 @@ export class GraphicsService {
   ): string[] {
     const stationById = new Map(stations.map((station) => [station.id, station]));
     return ids.map((id) => `${stationById.get(id).latitude},${stationById.get(id).longitude}`);
+  }
+
+  getFeaturesByIds(ids: string[], stations: LineaStationFeature[]): Feature[] {
+    const stationById = new Map(stations.map((station) => [station.id, station]));
+    return ids.map((id) => stationById.get(id)!.feature);
   }
 
   // ============================================

@@ -188,19 +188,9 @@ export class LineaExportComponent implements AfterViewInit {
     this.markers[id].setStyle(this.getModelPointOptions(false)); // unselected style
   }
 
-  // linea-plot srcs
-  get srcs(): string {
-    return JSON.stringify(this.graphicsService.getSmetUrlsByIds(this.selectedIds, this.stations, 0));
-  }
-
-  // linea-plot lazysrcs
-  get lazysrcs(): string {
-    return JSON.stringify(this.graphicsService.getSmetUrlsByIds(this.selectedIds, this.stations, 1));
-  }
-
-  // linea-plot winter srcs
-  get wintersrcs(): string {
-    return JSON.stringify(this.graphicsService.getSmetUrlsByIds(this.selectedIds, this.stations, 2));
+  // linea-plot features (GeoJSON Feature array with dataURLs)
+  get features(): string {
+    return JSON.stringify(this.graphicsService.getFeaturesByIds(this.selectedIds, this.stations));
   }
 
   get forecastLatLon(): string {
