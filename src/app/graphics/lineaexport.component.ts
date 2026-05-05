@@ -29,6 +29,8 @@ export class LineaExportComponent implements AfterViewInit {
   stationIds: string[] = [];
   // Initially selected station
   selectedIds: string[] = [];
+  features = "[]";
+  forecastLatLon = "[]";
 
   private mapService = inject(LineaMapService);
   private graphicsService = inject(GraphicsService);
@@ -171,6 +173,7 @@ export class LineaExportComponent implements AfterViewInit {
     if (!this.selectedIds.includes(id)) {
       this.selectedIds.push(id);
       this.markers[id].setStyle(this.getModelPointOptions(true)); // selected style
+      this.#updateLineaPlotAttrs();
     }
   }
 
@@ -186,15 +189,13 @@ export class LineaExportComponent implements AfterViewInit {
   removeStation(id: string): void {
     this.selectedIds = this.selectedIds.filter((s) => s !== id);
     this.markers[id].setStyle(this.getModelPointOptions(false)); // unselected style
+    this.#updateLineaPlotAttrs();
   }
 
-  // linea-plot features (GeoJSON Feature array with dataURLs)
-  get features(): string {
-    return JSON.stringify(this.graphicsService.getFeaturesByIds(this.selectedIds, this.stations));
-  }
-
-  get forecastLatLon(): string {
-    return JSON.stringify(this.graphicsService.getLatLongPairsByIds(this.selectedIds, this.stations));
+  #updateLineaPlotAttrs(): void {
+    const selected = this.stations.filter((s) => this.selectedIds.includes(s.id));
+    this.features = JSON.stringify(selected.map((s) => s.feature));
+    this.forecastLatLon = JSON.stringify(selected.map((s) => `${s.latitude},${s.longitude}`));
   }
 
   // Marker style

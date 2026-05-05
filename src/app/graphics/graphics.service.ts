@@ -234,19 +234,6 @@ export class GraphicsService {
     return fallback;
   }
 
-  getLatLongPairsByIds(
-    ids: string[],
-    stations: Pick<LineaStationFeature, "id" | "latitude" | "longitude">[],
-  ): string[] {
-    const stationById = new Map(stations.map((station) => [station.id, station]));
-    return ids.map((id) => `${stationById.get(id).latitude},${stationById.get(id).longitude}`);
-  }
-
-  getFeaturesByIds(ids: string[], stations: LineaStationFeature[]): Feature[] {
-    const stationById = new Map(stations.map((station) => [station.id, station]));
-    return ids.map((id) => stationById.get(id)!.feature);
-  }
-
   // ============================================
   // Private Utilities
   // ============================================
