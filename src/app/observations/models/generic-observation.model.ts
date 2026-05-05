@@ -95,7 +95,7 @@ export function toGeoJSON(observations: GenericObservation[]) {
       },
       properties: {
         ...o,
-        ...(o.$data || {}),
+        ...o.$data,
         $data: undefined,
       },
     }),

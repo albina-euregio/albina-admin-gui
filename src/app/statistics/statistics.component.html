@@ -47,14 +47,19 @@
                   </div>
                 </div>
                 <!-- Footer -->
-                <div class="card-footer">
+                <div class="card-footer d-flex align-items-center flex-wrap gap-2">
                   <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getBulletinStatistics($event)">
                     {{ "statistics.button.submit" | translate }}
                   </button>
                   @if (loadingStatistics) {
-                    <div class="spinner-border" role="status">
+                    <span class="spinner-border align-middle" role="status">
                       <span class="visually-hidden">{{ "admin.loadingStatistics" | translate }}</span>
-                    </div>
+                    </span>
+                  }
+                  @if (statisticsError) {
+                    <span class="alert alert-dismissible alert-danger py-1 px-2 mb-0" role="alert">{{
+                      statisticsError
+                    }}</span>
                   }
                 </div>
               </form>
@@ -81,14 +86,17 @@
                   </div>
                 </div>
                 <!-- Footer -->
-                <div class="card-footer">
+                <div class="card-footer d-flex align-items-center flex-wrap gap-2">
                   <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getDangerSourceStatistics($event)">
                     {{ "statistics.button.submit" | translate }}
                   </button>
                   @if (loadingStatistics) {
-                    <div class="spinner-border" role="status">
+                    <span class="spinner-border align-middle" role="status">
                       <span class="visually-hidden">{{ "admin.loadingStatistics" | translate }}</span>
-                    </div>
+                    </span>
+                  }
+                  @if (statisticsError) {
+                    <span class="alert alert-danger py-1 px-2 mb-0" role="alert">{{ statisticsError }}</span>
                   }
                 </div>
               </form>

@@ -291,7 +291,7 @@ export async function* fetchSnowLineCalculations(
 }
 
 function getSnowLineCalculationsImages(endDate: Date, { plot_name }: SnowLineProperties): string[] {
-  return new Array(17).fill("").map((_, i) => {
+  return Array.from({ length: 17 }).map((_, i) => {
     const d = new Date(endDate);
     d.setDate(d.getDate() - i * 3);
     const date = getISODateString(d);

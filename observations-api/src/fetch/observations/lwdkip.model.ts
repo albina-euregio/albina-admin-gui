@@ -140,7 +140,7 @@ export function convertLwdKipBeobachtung(
       .filter((row) => row !== undefined),
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Evaluation,
-    stability: getLwdKipBeobachtungStability(feature),
+    stability: getLwdKipBeobachtungStability(),
     aspect: undefined,
     authorName: feature.properties.BEZEICHNUNG,
     content: [feature.properties.BESCHREIBUNG, feature.properties.NOTIZEN].filter((s) => !!s).join(" – "),
@@ -242,7 +242,7 @@ export function convertLwdKipLawinenabgang(
     ],
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Avalanche,
-    stability: getLwdKipLawinenabgangStability(feature),
+    stability: getLwdKipLawinenabgangStability(),
     aspect: toAspect(feature.properties.EXPOSITION),
     authorName: undefined,
     content: [
@@ -285,7 +285,7 @@ export function convertLwdKipSperren(
     $data: feature.properties,
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Closure,
-    stability: getLwdKipSperreStability(feature),
+    stability: getLwdKipSperreStability(),
     aspect: undefined,
     authorName: undefined,
     content: [feature.properties.SPERRETYP, feature.properties.SPERREBEREICH].filter((s) => !!s).join(" – "),
@@ -298,7 +298,7 @@ export function convertLwdKipSperren(
   };
 }
 
-function getLwdKipBeobachtungStability(feature: GeoJSON.Feature<GeoJSON.Point, BeobachtungProperties>): Stability {
+function getLwdKipBeobachtungStability(): Stability {
   return null;
 }
 
@@ -317,12 +317,10 @@ function getLwdKipSprengerfolgStability(feature: GeoJSON.Feature<GeoJSON.Point, 
   }
 }
 
-function getLwdKipLawinenabgangStability(
-  feature: GeoJSON.Feature<GeoJSON.LineString, LawinenabgangProperties>,
-): Stability {
+function getLwdKipLawinenabgangStability(): Stability {
   return Stability.very_poor;
 }
 
-function getLwdKipSperreStability(feature: GeoJSON.Feature<GeoJSON.LineString, SperreProperties>): Stability {
+function getLwdKipSperreStability(): Stability {
   return Stability.very_poor;
 }

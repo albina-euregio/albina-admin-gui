@@ -52,6 +52,7 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
 import { BulletinStatusBadgeComponent } from "../shared/bulletin-status-badge.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { PublicationInProgressComponent } from "../shared/publication-in-progress.component";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
 import { ModalConfirmComponent } from "./modal-confirm.component";
@@ -73,6 +74,7 @@ import { ModalPublicationStatusComponent } from "./modal-publication-status.comp
     TranslateModule,
     NgxMousetrapDirective,
     BulletinTextComponent,
+    PublicationInProgressComponent,
   ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
@@ -351,6 +353,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     if (this.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
       this.reset();
+      this.bulletinsService.loadStatus();
+      this.bulletinsService.startPublicationStatusPolling();
 
       // copy bulletins from other date
       if (this.bulletinsService.getCopyDate()) {
@@ -496,16 +500,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showPublicationHappensAt5PM() {
     return (
-      (this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.resubmitted) &&
+      (this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.resubmitted) &&
       !this.bulletinsService.sourceDates.hasBeenPublished5PM()
     );
   }
 
   showPublicationHappensAt8AM() {
     return (
-      (this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.resubmitted) &&
+      (this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.resubmitted) &&
       this.bulletinsService.sourceDates.hasBeenPublished5PM() &&
       !this.bulletinsService.sourceDates.hasBeenPublished8AM()
     );
@@ -513,15 +517,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showPublicationHappened() {
     return (
-      this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.published ||
-      this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.republished
+      this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.published ||
+      this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.republished
     );
   }
 
   showNoPublicationWillHappen() {
     return (
-      (this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus() === Enums.BulletinStatus.resubmitted) &&
+      (this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getActiveRegionStatus() === Enums.BulletinStatus.resubmitted) &&
       this.bulletinsService.sourceDates.hasBeenPublished8AM()
     );
   }
@@ -893,8 +897,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.publishing &&
       !this.submitting &&
       this.authenticationService.getActiveRegionId() !== undefined &&
-      (this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.draft ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.updated) &&
+      (this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.draft ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.updated) &&
       !this.copying &&
       this.authenticationService.isCurrentUserInRole("FOREMAN")
     );
@@ -916,8 +920,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.submitting &&
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
-      (this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.published ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.republished) &&
+      (this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.published ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.republished) &&
       this.authenticationService.isCurrentUserInRole("ADMIN")
     );
   }
@@ -1729,7 +1733,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private isWriteDisabled(): boolean {
-    const userRegionStatus = this.bulletinsService.getUserRegionStatus();
+    const userRegionStatus = this.bulletinsService.getActiveRegionStatus();
     return (
       userRegionStatus === Enums.BulletinStatus.published ||
       userRegionStatus === Enums.BulletinStatus.republished ||
@@ -1834,12 +1838,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.submitting &&
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
-      (this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.draft ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.updated ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.resubmitted ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.published ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.republished) &&
+      (this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.draft ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.updated ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.submitted ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.published ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.republished) &&
       (this.authenticationService.isCurrentUserInRole("ADMIN") ||
         this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN"))
     );
@@ -1895,7 +1899,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   updateBulletinStatusEdit() {
-    const currentStatus = this.bulletinsService.getUserRegionStatus();
+    const currentStatus = this.bulletinsService.getActiveRegionStatus();
     const updatedStatuses = [
       Enums.BulletinStatus.republished,
       Enums.BulletinStatus.resubmitted,
@@ -2127,18 +2131,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return regionNames.join(", ");
   }
 
-  getActiveRegionStatus(date: [Date, Date] = this.bulletinsService.sourceDates.activeDate) {
-    const regionStatusMap = this.bulletinsService.statusMap.get(this.authenticationService.getActiveRegionId());
-    if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
-    else return Enums.BulletinStatus.missing;
-  }
-
-  getRegionStatus(region: string, date: [Date, Date] = this.bulletinsService.sourceDates.activeDate) {
-    const regionStatusMap = this.bulletinsService.statusMap.get(region);
-    if (date && regionStatusMap) return regionStatusMap.get(date[0].getTime());
-    else return Enums.BulletinStatus.missing;
-  }
-
   showSubmitButton() {
     return (
       !this.bulletinsService.getIsReadOnly() &&
@@ -2146,8 +2138,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.submitting &&
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
-      (this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.draft ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.updated) &&
+      (this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.draft ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.updated) &&
       this.internBulletinsList.length > 0 &&
       this.authenticationService.isCurrentUserInRole("FORECASTER")
     );
@@ -2262,10 +2254,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.submitBulletins(date, this.authenticationService.getActiveRegionId()).subscribe({
       next: () => {
         console.log("Bulletins submitted.");
-        if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.resubmitted);
-        } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.submitted);
+        if (this.bulletinsService.getActiveRegionStatus(date) === Enums.BulletinStatus.updated) {
+          this.bulletinsService.setActiveRegionStatus(date, Enums.BulletinStatus.resubmitted);
+        } else if (this.bulletinsService.getActiveRegionStatus(date) === Enums.BulletinStatus.draft) {
+          this.bulletinsService.setActiveRegionStatus(date, Enums.BulletinStatus.submitted);
         }
         this.bulletinsService.setIsEditable(false);
         this.submitting = false;
@@ -2298,12 +2290,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.submitting &&
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
-      (this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.resubmitted ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.published ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.republished ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.missing ||
-        (this.bulletinsService.getUserRegionStatus() === undefined &&
+      (this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.submitted ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.published ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.republished ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.missing ||
+        (this.bulletinsService.getActiveRegionStatus() === undefined &&
           this.bulletinsService.sourceDates.hasBeenPublished5PM())) &&
       this.authenticationService.isCurrentUserInRole("FORECASTER", "FOREMAN")
     );
@@ -2324,8 +2316,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
       this.bulletinsService.sourceDates.hasBeenPublished5PM() &&
-      (this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.resubmitted ||
-        this.bulletinsService.getUserRegionStatus() === this.bulletinStatus.submitted) &&
+      (this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.submitted) &&
       this.authenticationService.isCurrentUserInRole("FORECASTER")
     );
   }
