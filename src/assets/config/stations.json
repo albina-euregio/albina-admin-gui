@@ -6,7 +6,7 @@
       "https://api.avalanche.report/lawine/grafiken/smet/all/{id}.smet.gz"
     ],
     "smetOperators": "LWD Tirol|HD Tirol|Südtirol - Alto Adige|Trentino|LWD Bayern|Tiroler Wasserkraft|Verbund|Bundesforschungszentrum für Wald|IGF|Nationalpark Hohe Tauern|Universität Innsbruck|Wildbach- und Lawinenverbauung|fotho-electric.tirol",
-    "stations": "https://static.avalanche.report/weather_stations/stations.geojson?v=legacy"
+    "stations": "https://static.avalanche.report/weather_stations/linea.geojson.gz"
   },
   {
     "smet": [

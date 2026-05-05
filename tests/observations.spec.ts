@@ -237,7 +237,7 @@ test("Create new observation", async ({ page }) => {
   await page.getByRole("textbox", { name: "Author name" }).fill("Playwright");
   await page.locator('#reportDate input[type="date"]').fill("2024-12-11");
   await page.locator('#reportDate input[type="time"]').fill("08:00");
-  await page.getByRole("button", { name: "Wind slab" }).click();
+  await page.getByTitle("Wind slab").click();
   await page.getByLabel("Danger source").selectOption("60635f9e-63f8-456e-8202-740467eab952");
   await page.getByRole("button", { name: "Gliding snow" }).click();
   await page.getByRole("button", { name: "dp2" }).click();

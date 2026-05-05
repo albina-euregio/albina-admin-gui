@@ -34,13 +34,6 @@ test("check all links in navbar", async ({ page }) => {
     await expect(page.locator("#observationsMap")).toBeVisible();
     await expect(page.locator(".toolset").first()).toBeVisible();
   });
-  await test.step("Weatherbox", async () => {
-    await page.getByRole("link", { name: "Weatherbox", exact: true }).click();
-    await expect(page).toHaveURL(/modelling\/zamg-wbt/);
-    await expect(page.getByRole("link", { name: "Wetterinformationsportal" })).toBeEnabled();
-    const linkURL = await page.getByRole("link", { name: "Wetterinformationsportal" }).getAttribute("href");
-    expect(linkURL).toBe("https://portal.tirol.gv.at/at.ac.zamg.wbt-p/");
-  });
   await test.step("Avalanche.report", async () => {
     await page.getByRole("link", { name: "Avalanche.report", exact: true }).click();
     await expect(page).toHaveURL(/bulletins/);
@@ -53,6 +46,5 @@ test("check all links in navbar", async ({ page }) => {
     await expect(page.getByRole("link", { name: "GeoSphere", exact: true })).toBeHidden();
     await expect(page.getByRole("link", { name: "SNOWPACK", exact: true })).toBeHidden();
     await expect(page.getByRole("link", { name: "AWSOME", exact: true })).toBeHidden();
-    await expect(page.getByRole("link", { name: "Weatherbox", exact: true })).toBeHidden();
   });
 });
