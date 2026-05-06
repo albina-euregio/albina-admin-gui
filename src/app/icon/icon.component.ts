@@ -145,12 +145,7 @@ export class IconComponent implements OnInit {
 
       this.dayGroups = this.buildDayGroups();
 
-      // Select latest available timestamp by default
-      const lastDay = this.dayGroups[this.dayGroups.length - 1];
-      if (lastDay) {
-        this.selectedDate = lastDay.date;
-        this.selectedHour = lastDay.hours[lastDay.hours.length - 1];
-      }
+      this.selectInitialTimestamp();
 
       this.updateSelectedImage();
     } catch {
@@ -184,6 +179,37 @@ export class IconComponent implements OnInit {
         dateLabel: this.getDateLabel(date),
         hours: [...hoursSet].sort(),
       }));
+  }
+
+  private selectInitialTimestamp() {
+    const allTimestamps = this.dayGroups.flatMap((d) => d.hours.map((h) => ({ date: d.date, hour: h })));
+    if (!allTimestamps.length) return;
+
+    const now = new Date();
+    const currentDate = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, "0")}${String(now.getUTCDate()).padStart(2, "0")}`;
+    const currentHour = String(now.getUTCHours()).padStart(2, "0");
+
+    const exactNow = allTimestamps.find((t) => t.date === currentDate && t.hour === currentHour);
+    if (exactNow) {
+      this.selectedDate = exactNow.date;
+      this.selectedHour = exactNow.hour;
+      return;
+    }
+
+    const currentKey = `${currentDate}${currentHour}`;
+    let latestPastOrCurrent = allTimestamps[0];
+
+    for (const timestamp of allTimestamps) {
+      const timestampKey = `${timestamp.date}${timestamp.hour}`;
+      if (timestampKey <= currentKey) {
+        latestPastOrCurrent = timestamp;
+      } else {
+        break;
+      }
+    }
+
+    this.selectedDate = latestPastOrCurrent.date;
+    this.selectedHour = latestPastOrCurrent.hour;
   }
 
   private getDayLabel(date: string): string {
