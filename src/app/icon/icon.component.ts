@@ -83,7 +83,8 @@ export class IconComponent implements OnInit {
     const allTimestamps = this.dayGroups.flatMap((d) => d.hours.map((h) => ({ date: d.date, hour: h })));
     const currentIndex = allTimestamps.findIndex((t) => t.date === this.selectedDate && t.hour === this.selectedHour);
     if (currentIndex === -1) return;
-    const nextIndex = (currentIndex + direction + allTimestamps.length) % allTimestamps.length;
+    const nextIndex = currentIndex + direction;
+    if (nextIndex < 0 || nextIndex >= allTimestamps.length) return;
     const next = allTimestamps[nextIndex];
     this.selectTimestamp(next.date, next.hour);
   }
