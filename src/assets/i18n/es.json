@@ -37,7 +37,12 @@
     "lineaexport": "LINEA",
     "awsstats": "AWS Stats",
     "yearlystats": "Yearly Stats",
-    "graphics": "Graphics"
+    "graphics": "Gráficos",
+    "icon": "ICON"
+  },
+  "icon": {
+    "loading": "Loading ICON parameters and images...",
+    "noPng": "No PNG found for this parameter in the remote folder."
   },
   "menu": {
     "logout": "Cerrar sesión",
@@ -773,6 +778,7 @@
           "enableObservations": "Habilitar observaciones",
           "enableModelling": "Habilitar modelado",
           "enableWeatherbox": "Habilitar caja meteorológica",
+          "enableIcon": "Habilitar ICON",
           "enableLineaExport": "Activar exportación LINEA"
         },
         "configuration": {

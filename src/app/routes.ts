@@ -55,6 +55,12 @@ export default [
     loadChildren: () => import("./graphics/routes"),
   },
   {
+    path: "icon",
+    component: FullLayoutComponent,
+    canActivate: [AuthGuard],
+    loadChildren: () => import("./icon/routes"),
+  },
+  {
     path: "statistics",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],

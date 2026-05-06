@@ -37,7 +37,12 @@
     "lineaexport": "LINEA",
     "awsstats": "Statistiques SPA",
     "yearlystats": "Statistiques annuelles",
-    "graphics": "Graphiques"
+    "graphics": "Graphiques",
+    "icon": "ICON"
+  },
+  "icon": {
+    "loading": "Loading ICON parameters and images...",
+    "noPng": "No PNG found for this parameter in the remote folder."
   },
   "menu": {
     "logout": "Se déconnecter",
@@ -773,6 +778,7 @@
           "enableObservations": "Activer observations",
           "enableModelling": "Activer modélisation",
           "enableWeatherbox": "Activer boîte météo",
+          "enableIcon": "Activer ICON",
           "enableLineaExport": "Activer export LINEA"
         },
         "configuration": {

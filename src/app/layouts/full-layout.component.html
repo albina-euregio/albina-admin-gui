@@ -1,6 +1,6 @@
 <!-- Navbar -->
 @if (isNavbarShown) {
-  <nav class="navbar navbar-expand-lg" [style]="getStyle()">
+  <nav class="navbar navbar-expand-xl" [style]="getStyle()">
     <div class="container-fluid">
       <button
         class="navbar__toggler"
@@ -15,7 +15,7 @@
         <img class="navbar__logo" alt="Avalanche.report Logo" src="{{ environment.logoPath }}" />
       </a>
       <div class="navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-xl-0">
           @if (authenticationService.isUserLoggedIn()) {
             <li class="nav-item">
               <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']" ngxMousetrapKey="g b">
@@ -46,6 +46,13 @@
                 ngxMousetrapKey="g m"
               >
                 {{ "sidebar.geosphere" | translate }}
+              </a>
+            </li>
+          }
+          @if (authenticationService.getActiveRegion()?.enableIcon && authenticationService.isUserLoggedIn()) {
+            <li class="nav-item">
+              <a class="nav-link" routerLinkActive="active" [routerLink]="['/icon']" ngxMousetrapKey="g i">
+                {{ "sidebar.icon" | translate }}
               </a>
             </li>
           }
@@ -242,6 +249,14 @@
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
             <i class="ph ph-sphere"></i>
             {{ "sidebar.geosphere" | translate }}
+          </a>
+        </li>
+      }
+      @if (authenticationService.getActiveRegion()?.enableIcon && authenticationService.isUserLoggedIn()) {
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/icon']">
+            <i class="ph ph-image"></i>
+            {{ "sidebar.icon" | translate }}
           </a>
         </li>
       }
