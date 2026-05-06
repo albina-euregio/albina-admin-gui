@@ -10,7 +10,7 @@
       </div>
     } @else {
       <!-- Timeline bar -->
-      <div class="icon-timeline-wrapper">
+      <div class="icon-timeline-wrapper" #timelineWrapper>
         <div class="icon-timeline" role="toolbar" aria-label="Forecast timesteps">
           @for (day of dayGroups; track day.date) {
             <div class="timeline-day-group">
