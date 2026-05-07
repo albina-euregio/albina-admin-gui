@@ -90,14 +90,7 @@
 
 .icon-image-area {
   min-width: 0;
-}
-
-.icon-current-meta {
-  margin-top: 0.35rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  font-size: 0.8rem;
+  text-align: center;
 }
 
 .icon-image-wrapper {
@@ -114,6 +107,15 @@
   width: auto;
   max-width: 100%;
   height: auto;
+}
+
+.gfs-image-wrapper {
+  max-height: calc(100dvh - 250px);
+}
+
+.gfs-image {
+  max-height: calc(100dvh - 270px);
+  width: auto;
 }
 
 /* ── Parameters sidebar ──────────────────────────────────────── */
@@ -181,6 +183,11 @@
   }
 
   .icon-parameters {
+    max-height: none;
+  }
+
+  .gfs-image-wrapper,
+  .gfs-image {
     max-height: none;
   }
 }

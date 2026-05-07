@@ -41,25 +41,13 @@
       <div class="icon-main" (touchstart)="onSwipe($event, 'start')" (touchend)="onSwipe($event, 'end')">
         <!-- Image area -->
         <div class="icon-image-area">
-          <div class="icon-current mb-2">
-            <strong>{{ selectedParameter?.description }}</strong>
-            <span class="text-muted"> ({{ selectedParameter?.code }})</span>
-            <div class="icon-current-meta text-muted">
-              <span>{{ selectedModelLabel }}</span>
-              <span> · {{ selectedRegionLabel }}</span>
-              @if (selectedLevelLabel) {
-                <span> · {{ selectedLevelLabel }}</span>
-              }
-              <span> · {{ selectedDate }} {{ selectedHour }}Z</span>
-            </div>
-          </div>
-
           @if (selectedImageUrl && !imageLoadFailed) {
-            <div class="icon-image-wrapper">
+            <div class="icon-image-wrapper" [class.gfs-image-wrapper]="selectedModel === 'GFS'">
               <img
                 [src]="selectedImageUrl"
                 [alt]="currentImageAlt"
                 class="icon-image"
+                [class.gfs-image]="selectedModel === 'GFS'"
                 (load)="onImageLoad()"
                 (error)="onImageError()"
               />
