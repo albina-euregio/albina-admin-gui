@@ -145,6 +145,12 @@ export class IconComponent implements OnInit {
       const currentModelIndex = this.availableModels.findIndex((model) => model.id === this.selectedModel);
       const nextModel = this.availableModels[(currentModelIndex + 1) % this.availableModels.length];
       this.selectModel(nextModel.id);
+    } else if (event.key.toLowerCase() === "r") {
+      event.preventDefault();
+      const nextRegionId = this.getNextAvailableRegionId();
+      if (nextRegionId) {
+        this.selectRegion(nextRegionId);
+      }
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
       this.selectParameterByIndex(this.getSelectedParameterIndex() + 1);
@@ -195,6 +201,17 @@ export class IconComponent implements OnInit {
 
   isRegionAvailable(regionId: string): boolean {
     return this.availableRegions.some((region) => region.id === regionId);
+  }
+
+  private getNextAvailableRegionId(): string | undefined {
+    const availableRegionIds = this.orderedRegions
+      .filter((region) => this.isRegionAvailable(region.id))
+      .map((region) => region.id);
+    if (!availableRegionIds.length) return undefined;
+
+    const currentRegionIndex = availableRegionIds.indexOf(this.selectedRegion);
+    const nextRegionIndex = currentRegionIndex === -1 ? 0 : (currentRegionIndex + 1) % availableRegionIds.length;
+    return availableRegionIds[nextRegionIndex];
   }
 
   selectLevel(levelId: string) {

@@ -64,7 +64,10 @@
         <!-- Parameters sidebar -->
         <aside class="icon-parameters" aria-label="Forecast parameters">
           <div class="sidebar-section">
-            <h6 class="sidebar-heading">Model</h6>
+            <h6 class="sidebar-heading">
+              <span>Model</span>
+              <span class="sidebar-heading-hint">M</span>
+            </h6>
             <div class="sidebar-controls" role="toolbar" aria-label="Forecast model selection">
               @for (model of availableModels; track model.id) {
                 <button
@@ -81,7 +84,10 @@
           </div>
 
           <div class="sidebar-section">
-            <h6 class="sidebar-heading">Region</h6>
+            <h6 class="sidebar-heading">
+              <span>Region</span>
+              <span class="sidebar-heading-hint">R</span>
+            </h6>
             <div class="sidebar-controls" role="toolbar" aria-label="Forecast region selection">
               @for (region of orderedRegions; track region.id) {
                 <button
@@ -99,7 +105,10 @@
           </div>
 
           <div class="sidebar-section">
-            <h6 class="sidebar-heading">Parameters</h6>
+            <h6 class="sidebar-heading">
+              <span>Parameters</span>
+              <span class="sidebar-heading-hint">↑ ↓</span>
+            </h6>
             <div class="list-group list-group-flush">
               @for (parameter of filteredParameters; track parameter.key; let i = $index) {
                 <button
