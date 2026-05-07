@@ -298,7 +298,12 @@ export class IconComponent implements OnInit {
       return;
     }
 
-    if (!this.selectedLevel || !this.selectedRegion) {
+    if (!this.selectedRegion) {
+      this.selectedImageUrl = "";
+      return;
+    }
+
+    if (parameter.levelOptions.length > 0 && !this.selectedLevel) {
       this.selectedImageUrl = "";
       return;
     }
@@ -500,6 +505,14 @@ export class IconComponent implements OnInit {
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION],
         levelOptions: GFS_LEVELS,
+      },
+      {
+        key: "gfs:ns",
+        code: "ns",
+        description: "Precipitation",
+        modelOptions: [GFS_MODEL],
+        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        levelOptions: [] as SelectorOption[],
       },
     ];
   }

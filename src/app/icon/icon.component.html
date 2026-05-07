@@ -129,7 +129,7 @@
           <div class="sidebar-section">
             <h6 class="sidebar-heading">Parameters</h6>
             <div class="list-group list-group-flush">
-              @for (parameter of parameters; track parameter.code; let i = $index) {
+              @for (parameter of parameters; track parameter.key; let i = $index) {
                 <button
                   type="button"
                   class="list-group-item list-group-item-action"
