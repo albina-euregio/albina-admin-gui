@@ -95,6 +95,23 @@
             </div>
           </div>
 
+          <div class="sidebar-section">
+            <h6 class="sidebar-heading">Parameters</h6>
+            <div class="list-group list-group-flush">
+              @for (parameter of filteredParameters; track parameter.key; let i = $index) {
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  [class.active]="parameter.key === selectedParameter?.key"
+                  (click)="selectParameterByIndex(i)"
+                >
+                  <div class="parameter-description">{{ parameter.description }}</div>
+                  <div class="parameter-code">{{ parameter.code }}</div>
+                </button>
+              }
+            </div>
+          </div>
+
           @if (availableLevels.length) {
             <div class="sidebar-section">
               <h6 class="sidebar-heading">Level</h6>
@@ -113,23 +130,6 @@
               </div>
             </div>
           }
-
-          <div class="sidebar-section">
-            <h6 class="sidebar-heading">Parameters</h6>
-            <div class="list-group list-group-flush">
-              @for (parameter of filteredParameters; track parameter.key; let i = $index) {
-                <button
-                  type="button"
-                  class="list-group-item list-group-item-action"
-                  [class.active]="parameter.key === selectedParameter?.key"
-                  (click)="selectParameterByIndex(i)"
-                >
-                  <div class="parameter-description">{{ parameter.description }}</div>
-                  <div class="parameter-code">{{ parameter.code }}</div>
-                </button>
-              }
-            </div>
-          </div>
         </aside>
       </div>
     }
