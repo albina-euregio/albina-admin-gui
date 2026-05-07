@@ -14,6 +14,7 @@ interface IconParameter {
   modelOptions: SelectorOption[];
   regionOptions: SelectorOption[];
   levelOptions: SelectorOption[];
+  levelCodeMap?: Record<string, string>;
 }
 
 interface DayGroup {
@@ -35,6 +36,12 @@ const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((le
   id: level,
   label: `${level} hPa`,
 }));
+const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
+  { id: "t", label: "Total" },
+  { id: "l", label: "Low" },
+  { id: "m", label: "Mid" },
+  { id: "h", label: "High" },
+];
 
 @Component({
   selector: "app-icon",
@@ -285,7 +292,8 @@ export class IconComponent implements OnInit {
     }
 
     if (parameter.key.startsWith("icon:")) {
-      const fileName = this.filesMap[parameter.code]?.[this.selectedDate]?.[this.selectedHour] ?? "";
+      const resolvedCode = this.getResolvedIconCode(parameter);
+      const fileName = this.filesMap[resolvedCode]?.[this.selectedDate]?.[this.selectedHour] ?? "";
       this.selectedImageUrl = fileName ? `${this.iconBaseUrl}${fileName}` : "";
       return;
     }
@@ -311,8 +319,9 @@ export class IconComponent implements OnInit {
     }
 
     const dateHoursMap = new Map<string, Set<string>>();
+    const resolvedCode = this.getResolvedIconCode(parameter);
 
-    for (const [date, hourFiles] of Object.entries(this.filesMap[parameter.code] ?? {})) {
+    for (const [date, hourFiles] of Object.entries(this.filesMap[resolvedCode] ?? {})) {
       if (!dateHoursMap.has(date)) dateHoursMap.set(date, new Set());
       for (const hour of Object.keys(hourFiles)) {
         dateHoursMap.get(date)!.add(hour);
@@ -368,6 +377,15 @@ export class IconComponent implements OnInit {
     return options.some((option) => option.id === current) ? current : options[0].id;
   }
 
+  private getResolvedIconCode(parameter: IconParameter): string {
+    if (!parameter.levelCodeMap) return parameter.code;
+    return (
+      parameter.levelCodeMap[this.selectedLevel] ??
+      parameter.levelCodeMap[parameter.levelOptions[0]?.id] ??
+      parameter.code
+    );
+  }
+
   private ensureSelectedTimestamp() {
     const isStillAvailable = this.dayGroups.some(
       (dayGroup) => dayGroup.date === this.selectedDate && dayGroup.hours.includes(this.selectedHour),
@@ -420,23 +438,58 @@ export class IconComponent implements OnInit {
   }
 
   private parseParameters(parameterText: string): IconParameter[] {
-    const iconParameters = parameterText
+    const rawIconParameters = parameterText
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter((line) => line && !line.toLowerCase().startsWith("name"))
       .map((line) => {
         const match = line.match(/^([a-z0-9]+)\s+(.+)$/i);
         if (!match) return undefined;
-        return {
-          key: `icon:${match[1]}`,
-          code: match[1],
-          description: match[2].trim(),
-          modelOptions: [ICON_MODEL],
-          regionOptions: [EUREGIO_REGION],
-          levelOptions: [] as SelectorOption[],
-        };
+        return { code: match[1], description: match[2].trim() };
       })
-      .filter((parameter): parameter is IconParameter => parameter !== undefined);
+      .filter((parameter): parameter is { code: string; description: string } => parameter !== undefined);
+
+    const cloudCodeSet = new Set(["cct", "ccl", "ccm", "cch"]);
+    const cloudCodeMap: Record<string, string> = {};
+    const cloudLevelOptions: SelectorOption[] = [];
+
+    for (const option of CLOUD_LEVEL_OPTIONS) {
+      const codeByLevel: Record<string, string> = {
+        t: "cct",
+        l: "ccl",
+        m: "ccm",
+        h: "cch",
+      };
+      const cloudCode = codeByLevel[option.id];
+      const isAvailable = rawIconParameters.some((parameter) => parameter.code === cloudCode);
+      if (!isAvailable) continue;
+
+      cloudCodeMap[option.id] = cloudCode;
+      cloudLevelOptions.push(option);
+    }
+
+    const iconParameters: IconParameter[] = rawIconParameters
+      .filter((parameter) => !cloudCodeSet.has(parameter.code))
+      .map((parameter) => ({
+        key: `icon:${parameter.code}`,
+        code: parameter.code,
+        description: parameter.description,
+        modelOptions: [ICON_MODEL],
+        regionOptions: [EUREGIO_REGION],
+        levelOptions: [] as SelectorOption[],
+      }));
+
+    if (cloudLevelOptions.length) {
+      iconParameters.push({
+        key: "icon:cc",
+        code: "cc",
+        description: "Cloud Cover",
+        modelOptions: [ICON_MODEL],
+        regionOptions: [EUREGIO_REGION],
+        levelOptions: cloudLevelOptions,
+        levelCodeMap: cloudCodeMap,
+      });
+    }
 
     return [
       ...iconParameters,
