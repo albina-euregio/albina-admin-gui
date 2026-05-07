@@ -83,12 +83,13 @@
           <div class="sidebar-section">
             <h6 class="sidebar-heading">Region</h6>
             <div class="sidebar-controls" role="toolbar" aria-label="Forecast region selection">
-              @for (region of availableRegions; track region.id) {
+              @for (region of orderedRegions; track region.id) {
                 <button
                   type="button"
                   class="btn btn-sm sidebar-chip"
                   [class.btn-primary]="selectedRegion === region.id"
                   [class.btn-outline-primary]="selectedRegion !== region.id"
+                  [disabled]="!isRegionAvailable(region.id)"
                   (click)="selectRegion(region.id)"
                 >
                   {{ region.label }}

@@ -33,6 +33,7 @@ const GFS_MODEL: SelectorOption = { id: "GFS", label: "GFS" };
 const EUREGIO_REGION: SelectorOption = { id: "euregio", label: "EUREGIO" };
 const EUROPE_REGION: SelectorOption = { id: "eu", label: "Europe" };
 const ALPS_REGION: SelectorOption = { id: "al", label: "Alps" };
+const ATLANTIC_REGION: SelectorOption = { id: "at", label: "Atlantic" };
 const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((level) => ({
   id: level,
   label: `${level} hPa`,
@@ -64,6 +65,7 @@ export class IconComponent implements OnInit {
   private swipeCoord?: [number, number];
   private swipeTime?: number;
   private readonly allModels: SelectorOption[] = [ICON_MODEL, GFS_MODEL];
+  private readonly allRegions: SelectorOption[] = [ATLANTIC_REGION, EUROPE_REGION, ALPS_REGION, EUREGIO_REGION];
 
   parameters: IconParameter[] = [];
   selectedParameterKey = "";
@@ -106,6 +108,10 @@ export class IconComponent implements OnInit {
     return this.selectedParameter?.regionOptions ?? [];
   }
 
+  get orderedRegions(): SelectorOption[] {
+    return this.allRegions;
+  }
+
   get availableLevels(): SelectorOption[] {
     return this.selectedParameter?.levelOptions ?? [];
   }
@@ -115,7 +121,7 @@ export class IconComponent implements OnInit {
   }
 
   get selectedRegionLabel(): string {
-    return this.availableRegions.find((region) => region.id === this.selectedRegion)?.label ?? "";
+    return this.orderedRegions.find((region) => region.id === this.selectedRegion)?.label ?? "";
   }
 
   get selectedLevelLabel(): string {
@@ -173,12 +179,17 @@ export class IconComponent implements OnInit {
   }
 
   selectRegion(regionId: string) {
+    if (!this.isRegionAvailable(regionId)) return;
     if (this.selectedRegion === regionId) return;
 
     this.selectedRegion = regionId;
     this.rebuildDayGroups();
     this.ensureSelectedTimestamp();
     this.updateSelectedImage();
+  }
+
+  isRegionAvailable(regionId: string): boolean {
+    return this.availableRegions.some((region) => region.id === regionId);
   }
 
   selectLevel(levelId: string) {
@@ -565,7 +576,7 @@ export class IconComponent implements OnInit {
         code: "et",
         description: "Equivalent Potential Temp.",
         modelOptions: [GFS_MODEL],
-        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_LEVELS,
       },
       {
@@ -573,7 +584,7 @@ export class IconComponent implements OnInit {
         code: "r",
         description: "Relative Humidity",
         modelOptions: [GFS_MODEL],
-        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_RH_LEVELS,
       },
       {
@@ -581,7 +592,7 @@ export class IconComponent implements OnInit {
         code: "g",
         description: "Geopotential and Isotachs",
         modelOptions: [GFS_MODEL],
-        regionOptions: [EUROPE_REGION],
+        regionOptions: [EUROPE_REGION, ATLANTIC_REGION],
         levelOptions: GFS_GEOP_ISOTACHS_LEVELS,
       },
       {
@@ -589,7 +600,7 @@ export class IconComponent implements OnInit {
         code: "ns",
         description: "Precipitation",
         modelOptions: [GFS_MODEL],
-        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_SURFACE_LEVEL,
         gfsLevelSuffixMap: { sfc: "" },
       },
