@@ -2,9 +2,18 @@ import { CommonModule } from "@angular/common";
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 
+interface SelectorOption {
+  id: string;
+  label: string;
+}
+
 interface IconParameter {
+  key: string;
   code: string;
   description: string;
+  modelOptions: SelectorOption[];
+  regionOptions: SelectorOption[];
+  levelOptions: SelectorOption[];
 }
 
 interface DayGroup {
@@ -17,6 +26,16 @@ interface DayGroup {
 // filesMap[parameterCode][date][hour] = fileName
 type FilesMap = Record<string, Record<string, Record<string, string>>>;
 
+const ICON_MODEL: SelectorOption = { id: "ICON", label: "ICON" };
+const GFS_MODEL: SelectorOption = { id: "GFS", label: "GFS" };
+const EUREGIO_REGION: SelectorOption = { id: "euregio", label: "EUREGIO" };
+const EUROPE_REGION: SelectorOption = { id: "eu", label: "Europe" };
+const ALPS_REGION: SelectorOption = { id: "al", label: "Alps" };
+const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((level) => ({
+  id: level,
+  label: `${level} hPa`,
+}));
+
 @Component({
   selector: "app-icon",
   standalone: true,
@@ -25,16 +44,21 @@ type FilesMap = Record<string, Record<string, Record<string, string>>>;
   styleUrls: ["./icon.component.css"],
 })
 export class IconComponent implements OnInit {
-  private readonly baseUrl = "https://extra.avalanche.report/meteo-bz/meteo-bz/";
-  private readonly parameterUrl = `${this.baseUrl}Parameter.txt`;
+  private readonly iconBaseUrl = "https://extra.avalanche.report/meteo-bz/meteo-bz/";
+  private readonly iconParameterUrl = `${this.iconBaseUrl}Parameter.txt`;
+  private readonly gfsBaseUrl = "https://ertel2.uibk.ac.at/ertel/data/pngs/GFS/00/";
   private swipeCoord?: [number, number];
   private swipeTime?: number;
 
   parameters: IconParameter[] = [];
   selectedIndex = 0;
+  selectedModel = ICON_MODEL.id;
+  selectedRegion = EUREGIO_REGION.id;
+  selectedLevel = "";
   selectedDate = "";
   selectedHour = "";
   selectedImageUrl = "";
+  imageLoadFailed = false;
 
   loading = true;
   error = "";
@@ -47,6 +71,42 @@ export class IconComponent implements OnInit {
 
   async ngOnInit() {
     await this.loadData();
+  }
+
+  get selectedParameter(): IconParameter | undefined {
+    return this.parameters[this.selectedIndex];
+  }
+
+  get availableModels(): SelectorOption[] {
+    return this.selectedParameter?.modelOptions ?? [];
+  }
+
+  get availableRegions(): SelectorOption[] {
+    return this.selectedParameter?.regionOptions ?? [];
+  }
+
+  get availableLevels(): SelectorOption[] {
+    return this.selectedParameter?.levelOptions ?? [];
+  }
+
+  get selectedModelLabel(): string {
+    return this.availableModels.find((model) => model.id === this.selectedModel)?.label ?? "";
+  }
+
+  get selectedRegionLabel(): string {
+    return this.availableRegions.find((region) => region.id === this.selectedRegion)?.label ?? "";
+  }
+
+  get selectedLevelLabel(): string {
+    return this.availableLevels.find((level) => level.id === this.selectedLevel)?.label ?? "";
+  }
+
+  get currentImageAlt(): string {
+    const parameter = this.selectedParameter;
+    if (!parameter) return "Forecast map";
+
+    const levelSuffix = this.selectedLevelLabel ? ` ${this.selectedLevelLabel}` : "";
+    return `${this.selectedModelLabel} ${parameter.description}${levelSuffix} ${this.selectedRegionLabel} ${this.selectedDate} ${this.selectedHour}Z`;
   }
 
   @HostListener("document:keydown", ["$event"])
@@ -71,7 +131,38 @@ export class IconComponent implements OnInit {
   selectParameterByIndex(index: number) {
     const parameterCount = this.parameters.length;
     if (!parameterCount) return;
+
     this.selectedIndex = (index + parameterCount) % parameterCount;
+    this.syncSelectionsWithParameter();
+    this.rebuildDayGroups();
+    this.ensureSelectedTimestamp();
+    this.updateSelectedImage();
+  }
+
+  selectModel(modelId: string) {
+    if (this.selectedModel === modelId) return;
+
+    this.selectedModel = modelId;
+    this.rebuildDayGroups();
+    this.ensureSelectedTimestamp();
+    this.updateSelectedImage();
+  }
+
+  selectRegion(regionId: string) {
+    if (this.selectedRegion === regionId) return;
+
+    this.selectedRegion = regionId;
+    this.rebuildDayGroups();
+    this.ensureSelectedTimestamp();
+    this.updateSelectedImage();
+  }
+
+  selectLevel(levelId: string) {
+    if (this.selectedLevel === levelId) return;
+
+    this.selectedLevel = levelId;
+    this.rebuildDayGroups();
+    this.ensureSelectedTimestamp();
     this.updateSelectedImage();
   }
 
@@ -122,17 +213,25 @@ export class IconComponent implements OnInit {
     this.swipeTime = undefined;
   }
 
+  onImageLoad() {
+    this.imageLoadFailed = false;
+  }
+
+  onImageError() {
+    this.imageLoadFailed = true;
+  }
+
   private async loadData() {
     this.loading = true;
     this.error = "";
 
     try {
       const [parameterText, directoryIndex] = await Promise.all([
-        fetch(this.parameterUrl).then((response) => {
+        fetch(this.iconParameterUrl).then((response) => {
           if (!response.ok) throw new Error(`Failed to load parameters (${response.status})`);
           return response.text();
         }),
-        fetch(this.baseUrl).then((response) => {
+        fetch(this.iconBaseUrl).then((response) => {
           if (!response.ok) throw new Error(`Failed to load image index (${response.status})`);
           return response.text();
         }),
@@ -142,17 +241,16 @@ export class IconComponent implements OnInit {
       this.filesMap = this.parseAllFiles(directoryIndex);
 
       if (!this.parameters.length) {
-        this.error = "No ICON parameters available.";
+        this.error = "No forecast parameters available.";
         return;
       }
 
-      this.dayGroups = this.buildDayGroups();
-
+      this.syncSelectionsWithParameter();
+      this.rebuildDayGroups();
       this.selectInitialTimestamp();
-
       this.updateSelectedImage();
     } catch {
-      this.error = "Could not load ICON data.";
+      this.error = "Could not load forecast data.";
     } finally {
       this.loading = false;
       this.scheduleTimelineScroll();
@@ -178,21 +276,49 @@ export class IconComponent implements OnInit {
   }
 
   private updateSelectedImage() {
-    const code = this.parameters[this.selectedIndex]?.code;
-    const fileName = code ? (this.filesMap[code]?.[this.selectedDate]?.[this.selectedHour] ?? "") : "";
-    this.selectedImageUrl = fileName ? `${this.baseUrl}${fileName}` : "";
+    const parameter = this.selectedParameter;
+    this.imageLoadFailed = false;
+
+    if (!parameter || !this.selectedDate || !this.selectedHour) {
+      this.selectedImageUrl = "";
+      return;
+    }
+
+    if (parameter.key.startsWith("icon:")) {
+      const fileName = this.filesMap[parameter.code]?.[this.selectedDate]?.[this.selectedHour] ?? "";
+      this.selectedImageUrl = fileName ? `${this.iconBaseUrl}${fileName}` : "";
+      return;
+    }
+
+    if (!this.selectedLevel || !this.selectedRegion) {
+      this.selectedImageUrl = "";
+      return;
+    }
+
+    this.selectedImageUrl = `${this.gfsBaseUrl}GFS_${this.selectedDate}_${this.selectedHour}_${parameter.code}${this.selectedLevel}${this.selectedRegion}.png`;
+  }
+
+  private rebuildDayGroups() {
+    this.dayGroups = this.buildDayGroups();
   }
 
   private buildDayGroups(): DayGroup[] {
+    const parameter = this.selectedParameter;
+    if (!parameter) return [];
+
+    if (parameter.key.startsWith("gfs:")) {
+      return this.buildGeneratedDayGroups();
+    }
+
     const dateHoursMap = new Map<string, Set<string>>();
-    for (const paramFiles of Object.values(this.filesMap)) {
-      for (const [date, hourFiles] of Object.entries(paramFiles)) {
-        if (!dateHoursMap.has(date)) dateHoursMap.set(date, new Set());
-        for (const hour of Object.keys(hourFiles)) {
-          dateHoursMap.get(date)!.add(hour);
-        }
+
+    for (const [date, hourFiles] of Object.entries(this.filesMap[parameter.code] ?? {})) {
+      if (!dateHoursMap.has(date)) dateHoursMap.set(date, new Set());
+      for (const hour of Object.keys(hourFiles)) {
+        dateHoursMap.get(date)!.add(hour);
       }
     }
+
     return [...dateHoursMap.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, hoursSet]) => ({
@@ -201,6 +327,55 @@ export class IconComponent implements OnInit {
         dateLabel: this.getDateLabel(date),
         hours: [...hoursSet].sort(),
       }));
+  }
+
+  private buildGeneratedDayGroups(): DayGroup[] {
+    const dateHoursMap = new Map<string, string[]>();
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
+
+    for (let offset = 0; offset <= 168; offset += 3) {
+      const timestamp = new Date(start.getTime() + offset * 60 * 60 * 1000);
+      const date = `${timestamp.getUTCFullYear()}${String(timestamp.getUTCMonth() + 1).padStart(2, "0")}${String(timestamp.getUTCDate()).padStart(2, "0")}`;
+      const hour = String(timestamp.getUTCHours()).padStart(2, "0");
+      const hours = dateHoursMap.get(date) ?? [];
+
+      if (!hours.includes(hour)) {
+        hours.push(hour);
+        dateHoursMap.set(date, hours);
+      }
+    }
+
+    return [...dateHoursMap.entries()].map(([date, hours]) => ({
+      date,
+      dayLabel: this.getDayLabel(date),
+      dateLabel: this.getDateLabel(date),
+      hours,
+    }));
+  }
+
+  private syncSelectionsWithParameter() {
+    const parameter = this.selectedParameter;
+    if (!parameter) return;
+
+    this.selectedModel = this.getValidSelection(this.selectedModel, parameter.modelOptions);
+    this.selectedRegion = this.getValidSelection(this.selectedRegion, parameter.regionOptions);
+    this.selectedLevel = this.getValidSelection(this.selectedLevel, parameter.levelOptions, true);
+  }
+
+  private getValidSelection(current: string, options: SelectorOption[], allowEmpty = false): string {
+    if (!options.length) return allowEmpty ? "" : current;
+    return options.some((option) => option.id === current) ? current : options[0].id;
+  }
+
+  private ensureSelectedTimestamp() {
+    const isStillAvailable = this.dayGroups.some(
+      (dayGroup) => dayGroup.date === this.selectedDate && dayGroup.hours.includes(this.selectedHour),
+    );
+
+    if (isStillAvailable) return;
+
+    this.selectInitialTimestamp();
   }
 
   private selectInitialTimestamp() {
@@ -235,26 +410,45 @@ export class IconComponent implements OnInit {
   }
 
   private getDayLabel(date: string): string {
-    const d = new Date(+date.slice(0, 4), +date.slice(4, 6) - 1, +date.slice(6, 8));
-    return d.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase();
+    const d = new Date(Date.UTC(+date.slice(0, 4), +date.slice(4, 6) - 1, +date.slice(6, 8)));
+    return d.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" }).toUpperCase();
   }
 
   private getDateLabel(date: string): string {
-    const d = new Date(+date.slice(0, 4), +date.slice(4, 6) - 1, +date.slice(6, 8));
-    return d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    const d = new Date(Date.UTC(+date.slice(0, 4), +date.slice(4, 6) - 1, +date.slice(6, 8)));
+    return d.toLocaleDateString("en-US", { day: "numeric", month: "short", timeZone: "UTC" });
   }
 
   private parseParameters(parameterText: string): IconParameter[] {
-    return parameterText
+    const iconParameters = parameterText
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter((line) => line && !line.toLowerCase().startsWith("name"))
       .map((line) => {
         const match = line.match(/^([a-z0-9]+)\s+(.+)$/i);
         if (!match) return undefined;
-        return { code: match[1], description: match[2].trim() };
+        return {
+          key: `icon:${match[1]}`,
+          code: match[1],
+          description: match[2].trim(),
+          modelOptions: [ICON_MODEL],
+          regionOptions: [EUREGIO_REGION],
+          levelOptions: [] as SelectorOption[],
+        };
       })
       .filter((parameter): parameter is IconParameter => parameter !== undefined);
+
+    return [
+      ...iconParameters,
+      {
+        key: "gfs:et",
+        code: "et",
+        description: "Equivalent Potential Temp.",
+        modelOptions: [GFS_MODEL],
+        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        levelOptions: GFS_LEVELS,
+      },
+    ];
   }
 
   private parseAllFiles(directoryIndexHtml: string): FilesMap {

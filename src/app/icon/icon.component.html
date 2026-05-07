@@ -42,16 +42,26 @@
         <!-- Image area -->
         <div class="icon-image-area">
           <div class="icon-current mb-2">
-            <strong>{{ parameters[selectedIndex].description }}</strong>
-            <span class="text-muted"> ({{ parameters[selectedIndex].code }})</span>
+            <strong>{{ selectedParameter?.description }}</strong>
+            <span class="text-muted"> ({{ selectedParameter?.code }})</span>
+            <div class="icon-current-meta text-muted">
+              <span>{{ selectedModelLabel }}</span>
+              <span> · {{ selectedRegionLabel }}</span>
+              @if (selectedLevelLabel) {
+                <span> · {{ selectedLevelLabel }}</span>
+              }
+              <span> · {{ selectedDate }} {{ selectedHour }}Z</span>
+            </div>
           </div>
 
-          @if (selectedImageUrl) {
+          @if (selectedImageUrl && !imageLoadFailed) {
             <div class="icon-image-wrapper">
               <img
                 [src]="selectedImageUrl"
-                [alt]="'ICON ' + parameters[selectedIndex].description + ' ' + selectedDate + ' ' + selectedHour + 'Z'"
+                [alt]="currentImageAlt"
                 class="icon-image"
+                (load)="onImageLoad()"
+                (error)="onImageError()"
               />
             </div>
           } @else {
@@ -62,20 +72,75 @@
         </div>
 
         <!-- Parameters sidebar -->
-        <aside class="icon-parameters" aria-label="ICON parameters">
-          <h6 class="sidebar-heading">Parameters</h6>
-          <div class="list-group list-group-flush">
-            @for (parameter of parameters; track parameter.code; let i = $index) {
-              <button
-                type="button"
-                class="list-group-item list-group-item-action"
-                [class.active]="i === selectedIndex"
-                (click)="selectParameterByIndex(i)"
-              >
-                <div class="parameter-description">{{ parameter.description }}</div>
-                <div class="parameter-code">{{ parameter.code }}</div>
-              </button>
-            }
+        <aside class="icon-parameters" aria-label="Forecast parameters">
+          <div class="sidebar-section">
+            <h6 class="sidebar-heading">Model</h6>
+            <div class="sidebar-controls" role="toolbar" aria-label="Forecast model selection">
+              @for (model of availableModels; track model.id) {
+                <button
+                  type="button"
+                  class="btn btn-sm sidebar-chip"
+                  [class.btn-primary]="selectedModel === model.id"
+                  [class.btn-outline-primary]="selectedModel !== model.id"
+                  (click)="selectModel(model.id)"
+                >
+                  {{ model.label }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h6 class="sidebar-heading">Region</h6>
+            <div class="sidebar-controls" role="toolbar" aria-label="Forecast region selection">
+              @for (region of availableRegions; track region.id) {
+                <button
+                  type="button"
+                  class="btn btn-sm sidebar-chip"
+                  [class.btn-primary]="selectedRegion === region.id"
+                  [class.btn-outline-primary]="selectedRegion !== region.id"
+                  (click)="selectRegion(region.id)"
+                >
+                  {{ region.label }}
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (availableLevels.length) {
+            <div class="sidebar-section">
+              <h6 class="sidebar-heading">Level</h6>
+              <div class="sidebar-controls" role="toolbar" aria-label="Pressure level selection">
+                @for (level of availableLevels; track level.id) {
+                  <button
+                    type="button"
+                    class="btn btn-sm sidebar-chip"
+                    [class.btn-primary]="selectedLevel === level.id"
+                    [class.btn-outline-primary]="selectedLevel !== level.id"
+                    (click)="selectLevel(level.id)"
+                  >
+                    {{ level.label }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <div class="sidebar-section">
+            <h6 class="sidebar-heading">Parameters</h6>
+            <div class="list-group list-group-flush">
+              @for (parameter of parameters; track parameter.code; let i = $index) {
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  [class.active]="i === selectedIndex"
+                  (click)="selectParameterByIndex(i)"
+                >
+                  <div class="parameter-description">{{ parameter.description }}</div>
+                  <div class="parameter-code">{{ parameter.code }}</div>
+                </button>
+              }
+            </div>
           </div>
         </aside>
       </div>

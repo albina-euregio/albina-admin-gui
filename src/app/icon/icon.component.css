@@ -92,6 +92,14 @@
   min-width: 0;
 }
 
+.icon-current-meta {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+}
+
 .icon-image-wrapper {
   display: inline-block;
   max-width: 100%;
@@ -110,36 +118,60 @@
 
 /* ── Parameters sidebar ──────────────────────────────────────── */
 .icon-parameters {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  padding: 0.5rem;
   max-height: calc(100dvh - 220px);
   overflow-y: auto;
   border: 1px solid var(--bs-border-color);
   border-radius: 0.5rem;
 }
 
+.sidebar-section {
+  border: 1px solid var(--bs-border-color-translucent);
+  border-radius: 0.45rem;
+  overflow: hidden;
+}
+
 .sidebar-heading {
   margin: 0;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--bs-secondary-color);
   border-bottom: 1px solid var(--bs-border-color);
   background: var(--bs-secondary-bg);
-  border-radius: 0.5rem 0.5rem 0 0;
-  position: sticky;
-  top: 0;
-  z-index: 1;
+}
+
+.sidebar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.45rem;
+}
+
+.sidebar-chip {
+  --bs-btn-padding-y: 0.12rem;
+  --bs-btn-padding-x: 0.45rem;
+  --bs-btn-font-size: 0.72rem;
+  --bs-btn-border-radius: 999px;
 }
 
 .parameter-description {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
 .parameter-code {
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   opacity: 0.75;
+}
+
+.icon-parameters .list-group-item {
+  padding: 0.35rem 0.55rem;
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
