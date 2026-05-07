@@ -37,6 +37,11 @@ const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((le
   id: level,
   label: `${level} hPa`,
 }));
+const GFS_RH_LEVELS: SelectorOption[] = ["300", "500", "700", "800", "850", "925"].map((level) => ({
+  id: level,
+  label: `${level} hPa`,
+}));
+const GFS_GEOP_ISOTACHS_LEVELS: SelectorOption[] = [{ id: "300", label: "300 hPa" }];
 const GFS_SURFACE_LEVEL: SelectorOption[] = [{ id: "sfc", label: "Surface" }];
 const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
   { id: "t", label: "Total" },
@@ -562,6 +567,22 @@ export class IconComponent implements OnInit {
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION],
         levelOptions: GFS_LEVELS,
+      },
+      {
+        key: "gfs:r",
+        code: "r",
+        description: "Relative Humidity",
+        modelOptions: [GFS_MODEL],
+        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        levelOptions: GFS_RH_LEVELS,
+      },
+      {
+        key: "gfs:g",
+        code: "g",
+        description: "Geopotential and Isotachs",
+        modelOptions: [GFS_MODEL],
+        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        levelOptions: GFS_GEOP_ISOTACHS_LEVELS,
       },
       {
         key: "gfs:ns",
