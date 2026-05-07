@@ -581,7 +581,7 @@ export class IconComponent implements OnInit {
         code: "g",
         description: "Geopotential and Isotachs",
         modelOptions: [GFS_MODEL],
-        regionOptions: [EUROPE_REGION, ALPS_REGION],
+        regionOptions: [EUROPE_REGION],
         levelOptions: GFS_GEOP_ISOTACHS_LEVELS,
       },
       {
