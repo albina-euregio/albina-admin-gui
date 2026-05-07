@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, HostListener, OnInit } from "@angular/core";
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 
 interface SelectorOption {
@@ -74,6 +74,8 @@ export class IconComponent implements OnInit {
   error = "";
 
   dayGroups: DayGroup[] = [];
+
+  @ViewChild("timelineWrapper") private timelineWrapper?: ElementRef<HTMLDivElement>;
 
   private filesMap: FilesMap = {};
 
@@ -183,10 +185,14 @@ export class IconComponent implements OnInit {
     this.updateSelectedImage();
   }
 
-  selectTimestamp(date: string, hour: string) {
+  selectTimestamp(date: string, hour: string, ensureVisible = false) {
     this.selectedDate = date;
     this.selectedHour = hour;
     this.updateSelectedImage();
+
+    if (ensureVisible) {
+      setTimeout(() => this.ensureTimestampVisible(date, hour), 0);
+    }
   }
 
   private navigateTimestamp(direction: number) {
@@ -196,7 +202,7 @@ export class IconComponent implements OnInit {
     const nextIndex = currentIndex + direction;
     if (nextIndex < 0 || nextIndex >= allTimestamps.length) return;
     const next = allTimestamps[nextIndex];
-    this.selectTimestamp(next.date, next.hour);
+    this.selectTimestamp(next.date, next.hour, true);
   }
 
   onSwipe(event: TouchEvent, when: "start" | "end") {
@@ -235,6 +241,35 @@ export class IconComponent implements OnInit {
 
   onImageError() {
     this.imageLoadFailed = true;
+  }
+
+  private ensureTimestampVisible(date: string, hour: string) {
+    const wrapper = this.timelineWrapper?.nativeElement;
+    if (!wrapper) return;
+
+    const targetButton = wrapper.querySelector<HTMLButtonElement>(
+      `.timeline-hour-btn[data-date="${date}"][data-hour="${hour}"]`,
+    );
+    if (!targetButton) return;
+
+    const buttonLeft = targetButton.offsetLeft;
+    const buttonRight = buttonLeft + targetButton.offsetWidth;
+    const visibleLeft = wrapper.scrollLeft;
+    const visibleRight = visibleLeft + wrapper.clientWidth;
+    const visibilityPadding = 4;
+
+    if (buttonLeft >= visibleLeft + visibilityPadding && buttonRight <= visibleRight - visibilityPadding) return;
+
+    const maxScrollLeft = Math.max(0, wrapper.scrollWidth - wrapper.clientWidth);
+    let nextScrollLeft = wrapper.scrollLeft;
+
+    if (buttonLeft < visibleLeft + visibilityPadding) {
+      nextScrollLeft = buttonLeft - visibilityPadding;
+    } else if (buttonRight > visibleRight - visibilityPadding) {
+      nextScrollLeft = buttonRight - wrapper.clientWidth + visibilityPadding;
+    }
+
+    wrapper.scrollLeft = Math.min(maxScrollLeft, Math.max(0, nextScrollLeft));
   }
 
   private async loadData() {

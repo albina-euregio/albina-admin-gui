@@ -25,6 +25,8 @@
                     class="timeline-hour-btn"
                     [class.active]="selectedDate === day.date && selectedHour === hour"
                     (click)="selectTimestamp(day.date, hour)"
+                    [attr.data-date]="day.date"
+                    [attr.data-hour]="hour"
                     [attr.aria-label]="day.dayLabel + ' ' + day.dateLabel + ' ' + hour + ':00 UTC'"
                     [attr.aria-pressed]="selectedDate === day.date && selectedHour === hour"
                   >
