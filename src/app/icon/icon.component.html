@@ -104,9 +104,9 @@
                   class="list-group-item list-group-item-action"
                   [class.active]="parameter.key === selectedParameter?.key"
                   (click)="selectParameterByIndex(i)"
+                  [attr.title]="parameter.code"
                 >
                   <div class="parameter-description">{{ parameter.description }}</div>
-                  <div class="parameter-code">{{ parameter.code }}</div>
                 </button>
               }
             </div>

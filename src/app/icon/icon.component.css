@@ -62,9 +62,6 @@
   background: var(--bs-body-bg);
   color: var(--bs-body-color);
   cursor: pointer;
-  transition:
-    background-color 0.1s,
-    color 0.1s;
 }
 
 .timeline-hour-btn:hover {
@@ -165,6 +162,7 @@
 .parameter-description {
   font-size: 0.78rem;
   font-weight: 600;
+  line-height: 1.2;
 }
 
 .parameter-code {
