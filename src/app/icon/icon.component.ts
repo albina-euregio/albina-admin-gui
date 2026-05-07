@@ -579,19 +579,20 @@ export class IconComponent implements OnInit {
         levelOptions: [] as SelectorOption[],
       }));
 
-    if (cloudLevelOptions.length) {
-      iconParameters.push({
-        key: "icon:cc",
-        code: "cc",
-        description: "Cloud Cover",
-        modelOptions: [ICON_MODEL],
-        regionOptions: [EUREGIO_REGION],
-        levelOptions: cloudLevelOptions,
-        levelCodeMap: cloudCodeMap,
-      });
-    }
+    const cloudParameter = cloudLevelOptions.length
+      ? {
+          key: "icon:cc",
+          code: "cc",
+          description: "Cloud Cover",
+          modelOptions: [ICON_MODEL],
+          regionOptions: [EUREGIO_REGION],
+          levelOptions: cloudLevelOptions,
+          levelCodeMap: cloudCodeMap,
+        }
+      : undefined;
 
     return [
+      ...(cloudParameter ? [cloudParameter] : []),
       ...iconParameters,
       {
         key: "gfs:et",
