@@ -140,7 +140,12 @@ export class IconComponent implements OnInit {
   onDocumentKeydown(event: KeyboardEvent) {
     if (!this.filteredParameters.length) return;
 
-    if (event.key === "ArrowDown") {
+    if (event.key.toLowerCase() === "m") {
+      event.preventDefault();
+      const currentModelIndex = this.availableModels.findIndex((model) => model.id === this.selectedModel);
+      const nextModel = this.availableModels[(currentModelIndex + 1) % this.availableModels.length];
+      this.selectModel(nextModel.id);
+    } else if (event.key === "ArrowDown") {
       event.preventDefault();
       this.selectParameterByIndex(this.getSelectedParameterIndex() + 1);
     } else if (event.key === "ArrowUp") {
