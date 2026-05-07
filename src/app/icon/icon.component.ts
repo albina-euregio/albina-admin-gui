@@ -46,9 +46,9 @@ const GFS_GEOP_ISOTACHS_LEVELS: SelectorOption[] = [{ id: "300", label: "300 hPa
 const GFS_SURFACE_LEVEL: SelectorOption[] = [{ id: "sfc", label: "Surface" }];
 const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
   { id: "t", label: "Total" },
-  { id: "l", label: "Low" },
-  { id: "m", label: "Mid" },
   { id: "h", label: "High" },
+  { id: "m", label: "Mid" },
+  { id: "l", label: "Low" },
 ];
 
 @Component({
@@ -151,9 +151,15 @@ export class IconComponent implements OnInit {
       if (nextRegionId) {
         this.selectRegion(nextRegionId);
       }
-    } else if (event.key.toLowerCase() === "e") {
+    } else if (event.ctrlKey && event.key === "ArrowDown") {
       event.preventDefault();
-      const nextLevelId = this.getNextAvailableLevelId();
+      const nextLevelId = this.getAdjacentAvailableLevelId(+1);
+      if (nextLevelId) {
+        this.selectLevel(nextLevelId);
+      }
+    } else if (event.ctrlKey && event.key === "ArrowUp") {
+      event.preventDefault();
+      const nextLevelId = this.getAdjacentAvailableLevelId(-1);
       if (nextLevelId) {
         this.selectLevel(nextLevelId);
       }
@@ -220,12 +226,14 @@ export class IconComponent implements OnInit {
     return availableRegionIds[nextRegionIndex];
   }
 
-  private getNextAvailableLevelId(): string | undefined {
+  private getAdjacentAvailableLevelId(direction: number): string | undefined {
     const availableLevelIds = this.availableLevels.map((level) => level.id);
     if (!availableLevelIds.length) return undefined;
 
     const currentLevelIndex = availableLevelIds.indexOf(this.selectedLevel);
-    const nextLevelIndex = currentLevelIndex === -1 ? 0 : (currentLevelIndex + 1) % availableLevelIds.length;
+    const nextLevelIndex = currentLevelIndex === -1 ? 0 : currentLevelIndex + direction;
+    if (nextLevelIndex < 0 || nextLevelIndex >= availableLevelIds.length) return undefined;
+
     return availableLevelIds[nextLevelIndex];
   }
 
