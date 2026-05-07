@@ -129,11 +129,11 @@
           <div class="sidebar-section">
             <h6 class="sidebar-heading">Parameters</h6>
             <div class="list-group list-group-flush">
-              @for (parameter of parameters; track parameter.key; let i = $index) {
+              @for (parameter of filteredParameters; track parameter.key; let i = $index) {
                 <button
                   type="button"
                   class="list-group-item list-group-item-action"
-                  [class.active]="i === selectedIndex"
+                  [class.active]="parameter.key === selectedParameter?.key"
                   (click)="selectParameterByIndex(i)"
                 >
                   <div class="parameter-description">{{ parameter.description }}</div>

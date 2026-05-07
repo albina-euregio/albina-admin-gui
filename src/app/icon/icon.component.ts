@@ -56,9 +56,10 @@ export class IconComponent implements OnInit {
   private readonly gfsBaseUrl = "https://ertel2.uibk.ac.at/ertel/data/pngs/GFS/00/";
   private swipeCoord?: [number, number];
   private swipeTime?: number;
+  private readonly allModels: SelectorOption[] = [ICON_MODEL, GFS_MODEL];
 
   parameters: IconParameter[] = [];
-  selectedIndex = 0;
+  selectedParameterKey = "";
   selectedModel = ICON_MODEL.id;
   selectedRegion = EUREGIO_REGION.id;
   selectedLevel = "";
@@ -81,11 +82,17 @@ export class IconComponent implements OnInit {
   }
 
   get selectedParameter(): IconParameter | undefined {
-    return this.parameters[this.selectedIndex];
+    return this.parameters.find((parameter) => parameter.key === this.selectedParameterKey);
   }
 
   get availableModels(): SelectorOption[] {
-    return this.selectedParameter?.modelOptions ?? [];
+    return this.allModels;
+  }
+
+  get filteredParameters(): IconParameter[] {
+    return this.parameters.filter((parameter) =>
+      parameter.modelOptions.some((modelOption) => modelOption.id === this.selectedModel),
+    );
   }
 
   get availableRegions(): SelectorOption[] {
@@ -118,14 +125,14 @@ export class IconComponent implements OnInit {
 
   @HostListener("document:keydown", ["$event"])
   onDocumentKeydown(event: KeyboardEvent) {
-    if (!this.parameters.length) return;
+    if (!this.filteredParameters.length) return;
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      this.selectParameterByIndex(this.selectedIndex + 1);
+      this.selectParameterByIndex(this.getSelectedParameterIndex() + 1);
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      this.selectParameterByIndex(this.selectedIndex - 1);
+      this.selectParameterByIndex(this.getSelectedParameterIndex() - 1);
     } else if (event.key === "ArrowRight") {
       event.preventDefault();
       this.navigateTimestamp(+1);
@@ -136,10 +143,10 @@ export class IconComponent implements OnInit {
   }
 
   selectParameterByIndex(index: number) {
-    const parameterCount = this.parameters.length;
+    const parameterCount = this.filteredParameters.length;
     if (!parameterCount) return;
 
-    this.selectedIndex = (index + parameterCount) % parameterCount;
+    this.selectedParameterKey = this.filteredParameters[(index + parameterCount) % parameterCount].key;
     this.syncSelectionsWithParameter();
     this.rebuildDayGroups();
     this.ensureSelectedTimestamp();
@@ -149,7 +156,10 @@ export class IconComponent implements OnInit {
   selectModel(modelId: string) {
     if (this.selectedModel === modelId) return;
 
+    const previousParameterCode = this.selectedParameter?.code;
     this.selectedModel = modelId;
+    this.ensureSelectedParameterForModel(previousParameterCode);
+    this.syncSelectionsWithParameter();
     this.rebuildDayGroups();
     this.ensureSelectedTimestamp();
     this.updateSelectedImage();
@@ -191,7 +201,7 @@ export class IconComponent implements OnInit {
   }
 
   onSwipe(event: TouchEvent, when: "start" | "end") {
-    if (!this.parameters.length) return;
+    if (!this.filteredParameters.length) return;
 
     const touch = event.changedTouches[0];
     if (!touch) return;
@@ -211,7 +221,7 @@ export class IconComponent implements OnInit {
     const duration = time - this.swipeTime;
 
     if (duration < 1000 && Math.abs(direction[1]) > 30 && Math.abs(direction[1]) > Math.abs(direction[0] * 3)) {
-      this.selectParameterByIndex(this.selectedIndex + (direction[1] < 0 ? 1 : -1));
+      this.selectParameterByIndex(this.getSelectedParameterIndex() + (direction[1] < 0 ? 1 : -1));
     } else if (duration < 1000 && Math.abs(direction[0]) > 30 && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) {
       this.navigateTimestamp(direction[0] < 0 ? +1 : -1);
     }
@@ -252,6 +262,7 @@ export class IconComponent implements OnInit {
         return;
       }
 
+      this.ensureSelectedParameterForModel();
       this.syncSelectionsWithParameter();
       this.rebuildDayGroups();
       this.selectInitialTimestamp();
@@ -372,9 +383,28 @@ export class IconComponent implements OnInit {
     const parameter = this.selectedParameter;
     if (!parameter) return;
 
-    this.selectedModel = this.getValidSelection(this.selectedModel, parameter.modelOptions);
     this.selectedRegion = this.getValidSelection(this.selectedRegion, parameter.regionOptions);
     this.selectedLevel = this.getValidSelection(this.selectedLevel, parameter.levelOptions, true);
+  }
+
+  private getSelectedParameterIndex(): number {
+    return this.filteredParameters.findIndex((parameter) => parameter.key === this.selectedParameterKey);
+  }
+
+  private ensureSelectedParameterForModel(preferredCode?: string) {
+    const availableParameters = this.filteredParameters;
+
+    if (!availableParameters.length) {
+      this.selectedParameterKey = "";
+      return;
+    }
+
+    const preferredParameter = preferredCode
+      ? availableParameters.find((parameter) => parameter.code === preferredCode)
+      : undefined;
+    const currentlySelected = availableParameters.find((parameter) => parameter.key === this.selectedParameterKey);
+
+    this.selectedParameterKey = (preferredParameter ?? currentlySelected ?? availableParameters[0]).key;
   }
 
   private getValidSelection(current: string, options: SelectorOption[], allowEmpty = false): string {
