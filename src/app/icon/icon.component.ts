@@ -1,16 +1,18 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { Component, ElementRef, HostListener, OnInit, ViewChild, inject } from "@angular/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 interface SelectorOption {
   id: string;
   label: string;
+  labelKey?: string;
 }
 
 interface IconParameter {
   key: string;
   code: string;
   description: string;
+  descriptionKey?: string;
   modelOptions: SelectorOption[];
   regionOptions: SelectorOption[];
   levelOptions: SelectorOption[];
@@ -28,12 +30,12 @@ interface DayGroup {
 // filesMap[parameterCode][date][hour] = fileName
 type FilesMap = Record<string, Record<string, Record<string, string>>>;
 
-const ICON_MODEL: SelectorOption = { id: "ICON", label: "ICON" };
-const GFS_MODEL: SelectorOption = { id: "GFS", label: "GFS" };
-const EUREGIO_REGION: SelectorOption = { id: "euregio", label: "EUREGIO" };
-const EUROPE_REGION: SelectorOption = { id: "eu", label: "Europe" };
-const ALPS_REGION: SelectorOption = { id: "al", label: "Alps" };
-const ATLANTIC_REGION: SelectorOption = { id: "at", label: "Atlantic" };
+const ICON_MODEL: SelectorOption = { id: "ICON", label: "ICON", labelKey: "icon.models.icon" };
+const GFS_MODEL: SelectorOption = { id: "GFS", label: "GFS", labelKey: "icon.models.gfs" };
+const EUREGIO_REGION: SelectorOption = { id: "euregio", label: "EUREGIO", labelKey: "icon.regions.euregio" };
+const EUROPE_REGION: SelectorOption = { id: "eu", label: "Europe", labelKey: "icon.regions.europe" };
+const ALPS_REGION: SelectorOption = { id: "al", label: "Alps", labelKey: "icon.regions.alps" };
+const ATLANTIC_REGION: SelectorOption = { id: "at", label: "Atlantic", labelKey: "icon.regions.atlantic" };
 const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((level) => ({
   id: level,
   label: `${level} hPa`,
@@ -43,12 +45,12 @@ const GFS_RH_LEVELS: SelectorOption[] = ["300", "500", "700", "800", "850", "925
   label: `${level} hPa`,
 }));
 const GFS_GEOP_ISOTACHS_LEVELS: SelectorOption[] = [{ id: "300", label: "300 hPa" }];
-const GFS_SURFACE_LEVEL: SelectorOption[] = [{ id: "sfc", label: "Surface" }];
+const GFS_SURFACE_LEVEL: SelectorOption[] = [{ id: "sfc", label: "Surface", labelKey: "icon.levels.surface" }];
 const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
-  { id: "t", label: "Total" },
-  { id: "h", label: "High" },
-  { id: "m", label: "Mid" },
-  { id: "l", label: "Low" },
+  { id: "t", label: "Total", labelKey: "icon.levels.cloudTotal" },
+  { id: "h", label: "High", labelKey: "icon.levels.cloudHigh" },
+  { id: "m", label: "Mid", labelKey: "icon.levels.cloudMid" },
+  { id: "l", label: "Low", labelKey: "icon.levels.cloudLow" },
 ];
 
 @Component({
@@ -59,6 +61,7 @@ const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
   styleUrls: ["./icon.component.css"],
 })
 export class IconComponent implements OnInit {
+  private readonly translateService = inject(TranslateService);
   private readonly iconBaseUrl = "https://extra.avalanche.report/meteo-bz/meteo-bz/";
   private readonly iconParameterUrl = `${this.iconBaseUrl}Parameter.txt`;
   private readonly gfsBaseUrl = "https://ertel2.uibk.ac.at/ertel/data/pngs/GFS/00/";
@@ -117,23 +120,44 @@ export class IconComponent implements OnInit {
   }
 
   get selectedModelLabel(): string {
-    return this.availableModels.find((model) => model.id === this.selectedModel)?.label ?? "";
+    return this.getOptionLabel(this.availableModels.find((model) => model.id === this.selectedModel));
   }
 
   get selectedRegionLabel(): string {
-    return this.orderedRegions.find((region) => region.id === this.selectedRegion)?.label ?? "";
+    return this.getOptionLabel(this.orderedRegions.find((region) => region.id === this.selectedRegion));
   }
 
   get selectedLevelLabel(): string {
-    return this.availableLevels.find((level) => level.id === this.selectedLevel)?.label ?? "";
+    return this.getOptionLabel(this.availableLevels.find((level) => level.id === this.selectedLevel));
   }
 
   get currentImageAlt(): string {
     const parameter = this.selectedParameter;
-    if (!parameter) return "Forecast map";
+    if (!parameter) return this.translateService.instant("icon.alt.fallback");
 
     const levelSuffix = this.selectedLevelLabel ? ` ${this.selectedLevelLabel}` : "";
-    return `${this.selectedModelLabel} ${parameter.description}${levelSuffix} ${this.selectedRegionLabel} ${this.selectedDate} ${this.selectedHour}Z`;
+    return this.translateService.instant("icon.alt.image", {
+      model: this.selectedModelLabel,
+      parameter: this.getParameterDescription(parameter),
+      level: levelSuffix,
+      region: this.selectedRegionLabel,
+      date: this.selectedDate,
+      hour: this.selectedHour,
+    });
+  }
+
+  private getOptionLabel(option: SelectorOption | undefined): string {
+    if (!option) return "";
+    return option.labelKey ? this.translateService.instant(option.labelKey) : option.label;
+  }
+
+  private getParameterDescription(parameter: IconParameter | undefined): string {
+    if (!parameter) return "";
+    return parameter.descriptionKey ? this.translateService.instant(parameter.descriptionKey) : parameter.description;
+  }
+
+  private getCurrentLocale(): string {
+    return this.translateService.getCurrentLang() || "en";
   }
 
   @HostListener("document:keydown", ["$event"])
@@ -353,7 +377,7 @@ export class IconComponent implements OnInit {
       this.filesMap = this.parseAllFiles(directoryIndex);
 
       if (!this.parameters.length) {
-        this.error = "No forecast parameters available.";
+        this.error = this.translateService.instant("icon.error.noParameters");
         return;
       }
 
@@ -363,7 +387,7 @@ export class IconComponent implements OnInit {
       this.selectInitialTimestamp();
       this.updateSelectedImage();
     } catch {
-      this.error = "Could not load forecast data.";
+      this.error = this.translateService.instant("icon.error.loadFailed");
     } finally {
       this.loading = false;
     }
@@ -552,12 +576,12 @@ export class IconComponent implements OnInit {
 
   private getDayLabel(date: string): string {
     const d = new Date(Date.UTC(+date.slice(0, 4), +date.slice(4, 6) - 1, +date.slice(6, 8)));
-    return d.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" }).toUpperCase();
+    return d.toLocaleDateString(this.getCurrentLocale(), { weekday: "short", timeZone: "UTC" }).toUpperCase();
   }
 
   private getDateLabel(date: string): string {
     const d = new Date(Date.UTC(+date.slice(0, 4), +date.slice(4, 6) - 1, +date.slice(6, 8)));
-    return d.toLocaleDateString("en-US", { day: "numeric", month: "short", timeZone: "UTC" });
+    return d.toLocaleDateString(this.getCurrentLocale(), { day: "numeric", month: "short", timeZone: "UTC" });
   }
 
   private parseParameters(parameterText: string): IconParameter[] {
@@ -607,6 +631,7 @@ export class IconComponent implements OnInit {
           key: "icon:cc",
           code: "cc",
           description: "Cloud Cover",
+          descriptionKey: "icon.parameters.cloudCover",
           modelOptions: [ICON_MODEL],
           regionOptions: [EUREGIO_REGION],
           levelOptions: cloudLevelOptions,
@@ -621,6 +646,7 @@ export class IconComponent implements OnInit {
         key: "gfs:et",
         code: "et",
         description: "Equivalent Potential Temp.",
+        descriptionKey: "icon.parameters.equivalentPotentialTemp",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_LEVELS,
@@ -629,6 +655,7 @@ export class IconComponent implements OnInit {
         key: "gfs:r",
         code: "r",
         description: "Relative Humidity",
+        descriptionKey: "icon.parameters.relativeHumidity",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_RH_LEVELS,
@@ -637,6 +664,7 @@ export class IconComponent implements OnInit {
         key: "gfs:g",
         code: "g",
         description: "Geopotential and Isotachs",
+        descriptionKey: "icon.parameters.geopotentialAndIsotachs",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ATLANTIC_REGION],
         levelOptions: GFS_GEOP_ISOTACHS_LEVELS,
@@ -645,6 +673,7 @@ export class IconComponent implements OnInit {
         key: "gfs:ns",
         code: "ns",
         description: "Precipitation",
+        descriptionKey: "icon.parameters.precipitation",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_SURFACE_LEVEL,

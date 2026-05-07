@@ -65,7 +65,7 @@
         <aside class="icon-parameters" aria-label="Forecast parameters">
           <div class="sidebar-section">
             <h6 class="sidebar-heading">
-              <span>Model</span>
+              <span>{{ "icon.headings.model" | translate }}</span>
               <span class="sidebar-heading-hint">M</span>
             </h6>
             <div class="sidebar-controls" role="toolbar" aria-label="Forecast model selection">
@@ -77,7 +77,7 @@
                   [class.btn-outline-primary]="selectedModel !== model.id"
                   (click)="selectModel(model.id)"
                 >
-                  {{ model.label }}
+                  {{ model.labelKey ? (model.labelKey | translate) : model.label }}
                 </button>
               }
             </div>
@@ -85,7 +85,7 @@
 
           <div class="sidebar-section">
             <h6 class="sidebar-heading">
-              <span>Region</span>
+              <span>{{ "icon.headings.region" | translate }}</span>
               <span class="sidebar-heading-hint">R</span>
             </h6>
             <div class="sidebar-controls" role="toolbar" aria-label="Forecast region selection">
@@ -98,7 +98,7 @@
                   [disabled]="!isRegionAvailable(region.id)"
                   (click)="selectRegion(region.id)"
                 >
-                  {{ region.label }}
+                  {{ region.labelKey ? (region.labelKey | translate) : region.label }}
                 </button>
               }
             </div>
@@ -106,7 +106,7 @@
 
           <div class="sidebar-section">
             <h6 class="sidebar-heading">
-              <span>Parameters</span>
+              <span>{{ "icon.headings.parameters" | translate }}</span>
               <span class="sidebar-heading-hint">↑ ↓</span>
             </h6>
             <div class="list-group list-group-flush">
@@ -118,7 +118,9 @@
                   (click)="selectParameterByIndex(i)"
                   [attr.title]="parameter.code"
                 >
-                  <div class="parameter-description">{{ parameter.description }}</div>
+                  <div class="parameter-description">
+                    {{ parameter.descriptionKey ? (parameter.descriptionKey | translate) : parameter.description }}
+                  </div>
                 </button>
               }
             </div>
@@ -127,7 +129,7 @@
           @if (availableLevels.length) {
             <div class="sidebar-section">
               <h6 class="sidebar-heading">
-                <span>Level</span>
+                <span>{{ "icon.headings.level" | translate }}</span>
                 <span class="sidebar-heading-hint">Ctrl + ↑↓</span>
               </h6>
               <div class="sidebar-controls" role="toolbar" aria-label="Level selection">
@@ -139,7 +141,7 @@
                     [class.btn-outline-primary]="selectedLevel !== level.id"
                     (click)="selectLevel(level.id)"
                   >
-                    {{ level.label }}
+                    {{ level.labelKey ? (level.labelKey | translate) : level.label }}
                   </button>
                 }
               </div>
