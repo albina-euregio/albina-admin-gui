@@ -15,6 +15,7 @@ interface IconParameter {
   regionOptions: SelectorOption[];
   levelOptions: SelectorOption[];
   levelCodeMap?: Record<string, string>;
+  gfsLevelSuffixMap?: Record<string, string>;
 }
 
 interface DayGroup {
@@ -36,6 +37,7 @@ const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((le
   id: level,
   label: `${level} hPa`,
 }));
+const GFS_SURFACE_LEVEL: SelectorOption[] = [{ id: "sfc", label: "Surface" }];
 const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
   { id: "t", label: "Total" },
   { id: "l", label: "Low" },
@@ -319,7 +321,8 @@ export class IconComponent implements OnInit {
       return;
     }
 
-    this.selectedImageUrl = `${this.gfsBaseUrl}GFS_${this.selectedDate}_${this.selectedHour}_${parameter.code}${this.selectedLevel}${this.selectedRegion}.png`;
+    const levelSuffix = this.getResolvedGfsLevelSuffix(parameter);
+    this.selectedImageUrl = `${this.gfsBaseUrl}GFS_${this.selectedDate}_${this.selectedHour}_${parameter.code}${levelSuffix}${this.selectedRegion}.png`;
   }
 
   private rebuildDayGroups() {
@@ -418,6 +421,17 @@ export class IconComponent implements OnInit {
       parameter.levelCodeMap[this.selectedLevel] ??
       parameter.levelCodeMap[parameter.levelOptions[0]?.id] ??
       parameter.code
+    );
+  }
+
+  private getResolvedGfsLevelSuffix(parameter: IconParameter): string {
+    if (!parameter.levelOptions.length) return "";
+    if (!parameter.gfsLevelSuffixMap) return this.selectedLevel;
+
+    return (
+      parameter.gfsLevelSuffixMap[this.selectedLevel] ??
+      parameter.gfsLevelSuffixMap[parameter.levelOptions[0]?.id] ??
+      ""
     );
   }
 
@@ -542,7 +556,8 @@ export class IconComponent implements OnInit {
         description: "Precipitation",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION],
-        levelOptions: [] as SelectorOption[],
+        levelOptions: GFS_SURFACE_LEVEL,
+        gfsLevelSuffixMap: { sfc: "" },
       },
     ];
   }
