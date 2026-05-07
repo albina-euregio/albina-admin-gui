@@ -126,8 +126,11 @@
 
           @if (availableLevels.length) {
             <div class="sidebar-section">
-              <h6 class="sidebar-heading">Level</h6>
-              <div class="sidebar-controls" role="toolbar" aria-label="Pressure level selection">
+              <h6 class="sidebar-heading">
+                <span>Elevation</span>
+                <span class="sidebar-heading-hint">E</span>
+              </h6>
+              <div class="sidebar-controls" role="toolbar" aria-label="Elevation selection">
                 @for (level of availableLevels; track level.id) {
                   <button
                     type="button"

@@ -151,6 +151,12 @@ export class IconComponent implements OnInit {
       if (nextRegionId) {
         this.selectRegion(nextRegionId);
       }
+    } else if (event.key.toLowerCase() === "e") {
+      event.preventDefault();
+      const nextLevelId = this.getNextAvailableLevelId();
+      if (nextLevelId) {
+        this.selectLevel(nextLevelId);
+      }
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
       this.selectParameterByIndex(this.getSelectedParameterIndex() + 1);
@@ -212,6 +218,15 @@ export class IconComponent implements OnInit {
     const currentRegionIndex = availableRegionIds.indexOf(this.selectedRegion);
     const nextRegionIndex = currentRegionIndex === -1 ? 0 : (currentRegionIndex + 1) % availableRegionIds.length;
     return availableRegionIds[nextRegionIndex];
+  }
+
+  private getNextAvailableLevelId(): string | undefined {
+    const availableLevelIds = this.availableLevels.map((level) => level.id);
+    if (!availableLevelIds.length) return undefined;
+
+    const currentLevelIndex = availableLevelIds.indexOf(this.selectedLevel);
+    const nextLevelIndex = currentLevelIndex === -1 ? 0 : (currentLevelIndex + 1) % availableLevelIds.length;
+    return availableLevelIds[nextLevelIndex];
   }
 
   selectLevel(levelId: string) {
