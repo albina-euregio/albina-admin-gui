@@ -310,9 +310,7 @@ export class IconComponent implements OnInit {
     const direction: [number, number] = [coord[0] - this.swipeCoord[0], coord[1] - this.swipeCoord[1]];
     const duration = time - this.swipeTime;
 
-    if (duration < 1000 && Math.abs(direction[1]) > 30 && Math.abs(direction[1]) > Math.abs(direction[0] * 3)) {
-      this.selectParameterByIndex(this.getSelectedParameterIndex() + (direction[1] < 0 ? 1 : -1));
-    } else if (duration < 1000 && Math.abs(direction[0]) > 30 && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) {
+    if (duration < 1000 && Math.abs(direction[0]) > 30 && Math.abs(direction[0]) > Math.abs(direction[1] * 3)) {
       this.navigateTimestamp(direction[0] < 0 ? +1 : -1);
     }
 
