@@ -814,7 +814,7 @@ export class IconComponent implements OnInit {
           key: "icon:cc",
           code: "cc",
           description: "Cloud Cover",
-          descriptionKey: "weather.parameters.cloudCover",
+          descriptionKey: "weather.parameters.icon.cloudCover",
           modelOptions: [ICON_MODEL],
           regionOptions: [EUREGIO_REGION],
           levelOptions: cloudLevelOptions,

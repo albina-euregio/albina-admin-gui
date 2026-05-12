@@ -41,20 +41,20 @@
     "icon": "Wetter"
   },
   "weather": {
-    "loading": "Loading weather parameters and images...",
-    "noPng": "Image not found.",
+    "loading": "Laden der Parameter und Bilder ...",
+    "noPng": "Bild nicht gefunden.",
     "error": {
-      "noParameters": "No forecast parameters available.",
-      "loadFailed": "Could not load forecast data."
+      "noParameters": "Keine Vorhersage-Parameter verfügbar.",
+      "loadFailed": "Vorhersage konnte nicht gefunden werden."
     },
     "headings": {
-      "model": "Model",
+      "model": "Modell",
       "region": "Region",
-      "parameters": "Parameters",
+      "parameters": "Parameter",
       "level": "Level"
     },
     "alt": {
-      "fallback": "Forecast map",
+      "fallback": "Vorhersagekarte",
       "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
     },
     "models": {
@@ -70,20 +70,20 @@
     "levels": {
       "surface": "Surface",
       "cloudTotal": "Total",
-      "cloudHigh": "groß",
+      "cloudHigh": "High",
       "cloudMid": "Mid",
-      "cloudLow": "gering"
+      "cloudLow": "Low"
     },
     "parameters": {
       "gfs": {
-        "cloudCover": "Cloud Cover",
         "equivalentPotentialTemp": "Equivalent Potential Temp.",
-        "relativeHumidity": "Luftfeuchtigkeit",
+        "relativeHumidity": "Relative Humidity",
         "geopotentialAndIsotachs": "Geopotential and Isotachs",
-        "precipitation": "Niederschlag",
+        "precipitation": "Precipitation",
         "cape": "CAPE"
       },
       "icon": {
+        "cloudCover": "Cloud Cover",
         "ns": "Precipitation 1h",
         "ns24": "Precipitation 24h",
         "nsacc": "Acc. Precipitation",
@@ -326,7 +326,7 @@
         "telegram": "Telegram",
         "email": "E-Mail"
       },
-      "publicationInProgress": "Publication in progress",
+      "publicationInProgress": "Publikation läuft noch",
       "publicationFinishedOnServer": "Publikation auf dem Server abgeschlossen",
       "publishDisabled": {
         "inProgress": "Publikation läuft gerade.",
@@ -830,7 +830,7 @@
           "enableObservations": "Beobachtungen aktivieren",
           "enableModelling": "Modellierung aktivieren",
           "enableWeatherbox": "Wetterbox aktivieren",
-          "enableIcon": "Enable ICON",
+          "enableIcon": "Wetter aktivieren",
           "enableLineaExport": "LINEA-Export aktivieren"
         },
         "configuration": {
@@ -1066,7 +1066,7 @@
       "duplicates": "Duplikate"
     },
     "error": {
-      "downloadFailed": "The statistics export could not be downloaded. Please try again."
+      "downloadFailed": "Download des Statistik Exports nicht erfolgreich. Bitte erneut versuchen."
     }
   },
   "dangerRating": {

@@ -76,7 +76,6 @@
     },
     "parameters": {
       "gfs": {
-        "cloudCover": "Cloud Cover",
         "equivalentPotentialTemp": "Equivalent Potential Temp.",
         "relativeHumidity": "Relative Humidity",
         "geopotentialAndIsotachs": "Geopotential and Isotachs",
@@ -84,6 +83,7 @@
         "cape": "CAPE"
       },
       "icon": {
+        "cloudCover": "Cloud Cover",
         "ns": "Precipitation 1h",
         "ns24": "Precipitation 24h",
         "nsacc": "Acc. Precipitation",
@@ -830,7 +830,7 @@
           "enableObservations": "Enable observations",
           "enableModelling": "Enable modelling",
           "enableWeatherbox": "Enable weather box",
-          "enableIcon": "Enable ICON",
+          "enableIcon": "Enable weather",
           "enableLineaExport": "Enable LINEA export"
         },
         "configuration": {

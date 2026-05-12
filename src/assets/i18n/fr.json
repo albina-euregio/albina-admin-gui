@@ -70,20 +70,20 @@
     "levels": {
       "surface": "Surface",
       "cloudTotal": "Total",
-      "cloudHigh": "Fort",
+      "cloudHigh": "High",
       "cloudMid": "Mid",
-      "cloudLow": "Faible"
+      "cloudLow": "Low"
     },
     "parameters": {
       "gfs": {
-        "cloudCover": "Cloud Cover",
         "equivalentPotentialTemp": "Equivalent Potential Temp.",
-        "relativeHumidity": "humidité relative",
+        "relativeHumidity": "Relative Humidity",
         "geopotentialAndIsotachs": "Geopotential and Isotachs",
-        "precipitation": "précipitation",
+        "precipitation": "Precipitation",
         "cape": "CAPE"
       },
       "icon": {
+        "cloudCover": "Cloud Cover",
         "ns": "Precipitation 1h",
         "ns24": "Precipitation 24h",
         "nsacc": "Acc. Precipitation",
@@ -830,7 +830,7 @@
           "enableObservations": "Activer observations",
           "enableModelling": "Activer modélisation",
           "enableWeatherbox": "Activer boîte météo",
-          "enableIcon": "Enable ICON",
+          "enableIcon": "Enable weather",
           "enableLineaExport": "Activer export LINEA"
         },
         "configuration": {

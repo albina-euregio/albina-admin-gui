@@ -76,14 +76,14 @@
     },
     "parameters": {
       "gfs": {
-        "cloudCover": "Cloud Cover",
         "equivalentPotentialTemp": "Equivalent Potential Temp.",
-        "relativeHumidity": "Humitat relativa",
+        "relativeHumidity": "Relative Humidity",
         "geopotentialAndIsotachs": "Geopotential and Isotachs",
-        "precipitation": "Precipitació",
+        "precipitation": "Precipitation",
         "cape": "CAPE"
       },
       "icon": {
+        "cloudCover": "Cloud Cover",
         "ns": "Precipitation 1h",
         "ns24": "Precipitation 24h",
         "nsacc": "Acc. Precipitation",
@@ -830,7 +830,7 @@
           "enableObservations": "Habilitar les observacions",
           "enableModelling": "Habilitar la modelització",
           "enableWeatherbox": "Activar caixa meteorològica",
-          "enableIcon": "Enable ICON",
+          "enableIcon": "Enable weather",
           "enableLineaExport": "Activar l'exportació LINEA"
         },
         "configuration": {
