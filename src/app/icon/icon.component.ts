@@ -27,6 +27,13 @@ interface DayGroup {
   hours: string[];
 }
 
+interface LocalDayGroup {
+  localDateKey: string;
+  localDayLabel: string;
+  localDateLabel: string;
+  timestamps: { date: string; hour: string }[];
+}
+
 // filesMap[parameterCode][date][hour] = fileName
 type FilesMap = Record<string, Record<string, Record<string, string>>>;
 
@@ -139,17 +146,41 @@ export class IconComponent implements OnInit {
     if (!this.selectedGfsRunTimestamp) return "";
 
     const runDate = new Date(this.selectedGfsRunTimestamp);
-    const year = runDate.getUTCFullYear();
-    const month = String(runDate.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(runDate.getUTCDate()).padStart(2, "0");
-    const hour = String(runDate.getUTCHours()).padStart(2, "0");
-    const minute = String(runDate.getUTCMinutes()).padStart(2, "0");
+    const year = runDate.getFullYear();
+    const month = String(runDate.getMonth() + 1).padStart(2, "0");
+    const day = String(runDate.getDate()).padStart(2, "0");
+    const hour = String(runDate.getHours()).padStart(2, "0");
+    const minute = String(runDate.getMinutes()).padStart(2, "0");
 
     return `${year}-${month}-${day} ${hour}:${minute}`;
   }
 
   get availableGfsRuns(): string[] {
     return this.gfsRuns;
+  }
+
+  get localDayGroups(): LocalDayGroup[] {
+    const map = new Map<string, LocalDayGroup>();
+    const locale = this.getCurrentLocale();
+
+    for (const day of this.dayGroups) {
+      for (const hour of day.hours) {
+        const localTs = this.toLocalTimestamp(day.date, hour);
+        const localKey = `${localTs.getFullYear()}${String(localTs.getMonth() + 1).padStart(2, "0")}${String(localTs.getDate()).padStart(2, "0")}`;
+
+        if (!map.has(localKey)) {
+          map.set(localKey, {
+            localDateKey: localKey,
+            localDayLabel: localTs.toLocaleDateString(locale, { weekday: "short" }).toUpperCase(),
+            localDateLabel: localTs.toLocaleDateString(locale, { day: "numeric", month: "short" }),
+            timestamps: [],
+          });
+        }
+        map.get(localKey)!.timestamps.push({ date: day.date, hour });
+      }
+    }
+
+    return [...map.values()];
   }
 
   get currentImageAlt(): string {
@@ -179,6 +210,34 @@ export class IconComponent implements OnInit {
 
   private getCurrentLocale(): string {
     return this.translateService.getCurrentLang() || "en";
+  }
+
+  getLocalHourLabel(date: string, hour: string): string {
+    const localTimestamp = this.toLocalTimestamp(date, hour);
+    return String(localTimestamp.getHours()).padStart(2, "0");
+  }
+
+  getLocalTimestampAriaLabel(date: string, hour: string): string {
+    const localTimestamp = this.toLocalTimestamp(date, hour);
+    const localDay = localTimestamp.toLocaleDateString(this.getCurrentLocale(), { weekday: "short" }).toUpperCase();
+    const localDate = localTimestamp.toLocaleDateString(this.getCurrentLocale(), { day: "numeric", month: "short" });
+    const localHour = String(localTimestamp.getHours()).padStart(2, "0");
+
+    return `${localDay} ${localDate} ${localHour}:00`;
+  }
+
+  getLocalDayLabel(date: string, hour: string): string {
+    const localTimestamp = this.toLocalTimestamp(date, hour);
+    return localTimestamp.toLocaleDateString(this.getCurrentLocale(), { weekday: "short" }).toUpperCase();
+  }
+
+  getLocalDateLabel(date: string, hour: string): string {
+    const localTimestamp = this.toLocalTimestamp(date, hour);
+    return localTimestamp.toLocaleDateString(this.getCurrentLocale(), { day: "numeric", month: "short" });
+  }
+
+  private toLocalTimestamp(date: string, hour: string): Date {
+    return new Date(Date.UTC(+date.slice(0, 4), +date.slice(4, 6) - 1, +date.slice(6, 8), +hour, 0, 0));
   }
 
   @HostListener("document:keydown", ["$event"])

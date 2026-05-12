@@ -12,25 +12,25 @@
       <!-- Timeline bar -->
       <div class="icon-timeline-wrapper" #timelineWrapper>
         <div class="icon-timeline" role="toolbar" aria-label="Forecast timesteps">
-          @for (day of dayGroups; track day.date) {
+          @for (localDay of localDayGroups; track localDay.localDateKey) {
             <div class="timeline-day-group">
               <div class="timeline-day-header">
-                <span class="timeline-day-name">{{ day.dayLabel }}</span>
-                <span class="timeline-day-date">{{ day.dateLabel }}</span>
+                <span class="timeline-day-name">{{ localDay.localDayLabel }}</span>
+                <span class="timeline-day-date">{{ localDay.localDateLabel }}</span>
               </div>
               <div class="timeline-hours">
-                @for (hour of day.hours; track hour) {
+                @for (ts of localDay.timestamps; track ts.date + ts.hour) {
                   <button
                     type="button"
                     class="timeline-hour-btn"
-                    [class.active]="selectedDate === day.date && selectedHour === hour"
-                    (click)="selectTimestamp(day.date, hour)"
-                    [attr.data-date]="day.date"
-                    [attr.data-hour]="hour"
-                    [attr.aria-label]="day.dayLabel + ' ' + day.dateLabel + ' ' + hour + ':00 UTC'"
-                    [attr.aria-pressed]="selectedDate === day.date && selectedHour === hour"
+                    [class.active]="selectedDate === ts.date && selectedHour === ts.hour"
+                    (click)="selectTimestamp(ts.date, ts.hour)"
+                    [attr.data-date]="ts.date"
+                    [attr.data-hour]="ts.hour"
+                    [attr.aria-label]="getLocalTimestampAriaLabel(ts.date, ts.hour)"
+                    [attr.aria-pressed]="selectedDate === ts.date && selectedHour === ts.hour"
                   >
-                    {{ hour }}
+                    {{ getLocalHourLabel(ts.date, ts.hour) }}
                   </button>
                 }
               </div>
@@ -85,7 +85,7 @@
               <div class="gfs-run-indicator" aria-label="Selected GFS run">
                 <div class="gfs-run-title">Model run</div>
                 @if (selectedGfsRunDateTimeLabel) {
-                  <div class="gfs-run-indicator-time">{{ selectedGfsRunDateTimeLabel }} UTC</div>
+                  <div class="gfs-run-indicator-time">{{ selectedGfsRunDateTimeLabel }} local time</div>
                 }
                 <div class="gfs-run-options" role="toolbar" aria-label="GFS run selection">
                   @for (run of availableGfsRuns; track run) {
