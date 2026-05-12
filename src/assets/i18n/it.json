@@ -40,7 +40,7 @@
     "graphics": "Grafici",
     "icon": "Meteo"
   },
-  "icon": {
+  "weather": {
     "loading": "Loading ICON parameters and images...",
     "noPng": "Image not found.",
     "error": {
@@ -75,12 +75,25 @@
       "cloudLow": "Debole"
     },
     "parameters": {
-      "cloudCover": "Cloud Cover",
-      "equivalentPotentialTemp": "Equivalent Potential Temp.",
-      "relativeHumidity": "Umidità relativa",
-      "geopotentialAndIsotachs": "Geopotential and Isotachs",
-      "precipitation": "Precipitazione",
-      "cape": "CAPE"
+      "gfs": {
+        "cloudCover": "Cloud Cover",
+        "equivalentPotentialTemp": "Equivalent Potential Temp.",
+        "relativeHumidity": "Umidità relativa",
+        "geopotentialAndIsotachs": "Geopotential and Isotachs",
+        "precipitation": "Precipitazione",
+        "cape": "CAPE"
+      },
+      "icon": {
+        "ns": "Precipitation 1h",
+        "ns24": "Precipitation 24h",
+        "nsacc": "Acc. Precipitation",
+        "nsprob24gt20": "Prob. Prec. > 20 mm / 24h",
+        "nsprob24gt40": "Prob. Prec. > 40 mm / 24h",
+        "nsprob24gt80": "Prob. Prec. > 80 mm / 24h",
+        "d2m": "Dew Point 2m",
+        "gust": "Max. Wind Gust 10m",
+        "cape": "MU-CAPE"
+      }
     }
   },
   "menu": {

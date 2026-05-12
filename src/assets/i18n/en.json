@@ -40,7 +40,7 @@
     "graphics": "Graphics",
     "icon": "Weather"
   },
-  "icon": {
+  "weather": {
     "loading": "Loading ICON parameters and images...",
     "noPng": "Image not found.",
     "error": {

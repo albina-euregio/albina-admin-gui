@@ -37,12 +37,12 @@ interface LocalDayGroup {
 // filesMap[parameterCode][date][hour] = fileName
 type FilesMap = Record<string, Record<string, Record<string, string>>>;
 
-const ICON_MODEL: SelectorOption = { id: "ICON", label: "ICON", labelKey: "icon.models.icon" };
-const GFS_MODEL: SelectorOption = { id: "GFS", label: "GFS", labelKey: "icon.models.gfs" };
-const EUREGIO_REGION: SelectorOption = { id: "euregio", label: "EUREGIO", labelKey: "icon.regions.euregio" };
-const EUROPE_REGION: SelectorOption = { id: "eu", label: "Europe", labelKey: "icon.regions.europe" };
-const ALPS_REGION: SelectorOption = { id: "al", label: "Alps", labelKey: "icon.regions.alps" };
-const ATLANTIC_REGION: SelectorOption = { id: "at", label: "Atlantic", labelKey: "icon.regions.atlantic" };
+const ICON_MODEL: SelectorOption = { id: "ICON", label: "ICON", labelKey: "weather.models.icon" };
+const GFS_MODEL: SelectorOption = { id: "GFS", label: "GFS", labelKey: "weather.models.gfs" };
+const EUREGIO_REGION: SelectorOption = { id: "euregio", label: "EUREGIO", labelKey: "weather.regions.euregio" };
+const EUROPE_REGION: SelectorOption = { id: "eu", label: "Europe", labelKey: "weather.regions.europe" };
+const ALPS_REGION: SelectorOption = { id: "al", label: "Alps", labelKey: "weather.regions.alps" };
+const ATLANTIC_REGION: SelectorOption = { id: "at", label: "Atlantic", labelKey: "weather.regions.atlantic" };
 const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((level) => ({
   id: level,
   label: `${level} hPa`,
@@ -52,12 +52,12 @@ const GFS_RH_LEVELS: SelectorOption[] = ["300", "500", "700", "800", "850", "925
   label: `${level} hPa`,
 }));
 const GFS_GEOP_ISOTACHS_LEVELS: SelectorOption[] = [{ id: "300", label: "300 hPa" }];
-const GFS_SURFACE_LEVEL: SelectorOption[] = [{ id: "sfc", label: "Surface", labelKey: "icon.levels.surface" }];
+const GFS_SURFACE_LEVEL: SelectorOption[] = [{ id: "sfc", label: "Surface", labelKey: "weather.levels.surface" }];
 const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
-  { id: "t", label: "Total", labelKey: "icon.levels.cloudTotal" },
-  { id: "h", label: "High", labelKey: "icon.levels.cloudHigh" },
-  { id: "m", label: "Mid", labelKey: "icon.levels.cloudMid" },
-  { id: "l", label: "Low", labelKey: "icon.levels.cloudLow" },
+  { id: "t", label: "Total", labelKey: "weather.levels.cloudTotal" },
+  { id: "h", label: "High", labelKey: "weather.levels.cloudHigh" },
+  { id: "m", label: "Mid", labelKey: "weather.levels.cloudMid" },
+  { id: "l", label: "Low", labelKey: "weather.levels.cloudLow" },
 ];
 
 @Component({
@@ -185,10 +185,10 @@ export class IconComponent implements OnInit {
 
   get currentImageAlt(): string {
     const parameter = this.selectedParameter;
-    if (!parameter) return this.translateService.instant("icon.alt.fallback");
+    if (!parameter) return this.translateService.instant("weather.alt.fallback");
 
     const levelSuffix = this.selectedLevelLabel ? ` ${this.selectedLevelLabel}` : "";
-    return this.translateService.instant("icon.alt.image", {
+    return this.translateService.instant("weather.alt.image", {
       model: this.selectedModelLabel,
       parameter: this.getParameterDescription(parameter),
       level: levelSuffix,
@@ -467,7 +467,7 @@ export class IconComponent implements OnInit {
       await this.detectLatestGfsRun();
 
       if (!this.parameters.length) {
-        this.error = this.translateService.instant("icon.error.noParameters");
+        this.error = this.translateService.instant("weather.error.noParameters");
         return;
       }
 
@@ -477,7 +477,7 @@ export class IconComponent implements OnInit {
       this.selectInitialTimestamp();
       this.updateSelectedImage();
     } catch {
-      this.error = this.translateService.instant("icon.error.loadFailed");
+      this.error = this.translateService.instant("weather.error.loadFailed");
     } finally {
       this.loading = false;
     }
@@ -803,7 +803,7 @@ export class IconComponent implements OnInit {
         key: `icon:${parameter.code}`,
         code: parameter.code,
         description: parameter.description,
-        descriptionKey: `icon.parameters.icon.${parameter.code}`,
+        descriptionKey: `weather.parameters.icon.${parameter.code}`,
         modelOptions: [ICON_MODEL],
         regionOptions: [EUREGIO_REGION],
         levelOptions: [] as SelectorOption[],
@@ -814,7 +814,7 @@ export class IconComponent implements OnInit {
           key: "icon:cc",
           code: "cc",
           description: "Cloud Cover",
-          descriptionKey: "icon.parameters.cloudCover",
+          descriptionKey: "weather.parameters.cloudCover",
           modelOptions: [ICON_MODEL],
           regionOptions: [EUREGIO_REGION],
           levelOptions: cloudLevelOptions,
@@ -829,7 +829,7 @@ export class IconComponent implements OnInit {
         key: "gfs:et",
         code: "et",
         description: "Equivalent Potential Temp.",
-        descriptionKey: "icon.parameters.gfs.equivalentPotentialTemp",
+        descriptionKey: "weather.parameters.gfs.equivalentPotentialTemp",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_LEVELS,
@@ -838,7 +838,7 @@ export class IconComponent implements OnInit {
         key: "gfs:r",
         code: "r",
         description: "Relative Humidity",
-        descriptionKey: "icon.parameters.gfs.relativeHumidity",
+        descriptionKey: "weather.parameters.gfs.relativeHumidity",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_RH_LEVELS,
@@ -847,7 +847,7 @@ export class IconComponent implements OnInit {
         key: "gfs:g",
         code: "g",
         description: "Geopotential and Isotachs",
-        descriptionKey: "icon.parameters.gfs.geopotentialAndIsotachs",
+        descriptionKey: "weather.parameters.gfs.geopotentialAndIsotachs",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ATLANTIC_REGION],
         levelOptions: GFS_GEOP_ISOTACHS_LEVELS,
@@ -856,7 +856,7 @@ export class IconComponent implements OnInit {
         key: "gfs:ns",
         code: "ns",
         description: "Precipitation",
-        descriptionKey: "icon.parameters.gfs.precipitation",
+        descriptionKey: "weather.parameters.gfs.precipitation",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_SURFACE_LEVEL,
@@ -866,7 +866,7 @@ export class IconComponent implements OnInit {
         key: "gfs:cape",
         code: "cape",
         description: "CAPE",
-        descriptionKey: "icon.parameters.gfs.cape",
+        descriptionKey: "weather.parameters.gfs.cape",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_SURFACE_LEVEL,
