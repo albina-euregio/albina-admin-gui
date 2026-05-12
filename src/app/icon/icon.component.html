@@ -83,7 +83,7 @@
             </div>
             @if (selectedModel === "GFS") {
               <div class="gfs-run-indicator" aria-label="Selected GFS run">
-                <div class="gfs-run-title">Model run</div>
+                <div class="gfs-run-title">{{ "weather.headings.modelRun" | translate }}</div>
                 @if (selectedGfsRunDateTimeLabel) {
                   <div class="gfs-run-indicator-time">{{ selectedGfsRunDateTimeLabel }} local time</div>
                 }

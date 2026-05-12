@@ -49,6 +49,7 @@
     },
     "headings": {
       "model": "Model",
+      "modelRun": "Model run",
       "region": "Region",
       "parameters": "Parameters",
       "level": "Level"
