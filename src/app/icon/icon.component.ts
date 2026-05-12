@@ -205,7 +205,9 @@ export class IconComponent implements OnInit {
 
   private getParameterDescription(parameter: IconParameter | undefined): string {
     if (!parameter) return "";
-    return parameter.descriptionKey ? this.translateService.instant(parameter.descriptionKey) : parameter.description;
+    if (!parameter.descriptionKey) return parameter.description;
+    const translated = this.translateService.instant(parameter.descriptionKey);
+    return translated === parameter.descriptionKey ? parameter.description : translated;
   }
 
   private getCurrentLocale(): string {
@@ -801,6 +803,7 @@ export class IconComponent implements OnInit {
         key: `icon:${parameter.code}`,
         code: parameter.code,
         description: parameter.description,
+        descriptionKey: `icon.parameters.icon.${parameter.code}`,
         modelOptions: [ICON_MODEL],
         regionOptions: [EUREGIO_REGION],
         levelOptions: [] as SelectorOption[],
@@ -826,7 +829,7 @@ export class IconComponent implements OnInit {
         key: "gfs:et",
         code: "et",
         description: "Equivalent Potential Temp.",
-        descriptionKey: "icon.parameters.equivalentPotentialTemp",
+        descriptionKey: "icon.parameters.gfs.equivalentPotentialTemp",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_LEVELS,
@@ -835,7 +838,7 @@ export class IconComponent implements OnInit {
         key: "gfs:r",
         code: "r",
         description: "Relative Humidity",
-        descriptionKey: "icon.parameters.relativeHumidity",
+        descriptionKey: "icon.parameters.gfs.relativeHumidity",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_RH_LEVELS,
@@ -844,7 +847,7 @@ export class IconComponent implements OnInit {
         key: "gfs:g",
         code: "g",
         description: "Geopotential and Isotachs",
-        descriptionKey: "icon.parameters.geopotentialAndIsotachs",
+        descriptionKey: "icon.parameters.gfs.geopotentialAndIsotachs",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ATLANTIC_REGION],
         levelOptions: GFS_GEOP_ISOTACHS_LEVELS,
@@ -853,7 +856,7 @@ export class IconComponent implements OnInit {
         key: "gfs:ns",
         code: "ns",
         description: "Precipitation",
-        descriptionKey: "icon.parameters.precipitation",
+        descriptionKey: "icon.parameters.gfs.precipitation",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_SURFACE_LEVEL,
@@ -863,7 +866,7 @@ export class IconComponent implements OnInit {
         key: "gfs:cape",
         code: "cape",
         description: "CAPE",
-        descriptionKey: "icon.parameters.cape",
+        descriptionKey: "icon.parameters.gfs.cape",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_SURFACE_LEVEL,

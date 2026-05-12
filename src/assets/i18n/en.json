@@ -75,12 +75,25 @@
       "cloudLow": "Low"
     },
     "parameters": {
-      "cloudCover": "Cloud Cover",
-      "equivalentPotentialTemp": "Equivalent Potential Temp.",
-      "relativeHumidity": "Relative Humidity",
-      "geopotentialAndIsotachs": "Geopotential and Isotachs",
-      "precipitation": "Precipitation",
-      "cape": "CAPE"
+      "gfs": {
+        "cloudCover": "Cloud Cover",
+        "equivalentPotentialTemp": "Equivalent Potential Temp.",
+        "relativeHumidity": "Relative Humidity",
+        "geopotentialAndIsotachs": "Geopotential and Isotachs",
+        "precipitation": "Precipitation",
+        "cape": "CAPE"
+      },
+      "icon": {
+        "ns": "Precipitation 1h",
+        "ns24": "Precipitation 24h",
+        "nsacc": "Acc. Precipitation",
+        "nsprob24gt20": "Prob. Prec. > 20 mm / 24h",
+        "nsprob24gt40": "Prob. Prec. > 40 mm / 24h",
+        "nsprob24gt80": "Prob. Prec. > 80 mm / 24h",
+        "d2m": "Dew Point 2m",
+        "gust": "Max. Wind Gust 10m",
+        "cape": "MU-CAPE"
+      }
     }
   },
   "menu": {
