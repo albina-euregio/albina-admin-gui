@@ -677,6 +677,15 @@ export class IconComponent implements OnInit {
         levelOptions: GFS_SURFACE_LEVEL,
         gfsLevelSuffixMap: { sfc: "" },
       },
+      {
+        key: "gfs:cape",
+        code: "cape",
+        description: "CAPE",
+        modelOptions: [GFS_MODEL],
+        regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
+        levelOptions: GFS_SURFACE_LEVEL,
+        gfsLevelSuffixMap: { sfc: "" },
+      },
     ];
   }
 
