@@ -37,12 +37,50 @@
     "lineaexport": "LINEA",
     "awsstats": "AWS Stats",
     "yearlystats": "Yearly Stats",
-    "graphics": "Grafics",
-    "icon": "ICON"
+    "graphics": "Graphics",
+    "icon": "Temps atmosferic"
   },
   "icon": {
     "loading": "Loading ICON parameters and images...",
-    "noPng": "No PNG found for this parameter in the remote folder."
+    "noPng": "No PNG found for this parameter in the remote folder.",
+    "error": {
+      "noParameters": "No forecast parameters available.",
+      "loadFailed": "Could not load forecast data."
+    },
+    "headings": {
+      "model": "Model",
+      "region": "Region",
+      "parameters": "Parameters",
+      "level": "Level"
+    },
+    "alt": {
+      "fallback": "Forecast map",
+      "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
+    },
+    "models": {
+      "icon": "ICON",
+      "gfs": "GFS"
+    },
+    "regions": {
+      "atlantic": "Atlantic",
+      "europe": "Europe",
+      "alps": "Alps",
+      "euregio": "EUREGIO"
+    },
+    "levels": {
+      "surface": "Surface",
+      "cloudTotal": "Total",
+      "cloudHigh": "High",
+      "cloudMid": "Mid",
+      "cloudLow": "Low"
+    },
+    "parameters": {
+      "cloudCover": "Cloud Cover",
+      "equivalentPotentialTemp": "Equivalent Potential Temp.",
+      "relativeHumidity": "Umiditat relativa",
+      "geopotentialAndIsotachs": "Geopotential and Isotachs",
+      "precipitation": "Precipitacion"
+    }
   },
   "menu": {
     "logout": "Barrar session",
@@ -274,7 +312,7 @@
         "telegram": "Telegram",
         "email": "Corrèu electronic"
       },
-      "publicationInProgress": "Publication still in progress",
+      "publicationInProgress": "Publication in progress",
       "publicationFinishedOnServer": "Finished publication on server",
       "publishDisabled": {
         "inProgress": "Publication is currently in progress.",
@@ -778,7 +816,7 @@
           "enableObservations": "Abilitar observacions",
           "enableModelling": "Abilitar modelitzacion",
           "enableWeatherbox": "Abilitar caisha meteorologica",
-          "enableIcon": "Abilitar ICON",
+          "enableIcon": "Enable ICON",
           "enableLineaExport": "Activar era exportacion LINEA"
         },
         "configuration": {
@@ -1012,6 +1050,9 @@
       "dateRange": "Periòde",
       "extended": "Estenuda",
       "duplicates": "Duplicats"
+    },
+    "error": {
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
   "dangerRating": {

@@ -38,11 +38,49 @@
     "awsstats": "LWD-Statistiken",
     "yearlystats": "Jahresstatistiken",
     "graphics": "Grafiken",
-    "icon": "ICON"
+    "icon": "Wetter"
   },
   "icon": {
     "loading": "Loading ICON parameters and images...",
-    "noPng": "No PNG found for this parameter in the remote folder."
+    "noPng": "No PNG found for this parameter in the remote folder.",
+    "error": {
+      "noParameters": "No forecast parameters available.",
+      "loadFailed": "Could not load forecast data."
+    },
+    "headings": {
+      "model": "Model",
+      "region": "Region",
+      "parameters": "Parameters",
+      "level": "Level"
+    },
+    "alt": {
+      "fallback": "Forecast map",
+      "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
+    },
+    "models": {
+      "icon": "ICON",
+      "gfs": "GFS"
+    },
+    "regions": {
+      "atlantic": "Atlantic",
+      "europe": "Europe",
+      "alps": "Alps",
+      "euregio": "EUREGIO"
+    },
+    "levels": {
+      "surface": "Surface",
+      "cloudTotal": "Total",
+      "cloudHigh": "groß",
+      "cloudMid": "Mid",
+      "cloudLow": "gering"
+    },
+    "parameters": {
+      "cloudCover": "Cloud Cover",
+      "equivalentPotentialTemp": "Equivalent Potential Temp.",
+      "relativeHumidity": "Luftfeuchtigkeit",
+      "geopotentialAndIsotachs": "Geopotential and Isotachs",
+      "precipitation": "Niederschlag"
+    }
   },
   "menu": {
     "logout": "Logout",
@@ -274,7 +312,7 @@
         "telegram": "Telegram",
         "email": "E-Mail"
       },
-      "publicationInProgress": "Publikation läuft noch",
+      "publicationInProgress": "Publication in progress",
       "publicationFinishedOnServer": "Publikation auf dem Server abgeschlossen",
       "publishDisabled": {
         "inProgress": "Publikation läuft gerade.",
@@ -778,7 +816,7 @@
           "enableObservations": "Beobachtungen aktivieren",
           "enableModelling": "Modellierung aktivieren",
           "enableWeatherbox": "Wetterbox aktivieren",
-          "enableIcon": "ICON aktivieren",
+          "enableIcon": "Enable ICON",
           "enableLineaExport": "LINEA-Export aktivieren"
         },
         "configuration": {
@@ -1012,6 +1050,9 @@
       "dateRange": "Zeitspanne",
       "extended": "Erweitert",
       "duplicates": "Duplikate"
+    },
+    "error": {
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
   "dangerRating": {

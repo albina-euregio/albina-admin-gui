@@ -38,7 +38,7 @@
     "awsstats": "AWS Stats",
     "yearlystats": "Yearly Stats",
     "graphics": "Graphics",
-    "icon": "ICON"
+    "icon": "Weather"
   },
   "icon": {
     "loading": "Loading ICON parameters and images...",

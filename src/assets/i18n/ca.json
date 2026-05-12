@@ -38,11 +38,49 @@
     "awsstats": "AWS Stats",
     "yearlystats": "Yearly Stats",
     "graphics": "Graphics",
-    "icon": "ICON"
+    "icon": "Temps atmosfèric"
   },
   "icon": {
     "loading": "Loading ICON parameters and images...",
-    "noPng": "No PNG found for this parameter in the remote folder."
+    "noPng": "No PNG found for this parameter in the remote folder.",
+    "error": {
+      "noParameters": "No forecast parameters available.",
+      "loadFailed": "Could not load forecast data."
+    },
+    "headings": {
+      "model": "Model",
+      "region": "Regió",
+      "parameters": "Parameters",
+      "level": "Level"
+    },
+    "alt": {
+      "fallback": "Forecast map",
+      "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
+    },
+    "models": {
+      "icon": "ICON",
+      "gfs": "GFS"
+    },
+    "regions": {
+      "atlantic": "Atlantic",
+      "europe": "Europe",
+      "alps": "Alps",
+      "euregio": "EUREGIO"
+    },
+    "levels": {
+      "surface": "Surface",
+      "cloudTotal": "Total",
+      "cloudHigh": "High",
+      "cloudMid": "Mid",
+      "cloudLow": "Low"
+    },
+    "parameters": {
+      "cloudCover": "Cloud Cover",
+      "equivalentPotentialTemp": "Equivalent Potential Temp.",
+      "relativeHumidity": "Humitat relativa",
+      "geopotentialAndIsotachs": "Geopotential and Isotachs",
+      "precipitation": "Precipitació"
+    }
   },
   "menu": {
     "logout": "Surt",
@@ -274,7 +312,7 @@
         "telegram": "Telegram",
         "email": "Email"
       },
-      "publicationInProgress": "Publication still in progress",
+      "publicationInProgress": "Publication in progress",
       "publicationFinishedOnServer": "Finished publication on server",
       "publishDisabled": {
         "inProgress": "Publication is currently in progress.",
@@ -778,7 +816,7 @@
           "enableObservations": "Habilitar les observacions",
           "enableModelling": "Habilitar la modelització",
           "enableWeatherbox": "Activar caixa meteorològica",
-          "enableIcon": "Activar ICON",
+          "enableIcon": "Enable ICON",
           "enableLineaExport": "Activar l'exportació LINEA"
         },
         "configuration": {
@@ -1012,6 +1050,9 @@
       "dateRange": "Període",
       "extended": "Ampliat",
       "duplicates": "Duplicats"
+    },
+    "error": {
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
   "dangerRating": {

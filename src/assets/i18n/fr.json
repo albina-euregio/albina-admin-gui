@@ -38,11 +38,49 @@
     "awsstats": "Statistiques SPA",
     "yearlystats": "Statistiques annuelles",
     "graphics": "Graphiques",
-    "icon": "ICON"
+    "icon": "Météo"
   },
   "icon": {
     "loading": "Loading ICON parameters and images...",
-    "noPng": "No PNG found for this parameter in the remote folder."
+    "noPng": "No PNG found for this parameter in the remote folder.",
+    "error": {
+      "noParameters": "No forecast parameters available.",
+      "loadFailed": "Could not load forecast data."
+    },
+    "headings": {
+      "model": "Model",
+      "region": "Région de prévision",
+      "parameters": "Parameters",
+      "level": "Level"
+    },
+    "alt": {
+      "fallback": "Forecast map",
+      "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
+    },
+    "models": {
+      "icon": "ICON",
+      "gfs": "GFS"
+    },
+    "regions": {
+      "atlantic": "Atlantic",
+      "europe": "Europe",
+      "alps": "Alps",
+      "euregio": "EUREGIO"
+    },
+    "levels": {
+      "surface": "Surface",
+      "cloudTotal": "Total",
+      "cloudHigh": "Fort",
+      "cloudMid": "Mid",
+      "cloudLow": "Faible"
+    },
+    "parameters": {
+      "cloudCover": "Cloud Cover",
+      "equivalentPotentialTemp": "Equivalent Potential Temp.",
+      "relativeHumidity": "humidité relative",
+      "geopotentialAndIsotachs": "Geopotential and Isotachs",
+      "precipitation": "précipitation"
+    }
   },
   "menu": {
     "logout": "Se déconnecter",
@@ -266,7 +304,7 @@
       },
       "ok": "Ok",
       "problem": "Problème",
-      "problemDescription": "Problem description",
+      "problemDescription": "Description du problème",
       "problemPlaceholder": "Décrivez le problème rencontré",
       "channel": {
         "website": "Site web",
@@ -274,7 +312,7 @@
         "telegram": "Telegram",
         "email": "Mail"
       },
-      "publicationInProgress": "Publication toujours en cours",
+      "publicationInProgress": "Publication in progress",
       "publicationFinishedOnServer": "Publication sur le serveur terminée",
       "publishDisabled": {
         "inProgress": "Publication en cours",
@@ -306,8 +344,8 @@
         },
         "copyText": "Copiez {{language}} {{channel}} texte"
       },
-      "newChecklist": "New checklist",
-      "savedInfo": "Saved by {{user}}, {{time}}"
+      "newChecklist": "Nouvelle checklist",
+      "savedInfo": "Enregistré par {{user}}, {{time}}"
     },
     "status": {
       "submittedInfo": "Publication prévue à 17h00",
@@ -778,7 +816,7 @@
           "enableObservations": "Activer observations",
           "enableModelling": "Activer modélisation",
           "enableWeatherbox": "Activer boîte météo",
-          "enableIcon": "Activer ICON",
+          "enableIcon": "Enable ICON",
           "enableLineaExport": "Activer export LINEA"
         },
         "configuration": {
@@ -1012,6 +1050,9 @@
       "dateRange": "Période",
       "extended": "Étendue",
       "duplicates": "Doublons"
+    },
+    "error": {
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
   "dangerRating": {
@@ -1116,10 +1157,10 @@
   },
   "snowpackStability": {
     "unknown": "inconnue",
-    "good": "bonne",
-    "fair": "moyenne",
-    "poor": "mauvaise",
-    "very_poor": "très mauvaise"
+    "good": "stable",
+    "fair": "moyennement stable",
+    "poor": "instable",
+    "very_poor": "très instable"
   },
   "frequency": {
     "none": "(pratiquement) pas",
@@ -1555,9 +1596,9 @@
       "aws-danger-source-variants-matrix-parameter-avalanche-size": "Taille des avalanches selon les différentes sources de danger"
     },
     "error": {
-      "startDateBeforeEndDate": "Start date must be before or equal to end date.",
-      "failedLoadData": "Failed to load data for selected date range.",
-      "startDateEndDateRequired": "Start date and end date are required."
+      "startDateBeforeEndDate": "La date de début doit être antérieure ou égale à la date de fin.",
+      "failedLoadData": "Impossible de charger les données pour la période sélectionnée.",
+      "startDateEndDateRequired": "Les dates de début et de fin sont obligatoires."
     }
   },
   "yearlystats": {

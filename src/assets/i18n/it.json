@@ -38,11 +38,49 @@
     "awsstats": "Statistiche servizi valanghe",
     "yearlystats": "Statistiche annuali",
     "graphics": "Grafici",
-    "icon": "ICON"
+    "icon": "Meteo"
   },
   "icon": {
     "loading": "Loading ICON parameters and images...",
-    "noPng": "No PNG found for this parameter in the remote folder."
+    "noPng": "No PNG found for this parameter in the remote folder.",
+    "error": {
+      "noParameters": "No forecast parameters available.",
+      "loadFailed": "Could not load forecast data."
+    },
+    "headings": {
+      "model": "Model",
+      "region": "Meteo-nivo zona",
+      "parameters": "Parameters",
+      "level": "Level"
+    },
+    "alt": {
+      "fallback": "Forecast map",
+      "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
+    },
+    "models": {
+      "icon": "ICON",
+      "gfs": "GFS"
+    },
+    "regions": {
+      "atlantic": "Atlantic",
+      "europe": "Europe",
+      "alps": "Alps",
+      "euregio": "EUREGIO"
+    },
+    "levels": {
+      "surface": "Surface",
+      "cloudTotal": "Total",
+      "cloudHigh": "Forte",
+      "cloudMid": "Mid",
+      "cloudLow": "Debole"
+    },
+    "parameters": {
+      "cloudCover": "Cloud Cover",
+      "equivalentPotentialTemp": "Equivalent Potential Temp.",
+      "relativeHumidity": "Umidità relativa",
+      "geopotentialAndIsotachs": "Geopotential and Isotachs",
+      "precipitation": "Precipitazione"
+    }
   },
   "menu": {
     "logout": "Logout",
@@ -274,7 +312,7 @@
         "telegram": "Telegram",
         "email": "Email"
       },
-      "publicationInProgress": "Pubblicazione ancora in corso",
+      "publicationInProgress": "Publication in progress",
       "publicationFinishedOnServer": "Pubblicazione completata sul server",
       "publishDisabled": {
         "inProgress": "La pubblicazione è attualmente in corso.",
@@ -778,7 +816,7 @@
           "enableObservations": "Attiva osservazioni",
           "enableModelling": "Attiva modellazione",
           "enableWeatherbox": "Attiva box meteo",
-          "enableIcon": "Attiva ICON",
+          "enableIcon": "Enable ICON",
           "enableLineaExport": "Abilita l’esportazione LINEA"
         },
         "configuration": {
@@ -1012,6 +1050,9 @@
       "dateRange": "Periodo",
       "extended": "Esteso",
       "duplicates": "Doppioni"
+    },
+    "error": {
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
   "dangerRating": {
