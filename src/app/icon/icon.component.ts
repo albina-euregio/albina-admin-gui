@@ -863,6 +863,7 @@ export class IconComponent implements OnInit {
         key: "gfs:cape",
         code: "cape",
         description: "CAPE",
+        descriptionKey: "icon.parameters.cape",
         modelOptions: [GFS_MODEL],
         regionOptions: [EUROPE_REGION, ALPS_REGION, ATLANTIC_REGION],
         levelOptions: GFS_SURFACE_LEVEL,
