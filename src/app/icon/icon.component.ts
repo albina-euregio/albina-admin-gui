@@ -87,7 +87,6 @@ export class IconComponent implements OnInit {
   selectedHour = "";
   selectedImageUrl = "";
   selectedGfsRun = "00";
-  selectedGfsRunTimestamp = 0;
   imageLoadFailed = false;
 
   loading = true;
@@ -98,7 +97,6 @@ export class IconComponent implements OnInit {
   @ViewChild("timelineWrapper") private timelineWrapper?: ElementRef<HTMLDivElement>;
 
   private filesMap: FilesMap = {};
-  private readonly gfsRunTimestamps: Record<string, number> = {};
 
   async ngOnInit() {
     await this.loadData();
@@ -140,19 +138,6 @@ export class IconComponent implements OnInit {
 
   get selectedLevelLabel(): string {
     return this.getOptionLabel(this.availableLevels.find((level) => level.id === this.selectedLevel));
-  }
-
-  get selectedGfsRunDateTimeLabel(): string {
-    if (!this.selectedGfsRunTimestamp) return "";
-
-    const runDate = new Date(this.selectedGfsRunTimestamp);
-    const year = runDate.getFullYear();
-    const month = String(runDate.getMonth() + 1).padStart(2, "0");
-    const day = String(runDate.getDate()).padStart(2, "0");
-    const hour = String(runDate.getHours()).padStart(2, "0");
-    const minute = String(runDate.getMinutes()).padStart(2, "0");
-
-    return `${year}-${month}-${day} ${hour}:${minute}`;
   }
 
   get availableGfsRuns(): string[] {
@@ -357,7 +342,6 @@ export class IconComponent implements OnInit {
     if (this.selectedGfsRun === run) return;
 
     this.selectedGfsRun = run;
-    this.selectedGfsRunTimestamp = this.gfsRunTimestamps[run] ?? 0;
     this.updateSelectedImage();
   }
 
@@ -521,29 +505,50 @@ export class IconComponent implements OnInit {
   private async detectLatestGfsRun() {
     const probeTimestamps = this.getGfsProbeTimestamps();
     const representativeFiles = ["nseu", "et500eu", "capeeu"];
+
+    console.info("[IconWeather] Detecting latest GFS run by probing image availability", {
+      runs: this.gfsRuns,
+      probeTimestamps: probeTimestamps.map((timestamp) => `${timestamp.date}_${timestamp.hour}`),
+      representativeFiles,
+    });
+
     const runScores = await Promise.all(
       this.gfsRuns.map(async (run) => ({
         run,
-        timestamp: await this.getLatestRunTimestamp(run, probeTimestamps, representativeFiles),
+        score: await this.getRunAvailabilityScore(run, probeTimestamps, representativeFiles),
       })),
     );
 
     for (const score of runScores) {
-      this.gfsRunTimestamps[score.run] = score.timestamp;
+      console.info(`[IconWeather] Run ${score.run} available timestamps`, {
+        newest: score.score.newestTimestampKey,
+        count: score.score.availableTimestampLabels.length,
+        timestamps: score.score.availableTimestampLabels,
+      });
     }
 
-    const latestByHeader = runScores
-      .filter((score) => score.timestamp > 0)
-      .sort((left, right) => right.timestamp - left.timestamp)[0];
+    const latestByAvailability = runScores
+      .filter((score) => !!score.score.newestTimestampKey)
+      .sort((left, right) => {
+        if (right.score.newestTimestampKey !== left.score.newestTimestampKey) {
+          return right.score.newestTimestampKey.localeCompare(left.score.newestTimestampKey);
+        }
 
-    if (latestByHeader) {
-      this.selectedGfsRun = latestByHeader.run;
-      this.selectedGfsRunTimestamp = latestByHeader.timestamp;
+        if (right.score.availableTimestampLabels.length !== left.score.availableTimestampLabels.length) {
+          return right.score.availableTimestampLabels.length - left.score.availableTimestampLabels.length;
+        }
+
+        return Number(right.run) - Number(left.run);
+      })[0];
+
+    if (latestByAvailability) {
+      this.selectedGfsRun = latestByAvailability.run;
+      console.info(`[IconWeather] Latest GFS run selected: ${this.selectedGfsRun}`);
       return;
     }
 
     this.selectedGfsRun = this.getFallbackGfsRun();
-    this.selectedGfsRunTimestamp = 0;
+    console.warn(`[IconWeather] No GFS images found while probing; falling back to run ${this.selectedGfsRun}`);
   }
 
   private getGfsProbeTimestamps(): { date: string; hour: string }[] {
@@ -560,40 +565,65 @@ export class IconComponent implements OnInit {
     });
   }
 
-  private async getLatestRunTimestamp(
+  private async getRunAvailabilityScore(
     run: string,
     probeTimestamps: { date: string; hour: string }[],
     representativeFiles: string[],
-  ): Promise<number> {
-    let latestTimestamp = 0;
+  ): Promise<{ newestTimestampKey: string; availableTimestampLabels: string[] }> {
+    let newestTimestampKey = "";
+    const availableTimestampLabels: string[] = [];
     const baseUrl = this.getGfsBaseUrl(run);
 
     for (const timestamp of probeTimestamps) {
+      let existsForTimestamp = false;
+
       for (const fileSuffix of representativeFiles) {
         const url = `${baseUrl}GFS_${timestamp.date}_${timestamp.hour}_${fileSuffix}.png`;
-        const modifiedAt = await this.fetchImageLastModified(url);
-        if (modifiedAt > latestTimestamp) {
-          latestTimestamp = modifiedAt;
+        const exists = await this.checkImageExists(url);
+
+        if (exists) {
+          existsForTimestamp = true;
+          break;
         }
+      }
+
+      if (!existsForTimestamp) continue;
+
+      const label = `${timestamp.date}_${timestamp.hour}`;
+      availableTimestampLabels.push(label);
+
+      if (!newestTimestampKey || label > newestTimestampKey) {
+        newestTimestampKey = label;
       }
     }
 
-    return latestTimestamp;
+    return {
+      newestTimestampKey,
+      availableTimestampLabels,
+    };
   }
 
-  private async fetchImageLastModified(url: string): Promise<number> {
-    try {
-      const response = await fetch(url, { method: "HEAD" });
-      if (!response.ok) return 0;
+  private async checkImageExists(url: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const image = new Image();
+      const timeoutId = window.setTimeout(() => {
+        image.onload = null;
+        image.onerror = null;
+        resolve(false);
+      }, 5000);
 
-      const lastModified = response.headers.get("Last-Modified");
-      if (!lastModified) return 0;
+      image.onload = () => {
+        window.clearTimeout(timeoutId);
+        resolve(true);
+      };
 
-      const parsed = Date.parse(lastModified);
-      return Number.isNaN(parsed) ? 0 : parsed;
-    } catch {
-      return 0;
-    }
+      image.onerror = () => {
+        window.clearTimeout(timeoutId);
+        resolve(false);
+      };
+
+      image.src = `${url}${url.includes("?") ? "&" : "?"}probe=${Date.now()}`;
+    });
   }
 
   private getFallbackGfsRun(): string {

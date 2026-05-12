@@ -185,12 +185,6 @@
   text-transform: uppercase;
 }
 
-.gfs-run-indicator-time {
-  font-size: 0.58rem;
-  font-weight: 600;
-  color: var(--bs-tertiary-color);
-}
-
 .gfs-run-options {
   display: flex;
   gap: 0.25rem;
