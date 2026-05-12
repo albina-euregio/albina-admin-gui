@@ -41,7 +41,7 @@
     "icon": "Weather"
   },
   "weather": {
-    "loading": "Loading ICON parameters and images...",
+    "loading": "Loading weather parameters and images...",
     "noPng": "Image not found.",
     "error": {
       "noParameters": "No forecast parameters available.",
