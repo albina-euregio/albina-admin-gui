@@ -171,6 +171,40 @@
   padding: 0.45rem;
 }
 
+.gfs-run-indicator {
+  margin: 0 0.45rem 0.45rem;
+  padding: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--bs-secondary-color);
+}
+
+.gfs-run-title {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.gfs-run-indicator-time {
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: var(--bs-tertiary-color);
+}
+
+.gfs-run-options {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.gfs-run-chip {
+  --bs-btn-padding-y: 0.06rem;
+  --bs-btn-padding-x: 0.35rem;
+  --bs-btn-font-size: 0.62rem;
+  --bs-btn-border-radius: 999px;
+}
+
 .sidebar-chip {
   --bs-btn-padding-y: 0.12rem;
   --bs-btn-padding-x: 0.45rem;

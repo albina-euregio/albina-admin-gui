@@ -64,7 +64,8 @@ export class IconComponent implements OnInit {
   private readonly translateService = inject(TranslateService);
   private readonly iconBaseUrl = "https://extra.avalanche.report/meteo-bz/meteo-bz/";
   private readonly iconParameterUrl = `${this.iconBaseUrl}Parameter.txt`;
-  private readonly gfsBaseUrl = "https://ertel2.uibk.ac.at/ertel/data/pngs/GFS/00/";
+  private readonly gfsBaseUrl = "https://ertel2.uibk.ac.at/ertel/data/pngs/GFS";
+  private readonly gfsRuns = ["00", "06", "12", "18"];
   private swipeCoord?: [number, number];
   private swipeTime?: number;
   private readonly allModels: SelectorOption[] = [ICON_MODEL, GFS_MODEL];
@@ -78,6 +79,8 @@ export class IconComponent implements OnInit {
   selectedDate = "";
   selectedHour = "";
   selectedImageUrl = "";
+  selectedGfsRun = "00";
+  selectedGfsRunTimestamp = 0;
   imageLoadFailed = false;
 
   loading = true;
@@ -88,6 +91,7 @@ export class IconComponent implements OnInit {
   @ViewChild("timelineWrapper") private timelineWrapper?: ElementRef<HTMLDivElement>;
 
   private filesMap: FilesMap = {};
+  private readonly gfsRunTimestamps: Record<string, number> = {};
 
   async ngOnInit() {
     await this.loadData();
@@ -129,6 +133,23 @@ export class IconComponent implements OnInit {
 
   get selectedLevelLabel(): string {
     return this.getOptionLabel(this.availableLevels.find((level) => level.id === this.selectedLevel));
+  }
+
+  get selectedGfsRunDateTimeLabel(): string {
+    if (!this.selectedGfsRunTimestamp) return "";
+
+    const runDate = new Date(this.selectedGfsRunTimestamp);
+    const year = runDate.getUTCFullYear();
+    const month = String(runDate.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(runDate.getUTCDate()).padStart(2, "0");
+    const hour = String(runDate.getUTCHours()).padStart(2, "0");
+    const minute = String(runDate.getUTCMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  }
+
+  get availableGfsRuns(): string[] {
+    return this.gfsRuns;
   }
 
   get currentImageAlt(): string {
@@ -270,6 +291,15 @@ export class IconComponent implements OnInit {
     this.updateSelectedImage();
   }
 
+  selectGfsRun(run: string) {
+    if (!this.gfsRuns.includes(run)) return;
+    if (this.selectedGfsRun === run) return;
+
+    this.selectedGfsRun = run;
+    this.selectedGfsRunTimestamp = this.gfsRunTimestamps[run] ?? 0;
+    this.updateSelectedImage();
+  }
+
   selectTimestamp(date: string, hour: string, ensureVisible = false) {
     this.selectedDate = date;
     this.selectedHour = hour;
@@ -373,6 +403,7 @@ export class IconComponent implements OnInit {
 
       this.parameters = this.parseParameters(parameterText);
       this.filesMap = this.parseAllFiles(directoryIndex);
+      await this.detectLatestGfsRun();
 
       if (!this.parameters.length) {
         this.error = this.translateService.instant("icon.error.noParameters");
@@ -418,7 +449,99 @@ export class IconComponent implements OnInit {
     }
 
     const levelSuffix = this.getResolvedGfsLevelSuffix(parameter);
-    this.selectedImageUrl = `${this.gfsBaseUrl}GFS_${this.selectedDate}_${this.selectedHour}_${parameter.code}${levelSuffix}${this.selectedRegion}.png`;
+    const gfsBaseUrl = this.getGfsBaseUrl();
+    this.selectedImageUrl = `${gfsBaseUrl}GFS_${this.selectedDate}_${this.selectedHour}_${parameter.code}${levelSuffix}${this.selectedRegion}.png`;
+  }
+
+  private getGfsBaseUrl(run = this.selectedGfsRun): string {
+    return `${this.gfsBaseUrl}/${run}/`;
+  }
+
+  private async detectLatestGfsRun() {
+    const probeTimestamps = this.getGfsProbeTimestamps();
+    const representativeFiles = ["nseu", "et500eu", "capeeu"];
+    const runScores = await Promise.all(
+      this.gfsRuns.map(async (run) => ({
+        run,
+        timestamp: await this.getLatestRunTimestamp(run, probeTimestamps, representativeFiles),
+      })),
+    );
+
+    for (const score of runScores) {
+      this.gfsRunTimestamps[score.run] = score.timestamp;
+    }
+
+    const latestByHeader = runScores
+      .filter((score) => score.timestamp > 0)
+      .sort((left, right) => right.timestamp - left.timestamp)[0];
+
+    if (latestByHeader) {
+      this.selectedGfsRun = latestByHeader.run;
+      this.selectedGfsRunTimestamp = latestByHeader.timestamp;
+      return;
+    }
+
+    this.selectedGfsRun = this.getFallbackGfsRun();
+    this.selectedGfsRunTimestamp = 0;
+  }
+
+  private getGfsProbeTimestamps(): { date: string; hour: string }[] {
+    const now = new Date();
+    const roundedHour = Math.floor(now.getUTCHours() / 3) * 3;
+    const base = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), roundedHour, 0, 0, 0));
+
+    const offsets = [-12, -9, -6, -3, 0, 3, 6, 9, 12, 24, 36, 48];
+    return offsets.map((offset) => {
+      const timestamp = new Date(base.getTime() + offset * 60 * 60 * 1000);
+      const date = `${timestamp.getUTCFullYear()}${String(timestamp.getUTCMonth() + 1).padStart(2, "0")}${String(timestamp.getUTCDate()).padStart(2, "0")}`;
+      const hour = String(timestamp.getUTCHours()).padStart(2, "0");
+      return { date, hour };
+    });
+  }
+
+  private async getLatestRunTimestamp(
+    run: string,
+    probeTimestamps: { date: string; hour: string }[],
+    representativeFiles: string[],
+  ): Promise<number> {
+    let latestTimestamp = 0;
+    const baseUrl = this.getGfsBaseUrl(run);
+
+    for (const timestamp of probeTimestamps) {
+      for (const fileSuffix of representativeFiles) {
+        const url = `${baseUrl}GFS_${timestamp.date}_${timestamp.hour}_${fileSuffix}.png`;
+        const modifiedAt = await this.fetchImageLastModified(url);
+        if (modifiedAt > latestTimestamp) {
+          latestTimestamp = modifiedAt;
+        }
+      }
+    }
+
+    return latestTimestamp;
+  }
+
+  private async fetchImageLastModified(url: string): Promise<number> {
+    try {
+      const response = await fetch(url, { method: "HEAD" });
+      if (!response.ok) return 0;
+
+      const lastModified = response.headers.get("Last-Modified");
+      if (!lastModified) return 0;
+
+      const parsed = Date.parse(lastModified);
+      return Number.isNaN(parsed) ? 0 : parsed;
+    } catch {
+      return 0;
+    }
+  }
+
+  private getFallbackGfsRun(): string {
+    const currentUtcHour = new Date().getUTCHours();
+
+    if (currentUtcHour >= 18) return "18";
+    if (currentUtcHour >= 12) return "12";
+    if (currentUtcHour >= 6) return "06";
+    return "00";
   }
 
   private rebuildDayGroups() {

@@ -81,6 +81,27 @@
                 </button>
               }
             </div>
+            @if (selectedModel === "GFS") {
+              <div class="gfs-run-indicator" aria-label="Selected GFS run">
+                <div class="gfs-run-title">Model run</div>
+                @if (selectedGfsRunDateTimeLabel) {
+                  <div class="gfs-run-indicator-time">{{ selectedGfsRunDateTimeLabel }} UTC</div>
+                }
+                <div class="gfs-run-options" role="toolbar" aria-label="GFS run selection">
+                  @for (run of availableGfsRuns; track run) {
+                    <button
+                      type="button"
+                      class="btn btn-sm gfs-run-chip"
+                      [class.btn-primary]="selectedGfsRun === run"
+                      [class.btn-outline-primary]="selectedGfsRun !== run"
+                      (click)="selectGfsRun(run)"
+                    >
+                      {{ run }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
           </div>
 
           <div class="sidebar-section">
