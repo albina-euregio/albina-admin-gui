@@ -97,6 +97,9 @@ export class IconComponent implements OnInit {
   @ViewChild("timelineWrapper") private timelineWrapper?: ElementRef<HTMLDivElement>;
 
   private filesMap: FilesMap = {};
+  private readonly gfsTimelineCache = new Map<string, string[]>();
+  private readonly gfsTimelineRequestCache = new Map<string, Promise<string[]>>();
+  private dayGroupsRequestId = 0;
 
   async ngOnInit() {
     await this.loadData();
@@ -275,9 +278,7 @@ export class IconComponent implements OnInit {
 
     this.selectedParameterKey = this.filteredParameters[(index + parameterCount) % parameterCount].key;
     this.syncSelectionsWithParameter();
-    this.rebuildDayGroups();
-    this.ensureSelectedTimestamp();
-    this.updateSelectedImage();
+    void this.refreshTimelineAndImage();
   }
 
   selectModel(modelId: string) {
@@ -287,9 +288,7 @@ export class IconComponent implements OnInit {
     this.selectedModel = modelId;
     this.ensureSelectedParameterForModel(previousParameterCode);
     this.syncSelectionsWithParameter();
-    this.rebuildDayGroups();
-    this.ensureSelectedTimestamp();
-    this.updateSelectedImage();
+    void this.refreshTimelineAndImage();
   }
 
   selectRegion(regionId: string) {
@@ -297,9 +296,7 @@ export class IconComponent implements OnInit {
     if (this.selectedRegion === regionId) return;
 
     this.selectedRegion = regionId;
-    this.rebuildDayGroups();
-    this.ensureSelectedTimestamp();
-    this.updateSelectedImage();
+    void this.refreshTimelineAndImage();
   }
 
   isRegionAvailable(regionId: string): boolean {
@@ -332,9 +329,7 @@ export class IconComponent implements OnInit {
     if (this.selectedLevel === levelId) return;
 
     this.selectedLevel = levelId;
-    this.rebuildDayGroups();
-    this.ensureSelectedTimestamp();
-    this.updateSelectedImage();
+    void this.refreshTimelineAndImage();
   }
 
   selectGfsRun(run: string) {
@@ -342,7 +337,7 @@ export class IconComponent implements OnInit {
     if (this.selectedGfsRun === run) return;
 
     this.selectedGfsRun = run;
-    this.updateSelectedImage();
+    void this.refreshTimelineAndImage();
   }
 
   selectTimestamp(date: string, hour: string, ensureVisible = false) {
@@ -457,7 +452,7 @@ export class IconComponent implements OnInit {
 
       this.ensureSelectedParameterForModel();
       this.syncSelectionsWithParameter();
-      this.rebuildDayGroups();
+      await this.rebuildDayGroups();
       this.selectInitialTimestamp();
       this.updateSelectedImage();
     } catch {
@@ -635,16 +630,25 @@ export class IconComponent implements OnInit {
     return "00";
   }
 
-  private rebuildDayGroups() {
-    this.dayGroups = this.buildDayGroups();
+  private async refreshTimelineAndImage() {
+    await this.rebuildDayGroups();
+    this.ensureSelectedTimestamp();
+    this.updateSelectedImage();
   }
 
-  private buildDayGroups(): DayGroup[] {
+  private async rebuildDayGroups() {
+    const requestId = ++this.dayGroupsRequestId;
+    const nextGroups = await this.buildDayGroups();
+    if (requestId !== this.dayGroupsRequestId) return;
+    this.dayGroups = nextGroups;
+  }
+
+  private async buildDayGroups(): Promise<DayGroup[]> {
     const parameter = this.selectedParameter;
     if (!parameter) return [];
 
     if (parameter.key.startsWith("gfs:")) {
-      return this.buildGeneratedDayGroups();
+      return this.buildGeneratedDayGroups(parameter);
     }
 
     const dateHoursMap = new Map<string, Set<string>>();
@@ -667,8 +671,85 @@ export class IconComponent implements OnInit {
       }));
   }
 
-  private buildGeneratedDayGroups(): DayGroup[] {
+  private async buildGeneratedDayGroups(parameter: IconParameter): Promise<DayGroup[]> {
+    if (!this.selectedRegion) return [];
+    if (parameter.levelOptions.length > 0 && !this.selectedLevel) return [];
+
+    const levelSuffix = this.getResolvedGfsLevelSuffix(parameter);
+    const cacheKey = `${this.selectedGfsRun}|${parameter.code}|${levelSuffix}|${this.selectedRegion}`;
+    const availableTimestamps = await this.getOrLoadGfsTimeline(
+      cacheKey,
+      parameter.code,
+      levelSuffix,
+      this.selectedRegion,
+    );
+
     const dateHoursMap = new Map<string, string[]>();
+
+    for (const timestamp of availableTimestamps) {
+      const [date, hour] = timestamp.split("_");
+      if (!date || !hour) continue;
+
+      const hours = dateHoursMap.get(date) ?? [];
+      if (hours.includes(hour)) continue;
+      hours.push(hour);
+      dateHoursMap.set(date, hours);
+    }
+
+    return [...dateHoursMap.entries()].map(([date, hours]) => ({
+      date,
+      dayLabel: this.getDayLabel(date),
+      dateLabel: this.getDateLabel(date),
+      hours: hours.sort(),
+    }));
+  }
+
+  private async getOrLoadGfsTimeline(
+    cacheKey: string,
+    parameterCode: string,
+    levelSuffix: string,
+    region: string,
+  ): Promise<string[]> {
+    const cached = this.gfsTimelineCache.get(cacheKey);
+    if (cached) return cached;
+
+    const pending = this.gfsTimelineRequestCache.get(cacheKey);
+    if (pending) return pending;
+
+    const request = this.probeAvailableGfsTimestamps(parameterCode, levelSuffix, region)
+      .then((timestamps) => {
+        this.gfsTimelineCache.set(cacheKey, timestamps);
+        this.gfsTimelineRequestCache.delete(cacheKey);
+        return timestamps;
+      })
+      .catch(() => {
+        this.gfsTimelineRequestCache.delete(cacheKey);
+        return [] as string[];
+      });
+
+    this.gfsTimelineRequestCache.set(cacheKey, request);
+    return request;
+  }
+
+  private async probeAvailableGfsTimestamps(
+    parameterCode: string,
+    levelSuffix: string,
+    region: string,
+  ): Promise<string[]> {
+    const baseUrl = this.getGfsBaseUrl();
+    const candidates = this.getGfsTimelineCandidates();
+    const checks = candidates.map(async ({ date, hour }) => {
+      const url = `${baseUrl}GFS_${date}_${hour}_${parameterCode}${levelSuffix}${region}.png`;
+      const exists = await this.checkImageExists(url);
+      return exists ? `${date}_${hour}` : "";
+    });
+
+    const results = await Promise.all(checks);
+    return results.filter((value): value is string => !!value).sort();
+  }
+
+  private getGfsTimelineCandidates(): { date: string; hour: string }[] {
+    const candidates: { date: string; hour: string }[] = [];
     const start = new Date();
     start.setUTCHours(0, 0, 0, 0);
 
@@ -676,20 +757,10 @@ export class IconComponent implements OnInit {
       const timestamp = new Date(start.getTime() + offset * 60 * 60 * 1000);
       const date = `${timestamp.getUTCFullYear()}${String(timestamp.getUTCMonth() + 1).padStart(2, "0")}${String(timestamp.getUTCDate()).padStart(2, "0")}`;
       const hour = String(timestamp.getUTCHours()).padStart(2, "0");
-      const hours = dateHoursMap.get(date) ?? [];
-
-      if (!hours.includes(hour)) {
-        hours.push(hour);
-        dateHoursMap.set(date, hours);
-      }
+      candidates.push({ date, hour });
     }
 
-    return [...dateHoursMap.entries()].map(([date, hours]) => ({
-      date,
-      dayLabel: this.getDayLabel(date),
-      dateLabel: this.getDateLabel(date),
-      hours,
-    }));
+    return candidates;
   }
 
   private syncSelectionsWithParameter() {
