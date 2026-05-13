@@ -39,7 +39,6 @@ export const RegionConfigurationSchema = z.object({
   enableDangerSources: z.boolean().nullish(),
   enableObservations: z.boolean().nullish(),
   enableModelling: z.boolean().nullish(),
-  enableWeatherbox: z.boolean().nullish(),
   enableIcon: z.boolean().nullish(),
   enableLineaExport: z.boolean().nullish(),
   enableStrategicMindset: z.boolean().nullish(),

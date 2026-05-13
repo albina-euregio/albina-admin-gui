@@ -3,11 +3,10 @@ import { Routes } from "@angular/router";
 import { AuthGuard } from "../guards/auth.guard";
 import { AwsomeComponent } from "./awsome.component";
 import { ForecastComponent } from "./forecast.component";
-import { ZamgWbtComponent } from "./zamg-wbt.component";
 
 export interface ModellingRouteData {
   title: string;
-  modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt" | "graphics";
+  modelling: "geosphere" | "snowpack" | "awsome" | "graphics";
 }
 
 export default [
@@ -27,15 +26,6 @@ export default [
       modelling: "awsome",
     } satisfies ModellingRouteData,
     component: AwsomeComponent,
-    canActivate: [], // no authentication
-  },
-  {
-    path: "zamg-wbt",
-    data: {
-      title: "SNOWPACK",
-      modelling: "zamg-wbt",
-    } satisfies ModellingRouteData,
-    component: ZamgWbtComponent,
     canActivate: [], // no authentication
   },
 ] satisfies Routes;
