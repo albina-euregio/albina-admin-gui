@@ -63,18 +63,6 @@
               </a>
             </li>
           }
-          @if (authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()) {
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                routerLinkActive="active"
-                [routerLink]="['/modelling/zamg-wbt']"
-                ngxMousetrapKey="g w"
-              >
-                {{ "sidebar.weatherbox" | translate }}
-              </a>
-            </li>
-          }
           <li class="nav-item">
             <a class="nav-link" routerLinkActive="active" [routerLink]="['/graphics']" ngxMousetrapKey="g g">
               {{ "sidebar.graphics" | translate }}
@@ -271,13 +259,6 @@
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']" ngxMousetrapKey="g a">
             {{ "sidebar.awsome" | translate }}
-          </a>
-        </li>
-      }
-      @if (authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()) {
-        <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']">
-            {{ "sidebar.weatherbox" | translate }}
           </a>
         </li>
       }

@@ -1645,7 +1645,6 @@ export interface components {
       enableModelling?: boolean;
       enabledTextcatFields?: components["schemas"]["TextPart"][];
       enabledEditableFields?: components["schemas"]["TextPart"][];
-      enableWeatherbox?: boolean;
       enableIcon?: boolean;
       enableLineaExport?: boolean;
       defaultLang?: components["schemas"]["LanguageCode"];
