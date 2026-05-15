@@ -158,8 +158,8 @@ export class BulletinDaytimeDescriptionModel extends ZSchema(BulletinDaytimeDesc
         this.treeline = false;
         this.elevation = undefined;
         this.hasElevationDependency = false;
-        this.dangerRatingAbove = this.avalancheProblem1.getDangerRating();
-        this.dangerRatingBelow = this.avalancheProblem1.getDangerRating();
+        this.dangerRatingAbove = this.avalancheProblem1.getDangerRating() ?? Enums.DangerRating.low;
+        this.dangerRatingBelow = this.avalancheProblem1.getDangerRating() ?? Enums.DangerRating.low;
       }
     } else {
       this.treeline = false;

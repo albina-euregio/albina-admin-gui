@@ -68,6 +68,52 @@ $region-form-width: 512px;
   }
 }
 
+.region-form__no-snow-row {
+  padding: $space-3 $region-form-padding;
+  border-bottom: $region-form-border;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.region-form__no-snow-label {
+  margin-bottom: 0;
+}
+
+.region-form__no-snow-toggle {
+  width: 44px;
+  height: 24px;
+  border: 0;
+  border-radius: 12px;
+  background: $gray-400;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: background-color 0.2s ease;
+
+  &:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+  }
+}
+
+.region-form__no-snow-toggle-knob {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $white;
+  transition: transform 0.2s ease;
+}
+
+.region-form__no-snow-toggle--active {
+  background: $primary;
+
+  .region-form__no-snow-toggle-knob {
+    transform: translateX(20px);
+  }
+}
+
 .strategic-mindset__table {
   td {
     vertical-align: top;
