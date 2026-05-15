@@ -163,6 +163,46 @@ export class AvalancheBulletinComponent implements OnInit {
     this.updateBulletinOnServer();
   }
 
+  toggleNoSnow(event: Event) {
+    event.stopPropagation();
+
+    const forenoon = this.bulletin().forenoon;
+    const afternoon = this.bulletin().afternoon;
+
+    if (this.isNoSnowSelected()) {
+      forenoon.updateDangerRating();
+      afternoon.updateDangerRating();
+    } else {
+      this.bulletin().hasDaytimeDependency = false;
+
+      forenoon.hasElevationDependency = false;
+      forenoon.elevation = undefined;
+      forenoon.treeline = false;
+      forenoon.dangerRatingAbove = Enums.DangerRating.no_snow;
+      forenoon.dangerRatingBelow = Enums.DangerRating.no_snow;
+
+      afternoon.hasElevationDependency = false;
+      afternoon.elevation = undefined;
+      afternoon.treeline = false;
+      afternoon.dangerRatingAbove = Enums.DangerRating.no_snow;
+      afternoon.dangerRatingBelow = Enums.DangerRating.no_snow;
+    }
+
+    this.updateBulletinOnServer();
+  }
+
+  isNoSnowSelected() {
+    const forenoon = this.bulletin().forenoon;
+    const afternoon = this.bulletin().afternoon;
+
+    return (
+      forenoon?.dangerRatingAbove === Enums.DangerRating.no_snow ||
+      forenoon?.dangerRatingBelow === Enums.DangerRating.no_snow ||
+      afternoon?.dangerRatingAbove === Enums.DangerRating.no_snow ||
+      afternoon?.dangerRatingBelow === Enums.DangerRating.no_snow
+    );
+  }
+
   isTendency(tendency: Enums.Tendency) {
     return tendency === this.bulletin().tendency;
   }

@@ -463,7 +463,8 @@
         "dangerPatterns": "Danger patterns",
         "tendencyComment": "Description of tendency",
         "synopsisComment": "Weather synopsis",
-        "notes": "Notes"
+        "notes": "Notes",
+        "noSnow": "No snow"
       },
       "copyRegion": {
         "label": "Copy warning region to another bulletin",
