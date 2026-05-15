@@ -818,38 +818,37 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         } else {
           for (const entry of data) {
             if (entry === "missingDangerRating") {
+              message += this.translateService.instant("bulletins.table.bulletinCheck.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingDangerRatingModificator") {
               message +=
-                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingDangerRating") + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingDangerRatingModificator") + "<br>";
             }
             if (entry === "missingRegion") {
-              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingRegion") + "<br>";
+              message += this.translateService.instant("bulletins.table.bulletinCheck.missingRegion") + "<br>";
             }
             if (entry === "missingAvActivityHighlights") {
               message +=
-                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityHighlights") +
-                "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingAvActivityHighlights") + "<br>";
             }
             if (entry === "missingAvActivityComment") {
               message +=
-                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityComment") + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingAvActivityComment") + "<br>";
             }
             if (entry === "missingSnowpackStructureHighlights") {
               message +=
-                this.translateService.instant(
-                  "bulletins.table.checkBulletinsDialog.missingSnowpackStructureHighlights",
-                ) + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingSnowpackStructureHighlights") +
+                "<br>";
             }
             if (entry === "missingSnowpackStructureComment") {
               message +=
-                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingSnowpackStructureComment") +
-                "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingSnowpackStructureComment") + "<br>";
             }
             if (entry === "pendingSuggestions") {
-              message +=
-                this.translateService.instant("bulletins.table.checkBulletinsDialog.pendingSuggestions") + "<br>";
+              message += this.translateService.instant("bulletins.table.bulletinCheck.pendingSuggestions") + "<br>";
             }
             if (entry === "incompleteTranslation") {
-              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.incompleteTranslation");
+              message += this.translateService.instant("bulletins.table.bulletinCheck.incompleteTranslation");
             }
           }
         }
@@ -2165,39 +2164,37 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
               duplicateRegion = true;
             }
             if (entry === "missingDangerRating") {
+              message += this.translateService.instant("bulletins.table.bulletinCheck.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingDangerRatingModificator") {
               message +=
-                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingDangerRating") + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingDangerRatingModificator") + "<br>";
             }
             if (entry === "missingRegion") {
-              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingRegion") + "<br>";
+              message += this.translateService.instant("bulletins.table.bulletinCheck.missingRegion") + "<br>";
             }
             if (entry === "missingAvActivityHighlights") {
               message +=
-                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityHighlights") +
-                "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingAvActivityHighlights") + "<br>";
             }
             if (entry === "missingAvActivityComment") {
               message +=
-                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityComment") +
-                "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingAvActivityComment") + "<br>";
             }
             if (entry === "missingSnowpackStructureHighlights") {
               message +=
-                this.translateService.instant(
-                  "bulletins.table.submitBulletinsDialog.missingSnowpackStructureHighlights",
-                ) + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingSnowpackStructureHighlights") +
+                "<br>";
             }
             if (entry === "missingSnowpackStructureComment") {
               message +=
-                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureComment") +
-                "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingSnowpackStructureComment") + "<br>";
             }
             if (entry === "pendingSuggestions") {
-              message +=
-                this.translateService.instant("bulletins.table.submitBulletinsDialog.pendingSuggestions") + "<br>";
+              message += this.translateService.instant("bulletins.table.bulletinCheck.pendingSuggestions") + "<br>";
             }
             if (entry === "incompleteTranslation") {
-              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+              message += this.translateService.instant("bulletins.table.bulletinCheck.incompleteTranslation") + "<br>";
             }
           }
 
@@ -2334,44 +2331,40 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
           for (const entry of data) {
             if (entry === "missingDangerRating") {
+              message += this.translateService.instant("bulletins.table.bulletinCheck.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingDangerRatingModificator") {
               message +=
-                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingDangerRating") + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingDangerRatingModificator") + "<br>";
             }
             if (entry === "missingRegion") {
-              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.missingRegion") + "<br>";
+              message += this.translateService.instant("bulletins.table.bulletinCheck.missingRegion") + "<br>";
             }
             if (entry === "duplicateRegion") {
-              message +=
-                this.translateService.instant("bulletins.table.publishBulletinsDialog.duplicateRegion") + "<br>";
+              message += this.translateService.instant("bulletins.table.bulletinCheck.duplicateRegion") + "<br>";
             }
             if (entry === "missingAvActivityHighlights") {
               message +=
-                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityHighlights") +
-                "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingAvActivityHighlights") + "<br>";
             }
             if (entry === "missingAvActivityComment") {
               message +=
-                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityComment") +
-                "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingAvActivityComment") + "<br>";
             }
             if (entry === "missingSnowpackStructureHighlights") {
               message +=
-                this.translateService.instant(
-                  "bulletins.table.publishBulletinsDialog.missingSnowpackStructureHighlights",
-                ) + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingSnowpackStructureHighlights") +
+                "<br>";
             }
             if (entry === "missingSnowpackStructureComment") {
               message +=
-                this.translateService.instant(
-                  "bulletins.table.publishBulletinsDialog.missingSnowpackStructureComment",
-                ) + "<br>";
+                this.translateService.instant("bulletins.table.bulletinCheck.missingSnowpackStructureComment") + "<br>";
             }
             if (entry === "pendingSuggestions") {
-              message +=
-                this.translateService.instant("bulletins.table.publishBulletinsDialog.pendingSuggestions") + "<br>";
+              message += this.translateService.instant("bulletins.table.bulletinCheck.pendingSuggestions") + "<br>";
             }
             if (entry === "incompleteTranslation") {
-              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+              message += this.translateService.instant("bulletins.table.bulletinCheck.incompleteTranslation");
             }
           }
 

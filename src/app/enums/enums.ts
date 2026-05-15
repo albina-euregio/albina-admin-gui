@@ -21,6 +21,7 @@ export const WarnLevel = {
 };
 
 export enum DangerRatingModificator {
+  none = "none",
   minus = "minus",
   equal = "equal",
   plus = "plus",
