@@ -639,16 +639,7 @@
         "republished": "republished"
       },
       "publishBulletinsDialog": {
-        "message": "Do you want to publish the bulletin?",
-        "missingDangerRating": "Danger rating not set",
-        "missingRegion": "Regions not rated",
-        "duplicateRegion": "Regions rated multiple times",
-        "missingAvActivityHighlights": "Headline avalanche situation missing",
-        "missingAvActivityComment": "Description of avalanche danger missing",
-        "missingSnowpackStructureHighlights": "Headline snowpack structure missing",
-        "missingSnowpackStructureComment": "Description of snowpack structure missing",
-        "pendingSuggestions": "Pending suggestions",
-        "incompleteTranslation": "Incomplete translation"
+        "message": "Do you want to publish the bulletin?"
       },
       "publicationStatusDialog": {
         "headline": "Publication Status",
@@ -706,14 +697,7 @@
         "accept": "Ok"
       },
       "submitBulletinsDialog": {
-        "message": "Do you want to submit the bulletin?",
-        "missingDangerRating": "Danger rating not set",
-        "missingRegion": "Regions not rated",
-        "missingAvActivityHighlights": "Headline avalanche situation missing",
-        "missingAvActivityComment": "Description of avalanche danger missing",
-        "missingSnowpackStructureHighlights": "Headline snowpack structure missing",
-        "missingSnowpackStructureComment": "Description of snowpack structure missing",
-        "pendingSuggestions": "Pending suggestions"
+        "message": "Do you want to submit the bulletin?"
       },
       "submitBulletinsErrorDialog": {
         "message": "There was an error submitting the bulletins!",
@@ -733,19 +717,23 @@
       },
       "checkBulletinsDialog": {
         "message": "Check bulletin",
-        "missingDangerRating": "Danger rating not set",
-        "missingRegion": "Regions not rated",
-        "missingAvActivityHighlights": "Headline avalanche situation missing",
-        "missingAvActivityComment": "Description of avalanche danger missing",
-        "missingSnowpackStructureHighlights": "Headline snowpack structure missing",
-        "missingSnowpackStructureComment": "Description of snowpack structure missing",
-        "pendingSuggestions": "Pending suggestions",
-        "incompleteTranslation": "Incomplete translation",
         "ok": "(everything alright)"
       },
       "publishAllDialog": {
         "message": "Do you want to publish all regions?",
         "changeMessage": "Do you want to publish all regions? (no messages)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Danger rating not set",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingRegion": "Regions not rated",
+        "duplicateRegion": "Regions rated multiple times",
+        "missingAvActivityHighlights": "Headline avalanche situation missing",
+        "missingAvActivityComment": "Description of avalanche danger missing",
+        "missingSnowpackStructureHighlights": "Headline snowpack structure missing",
+        "missingSnowpackStructureComment": "Description of snowpack structure missing",
+        "pendingSuggestions": "Pending suggestions",
+        "incompleteTranslation": "Incomplete translation"
       }
     }
   },
