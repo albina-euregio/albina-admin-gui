@@ -69,6 +69,39 @@
   </div>
 
   <div class="btn-group">
+    @if (isDangerRatingModificator(modificatorEnum.none)) {
+      <button
+        [disabled]="
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
+        "
+        type="reset"
+        class="btn btn-sm btn-dark btn-icon"
+        (click)="setDangerRatingModificator($event, undefined)"
+      >
+        <i class="ph ph-x"></i>
+      </button>
+    }
+    @if (!isDangerRatingModificator(modificatorEnum.none)) {
+      <button
+        [disabled]="
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
+        "
+        type="reset"
+        class="btn btn-sm btn-outline-secondary btn-icon"
+        (click)="setDangerRatingModificator($event, modificatorEnum.none)"
+      >
+        <i class="ph ph-x"></i>
+      </button>
+    }
+
     @if (isDangerRatingModificator(modificatorEnum.minus)) {
       <button
         [disabled]="
