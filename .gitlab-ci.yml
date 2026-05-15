@@ -136,6 +136,30 @@ deploy:production:
       when: manual
       allow_failure: true
 
+build:www2:
+  extends: .envsubst
+  variables:
+    INITIAL_URL: ""
+    API_BASE_URL: "https://www2.avalanche.report/api/"
+    TEXTCAT_URL: "https://dev.avalanche.report/textcat-ng/"
+    AWSOME_CONFIG_URL: ""
+    HEADER_BG_COLOR: "#1a8943"
+    FAVICON_PATH: "assets/img/admin-favicon.ico"
+    LOGO_PATH: "assets/img/admin-logo.svg"
+  environment:
+    name: www2
+
+deploy:www2:
+  extends: .deploy
+  needs:
+    - build:production
+  environment:
+    name: www2
+  rules:
+    - if: "$CI_COMMIT_TAG"
+      when: manual
+      allow_failure: true
+
 build:aran:
   extends: .envsubst
   environment:
