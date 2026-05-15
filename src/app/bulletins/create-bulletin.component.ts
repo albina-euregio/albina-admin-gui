@@ -1595,8 +1595,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !avalancheProblem.matrixInformation ||
       !avalancheProblem.matrixInformation.snowpackStability ||
       !avalancheProblem.matrixInformation.frequency ||
-      !avalancheProblem.matrixInformation.avalancheSize ||
-      !avalancheProblem.matrixInformation.dangerRatingModificator
+      !avalancheProblem.matrixInformation.avalancheSize
     );
   }
 
