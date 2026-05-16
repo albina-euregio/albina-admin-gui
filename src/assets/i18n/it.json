@@ -30,7 +30,6 @@
     "modellingZamgMeteogram": "GeoSphere meteogramma",
     "modellingSnowpack": "Modello SNOWPACK",
     "modellingSnowpackMeteo": "Dati meteo simulati SNOWPACK",
-    "weatherbox": "Dashboard meteo",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
@@ -49,6 +48,7 @@
     },
     "headings": {
       "model": "Model",
+      "modelRun": "Model run",
       "region": "Meteo-nivo zona",
       "parameters": "Parameters",
       "level": "Level"
@@ -463,7 +463,8 @@
         "dangerPatterns": "Situazioni tipo",
         "tendencyComment": "Descrizione della tendenza",
         "synopsisComment": "Panoramica meteo",
-        "notes": "Commenti"
+        "notes": "Commenti",
+        "noSnow": "Senza neve"
       },
       "copyRegion": {
         "label": "Copia la meteo-nivo zona in un altro bollettino",
@@ -639,16 +640,7 @@
         "republished": "versione aggiornata pubblicata"
       },
       "publishBulletinsDialog": {
-        "message": "Vuoi pubblicare il bollettino valanghe?",
-        "missingDangerRating": "Grado di pericolo non definito",
-        "missingRegion": "  Meteo-nivo zone non valutate",
-        "duplicateRegion": "Meteo-nivo zone valutate più volte",
-        "missingAvActivityHighlights": "Manca il titolo situazione di pericolo",
-        "missingAvActivityComment": "Manca la valutazione pericolo valanghe",
-        "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
-        "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
-        "pendingSuggestions": "Proposta non confermata",
-        "incompleteTranslation": "Traduzione incompleta"
+        "message": "Vuoi pubblicare il bollettino valanghe?"
       },
       "publicationStatusDialog": {
         "headline": "Stato della pubblicazione",
@@ -706,14 +698,7 @@
         "accept": "Ok"
       },
       "submitBulletinsDialog": {
-        "message": "Vuoi inviare il bollettino valanghe?",
-        "missingDangerRating": "Grado di pericolo non definito",
-        "missingRegion": "Micro-zone non valutate",
-        "missingAvActivityHighlights": "Manca titolo situazione di pericolo",
-        "missingAvActivityComment": "Manca valutazione pericolo valanghe",
-        "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
-        "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
-        "pendingSuggestions": "Proposta non confermata"
+        "message": "Vuoi inviare il bollettino valanghe?"
       },
       "submitBulletinsErrorDialog": {
         "message": "Errore durante l'invio del bollettino valanghe!",
@@ -733,19 +718,23 @@
       },
       "checkBulletinsDialog": {
         "message": "Controllare bollettino valanghe",
-        "missingDangerRating": "Grado di pericolo non definito",
-        "missingRegion": "Micro-aree non valutate",
-        "missingAvActivityHighlights": "Manca titolo situazione di pericolo",
-        "missingAvActivityComment": "Manca valutazione pericolo valanghe",
-        "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
-        "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
-        "pendingSuggestions": "Proposta non confermata",
-        "incompleteTranslation": "Traduzione incompleta",
         "ok": "(tutto va bene)"
       },
       "publishAllDialog": {
         "message": "Vuoi pubblicare tutte le meteo-nivo zone?",
         "changeMessage": "Vuoi pubblicare tutte le meteo-nivo zone? (senza messaggi)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Grado di pericolo non definito",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingRegion": "  Meteo-nivo zone non valutate",
+        "duplicateRegion": "Meteo-nivo zone valutate più volte",
+        "missingAvActivityHighlights": "Manca titolo situazione di pericolo",
+        "missingAvActivityComment": "Manca valutazione pericolo valanghe",
+        "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
+        "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
+        "pendingSuggestions": "Proposta non confermata",
+        "incompleteTranslation": "Traduzione incompleta"
       }
     }
   },

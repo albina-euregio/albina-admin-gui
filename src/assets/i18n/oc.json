@@ -30,7 +30,6 @@
     "modellingZamgMeteogram": "meteograma GeoSphere",
     "modellingSnowpack": "Modèl SNOWPACK",
     "modellingSnowpackMeteo": "Modèl meteo SNOWPACK",
-    "weatherbox": "Caisha meteorologica",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
@@ -49,6 +48,7 @@
     },
     "headings": {
       "model": "Model",
+      "modelRun": "Model run",
       "region": "Region",
       "parameters": "Parameters",
       "level": "Level"
@@ -463,7 +463,8 @@
         "dangerPatterns": "Patrons de perilh",
         "tendencyComment": "Descripcion de tendéncia",
         "synopsisComment": "Sinopsi deth temps",
-        "notes": "Nòtes"
+        "notes": "Nòtes",
+        "noSnow": "Sense nhèu"
       },
       "copyRegion": {
         "label": "Copiar era region d'alèrta a un aute bulletin",
@@ -639,16 +640,7 @@
         "republished": "re-publicat"
       },
       "publishBulletinsDialog": {
-        "message": "Vòs publicar eth bulletin?",
-        "missingDangerRating": "Grad de perilh non establit",
-        "missingRegion": "Regions sense grad de perilh",
-        "duplicateRegion": "Regions avalorades diuèrsi viatges",
-        "missingAvActivityHighlights": "Manque eth titular dera situacion de lauegi",
-        "missingAvActivityComment": "Manque era descripcion deth perilh de lauegi",
-        "missingSnowpackStructureHighlights": "Manque eth titular dera estructura deth celh de nhèu",
-        "missingSnowpackStructureComment": "Manque era descripcion deth celh de nhèu",
-        "pendingSuggestions": "Suggeriments pendenti",
-        "incompleteTranslation": "Revirada incomplèta"
+        "message": "Vòs publicar eth bulletin?"
       },
       "publicationStatusDialog": {
         "headline": "Estat dera publicacion",
@@ -706,14 +698,7 @@
         "accept": "Òc ben"
       },
       "submitBulletinsDialog": {
-        "message": "Vòs enviar eth bulletin?",
-        "missingDangerRating": "Grad de perilh non establit",
-        "missingRegion": "Regions sense grad de perilh",
-        "missingAvActivityHighlights": "Manque eth titular dera situacion de lauegi",
-        "missingAvActivityComment": "Manque era descripcion deth perilh de lauegi",
-        "missingSnowpackStructureHighlights": "Manque eth titular dera estructura deth celh de nhèu",
-        "missingSnowpackStructureComment": "Manque era descripcion deth celh de nhèu",
-        "pendingSuggestions": "Suggeriments pendenti"
+        "message": "Vòs enviar eth bulletin?"
       },
       "submitBulletinsErrorDialog": {
         "message": "S'ha produït un error en enviar butlletins!",
@@ -733,19 +718,23 @@
       },
       "checkBulletinsDialog": {
         "message": "Verificar eth bulletin",
-        "missingDangerRating": "Grad de perilh non establit",
-        "missingRegion": "Regions sense grad de perilh",
-        "missingAvActivityHighlights": "Manque eth titular dera situacion de lauegi",
-        "missingAvActivityComment": "Manque era descripcion deth perilh de lauegi",
-        "missingSnowpackStructureHighlights": "Manque eth titular dera estructura deth celh de nhèu",
-        "missingSnowpackStructureComment": "Manque era descripcion deth celh de nhèu",
-        "pendingSuggestions": "Suggeriments pendenti",
-        "incompleteTranslation": "Revirada incomplèta",
         "ok": "(tot corrècte)"
       },
       "publishAllDialog": {
         "message": "Vòs publicar totes es regions?",
         "changeMessage": "Vòs publicar totes es regions? (sense messatges)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Grad de perilh non establit",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingRegion": "Regions sense grad de perilh",
+        "duplicateRegion": "Regions avalorades diuèrsi viatges",
+        "missingAvActivityHighlights": "Manque eth titular dera situacion de lauegi",
+        "missingAvActivityComment": "Manque era descripcion deth perilh de lauegi",
+        "missingSnowpackStructureHighlights": "Manque eth titular dera estructura deth celh de nhèu",
+        "missingSnowpackStructureComment": "Manque era descripcion deth celh de nhèu",
+        "pendingSuggestions": "Suggeriments pendenti",
+        "incompleteTranslation": "Revirada incomplèta"
       }
     }
   },

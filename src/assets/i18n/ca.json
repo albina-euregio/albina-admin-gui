@@ -30,7 +30,6 @@
     "modellingZamgMeteogram": "Meteograma GeoSphere",
     "modellingSnowpack": "SNOWPACK model",
     "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
-    "weatherbox": "Caixa meteorològica",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
@@ -49,6 +48,7 @@
     },
     "headings": {
       "model": "Model",
+      "modelRun": "Model run",
       "region": "Regió",
       "parameters": "Parameters",
       "level": "Level"
@@ -463,7 +463,8 @@
         "dangerPatterns": "Patrons de perill",
         "tendencyComment": "Descripció de la tendència",
         "synopsisComment": "Sinopsi meteorològica",
-        "notes": "Notes"
+        "notes": "Notes",
+        "noSnow": "Sense neu"
       },
       "copyRegion": {
         "label": "Copiar regió d'alerta a un altre butlletí",
@@ -639,16 +640,7 @@
         "republished": "re-publicat"
       },
       "publishBulletinsDialog": {
-        "message": "Vols publicar el butlletí?",
-        "missingDangerRating": "Grau de perill no especificat ",
-        "missingRegion": "Regions sense graduar",
-        "duplicateRegion": "Regions graduades més d'un cop",
-        "missingAvActivityHighlights": "Falta el titular de la situació d'allaus",
-        "missingAvActivityComment": "Falta la descripció del perill d'allaus",
-        "missingSnowpackStructureHighlights": "Falta titular estructura mantell",
-        "missingSnowpackStructureComment": "Falta la descripció de l'estructura del mantell",
-        "pendingSuggestions": "Suggeriments pendents",
-        "incompleteTranslation": "Traducció incompleta"
+        "message": "Vols publicar el butlletí?"
       },
       "publicationStatusDialog": {
         "headline": "Estat de la publicació",
@@ -706,14 +698,7 @@
         "accept": "D'acord"
       },
       "submitBulletinsDialog": {
-        "message": "Vols enviar el butlletí?",
-        "missingDangerRating": "Grau de perill no especificat ",
-        "missingRegion": "Regions sense graduar",
-        "missingAvActivityHighlights": "Falta el titular de la situació d'allaus",
-        "missingAvActivityComment": "Falta la descripció del perill d'allaus",
-        "missingSnowpackStructureHighlights": "Falta titular estructura mantell",
-        "missingSnowpackStructureComment": "Falta la descripció de l'estructura del mantell",
-        "pendingSuggestions": "Suggeriments pendents"
+        "message": "Vols enviar el butlletí?"
       },
       "submitBulletinsErrorDialog": {
         "message": "Hi ha hagut un error pujant els butlletins!",
@@ -733,19 +718,23 @@
       },
       "checkBulletinsDialog": {
         "message": "Comprovar el butlletí",
-        "missingDangerRating": "Grau de perill no especificat ",
-        "missingRegion": "Regions sense graduar",
-        "missingAvActivityHighlights": "Falta el titular de la situació d'allaus",
-        "missingAvActivityComment": "Falta la descripció del perill d'allaus",
-        "missingSnowpackStructureHighlights": "Falta titular estructura mantell",
-        "missingSnowpackStructureComment": "Falta la descripció de l'estructura del mantell",
-        "pendingSuggestions": "Suggeriments pendents",
-        "incompleteTranslation": "Traducció incompleta",
         "ok": "(tot correcte)"
       },
       "publishAllDialog": {
         "message": "Vols publicar totes les regions?",
         "changeMessage": "Voleu publicar totes les regions? (sense missatges)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Grau de perill no especificat ",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingRegion": "Regions sense graduar",
+        "duplicateRegion": "Regions graduades més d'un cop",
+        "missingAvActivityHighlights": "Falta el titular de la situació d'allaus",
+        "missingAvActivityComment": "Falta la descripció del perill d'allaus",
+        "missingSnowpackStructureHighlights": "Falta titular estructura mantell",
+        "missingSnowpackStructureComment": "Falta la descripció de l'estructura del mantell",
+        "pendingSuggestions": "Suggeriments pendents",
+        "incompleteTranslation": "Traducció incompleta"
       }
     }
   },

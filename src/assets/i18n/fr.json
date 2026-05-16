@@ -30,7 +30,6 @@
     "modellingZamgMeteogram": "GeoSphere météogramme",
     "modellingSnowpack": "SNOWPACK model",
     "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
-    "weatherbox": "Boîte météo",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
@@ -49,6 +48,7 @@
     },
     "headings": {
       "model": "Model",
+      "modelRun": "Model run",
       "region": "Région de prévision",
       "parameters": "Parameters",
       "level": "Level"
@@ -463,7 +463,8 @@
         "dangerPatterns": "Modèle de risques",
         "tendencyComment": "Description de la tendance",
         "synopsisComment": "Bulletin météo",
-        "notes": "Notes"
+        "notes": "Notes",
+        "noSnow": "Pas de neige"
       },
       "copyRegion": {
         "label": "Copier la région de prévision dans un autre bulletin",
@@ -639,16 +640,7 @@
         "republished": "publié à nouveau"
       },
       "publishBulletinsDialog": {
-        "message": "Publier le bulletin ?",
-        "missingDangerRating": "Indice de risque non défini",
-        "missingRegion": "Régions non évaluée",
-        "duplicateRegion": "Régions notées plusieurs fois",
-        "missingAvActivityHighlights": "Titre situation avalancheuse manque",
-        "missingAvActivityComment": "Description du danger d'avalanche manque",
-        "missingSnowpackStructureHighlights": "Titre structure du manteau neigeux manque",
-        "missingSnowpackStructureComment": "Description structure du manteau neigeux manque",
-        "pendingSuggestions": "Propositions en attente",
-        "incompleteTranslation": "Traduction incomplète"
+        "message": "Publier le bulletin ?"
       },
       "publicationStatusDialog": {
         "headline": "Statut de publication",
@@ -706,14 +698,7 @@
         "accept": "Ok"
       },
       "submitBulletinsDialog": {
-        "message": "Envoyer le bulletin ?",
-        "missingDangerRating": "Indice de risque non défini",
-        "missingRegion": "Régions non évaluée",
-        "missingAvActivityHighlights": "Titre situation avalancheuse manque",
-        "missingAvActivityComment": "Description du danger d'avalanche manque",
-        "missingSnowpackStructureHighlights": "Titre structure du manteau neigeux manque",
-        "missingSnowpackStructureComment": "Description structure du manteau neigeux manque",
-        "pendingSuggestions": "Propositions en attente"
+        "message": "Envoyer le bulletin ?"
       },
       "submitBulletinsErrorDialog": {
         "message": "Erreur lors de l'envoi des bulletins !",
@@ -733,19 +718,23 @@
       },
       "checkBulletinsDialog": {
         "message": "Contrôler le bulletin",
-        "missingDangerRating": "Indice de risque non défini",
-        "missingRegion": "Régions non évaluée",
-        "missingAvActivityHighlights": "Titre situation avalancheuse manque",
-        "missingAvActivityComment": "Description du danger d'avalanche manque",
-        "missingSnowpackStructureHighlights": "Titre structure du manteau neigeux manque",
-        "missingSnowpackStructureComment": "Description structure du manteau neigeux manque",
-        "pendingSuggestions": "Propositions en attente",
-        "incompleteTranslation": "Traduction incomplète",
         "ok": "(tout bon)"
       },
       "publishAllDialog": {
         "message": "Publier toutes les régions ?",
         "changeMessage": "Publier toutes les régions ? (pas de messages)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Indice de risque non défini",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingRegion": "Régions non évaluée",
+        "duplicateRegion": "Régions notées plusieurs fois",
+        "missingAvActivityHighlights": "Titre situation avalancheuse manque",
+        "missingAvActivityComment": "Description du danger d'avalanche manque",
+        "missingSnowpackStructureHighlights": "Titre structure du manteau neigeux manque",
+        "missingSnowpackStructureComment": "Description structure du manteau neigeux manque",
+        "pendingSuggestions": "Propositions en attente",
+        "incompleteTranslation": "Traduction incomplète"
       }
     }
   },

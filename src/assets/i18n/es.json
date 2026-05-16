@@ -30,7 +30,6 @@
     "modellingZamgMeteogram": "Meteograma GeoSphere",
     "modellingSnowpack": "modelo SNOWPACK",
     "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
-    "weatherbox": "Caja meteorológica",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
@@ -49,6 +48,7 @@
     },
     "headings": {
       "model": "Model",
+      "modelRun": "Model run",
       "region": "Región",
       "parameters": "Parameters",
       "level": "Level"
@@ -463,7 +463,8 @@
         "dangerPatterns": "Patrón de peligro",
         "tendencyComment": "Descripción de la tendencia",
         "synopsisComment": "Sinopsis del tiempo",
-        "notes": "Notas"
+        "notes": "Notas",
+        "noSnow": "Sin nieve"
       },
       "copyRegion": {
         "label": "Copiar región de alerta a otro boletín",
@@ -639,16 +640,7 @@
         "republished": "republicado"
       },
       "publishBulletinsDialog": {
-        "message": "¿Quieres publicar el boletín?",
-        "missingDangerRating": "Grado de peligro no establecido",
-        "missingRegion": "Regiones no establecidas",
-        "duplicateRegion": "Regiones establecidas varias veces",
-        "missingAvActivityHighlights": "Falta el titular de la situación de aludes",
-        "missingAvActivityComment": "Falta la descripción del peligro de aludes",
-        "missingSnowpackStructureHighlights": "Falta el titular de la estructura del manto",
-        "missingSnowpackStructureComment": "Falta la descripción de la estructura del manto",
-        "pendingSuggestions": "Sugerencias pendientes",
-        "incompleteTranslation": "Traducción incompleta"
+        "message": "¿Quieres publicar el boletín?"
       },
       "publicationStatusDialog": {
         "headline": "Estado de publicación",
@@ -706,14 +698,7 @@
         "accept": "De acuerdo"
       },
       "submitBulletinsDialog": {
-        "message": "¿Quieres enviar el boletín?",
-        "missingDangerRating": "Grado de peligro no establecido",
-        "missingRegion": "Regiones no establecidas",
-        "missingAvActivityHighlights": "Falta el titular de la situación de aludes",
-        "missingAvActivityComment": "Falta la descripción del peligro de aludes",
-        "missingSnowpackStructureHighlights": "Falta el titular de la estructura del manto",
-        "missingSnowpackStructureComment": "Falta la descripción de la estructura del manto",
-        "pendingSuggestions": "Sugerencias pendientes"
+        "message": "¿Quieres enviar el boletín?"
       },
       "submitBulletinsErrorDialog": {
         "message": "¡Se ha producido un error enviando los boletines!",
@@ -733,19 +718,23 @@
       },
       "checkBulletinsDialog": {
         "message": "Comprobar boletín",
-        "missingDangerRating": "Grado de peligro no establecido",
-        "missingRegion": "Regiones no establecidas",
-        "missingAvActivityHighlights": "Falta el titular de la situación de aludes",
-        "missingAvActivityComment": "Falta la descripción del peligro de aludes",
-        "missingSnowpackStructureHighlights": "Falta el titular de la estructura del manto",
-        "missingSnowpackStructureComment": "Falta la descripción de la estructura del manto",
-        "pendingSuggestions": "Sugerencias pendientes",
-        "incompleteTranslation": "Traducción incompleta",
         "ok": "(todo bien)"
       },
       "publishAllDialog": {
         "message": "¿Quieres publicar todas las regiones?",
         "changeMessage": "¿Quieres publicar todas las regiones? (sin mensajes)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Grado de peligro no establecido",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingRegion": "Regiones no establecidas",
+        "duplicateRegion": "Regiones establecidas varias veces",
+        "missingAvActivityHighlights": "Falta el titular de la situación de aludes",
+        "missingAvActivityComment": "Falta la descripción del peligro de aludes",
+        "missingSnowpackStructureHighlights": "Falta el titular de la estructura del manto",
+        "missingSnowpackStructureComment": "Falta la descripción de la estructura del manto",
+        "pendingSuggestions": "Sugerencias pendientes",
+        "incompleteTranslation": "Traducción incompleta"
       }
     }
   },

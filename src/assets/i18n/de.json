@@ -30,7 +30,6 @@
     "modellingZamgMeteogram": "GeoSphere Meteogramm",
     "modellingSnowpack": "SNOWPACK Modell",
     "modellingSnowpackMeteo": "Modellierte Meteodaten SNOWPACK",
-    "weatherbox": "Wetterbox",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
@@ -49,6 +48,7 @@
     },
     "headings": {
       "model": "Modell",
+      "modelRun": "Modelllauf",
       "region": "Region",
       "parameters": "Parameter",
       "level": "Level"
@@ -463,7 +463,8 @@
         "dangerPatterns": "Gefahrenmuster",
         "tendencyComment": "Beschreibung der Tendenz",
         "synopsisComment": "Wettervorhersage",
-        "notes": "Notizen"
+        "notes": "Notizen",
+        "noSnow": "Kein Schnee"
       },
       "copyRegion": {
         "label": "Warnregion zu anderem Bulletin kopieren",
@@ -639,16 +640,7 @@
         "republished": "Update publiziert"
       },
       "publishBulletinsDialog": {
-        "message": "Willst du die Lawinenvorhersage publizieren?",
-        "missingDangerRating": "Gefahrenstufe nicht definiert",
-        "missingRegion": "Regionen nicht beurteilt",
-        "duplicateRegion": "Regionen mehrfach beurteilt",
-        "missingAvActivityHighlights": "Schlagzeile Gefahrensituation fehlt",
-        "missingAvActivityComment": "Beurteilung der Lawinengefahr fehlt",
-        "missingSnowpackStructureHighlights": "Schlagzeile des Schneedeckenaufbaus fehlt",
-        "missingSnowpackStructureComment": "Beurteilung des Schneedeckenaufbaus fehlt",
-        "pendingSuggestions": "Unbeantwortete Vorschläge",
-        "incompleteTranslation": "Unvollständige Übersetzung"
+        "message": "Willst du die Lawinenvorhersage publizieren?"
       },
       "publicationStatusDialog": {
         "headline": "Status der Publikation",
@@ -706,14 +698,7 @@
         "accept": "Ok"
       },
       "submitBulletinsDialog": {
-        "message": "Willst du die Lawinenvorhersage absenden?",
-        "missingDangerRating": "Gefahrenstufe nicht definiert",
-        "missingRegion": "Regionen nicht beurteilt",
-        "missingAvActivityHighlights": "Schlagzeile der Lawinengefahr fehlt",
-        "missingAvActivityComment": "Beurteilung der Lawinengefahr fehlt",
-        "missingSnowpackStructureHighlights": "Schlagzeile des Schneedeckenaufbaus fehlt",
-        "missingSnowpackStructureComment": "Beurteilung des Schneedeckenaufbaus fehlt",
-        "pendingSuggestions": "Unbeantwortete Vorschläge"
+        "message": "Willst du die Lawinenvorhersage absenden?"
       },
       "submitBulletinsErrorDialog": {
         "message": "Beim Absenden der Lawinenvorhersage ist ein Fehler aufgetreten!",
@@ -733,19 +718,23 @@
       },
       "checkBulletinsDialog": {
         "message": "Lawinenvorhersage prüfen",
-        "missingDangerRating": "Gefahrenstufe nicht definiert",
-        "missingRegion": "Regionen nicht beurteilt",
-        "missingAvActivityHighlights": "Schlagzeile der Lawinengefahr fehlt",
-        "missingAvActivityComment": "Beurteilung der Lawinengefahr fehlt",
-        "missingSnowpackStructureHighlights": "Schlagzeile des Schneedeckenaufbaus fehlt",
-        "missingSnowpackStructureComment": "Beurteilung des Schneedeckenaufbaus fehlt",
-        "pendingSuggestions": "Unbeantwortete Vorschläge",
-        "incompleteTranslation": "Unvollständige Übersetzung",
         "ok": "(alles ok)"
       },
       "publishAllDialog": {
         "message": "Willst du alle Regionen publizieren?",
         "changeMessage": "Willst du alle Regionen publizieren? (keine Nachrichten)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Gefahrenstufe nicht definiert",
+        "missingDangerRatingModificator": "Modifikator für die Gefahrenstufe nicht ausgewählt",
+        "missingRegion": "Regionen nicht beurteilt",
+        "duplicateRegion": "Regionen mehrfach beurteilt",
+        "missingAvActivityHighlights": "Schlagzeile Gefahrensituation fehlt",
+        "missingAvActivityComment": "Beurteilung der Lawinengefahr fehlt",
+        "missingSnowpackStructureHighlights": "Schlagzeile des Schneedeckenaufbaus fehlt",
+        "missingSnowpackStructureComment": "Beurteilung des Schneedeckenaufbaus fehlt",
+        "pendingSuggestions": "Unbeantwortete Vorschläge",
+        "incompleteTranslation": "Unvollständige Übersetzung"
       }
     }
   },
