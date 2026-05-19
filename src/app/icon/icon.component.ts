@@ -43,6 +43,14 @@ const EUREGIO_REGION: SelectorOption = { id: "euregio", label: "EUREGIO", labelK
 const EUROPE_REGION: SelectorOption = { id: "eu", label: "Europe", labelKey: "weather.regions.europe" };
 const ALPS_REGION: SelectorOption = { id: "al", label: "Alps", labelKey: "weather.regions.alps" };
 const ATLANTIC_REGION: SelectorOption = { id: "at", label: "Atlantic", labelKey: "weather.regions.atlantic" };
+const HPA_APPROX_HEIGHT_M: Record<string, number> = {
+  "925": 750,
+  "850": 1500,
+  "800": 2000,
+  "700": 3000,
+  "500": 5500,
+  "300": 9000,
+};
 const GFS_LEVELS: SelectorOption[] = ["500", "700", "800", "850", "925"].map((level) => ({
   id: level,
   label: `${level} hPa`,
@@ -141,6 +149,15 @@ export class IconComponent implements OnInit {
 
   get selectedLevelLabel(): string {
     return this.getOptionLabel(this.availableLevels.find((level) => level.id === this.selectedLevel));
+  }
+
+  getLevelTooltip(level: SelectorOption): string | null {
+    const approxHeight = HPA_APPROX_HEIGHT_M[level.id];
+    if (!approxHeight) return null;
+
+    return this.translateService.instant("weather.tooltips.levelApproxElevation", {
+      height: approxHeight,
+    });
   }
 
   get availableGfsRuns(): string[] {

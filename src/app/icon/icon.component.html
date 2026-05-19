@@ -157,6 +157,7 @@
                     class="btn btn-sm sidebar-chip"
                     [class.btn-primary]="selectedLevel === level.id"
                     [class.btn-outline-primary]="selectedLevel !== level.id"
+                    [attr.title]="getLevelTooltip(level)"
                     (click)="selectLevel(level.id)"
                   >
                     {{ level.labelKey ? (level.labelKey | translate) : level.label }}
