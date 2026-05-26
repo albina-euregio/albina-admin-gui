@@ -2,6 +2,39 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.4.2] - 2026-05-26
+
+### 🚀 Features
+
+- _(graphics)_ Add team stress level chart
+- _(graphics)_ Add danger source plots
+- _(create-bulletin)_ Show publication-in-progress
+- _(publication-checklist)_ Major improvements
+- _(publication-checklist)_ Store on server
+- _(weather)_ Add weather maps (ICON and GFS)
+- _(bulletin)_ Add X for no danger-rating-modificator, check presence of selection
+- _(bulletin)_ Allow to select no_snow as danger rating for warning region
+
+### 🐛 Bug Fixes
+
+- _(statistics)_ Show alert when download failed
+- _(danger-sources)_ Do not rebuild variants list
+- _(qfa)_ Ignore timestamp of file transfer
+- _(textcat)_ Improve copying of texts
+- _(compare-bulletin)_ Fix compare text after text change
+- _(graphics)_ Show menu entry only if enableLineaExport
+- _(bulletins.service)_ Load status for active date outside of preloaded range
+
+### 🧪 Testing
+
+- _(observations)_ Update weather station tests
+
+### ⚙️ Miscellaneous Tasks
+
+- _(settings)_ Oxc as default formatter for HTML files
+- _(linea)_ Update to v8.24.1
+- _(weather-box)_ Remove component
+
 ## [8.4.1] - 2026-04-10
 
 ### 🚀 Features
