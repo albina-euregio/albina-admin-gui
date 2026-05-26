@@ -119,6 +119,17 @@
 
 - Migrate to oxfmt
 
+## [8.2.1] - 2026-02-09
+
+### 🐛 Bug Fixes
+
+- Undefined activeRegion after logout
+- Load bulletins from yesterday
+
+### ⚙️ Miscellaneous Tasks
+
+- Update linea to v8.7.1
+
 ## [8.2.0] - 2026-02-02
 
 ### 🚀 Features
