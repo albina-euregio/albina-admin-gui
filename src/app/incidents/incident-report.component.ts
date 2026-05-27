@@ -1,6 +1,7 @@
 import { Component, inject, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 
@@ -18,6 +19,7 @@ import { IncidentReport } from "./models/incident-report.model";
 })
 export class IncidentReportComponent {
   constantsService = inject(ConstantsService);
+  authenticationService = inject(AuthenticationService);
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
 
@@ -26,5 +28,14 @@ export class IncidentReportComponent {
   readonly Object = Object;
 
   readonly disabled = input<boolean>(false);
-  readonly incidentReport = model<IncidentReport>({ sourceOfInformation: [], damagedAssets: [] } as IncidentReport);
+  readonly incidentReport = model<IncidentReport>({
+    author: this.authenticationService.getCurrentAuthor()?.email,
+    authorAffiliation: this.authenticationService.getCurrentAuthor()?.organization,
+    publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
+    timestamp: new Date(),
+    reportStatus: "Draft",
+    sourceOfInformation: [],
+    damagedAssets: [],
+    dangerPattern: [],
+  } as IncidentReport);
 }

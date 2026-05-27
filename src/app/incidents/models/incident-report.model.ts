@@ -65,10 +65,9 @@ export const GeneralInformationSchema = z.object({
 
   reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]),
 
-  // TODO array?
-  externalLink: z.url(),
+  externalLink: z.url().nullish(),
 
-  generalInformationComment: z.string(),
+  generalInformationComment: z.string().nullish(),
 });
 
 export const LocationInformationSchema = z.object({
