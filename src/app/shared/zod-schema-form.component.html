@@ -7,7 +7,7 @@
       <div class="form-text">
         {{ helpI18n().replace("#", x.key) | translate }}
       </div>
-      @if (x.value.def.type === "enum") {
+      @if (x.value.type === "enum") {
         <app-toggle-btn-group
           [disabled]="disabled()"
           [enumValues]="Object.keys(x.value.def.entries)"
@@ -15,7 +15,7 @@
           (valueChange)="value.set(value())"
           [labelI18n]="`${x.key}.#`"
         />
-      } @else if (x.value.def.type === "array" && x.value.def.element.def.type === "enum") {
+      } @else if (x.value.type === "array" && x.value.def.element.type === "enum") {
         <app-toggle-btn-group
           [disabled]="disabled()"
           [enumValues]="Object.keys(x.value.def.element.def.entries)"
@@ -23,9 +23,9 @@
           (valuesChange)="value.set(value())"
           [labelI18n]="`${x.key}.#`"
         />
-      } @else if (x.value.def.type === "string") {
+      } @else if (x.value.type === "string") {
         <app-zod-input [zodType]="zodType().shape[x.key]" [(value)]="value()[x.key]" />
-      } @else if (x.value.def.type === "date") {
+      } @else if (x.value.type === "date") {
         <div class="input-group">
           <!-- TODO implement data binding -->
           <input type="date" class="form-control" [disabled]="disabled()" />
@@ -36,9 +36,9 @@
         </div>
       } @else {
         <div class="alert alert-danger" role="alert">
-          Unknown type {{ x.value.def.type }} for key {{ x.key }}
+          Unknown type {{ x.value.type }} for key {{ x.key }}
           <div>{{ x.key }}</div>
-          <div>{{ x.value.def.type }}</div>
+          <div>{{ x.value.type }}</div>
           <div>{{ JSON.stringify(x.value) }}</div>
         </div>
       }
