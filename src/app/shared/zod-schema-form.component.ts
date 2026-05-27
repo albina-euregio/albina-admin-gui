@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import z from "zod";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
-import { GeneralInformationSchema, MetaInformationSchema } from "../incidents/models/incident-report.model";
+import * as IncidentModels from "../incidents/models/incident-report.model";
 import { ZodInputComponent } from "./zod-input.component";
 
 @Component({
@@ -27,18 +27,33 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
 
-  zodObject = computed((): typeof MetaInformationSchema | typeof GeneralInformationSchema => {
-    const t = this.zodType() as unknown;
-    if (t === MetaInformationSchema) {
-      return MetaInformationSchema;
-    }
-    if (t === GeneralInformationSchema) {
-      return GeneralInformationSchema;
-    }
-    throw Error();
-  });
+  zodObject = computed(
+    ():
+      | typeof IncidentModels.MetaInformationSchema
+      | typeof IncidentModels.GeneralInformationSchema
+      | typeof IncidentModels.LocationInformationSchema => {
+      const t = this.zodType() as unknown;
+      if (t === IncidentModels.MetaInformationSchema) {
+        return IncidentModels.MetaInformationSchema;
+      }
+      if (t === IncidentModels.GeneralInformationSchema) {
+        return IncidentModels.GeneralInformationSchema;
+      }
+      if (t === IncidentModels.LocationInformationSchema) {
+        return IncidentModels.LocationInformationSchema;
+      }
+      throw Error();
+    },
+  );
 
   castArray(x: unknown) {
     return x as unknown[];
+  }
+
+  unwrap<T extends z.ZodType>(t: T): T {
+    while (t.type === "optional" || t.type === "nullable") {
+      t = (t as unknown as z.ZodOptional | z.ZodNullable).unwrap() as T;
+    }
+    return t;
   }
 }

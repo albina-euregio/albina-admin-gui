@@ -1,5 +1,6 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
+    @let inner = unwrap(x.value);
     <div class="row mt-4" [id]="x.key">
       <div class="form-label">
         {{ labelI18n().replace("#", x.key) | translate }}
@@ -7,25 +8,25 @@
       <div class="form-text">
         {{ helpI18n().replace("#", x.key) | translate }}
       </div>
-      @if (x.value.type === "enum") {
+      @if (inner.type === "enum") {
         <app-toggle-btn-group
           [disabled]="disabled()"
-          [enumValues]="Object.keys(x.value.def.entries)"
+          [enumValues]="Object.keys(inner.def.entries)"
           [value]="value()[x.key]"
           (valueChange)="value.set(value())"
           [labelI18n]="`${x.key}.#`"
         />
-      } @else if (x.value.type === "array" && x.value.def.element.type === "enum") {
+      } @else if (inner.type === "array" && inner.def.element.type === "enum") {
         <app-toggle-btn-group
           [disabled]="disabled()"
-          [enumValues]="Object.keys(x.value.def.element.def.entries)"
+          [enumValues]="Object.keys(inner.def.element.def.entries)"
           [values]="castArray(value()[x.key])"
           (valuesChange)="value.set(value())"
           [labelI18n]="`${x.key}.#`"
         />
-      } @else if (x.value.type === "string") {
+      } @else if (inner.type === "string") {
         <app-zod-input [zodType]="zodType().shape[x.key]" [(value)]="value()[x.key]" />
-      } @else if (x.value.type === "date") {
+      } @else if (inner.type === "date") {
         <div class="input-group">
           <!-- TODO implement data binding -->
           <input type="date" class="form-control" [disabled]="disabled()" />
@@ -36,9 +37,9 @@
         </div>
       } @else {
         <div class="alert alert-danger" role="alert">
-          Unknown type {{ x.value.type }} for key {{ x.key }}
+          Unknown type {{ inner.type }} for key {{ x.key }}
           <div>{{ x.key }}</div>
-          <div>{{ x.value.type }}</div>
+          <div>{{ inner.type }}</div>
           <div>{{ JSON.stringify(x.value) }}</div>
         </div>
       }
