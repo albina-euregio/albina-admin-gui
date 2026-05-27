@@ -7,7 +7,8 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
-import { GeneralInformationSchema, IncidentReport, IncidentReportSchema } from "./models/incident-report.model";
+import * as IncidentModels from "./models/incident-report.model";
+import { IncidentReport } from "./models/incident-report.model";
 
 @Component({
   selector: "app-incident-report",
@@ -20,8 +21,7 @@ export class IncidentReportComponent {
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
 
-  readonly GeneralInformationSchema = GeneralInformationSchema;
-  readonly IncidentReportSchema = IncidentReportSchema;
+  readonly IncidentModels = IncidentModels;
   readonly JSON = JSON;
   readonly Object = Object;
 

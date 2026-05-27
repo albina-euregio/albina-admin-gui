@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import z from "zod";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
-import { IncidentReportSchema } from "../incidents/models/incident-report.model";
+import { GeneralInformationSchema, MetaInformationSchema } from "../incidents/models/incident-report.model";
 import { ZodInputComponent } from "./zod-input.component";
 
 @Component({
@@ -27,13 +27,15 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
 
-  zodObject = computed((): typeof IncidentReportSchema => {
-    const t = this.zodType();
-    if ((t as unknown) === IncidentReportSchema) {
-      return IncidentReportSchema;
-    } else {
-      throw Error();
+  zodObject = computed((): typeof MetaInformationSchema | typeof GeneralInformationSchema => {
+    const t = this.zodType() as unknown;
+    if (t === MetaInformationSchema) {
+      return MetaInformationSchema;
     }
+    if (t === GeneralInformationSchema) {
+      return GeneralInformationSchema;
+    }
+    throw Error();
   });
 
   castArray(x: unknown) {

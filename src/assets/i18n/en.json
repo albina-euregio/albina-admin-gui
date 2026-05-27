@@ -1669,7 +1669,13 @@
   },
   "incidentReport": {
     "incidentReport": "Incident Report",
+    "metaInformation": "Meta Information",
     "generalInformation": "General Information",
+
+    "author": "Author",
+    "authorAffiliation": "Author Affiliation",
+    "timestamp": "Timestamp",
+
     "dateTime": "Date/Time",
     "timeAccuracy": "Time Accuracy ",
     "sourceOfInformation": "Source of Information",
@@ -1685,6 +1691,10 @@
     "generalInformationComment": "General Information Comment"
   },
   "incidentReportHelp": {
+    "author": "",
+    "authorAffiliation": "",
+    "timestamp": "",
+
     "dateTime": "",
     "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche",
     "sourceOfInformation": "Specify the source(s) of the information",

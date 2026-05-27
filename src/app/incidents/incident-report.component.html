@@ -2,12 +2,24 @@
   <h1>{{ "incidentReport.incidentReport" | translate }}</h1>
 
   <details>
+    <summary>{{ "incidentReport.metaInformation" | translate }}</summary>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="IncidentModels.MetaInformationSchema"
+      [labelI18n]="'incidentReport.#'"
+      [helpI18n]="'incidentReportHelp.#'"
+    />
+  </details>
+
+  <details>
     <summary>{{ "incidentReport.generalInformation" | translate }}</summary>
     <app-zod-schema-form
       [disabled]="disabled()"
       [value]="incidentReport()"
       (valueChange)="incidentReport.set($event)"
-      [zodType]="GeneralInformationSchema"
+      [zodType]="IncidentModels.GeneralInformationSchema"
       [labelI18n]="'incidentReport.#'"
       [helpI18n]="'incidentReportHelp.#'"
     />
