@@ -12,7 +12,7 @@
         <app-toggle-btn-group
           [disabled]="disabled()"
           [enumValues]="Object.keys(inner.def.entries)"
-          [value]="value()[x.key]"
+          [(value)]="value()[x.key]"
           (valueChange)="value.set(value())"
           [labelI18n]="`${x.key}.#`"
         />
@@ -21,7 +21,7 @@
           [disabled]="disabled()"
           [enumValues]="Object.keys(inner.def.element.def.entries)"
           [values]="castArray(value()[x.key])"
-          (valuesChange)="value.set(value())"
+          (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); value.set(value())"
           [labelI18n]="`${x.key}.#`"
         />
       } @else if (inner.type === "string") {
