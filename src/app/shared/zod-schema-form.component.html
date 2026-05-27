@@ -25,7 +25,12 @@
           [labelI18n]="`${x.key}.#`"
         />
       } @else if (inner.type === "string") {
-        <app-zod-input [zodType]="zodType().shape[x.key]" [(value)]="value()[x.key]" />
+        <input
+          type="text"
+          [class]="zodCssClass(x.value, value()[x.key])"
+          [(ngModel)]="value()[x.key]"
+          (ngModelChange)="value.set(value())"
+        />
       } @else if (inner.type === "date") {
         <div class="input-group">
           <!-- TODO implement data binding -->
@@ -42,6 +47,15 @@
           <div>{{ inner.type }}</div>
           <div>{{ JSON.stringify(x.value) }}</div>
         </div>
+      }
+
+      @if (x.value.safeParse(value()[x.key]); as parseResult) {
+        @if (parseResult.error) {
+          <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
+          <div class="invalid-feedback">
+            {{ zPrettifyError(parseResult.error) }}
+          </div>
+        }
       }
     </div>
   }

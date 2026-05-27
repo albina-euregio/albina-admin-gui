@@ -6,17 +6,19 @@ import z from "zod";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import * as IncidentModels from "../incidents/models/incident-report.model";
-import { ZodInputComponent } from "./zod-input.component";
+import { zodCssClass } from "./zod-css-class";
 
 @Component({
   selector: "app-zod-schema-form",
   templateUrl: "zod-schema-form.component.html",
   standalone: true,
-  imports: [FormsModule, KeyValuePipe, ToggleBtnGroup, TranslateModule, ZodInputComponent],
+  imports: [FormsModule, KeyValuePipe, ToggleBtnGroup, TranslateModule],
 })
 export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>> {
   readonly JSON = JSON;
   readonly Object = Object;
+  readonly zodCssClass = zodCssClass;
+  readonly zPrettifyError = z.prettifyError;
 
   readonly translateService = inject(TranslateService);
 
