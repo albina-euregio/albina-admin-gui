@@ -1,7 +1,7 @@
 <div class="container bg-white p-4">
   <h1>{{ "incidentReport.incidentReport" | translate }}</h1>
 
-  <details>
+  <details class="mt-4">
     <summary>{{ "incidentReport.metaInformation" | translate }}</summary>
     <app-zod-schema-form
       [disabled]="disabled()"
@@ -13,7 +13,7 @@
     />
   </details>
 
-  <details>
+  <details class="mt-4">
     <summary>{{ "incidentReport.generalInformation" | translate }}</summary>
     <app-zod-schema-form
       [disabled]="disabled()"
@@ -25,7 +25,7 @@
     />
   </details>
 
-  <details>
+  <details class="mt-4">
     <summary>{{ "incidentReport.locationInformation" | translate }}</summary>
     <app-zod-schema-form
       [disabled]="disabled()"

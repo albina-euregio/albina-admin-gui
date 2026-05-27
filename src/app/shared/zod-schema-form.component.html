@@ -1,7 +1,7 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
     @let inner = unwrap(x.value);
-    <div class="row mt-4" [id]="x.key">
+    <div class="mt-4" [id]="x.key">
       <div class="form-label">
         {{ labelI18n().replace("#", x.key) | translate }}
       </div>
