@@ -10,6 +10,7 @@
       </div>
       @if (inner.type === "enum") {
         <app-toggle-btn-group
+          [class]="zodCssClass(x.value, value()[x.key], '')"
           [disabled]="disabled()"
           [enumValues]="Object.keys(inner.def.entries)"
           [(value)]="value()[x.key]"
@@ -18,6 +19,7 @@
         />
       } @else if (inner.type === "array" && inner.def.element.type === "enum") {
         <app-toggle-btn-group
+          [class]="zodCssClass(x.value, value()[x.key], '')"
           [disabled]="disabled()"
           [enumValues]="Object.keys(inner.def.element.def.entries)"
           [values]="castArray(value()[x.key])"
