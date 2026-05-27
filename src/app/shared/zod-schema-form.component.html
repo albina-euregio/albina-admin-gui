@@ -1,0 +1,47 @@
+<section>
+  @for (x of zodObject().shape | keyvalue: null; track x) {
+    <div class="row mt-4" [id]="x.key">
+      <div class="form-label">
+        {{ labelI18n().replace("#", x.key) | translate }}
+      </div>
+      <div class="form-text">
+        {{ helpI18n().replace("#", x.key) | translate }}
+      </div>
+      @if (x.value.def.type === "enum") {
+        <app-toggle-btn-group
+          [disabled]="disabled()"
+          [enumValues]="Object.keys(x.value.def.entries)"
+          [value]="value()[x.key]"
+          (valueChange)="value.set(value())"
+          [labelI18n]="`${x.key}.#`"
+        />
+      } @else if (x.value.def.type === "array" && x.value.def.element.def.type === "enum") {
+        <app-toggle-btn-group
+          [disabled]="disabled()"
+          [enumValues]="Object.keys(x.value.def.element.def.entries)"
+          [values]="castArray(value()[x.key])"
+          (valuesChange)="value.set(value())"
+          [labelI18n]="`${x.key}.#`"
+        />
+      } @else if (x.value.def.type === "string") {
+        <app-zod-input [zodType]="zodType().shape[x.key]" [(value)]="value()[x.key]" />
+      } @else if (x.value.def.type === "date") {
+        <div class="input-group">
+          <!-- TODO implement data binding -->
+          <input type="date" class="form-control" [disabled]="disabled()" />
+          <input type="time" class="form-control" [disabled]="disabled()" />
+          <button class="btn btn-outline-secondary" type="button" [disabled]="disabled()">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+      } @else {
+        <div class="alert alert-danger" role="alert">
+          Unknown type {{ x.value.def.type }} for key {{ x.key }}
+          <div>{{ x.key }}</div>
+          <div>{{ x.value.def.type }}</div>
+          <div>{{ JSON.stringify(x.value) }}</div>
+        </div>
+      }
+    </div>
+  }
+</section>

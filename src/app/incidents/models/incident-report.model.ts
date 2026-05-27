@@ -2,7 +2,7 @@ import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
 
-const GeneralInformation = z.object({
+export const GeneralInformationSchema = z.object({
   dateTime: z.coerce.date(),
 
   timeAccuracy: z.enum([
@@ -68,6 +68,6 @@ const GeneralInformation = z.object({
 // Location	YES	YES	Text Multilanguage
 // Municipality	NO	NO	Text Multilanguage
 
-export const IncidentReportSchema = GeneralInformation;
+export const IncidentReportSchema = GeneralInformationSchema;
 
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;
