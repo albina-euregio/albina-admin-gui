@@ -55,6 +55,16 @@ export class LocalStorageService {
     if (!this.translateService.getLangs().includes(language)) {
       language = "en";
     }
+    if (
+      language === "de" ||
+      language === "it" ||
+      language === "en" ||
+      language === "fr" ||
+      language === "es" ||
+      language === "ca"
+    ) {
+      z.config(z.locales[language]());
+    }
     document.documentElement.setAttribute("lang", language);
     this.translateService.use(language);
     return this.set("language", language);
