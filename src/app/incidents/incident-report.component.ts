@@ -28,14 +28,33 @@ export class IncidentReportComponent {
   readonly Object = Object;
 
   readonly disabled = input<boolean>(false);
-  readonly incidentReport = model<IncidentReport>({
-    author: this.authenticationService.getCurrentAuthor()?.email,
-    authorAffiliation: this.authenticationService.getCurrentAuthor()?.organization,
-    publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
-    timestamp: new Date(),
-    reportStatus: "Draft",
-    sourceOfInformation: [],
-    damagedAssets: [],
-    dangerPattern: [],
-  } as IncidentReport);
+  readonly incidentReport = model<IncidentReport>(
+    IncidentModels.PartialIncidentReportSchema.parse({
+      author: this.authenticationService.getCurrentAuthor()?.email,
+      authorAffiliation: this.authenticationService.getCurrentAuthor()?.organization,
+      publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
+      timestamp: new Date(),
+      reportStatus: "Draft",
+      sourceOfInformation: [],
+      damagedAssets: [],
+      dangerPattern: [],
+      groupInformation: [
+        {
+          anonymousGroupIdentifier: "Group unknown",
+        } as IncidentModels.GroupInformation,
+      ],
+    }) as IncidentReport,
+  );
+
+  newGroupInformation() {
+    const groupInformation = {
+      anonymousGroupIdentifier: "Group " + Math.random(),
+    } as IncidentModels.GroupInformation;
+    this.incidentReport().groupInformation.push(groupInformation);
+  }
+
+  removeGroupInformation(index: number) {
+    if (!confirm(`Kill group ${index + 1}?`)) return;
+    this.incidentReport().groupInformation.splice(index, 1);
+  }
 }

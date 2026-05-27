@@ -29,32 +29,35 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
 
-  zodObject = computed(
-    ():
-      | typeof IncidentModels.MetaInformationSchema
-      | typeof IncidentModels.GeneralInformationSchema
-      | typeof IncidentModels.LocationInformationSchema => {
-      const t = this.zodType() as unknown;
-      if (t === IncidentModels.MetaInformationSchema) {
-        return IncidentModels.MetaInformationSchema;
-      }
-      if (t === IncidentModels.GeneralInformationSchema) {
-        return IncidentModels.GeneralInformationSchema;
-      }
-      if (t === IncidentModels.LocationInformationSchema) {
-        return IncidentModels.LocationInformationSchema;
-      }
-      throw Error();
-    },
-  );
+  zodObject = computed<
+    | typeof IncidentModels.MetaInformationSchema
+    | typeof IncidentModels.GeneralInformationSchema
+    | typeof IncidentModels.LocationInformationSchema
+    | typeof IncidentModels.GroupInformationSchema
+  >(() => {
+    const t = this.zodType() as unknown;
+    if (t === IncidentModels.MetaInformationSchema) {
+      return IncidentModels.MetaInformationSchema;
+    }
+    if (t === IncidentModels.GeneralInformationSchema) {
+      return IncidentModels.GeneralInformationSchema;
+    }
+    if (t === IncidentModels.LocationInformationSchema) {
+      return IncidentModels.LocationInformationSchema;
+    }
+    if (t === IncidentModels.GroupInformationSchema) {
+      return IncidentModels.GroupInformationSchema;
+    }
+    throw Error();
+  });
 
   castArray(x: unknown) {
     return x as unknown[];
   }
 
   unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber {
-    while (t.type === "optional" || t.type === "nullable") {
-      t = (t as unknown as z.ZodOptional | z.ZodNullable).unwrap() as T;
+    while (t.type === "optional" || t.type === "nullable" || t.type === "default") {
+      t = (t as unknown as z.ZodOptional | z.ZodNullable | z.ZodDefault).unwrap() as T;
     }
     return t;
   }

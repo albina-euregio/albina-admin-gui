@@ -98,6 +98,83 @@ export const LocationInformationSchema = z.object({
   locationInformationComment: z.string().nullish(),
 });
 
-export const IncidentReportSchema = MetaInformationSchema.and(GeneralInformationSchema).and(LocationInformationSchema);
+export const GroupInformationSchema = z.object({
+  anonymousGroupIdentifier: z.string(),
+  groupType: z.enum([
+    "RecreationalFamilyFriends",
+    "Club",
+    "Commercial",
+    "Industrial",
+    "Solo",
+    // "Other [text]", // TODO
+    "Unknown",
+  ]),
+  groupSize: z.number().default(0),
+  // TODO unknown => groupSize=0
+  // groupSizeUnknown: z.string(),
+  incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
+  typeOfControlledTerrain: z
+    .enum([
+      "IndoorInsideBuilding",
+      "Street",
+      "TrainTrack",
+      "SkiAreaResort",
+      "CrossCountryTrack",
+      "SledgingTrack",
+      // "Other [text]", // TODO
+    ])
+    .nullish(),
+  incidentActivity: z.enum([
+    "Touring",
+    "Freeriding",
+    "SkiingSnowboarding",
+    "Snowmobiling",
+    "Mountaineering",
+    "IceClimbing",
+    "Snowshoeing",
+    "HikingOnFoot",
+    "CrossCountrySkiing",
+    "HuntingFishing",
+    "Sledging",
+    "Snowbiking",
+    "Biking",
+    "InsideVehicle",
+    "Unknown",
+    // "Other [text] ", // TODO
+  ]),
+  travelDirection: z
+    .enum([
+      "Ascending",
+      "Descending",
+      "Stationary",
+      "Traversing",
+      "MovingOnPeaksRidges",
+      "SnowmobileHighMarking",
+      "CrossingRunouts",
+      // "Other [text]", // TODO
+    ])
+    .nullish(),
+  vehicleType: z.enum([
+    "Car",
+    "Bus",
+    "SnowPlower",
+    "Snowcat",
+    // "Other [text]" // TODO
+  ]),
+  avalancheGear: z.enum(["All", "Some", "None", "Unknown"]),
+  groupInformationComment: z.string().nullish(),
+});
+export type GroupInformation = z.infer<typeof GroupInformationSchema>;
+
+export const IncidentReportSchema = z.object({
+  ...MetaInformationSchema.shape,
+  ...GeneralInformationSchema.shape,
+  ...LocationInformationSchema.shape,
+  groupInformation: GroupInformationSchema.array(),
+});
+
+export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({
+  groupInformation: GroupInformationSchema.partial().array(),
+});
 
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;

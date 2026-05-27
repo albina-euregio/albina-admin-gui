@@ -1672,6 +1672,7 @@
     "metaInformation": "Meta Information",
     "generalInformation": "General Information",
     "locationInformation": "Location Information",
+    "groupInformation": "Group Information",
 
     "author": "Author",
     "authorAffiliation": "Author Affiliation",
@@ -1699,7 +1700,19 @@
     "latitude": "Latitude",
     "longitude": "Longitude",
     "locationAccuracy": "Location Accuracy",
-    "locationInformationComment": "Location Information Comment"
+    "locationInformationComment": "Location Information Comment",
+
+    "anonymousGroupIdentifier": "Anonymous Group Identifier",
+    "groupType": "Group Type",
+    "groupSize": "Group Size",
+    "groupSizeUnknown": "Group Size unknown",
+    "incidentTerrainType": "Terrain Type",
+    "typeOfControlledTerrain": "Type of Controlled Terrain",
+    "incidentActivity": "Activity",
+    "travelDirection": "Travel Direction",
+    "vehicleType": "Vehicle Type",
+    "avalancheGear": "Avalanche Gear",
+    "groupInformationComment": "Group Information Comment"
   },
   "incidentReportHelp": {
     "author": "",
@@ -1728,7 +1741,19 @@
     "latitude": "Provide the coordinates of the center of the fracture crown.",
     "longitude": "Provide the coordinates of the center of the fracture crown.",
     "locationAccuracy": "Estimate the accuracy of the latitude/longitude coordinates.",
-    "locationInformationComment": "Add any additional relevant details."
+    "locationInformationComment": "Add any additional relevant details.",
+
+    "anonymousGroupIdentifier": "This is used to identify the group throughout the report. For example, you might refer to Group 1, Group 2, etc when reporting on a incident. You could add specific details if it helps keep track of which group is which. If appropriate, you can use the same identifier when referencing this group in the Incident Description.",
+    "groupType": "Select the option that best describes the type of group.",
+    "groupSize": "Provide the total number of individuals in the group.",
+    "groupSizeUnknown": "Select “Yes” if the total number of individuals in the group is unknown. Note: This field is automatically set to “Yes” if the avalanche was human-triggered or if individuals were impacted.",
+    "incidentTerrainType": "Select the terrain type where people were located at the time of the avalanche. Free terrain refers to areas without any human infrastructure.",
+    "typeOfControlledTerrain": "",
+    "incidentActivity": "",
+    "travelDirection": "Direction of travel at the time of the incident.",
+    "vehicleType": "",
+    "avalancheGear": "Essential avalanche rescue gear is defined as a transceiver, shovel and probe. Give a basic assessment of whether the group was carrying essential avalanche rescue gear. Commonly this information comes from the search and rescue team. It is not necessary to get hung up on exact numbers or require in-depth communication with each party member. More like an answer to the basic question of: Were they carrying rescue gear?.",
+    "groupInformationComment": "Add any additional relevant details."
   },
   "sourceOfInformation": {
     "PublicObservation": "Public Observation",
@@ -1779,5 +1804,65 @@
     "within20km": "± 20 km",
     "within50km": "± 50 km",
     "unknown": "unknown"
+  },
+  "groupType": {
+    "RecreationalFamilyFriends": "Recreational Family/Friends",
+    "Club": "Club",
+    "Commercial": "Commercial",
+    "Industrial": "Industrial",
+    "Solo": "Solo",
+    "Unknown": "Unknown"
+  },
+  "incidentTerrainType": {
+    "FreeTerrain": "Free Terrain",
+    "ControlledTerrainOpen": "Controlled Terrain: Open",
+    "ControlledTerrainClosed": "Controlled Terrain: Closed",
+    "Unknown": "Unknown"
+  },
+  "typeOfControlledTerrain": {
+    "IndoorInsideBuilding": "Indoor (Inside Building)",
+    "Street": "Street",
+    "TrainTrack": "Train Track",
+    "SkiAreaResort": "Ski Area Resort",
+    "CrossCountryTrack": "Cross Country Track",
+    "SledgingTrack": "Sledging Track"
+  },
+  "incidentActivity": {
+    "Touring": "Touring",
+    "Freeriding": "Freeriding",
+    "SkiingSnowboarding": "Skiing/Snowboarding",
+    "Snowmobiling": "Snowmobiling",
+    "Mountaineering": "Mountaineering",
+    "IceClimbing": "Ice Climbing",
+    "Snowshoeing": "Snowshoeing",
+    "HikingOnFoot": "Hiking on Foot",
+    "CrossCountrySkiing": "Cross Country Skiing",
+    "HuntingFishing": "Hunting/Fishing",
+    "Sledging": "Sledging",
+    "Snowbiking": "Snowbiking",
+    "Biking": "Biking",
+    "InsideVehicle": "Inside Vehicle",
+    "Unknown": "Unknown"
+  },
+  "travelDirection": {
+    "Ascending": "Ascending",
+    "Descending": "Descending",
+    "Stationary": "Stationary",
+    "Traversing": "Traversing",
+    "MovingOnPeaksRidges": "Moving on peaks/ridges",
+    "SnowmobileHighMarking": "Snowmobile High Marking",
+    "CrossingRunouts": "Crossing Runouts"
+  },
+  "vehicleType": {
+    "Car": "Car",
+    "Bus": "Bus",
+    "SnowPlower": "Snow Plower",
+    "Snowcat": "Snowcat"
+  },
+  "avalancheGear": {
+    "All": "All",
+    "Some": "Some",
+    "None": "None",
+    "Unknown": "Unknown"
   }
 }
