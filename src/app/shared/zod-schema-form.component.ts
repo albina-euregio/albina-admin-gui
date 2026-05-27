@@ -2,7 +2,7 @@ import { KeyValuePipe } from "@angular/common";
 import { Component, computed, inject, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import z from "zod";
+import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import * as IncidentModels from "../incidents/models/incident-report.model";

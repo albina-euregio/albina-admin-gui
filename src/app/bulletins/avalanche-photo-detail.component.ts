@@ -2,7 +2,7 @@ import { Component, inject, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { RegionsService } from "app/providers/regions-service/regions.service";
-import z from "zod";
+import z from "zod/v4";
 
 import { BulletinPhotoModel } from "../models/bulletin-photo.model";
 import { BulletinModel } from "../models/bulletin.model";

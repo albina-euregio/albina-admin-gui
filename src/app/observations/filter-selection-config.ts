@@ -1,4 +1,4 @@
-import * as z from "zod/v4";
+import { z } from "zod/v4";
 
 export const UrlSchema = z.union([z.url().describe("Absolute URL"), z.string().describe("Relative URL")]);
 
