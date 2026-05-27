@@ -31,6 +31,13 @@
           [(ngModel)]="value()[x.key]"
           (ngModelChange)="value.set(value())"
         />
+      } @else if (inner.type === "number") {
+        <input
+          type="number"
+          [class]="zodCssClass(x.value, value()[x.key])"
+          [(ngModel)]="value()[x.key]"
+          (ngModelChange)="value.set(value())"
+        />
       } @else if (inner.type === "date") {
         <div class="input-group">
           <!-- TODO implement data binding -->

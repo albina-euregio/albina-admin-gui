@@ -1671,6 +1671,7 @@
     "incidentReport": "Incident Report",
     "metaInformation": "Meta Information",
     "generalInformation": "General Information",
+    "locationInformation": "Location Information",
 
     "author": "Author",
     "authorAffiliation": "Author Affiliation",
@@ -1688,7 +1689,17 @@
     "dangerPattern": "Danger Pattern",
     "reportStatus": "Report Status",
     "externalLink": "External Link",
-    "generalInformationComment": "General Information Comment"
+    "generalInformationComment": "General Information Comment",
+
+    "location": "Location",
+    "country": "Country",
+    "region": "Region",
+    "municipality": "Municipality",
+    "avalancheRegion": "Avalanche Region",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "locationAccuracy": "Location Accuracy",
+    "locationInformationComment": "Location Information Comment"
   },
   "incidentReportHelp": {
     "author": "",
@@ -1696,18 +1707,28 @@
     "timestamp": "",
 
     "dateTime": "",
-    "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche",
-    "sourceOfInformation": "Specify the source(s) of the information",
+    "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche.",
+    "sourceOfInformation": "Specify the source(s) of the information.",
     "personInvolvement": "Select “Yes” if the avalanche was human-triggered (including remote triggering) or if individuals were affected by moving masses.",
     "otherDamages": "Select “Yes” if the avalanche caused damage to property or other valuable assets.",
     "damagedAssets": "Indicate the type of object(s) that sustained damage.",
-    "publicAvalancheWarningService": "Name of agency in which area of responsibility the avalanche happened ",
+    "publicAvalancheWarningService": "Name of agency in which area of responsibility the avalanche happened.",
     "dangerRating": "Publicly available avalanche danger rating valid for the date, time, and location of the incident (including elevation and aspect, if applicable).",
     "avalancheProblem": "Select the forecasted EAWS Avalanche Problem(s) for that day and location. Choose “None” if none were issued that day.",
-    "dangerPattern": "Select the forecasted Danger Pattern(s) for that day and location",
+    "dangerPattern": "Select the forecasted Danger Pattern(s) for that day and location.",
     "reportStatus": "Draft: Not ready for public view; initial entry phase; Incomplete: Not all information has been entered or received; visible to the public but may contain unverified information; In Review: All information has been entered; awaiting review by a supervisor; Complete: All available information has been added; final status.",
     "externalLink": "",
-    "generalInformationComment": "Add any additional relevant details"
+    "generalInformationComment": "Add any additional relevant details.",
+
+    "location": "Brief description of the location. Use the name of the nearest mountain or a prominent geographic feature.",
+    "country": "",
+    "region": "",
+    "municipality": "",
+    "avalancheRegion": "Micro-Regions",
+    "latitude": "Provide the coordinates of the center of the fracture crown.",
+    "longitude": "Provide the coordinates of the center of the fracture crown.",
+    "locationAccuracy": "Estimate the accuracy of the latitude/longitude coordinates.",
+    "locationInformationComment": "Add any additional relevant details."
   },
   "sourceOfInformation": {
     "PublicObservation": "Public Observation",
@@ -1743,5 +1764,20 @@
     "Incomplete": "Incomplete",
     "InReview": "In Review",
     "Verified": "Verified"
+  },
+  "locationAccuracy": {
+    "exact": "exact",
+    "within15m": "± 15 m",
+    "within30m": "± 30 m",
+    "within100m": "± 100 m",
+    "within250m": "± 250 m",
+    "within500m": "± 500 m",
+    "within1km": "± 1 km",
+    "within2km": "± 2 km",
+    "within5km": "± 5 km",
+    "within10km": "± 10 km",
+    "within20km": "± 20 km",
+    "within50km": "± 50 km",
+    "unknown": "unknown"
   }
 }

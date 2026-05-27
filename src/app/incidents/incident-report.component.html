@@ -24,4 +24,16 @@
       [helpI18n]="'incidentReportHelp.#'"
     />
   </details>
+
+  <details>
+    <summary>{{ "incidentReport.locationInformation" | translate }}</summary>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="IncidentModels.LocationInformationSchema"
+      [labelI18n]="'incidentReport.#'"
+      [helpI18n]="'incidentReportHelp.#'"
+    />
+  </details>
 </div>

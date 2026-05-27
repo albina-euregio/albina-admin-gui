@@ -52,7 +52,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return x as unknown[];
   }
 
-  unwrap<T extends z.ZodType>(t: T): T {
+  unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber {
     while (t.type === "optional" || t.type === "nullable") {
       t = (t as unknown as z.ZodOptional | z.ZodNullable).unwrap() as T;
     }
