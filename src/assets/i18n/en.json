@@ -21,6 +21,7 @@
     "bulletins": "Avalanche.report",
     "dangerSources": "Danger Sources",
     "observations": "Observations",
+    "incidents": "Incidents",
     "qfa": "QFA",
     "modelling": "Modelling",
     "modellingForecast": "Forecast",
@@ -1087,11 +1088,15 @@
     }
   },
   "dangerRating": {
+    "missing": "missing",
     "noRating": "no rating",
+    "no_rating": "no rating",
+    "no_snow": "no snow",
     "low": "low",
     "moderate": "moderate",
     "considerable": "considerable",
     "high": "high",
+    "very_high": "very high",
     "veryHigh": "very high"
   },
   "avalancheProblem": {
@@ -1522,6 +1527,7 @@
   "personInvolvement": {
     "Dead": "Event involving persons (dead)",
     "Injured": "Event involving persons (injured)",
+    "Yes": "Event involving persons",
     "No": "Event not involving persons",
     "Uninjured": "Event involving persons (uninjured)",
     "Unknown": "Event (unknown)"
@@ -1660,5 +1666,72 @@
       "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
       "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
+  },
+  "incidentReport": {
+    "incidentReport": "Incident Report",
+    "generalInformation": "General Information",
+    "dateTime": "Date/Time",
+    "timeAccuracy": "Time Accuracy ",
+    "sourceOfInformation": "Source of Information",
+    "personInvolvement": "Person Involvement",
+    "otherDamages": "Other Damages",
+    "damagedAssets": "Damaged Assets",
+    "publicAvalancheWarningService": "Public Avalanche Warning Service",
+    "dangerRating": "Avalanche Danger Rating",
+    "avalancheProblem": "Avalanche Problem",
+    "dangerPattern": "Danger Pattern",
+    "reportStatus": "Report Status",
+    "externalLink": "External Link",
+    "generalInformationComment": "General Information Comment"
+  },
+  "incidentReportHelp": {
+    "dateTime": "",
+    "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche",
+    "sourceOfInformation": "Specify the source(s) of the information",
+    "personInvolvement": "Select “Yes” if the avalanche was human-triggered (including remote triggering) or if individuals were affected by moving masses.",
+    "otherDamages": "Select “Yes” if the avalanche caused damage to property or other valuable assets.",
+    "damagedAssets": "Indicate the type of object(s) that sustained damage.",
+    "publicAvalancheWarningService": "Name of agency in which area of responsibility the avalanche happened ",
+    "dangerRating": "Publicly available avalanche danger rating valid for the date, time, and location of the incident (including elevation and aspect, if applicable).",
+    "avalancheProblem": "Select the forecasted EAWS Avalanche Problem(s) for that day and location. Choose “None” if none were issued that day.",
+    "dangerPattern": "Select the forecasted Danger Pattern(s) for that day and location",
+    "reportStatus": "Draft: Not ready for public view; initial entry phase; Incomplete: Not all information has been entered or received; visible to the public but may contain unverified information; In Review: All information has been entered; awaiting review by a supervisor; Complete: All available information has been added; final status.",
+    "externalLink": "",
+    "generalInformationComment": "Add any additional relevant details"
+  },
+  "sourceOfInformation": {
+    "PublicObservation": "Public Observation",
+    "AWSInternal": "AWS Internal",
+    "AWSObserver": "AWS Observer",
+    "DispatchCentre": "Dispatch Centre",
+    "Police": "Police",
+    "MountainRescue": "Mountain Rescue"
+  },
+  "damagedAssets": {
+    "Vehicle": "Vehicle",
+    "Forest": "Forest",
+    "Agriculture": "Agriculture",
+    "Livestock": "Livestock",
+    "UtilitiesTechnicalInfrastructure": "Utilities or Technical Infrastructure"
+  },
+  "timeAccuracy": {
+    "exact": "exact",
+    "PT15M": "± 15 min",
+    "PT30M": "± 30 min",
+    "PT1H": "± 1 h",
+    "PT2H": "± 2 h",
+    "PT4H": "± 4 h",
+    "PT6H": "± 6 h",
+    "PT12H": "± 12 h",
+    "P1D": "± 1 d",
+    "P2D": "± 2 d",
+    "P3D": "± 3 d",
+    "unknown": "unknown"
+  },
+  "reportStatus": {
+    "Draft": "Draft",
+    "Incomplete": "Incomplete",
+    "InReview": "In Review",
+    "Verified": "Verified"
   }
 }
