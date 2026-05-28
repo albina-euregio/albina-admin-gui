@@ -392,6 +392,26 @@
                                   <i class="ph ph-paper-plane-tilt"></i>
                                   <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
                                 </button>
+                                @if (showPublishAllButton()) {
+                                  <button
+                                    type="button"
+                                    class="btn btn-outline-warning btn-sm"
+                                    style="--bs-btn-color: #dfd458"
+                                    (click)="publishAll(false)"
+                                  >
+                                    <i class="ph ph-warning"></i>
+                                    <span>{{ "bulletins.tooltip.publishAll" | translate }}</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    class="btn btn-outline-warning btn-sm"
+                                    style="--bs-btn-color: #dfd458"
+                                    (click)="publishAll(true)"
+                                  >
+                                    <i class="ph ph-warning"></i>
+                                    <span>{{ "bulletins.tooltip.publishAllNoMessages" | translate }}</span>
+                                  </button>
+                                }
                               </div>
                             </li>
                             <li class="mt-2">

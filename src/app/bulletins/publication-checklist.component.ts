@@ -74,6 +74,7 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   fallbackWebUrls: Record<string, string> = { de: "", en: "", it: "" };
 
   publishBulletinsModalRef: BsModalRef;
+  publishAllModalRef: BsModalRef;
 
   get isWebsiteChecked(): boolean {
     return this.activeChecklist.checklistItems[0].ok !== undefined;
@@ -338,6 +339,26 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
       this.translateService.getCurrentLang(),
     );
     return this.translateService.instant("bulletins.publicationChecklist.savedInfo", { user: checklist.user, time });
+  }
+
+  showPublishAllButton(): boolean {
+    return this.authenticationService.isCurrentUserInRole("ADMIN");
+  }
+
+  publishAll(change: boolean) {
+    const initialState: Partial<ModalConfirmComponent> = {
+      text: this.translateService.instant(
+        change ? "bulletins.table.publishAllDialog.changeMessage" : "bulletins.table.publishAllDialog.message",
+      ),
+      acceptKey: "button.yes",
+      onConfirm: () => {
+        this.bulletinsService.publishAllBulletins(this.getActiveDate(), change).subscribe({
+          next: () => console.log("All bulletins published."),
+          error: (error) => console.error("All bulletins could not be published!", error),
+        });
+      },
+    };
+    this.publishAllModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
   }
 
   publish(event: Event, date: [Date, Date], change = false) {

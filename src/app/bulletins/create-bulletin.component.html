@@ -552,58 +552,6 @@
                 <hr class="dropdown-divider" />
               </li>
 
-              <!-- info -->
-              <li>
-                @if (showInfoButton()) {
-                  <button
-                    [disabled]="editRegions || loading"
-                    type="button"
-                    class="dropdown-item"
-                    (click)="showPublicationInfo(); dropdown.hide()"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.tooltip.info' | translate }}"
-                    ngxMousetrapKey="s"
-                  >
-                    <i class="ph-bold ph-info icon-md"></i>
-                    {{ "bulletins.tooltip.info" | translate }}
-                  </button>
-                }
-              </li>
-
-              <!-- publish all -->
-              <li>
-                @if (showPublishAllButton()) {
-                  <button
-                    [disabled]="editRegions || loading"
-                    type="button"
-                    class="dropdown-item"
-                    (click)="publishAll(false); dropdown.hide()"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.tooltip.publishAll' | translate }}"
-                    ngxMousetrapKey="p"
-                  >
-                    <i class="ph-bold ph-warning icon-md"></i>
-                    {{ "bulletins.tooltip.publishAll" | translate }}
-                  </button>
-                }
-              </li>
-              <li>
-                @if (showPublishAllButton()) {
-                  <button
-                    [disabled]="editRegions || loading"
-                    type="button"
-                    class="dropdown-item"
-                    (click)="publishAll(true); dropdown.hide()"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.tooltip.publishAllNoMessages' | translate }}"
-                    ngxMousetrapKey="p"
-                  >
-                    <i class="ph-bold ph-warning icon-md"></i>
-                    {{ "bulletins.tooltip.publishAllNoMessages" | translate }}
-                  </button>
-                }
-              </li>
-
               <!-- delete all warning regions  -->
               <li>
                 @if (showDeleteAllWarningRegionsButton()) {
