@@ -2305,6 +2305,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           .subscribe({
             next: () => {
               console.log(change ? "Bulletins published (no messages)." : "Bulletins published.");
+              this.bulletinsService.refreshPublicationStatus();
             },
             error: (error) => {
               console.error(
