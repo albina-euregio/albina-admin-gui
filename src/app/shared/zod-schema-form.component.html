@@ -8,7 +8,19 @@
       <div class="form-text">
         {{ helpI18n().replace("#", x.key) | translate }}
       </div>
-      @if (inner.type === "enum") {
+      @if (getWidget(x.value) === "slider" && inner.type === "enum") {
+        @let enumValues = Object.keys(inner.def.entries);
+        <app-slider
+          [class]="zodCssClass(x.value, value()[x.key], '')"
+          [disabled]="disabled()"
+          [sliderOptions]="enumSliderOptions(x.key, enumValues)"
+          [sliderValue]="enumValueIndex(value()[x.key], enumValues)"
+          (sliderValueChange)="onSliderEnumChange(x.key, $event, enumValues)"
+        />
+        @if (value()[x.key]) {
+          <div class="text-center">{{ x.key + "." + value()[x.key] | translate }}</div>
+        }
+      } @else if (inner.type === "enum") {
         <app-toggle-btn-group
           [class]="zodCssClass(x.value, value()[x.key], '')"
           [disabled]="disabled()"

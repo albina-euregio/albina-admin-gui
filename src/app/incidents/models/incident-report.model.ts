@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
+import { widgetRegistry } from "../../shared/widget-registry";
 
 export const MetaInformationSchema = z.object({
   author: z.string(),
@@ -11,20 +12,9 @@ export const MetaInformationSchema = z.object({
 export const GeneralInformationSchema = z.object({
   dateTime: z.coerce.date(),
 
-  timeAccuracy: z.enum([
-    "exact",
-    "PT15M",
-    "PT30M",
-    "PT1H",
-    "PT2H",
-    "PT4H",
-    "PT6H",
-    "PT12H",
-    "P1D",
-    "P2D",
-    "P3D",
-    "unknown",
-  ]),
+  timeAccuracy: z
+    .enum(["exact", "PT15M", "PT30M", "PT1H", "PT2H", "PT4H", "PT6H", "PT12H", "P1D", "P2D", "P3D", "unknown"])
+    .register(widgetRegistry, { widget: "slider" }),
 
   sourceOfInformation: z.array(
     z.enum([
@@ -80,21 +70,23 @@ export const LocationInformationSchema = z.object({
   avalancheRegion: z.string().nullish(),
   latitude: z.number(),
   longitude: z.number(),
-  locationAccuracy: z.enum([
-    "exact",
-    "within15m",
-    "within30m",
-    "within100m",
-    "within250m",
-    "within500m",
-    "within1km",
-    "within2km",
-    "within5km",
-    "within10km",
-    "within20km",
-    "within50km",
-    "unknown",
-  ]),
+  locationAccuracy: z
+    .enum([
+      "exact",
+      "within15m",
+      "within30m",
+      "within100m",
+      "within250m",
+      "within500m",
+      "within1km",
+      "within2km",
+      "within5km",
+      "within10km",
+      "within20km",
+      "within50km",
+      "unknown",
+    ])
+    .register(widgetRegistry, { widget: "slider" }),
   locationInformationComment: z.string().nullish(),
 });
 

@@ -6,13 +6,15 @@ import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import * as IncidentModels from "../incidents/models/incident-report.model";
+import { SliderComponent, SliderOptions } from "./slider.component";
+import { widgetRegistry } from "./widget-registry";
 import { zodCssClass } from "./zod-css-class";
 
 @Component({
   selector: "app-zod-schema-form",
   templateUrl: "zod-schema-form.component.html",
   standalone: true,
-  imports: [FormsModule, KeyValuePipe, ToggleBtnGroup, TranslateModule],
+  imports: [FormsModule, KeyValuePipe, SliderComponent, ToggleBtnGroup, TranslateModule],
 })
 export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>> {
   readonly JSON = JSON;
@@ -50,6 +52,31 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     }
     throw Error();
   });
+
+  getWidget(schema: z.ZodType): string | undefined {
+    return widgetRegistry.get(schema)?.widget;
+  }
+
+  enumSliderOptions(key: string, enumValues: string[]): SliderOptions {
+    return {
+      floor: 0,
+      ceil: enumValues.length - 1,
+      ticks: enumValues.map((_, i) => i),
+      getLegend: (i) => this.translateService.instant(`${key}.${enumValues[i]}`),
+      getSelectionBarColor: () => "var(--bs-secondary)",
+      onValueChange: () => {},
+    };
+  }
+
+  enumValueIndex(value: unknown, enumValues: string[]): number {
+    const i = enumValues.indexOf(value as string);
+    return i >= 0 ? i : 0;
+  }
+
+  onSliderEnumChange(key: string, index: number, enumValues: string[]): void {
+    Object.assign(this.value(), { [key]: enumValues[index] ?? enumValues[0] });
+    this.value.set(this.value());
+  }
 
   castArray(x: unknown) {
     return x as unknown[];
