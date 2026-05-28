@@ -1,13 +1,13 @@
 <div class="container-fluid px-0 px-md-3 py-3 py-md-4">
   <div class="row justify-content-center mx-0">
     <div class="col-12 col-md-10 col-lg-8 px-0 px-md-3 d-flex flex-column gap-3">
-      <!-- Active checklist (editable) -->
-      <div class="card">
+      <!-- Active checklist (editable / print) -->
+      <div class="card" [class.publication-checklist-print]="showPrintVersion">
         <div class="card-header py-3 d-flex flex-column gap-2">
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
             <h2 class="mb-0">{{ "bulletins.publicationChecklist.title" | translate }}</h2>
             @if (activeChecklist.checklistId) {
-              <div class="small text-body-secondary">{{ getSavedInfo(activeChecklist) }}</div>
+              <div class="small text-body-secondary d-print-none">{{ getSavedInfo(activeChecklist) }}</div>
             }
           </div>
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
@@ -16,43 +16,187 @@
               <span class="mx-1">&ndash;</span>
               <span>{{ regionsService.getRegionName(regionId) | translate }}</span>
             </div>
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-sm"
-              (click)="createNewChecklist()"
-              [disabled]="!hasContent"
-            >
-              <i class="ph ph-plus" aria-hidden="true"></i>
-              {{ "bulletins.publicationChecklist.newChecklist" | translate }}
-            </button>
-          </div>
-        </div>
-
-        <div class="card-body py-3 border-bottom d-flex flex-column gap-2">
-          <div class="d-flex flex-column gap-2 small">
-            <div class="d-flex flex-wrap align-items-center gap-2">
-              <span class="font-s-medium text-secondary"
-                >{{ "bulletins.create.statusHeader" | translate }}{{ ": " }}</span
+            <div class="d-flex gap-2 flex-wrap d-print-none">
+              @if (showPrintVersion) {
+                <button type="button" class="btn btn-primary btn-sm" (click)="printChecklist()">
+                  <i class="ph ph-printer" aria-hidden="true"></i>
+                  {{ "bulletins.publicationChecklist.print.print" | translate }}
+                </button>
+              }
+              <button
+                type="button"
+                class="btn btn-sm"
+                [class.btn-outline-secondary]="!showPrintVersion"
+                [class.btn-secondary]="showPrintVersion"
+                (click)="togglePrintVersion()"
               >
-              @if (bulletinsService.getActiveRegionStatus()) {
-                <app-bulletin-status-badge
-                  [status]="bulletinsService.getActiveRegionStatus()"
-                ></app-bulletin-status-badge>
+                <i class="ph ph-printer" aria-hidden="true"></i>
+                {{
+                  (showPrintVersion
+                    ? "bulletins.publicationChecklist.print.hide"
+                    : "bulletins.publicationChecklist.print.toggle"
+                  ) | translate
+                }}
+              </button>
+              @if (!showPrintVersion) {
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  (click)="createNewChecklist()"
+                  [disabled]="!hasContent"
+                >
+                  <i class="ph ph-plus" aria-hidden="true"></i>
+                  {{ "bulletins.publicationChecklist.newChecklist" | translate }}
+                </button>
               }
             </div>
-            <app-publication-in-progress />
           </div>
+          @if (showPrintVersion) {
+            <small class="text-muted d-print-none">{{ "bulletins.publicationChecklist.print.hint" | translate }}</small>
+          }
         </div>
+
+        @if (!showPrintVersion) {
+          <div class="card-body py-3 border-bottom d-flex flex-column gap-2">
+            <div class="d-flex flex-column gap-2 small">
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="font-s-medium text-secondary"
+                  >{{ "bulletins.create.statusHeader" | translate }}{{ ": " }}</span
+                >
+                @if (bulletinsService.getActiveRegionStatus()) {
+                  <app-bulletin-status-badge
+                    [status]="bulletinsService.getActiveRegionStatus()"
+                  ></app-bulletin-status-badge>
+                }
+              </div>
+              <app-publication-in-progress />
+            </div>
+          </div>
+        }
 
         <ng-container
           [ngTemplateOutlet]="checklistCardsTemplate"
-          [ngTemplateOutletContext]="{ checklist: activeChecklist, readonly: false, idPrefix: 'active' }"
+          [ngTemplateOutletContext]="{
+            checklist: activeChecklist,
+            readonly: false,
+            idPrefix: 'active',
+            print: showPrintVersion,
+          }"
         ></ng-container>
       </div>
 
-      <!-- Older saved checklists -->
+      @if (showPrintVersion) {
+        <div class="card p-3" style="break-before: page">
+          <p class="font-l mb-3">{{ "bulletins.publicationChecklist.print.emergencyTitle" | translate }}</p>
+
+          <!-- Contact hosting service -->
+          <div class="mb-4">
+            <p class="fw-semibold mb-2">
+              1. {{ "bulletins.publicationChecklist.print.hostingContact.title" | translate }}
+            </p>
+            <div class="d-flex gap-4 flex-wrap mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <label class="small text-nowrap mb-0" for="print-hosting-name">
+                  {{ "bulletins.publicationChecklist.print.hostingContact.nameLabel" | translate }}
+                </label>
+                <input type="text" id="print-hosting-name" class="print-fill-input" />
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <label class="small text-nowrap mb-0" for="print-hosting-phone">
+                  {{ "bulletins.publicationChecklist.print.hostingContact.phoneLabel" | translate }}
+                </label>
+                <input type="tel" id="print-hosting-phone" class="print-fill-input" />
+              </div>
+            </div>
+            <p class="small mb-3">
+              {{ "bulletins.publicationChecklist.print.hostingContact.description" | translate }}
+            </p>
+          </div>
+
+          <!-- Fallback instance -->
+          <div>
+            <p class="fw-semibold mb-2">2. {{ "bulletins.publicationChecklist.print.fallback.title" | translate }}</p>
+
+            <!-- URL fields -->
+            <div class="d-flex flex-wrap gap-3 mb-3 small">
+              <div class="d-flex align-items-center gap-2">
+                <label class="text-nowrap mb-0" for="print-fallback-admin">
+                  {{ "Admin-GUI:" }}
+                </label>
+                <input
+                  type="url"
+                  id="print-fallback-admin"
+                  class="print-fill-input"
+                  [value]="fallbackAdminUrl"
+                  (input)="fallbackAdminUrl = $any($event.target).value"
+                />
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <label class="text-nowrap mb-0" for="print-fallback-de">
+                  {{ "DE:" }}
+                </label>
+                <input
+                  type="url"
+                  id="print-fallback-de"
+                  class="print-fill-input"
+                  [value]="fallbackWebUrls['de']"
+                  (input)="fallbackWebUrls['de'] = $any($event.target).value"
+                />
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <label class="text-nowrap mb-0" for="print-fallback-en">
+                  {{ "EN:" }}
+                </label>
+                <input
+                  type="url"
+                  id="print-fallback-en"
+                  class="print-fill-input"
+                  [value]="fallbackWebUrls['en']"
+                  (input)="fallbackWebUrls['en'] = $any($event.target).value"
+                />
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <label class="text-nowrap mb-0" for="print-fallback-it">
+                  {{ "IT:" }}
+                </label>
+                <input
+                  type="url"
+                  id="print-fallback-it"
+                  class="print-fill-input"
+                  [value]="fallbackWebUrls['it']"
+                  (input)="fallbackWebUrls['it'] = $any($event.target).value"
+                />
+              </div>
+            </div>
+
+            <ol class="small mb-0 ps-3">
+              <li class="mb-2">{{ "bulletins.publicationChecklist.print.fallback.step1" | translate }}</li>
+              <li class="mb-2">
+                {{ "bulletins.publicationChecklist.print.fallback.step2" | translate }}
+                <div class="vstack gap-1 mt-1">
+                  @for (lang of ["de", "en", "it"]; track lang) {
+                    <div class="border rounded bg-light p-2">
+                      <span class="fw-semibold me-1">{{ lang.toUpperCase() }}:</span>
+                      <span class="font-monospace">{{ getFallbackMessage(lang) }}</span>
+                    </div>
+                  }
+                </div>
+              </li>
+              <li class="mb-2">
+                {{ "bulletins.publicationChecklist.print.fallback.step3" | translate }}
+                <pre class="border rounded p-2 mt-1 mb-0 font-monospace bg-light" style="white-space: pre-wrap">{{
+                  fallbackStep3Text
+                }}</pre>
+              </li>
+              <li class="mb-2">{{ "bulletins.publicationChecklist.print.fallback.step4" | translate }}</li>
+            </ol>
+          </div>
+        </div>
+      }
+
+      <!-- Older saved checklists (screen only) -->
       @for (checklist of previousChecklists; track checklist.checklistId) {
-        <div class="card">
+        <div class="card d-print-none">
           <button
             type="button"
             class="card-header border-bottom d-flex justify-content-between align-items-start gap-2 border-0 text-start w-100 py-3"
@@ -79,19 +223,26 @@
                 checklist: checklist,
                 readonly: true,
                 idPrefix: 'archived-' + checklist.checklistId,
+                print: false,
               }"
             ></ng-container>
           }
         </div>
       }
 
-      <ng-template #checklistCardsTemplate let-checklist="checklist" let-readonly="readonly" let-idPrefix="idPrefix">
+      <ng-template
+        #checklistCardsTemplate
+        let-checklist="checklist"
+        let-readonly="readonly"
+        let-idPrefix="idPrefix"
+        let-print="print"
+      >
         <div class="d-grid gap-3 p-3">
           @for (item of checklist.checklistItems; track $index; let index = $index) {
             <div
               class="card shadow-sm"
-              [class.opacity-50]="index > 0 && !isWebsiteChecked && !readonly"
-              [style.pointer-events]="index > 0 && !isWebsiteChecked && !readonly ? 'none' : null"
+              [class.opacity-50]="index > 0 && !isWebsiteChecked && !readonly && !print"
+              [style.pointer-events]="index > 0 && !isWebsiteChecked && !readonly && !print ? 'none' : null"
             >
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center gap-3">
@@ -110,43 +261,45 @@
                     }
                     <span>{{ `bulletins.publicationChecklist.channel.${item.publicationChannel}` | translate }}</span>
                   </div>
-                  <div class="btn-group text-nowrap flex-shrink-0" role="group">
-                    <input
-                      class="btn-check"
-                      type="checkbox"
-                      [id]="idPrefix + '-check' + index + 'Ok'"
-                      [checked]="item.ok === true"
-                      [disabled]="readonly"
-                      (change)="onOkChange(index, $event)"
-                    />
-                    <label
-                      class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
-                      [class.btn-success]="item.ok === true"
-                      [class.btn-outline-dark]="item.ok !== true"
-                      [for]="idPrefix + '-check' + index + 'Ok'"
-                    >
-                      <i class="ph ph-check-circle ms-1"></i>
-                      {{ "bulletins.publicationChecklist.ok" | translate }}
-                    </label>
+                  @if (!print) {
+                    <div class="btn-group text-nowrap flex-shrink-0" role="group">
+                      <input
+                        class="btn-check"
+                        type="checkbox"
+                        [id]="idPrefix + '-check' + index + 'Ok'"
+                        [checked]="item.ok === true"
+                        [disabled]="readonly"
+                        (change)="onOkChange(index, $event)"
+                      />
+                      <label
+                        class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
+                        [class.btn-success]="item.ok === true"
+                        [class.btn-outline-dark]="item.ok !== true"
+                        [for]="idPrefix + '-check' + index + 'Ok'"
+                      >
+                        <i class="ph ph-check-circle ms-1"></i>
+                        {{ "bulletins.publicationChecklist.ok" | translate }}
+                      </label>
 
-                    <input
-                      class="btn-check"
-                      type="checkbox"
-                      [id]="idPrefix + '-check' + index + 'Problem'"
-                      [checked]="item.ok === false"
-                      [disabled]="readonly"
-                      (change)="onProblemChange(index, $event)"
-                    />
-                    <label
-                      class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
-                      [class.btn-danger]="item.ok === false"
-                      [class.btn-outline-dark]="item.ok !== false"
-                      [for]="idPrefix + '-check' + index + 'Problem'"
-                    >
-                      <i class="ph ph-warning-circle ms-1"></i>
-                      {{ "bulletins.publicationChecklist.problem" | translate }}
-                    </label>
-                  </div>
+                      <input
+                        class="btn-check"
+                        type="checkbox"
+                        [id]="idPrefix + '-check' + index + 'Problem'"
+                        [checked]="item.ok === false"
+                        [disabled]="readonly"
+                        (change)="onProblemChange(index, $event)"
+                      />
+                      <label
+                        class="btn btn-sm d-inline-flex align-items-center gap-1 pe-3"
+                        [class.btn-danger]="item.ok === false"
+                        [class.btn-outline-dark]="item.ok !== false"
+                        [for]="idPrefix + '-check' + index + 'Problem'"
+                      >
+                        <i class="ph ph-warning-circle ms-1"></i>
+                        {{ "bulletins.publicationChecklist.problem" | translate }}
+                      </label>
+                    </div>
+                  }
                 </div>
 
                 @if (!readonly) {
@@ -159,24 +312,28 @@
                     >
                       {{ getPublicationLink(item.publicationChannel) }}
                     </a>
-                    <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
+                    @if (!print) {
+                      <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
+                    }
                   }
                   <small class="text-muted d-block mt-1">
                     {{ `bulletins.publicationChecklist.description.${item.publicationChannel}` | translate }}
                   </small>
 
-                  <div class="mt-3" [hidden]="item.ok !== false">
-                    <label class="form-label" [for]="idPrefix + '-problem' + index">
-                      {{ "bulletins.publicationChecklist.problemDescription" | translate }}
-                    </label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      [id]="idPrefix + '-problem' + index"
-                      [value]="item.problemDescription"
-                      (input)="onProblemDescriptionChange(index, $event)"
-                      [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
-                    />
+                  <div class="mt-3" [hidden]="!print && item.ok !== false">
+                    @if (!print) {
+                      <label class="form-label" [for]="idPrefix + '-problem' + index">
+                        {{ "bulletins.publicationChecklist.problemDescription" | translate }}
+                      </label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        [id]="idPrefix + '-problem' + index"
+                        [value]="item.problemDescription"
+                        (input)="onProblemDescriptionChange(index, $event)"
+                        [placeholder]="'bulletins.publicationChecklist.problemPlaceholder' | translate"
+                      />
+                    }
 
                     <div class="mt-3">
                       <div class="form-label">{{ "bulletins.publicationChecklist.options" | translate }}</div>
@@ -195,7 +352,9 @@
                                 <a [href]="getWebsiteUrl()" target="_blank" rel="noopener noreferrer">
                                   {{ getWebsiteUrl() }}
                                 </a>
-                                <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
+                                @if (!print) {
+                                  <i class="ph ph-arrow-up-right small text-primary opacity-75" aria-hidden="true"></i>
+                                }
                                 {{
                                   "bulletins.publicationChecklist.website.checkInternetDescriptionSuffix" | translate
                                 }}
@@ -243,14 +402,16 @@
                                 <ol>
                                   <li>
                                     {{ "bulletins.publicationChecklist.website.openBulletin" | translate }}
-                                    <button
-                                      class="btn btn-secondary btn-icon ms-2"
-                                      type="button"
-                                      [routerLink]="['/bulletins', date]"
-                                      title="{{ 'bulletins.tooltip.edit' | translate }}"
-                                    >
-                                      <i class="ph ph-pencil-line"></i>
-                                    </button>
+                                    @if (!print) {
+                                      <button
+                                        class="btn btn-secondary btn-icon ms-2"
+                                        type="button"
+                                        [routerLink]="['/bulletins', date]"
+                                        title="{{ 'bulletins.tooltip.edit' | translate }}"
+                                      >
+                                        <i class="ph ph-pencil-line"></i>
+                                      </button>
+                                    }
                                   </li>
                                   <li>{{ "bulletins.publicationChecklist.website.clickEdit" | translate }}</li>
                                   <li>{{ "bulletins.publicationChecklist.website.clickSubmit" | translate }}</li>
@@ -269,7 +430,6 @@
                               <div class="fw-semibold">
                                 {{ "bulletins.publicationChecklist.resend" | translate }}
                               </div>
-
                               <app-publication-trigger-notifications
                                 [date]="getActiveDate()"
                                 [regionId]="regionId"
@@ -299,32 +459,36 @@
                                         <i [class]="getSocialIconClass(item.publicationChannel)"></i>
                                         <span class="fw-semibold">{{ entry.language.toUpperCase() }}</span>
                                         <span class="text-decoration-underline text-truncate">{{ entry.url }}</span>
-                                        <i
-                                          class="ph ph-arrow-up-right small text-primary opacity-75"
-                                          style="margin-left: -2px"
-                                          aria-hidden="true"
-                                        ></i>
+                                        @if (!print) {
+                                          <i
+                                            class="ph ph-arrow-up-right small text-primary opacity-75"
+                                            style="margin-left: -2px"
+                                            aria-hidden="true"
+                                          ></i>
+                                        }
                                       </a>
                                     </div>
                                     <div class="d-flex align-items-center gap-1">
                                       <pre
                                         class="flex-grow-1 mb-0 p-2 border rounded bg-light text-wrap"
                                       ><code>{{ getManualSendMessage(entry.language) }}</code></pre>
-                                      <button
-                                        type="button"
-                                        class="btn btn-sm btn-outline-secondary"
-                                        (click)="copyToClipboard(getManualSendMessage(entry.language))"
-                                        [title]="
-                                          'bulletins.publicationChecklist.manualSend.copyText'
-                                            | translate
-                                              : {
-                                                  channel: getChannelName(item.publicationChannel),
-                                                  language: getLanguageName(entry.language),
-                                                }
-                                        "
-                                      >
-                                        <i class="ph ph-copy"></i>
-                                      </button>
+                                      @if (!print) {
+                                        <button
+                                          type="button"
+                                          class="btn btn-sm btn-outline-secondary"
+                                          (click)="copyToClipboard(getManualSendMessage(entry.language))"
+                                          [title]="
+                                            'bulletins.publicationChecklist.manualSend.copyText'
+                                              | translate
+                                                : {
+                                                    channel: getChannelName(item.publicationChannel),
+                                                    language: getLanguageName(entry.language),
+                                                  }
+                                          "
+                                        >
+                                          <i class="ph ph-copy"></i>
+                                        </button>
+                                      }
                                     </div>
                                   </div>
                                 }
@@ -349,13 +513,19 @@
                               <div class="fw-semibold">
                                 {{ "bulletins.publicationChecklist.resend" | translate }}
                               </div>
-                              <app-publication-trigger-notifications
-                                [date]="getActiveDate()"
-                                [regionId]="regionId"
-                                [publicationChannel]="item.publicationChannel"
-                                iconClass="ph ph-envelope-simple"
-                                [languages]="getEnabledLanguages(item.publicationChannel)"
-                              ></app-publication-trigger-notifications>
+                              @if (!print) {
+                                <app-publication-trigger-notifications
+                                  [date]="getActiveDate()"
+                                  [regionId]="regionId"
+                                  [publicationChannel]="item.publicationChannel"
+                                  iconClass="ph ph-envelope-simple"
+                                  [languages]="getEnabledLanguages(item.publicationChannel)"
+                                ></app-publication-trigger-notifications>
+                              } @else {
+                                <div class="small text-muted">
+                                  {{ "bulletins.publicationChecklist.print.useAdminToResend" | translate }}
+                                </div>
+                              }
                             </li>
                           </ol>
                         </div>

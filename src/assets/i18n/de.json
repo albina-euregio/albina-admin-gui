@@ -359,7 +359,27 @@
         "copyText": "{{language}}en {{channel}} Text kopieren"
       },
       "newChecklist": "Neue Checkliste",
-      "savedInfo": "Gespeichert von {{user}}, {{time}}"
+      "savedInfo": "Gespeichert von {{user}}, {{time}}",
+      "print": {
+        "toggle": "Druckversion",
+        "hide": "Druckversion ausblenden",
+        "hint": "Trage unten die Kontaktdaten des Hosting-Dienstes, sowie die URLs der Fallback-Instanz ein und klicke dann auf »Drucken«.",
+        "print": "Drucken",
+        "emergencyTitle": "Bei größeren Problemen",
+        "hostingContact": {
+          "title": "Hosting-Dienst kontaktieren:",
+          "description": "Frage nach dem Serverstatus. Falls möglich, bitte den Hosting-Dienst um einen Serverneustart.",
+          "nameLabel": "Name:",
+          "phoneLabel": "Telefon:"
+        },
+        "fallback": {
+          "title": "Fallback-Instanz verwenden:",
+          "step1": "Navigiere zur Fallback Admin-GUI und publiziere dort das Bulletin.",
+          "step2": "Versende Nachrichten an abonnierte Kanäle manuell. Verwende dafür den untenstehenden Text.",
+          "step3": "Informiere die Öffentlichkeit per Social-Media-Post mit einem Link zur Fallback-Website.",
+          "step4": "Informiere die PR-Abteilung über die Situation."
+        }
+      }
     },
     "status": {
       "submittedInfo": "Wird um 17 Uhr publiziert",

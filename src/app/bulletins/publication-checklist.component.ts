@@ -69,6 +69,9 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
   expandedIds = new Set<string>();
   regionId = "";
   publicationStatus: PublicationStatusModel | undefined;
+  showPrintVersion = false;
+  fallbackAdminUrl = "";
+  fallbackWebUrls: Record<string, string> = { de: "", en: "", it: "" };
 
   publishBulletinsModalRef: BsModalRef;
 
@@ -407,6 +410,47 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
         this.activeChecklist = { checklistItems: this.createChecklistItems() };
       },
     });
+  }
+
+  get fallbackStep3Text(): string {
+    return ["de", "en", "it"].map((lang) => this.getFallbackPublicMessage(lang)).join("\n\n");
+  }
+
+  private getFallbackPublicMessage(language: string): string {
+    const url = this.fallbackWebUrls[language] || "…";
+    switch (language) {
+      case "de":
+        return `Aufgrund von technischen Schwierigkeiten findet ihr die aktuelle Lawinenvorhersage unter folgendem Link: ${url}`;
+      case "en":
+        return `Due to technical difficulties, today's avalanche forecast is available at the following link: ${url}`;
+      case "it":
+        return `A causa di difficoltà tecniche, le previsioni valanghe di oggi sono disponibili al seguente link: ${url}`;
+      default:
+        return url;
+    }
+  }
+
+  getFallbackMessage(language: string): string {
+    const date = this.getFormattedDate(language);
+    const url = this.fallbackWebUrls[language] || "…";
+    switch (language) {
+      case "de":
+        return `Lawinenvorhersage für ${date}: ${url}`;
+      case "en":
+        return `Avalanche forecast for ${date}: ${url}`;
+      case "it":
+        return `Previsione valanghe per ${date}: ${url}`;
+      default:
+        return `${date}: ${url}`;
+    }
+  }
+
+  togglePrintVersion(): void {
+    this.showPrintVersion = !this.showPrintVersion;
+  }
+
+  printChecklist(): void {
+    window.print();
   }
 
   toggleExpanded(checklistId: string): void {

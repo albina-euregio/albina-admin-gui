@@ -362,7 +362,27 @@
         "copyText": "Copy {{language}} {{channel}} text"
       },
       "newChecklist": "New checklist",
-      "savedInfo": "Saved by {{user}}, {{time}}"
+      "savedInfo": "Saved by {{user}}, {{time}}",
+      "print": {
+        "toggle": "Print version",
+        "hide": "Hide print version",
+        "hint": "Fill in the hosting service contact details and the fallback URLs below, then click \"Print\".",
+        "print": "Print",
+        "emergencyTitle": "If serious problems occur",
+        "hostingContact": {
+          "title": "Contact hosting service:",
+          "description": "Ask about server status. If applicable, request a server restart.",
+          "nameLabel": "Name:",
+          "phoneLabel": "Phone:"
+        },
+        "fallback": {
+          "title": "Use fallback instance:",
+          "step1": "Navigate to the fallback Admin-GUI and publish the bulletin there.",
+          "step2": "Manually send messages to subscribed channels. Use the text below:",
+          "step3": "Inform the public by creating social media posts linking to the fallback website URL.",
+          "step4": "Inform the PR department about the situation."
+        }
+      }
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",
