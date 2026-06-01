@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 export const WidgetSchema = z
   .object({
+    unit: z.string(),
     showIf: z.string().array(),
     widget: z.enum(["slider", "radio", "checkbox"]),
   })

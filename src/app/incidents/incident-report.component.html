@@ -26,6 +26,18 @@
   </details>
 
   <details class="border m-2 p-2">
+    <summary>{{ "incidentReport.avalancheInformation" | translate }}</summary>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="IncidentModels.AvalancheInformationSchema"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
+  </details>
+
+  <details class="border m-2 p-2">
     <summary>{{ "incidentReport.locationInformation" | translate }}</summary>
     <app-zod-schema-form
       [disabled]="disabled()"

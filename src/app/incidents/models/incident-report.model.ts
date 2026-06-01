@@ -158,10 +158,158 @@ export const GroupInformationSchema = z.object({
 });
 export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
+const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
+export const AvalancheInformationSchema = z.object({
+  multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
+  avalancheSize: z.enum(Enums.IncidentAvalancheSize),
+  avalancheType: z.enum(Enums.IncidentAvalancheType),
+  relevantAvalancheProblem: z.enum(Enums.AvalancheProblem).nullish(),
+  trigger: Trigger.nullish(),
+  natural: z
+    .enum([
+      "Natural (result of weather events, e.g. snowfall, wind temperature)",
+      "Cornice fall, natural",
+      "Earthquake",
+      "Ice fall",
+      "Rock fall",
+    ])
+    .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.natural] })
+    .nullish(),
+  person: z
+    .enum([
+      "Person (e.g. skier, snowboarder, hiker, climber), accidental",
+      "Person, controlled (i.e., skier deliberately ski cutting a slope, cornice, etc.)",
+    ])
+    .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.person] })
+    .nullish(),
+  additionalLoad: z
+    .enum(["High", "Low"])
+    .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.person] })
+    .nullish(),
+  explosives: z
+    .enum([
+      "Artillery",
+      "Case (bag) charge placed on Hand-thrown",
+      "Cornice controlled by explosives",
+      "Helicopter deployed gas exploder (e.g., Daisybell)",
+      "Hand-thrown or hand-placed explosive charge",
+      "Gas exploder",
+      "Helicopter bomb",
+      "Avalauncher and other types of launchers",
+      "Pre-placed remotely detonated explosive charge",
+      "Tram or ropeway delivery system",
+      // "Other [text]",
+    ])
+    .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.explosives] })
+    .nullish(),
+  vehicle: z
+    .enum([
+      "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
+      "Snowmobile",
+      "Helicopter (e.g. on landing, approach)",
+      // "Other [text]",
+    ])
+    .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.vehicle] })
+    .nullish(),
+  accidentalControlled: z
+    .enum(["Accidental", "Controlled"])
+    .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.vehicle] })
+    .nullish(),
+  remoteTriggering: z
+    .enum(["Yes", "No"])
+    .register(widgetRegistry, { showIf: ["avalancheType", Enums.IncidentAvalancheType.slab] })
+    .nullish(),
+  startZoneAspect: z.enum(Enums.Aspect),
+  startZoneAspectAccuracy: z.enum(["Accurate", "Uncertain"]),
+  startZoneElevation: z.number().register(widgetRegistry, { unit: "m" }),
+  startZoneElevationAccuracy: z.enum(["exact", "+/- 50m", "+/-100m", "+/-200m", "Unknown"]),
+  startZoneIncline: z.number().register(widgetRegistry, { unit: "°" }).nullish(),
+  startZoneTerrainType: z
+    .enum([
+      "Alpine Bowl",
+      "Couloir",
+      "Near Ridge Crest",
+      "Sparsely Treed",
+      "Open Forest",
+      "Dense Forest",
+      "Forest Glade",
+      "Glacier",
+      "Open Slope",
+      "Ridge",
+      "Extreme Rocky Terrain",
+      "Base of Rock Face",
+      "Wood Path",
+      "Leeward Slope",
+      "Windward Slope",
+      "Ice Waterfall",
+      // "Other [text]",
+    ])
+    .array()
+    .nullish(),
+  slabWidth: z
+    .number()
+    .register(widgetRegistry, {
+      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
+      unit: "m",
+    })
+    .nullish(),
+  crownDepthAvg: z
+    .number()
+    .register(widgetRegistry, {
+      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
+      unit: "cm",
+    })
+    .nullish(),
+  crownDepthMin: z
+    .number()
+    .register(widgetRegistry, {
+      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
+      unit: "cm",
+    })
+    .nullish(),
+  crownDepthMax: z
+    .number()
+    .register(widgetRegistry, {
+      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
+      unit: "cm",
+    })
+    .nullish(),
+  avalancheLength: z.number().register(widgetRegistry, { unit: "m" }).nullish(),
+  weakLayerName: z.string().nullish(),
+  weakLayerGrainType1: z.enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"]).nullish(),
+  weakLayerGrainSize1: z.number().nullish(),
+  weakLayerGrainType2: z.enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"]).nullish(),
+  weakLayerGrainSize2: z.number().nullish(),
+  weakLayerLocation: z
+    .enum(["Within new snow", "At the Interface with Old Snow", "Within the Old Snowpack", "Near the Ground"])
+    .nullish(),
+  bedSurfaceStepped: z.enum(["Yes", "No"]).nullish(),
+  avalancheMoistureStartZone: z.enum(["Dry", "Moist", "Wet", "Unknown"]),
+  avalancheMoistureDeposit: z.enum(["Dry", "Moist", "Wet"]).nullish(),
+  depositHeight: z.string().register(widgetRegistry, { unit: "cm" }).nullish(),
+  depositWidth: z.string().register(widgetRegistry, { unit: "m" }).nullish(),
+  debrisType: z
+    .enum([
+      "Fine",
+      "Blocks",
+      "Hard",
+      "Soft",
+      "Rocks",
+      "Trees",
+      // "Other [text]"
+    ])
+    .array()
+    .nullish(),
+  debrisDensity: z.string().register(widgetRegistry, { unit: "kg/m³" }).nullish(),
+  depositElevation: z.string().register(widgetRegistry, { unit: "m" }).nullish(),
+  avalancheDetailsComment: z.string().nullish(),
+});
+
 export const IncidentReportSchema = z.object({
   ...MetaInformationSchema.shape,
   ...GeneralInformationSchema.shape,
   ...LocationInformationSchema.shape,
+  ...AvalancheInformationSchema.shape,
   groupInformation: GroupInformationSchema.array(),
 });
 

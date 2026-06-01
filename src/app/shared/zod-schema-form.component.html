@@ -1,10 +1,21 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
     @let inner = unwrap(x.value);
-    @let widget = widgetRegistry.get(x.value);
-    <div [class.d-none]="widget?.showIf && value()[widget.showIf[0]] !== widget.showIf[1]" class="mt-4" [id]="x.key">
+    @let widget = widgetRegistry.get(inner);
+    <div
+      [class.d-none]="
+        widget?.showIf &&
+        value()[widget.showIf[0]] !== widget.showIf[1] &&
+        value()[widget.showIf[0]] !== widget.showIf[2]
+      "
+      class="mt-4"
+      [id]="x.key"
+    >
       <div class="form-label">
         {{ labelI18n().replace("#", x.key) | translate }}
+        @if (widget?.unit) {
+          <span>[{{ widget.unit }}]</span>
+        }
       </div>
       <div class="form-text">
         {{ helpI18n().replace("#", x.key) | translate }}
