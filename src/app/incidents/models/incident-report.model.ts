@@ -30,8 +30,7 @@ export const GeneralInformationSchema = z.object({
 
   personInvolvement: z.enum(["Yes", "No", "Unknown"]),
 
-  // TODO only use DamagedAssets?
-  // otherDamages: z.enum(["Yes", "No"]),
+  otherDamages: z.enum(["Yes", "No"]),
 
   damagedAssets: z
     .enum([
@@ -42,7 +41,8 @@ export const GeneralInformationSchema = z.object({
       "UtilitiesTechnicalInfrastructure",
       // "Other [text]", // TODO
     ])
-    .array(),
+    .array()
+    .register(widgetRegistry, { showIf: ["otherDamages", "Yes"] }),
 
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
   publicAvalancheWarningService: z.string(),

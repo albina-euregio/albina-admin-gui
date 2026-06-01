@@ -19,6 +19,7 @@ import { zodCssClass } from "./zod-css-class";
 export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>> {
   readonly JSON = JSON;
   readonly Object = Object;
+  readonly widgetRegistry = widgetRegistry;
   readonly zodCssClass = zodCssClass;
   readonly zPrettifyError = z.prettifyError;
 
@@ -52,10 +53,6 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     }
     throw Error();
   });
-
-  getWidget(schema: z.ZodType): string | undefined {
-    return widgetRegistry.get(schema)?.widget;
-  }
 
   enumSliderOptions(key: string, enumValues: string[]): SliderOptions {
     return {

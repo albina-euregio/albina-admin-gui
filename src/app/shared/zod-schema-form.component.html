@@ -1,14 +1,15 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
     @let inner = unwrap(x.value);
-    <div class="mt-4" [id]="x.key">
+    @let widget = widgetRegistry.get(x.value);
+    <div [class.d-none]="widget?.showIf && value()[widget.showIf[0]] !== widget.showIf[1]" class="mt-4" [id]="x.key">
       <div class="form-label">
         {{ labelI18n().replace("#", x.key) | translate }}
       </div>
       <div class="form-text">
         {{ helpI18n().replace("#", x.key) | translate }}
       </div>
-      @if (getWidget(x.value) === "slider" && inner.type === "enum") {
+      @if (widget?.widget === "slider" && inner.type === "enum") {
         @let enumValues = Object.keys(inner.def.entries);
         <app-slider
           [class]="zodCssClass(x.value, value()[x.key], '')"

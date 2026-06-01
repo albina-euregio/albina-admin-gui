@@ -1763,6 +1763,10 @@
     "Police": "Police",
     "MountainRescue": "Mountain Rescue"
   },
+  "otherDamages": {
+    "Yes": "Yes",
+    "No": "No"
+  },
   "damagedAssets": {
     "Vehicle": "Vehicle",
     "Forest": "Forest",
