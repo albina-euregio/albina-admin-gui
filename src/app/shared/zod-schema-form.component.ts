@@ -79,6 +79,19 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return x as unknown[];
   }
 
+  onCheckboxArrayChange(key: string, v: string, checked: boolean): void {
+    const value = this.value();
+    const array = Array.isArray(value[key]) ? [...value[key]] : [];
+    const index = array.indexOf(v);
+    if (checked && index < 0) {
+      array.push(v);
+    } else if (!checked && index >= 0) {
+      array.splice(index, 1);
+    }
+    Object.assign(value, { [key]: array });
+    this.value.set(value);
+  }
+
   unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber {
     while (t.type === "optional" || t.type === "nullable" || t.type === "default") {
       t = (t as unknown as z.ZodOptional | z.ZodNullable | z.ZodDefault).unwrap() as T;

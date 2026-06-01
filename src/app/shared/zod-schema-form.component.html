@@ -9,36 +9,75 @@
       <div class="form-text">
         {{ helpI18n().replace("#", x.key) | translate }}
       </div>
-      @if (widget?.widget === "slider" && inner.type === "enum") {
+      @if (inner.type === "enum") {
         @let enumValues = Object.keys(inner.def.entries);
-        <app-slider
-          [class]="zodCssClass(x.value, value()[x.key], '')"
-          [disabled]="disabled()"
-          [sliderOptions]="enumSliderOptions(x.key, enumValues)"
-          [sliderValue]="enumValueIndex(value()[x.key], enumValues)"
-          (sliderValueChange)="onSliderEnumChange(x.key, $event, enumValues)"
-        />
-        @if (value()[x.key]) {
-          <div class="text-center">{{ x.key + "." + value()[x.key] | translate }}</div>
+        @if (widget?.widget === "slider") {
+          <app-slider
+            [class]="zodCssClass(x.value, value()[x.key], '')"
+            [disabled]="disabled()"
+            [sliderOptions]="enumSliderOptions(x.key, enumValues)"
+            [sliderValue]="enumValueIndex(value()[x.key], enumValues)"
+            (sliderValueChange)="onSliderEnumChange(x.key, $event, enumValues)"
+          />
+          @if (value()[x.key]) {
+            <div class="text-center">{{ x.key + "." + value()[x.key] | translate }}</div>
+          }
+        } @else if (widget?.widget === "radio") {
+          @for (v of enumValues; track v) {
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  [name]="x.key"
+                  [(ngModel)]="value()[x.key]"
+                  [value]="v"
+                  [disabled]="disabled()"
+                />
+                {{ x.key + "." + v | translate }}
+              </label>
+            </div>
+          }
+        } @else {
+          <app-toggle-btn-group
+            [class]="zodCssClass(x.value, value()[x.key], '')"
+            [disabled]="disabled()"
+            [enumValues]="enumValues"
+            [(value)]="value()[x.key]"
+            (valueChange)="value.set(value())"
+            [labelI18n]="`${x.key}.#`"
+          />
         }
-      } @else if (inner.type === "enum") {
-        <app-toggle-btn-group
-          [class]="zodCssClass(x.value, value()[x.key], '')"
-          [disabled]="disabled()"
-          [enumValues]="Object.keys(inner.def.entries)"
-          [(value)]="value()[x.key]"
-          (valueChange)="value.set(value())"
-          [labelI18n]="`${x.key}.#`"
-        />
       } @else if (inner.type === "array" && inner.def.element.type === "enum") {
-        <app-toggle-btn-group
-          [class]="zodCssClass(x.value, value()[x.key], '')"
-          [disabled]="disabled()"
-          [enumValues]="Object.keys(inner.def.element.def.entries)"
-          [values]="castArray(value()[x.key])"
-          (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); value.set(value())"
-          [labelI18n]="`${x.key}.#`"
-        />
+        @let enumValues = Object.keys(inner.def.element.def.entries);
+        @if (widget?.widget === "checkbox") {
+          @for (v of enumValues; track v) {
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input
+                  #checkbox
+                  class="form-check-input"
+                  type="checkbox"
+                  [name]="x.key"
+                  [value]="v"
+                  [disabled]="disabled()"
+                  [checked]="castArray(value()[x.key])?.includes(v)"
+                  (change)="onCheckboxArrayChange(x.key, v, checkbox.checked)"
+                />
+                {{ x.key + "." + v | translate }}
+              </label>
+            </div>
+          }
+        } @else {
+          <app-toggle-btn-group
+            [class]="zodCssClass(x.value, value()[x.key], '')"
+            [disabled]="disabled()"
+            [enumValues]="enumValues"
+            [values]="castArray(value()[x.key])"
+            (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); value.set(value())"
+            [labelI18n]="`${x.key}.#`"
+          />
+        }
       } @else if (inner.type === "string") {
         <input
           type="text"
