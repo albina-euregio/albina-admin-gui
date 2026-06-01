@@ -37,9 +37,6 @@ export class IncidentReportComponent {
       publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
       timestamp: new Date(),
       reportStatus: "Draft",
-      sourceOfInformation: [],
-      damagedAssets: [],
-      dangerPattern: [],
       groupInformation: [
         {
           anonymousGroupIdentifier: "Group unknown",

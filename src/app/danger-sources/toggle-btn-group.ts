@@ -10,6 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 })
 export class ToggleBtnGroup<T> {
   translateService = inject(TranslateService);
+  multiple = input<boolean>();
   enumValues = input<T[]>();
   diminishValues = input<Partial<Record<T extends string ? T : never, boolean>>>();
 
@@ -28,8 +29,9 @@ export class ToggleBtnGroup<T> {
   }
 
   emitChange(v: T) {
-    const values = this.values();
-    if (Array.isArray(values)) {
+    let values = this.values();
+    if (Array.isArray(values) || this.multiple()) {
+      values ??= [];
       if (values.includes(v)) {
         this.valuesChange.emit([...values].filter((v0) => v0 !== v));
       } else {
