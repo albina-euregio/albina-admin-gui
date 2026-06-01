@@ -57,7 +57,6 @@ import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
 import { ModalConfirmComponent } from "./modal-confirm.component";
 import { ModalMediaFileComponent } from "./modal-media-file.component";
-import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -176,7 +175,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   readonly submitBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("submitBulletinsErrorTemplate");
 
   public publishBulletinsModalRef: BsModalRef;
-  readonly publishBulletinsTemplate = viewChild<TemplateRef<unknown>>("publishBulletinsTemplate");
 
   public publishBulletinsErrorModalRef: BsModalRef;
   readonly publishBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("publishBulletinsErrorTemplate");
@@ -184,13 +182,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public previewErrorModalRef: BsModalRef;
   readonly previewErrorTemplate = viewChild<TemplateRef<unknown>>("previewErrorTemplate");
 
-  public publicationStatusModalRef: BsModalRef;
-  readonly publicationStatusTemplate = viewChild<TemplateRef<unknown>>("publicationStatusTemplate");
-
   public mediaFileModalRef: BsModalRef;
   readonly mediaFileTemplate = viewChild<TemplateRef<unknown>>("mediaFileTemplate");
-
-  public publishAllModalRef: BsModalRef;
 
   public checkBulletinsModalRef: BsModalRef;
   readonly checkBulletinsTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsTemplate");
@@ -800,11 +793,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  publishAll(change: boolean) {
-    this.publishing = true;
-    this.openPublishAllModal(change);
-  }
-
   check(event: Event, date: [Date, Date]) {
     event.stopPropagation();
 
@@ -882,15 +870,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  showPublishAllButton() {
-    return (
-      !this.bulletinsService.getIsReadOnly() &&
-      !this.publishing &&
-      !this.submitting &&
-      this.authenticationService.isCurrentUserInRole("ADMIN")
-    );
-  }
-
   showCheckButton() {
     return (
       !this.publishing &&
@@ -913,40 +892,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  showInfoButton() {
-    return (
-      !this.publishing &&
-      !this.submitting &&
-      !this.copying &&
-      this.authenticationService.getActiveRegionId() !== undefined &&
-      (this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.published ||
-        this.bulletinsService.getActiveRegionStatus() === this.bulletinStatus.republished) &&
-      this.authenticationService.isCurrentUserInRole("ADMIN")
-    );
-  }
-
-  showPublicationInfo() {
-    this.bulletinsService.getPublicationStatus(this.authenticationService.getActiveRegionId()).subscribe(
-      (data) => {
-        this.openPublicationStatusModal(data as any);
-      },
-      (error) => {
-        console.error("Publication status could not be loaded!", error);
-        // open modal regardless since it works without the data as well
-        this.openPublicationStatusModal(undefined);
-      },
-    );
-  }
-
-  openPublicationStatusModal(json) {
-    const initialState: Partial<ModalPublicationStatusComponent> = {
-      json: json,
-      date: this.getActiveDate(),
-      component: this,
-    };
-    this.publicationStatusModalRef = this.modalService.show(ModalPublicationStatusComponent, { initialState });
-  }
-
   openMediaFileModal() {
     const initialState: Partial<ModalMediaFileComponent> = {
       date: this.getActiveDate(),
@@ -957,36 +902,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   mediaFileModalConfirm(): void {
     this.mediaFileModalRef.hide();
-  }
-
-  publicationStatusModalConfirm(): void {
-    this.publicationStatusModalRef.hide();
-  }
-
-  openPublishAllModal(change: boolean) {
-    const initialState: Partial<ModalConfirmComponent> = {
-      text: change
-        ? this.translateService.instant("bulletins.table.publishAllDialog.changeMessage")
-        : this.translateService.instant("bulletins.table.publishAllDialog.message"),
-      acceptKey: "button.yes",
-      onConfirm: () => {
-        this.bulletinsService.publishAllBulletins(this.getActiveDate(), change).subscribe({
-          next: () => {
-            console.log("All bulletins published.");
-            this.publishing = false;
-          },
-          error: (error) => {
-            console.error("All bulletins could not be published!", error);
-            this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
-          },
-        });
-      },
-    };
-    this.publishAllModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
-
-    this.modalService.onHide.subscribe(() => {
-      this.publishing = false;
-    });
   }
 
   async downloadCaamlBulletin() {
@@ -2390,6 +2305,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           .subscribe({
             next: () => {
               console.log(change ? "Bulletins published (no messages)." : "Bulletins published.");
+              this.bulletinsService.refreshPublicationStatus();
             },
             error: (error) => {
               console.error(
