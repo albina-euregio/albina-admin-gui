@@ -5,7 +5,12 @@
       <div class="card" [class.publication-checklist-print]="showPrintVersion">
         <div class="card-header py-3 d-flex flex-column gap-2">
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <h2 class="mb-0">{{ "bulletins.publicationChecklist.title" | translate }}</h2>
+            <h2 class="mb-0">
+              {{ "bulletins.publicationChecklist.title" | translate }}
+              @if (showPrintVersion) {
+                &ndash; {{ "bulletins.title" | translate }}
+              }
+            </h2>
             @if (activeChecklist.checklistId) {
               <div class="small text-body-secondary d-print-none">{{ getSavedInfo(activeChecklist) }}</div>
             }
@@ -91,25 +96,29 @@
 
           <!-- Contact hosting service -->
           <div class="mb-4">
-            <p class="fw-semibold mb-2">
-              1. {{ "bulletins.publicationChecklist.print.hostingContact.title" | translate }}
-            </p>
+            <p class="fw-semibold mb-2">1. {{ "bulletins.publicationChecklist.print.contact.title" | translate }}</p>
             <div class="d-flex gap-4 flex-wrap mb-3">
               <div class="d-flex align-items-center gap-2">
                 <label class="small text-nowrap mb-0" for="print-hosting-name">
-                  {{ "bulletins.publicationChecklist.print.hostingContact.nameLabel" | translate }}
+                  {{ "bulletins.publicationChecklist.print.contact.nameLabel" | translate }}
                 </label>
                 <input type="text" id="print-hosting-name" class="print-fill-input" />
               </div>
               <div class="d-flex align-items-center gap-2">
                 <label class="small text-nowrap mb-0" for="print-hosting-phone">
-                  {{ "bulletins.publicationChecklist.print.hostingContact.phoneLabel" | translate }}
+                  {{ "bulletins.publicationChecklist.print.contact.phoneLabel" | translate }}
                 </label>
                 <input type="tel" id="print-hosting-phone" class="print-fill-input" />
               </div>
+              <div class="d-flex align-items-center gap-2">
+                <label class="small text-nowrap mb-0" for="print-hosting-email">
+                  {{ "bulletins.publicationChecklist.print.contact.emailLabel" | translate }}
+                </label>
+                <input type="email" id="print-hosting-email" class="print-fill-input" />
+              </div>
             </div>
             <p class="small mb-3">
-              {{ "bulletins.publicationChecklist.print.hostingContact.description" | translate }}
+              {{ "bulletins.publicationChecklist.print.hostingDescription" | translate }}
             </p>
           </div>
 
@@ -188,7 +197,29 @@
                   fallbackStep3Text
                 }}</pre>
               </li>
-              <li class="mb-2">{{ "bulletins.publicationChecklist.print.fallback.step4" | translate }}</li>
+              <li class="mb-2">
+                {{ "bulletins.publicationChecklist.print.fallback.step4" | translate }}
+                <div class="d-flex gap-4 flex-wrap mb-3">
+                  <div class="d-flex align-items-center gap-2">
+                    <label class="small text-nowrap mb-0" for="print-hosting-name">
+                      {{ "bulletins.publicationChecklist.print.contact.nameLabel" | translate }}
+                    </label>
+                    <input type="text" id="print-hosting-name" class="print-fill-input" />
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <label class="small text-nowrap mb-0" for="print-hosting-phone">
+                      {{ "bulletins.publicationChecklist.print.contact.phoneLabel" | translate }}
+                    </label>
+                    <input type="tel" id="print-hosting-phone" class="print-fill-input" />
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <label class="small text-nowrap mb-0" for="print-hosting-email">
+                      {{ "bulletins.publicationChecklist.print.contact.emailLabel" | translate }}
+                    </label>
+                    <input type="email" id="print-hosting-email" class="print-fill-input" />
+                  </div>
+                </div>
+              </li>
             </ol>
           </div>
         </div>
@@ -392,7 +423,7 @@
                                   <i class="ph ph-paper-plane-tilt"></i>
                                   <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
                                 </button>
-                                @if (showPublishAllButton()) {
+                                @if (showPublishAllButton() && !print) {
                                   <button
                                     type="button"
                                     class="btn btn-outline-warning btn-sm"
@@ -533,19 +564,13 @@
                               <div class="fw-semibold">
                                 {{ "bulletins.publicationChecklist.resend" | translate }}
                               </div>
-                              @if (!print) {
-                                <app-publication-trigger-notifications
-                                  [date]="getActiveDate()"
-                                  [regionId]="regionId"
-                                  [publicationChannel]="item.publicationChannel"
-                                  iconClass="ph ph-envelope-simple"
-                                  [languages]="getEnabledLanguages(item.publicationChannel)"
-                                ></app-publication-trigger-notifications>
-                              } @else {
-                                <div class="small text-muted">
-                                  {{ "bulletins.publicationChecklist.print.useAdminToResend" | translate }}
-                                </div>
-                              }
+                              <app-publication-trigger-notifications
+                                [date]="getActiveDate()"
+                                [regionId]="regionId"
+                                [publicationChannel]="item.publicationChannel"
+                                iconClass="ph ph-envelope-simple"
+                                [languages]="getEnabledLanguages(item.publicationChannel)"
+                              ></app-publication-trigger-notifications>
                             </li>
                           </ol>
                         </div>

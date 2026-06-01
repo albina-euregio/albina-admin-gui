@@ -456,11 +456,11 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     const url = this.fallbackWebUrls[language] || "…";
     switch (language) {
       case "de":
-        return `Lawinenvorhersage für ${date}: ${url}`;
+        return `Lawinenvorhersage für ${date}: ${url}/${this.date}`;
       case "en":
-        return `Avalanche forecast for ${date}: ${url}`;
+        return `Avalanche forecast for ${date}: ${url}/${this.date}`;
       case "it":
-        return `Previsione valanghe per ${date}: ${url}`;
+        return `Previsione valanghe per ${date}: ${url}/${this.date}`;
       default:
         return `${date}: ${url}`;
     }
