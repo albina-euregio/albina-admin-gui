@@ -74,6 +74,9 @@
       "cloudMid": "Mid",
       "cloudLow": "Low"
     },
+    "tooltips": {
+      "levelApproxElevation": "Approx. elevation: ~{{height}} m"
+    },
     "parameters": {
       "gfs": {
         "equivalentPotentialTemp": "Equivalent Potential Temp.",
