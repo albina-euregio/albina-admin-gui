@@ -28,6 +28,8 @@ export class IncidentReportComponent {
   readonly Object = Object;
 
   readonly disabled = input<boolean>(false);
+  readonly labelI18n = "incidentReport.#";
+  readonly helpI18n = "incidentReportHelp.#";
   readonly incidentReport = model<IncidentReport>(
     IncidentModels.PartialIncidentReportSchema.parse({
       author: this.authenticationService.getCurrentAuthor()?.email,

@@ -8,8 +8,8 @@
       [value]="incidentReport()"
       (valueChange)="incidentReport.set($event)"
       [zodType]="IncidentModels.MetaInformationSchema"
-      [labelI18n]="'incidentReport.#'"
-      [helpI18n]="'incidentReportHelp.#'"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
     />
   </details>
 
@@ -20,8 +20,8 @@
       [value]="incidentReport()"
       (valueChange)="incidentReport.set($event)"
       [zodType]="IncidentModels.GeneralInformationSchema"
-      [labelI18n]="'incidentReport.#'"
-      [helpI18n]="'incidentReportHelp.#'"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
     />
   </details>
 
@@ -32,8 +32,8 @@
       [value]="incidentReport()"
       (valueChange)="incidentReport.set($event)"
       [zodType]="IncidentModels.LocationInformationSchema"
-      [labelI18n]="'incidentReport.#'"
-      [helpI18n]="'incidentReportHelp.#'"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
     />
   </details>
 
@@ -50,8 +50,8 @@
             [disabled]="disabled()"
             [value]="groupInformation"
             [zodType]="IncidentModels.GroupInformationSchema"
-            [labelI18n]="'incidentReport.#'"
-            [helpI18n]="'incidentReportHelp.#'"
+            [labelI18n]="labelI18n"
+            [helpI18n]="helpI18n"
           />
         </details>
       }
