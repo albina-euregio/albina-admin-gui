@@ -138,8 +138,14 @@
     }
   }
 
-  // Spacing between fields
-  .mt-4 {
-    margin-top: $space-3 !important;
+  // Spacing and separation between fields
+  .zod-form-field {
+    margin-top: $space-4;
+
+    &:not(.d-none) ~ .zod-form-field:not(.d-none) {
+      border-top: 1px solid $gray-200;
+      padding-top: $space-4;
+      margin-top: $space-4;
+    }
   }
 }

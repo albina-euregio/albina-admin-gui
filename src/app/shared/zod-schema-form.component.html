@@ -5,7 +5,7 @@
     @let valueI18n = widget?.valueI18n || `${x.key}.#`;
     <div
       [class.d-none]="!shouldShowField(widget) || (showMandatoryOnly() && isFieldOptional(x.value))"
-      class="mt-4"
+      class="zod-form-field"
       [id]="x.key"
     >
       <div class="form-label d-flex align-items-center gap-2">
