@@ -74,7 +74,7 @@
                   [value]="v"
                   [disabled]="disabled()"
                   [checked]="castArray(value()[x.key])?.includes(v)"
-                  (change)="onCheckboxArrayChange(x.key, v, checkbox.checked)"
+                  (change)="onCheckboxArrayChange(x.key, v)"
                 />
                 {{ valueI18n.replace("#", v) | translate }}
               </label>

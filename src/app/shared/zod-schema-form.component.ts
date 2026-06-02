@@ -2,6 +2,7 @@ import { KeyValuePipe } from "@angular/common";
 import { Component, computed, inject, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { xor } from "es-toolkit";
 import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
@@ -83,16 +84,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return x as unknown[];
   }
 
-  onCheckboxArrayChange(key: string, v: string, checked: boolean): void {
+  onCheckboxArrayChange(key: string, v: string): void {
     const value = this.value();
-    const array = Array.isArray(value[key]) ? [...value[key]] : [];
-    const index = array.indexOf(v);
-    if (checked && index < 0) {
-      array.push(v);
-    } else if (!checked && index >= 0) {
-      array.splice(index, 1);
-    }
-    Object.assign(value, { [key]: array });
+    Object.assign(value, { [key]: xor(this.castArray(value[key]) ?? [], [v]) });
     this.value.set(value);
   }
 
