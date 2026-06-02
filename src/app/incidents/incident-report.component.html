@@ -253,6 +253,11 @@
                       [class.ph-caret-down]="!isGroupCollapsed(groupInformation.anonymousGroupIdentifier)"
                     ></i>
                     <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
+                    @if (isGroupValid(groupInformation)) {
+                      <span class="text-success ms-2" title="Valid">✔</span>
+                    } @else {
+                      <span class="text-danger ms-2" title="Incomplete">⚠</span>
+                    }
                   </div>
                   @if ($index > 0) {
                     <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">

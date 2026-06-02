@@ -117,4 +117,8 @@ export class IncidentReportComponent {
   isGroupCollapsed(groupIdentifier: string): boolean {
     return !!this.collapsedGroups[groupIdentifier];
   }
+
+  isGroupValid(group: IncidentModels.GroupInformation): boolean {
+    return IncidentModels.GroupInformationSchema.safeParse(group).success;
+  }
 }
