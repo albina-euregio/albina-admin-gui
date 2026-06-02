@@ -38,16 +38,14 @@
         @if (inner.type === "enum") {
           @let enumValues = Object.keys(inner.def.entries);
           @if (widget?.widget === "slider") {
-            <app-slider
+            <app-enum-slider
               [class]="zodCssClass(x.value, value()[x.key], '')"
               [disabled]="disabled()"
-              [sliderOptions]="enumSliderOptions(x.key, enumValues)"
-              [sliderValue]="enumValueIndex(value()[x.key], enumValues)"
-              (sliderValueChange)="onSliderEnumChange(x.key, $event, enumValues)"
+              [enumValues]="enumValues"
+              [valueI18n]="valueI18n"
+              [(value)]="value()[x.key]"
+              (valueChange)="value.set(value())"
             />
-            @if (value()[x.key]) {
-              <div class="text-center">{{ valueI18n.replace("#", "" + value()[x.key]) | translate }}</div>
-            }
           } @else if (widget?.widget === "select") {
             <select
               [disabled]="disabled()"
