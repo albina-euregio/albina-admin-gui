@@ -2328,5 +2328,26 @@
     "Minor": "Minor",
     "Moderate": "Moderate",
     "Major": "Major"
+  },
+  "signsOfInstability": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
+  "recentLoading": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
+  "criticalWarming": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
+  "analysisStatus": {
+    "Empty": "Empty",
+    "Draft": "Draft",
+    "Review": "Review",
+    "Publish": "Publish"
   }
 }
