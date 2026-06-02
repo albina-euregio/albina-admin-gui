@@ -54,7 +54,7 @@
         (click)="activeTab = 'meta'"
       >
         <span>{{ "incidentReport.metaInformation" | translate }}</span>
-        @if (getMetaValidationStatus() === "valid") {
+        @if (getValidationStatus(IncidentModels.MetaInformationSchema) === "valid") {
           <span class="text-success" title="Valid">✔</span>
         } @else {
           <span class="text-danger" title="Incomplete">⚠</span>
@@ -68,7 +68,7 @@
         (click)="activeTab = 'general'"
       >
         <span>{{ "incidentReport.generalInformation" | translate }}</span>
-        @if (getGeneralValidationStatus() === "valid") {
+        @if (getValidationStatus(IncidentModels.GeneralInformationSchema) === "valid") {
           <span class="text-success" title="Valid">✔</span>
         } @else {
           <span class="text-danger" title="Incomplete">⚠</span>
@@ -82,7 +82,7 @@
         (click)="activeTab = 'location'"
       >
         <span>{{ "incidentReport.locationInformation" | translate }}</span>
-        @if (getLocationValidationStatus() === "valid") {
+        @if (getValidationStatus(IncidentModels.LocationInformationSchema) === "valid") {
           <span class="text-success" title="Valid">✔</span>
         } @else {
           <span class="text-danger" title="Incomplete">⚠</span>
@@ -96,7 +96,7 @@
         (click)="activeTab = 'avalanche'"
       >
         <span>{{ "incidentReport.avalancheInformation" | translate }}</span>
-        @if (getAvalancheValidationStatus() === "valid") {
+        @if (getValidationStatus(IncidentModels.AvalancheInformationSchema) === "valid") {
           <span class="text-success" title="Valid">✔</span>
         } @else {
           <span class="text-danger" title="Incomplete">⚠</span>

@@ -4,6 +4,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -48,23 +49,8 @@ export class IncidentReportComponent {
     return this.allTabs[Math.min(index + 1, this.allTabs.length - 1)];
   }
 
-  getMetaValidationStatus(): "valid" | "invalid" {
-    const res = IncidentModels.MetaInformationSchema.safeParse(this.incidentReport());
-    return res.success ? "valid" : "invalid";
-  }
-
-  getGeneralValidationStatus(): "valid" | "invalid" {
-    const res = IncidentModels.GeneralInformationSchema.safeParse(this.incidentReport());
-    return res.success ? "valid" : "invalid";
-  }
-
-  getAvalancheValidationStatus(): "valid" | "invalid" {
-    const res = IncidentModels.AvalancheInformationSchema.safeParse(this.incidentReport());
-    return res.success ? "valid" : "invalid";
-  }
-
-  getLocationValidationStatus(): "valid" | "invalid" {
-    const res = IncidentModels.LocationInformationSchema.safeParse(this.incidentReport());
+  getValidationStatus(schema: z.ZodType): "valid" | "invalid" {
+    const res = schema.safeParse(this.incidentReport());
     return res.success ? "valid" : "invalid";
   }
 
