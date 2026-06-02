@@ -103,6 +103,7 @@ export class IncidentReportComponent {
   }
 
   removeGroupInformation(index: number) {
+    if (index === 0) return;
     if (!confirm(`Kill group ${index + 1}?`)) return;
     this.incidentReport().groupInformation.splice(index, 1);
   }

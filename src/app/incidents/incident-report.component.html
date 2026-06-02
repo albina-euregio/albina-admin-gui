@@ -244,9 +244,11 @@
               <div class="card mb-3 shadow-sm border">
                 <div class="card-header d-flex justify-content-between align-items-center bg-light">
                   <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
-                  <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">
-                    &minus; Remove
-                  </button>
+                  @if ($index > 0) {
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">
+                      &minus; Remove
+                    </button>
+                  }
                 </div>
                 <div class="card-body">
                   <app-zod-schema-form
