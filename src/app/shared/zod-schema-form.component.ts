@@ -98,11 +98,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     }
     return t;
   }
-
   isFieldOptional(zodType: z.ZodType): boolean {
-    return zodType.safeParse(undefined).success || zodType.safeParse(null).success;
+    return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
   }
-
   getDateString(key: string): string {
     const raw = (this.value() as any)?.[key];
     if (!raw) return "";

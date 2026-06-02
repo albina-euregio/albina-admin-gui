@@ -314,6 +314,7 @@ export const IncidentReportSchema = z.object({
 });
 
 export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({
+  timestamp: z.coerce.date(),
   groupInformation: GroupInformationSchema.partial().array(),
 });
 
