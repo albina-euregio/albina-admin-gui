@@ -36,7 +36,7 @@ export class IncidentReportComponent {
   personInvolvementOptions: ("Yes" | "No" | "Unknown")[] = ["Yes", "No", "Unknown"];
 
   showMandatoryOnly = false;
-  readonly allTabs = ["meta", "general", "location", "avalanche", "group", "other-damages"] as const;
+  readonly allTabs = ["meta", "general", "location", "avalanche", "group", "other-damages", "analysis"] as const;
   activeTab: (typeof this.allTabs)[number] = "general";
 
   get prevTab(): (typeof this.allTabs)[number] {

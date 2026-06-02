@@ -131,6 +131,20 @@
         }
       </button>
     </li>
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'analysis'"
+        (click)="activeTab = 'analysis'"
+      >
+        <span>{{ "incidentReport.incidentAnalysis" | translate }}</span>
+        @if (getValidationStatus(IncidentModels.IncidentAnalysisSchema) === "valid") {
+          <span class="text-success" title="Valid">✔</span>
+        } @else {
+          <span class="text-danger" title="Incomplete">⚠</span>
+        }
+      </button>
+    </li>
   </ul>
 
   <!-- Tab Content Areas -->
@@ -377,6 +391,22 @@
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.OtherDamagesSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
+
+    <!-- Incident Analysis Tab -->
+    @if (activeTab === "analysis") {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.incidentAnalysis" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.IncidentAnalysisSchema"
           [labelI18n]="labelI18n"
           [helpI18n]="helpI18n"
           [showMandatoryOnly]="showMandatoryOnly"

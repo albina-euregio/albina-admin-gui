@@ -420,6 +420,21 @@ export const OtherDamagesSchema = z.object({
     .nullish(),
 });
 
+export const IncidentAnalysisSchema = z.object({
+  incidentLede: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  incidentDescription: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  weatherDescription: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  avalancheDescription: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  snowpackDescription: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  recentSlabAvalanches: z.string().nullish(),
+  signsOfInstability: z.string().nullish(),
+  recentLoading: z.string().nullish(),
+  criticalWarming: z.string().nullish(),
+  takeAways: z.string().nullish(),
+  analysisStatus: z.string().nullish(),
+  incidentAnalysisComment: z.string().nullish(),
+});
+
 export const IncidentReportSchema = z.object({
   ...MetaInformationSchema.shape,
   ...GeneralInformationSchema.shape,
@@ -430,6 +445,7 @@ export const IncidentReportSchema = z.object({
   ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array(),
   victimInformation: VictimInformationSchema.array(),
+  ...IncidentAnalysisSchema.shape,
 });
 
 export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({
