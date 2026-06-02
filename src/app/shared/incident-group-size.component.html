@@ -1,0 +1,20 @@
+<div class="d-flex align-items-center gap-3">
+  <input
+    type="number"
+    [class]="cssClass()"
+    [ngModel]="groupSize()"
+    (ngModelChange)="groupSize.set($event)"
+    [disabled]="disabled()"
+    style="max-width: 150px"
+  />
+  <label class="form-check-label group-size-unknown-label cursor-pointer d-flex align-items-center gap-2 mb-0">
+    <input
+      type="checkbox"
+      class="form-check-input m-0"
+      [disabled]="disabled()"
+      [ngModel]="groupSizeUnknown()"
+      (ngModelChange)="groupSizeUnknown.set($event)"
+    />
+    <span>{{ labelI18n().replace("#", "groupSizeUnknown") | translate }}</span>
+  </label>
+</div>

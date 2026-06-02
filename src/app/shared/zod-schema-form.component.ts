@@ -9,6 +9,7 @@ import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import * as IncidentModels from "../incidents/models/incident-report.model";
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumSliderComponent } from "./enum-slider.component";
+import { IncidentGroupSizeComponent } from "./incident-group-size.component";
 import { zodCssClass } from "./zod-css-class";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
 
@@ -16,7 +17,15 @@ import { widgetRegistry } from "./zod-schema-form.widget-registry";
   selector: "app-zod-schema-form",
   templateUrl: "zod-schema-form.component.html",
   standalone: true,
-  imports: [DateTimeInputComponent, EnumSliderComponent, FormsModule, KeyValuePipe, ToggleBtnGroup, TranslateModule],
+  imports: [
+    DateTimeInputComponent,
+    EnumSliderComponent,
+    FormsModule,
+    IncidentGroupSizeComponent,
+    KeyValuePipe,
+    ToggleBtnGroup,
+    TranslateModule,
+  ],
 })
 export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>> {
   readonly JSON = JSON;
@@ -97,17 +106,5 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   }
   isFieldValid(schema: z.ZodType, val: unknown): boolean {
     return this.hasValue(val) && schema.safeParse(val).success;
-  }
-
-  get groupSizeUnknown(): boolean {
-    const val = this.value() as z.infer<typeof IncidentModels.GroupInformationSchema>;
-    return !!val?.groupSizeUnknown;
-  }
-
-  onGroupSizeUnknownChange(checked: boolean): void {
-    const val = this.value() as z.infer<typeof IncidentModels.GroupInformationSchema>;
-    if (!val) return;
-    val.groupSizeUnknown = checked;
-    this.value.set(val as any);
   }
 }

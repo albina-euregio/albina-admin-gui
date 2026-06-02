@@ -137,28 +137,15 @@
           }
         } @else if (inner.type === "number") {
           @if (x.key === "groupSize") {
-            <div class="d-flex align-items-center gap-3">
-              <input
-                type="number"
-                [class]="zodCssClass(x.value, value()[x.key])"
-                [(ngModel)]="value().groupSize"
-                (ngModelChange)="value.set(value())"
-                [disabled]="disabled()"
-                style="max-width: 150px"
-              />
-              <label
-                class="form-check-label group-size-unknown-label cursor-pointer d-flex align-items-center gap-2 mb-0"
-              >
-                <input
-                  type="checkbox"
-                  class="form-check-input m-0"
-                  [disabled]="disabled()"
-                  [ngModel]="groupSizeUnknown"
-                  (ngModelChange)="onGroupSizeUnknownChange($event)"
-                />
-                <span>{{ labelI18n().replace("#", "groupSizeUnknown") | translate }}</span>
-              </label>
-            </div>
+            <app-incident-group-size
+              [disabled]="disabled()"
+              [cssClass]="zodCssClass(x.value, value()[x.key])"
+              [labelI18n]="labelI18n()"
+              [(groupSize)]="value().groupSize"
+              (groupSizeChange)="value.set(value())"
+              [(groupSizeUnknown)]="value().groupSizeUnknown"
+              (groupSizeUnknownChange)="value.set(value())"
+            />
           } @else {
             <input
               type="number"
