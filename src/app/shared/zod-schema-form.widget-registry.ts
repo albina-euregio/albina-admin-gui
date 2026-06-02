@@ -4,5 +4,5 @@ export const widgetRegistry = z.registry<{
   unit?: string;
   valueI18n?: `${string}#${string}`;
   showIf?: string[];
-  widget?: "slider" | "radio" | "checkbox" | "select";
+  widget?: "slider" | "radio" | "checkbox" | "select" | "textarea";
 }>();

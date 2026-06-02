@@ -118,7 +118,7 @@
             />
           }
         } @else if (inner.type === "string") {
-          @if (x.key.toLowerCase().includes("comment")) {
+          @if (widget?.widget === "textarea") {
             <textarea
               [class]="zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"

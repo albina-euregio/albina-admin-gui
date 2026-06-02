@@ -41,7 +41,7 @@ export const GeneralInformationSchema = z.object({
 
   externalLink: z.url().nullish(),
 
-  generalInformationComment: z.string().nullish(),
+  generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
 export const LocationInformationSchema = z.object({
@@ -71,7 +71,7 @@ export const LocationInformationSchema = z.object({
   // TODO Multilanguage?
   municipality: z.string().nullish(),
   avalancheRegion: z.string().nullish(),
-  locationInformationComment: z.string().nullish(),
+  locationInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
 export const GroupInformationSchema = z.object({
@@ -139,7 +139,7 @@ export const GroupInformationSchema = z.object({
     // "Other [text]" // TODO
   ]),
   avalancheGear: z.enum(["All", "Some", "None", "Unknown"]),
-  groupInformationComment: z.string().nullish(),
+  groupInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
@@ -287,7 +287,7 @@ export const AvalancheInformationSchema = z.object({
     .nullish(),
   debrisDensity: z.string().register(widgetRegistry, { unit: "kg/m³" }).nullish(),
   depositElevation: z.string().register(widgetRegistry, { unit: "m" }).nullish(),
-  avalancheDetailsComment: z.string().nullish(),
+  avalancheDetailsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
 export const OtherDamagesSchema = z.object({
