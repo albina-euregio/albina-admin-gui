@@ -1,5 +1,7 @@
-<img
-  [src]="`./assets/img/${avalancheProblem[0].toUpperCase()}${avalancheProblem.slice(1)}_c.svg`"
-  alt="{{ `avalancheProblem.${avalancheProblem}` | translate }}"
-  title="{{ `avalancheProblem.${avalancheProblem}` | translate }}"
-/>
+@if (avalancheProblem) {
+  <img
+    [src]="`./assets/img/${avalancheProblem[0].toUpperCase()}${avalancheProblem.slice(1)}_c.svg`"
+    alt="{{ `avalancheProblem.${avalancheProblem}` | translate }}"
+    title="{{ `avalancheProblem.${avalancheProblem}` | translate }}"
+  />
+}

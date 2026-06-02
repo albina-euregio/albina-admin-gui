@@ -14,11 +14,6 @@ export class AvalancheProblemIconsComponent {
   readonly value = input<AvalancheProblemModel | Enums.AvalancheProblem>(undefined);
   avalancheProblemEnum = Enums.AvalancheProblem;
 
-  isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
-    const v = this.value();
-    return v === avalancheProblem || (typeof v === "object" && v?.avalancheProblem === avalancheProblem);
-  }
-
   get avalancheProblem(): Enums.AvalancheProblem {
     const v = this.value();
     if (typeof v === "object") return v.avalancheProblem;
