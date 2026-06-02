@@ -163,23 +163,17 @@ export const AvalancheInformationSchema = z.object({
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
   avalancheSize: z.enum(Enums.IncidentAvalancheSize),
   avalancheType: z.enum(Enums.IncidentAvalancheType),
-  relevantAvalancheProblem: z.enum(Enums.AvalancheProblem).nullish(),
+  relevantAvalancheProblem: z
+    .enum(Enums.AvalancheProblem)
+    .register(widgetRegistry, { valueI18n: "avalancheProblem.#" })
+    .nullish(),
   trigger: Trigger.nullish(),
   natural: z
-    .enum([
-      "Natural (result of weather events, e.g. snowfall, wind temperature)",
-      "Cornice fall, natural",
-      "Earthquake",
-      "Ice fall",
-      "Rock fall",
-    ])
+    .enum(["Natural", "CorniceFall", "Earthquake", "IceFall", "RockFall"])
     .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.natural] })
     .nullish(),
   person: z
-    .enum([
-      "Person (e.g. skier, snowboarder, hiker, climber), accidental",
-      "Person, controlled (i.e., skier deliberately ski cutting a slope, cornice, etc.)",
-    ])
+    .enum(["PersonAccidental", "PersonControlled"])
     .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.person] })
     .nullish(),
   additionalLoad: z
@@ -189,24 +183,24 @@ export const AvalancheInformationSchema = z.object({
   explosives: z
     .enum([
       "Artillery",
-      "Case (bag) charge placed on Hand-thrown",
-      "Cornice controlled by explosives",
-      "Helicopter deployed gas exploder (e.g., Daisybell)",
-      "Hand-thrown or hand-placed explosive charge",
-      "Gas exploder",
-      "Helicopter bomb",
-      "Avalauncher and other types of launchers",
-      "Pre-placed remotely detonated explosive charge",
-      "Tram or ropeway delivery system",
+      "CaseCharge",
+      "CorniceControlledByExplosives",
+      "HelicopterDeployedGasExploder",
+      "HandThrownOrPlaced",
+      "GasExploder",
+      "HelicopterBomb",
+      "Avalauncher",
+      "PrePlacedRemotelyDetonated",
+      "TramOrRopewayDelivery",
       // "Other [text]",
     ])
     .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.explosives] })
     .nullish(),
   vehicle: z
     .enum([
-      "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
+      "OverSnowVehicle",
       "Snowmobile",
-      "Helicopter (e.g. on landing, approach)",
+      "Helicopter",
       // "Other [text]",
     ])
     .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.vehicle] })
@@ -219,29 +213,29 @@ export const AvalancheInformationSchema = z.object({
     .enum(["Yes", "No"])
     .register(widgetRegistry, { showIf: ["avalancheType", Enums.IncidentAvalancheType.slab] })
     .nullish(),
-  startZoneAspect: z.enum(Enums.Aspect),
+  startZoneAspect: z.enum(Enums.Aspect).register(widgetRegistry, { valueI18n: "aspect.#" }),
   startZoneAspectAccuracy: z.enum(["Accurate", "Uncertain"]),
   startZoneElevation: z.number().register(widgetRegistry, { unit: "m" }),
-  startZoneElevationAccuracy: z.enum(["exact", "+/- 50m", "+/-100m", "+/-200m", "Unknown"]),
+  startZoneElevationAccuracy: z.enum(["exact", "within50m", "within100m", "within200m", "unknown"]),
   startZoneIncline: z.number().register(widgetRegistry, { unit: "°" }).nullish(),
   startZoneTerrainType: z
     .enum([
-      "Alpine Bowl",
+      "AlpineBowl",
       "Couloir",
-      "Near Ridge Crest",
-      "Sparsely Treed",
-      "Open Forest",
-      "Dense Forest",
-      "Forest Glade",
+      "NearRidgeCrest",
+      "SparselyTreed",
+      "OpenForest",
+      "DenseForest",
+      "ForestGlade",
       "Glacier",
-      "Open Slope",
+      "OpenSlope",
       "Ridge",
-      "Extreme Rocky Terrain",
-      "Base of Rock Face",
-      "Wood Path",
-      "Leeward Slope",
-      "Windward Slope",
-      "Ice Waterfall",
+      "ExtremeRockyTerrain",
+      "BaseOfRockFace",
+      "WoodPath",
+      "LeewardSlope",
+      "WindwardSlope",
+      "IceWaterfall",
       // "Other [text]",
     ])
     .array()
@@ -276,12 +270,18 @@ export const AvalancheInformationSchema = z.object({
     .nullish(),
   avalancheLength: z.number().register(widgetRegistry, { unit: "m" }).nullish(),
   weakLayerName: z.string().nullish(),
-  weakLayerGrainType1: z.enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"]).nullish(),
+  weakLayerGrainType1: z
+    .enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"])
+    .register(widgetRegistry, { valueI18n: "grainShape.#.code" })
+    .nullish(),
   weakLayerGrainSize1: z.number().nullish(),
-  weakLayerGrainType2: z.enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"]).nullish(),
+  weakLayerGrainType2: z
+    .enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"])
+    .register(widgetRegistry, { valueI18n: "grainShape.#.code" })
+    .nullish(),
   weakLayerGrainSize2: z.number().nullish(),
   weakLayerLocation: z
-    .enum(["Within new snow", "At the Interface with Old Snow", "Within the Old Snowpack", "Near the Ground"])
+    .enum(["WithinNewSnow", "AtInterfaceWithOldSnow", "WithinOldSnowpack", "NearTheGround"])
     .nullish(),
   bedSurfaceStepped: z.enum(["Yes", "No"]).nullish(),
   avalancheMoistureStartZone: z.enum(["Dry", "Moist", "Wet", "Unknown"]),

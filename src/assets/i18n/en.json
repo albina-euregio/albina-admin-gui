@@ -1399,6 +1399,10 @@
       "code": "FC",
       "class": "Faceted Crystals"
     },
+    "FCxr": {
+      "code": "FCxr",
+      "class": "Rounding Faceted Crystals"
+    },
     "DH": {
       "code": "DH",
       "class": "Depth Hoar"
@@ -1410,6 +1414,10 @@
     "MF": {
       "code": "MF",
       "class": "Melt Forms"
+    },
+    "MM": {
+      "code": "MM",
+      "class": "Machine Made"
     },
     "MFcr": {
       "code": "MFcr",
@@ -1956,5 +1964,114 @@
     "Some": "Some",
     "None": "None",
     "Unknown": "Unknown"
+  },
+  "natural": {
+    "Natural": "Natural (result of weather events, e.g. snowfall, wind temperature)",
+    "CorniceFall": "Cornice fall, natural",
+    "Earthquake": "Earthquake",
+    "IceFall": "Ice fall",
+    "RockFall": "Rock fall"
+  },
+  "person": {
+    "PersonAccidental": "Person (e.g. skier, snowboarder, hiker, climber), accidental",
+    "PersonControlled": "Person, controlled (i.e., skier deliberately ski cutting a slope, cornice, etc.)"
+  },
+  "explosives": {
+    "Artillery": "Artillery",
+    "CaseCharge": "Case (bag) charge placed on Hand-thrown",
+    "CorniceControlledByExplosives": "Cornice controlled by explosives",
+    "HelicopterDeployedGasExploder": "Helicopter deployed gas exploder (e.g., Daisybell)",
+    "HandThrownOrPlaced": "Hand-thrown or hand-placed explosive charge",
+    "GasExploder": "Gas exploder",
+    "HelicopterBomb": "Helicopter bomb",
+    "Avalauncher": "Avalauncher and other types of launchers",
+    "PrePlacedRemotelyDetonated": "Pre-placed remotely detonated explosive charge",
+    "TramOrRopewayDelivery": "Tram or ropeway delivery system"
+  },
+  "vehicle": {
+    "OverSnowVehicle": "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
+    "Snowmobile": "Snowmobile",
+    "Helicopter": "Helicopter (e.g. on landing, approach)"
+  },
+  "startZoneElevationAccuracy": {
+    "exact": "exact",
+    "within50m": "± 50 m",
+    "within100m": "± 100 m",
+    "within200m": "± 200 m",
+    "unknown": "unknown"
+  },
+  "startZoneTerrainType": {
+    "AlpineBowl": "Alpine Bowl",
+    "Couloir": "Couloir",
+    "NearRidgeCrest": "Near Ridge Crest",
+    "SparselyTreed": "Sparsely Treed",
+    "OpenForest": "Open Forest",
+    "DenseForest": "Dense Forest",
+    "ForestGlade": "Forest Glade",
+    "Glacier": "Glacier",
+    "OpenSlope": "Open Slope",
+    "Ridge": "Ridge",
+    "ExtremeRockyTerrain": "Extreme Rocky Terrain",
+    "BaseOfRockFace": "Base of Rock Face",
+    "WoodPath": "Wood Path",
+    "LeewardSlope": "Leeward Slope",
+    "WindwardSlope": "Windward Slope",
+    "IceWaterfall": "Ice Waterfall"
+  },
+  "weakLayerLocation": {
+    "WithinNewSnow": "Within new snow",
+    "AtInterfaceWithOldSnow": "At the Interface with Old Snow",
+    "WithinOldSnowpack": "Within the Old Snowpack",
+    "NearTheGround": "Near the Ground"
+  },
+  "debrisType": {
+    "Fine": "Fine",
+    "Blocks": "Blocks",
+    "Hard": "Hard",
+    "Soft": "Soft",
+    "Rocks": "Rocks",
+    "Trees": "Trees"
+  },
+  "avalancheMoistureStartZone": {
+    "Dry": "Dry",
+    "Moist": "Moist",
+    "Wet": "Wet",
+    "Unknown": "Unknown"
+  },
+  "avalancheMoistureDeposit": {
+    "Dry": "Dry",
+    "Moist": "Moist",
+    "Wet": "Wet"
+  },
+  "bedSurfaceStepped": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "multipleAvalanches": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "trigger": {
+    "natural": "Natural",
+    "person": "Person",
+    "explosives": "Explosives",
+    "vehicle": "Vehicle",
+    "unknown": "Unknown"
+  },
+  "startZoneAspectAccuracy": {
+    "Accurate": "Accurate",
+    "Uncertain": "Uncertain"
+  },
+  "remoteTriggering": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "additionalLoad": {
+    "High": "High",
+    "Low": "Low"
+  },
+  "accidentalControlled": {
+    "Accidental": "Accidental",
+    "Controlled": "Controlled"
   }
 }
