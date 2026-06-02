@@ -100,24 +100,26 @@ export const GroupInformationSchema = z.object({
       // "Other [text]", // TODO
     ])
     .nullish(),
-  incidentActivity: z.enum([
-    "Touring",
-    "Freeriding",
-    "SkiingSnowboarding",
-    "Snowmobiling",
-    "Mountaineering",
-    "IceClimbing",
-    "Snowshoeing",
-    "HikingOnFoot",
-    "CrossCountrySkiing",
-    "HuntingFishing",
-    "Sledging",
-    "Snowbiking",
-    "Biking",
-    "InsideVehicle",
-    "Unknown",
-    // "Other [text] ", // TODO
-  ]),
+  incidentActivity: z
+    .enum([
+      "Touring",
+      "Freeriding",
+      "SkiingSnowboarding",
+      "Snowmobiling",
+      "Mountaineering",
+      "IceClimbing",
+      "Snowshoeing",
+      "HikingOnFoot",
+      "CrossCountrySkiing",
+      "HuntingFishing",
+      "Sledging",
+      "Snowbiking",
+      "Biking",
+      "InsideVehicle",
+      "Unknown",
+      // "Other [text] ", // TODO
+    ])
+    .register(widgetRegistry, { widget: "select" }),
   travelDirection: z
     .enum([
       "Ascending",
