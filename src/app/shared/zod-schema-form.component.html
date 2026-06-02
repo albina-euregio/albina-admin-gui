@@ -1,170 +1,172 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
-    @let inner = unwrap(x.value);
-    @let widget = widgetRegistry.get(inner);
-    @let valueI18n = widget?.valueI18n || `${x.key}.#`;
-    <div
-      [class.d-none]="!shouldShowField(widget) || (showMandatoryOnly() && isFieldOptional(x.value))"
-      class="zod-form-field"
-      [id]="x.key"
-    >
-      <div class="form-label d-flex align-items-center gap-2">
-        <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
-        @if (widget?.unit) {
-          <span class="text-muted">[{{ widget.unit }}]</span>
-        }
-        @if (!isFieldOptional(x.value)) {
-          <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1" style="font-size: 0.65rem"
-            >Required</span
-          >
-        } @else {
-          <span class="badge bg-light text-muted border px-1" style="font-size: 0.65rem">Optional</span>
-        }
-      </div>
-      <div class="form-text">
-        {{ helpI18n().replace("#", x.key) | translate }}
-      </div>
-      @if (inner.type === "enum") {
-        @let enumValues = Object.keys(inner.def.entries);
-        @if (widget?.widget === "slider") {
-          <app-slider
-            [class]="zodCssClass(x.value, value()[x.key], '')"
-            [disabled]="disabled()"
-            [sliderOptions]="enumSliderOptions(x.key, enumValues)"
-            [sliderValue]="enumValueIndex(value()[x.key], enumValues)"
-            (sliderValueChange)="onSliderEnumChange(x.key, $event, enumValues)"
-          />
-          @if (value()[x.key]) {
-            <div class="text-center">{{ valueI18n.replace("#", "" + value()[x.key]) | translate }}</div>
+    @if (x.key !== "reportStatus") {
+      @let inner = unwrap(x.value);
+      @let widget = widgetRegistry.get(inner);
+      @let valueI18n = widget?.valueI18n || `${x.key}.#`;
+      <div
+        [class.d-none]="!shouldShowField(widget) || (showMandatoryOnly() && isFieldOptional(x.value))"
+        class="zod-form-field"
+        [id]="x.key"
+      >
+        <div class="form-label d-flex align-items-center gap-2">
+          <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
+          @if (widget?.unit) {
+            <span class="text-muted">[{{ widget.unit }}]</span>
           }
-        } @else if (widget?.widget === "radio") {
-          @for (v of enumValues; track v) {
-            <div class="form-check form-check-inline">
-              <label class="form-check-label">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  [name]="x.key"
-                  [(ngModel)]="value()[x.key]"
-                  [value]="v"
-                  [disabled]="disabled()"
-                />
-                {{ valueI18n.replace("#", v) | translate }}
-              </label>
-            </div>
+          @if (!isFieldOptional(x.value)) {
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1" style="font-size: 0.65rem"
+              >Required</span
+            >
+          } @else {
+            <span class="badge bg-light text-muted border px-1" style="font-size: 0.65rem">Optional</span>
           }
-        } @else {
-          <app-toggle-btn-group
-            [class]="zodCssClass(x.value, value()[x.key], '')"
-            [disabled]="disabled()"
-            [enumValues]="enumValues"
-            [(value)]="value()[x.key]"
-            (valueChange)="value.set(value())"
-            [labelI18n]="valueI18n"
-          />
-        }
-      } @else if (inner.type === "array" && inner.def.element.type === "enum") {
-        @let enumValues = Object.keys(inner.def.element.def.entries);
-        @if (widget?.widget === "checkbox") {
-          @for (v of enumValues; track v) {
-            <div class="form-check form-check-inline">
-              <label class="form-check-label">
-                <input
-                  #checkbox
-                  class="form-check-input"
-                  type="checkbox"
-                  [name]="x.key"
-                  [value]="v"
-                  [disabled]="disabled()"
-                  [checked]="castArray(value()[x.key])?.includes(v)"
-                  (change)="onCheckboxArrayChange(x.key, v)"
-                />
-                {{ valueI18n.replace("#", v) | translate }}
-              </label>
-            </div>
+        </div>
+        <div class="form-text">
+          {{ helpI18n().replace("#", x.key) | translate }}
+        </div>
+        @if (inner.type === "enum") {
+          @let enumValues = Object.keys(inner.def.entries);
+          @if (widget?.widget === "slider") {
+            <app-slider
+              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [disabled]="disabled()"
+              [sliderOptions]="enumSliderOptions(x.key, enumValues)"
+              [sliderValue]="enumValueIndex(value()[x.key], enumValues)"
+              (sliderValueChange)="onSliderEnumChange(x.key, $event, enumValues)"
+            />
+            @if (value()[x.key]) {
+              <div class="text-center">{{ valueI18n.replace("#", "" + value()[x.key]) | translate }}</div>
+            }
+          } @else if (widget?.widget === "radio") {
+            @for (v of enumValues; track v) {
+              <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    [name]="x.key"
+                    [(ngModel)]="value()[x.key]"
+                    [value]="v"
+                    [disabled]="disabled()"
+                  />
+                  {{ valueI18n.replace("#", v) | translate }}
+                </label>
+              </div>
+            }
+          } @else {
+            <app-toggle-btn-group
+              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [disabled]="disabled()"
+              [enumValues]="enumValues"
+              [(value)]="value()[x.key]"
+              (valueChange)="value.set(value())"
+              [labelI18n]="valueI18n"
+            />
           }
-        } @else {
-          <app-toggle-btn-group
-            [class]="zodCssClass(x.value, value()[x.key], '')"
-            [disabled]="disabled()"
-            [multiple]="true"
-            [enumValues]="enumValues"
-            [values]="castArray(value()[x.key])"
-            (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); value.set(value())"
-            [labelI18n]="valueI18n"
-          />
-        }
-      } @else if (inner.type === "string") {
-        @if (x.key.toLowerCase().includes("comment")) {
-          <textarea
+        } @else if (inner.type === "array" && inner.def.element.type === "enum") {
+          @let enumValues = Object.keys(inner.def.element.def.entries);
+          @if (widget?.widget === "checkbox") {
+            @for (v of enumValues; track v) {
+              <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                  <input
+                    #checkbox
+                    class="form-check-input"
+                    type="checkbox"
+                    [name]="x.key"
+                    [value]="v"
+                    [disabled]="disabled()"
+                    [checked]="castArray(value()[x.key])?.includes(v)"
+                    (change)="onCheckboxArrayChange(x.key, v)"
+                  />
+                  {{ valueI18n.replace("#", v) | translate }}
+                </label>
+              </div>
+            }
+          } @else {
+            <app-toggle-btn-group
+              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [disabled]="disabled()"
+              [multiple]="true"
+              [enumValues]="enumValues"
+              [values]="castArray(value()[x.key])"
+              (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); value.set(value())"
+              [labelI18n]="valueI18n"
+            />
+          }
+        } @else if (inner.type === "string") {
+          @if (x.key.toLowerCase().includes("comment")) {
+            <textarea
+              [class]="zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="value.set(value())"
+              rows="5"
+              [disabled]="disabled()"
+            ></textarea>
+          } @else {
+            <input
+              type="text"
+              [class]="zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="value.set(value())"
+              [disabled]="disabled()"
+            />
+          }
+        } @else if (inner.type === "number") {
+          <input
+            type="number"
             [class]="zodCssClass(x.value, value()[x.key])"
             [(ngModel)]="value()[x.key]"
             (ngModelChange)="value.set(value())"
-            rows="5"
-            [disabled]="disabled()"
-          ></textarea>
+          />
+        } @else if (inner.type === "date") {
+          <div class="input-group">
+            <input
+              type="date"
+              class="form-control"
+              [disabled]="disabled()"
+              [value]="getDateString(x.key, dInput)"
+              #dInput
+              (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
+            />
+            <input
+              type="time"
+              class="form-control"
+              [disabled]="disabled()"
+              [value]="getTimeString(x.key, tInput)"
+              #tInput
+              (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              [disabled]="disabled()"
+              (click)="clearDateTime(x.key); dInput.value = ''; tInput.value = ''"
+            >
+              <i class="ph ph-x"></i>
+            </button>
+          </div>
         } @else {
-          <input
-            type="text"
-            [class]="zodCssClass(x.value, value()[x.key])"
-            [(ngModel)]="value()[x.key]"
-            (ngModelChange)="value.set(value())"
-            [disabled]="disabled()"
-          />
+          <div class="alert alert-danger" role="alert">
+            Unknown type {{ inner.type }} for key {{ x.key }}
+            <div>{{ x.key }}</div>
+            <div>{{ inner.type }}</div>
+            <div>{{ JSON.stringify(x.value) }}</div>
+          </div>
         }
-      } @else if (inner.type === "number") {
-        <input
-          type="number"
-          [class]="zodCssClass(x.value, value()[x.key])"
-          [(ngModel)]="value()[x.key]"
-          (ngModelChange)="value.set(value())"
-        />
-      } @else if (inner.type === "date") {
-        <div class="input-group">
-          <input
-            type="date"
-            class="form-control"
-            [disabled]="disabled()"
-            [value]="getDateString(x.key, dInput)"
-            #dInput
-            (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
-          />
-          <input
-            type="time"
-            class="form-control"
-            [disabled]="disabled()"
-            [value]="getTimeString(x.key, tInput)"
-            #tInput
-            (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
-          />
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            [disabled]="disabled()"
-            (click)="clearDateTime(x.key); dInput.value = ''; tInput.value = ''"
-          >
-            <i class="ph ph-x"></i>
-          </button>
-        </div>
-      } @else {
-        <div class="alert alert-danger" role="alert">
-          Unknown type {{ inner.type }} for key {{ x.key }}
-          <div>{{ x.key }}</div>
-          <div>{{ inner.type }}</div>
-          <div>{{ JSON.stringify(x.value) }}</div>
-        </div>
-      }
 
-      @if (hasValue(value()[x.key])) {
-        @if (x.value.safeParse(value()[x.key]); as parseResult) {
-          @if (parseResult.error) {
-            <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
-            <div class="invalid-feedback">
-              {{ zPrettifyError(parseResult.error) }}
-            </div>
+        @if (hasValue(value()[x.key])) {
+          @if (x.value.safeParse(value()[x.key]); as parseResult) {
+            @if (parseResult.error) {
+              <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
+              <div class="invalid-feedback">
+                {{ zPrettifyError(parseResult.error) }}
+              </div>
+            }
           }
         }
-      }
-    </div>
+      </div>
+    }
   }
 </section>
