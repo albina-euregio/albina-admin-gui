@@ -171,32 +171,7 @@
             />
           }
         } @else if (inner.type === "date") {
-          <div class="input-group">
-            <input
-              type="date"
-              class="form-control"
-              [disabled]="disabled()"
-              [value]="getDateString(x.key, dInput)"
-              #dInput
-              (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
-            />
-            <input
-              type="time"
-              class="form-control"
-              [disabled]="disabled()"
-              [value]="getTimeString(x.key, tInput)"
-              #tInput
-              (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
-            />
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              [disabled]="disabled()"
-              (click)="clearDateTime(x.key); dInput.value = ''; tInput.value = ''"
-            >
-              <i class="ph ph-x"></i>
-            </button>
-          </div>
+          <app-date-time-input [disabled]="disabled()" [(value)]="value()[x.key]" (valueChange)="value.set(value())" />
         } @else if (inner.type === "boolean") {
           <div class="form-check form-switch mb-0">
             <input

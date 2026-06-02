@@ -7,6 +7,7 @@ import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import * as IncidentModels from "../incidents/models/incident-report.model";
+import { DateTimeInputComponent } from "./date-time-input.component";
 import { SliderComponent, SliderOptions } from "./slider.component";
 import { zodCssClass } from "./zod-css-class";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
@@ -15,7 +16,7 @@ import { widgetRegistry } from "./zod-schema-form.widget-registry";
   selector: "app-zod-schema-form",
   templateUrl: "zod-schema-form.component.html",
   standalone: true,
-  imports: [FormsModule, KeyValuePipe, SliderComponent, ToggleBtnGroup, TranslateModule],
+  imports: [DateTimeInputComponent, FormsModule, KeyValuePipe, SliderComponent, ToggleBtnGroup, TranslateModule],
 })
 export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>> {
   readonly JSON = JSON;
@@ -119,56 +120,6 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   }
   isFieldValid(schema: z.ZodType, val: unknown): boolean {
     return this.hasValue(val) && schema.safeParse(val).success;
-  }
-  getDateString(key: string, inputEl?: HTMLInputElement): string {
-    if (inputEl && document.activeElement === inputEl) {
-      return inputEl.value;
-    }
-    const raw = this.value()?.[key];
-    if (!raw) return "";
-    const val = new Date(raw as string | number | Date);
-    if (isNaN(val.getTime())) return "";
-    const year = val.getFullYear();
-    const month = String(val.getMonth() + 1).padStart(2, "0");
-    const day = String(val.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  getTimeString(key: string, inputEl?: HTMLInputElement): string {
-    if (inputEl && document.activeElement === inputEl) {
-      return inputEl.value;
-    }
-    const raw = this.value()?.[key];
-    if (!raw) return "";
-    const val = new Date(raw as string | number | Date);
-    if (isNaN(val.getTime())) return "";
-    const hours = String(val.getHours()).padStart(2, "0");
-    const minutes = String(val.getMinutes()).padStart(2, "0");
-    return `${hours}:${minutes}`;
-  }
-
-  onDateTimeChange(key: string, datePart: string, timePart: string): void {
-    const val = this.value();
-    if (!val) return;
-    if (!datePart) {
-      this.clearDateTime(key);
-      return;
-    }
-    const [year, month, day] = datePart.split("-").map(Number);
-    if (year < 1000) {
-      return;
-    }
-    const [hours, minutes] = (timePart || "00:00").split(":").map(Number);
-    const newDate = new Date(year, month - 1, day, hours, minutes);
-    Object.assign(val, { [key]: newDate });
-    this.value.set(val);
-  }
-
-  clearDateTime(key: string): void {
-    const val = this.value();
-    if (!val) return;
-    Object.assign(val, { [key]: undefined });
-    this.value.set(val);
   }
 
   get groupSizeUnknown(): boolean {
