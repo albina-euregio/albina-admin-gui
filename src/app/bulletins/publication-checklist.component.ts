@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinStatus, PublicationChannel } from "app/enums/enums";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
+import { BulletinsService, PublicationStrategy } from "app/providers/bulletins-service/bulletins.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import {
@@ -345,48 +345,53 @@ export class PublicationChecklistComponent implements OnInit, OnDestroy {
     return this.authenticationService.isCurrentUserInRole("ADMIN");
   }
 
-  publishAll(change: boolean) {
+  publishAll(strategy: PublicationStrategy) {
     const initialState: Partial<ModalConfirmComponent> = {
       text: this.translateService.instant(
-        change ? "bulletins.table.publishAllDialog.changeMessage" : "bulletins.table.publishAllDialog.message",
+        strategy === "publish"
+          ? "bulletins.table.publishAllDialog.message"
+          : "bulletins.table.publishAllDialog.changeMessage",
       ),
       acceptKey: "button.yes",
       onConfirm: () => {
-        this.bulletinsService.publishAllBulletins(this.getActiveDate(), change).subscribe({
-          next: () => console.log("All bulletins published."),
-          error: (error) => console.error("All bulletins could not be published!", error),
+        this.bulletinsService.publishAllBulletins(this.getActiveDate(), strategy).subscribe({
+          next: () => {
+            console.log("All bulletins published.");
+            this.bulletinsService.refreshPublicationStatus();
+          },
+          error: (error) => {
+            console.error("All bulletins could not be published!", error);
+            this.bulletinsService.refreshPublicationStatus();
+          },
         });
       },
     };
     this.publishAllModalRef = this.modalService.show(ModalConfirmComponent, { initialState });
   }
 
-  publish(event: Event, date: [Date, Date], change = false) {
+  publish(event: Event, date: [Date, Date], strategy: PublicationStrategy = "publish") {
     event.stopPropagation();
     const regionName = this.translateService.instant(this.regionsService.getRegionName(this.regionId));
     const message = [
       `<b>${this.translateService.instant("bulletins.table.publishBulletinsDialog.message")}</b>`,
       `<span class="text-body-secondary">${regionName} (${this.regionId})<br>${this.getFormattedDate()}</span>`,
     ].join("<br>");
-    this.openPublishBulletinsModal(message, date, change);
+    this.openPublishBulletinsModal(message, date, strategy);
   }
 
-  openPublishBulletinsModal(message: string, date: [Date, Date], change: boolean) {
+  openPublishBulletinsModal(message: string, date: [Date, Date], strategy: PublicationStrategy) {
     const initialState: Partial<ModalConfirmComponent> = {
       text: message,
       acceptKey: "button.yes",
       onConfirm: () => {
         this.bulletinsService
-          .publishOrChangeBulletins(date, this.authenticationService.getActiveRegionId(), change)
+          .publishBulletins(date, this.authenticationService.getActiveRegionId(), strategy)
           .subscribe({
             next: () => {
               this.bulletinsService.refreshPublicationStatus();
             },
             error: (error) => {
-              console.error(
-                change ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
-                error,
-              );
+              console.error("Bulletins could not be published!", error);
               this.bulletinsService.refreshPublicationStatus();
             },
           });

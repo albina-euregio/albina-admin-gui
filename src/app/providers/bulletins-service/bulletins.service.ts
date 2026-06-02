@@ -19,6 +19,10 @@ import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
 import { SourceDates } from "../../models/SourceDates";
 import { AlbinaLanguage } from "../../models/text.model";
+import type { components } from "../openapi";
+
+export type PublicationStrategy = components["schemas"]["PublicationStrategy.Type"];
+
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
@@ -438,34 +442,17 @@ export class BulletinsService {
     return this.http.post<void>(url, body);
   }
 
-  publishBulletins(date: [Date, Date], region: string) {
+  publishBulletins(date: [Date, Date], region: string, strategy: PublicationStrategy): Observable<void> {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
     const url = this.constantsService.getServerUrlPOST("/bulletins/publish", {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: region,
+      strategy: strategy,
     });
     const body = JSON.stringify("");
-    return this.http.post<void>(url, body);
-  }
-
-  changeBulletins(date: [Date, Date], region: string) {
-    if (this.localStorageService.isTrainingEnabled) {
-      throw new TrainingModeError();
-    }
-    const url = this.constantsService.getServerUrlPOST("/bulletins/change", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: region,
-    });
-    const jsonBulletins = [];
-    const body = JSON.stringify(jsonBulletins);
-    return this.http.post<void>(url, body);
-  }
-
-  publishOrChangeBulletins(date: [Date, Date], region: string, change: boolean): Observable<void> {
-    const request$ = change ? this.changeBulletins(date, region) : this.publishBulletins(date, region);
-    return request$.pipe(
+    return this.http.post<void>(url, body).pipe(
       tap(() => {
         if (this.getActiveRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
           this.setActiveRegionStatus(date, Enums.BulletinStatus.republished);
@@ -476,13 +463,13 @@ export class BulletinsService {
     );
   }
 
-  publishAllBulletins(date: [Date, Date], change: boolean) {
+  publishAllBulletins(date: [Date, Date], strategy: PublicationStrategy) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
     const url = this.constantsService.getServerUrlPOST("/bulletins/publish/all", {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      change: change,
+      strategy: strategy,
     });
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);

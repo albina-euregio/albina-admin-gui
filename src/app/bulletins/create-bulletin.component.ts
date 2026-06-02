@@ -42,7 +42,7 @@ import * as Enums from "../enums/enums";
 import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
 import * as CAAML from "../models/CAAMLv6";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { BulletinsService, PublicationStrategy } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { MapService } from "../providers/map-service/map.service";
@@ -2234,7 +2234,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  publish(event: Event, date: [Date, Date], change = false) {
+  publish(event: Event, date: [Date, Date], strategy: PublicationStrategy = "publish") {
     event.stopPropagation();
     this.publishing = true;
 
@@ -2283,7 +2283,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.openPublishBulletinsModal(message, date, change);
+          this.openPublishBulletinsModal(message, date, strategy);
         },
         (error) => {
           console.error("Bulletins could not be checked!", error);
@@ -2295,23 +2295,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPublishBulletinsModal(message: string, date: [Date, Date], change: boolean) {
+  openPublishBulletinsModal(message: string, date: [Date, Date], strategy: PublicationStrategy) {
     const initialState: Partial<ModalConfirmComponent> = {
       text: message,
       acceptKey: "button.yes",
       onConfirm: () => {
         this.bulletinsService
-          .publishOrChangeBulletins(date, this.authenticationService.getActiveRegionId(), change)
+          .publishBulletins(date, this.authenticationService.getActiveRegionId(), strategy)
           .subscribe({
             next: () => {
-              console.log(change ? "Bulletins published (no messages)." : "Bulletins published.");
+              console.log("Bulletins published.", strategy);
               this.bulletinsService.refreshPublicationStatus();
             },
             error: (error) => {
-              console.error(
-                change ? "Bulletins could not be published (no messages)!" : "Bulletins could not be published!",
-                error,
-              );
+              console.error("Bulletins could not be published!", error);
               this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
             },
           });

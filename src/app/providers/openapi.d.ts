@@ -219,23 +219,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/bulletins/change": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Change bulletins */
-    post: operations["changeBulletins"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/bulletins/check": {
     parameters: {
       query?: never;
@@ -1602,6 +1585,8 @@ export interface components {
       ok?: boolean;
       problemDescription?: string;
     };
+    /** @enum {string} */
+    "PublicationStrategy.Type": "publish" | "noMessages" | "minimalCAAML";
     PushSubscription: {
       /** Format: int64 */
       id?: number | null;
@@ -2175,32 +2160,6 @@ export interface operations {
       };
     };
   };
-  changeBulletins: {
-    parameters: {
-      query: {
-        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
-        date: string;
-        region: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AvalancheBulletin"][];
-      };
-    };
-    responses: {
-      /** @description changeBulletins 200 response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
   checkBulletins: {
     parameters: {
       query: {
@@ -2432,6 +2391,7 @@ export interface operations {
     parameters: {
       query: {
         region: string;
+        strategy: components["schemas"]["PublicationStrategy.Type"];
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         date: string;
       };
@@ -2455,7 +2415,7 @@ export interface operations {
       query: {
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         date: string;
-        change: boolean;
+        strategy: components["schemas"]["PublicationStrategy.Type"];
       };
       header?: never;
       path?: never;
