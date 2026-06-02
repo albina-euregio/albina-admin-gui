@@ -159,6 +159,103 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
   involvementsFatalitiesBurialsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
+export const VictimInformationSchema = z.object({
+  caught: z.enum(["Involved", "NotInvolved", "Unknown"]),
+  fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]),
+  burialDegree: z.enum([
+    "FullyBuried",
+    "PartlyBuriedHeadCovered",
+    "PartlyBuriedHeadUncovered",
+    "PartlyBuried",
+    "NotBuried",
+    "Unknown",
+  ]),
+  anonymousVictimIdentifier: z.string(),
+  anonymousGroupIdentifier: z.string(),
+  age: z.enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"]),
+  gender: z.enum(["Female", "Male", "Other"]),
+  country: z.enum(["Austria", "Germany", "Italy", "Switzerland"]), // TODO [standard country list]
+  workingAtTime: z.enum(["Yes", "No"]),
+  leaderAtTime: z.enum(["Yes", "No"]),
+  professionalCertification: z.enum([
+    "IFMGAGuide",
+    "FullSkiGuide",
+    "AvalancheProfessional",
+    "AvalancheEducator",
+    // "Other [text]",
+  ]),
+  avalancheTraining: z.enum([
+    "None",
+    "Awareness",
+    "BasicREC",
+    "AdvancedREC",
+    "Professional",
+    // "Other [text]"
+  ]),
+  yearsActive: z.enum(["UpTo2Years", "From3To9Years", "From10Years"]),
+  transceiver: z.enum(["NoTransceiver", "TransceiverOn", "TransceiverOff"]),
+  shovel: z.enum(["Yes", "No"]),
+  probe: z.enum(["Yes", "No"]),
+  airbag: z.enum(["NoAirbag", "AirbagDeployed", "AirbagUndeployed"]),
+  helmet: z.enum(["Yes", "No"]),
+  terrainTrap: z.enum([
+    "None",
+    "Cliff",
+    "Trees",
+    "Gully",
+    "Depression",
+    "Bench",
+    "Boulder",
+    "CrevasseOrBergschrund",
+    // "Other [text]",
+  ]),
+  burialDepth: z.number().register(widgetRegistry, { unit: "cm" }).nullish(),
+  burialDuration: z.string().register(widgetRegistry, { unit: "dd:hh:mm" }).nullish(),
+  primaryLocationMethod: z.enum([
+    "NotBuried",
+    "SelfExtraction",
+    "VisualClues",
+    "TransceiverProbeShovel",
+    "SpotProbing",
+    "ProbeLine",
+    "Recco",
+    "RescueDog",
+    "Snowmelt",
+    // "Other [text]",
+  ]),
+  rescuedBy: z.enum([
+    "Self",
+    "Companion",
+    "OtherGroup",
+    "OrganizedRescue",
+    "Unknown",
+    // "Other[text]"
+  ]),
+  medicalIntervention: z.enum([
+    "CPR",
+    "ALS",
+    "ECMO",
+    // "Other [text]"
+  ]),
+  estimatedTimeOfDeath: z.enum([
+    "DuringTheAvalanche",
+    "DuringBurial",
+    "OnSiteAfterExtrication",
+    "DuringTransport",
+    "InHospital",
+  ]),
+  causeOfDeath: z.enum([
+    "Asphyxiation",
+    "TraumaticInjury",
+    "Hypothermia",
+    // "Other[text]"
+  ]),
+  respiratoryCavity: z.enum(["Yes", "No"]),
+  injurySeverity: z.enum(["Minor", "Moderate", "Major"]),
+  victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+export type VictimInformation = z.infer<typeof VictimInformationSchema>;
+
 const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
 export const AvalancheInformationSchema = z.object({
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
@@ -332,6 +429,7 @@ export const IncidentReportSchema = z.object({
   ...InvolvementsFatalitiesBurialsSchema.shape,
   ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array(),
+  victimInformation: VictimInformationSchema.array(),
 });
 
 export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({

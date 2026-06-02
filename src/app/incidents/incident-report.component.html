@@ -306,6 +306,64 @@
               </div>
             }
           </div>
+
+          <div class="border-top pt-4 mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="mb-0 text-secondary">{{ "incidentReport.victimInformation" | translate }}</h4>
+              <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newVictimInformation()">
+                <span>+</span> Add Victim
+              </button>
+            </div>
+
+            @if (!incidentReport().victimInformation?.length) {
+              <div class="alert alert-info">No victims registered. Click "+ Add Victim" to add a victim.</div>
+            }
+
+            @for (
+              victimInformation of incidentReport().victimInformation;
+              track victimInformation.anonymousVictimIdentifier
+            ) {
+              <div class="card mb-3 shadow-sm border">
+                <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                  <div
+                    class="d-flex align-items-center gap-2 cursor-pointer flex-grow-1 py-1"
+                    (click)="toggleVictimCollapse(victimInformation.anonymousVictimIdentifier)"
+                  >
+                    <i
+                      class="ph"
+                      [class.ph-caret-right]="isVictimCollapsed(victimInformation.anonymousVictimIdentifier)"
+                      [class.ph-caret-down]="!isVictimCollapsed(victimInformation.anonymousVictimIdentifier)"
+                    ></i>
+                    <h5 class="mb-0 h6 fw-semibold text-secondary">
+                      {{ victimInformation.anonymousVictimIdentifier }}
+                    </h5>
+                    @if (isVictimValid(victimInformation)) {
+                      <span class="text-success ms-2" title="Valid">✔</span>
+                    } @else {
+                      <span class="text-danger ms-2" title="Incomplete">⚠</span>
+                    }
+                  </div>
+                  @if ($index > 0) {
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation($index)">
+                      &minus; Remove
+                    </button>
+                  }
+                </div>
+                @if (!isVictimCollapsed(victimInformation.anonymousVictimIdentifier)) {
+                  <div class="card-body">
+                    <app-zod-schema-form
+                      [disabled]="disabled()"
+                      [value]="victimInformation"
+                      [zodType]="IncidentModels.VictimInformationSchema"
+                      [labelI18n]="labelI18n"
+                      [helpI18n]="helpI18n"
+                      [showMandatoryOnly]="showMandatoryOnly"
+                    />
+                  </div>
+                }
+              </div>
+            }
+          </div>
         }
       </div>
     }

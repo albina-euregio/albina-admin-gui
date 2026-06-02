@@ -103,7 +103,8 @@ export class IncidentReportComponent {
           anonymousGroupIdentifier: "Group unknown",
         } as IncidentModels.GroupInformation,
       ],
-    }) as IncidentReport,
+      victimInformation: [],
+    } satisfies Partial<IncidentReport>) as IncidentReport,
   );
 
   newGroupInformation() {
@@ -131,5 +132,32 @@ export class IncidentReportComponent {
 
   isGroupValid(group: IncidentModels.GroupInformation): boolean {
     return IncidentModels.GroupInformationSchema.safeParse(group).success;
+  }
+
+  newVictimInformation() {
+    const VictimInformation = {
+      anonymousVictimIdentifier: "Victim " + Math.random(),
+    } as IncidentModels.VictimInformation;
+    this.incidentReport().victimInformation.push(VictimInformation);
+  }
+
+  removeVictimInformation(index: number) {
+    if (index === 0) return;
+    if (!confirm(`Drop victim ${index + 1}?`)) return;
+    this.incidentReport().victimInformation.splice(index, 1);
+  }
+
+  collapsedVictims: Record<string, boolean> = {};
+
+  toggleVictimCollapse(id: string) {
+    this.collapsedVictims[id] = !this.collapsedVictims[id];
+  }
+
+  isVictimCollapsed(id: string): boolean {
+    return !!this.collapsedVictims[id];
+  }
+
+  isVictimValid(group: IncidentModels.VictimInformation): boolean {
+    return IncidentModels.VictimInformationSchema.safeParse(group).success;
   }
 }

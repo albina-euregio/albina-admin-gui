@@ -1691,6 +1691,7 @@
     "locationInformation": "Location Information",
     "avalancheInformation": "Avalanche Information",
     "groupInformation": "Group Information",
+    "victimInformation": "Victim Information",
     "involvementsFatalitiesBurials": "Involvements, Fatalities, and Burials",
 
     "author": "Author",
@@ -1746,6 +1747,34 @@
     "partlyBuried": "Partly Buried",
     "numberInvolved": "Number Involved",
     "involvementsFatalitiesBurialsComment": "Involvements, Fatalities and Burials Comment",
+
+    "caught": "Caught",
+    "fatalInjured": "Fatal/Injured",
+    "burialDegree": "Burial Degree",
+    "anonymousVictimIdentifier": "Anonymous Victim Identifier ",
+    "age": "Age",
+    "gender": "Gender",
+    "workingAtTime": "Working At Time",
+    "leaderAtTime": "Leader At Time",
+    "professionalCertification": "Professional Certification",
+    "avalancheTraining": "Avalanche Training",
+    "yearsActive": "Years Active",
+    "transceiver": "Transceiver",
+    "shovel": "Shovel",
+    "probe": "Probe",
+    "airbag": "Airbag",
+    "helmet": "Helmet",
+    "terrainTrap": "Terrain trap",
+    "burialDepth": "Burial Depth",
+    "burialDuration": "Burial Duration",
+    "primaryLocationMethod": "Primary Location Method",
+    "rescuedBy": "Rescued by",
+    "medicalIntervention": "Medical Intervention",
+    "estimatedTimeOfDeath": "Estimated Time Of Death",
+    "causeOfDeath": "Cause of Death",
+    "respiratoryCavity": "Respiratory Cavity",
+    "injurySeverity": "Injury Severity",
+    "victimInformationComment": "Victim Information Comment",
 
     "multipleAvalanches": "Multiple Avalanches",
     "avalancheSize": "Avalanche Size",
@@ -1840,6 +1869,34 @@
     "partlyBuried": "Number=Partly Buried, Head Covered+Partly Buried, Head Uncovered",
     "numberInvolved": "Number=Caught Only+Fully Buried+Partly Buried",
     "involvementsFatalitiesBurialsComment": "Add any additional relevant details",
+
+    "caught": "Specify whether this individual was involved with the avalanche. Involved means being caught by the avalanche (whether buried or not), buried or dusted by the powder cloud.",
+    "fatalInjured": "Indicate whether the person was fatally injured, injured, or uninjured, regardless of their involvement type.",
+    "burialDegree": "Provide details about the degree of burial. A fully buried victim has all parts of their body submerged under the snow. If the victim was partly buried, try to find out whether their head was covered or uncovered and use these options preferentially. If you are unable to find out this detail, use the Partly Buried option.",
+    "anonymousVictimIdentifier": "This is used to identify the victim throughout the report, without needing to use their name. For example, you might refer to Rider 1, Rider 2, etc when reporting on a snowmobile incident. You could add specific details if it helps keep track of which victim is which, e.g. Male survivor, Female survivor, Male decedant. If appropriate, you can use the same identifier when referencing this person in the Incident Description.",
+    "age": "",
+    "gender": "",
+    "workingAtTime": "Was the person involved performing work duties at the time of the incident, either in a paid capacity or as a volunteer?",
+    "leaderAtTime": "Was the person involved acting in a capacity that clearly placed them at the leader of the group?",
+    "professionalCertification": "Provide details of the professional certification of the individual",
+    "avalancheTraining": "Provide details about the highest level of avalanche safety training the victim had received.",
+    "yearsActive": "Select how many years this person had been practicing the activity prior to the incident",
+    "transceiver": "Select whether the person carried a transceiver and whether it was in send mode",
+    "shovel": "",
+    "probe": "",
+    "airbag": "",
+    "helmet": "",
+    "terrainTrap": "Indicate the type of terrain trap involved, if there was one.",
+    "burialDepth": "Specify the depth of burial in m to the nearerst 0.1 m. The reference to determine the burial depth is the depth from the snow surface to the victim's airway.",
+    "burialDuration": "Specify the duration of the victim's burial in minutes from when they were first buried to when their airway was uncovered.",
+    "primaryLocationMethod": "Specify the primary method that was used to locate the victim. ",
+    "rescuedBy": "",
+    "medicalIntervention": "Provide details about medical interventions applied, either by party members, or external rescue.",
+    "estimatedTimeOfDeath": "Provide a best estimate of when the victim died. This does not have to be consistent with the official time of death, since in many instances, people are only pronounced dead at hospital.",
+    "causeOfDeath": "Estimated cause of death",
+    "respiratoryCavity": "No obstacles in the airways",
+    "injurySeverity": "Major: a serious, often life-threatening condition that requires immediate medical attention and may result in long-term disability or death (e.g. fractures, head injuries, loss of conscousness, heavy bleeding); Moderate: more serious than minor but not immediately life-threatening. It usually needs medical treatment, but recovery is expected without major long-term effects (e.g. dislocations, sprains and strains, deep cuts). Minor: slight injury that can be treated with basic first aid, does not require professional medical care (e.g. small cuts, scratches, bruises).",
+    "victimInformationComment": "Add any additional relevant details",
 
     "multipleAvalanches": "Choose yes, if there were multiple avalanches associated with the event. If selected, input details of the most impactful avalanche in the Avalanche Details section and provide details of the other avalanches in the Avalanche Comments section.",
     "avalancheSize": "Estimate the destructive potential of the avalanche based on the deposited snow and assign a size according to the EAWS standard. Size 1 is the minimum rating. Half sizes are generally not defined, but may be used for avalanches that fall between two size classes; they are assigned to the lower class (e.g. size 2.5 is classified as size 2).",
@@ -2102,5 +2159,147 @@
   "accidentalControlled": {
     "Accidental": "Accidental",
     "Controlled": "Controlled"
+  },
+  "caught": {
+    "Involved": "Involved",
+    "NotInvolved": "Not Involved",
+    "Unknown": "Unknown"
+  },
+  "fatalInjured": {
+    "Fatal": "Fatal",
+    "Injured": "Injured",
+    "Uninjured": "Uninjured",
+    "Unknown": "Unknown"
+  },
+  "burialDegree": {
+    "FullyBuried": "Fully Buried",
+    "PartlyBuriedHeadCovered": "Partly Buried, Head Covered",
+    "PartlyBuriedHeadUncovered": "Partly Buried, Head Uncovered",
+    "PartlyBuried": "Partly Buried",
+    "NotBuried": "Not Buried",
+    "Unknown": "Unknown"
+  },
+  "age": {
+    "UpTo13": "≤ 13",
+    "From14To20": "14–20",
+    "From21To30": "21–30",
+    "From31To40": "31–40",
+    "From41To50": "41–50",
+    "From51To60": "51–60",
+    "From61To70": "61–70",
+    "From71": "≥ 71"
+  },
+  "gender": {
+    "Female": "Female",
+    "Male": "Male",
+    "Other": "Other"
+  },
+  "country": {
+    "Austria": "Austria",
+    "Germany": "Germany",
+    "Italy": "Italy",
+    "Switzerland": "Switzerland"
+  },
+  "workingAtTime": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "leaderAtTime": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "professionalCertification": {
+    "IFMGAGuide": "IFMGA Guide",
+    "FullSkiGuide": "Full Ski guide, Ski Instructor, Apprentice Guide",
+    "AvalancheProfessional": "Avalanche Professional",
+    "AvalancheEducator": "Avalanche Educator"
+  },
+  "avalancheTraining": {
+    "None": "None",
+    "Awareness": "Awareness",
+    "BasicREC": "Basic REC",
+    "AdvancedREC": "Advanced REC",
+    "Professional": "Professional"
+  },
+  "yearsActive": {
+    "UpTo2Years": "≤ 2 yrs",
+    "From3To9Years": "3–9 yrs",
+    "From10Years": "≥ 10 yrs"
+  },
+  "transceiver": {
+    "NoTransceiver": "No Transceiver",
+    "TransceiverOn": "Transceiver: on",
+    "TransceiverOff": "Transceiver: off"
+  },
+  "shovel": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "probe": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "airbag": {
+    "NoAirbag": "No Airbag",
+    "AirbagDeployed": "Airbag: deployed",
+    "AirbagUndeployed": "Airbag: undeployed"
+  },
+  "helmet": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "terrainTrap": {
+    "None": "None",
+    "Cliff": "Cliff",
+    "Trees": "Trees",
+    "Gully": "Gully",
+    "Depression": "Depression",
+    "Bench": "Bench",
+    "Boulder": "Boulder",
+    "CrevasseOrBergschrund": "Crevasse or Bergschrund"
+  },
+  "primaryLocationMethod": {
+    "NotBuried": "Not Buried",
+    "SelfExtraction": "Self Extraction",
+    "VisualClues": "Visual Clues",
+    "TransceiverProbeShovel": "Transceiver/Probe/Shovel",
+    "SpotProbing": "Spot Probing",
+    "ProbeLine": "Probe Line",
+    "Recco": "Recco",
+    "RescueDog": "Rescue Dog",
+    "Snowmelt": "Snowmelt"
+  },
+  "rescuedBy": {
+    "Self": "Self",
+    "Companion": "Companion",
+    "OtherGroup": "Other Group",
+    "OrganizedRescue": "Organized Rescue",
+    "Unknown": "Unknown"
+  },
+  "medicalIntervention": {
+    "CPR": "CPR",
+    "ALS": "ALS",
+    "ECMO": "ECMO"
+  },
+  "estimatedTimeOfDeath": {
+    "DuringTheAvalanche": "During the avalanche",
+    "DuringBurial": "During burial",
+    "OnSiteAfterExtrication": "On site after extrication",
+    "DuringTransport": "During transport",
+    "InHospital": "In hospital"
+  },
+  "causeOfDeath": {
+    "Asphyxiation": "Asphyxiation",
+    "TraumaticInjury": "Traumatic injury",
+    "Hypothermia": "Hypothermia"
+  },
+  "respiratoryCavity": {
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "injurySeverity": {
+    "Minor": "Minor",
+    "Moderate": "Moderate",
+    "Major": "Major"
   }
 }
