@@ -108,11 +108,12 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   readonly showMandatoryOnly = input<boolean>(false);
 
-  unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber {
-    while (t.type === "optional" || t.type === "nullable" || t.type === "default") {
-      t = (t as unknown as z.ZodOptional | z.ZodNullable | z.ZodDefault).unwrap() as T;
+  unwrap(t: any): any {
+    let current = t;
+    while (current?.type === "optional" || current?.type === "nullable" || current?.type === "default") {
+      current = current.unwrap();
     }
-    return t;
+    return current;
   }
   isFieldOptional(zodType: z.ZodType): boolean {
     return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
@@ -166,6 +167,17 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     const val = this.value() as any;
     if (!val) return;
     val[key] = undefined;
+    this.value.set(val);
+  }
+
+  get groupSizeUnknown(): boolean {
+    return !!(this.value() as any)?.groupSizeUnknown;
+  }
+
+  onGroupSizeUnknownChange(checked: boolean): void {
+    const val = this.value() as any;
+    if (!val) return;
+    val.groupSizeUnknown = checked;
     this.value.set(val);
   }
 }

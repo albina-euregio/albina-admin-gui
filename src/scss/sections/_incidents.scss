@@ -138,6 +138,11 @@
     }
   }
 
+  .group-size-unknown-label {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
   // Spacing and separation between fields
   .zod-form-field {
     margin-top: $space-4;

@@ -1,6 +1,6 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
-    @if (x.key !== "reportStatus") {
+    @if (x.key !== "reportStatus" && x.key !== "groupSizeUnknown") {
       @let inner = unwrap(x.value);
       @let widget = widgetRegistry.get(inner);
       @let valueI18n = widget?.valueI18n || `${x.key}.#`;
@@ -128,12 +128,38 @@
             />
           }
         } @else if (inner.type === "number") {
-          <input
-            type="number"
-            [class]="zodCssClass(x.value, value()[x.key])"
-            [(ngModel)]="value()[x.key]"
-            (ngModelChange)="value.set(value())"
-          />
+          @if (x.key === "groupSize") {
+            <div class="d-flex align-items-center gap-3">
+              <input
+                type="number"
+                [class]="zodCssClass(x.value, value()[x.key])"
+                [(ngModel)]="value().groupSize"
+                (ngModelChange)="value.set(value())"
+                [disabled]="disabled()"
+                style="max-width: 150px"
+              />
+              <label
+                class="form-check-label group-size-unknown-label cursor-pointer d-flex align-items-center gap-2 mb-0"
+              >
+                <input
+                  type="checkbox"
+                  class="form-check-input m-0"
+                  [disabled]="disabled()"
+                  [ngModel]="groupSizeUnknown"
+                  (ngModelChange)="onGroupSizeUnknownChange($event)"
+                />
+                <span>{{ labelI18n().replace("#", "groupSizeUnknown") | translate }}</span>
+              </label>
+            </div>
+          } @else {
+            <input
+              type="number"
+              [class]="zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="value.set(value())"
+              [disabled]="disabled()"
+            />
+          }
         } @else if (inner.type === "date") {
           <div class="input-group">
             <input
@@ -160,6 +186,17 @@
             >
               <i class="ph ph-x"></i>
             </button>
+          </div>
+        } @else if (inner.type === "boolean") {
+          <div class="form-check form-switch mb-0">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [disabled]="disabled()"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="value.set(value())"
+              [id]="x.key + '-input'"
+            />
           </div>
         } @else {
           <div class="alert alert-danger" role="alert">

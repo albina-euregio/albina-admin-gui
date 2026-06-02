@@ -85,9 +85,8 @@ export const GroupInformationSchema = z.object({
     // "Other [text]", // TODO
     "Unknown",
   ]),
-  groupSize: z.number().default(0),
-  // TODO unknown => groupSize=0
-  // groupSizeUnknown: z.string(),
+  groupSize: z.number().nullish(),
+  groupSizeUnknown: z.boolean().default(false),
   incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
   typeOfControlledTerrain: z
     .enum([
