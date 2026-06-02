@@ -4,7 +4,9 @@
     <div class="col-lg-12">
       <div class="card" style="height: calc(100vh - 95px); margin-bottom: 0">
         <div class="card-body" style="height: calc(100vh - 95px); margin-bottom: 0">
-          <iframe class="w-100 h-100" src="https://admin.avalanche.report/education/"></iframe>
+          @if (educationUrl) {
+            <iframe class="w-100 h-100" [src]="educationUrl"></iframe>
+          }
         </div>
       </div>
     </div>

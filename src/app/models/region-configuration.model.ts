@@ -84,6 +84,7 @@ export const RegionConfigurationSchema = z.object({
   coatOfArms: z.url().nullish().describe("Image URL for coat of arms"),
   staticUrl: z.url().nullish().describe("URL to static avalanche files"),
   serverImagesUrl: z.url().nullish().describe("URL to server images"),
+  educationUrl: z.url().nullish().describe("URL to education content"),
 });
 
 export type RegionConfiguration = z.infer<typeof RegionConfigurationSchema>;
