@@ -15,9 +15,19 @@
             <span class="text-muted">[{{ widget.unit }}]</span>
           }
           @if (!isFieldOptional(x.value)) {
-            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1" style="font-size: 0.65rem"
-              >Required</span
-            >
+            @if (isFieldValid(x.value, value()[x.key])) {
+              <span
+                class="badge bg-success-subtle text-success border border-success-subtle px-1"
+                style="font-size: 0.65rem"
+                >Required</span
+              >
+            } @else {
+              <span
+                class="badge bg-danger-subtle text-danger border border-danger-subtle px-1"
+                style="font-size: 0.65rem"
+                >Required</span
+              >
+            }
           } @else {
             <span class="badge bg-light text-muted border px-1" style="font-size: 0.65rem">Optional</span>
           }

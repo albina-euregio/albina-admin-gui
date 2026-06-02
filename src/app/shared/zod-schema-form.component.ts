@@ -118,6 +118,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   isFieldOptional(zodType: z.ZodType): boolean {
     return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
   }
+  isFieldValid(schema: z.ZodType, val: unknown): boolean {
+    return this.hasValue(val) && schema.safeParse(val).success;
+  }
   getDateString(key: string, inputEl?: HTMLInputElement): string {
     if (inputEl && document.activeElement === inputEl) {
       return inputEl.value;

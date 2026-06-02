@@ -208,9 +208,22 @@
         <div class="mb-4">
           <div class="form-label d-flex align-items-center gap-2">
             <span>{{ "incidentReport.personInvolvement" | translate }}</span>
-            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1" style="font-size: 0.65rem"
-              >Required</span
-            >
+            @if (
+              incidentReport().personInvolvement &&
+              personInvolvementOptions.includes(incidentReport().personInvolvement)
+            ) {
+              <span
+                class="badge bg-success-subtle text-success border border-success-subtle px-1"
+                style="font-size: 0.65rem"
+                >Required</span
+              >
+            } @else {
+              <span
+                class="badge bg-danger-subtle text-danger border border-danger-subtle px-1"
+                style="font-size: 0.65rem"
+                >Required</span
+              >
+            }
           </div>
           <div class="form-text mb-2">
             {{ "incidentReportHelp.personInvolvement" | translate }}
