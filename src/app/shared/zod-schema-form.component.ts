@@ -117,7 +117,10 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   isFieldOptional(zodType: z.ZodType): boolean {
     return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
   }
-  getDateString(key: string): string {
+  getDateString(key: string, inputEl?: HTMLInputElement): string {
+    if (inputEl && document.activeElement === inputEl) {
+      return inputEl.value;
+    }
     const raw = (this.value() as any)?.[key];
     if (!raw) return "";
     const val = new Date(raw as string | number | Date);
@@ -128,7 +131,10 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return `${year}-${month}-${day}`;
   }
 
-  getTimeString(key: string): string {
+  getTimeString(key: string, inputEl?: HTMLInputElement): string {
+    if (inputEl && document.activeElement === inputEl) {
+      return inputEl.value;
+    }
     const raw = (this.value() as any)?.[key];
     if (!raw) return "";
     const val = new Date(raw as string | number | Date);
@@ -147,6 +153,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
       return;
     }
     const [year, month, day] = datePart.split("-").map(Number);
+    if (year < 1000) {
+      return;
+    }
     const [hours, minutes] = (timePart || "00:00").split(":").map(Number);
     const newDate = new Date(year, month - 1, day, hours, minutes);
     val[key] = newDate;

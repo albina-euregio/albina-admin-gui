@@ -125,7 +125,7 @@
             type="date"
             class="form-control"
             [disabled]="disabled()"
-            [value]="getDateString(x.key)"
+            [value]="getDateString(x.key, dInput)"
             #dInput
             (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
           />
@@ -133,7 +133,7 @@
             type="time"
             class="form-control"
             [disabled]="disabled()"
-            [value]="getTimeString(x.key)"
+            [value]="getTimeString(x.key, tInput)"
             #tInput
             (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
           />
