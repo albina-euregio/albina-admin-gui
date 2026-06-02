@@ -126,6 +126,14 @@
               rows="5"
               [disabled]="disabled()"
             ></textarea>
+          } @else if (widget?.widget === "rich-text") {
+            <quill-editor
+              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [styles]="{ height: '200px' }"
+              [readOnly]="disabled()"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="value.set(value())"
+            />
           } @else {
             <input
               type="text"

@@ -3,6 +3,7 @@ import { Component, computed, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { xor } from "es-toolkit";
+import { QuillModule } from "ngx-quill";
 import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
@@ -23,6 +24,7 @@ import { widgetRegistry } from "./zod-schema-form.widget-registry";
     FormsModule,
     IncidentGroupSizeComponent,
     KeyValuePipe,
+    QuillModule,
     ToggleBtnGroup,
     TranslateModule,
   ],
