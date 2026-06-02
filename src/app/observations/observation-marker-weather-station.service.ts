@@ -1,11 +1,15 @@
+import { ParameterTypeSchema, type Feature } from "@albina-euregio/linea/listing";
 import { inject, Injectable } from "@angular/core";
 import { Marker } from "leaflet";
+import z from "zod";
 
-import type { FeatureProperties } from "../../../observations-api/src/fetch/weather-stations";
 import { Aspect } from "../enums/enums";
 import { makeIcon } from "./make-icon";
 import { degreeToAspect, GenericObservation } from "./models/generic-observation.model";
 import { ObservationMarkerService } from "./observation-marker.service";
+
+type FeatureProperties = Feature["properties"];
+type ParameterType = z.infer<typeof ParameterTypeSchema>;
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
 const elevationColors = {
@@ -277,36 +281,34 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     }
   }
 
-  toStatistics(observation: T): FeatureProperties["statistics"][keyof FeatureProperties["statistics"]] {
-    const data: FeatureProperties = observation.$data;
-    const statistics = data.statistics;
+  toParameter(): ParameterType {
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
-        return statistics?.ISWR;
+        return "ISWR";
       case WeatherStationParameter.SnowHeight:
-        return statistics?.HS;
+        return "HS";
       case WeatherStationParameter.SnowDifference:
-        return statistics?.HS;
+        return "HS";
       case WeatherStationParameter.AirTemperature:
-        return statistics?.TA;
+        return "TA";
       case WeatherStationParameter.AirTemperatureMax:
-        return statistics?.TA;
+        return "TA";
       case WeatherStationParameter.AirTemperatureMin:
-        return statistics?.TA;
+        return "TA";
       case WeatherStationParameter.SurfaceTemperature:
-        return statistics?.TSS;
+        return "TSS";
       case WeatherStationParameter.DewPoint:
-        return statistics?.TD;
+        return "TD";
       case WeatherStationParameter.RelativeHumidity:
-        return statistics?.RH;
+        return "RH";
       case WeatherStationParameter.WindSpeed:
-        return statistics?.VW;
+        return "VW";
       case WeatherStationParameter.WindDirection:
-        return statistics?.DW;
+        return "DW";
       case WeatherStationParameter.WindGust:
-        return statistics?.VW_MAX;
+        return "VW_MAX";
       case WeatherStationParameter.DrySnowfallLevel:
-        return statistics?.SnowLine;
+        return "DrySnowfallLevel";
       default:
         return undefined;
     }
@@ -314,37 +316,39 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
   toValue(observation: T): number {
     const data: FeatureProperties = observation.$data;
+    const parameter = this.toParameter();
+    if (!parameter) return;
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
-        return this.toStatistics(observation)?.average;
+        return data.statistics?.[parameter]?.average;
       case WeatherStationParameter.SnowHeight:
-        return this.toStatistics(observation)?.average;
+        return data.statistics?.[parameter]?.average;
       case WeatherStationParameter.SnowDifference:
-        return this.toStatistics(observation)?.delta;
+        return data.statistics?.[parameter]?.delta;
       case WeatherStationParameter.AirTemperature:
-        return this.toStatistics(observation)?.average;
+        return data.statistics?.[parameter]?.average;
       case WeatherStationParameter.AirTemperatureMax:
-        return this.toStatistics(observation)?.max;
+        return data.statistics?.[parameter]?.max;
       case WeatherStationParameter.AirTemperatureMin:
-        return this.toStatistics(observation)?.min;
+        return data.statistics?.[parameter]?.min;
       case WeatherStationParameter.SurfaceTemperature:
-        return this.toStatistics(observation)?.average;
+        return data.statistics?.[parameter]?.average;
       case WeatherStationParameter.SurfaceHoar:
         return this.getSurfaceHoar(data);
       case WeatherStationParameter.SurfaceHoarCalc:
         return this.calcSurfaceHoarProbability(data);
       case WeatherStationParameter.DewPoint:
-        return this.toStatistics(observation)?.average;
+        return data.statistics?.[parameter]?.average;
       case WeatherStationParameter.RelativeHumidity:
-        return this.toStatistics(observation)?.average;
+        return data.statistics?.[parameter]?.average;
       case WeatherStationParameter.WindSpeed:
-        return this.toStatistics(observation)?.average;
+        return data.statistics?.[parameter]?.average;
       case WeatherStationParameter.WindDirection:
-        return this.toStatistics(observation)?.median;
+        return data.statistics?.[parameter]?.median;
       case WeatherStationParameter.WindGust:
-        return this.toStatistics(observation)?.max;
+        return data.statistics?.[parameter]?.max;
       case WeatherStationParameter.DrySnowfallLevel:
-        return this.toStatistics(observation)?.max;
+        return data.statistics?.[parameter]?.max;
       default:
         return NaN;
     }
@@ -391,17 +395,18 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     }
   }
 
-  private getSurfaceHoar(data: T["$data"]): number {
-    const tempDiff = data.TD - data.OFT;
-    if (data.OFT < 0 && tempDiff > 0) {
-      return tempDiff;
+  private getSurfaceHoar(data: FeatureProperties): number {
+    const TSS = data.TSS.convertTo("℃");
+    const delta = data.TD.convertTo("℃") - TSS;
+    if (TSS < 0 && delta > 0) {
+      return delta;
     } else {
       return undefined;
     }
   }
 
   // Lehning et. al. 2002
-  private calcSurfaceHoarProbability(data: T["$data"]): number {
+  private calcSurfaceHoarProbability(data: FeatureProperties): number {
     const grainSize = 1; // assumption
     //z0 0.5 to 2.4 mm for snow surfaces.
     const z0 = (0.003 + grainSize / 5) / 1000; //Lehning 2000, for grainSize = 1 mm only 0,203
@@ -411,12 +416,17 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
     let result = -1;
 
-    if (data.HS > 0 && data.OFT <= 0) {
-      const satp_w = 610.5 * Math.exp((lw * data.LT) / (461.9 * (data.LT + 273.16) * 273.16));
-      const satp_i = 610.5 * Math.exp((li * data.OFT) / (461.9 * (data.OFT + 273.16) * 273.16));
+    const HS = data.HS.convertTo("cm");
+    const TA = data.TA.convertTo("℃");
+    const TSS = data.TSS.convertTo("℃");
+    if (HS > 0 && TSS <= 0) {
+      const satp_w = 610.5 * Math.exp((lw * TA) / (461.9 * (TA + 273.16) * 273.16));
+      const satp_i = 610.5 * Math.exp((li * TSS) / (461.9 * (TSS + 273.16) * 273.16));
+      const VW = data.VW.convertTo("km/h");
+      const RH = data.RH.convertTo("%");
       result =
-        ((((-Math.pow(0.4, 2) * data.WG) / (0.74 * Math.pow(Math.log(2 / z0), 2))) * 0.622 * li) / (287 * data.LT)) *
-        (satp_w * data.RH - satp_i);
+        ((((-Math.pow(0.4, 2) * VW) / (0.74 * Math.pow(Math.log(2 / z0), 2))) * 0.622 * li) / (287 * TA)) *
+        (satp_w * RH - satp_i);
     }
 
     return result;

@@ -512,7 +512,7 @@
       <div style="width: 100%; height: 90vh">
         @let imgUrl = observationPopup?.imgUrls[observationPopup?.imgIndex];
         @if (isLineaUrl(imgUrl)) {
-          <linea-plot [attr.src]="imgUrl"></linea-plot>
+          <linea-plot [attr.features]="lineaFeature(imgUrl)"></linea-plot>
         } @else {
           <img [src]="imgUrl" style="width: 100%; height: 100%; object-fit: contain; object-position: top" />
         }

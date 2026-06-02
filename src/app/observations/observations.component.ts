@@ -1,3 +1,4 @@
+import { Feature } from "@albina-euregio/linea/listing";
 import { CommonModule, formatDate } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
@@ -28,10 +29,8 @@ import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { firstValueFrom, type Observable, type Subscription } from "rxjs";
 import Split from "split.js";
-
-import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
-
 import "@albina-euregio/linea";
+import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
 import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
@@ -48,10 +47,10 @@ import {
   toCSV,
   partialGenericObservationSchema,
 } from "./models/generic-observation.model";
-import { ObservationChartComponent } from "./observation-chart.component";
-import { ObservationEditorComponent } from "./observation-editor.component";
 
 import "bootstrap";
+import { ObservationChartComponent } from "./observation-chart.component";
+import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationGalleryComponent } from "./observation-gallery.component";
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
@@ -584,12 +583,40 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     return String(imgUrl).endsWith(".smet") || String(imgUrl).endsWith(".smet.gz");
   }
 
+  lineaFeature(imgUrl: string | SafeResourceUrl) {
+    return JSON.stringify([
+      {
+        id: "",
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [0, 0],
+        },
+        properties: {
+          name: "",
+          dataProviderID: "ALBINA",
+          dataURLs: [imgUrl as string],
+        },
+      } satisfies Feature,
+    ]);
+  }
+
   private $externalImgs(observation: GenericObservation) {
     if (!observation) return undefined;
-    return observation.$source === ObservationSource.AvalancheWarningService &&
+    if (
+      observation.$source === ObservationSource.AvalancheWarningService &&
       observation.$type === ObservationType.TimeSeries
-      ? (this.markerWeatherStationService.toStatistics(observation)?.$externalImgs ?? observation.$externalImgs)
-      : observation.$externalImgs;
+    ) {
+      const parameter = this.markerWeatherStationService.toParameter();
+      const externalImgsForParameter = observation.$externalImgs.filter((i) =>
+        // ?DrySnowfallLevel, see observations-api/src/fetch/weather-stations.ts
+        i.endsWith(`?${parameter}`),
+      );
+      if (externalImgsForParameter.length) {
+        return externalImgsForParameter;
+      }
+    }
+    return observation.$externalImgs;
   }
 
   onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
