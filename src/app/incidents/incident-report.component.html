@@ -11,22 +11,32 @@
         </label>
       </div>
 
-      <!-- Report Status Badge -->
-      <span
-        class="badge px-3 py-2 text-capitalize"
-        [class.bg-warning-subtle]="
-          incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
-        "
-        [class.text-warning-emphasis]="
-          incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
-        "
-        [class.bg-info-subtle]="incidentReport().reportStatus === 'InReview'"
-        [class.text-info-emphasis]="incidentReport().reportStatus === 'InReview'"
-        [class.bg-success-subtle]="incidentReport().reportStatus === 'Verified'"
-        [class.text-success-emphasis]="incidentReport().reportStatus === 'Verified'"
-      >
-        Status: {{ incidentReport().reportStatus }}
-      </span>
+      <!-- Report Status Dropdown -->
+      <div class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0 text-secondary" style="font-size: 11px" for="reportStatusSelect">STATUS:</label>
+        <select
+          [disabled]="disabled()"
+          id="reportStatusSelect"
+          class="form-select form-select-sm fw-semibold text-capitalize border"
+          [class.bg-warning-subtle]="
+            incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
+          "
+          [class.text-warning-emphasis]="
+            incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
+          "
+          [class.bg-info-subtle]="incidentReport().reportStatus === 'InReview'"
+          [class.text-info-emphasis]="incidentReport().reportStatus === 'InReview'"
+          [class.bg-success-subtle]="incidentReport().reportStatus === 'Verified'"
+          [class.text-success-emphasis]="incidentReport().reportStatus === 'Verified'"
+          [(ngModel)]="incidentReport().reportStatus"
+          (ngModelChange)="incidentReport.set(incidentReport())"
+        >
+          <option value="Draft">Draft</option>
+          <option value="Incomplete">Incomplete</option>
+          <option value="InReview">In Review</option>
+          <option value="Verified">Verified</option>
+        </select>
+      </div>
     </div>
   </div>
 
