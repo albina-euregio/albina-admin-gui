@@ -103,22 +103,20 @@
         }
       </button>
     </li>
-    @if (incidentReport().personInvolvement === "Yes") {
-      <li class="nav-item">
-        <button
-          class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-          [class.active]="activeTab === 'group'"
-          (click)="activeTab = 'group'"
-        >
-          <span>{{ "incidentReport.groupInformation" | translate }}</span>
-          @if (getGroupValidationStatus() === "valid") {
-            <span class="text-success" title="Valid">✔</span>
-          } @else {
-            <span class="text-danger" title="Incomplete">⚠</span>
-          }
-        </button>
-      </li>
-    }
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'group'"
+        (click)="activeTab = 'group'"
+      >
+        <span>{{ "incidentReport.personInvolvement" | translate }}</span>
+        @if (getGroupValidationStatus() === "valid") {
+          <span class="text-success" title="Valid">✔</span>
+        } @else {
+          <span class="text-danger" title="Incomplete">⚠</span>
+        }
+      </button>
+    </li>
   </ul>
 
   <!-- Tab Content Areas -->
@@ -188,37 +186,64 @@
     }
 
     <!-- Group Info Tab -->
-    @if (activeTab === "group" && incidentReport().personInvolvement === "Yes") {
+    @if (activeTab === "group") {
       <div>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="mb-0 text-secondary">{{ "incidentReport.groupInformation" | translate }}</h4>
-          <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newGroupInformation()">
-            <span>+</span> Add Group
-          </button>
+        <!-- Person Involvement Field -->
+        <div class="mb-4">
+          <div class="form-label d-flex align-items-center gap-2">
+            <span>{{ "incidentReport.personInvolvement" | translate }}</span>
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1" style="font-size: 0.65rem"
+              >Required</span
+            >
+          </div>
+          <div class="form-text mb-2">
+            {{ "incidentReportHelp.personInvolvement" | translate }}
+          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="personInvolvementOptions"
+            [value]="incidentReport().personInvolvement"
+            (valueChange)="incidentReport().personInvolvement = $event; incidentReport.set(incidentReport())"
+            [labelI18n]="'personInvolvement.#'"
+          />
         </div>
 
-        @if (!incidentReport().groupInformation?.length) {
-          <div class="alert alert-info">No groups registered. Click "+ Add Group" to add a group.</div>
-        }
-
-        @for (groupInformation of incidentReport().groupInformation; track groupInformation.anonymousGroupIdentifier) {
-          <div class="card mb-3 shadow-sm border">
-            <div class="card-header d-flex justify-content-between align-items-center bg-light">
-              <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
-              <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">
-                &minus; Remove
+        @if (incidentReport().personInvolvement === "Yes") {
+          <div class="border-top pt-4 mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="mb-0 text-secondary">{{ "incidentReport.groupInformation" | translate }}</h4>
+              <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newGroupInformation()">
+                <span>+</span> Add Group
               </button>
             </div>
-            <div class="card-body">
-              <app-zod-schema-form
-                [disabled]="disabled()"
-                [value]="groupInformation"
-                [zodType]="IncidentModels.GroupInformationSchema"
-                [labelI18n]="labelI18n"
-                [helpI18n]="helpI18n"
-                [showMandatoryOnly]="showMandatoryOnly"
-              />
-            </div>
+
+            @if (!incidentReport().groupInformation?.length) {
+              <div class="alert alert-info">No groups registered. Click "+ Add Group" to add a group.</div>
+            }
+
+            @for (
+              groupInformation of incidentReport().groupInformation;
+              track groupInformation.anonymousGroupIdentifier
+            ) {
+              <div class="card mb-3 shadow-sm border">
+                <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                  <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
+                  <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">
+                    &minus; Remove
+                  </button>
+                </div>
+                <div class="card-body">
+                  <app-zod-schema-form
+                    [disabled]="disabled()"
+                    [value]="groupInformation"
+                    [zodType]="IncidentModels.GroupInformationSchema"
+                    [labelI18n]="labelI18n"
+                    [helpI18n]="helpI18n"
+                    [showMandatoryOnly]="showMandatoryOnly"
+                  />
+                </div>
+              </div>
+            }
           </div>
         }
       </div>
@@ -248,7 +273,7 @@
 
     <button
       class="btn btn-primary"
-      [disabled]="activeTab === 'group' || (activeTab === 'avalanche' && incidentReport().personInvolvement !== 'Yes')"
+      [disabled]="activeTab === 'group'"
       (click)="
         activeTab =
           activeTab === 'meta'
@@ -257,9 +282,9 @@
               ? 'location'
               : activeTab === 'location'
                 ? 'avalanche'
-                : activeTab === 'avalanche' && incidentReport().personInvolvement === 'Yes'
+                : activeTab === 'avalanche'
                   ? 'group'
-                  : 'avalanche'
+                  : activeTab
       "
     >
       Next &rarr;

@@ -28,8 +28,6 @@ export const GeneralInformationSchema = z.object({
     ]),
   ),
 
-  personInvolvement: z.enum(["Yes", "No", "Unknown"]),
-
   otherDamages: z.enum(["Yes", "No"]),
 
   damagedAssets: z
@@ -310,6 +308,7 @@ export const IncidentReportSchema = z.object({
   ...GeneralInformationSchema.shape,
   ...LocationInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
+  personInvolvement: z.enum(["Yes", "No", "Unknown"]),
   groupInformation: GroupInformationSchema.array(),
 });
 

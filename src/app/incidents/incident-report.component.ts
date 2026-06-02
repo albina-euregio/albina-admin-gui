@@ -5,6 +5,7 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 
+import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
@@ -15,7 +16,7 @@ import { IncidentReport } from "./models/incident-report.model";
   selector: "app-incident-report",
   templateUrl: "incident-report.component.html",
   standalone: true,
-  imports: [AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent],
+  imports: [AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent, ToggleBtnGroup],
 })
 export class IncidentReportComponent {
   constantsService = inject(ConstantsService);
@@ -30,6 +31,8 @@ export class IncidentReportComponent {
   readonly disabled = input<boolean>(false);
   readonly labelI18n = "incidentReport.#";
   readonly helpI18n = "incidentReportHelp.#";
+
+  personInvolvementOptions: ("Yes" | "No" | "Unknown")[] = ["Yes", "No", "Unknown"];
 
   showMandatoryOnly = false;
   activeTab: "meta" | "general" | "location" | "avalanche" | "group" = "general";
@@ -55,10 +58,13 @@ export class IncidentReportComponent {
   }
 
   getGroupValidationStatus(): "valid" | "invalid" {
-    if (this.incidentReport().personInvolvement !== "Yes") return "valid";
-    for (const group of this.incidentReport().groupInformation ?? []) {
-      const res = IncidentModels.GroupInformationSchema.safeParse(group);
-      if (!res.success) return "invalid";
+    const pi = this.incidentReport().personInvolvement;
+    if (pi !== "Yes" && pi !== "No" && pi !== "Unknown") return "invalid";
+    if (pi === "Yes") {
+      for (const group of this.incidentReport().groupInformation ?? []) {
+        const res = IncidentModels.GroupInformationSchema.safeParse(group);
+        if (!res.success) return "invalid";
+      }
     }
     return "valid";
   }
