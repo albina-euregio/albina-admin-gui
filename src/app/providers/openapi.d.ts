@@ -1340,7 +1340,7 @@ export interface components {
       checklistId: string;
       /** Format: date-time */
       timestamp: string;
-      checklist: components["schemas"]["PublicationChecklistItem"][];
+      checklistItems: components["schemas"]["PublicationChecklistItem"][];
       user: string;
     };
     /** @enum {string} */
@@ -1358,7 +1358,7 @@ export interface components {
     /** @enum {string} */
     DangerRating: "missing" | "no_snow" | "no_rating" | "low" | "moderate" | "considerable" | "high" | "very_high";
     /** @enum {string} */
-    DangerRatingModificator: "minus" | "equal" | "plus";
+    DangerRatingModificator: "none" | "minus" | "equal" | "plus";
     /** @enum {string} */
     DangerSign: "shooting_cracks" | "whumpfing" | "fresh_avalanches" | "glide_cracks";
     /** @description This class holds all information about one danger source. */
@@ -1627,6 +1627,7 @@ export interface components {
       sendWhatsAppMessages?: boolean;
       sendPushNotifications?: boolean;
       enableMediaFile?: boolean;
+      enableIcon?: boolean;
       enableAvalancheProblemCornices?: boolean;
       enableAvalancheProblemNoDistinctAvalancheProblem?: boolean;
       showMatrix?: boolean;
@@ -1659,13 +1660,13 @@ export interface components {
       enableModelling?: boolean;
       enabledTextcatFields?: components["schemas"]["TextPart"][];
       enabledEditableFields?: components["schemas"]["TextPart"][];
-      enableIcon?: boolean;
       enableLineaExport?: boolean;
       defaultLang?: components["schemas"]["LanguageCode"];
       logoPath?: string;
       logoBwPath?: string;
       coatOfArms?: string;
       serverImagesUrl?: string;
+      educationUrl?: string;
     };
     RegionLanguageConfiguration: {
       lang?: components["schemas"]["LanguageCode"];
@@ -1870,8 +1871,8 @@ export interface operations {
   getBlogPost: {
     parameters: {
       query: {
-        region: string;
-        lang: components["schemas"]["LanguageCode"];
+        region?: string;
+        lang?: components["schemas"]["LanguageCode"];
         id: string;
       };
       header?: never;
@@ -1894,8 +1895,8 @@ export interface operations {
   getBlogPosts: {
     parameters: {
       query: {
-        region: string;
-        lang: components["schemas"]["LanguageCode"];
+        region?: string;
+        lang?: components["schemas"]["LanguageCode"];
         searchText: string;
         searchCategory: string;
         startDate: string;
@@ -2028,8 +2029,8 @@ export interface operations {
       query: {
         regions: string[];
         region: string;
-        version: components["schemas"]["CaamlVersion"];
         lang: components["schemas"]["LanguageCode"];
+        version?: components["schemas"]["CaamlVersion"];
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         date: string;
       };
@@ -2115,7 +2116,7 @@ export interface operations {
         date: string;
         regions: string[];
         lang: components["schemas"]["LanguageCode"];
-        version: components["schemas"]["CaamlVersion"];
+        version?: components["schemas"]["CaamlVersion"];
       };
       header?: never;
       path?: never;
@@ -2141,7 +2142,7 @@ export interface operations {
         date: string;
         regions: string[];
         lang: components["schemas"]["LanguageCode"];
-        version: components["schemas"]["CaamlVersion"];
+        version?: components["schemas"]["CaamlVersion"];
       };
       header?: never;
       path?: never;
@@ -2215,7 +2216,7 @@ export interface operations {
         date: string;
         regions: string[];
         lang: components["schemas"]["LanguageCode"];
-        version: components["schemas"]["CaamlVersion"];
+        version?: components["schemas"]["CaamlVersion"];
       };
       header?: never;
       path?: never;
@@ -3037,9 +3038,9 @@ export interface operations {
   };
   getRssFeed: {
     parameters: {
-      query: {
-        region: string;
-        lang: components["schemas"]["LanguageCode"];
+      query?: {
+        region?: string;
+        lang?: components["schemas"]["LanguageCode"];
       };
       header?: never;
       path?: never;
@@ -3320,10 +3321,10 @@ export interface operations {
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         endDate: string;
         lang: components["schemas"]["LanguageCode"];
-        extended: boolean;
-        duplicate: boolean;
+        extended?: boolean;
+        duplicate?: boolean;
         regions: string[];
-        obsoleteMatrix: boolean;
+        obsoleteMatrix?: boolean;
       };
       header?: never;
       path?: never;
