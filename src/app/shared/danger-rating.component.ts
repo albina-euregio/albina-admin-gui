@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 
 import * as Enums from "../enums/enums";
 
@@ -7,7 +8,7 @@ import * as Enums from "../enums/enums";
   templateUrl: "danger-rating.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [],
+  imports: [TranslateModule],
 })
 export class DangerRatingComponent {
   dangerRating = Enums.DangerRating;
