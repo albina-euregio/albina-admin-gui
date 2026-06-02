@@ -143,6 +143,22 @@ export const GroupInformationSchema = z.object({
 });
 export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
+export const InvolvementsFatalitiesBurialsSchema = z.object({
+  numberOfGroups: z.number().nullish(),
+  activities: z.string().nullish(),
+  terrainTypes: z.string().nullish(),
+  fatalities: z.number().nullish(),
+  injuredSurvivors: z.number().nullish(),
+  uninjuredSurvivors: z.number().nullish(),
+  caughtOnly: z.number().nullish(),
+  fullyBuried: z.number().nullish(),
+  partlyBuriedHeadCovered: z.number().nullish(),
+  partlyBuriedHeadUncovered: z.number().nullish(),
+  partlyBuried: z.number().nullish(),
+  numberInvolved: z.number().nullish(),
+  involvementsFatalitiesBurialsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+
 const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
 export const AvalancheInformationSchema = z.object({
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
@@ -313,6 +329,7 @@ export const IncidentReportSchema = z.object({
   ...LocationInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
   personInvolvement: z.enum(["Yes", "No", "Unknown"]),
+  ...InvolvementsFatalitiesBurialsSchema.shape,
   ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array(),
 });
