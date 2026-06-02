@@ -78,11 +78,11 @@
     <li class="nav-item">
       <button
         class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'avalanche'"
-        (click)="activeTab = 'avalanche'"
+        [class.active]="activeTab === 'location'"
+        (click)="activeTab = 'location'"
       >
-        <span>{{ "incidentReport.avalancheInformation" | translate }}</span>
-        @if (getAvalancheValidationStatus() === "valid") {
+        <span>{{ "incidentReport.locationInformation" | translate }}</span>
+        @if (getLocationValidationStatus() === "valid") {
           <span class="text-success" title="Valid">✔</span>
         } @else {
           <span class="text-danger" title="Incomplete">⚠</span>
@@ -92,11 +92,11 @@
     <li class="nav-item">
       <button
         class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'location'"
-        (click)="activeTab = 'location'"
+        [class.active]="activeTab === 'avalanche'"
+        (click)="activeTab = 'avalanche'"
       >
-        <span>{{ "incidentReport.locationInformation" | translate }}</span>
-        @if (getLocationValidationStatus() === "valid") {
+        <span>{{ "incidentReport.avalancheInformation" | translate }}</span>
+        @if (getAvalancheValidationStatus() === "valid") {
           <span class="text-success" title="Valid">✔</span>
         } @else {
           <span class="text-danger" title="Incomplete">⚠</span>
@@ -155,22 +155,6 @@
       </div>
     }
 
-    <!-- Avalanche Info Tab -->
-    @if (activeTab === "avalanche") {
-      <div>
-        <h4 class="mb-3 text-secondary">{{ "incidentReport.avalancheInformation" | translate }}</h4>
-        <app-zod-schema-form
-          [disabled]="disabled()"
-          [value]="incidentReport()"
-          (valueChange)="incidentReport.set($event)"
-          [zodType]="IncidentModels.AvalancheInformationSchema"
-          [labelI18n]="labelI18n"
-          [helpI18n]="helpI18n"
-          [showMandatoryOnly]="showMandatoryOnly"
-        />
-      </div>
-    }
-
     <!-- Location Info Tab -->
     @if (activeTab === "location") {
       <div>
@@ -180,6 +164,22 @@
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.LocationInformationSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
+
+    <!-- Avalanche Info Tab -->
+    @if (activeTab === "avalanche") {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.avalancheInformation" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.AvalancheInformationSchema"
           [labelI18n]="labelI18n"
           [helpI18n]="helpI18n"
           [showMandatoryOnly]="showMandatoryOnly"
@@ -234,12 +234,12 @@
         activeTab =
           activeTab === 'general'
             ? 'meta'
-            : activeTab === 'avalanche'
+            : activeTab === 'location'
               ? 'general'
-              : activeTab === 'location'
-                ? 'avalanche'
+              : activeTab === 'avalanche'
+                ? 'location'
                 : activeTab === 'group'
-                  ? 'location'
+                  ? 'avalanche'
                   : 'meta'
       "
     >
@@ -248,18 +248,18 @@
 
     <button
       class="btn btn-primary"
-      [disabled]="activeTab === 'group' || (activeTab === 'location' && incidentReport().personInvolvement !== 'Yes')"
+      [disabled]="activeTab === 'group' || (activeTab === 'avalanche' && incidentReport().personInvolvement !== 'Yes')"
       (click)="
         activeTab =
           activeTab === 'meta'
             ? 'general'
             : activeTab === 'general'
-              ? 'avalanche'
-              : activeTab === 'avalanche'
-                ? 'location'
-                : activeTab === 'location' && incidentReport().personInvolvement === 'Yes'
+              ? 'location'
+              : activeTab === 'location'
+                ? 'avalanche'
+                : activeTab === 'avalanche' && incidentReport().personInvolvement === 'Yes'
                   ? 'group'
-                  : 'location'
+                  : 'avalanche'
       "
     >
       Next &rarr;
