@@ -316,45 +316,11 @@
 
   <!-- Wizard Controls (Next/Back) -->
   <div class="d-flex justify-content-between mt-4 border-top pt-3">
-    <button
-      class="btn btn-outline-secondary"
-      [disabled]="activeTab === 'meta'"
-      (click)="
-        activeTab =
-          activeTab === 'general'
-            ? 'meta'
-            : activeTab === 'location'
-              ? 'general'
-              : activeTab === 'avalanche'
-                ? 'location'
-                : activeTab === 'group'
-                  ? 'avalanche'
-                  : activeTab === 'other-damages'
-                    ? 'group'
-                    : 'meta'
-      "
-    >
+    <button class="btn btn-outline-secondary" [disabled]="activeTab === allTabs[0]" (click)="activeTab = prevTab">
       &larr; Back
     </button>
 
-    <button
-      class="btn btn-primary"
-      [disabled]="activeTab === 'other-damages'"
-      (click)="
-        activeTab =
-          activeTab === 'meta'
-            ? 'general'
-            : activeTab === 'general'
-              ? 'location'
-              : activeTab === 'location'
-                ? 'avalanche'
-                : activeTab === 'avalanche'
-                  ? 'group'
-                  : activeTab === 'group'
-                    ? 'other-damages'
-                    : activeTab
-      "
-    >
+    <button class="btn btn-primary" [disabled]="activeTab === allTabs.at(-1)" (click)="activeTab = nextTab">
       Next &rarr;
     </button>
   </div>

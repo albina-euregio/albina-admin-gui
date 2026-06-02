@@ -35,7 +35,18 @@ export class IncidentReportComponent {
   personInvolvementOptions: ("Yes" | "No" | "Unknown")[] = ["Yes", "No", "Unknown"];
 
   showMandatoryOnly = false;
-  activeTab: "meta" | "general" | "location" | "avalanche" | "other-damages" | "group" = "general";
+  readonly allTabs = ["meta", "general", "location", "avalanche", "group", "other-damages"] as const;
+  activeTab: (typeof this.allTabs)[number] = "general";
+
+  get prevTab(): (typeof this.allTabs)[number] {
+    const index = this.allTabs.indexOf(this.activeTab);
+    return this.allTabs[Math.max(index - 1, 0)];
+  }
+
+  get nextTab(): (typeof this.allTabs)[number] {
+    const index = this.allTabs.indexOf(this.activeTab);
+    return this.allTabs[Math.min(index + 1, this.allTabs.length - 1)];
+  }
 
   getMetaValidationStatus(): "valid" | "invalid" {
     const res = IncidentModels.MetaInformationSchema.safeParse(this.incidentReport());
