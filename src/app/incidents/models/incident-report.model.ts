@@ -47,11 +47,6 @@ export const GeneralInformationSchema = z.object({
 export const LocationInformationSchema = z.object({
   // TODO Multilanguage?
   location: z.string(),
-  country: z.string().nullish(),
-  region: z.string().nullish(),
-  // TODO Multilanguage?
-  municipality: z.string().nullish(),
-  avalancheRegion: z.string().nullish(),
   latitude: z.number(),
   longitude: z.number(),
   locationAccuracy: z
@@ -71,6 +66,11 @@ export const LocationInformationSchema = z.object({
       "unknown",
     ])
     .register(widgetRegistry, { widget: "slider" }),
+  country: z.string().nullish(),
+  region: z.string().nullish(),
+  // TODO Multilanguage?
+  municipality: z.string().nullish(),
+  avalancheRegion: z.string().nullish(),
   locationInformationComment: z.string().nullish(),
 });
 
