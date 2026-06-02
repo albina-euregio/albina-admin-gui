@@ -1,4 +1,5 @@
 import "@albina-euregio/linea";
+import { Feature } from "@albina-euregio/linea/listing";
 import { CommonModule } from "@angular/common";
 import {
   AfterViewInit,
@@ -14,7 +15,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
 import { LineaMapService } from "../providers/map-service/linea-map.service";
-import { GraphicsService, type LineaStationFeature } from "./graphics.service";
+import { GraphicsService } from "./graphics.service";
 
 @Component({
   selector: "app-linea-export",
@@ -25,21 +26,17 @@ import { GraphicsService, type LineaStationFeature } from "./graphics.service";
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LineaExportComponent implements AfterViewInit {
-  // All station IDs
-  stationIds: string[] = [];
   // Initially selected station
   selectedIds: string[] = [];
-  features = "[]";
-  forecastLatLon = "[]";
 
   private mapService = inject(LineaMapService);
   private graphicsService = inject(GraphicsService);
 
   private searchTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
-  readonly stations: LineaStationFeature[] = [];
+  readonly stations: Feature[] = [];
 
-  filteredStations: LineaStationFeature[] = [];
+  filteredStations: Feature[] = [];
   searchTerm = "";
   showDropdown = false;
   activeIndex = -1;
@@ -57,15 +54,15 @@ export class LineaExportComponent implements AfterViewInit {
       const id = station.id;
       const marker = new CircleMarker(
         {
-          lat: station.latitude,
-          lng: station.longitude,
+          lat: station.geometry.coordinates[1],
+          lng: station.geometry.coordinates[0],
         },
         this.getModelPointOptions(false),
       ).addTo(this.mapService.stationLayer);
-      marker.bindTooltip(`${station.shortName ?? ""} ${station.name}`);
+      marker.bindTooltip(`${station.properties.shortName ?? ""} ${station.properties.name}`);
       this.mapService.showStationName(marker);
 
-      marker.bindTooltip(`${station.name || station.id}`);
+      marker.bindTooltip(`${station.properties.name || station.id}`);
       marker.on("click", () => void this.toggleStation(id));
       this.markers[id] = marker;
 
@@ -130,12 +127,12 @@ export class LineaExportComponent implements AfterViewInit {
       } else {
         this.filteredStations = this.stations.filter(
           (s) =>
-            s.id.toLowerCase().includes(value) ||
-            s.shortName.toLowerCase().includes(value) ||
-            s.name.toLowerCase().includes(value),
+            s.id?.toLowerCase().includes(value) ||
+            s.properties.shortName?.toLowerCase().includes(value) ||
+            s.properties.name?.toLowerCase().includes(value),
         );
         const exact = this.stations.find(
-          (s) => s.id.toLowerCase() === this.searchTerm || s.shortName.toLowerCase() === this.searchTerm,
+          (s) => s.id?.toLowerCase() === this.searchTerm || s.properties.shortName?.toLowerCase() === this.searchTerm,
         );
 
         if (exact) {
@@ -173,29 +170,33 @@ export class LineaExportComponent implements AfterViewInit {
     if (!this.selectedIds.includes(id)) {
       this.selectedIds.push(id);
       this.markers[id].setStyle(this.getModelPointOptions(true)); // selected style
-      this.#updateLineaPlotAttrs();
     }
   }
 
   getShortNameById(id: string): string {
     const station = this.stations.find((station) => station.id === id);
-    if (station?.shortName && station.name) {
-      return station.shortName.split("-").length == 5 ? station.name : station.shortName;
-    }
-    return station?.shortName ?? id;
+    return station?.properties?.shortName ?? station?.properties?.name ?? id;
   }
 
   // Remove a station
   removeStation(id: string): void {
     this.selectedIds = this.selectedIds.filter((s) => s !== id);
     this.markers[id].setStyle(this.getModelPointOptions(false)); // unselected style
-    this.#updateLineaPlotAttrs();
   }
 
-  #updateLineaPlotAttrs(): void {
-    const selected = this.stations.filter((s) => this.selectedIds.includes(s.id));
-    this.features = JSON.stringify(selected.map((s) => s.feature));
-    this.forecastLatLon = JSON.stringify(selected.map((s) => `${s.latitude},${s.longitude}`));
+  get selectedStations() {
+    return this.stations.filter((s) => this.selectedIds.includes(s.id));
+  }
+
+  // linea-plot features
+  get features(): string {
+    return JSON.stringify(this.selectedStations);
+  }
+
+  get forecastLatLon(): string {
+    return JSON.stringify(
+      this.selectedStations.map((s) => `${s.geometry.coordinates[1]},${s.geometry.coordinates[0]}`),
+    );
   }
 
   // Marker style

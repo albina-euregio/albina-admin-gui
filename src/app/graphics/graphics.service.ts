@@ -1,5 +1,4 @@
-import { type Feature } from "@albina-euregio/linea/listing";
-import { SmetDataProvider } from "@albina-euregio/linea/providers";
+import { Feature, FeatureCollectionSchema } from "@albina-euregio/linea/listing";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
@@ -11,26 +10,6 @@ import { BulletinsService } from "app/providers/bulletins-service/bulletins.serv
 import { UserService } from "app/providers/user-service/user.service";
 import { lastValueFrom } from "rxjs";
 
-import sources from "../../assets/config/stations.json";
-
-interface LineaStationSource {
-  stations: string;
-  smetOperators: string;
-  smet: string[];
-}
-
-export interface LineaStationFeature {
-  id: string;
-  name: string;
-  shortName: string;
-  smetId: string;
-  smet: string[];
-  latitude: number;
-  longitude: number;
-  hasPsum: boolean;
-  feature: Feature;
-}
-
 @Injectable({ providedIn: "root" })
 export class GraphicsService {
   private authentificationService = inject(AuthenticationService);
@@ -40,38 +19,18 @@ export class GraphicsService {
   private translateService = inject(TranslateService);
   private userService = inject(UserService);
 
-  async loadLineaStations(): Promise<LineaStationFeature[]> {
-    const stationById = new Map<string, LineaStationFeature>();
+  async loadLineaStations(): Promise<Feature[]> {
+    const stationById = new Map<string, Feature>();
+    const response = await fetch("https://static.avalanche.report/eaws_weather_stations/linea.geojson");
+    const json = await response.json();
+    const collection = FeatureCollectionSchema.parse(json, { reportInput: true });
 
-    let source: LineaStationSource;
-    for (source of sources) {
-      const provider = new SmetDataProvider("ALBINA", [], source.stations, (id) =>
-        source.smet.map((t) => t.replace(/\{id\}/g, id)),
-      );
-      const collection = await provider.fetchStationListing();
-
-      for (const feature of collection.features) {
-        if (source.smetOperators && !new RegExp(source.smetOperators).test(feature.properties.operator ?? "")) {
-          continue;
-        }
-
-        const id = feature.id;
-        if (stationById.has(id)) {
-          continue;
-        }
-
-        stationById.set(id, {
-          id,
-          name: feature.properties?.name,
-          shortName: feature.properties?.shortName ?? feature.properties?.name ?? id,
-          smetId: feature.properties?.shortName ?? id,
-          smet: source.smet,
-          latitude: feature.geometry.coordinates[1],
-          longitude: feature.geometry.coordinates[0],
-          hasPsum: feature.properties.PSUM_6.value != undefined,
-          feature,
-        });
+    for (const feature of collection.features) {
+      const id = feature.id;
+      if (stationById.has(id)) {
+        continue;
       }
+      stationById.set(id, feature);
     }
 
     return [...stationById.values()];
@@ -200,43 +159,6 @@ export class GraphicsService {
 
     return { start, end };
   }
-
-  // ============================================
-  // SMET URL Utilities
-  // ============================================
-
-  getSmetUrl(station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined, index: number): string | undefined {
-    const template = station?.smet?.[index];
-    const smetId = station?.smetId;
-    return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
-  }
-
-  getSmetUrlsByIds(
-    ids: string[],
-    stations: Pick<LineaStationFeature, "id" | "smet" | "smetId">[],
-    index: number,
-  ): string[] {
-    const stationById = new Map(stations.map((station) => [station.id, station]));
-    return ids.map((id) => this.getSmetUrl(stationById.get(id), index)).filter((url): url is string => !!url);
-  }
-
-  resolveStationSrc(
-    station: Pick<LineaStationFeature, "smet" | "smetId"> | undefined,
-    preferredIndexes: number[],
-    fallback: string,
-  ): string {
-    for (const index of preferredIndexes) {
-      const url = this.getSmetUrl(station, index);
-      if (url) {
-        return url;
-      }
-    }
-    return fallback;
-  }
-
-  // ============================================
-  // Private Utilities
-  // ============================================
 
   private getDateRange(startDate: string, endDate: string): Temporal.PlainDate[] {
     let start: Temporal.PlainDate;
