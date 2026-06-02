@@ -65,10 +65,12 @@
   }
 
   input.form-control,
+  textarea.form-control,
   input[type="text"],
   input[type="number"],
   input[type="date"],
-  input[type="time"] {
+  input[type="time"],
+  textarea {
     @include font-s;
     padding: 0.3rem 0.5rem;
     height: auto;

@@ -100,12 +100,23 @@
           />
         }
       } @else if (inner.type === "string") {
-        <input
-          type="text"
-          [class]="zodCssClass(x.value, value()[x.key])"
-          [(ngModel)]="value()[x.key]"
-          (ngModelChange)="value.set(value())"
-        />
+        @if (x.key.toLowerCase().includes("comment")) {
+          <textarea
+            [class]="zodCssClass(x.value, value()[x.key])"
+            [(ngModel)]="value()[x.key]"
+            (ngModelChange)="value.set(value())"
+            rows="5"
+            [disabled]="disabled()"
+          ></textarea>
+        } @else {
+          <input
+            type="text"
+            [class]="zodCssClass(x.value, value()[x.key])"
+            [(ngModel)]="value()[x.key]"
+            (ngModelChange)="value.set(value())"
+            [disabled]="disabled()"
+          />
+        }
       } @else if (inner.type === "number") {
         <input
           type="number"
