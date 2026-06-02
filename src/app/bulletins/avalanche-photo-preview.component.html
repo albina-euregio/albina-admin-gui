@@ -21,5 +21,16 @@
     >
       <i class="ph ph-trash"></i>
     </button>
+
+    <button
+      [disabled]="disabled() || uploading()"
+      class="btn btn-sm btn-icon btn-bare--grey"
+      (click)="photoFileInput.click()"
+      data-toggle="tooltip"
+      title="{{ 'bulletins.create.tooltip.uploadPhoto' | translate }}"
+    >
+      <i class="ph" [class.ph-upload]="!uploading()" [class.ph-spinner]="uploading()"></i>
+    </button>
+    <input #photoFileInput type="file" accept="image/*" class="d-none" (change)="uploadAvalanchePhoto($event)" />
   }
 </div>
