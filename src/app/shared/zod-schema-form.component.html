@@ -2,6 +2,7 @@
   @for (x of zodObject().shape | keyvalue: null; track x) {
     @let inner = unwrap(x.value);
     @let widget = widgetRegistry.get(inner);
+    @let valueI18n = widget?.valueI18n || `${x.key}.#`;
     <div
       [class.d-none]="
         widget?.showIf &&
@@ -31,7 +32,7 @@
             (sliderValueChange)="onSliderEnumChange(x.key, $event, enumValues)"
           />
           @if (value()[x.key]) {
-            <div class="text-center">{{ x.key + "." + value()[x.key] | translate }}</div>
+            <div class="text-center">{{ valueI18n.replace("#", "" + value()[x.key]) | translate }}</div>
           }
         } @else if (widget?.widget === "radio") {
           @for (v of enumValues; track v) {
@@ -45,7 +46,7 @@
                   [value]="v"
                   [disabled]="disabled()"
                 />
-                {{ x.key + "." + v | translate }}
+                {{ valueI18n.replace("#", v) | translate }}
               </label>
             </div>
           }
@@ -56,7 +57,7 @@
             [enumValues]="enumValues"
             [(value)]="value()[x.key]"
             (valueChange)="value.set(value())"
-            [labelI18n]="`${x.key}.#`"
+            [labelI18n]="valueI18n"
           />
         }
       } @else if (inner.type === "array" && inner.def.element.type === "enum") {
@@ -75,7 +76,7 @@
                   [checked]="castArray(value()[x.key])?.includes(v)"
                   (change)="onCheckboxArrayChange(x.key, v, checkbox.checked)"
                 />
-                {{ x.key + "." + v | translate }}
+                {{ valueI18n.replace("#", v) | translate }}
               </label>
             </div>
           }
@@ -87,7 +88,7 @@
             [enumValues]="enumValues"
             [values]="castArray(value()[x.key])"
             (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); value.set(value())"
-            [labelI18n]="`${x.key}.#`"
+            [labelI18n]="valueI18n"
           />
         }
       } @else if (inner.type === "string") {
