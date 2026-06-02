@@ -107,4 +107,14 @@ export class IncidentReportComponent {
     if (!confirm(`Kill group ${index + 1}?`)) return;
     this.incidentReport().groupInformation.splice(index, 1);
   }
+
+  collapsedGroups: Record<string, boolean> = {};
+
+  toggleGroupCollapse(groupIdentifier: string) {
+    this.collapsedGroups[groupIdentifier] = !this.collapsedGroups[groupIdentifier];
+  }
+
+  isGroupCollapsed(groupIdentifier: string): boolean {
+    return !!this.collapsedGroups[groupIdentifier];
+  }
 }
