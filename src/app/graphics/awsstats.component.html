@@ -147,7 +147,7 @@
         <div class="awsstats-panel-title">{{ "awsstats.label.selectWeatherStation" | translate }}</div>
         <div class="awsstats-inline-selection">
           <span class="small text-muted" style="text-align: right">
-            {{ stationById.get(selectedStationId)?.name || "Axamer Lizum" }}
+            {{ stationById.get(selectedStationId)?.properties.name || "Axamer Lizum" }}
           </span>
         </div>
         <button

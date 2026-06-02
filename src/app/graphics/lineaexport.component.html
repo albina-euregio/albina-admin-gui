@@ -21,7 +21,10 @@
           (mousedown)="toggleStation(station.id)"
           #dropdownItem
         >
-          {{ station.name }} ({{ station.shortName }})
+          {{ station.properties.name }}
+          @if (station.properties.shortName) {
+            ({{ station.properties.shortName }})
+          }
         </button>
       }
     </div>
@@ -29,7 +32,7 @@
 </div>
 
 @if (filteredStations.length === 1) {
-  <div class="hint">{{ "lineaexport.hint" | translate }} {{ filteredStations[0].name }}</div>
+  <div class="hint">{{ "lineaexport.hint" | translate }} {{ filteredStations[0].properties.name }}</div>
 }
 
 <div height="300px" style="height: 300px; width: 100%; margin-top: 0px">

@@ -4,6 +4,7 @@ import {
   type AwsstatsDatatype,
   type AwsstatsPlotConfig,
 } from "@albina-euregio/linea/aws-stats-plot-config";
+import { Feature } from "@albina-euregio/linea/listing";
 import { CommonModule } from "@angular/common";
 import {
   AfterViewInit,
@@ -24,7 +25,7 @@ import { lastValueFrom } from "rxjs";
 import { AlbinaObservationsService } from "../observations/observations.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
-import { GraphicsService, type LineaStationFeature } from "./graphics.service";
+import { GraphicsService } from "./graphics.service";
 
 const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id);
 
@@ -73,7 +74,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   );
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
-  readonly stationById = new Map<string, LineaStationFeature>();
+  readonly stationById = new Map<string, Feature>();
   private readonly defaultStationSrc = "https://api.avalanche.report/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
   private isDestroyed = false;
 
@@ -127,7 +128,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     if (!this.selectedStationId) return;
     const prev = this.stationMarkers[this.selectedStationId];
     const station = this.stationById.get(this.selectedStationId);
-    prev?.setStyle(this.getStationMarkerOptions(false, station?.hasPsum ?? false));
+    prev?.setStyle(this.getStationMarkerOptions(false, this.hasPsum(station)));
     this.selectedStationId = "";
     if (this.showWrapper) {
       this.mountWrapper();
@@ -151,7 +152,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private applyStationVisibilityFilter() {
     for (const [id, marker] of Object.entries(this.stationMarkers)) {
       const station = this.stationById.get(id);
-      const shouldShow = !this.showPrecipitationOnly || station?.hasPsum;
+      const shouldShow = !this.showPrecipitationOnly || this.hasPsum(station);
       if (shouldShow && !this.stationsMapService.stationLayer.hasLayer(marker)) {
         marker.addTo(this.stationsMapService.stationLayer);
       } else if (!shouldShow && this.stationsMapService.stationLayer.hasLayer(marker)) {
@@ -164,7 +165,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     if (!this.selectedStationId) return "none";
     const station = this.stationById.get(this.selectedStationId);
     if (!station) return this.selectedStationId;
-    return station.shortName || station.name || station.id;
+    return station.properties.shortName || station.properties.name || station.id;
   }
 
   protected async update() {
@@ -469,11 +470,14 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       this.stationById.set(station.id, station);
 
       const marker = new CircleMarker(
-        { lat: station.latitude, lng: station.longitude },
-        this.getStationMarkerOptions(false, station.hasPsum),
+        {
+          lat: station.geometry.coordinates[1],
+          lng: station.geometry.coordinates[0],
+        },
+        this.getStationMarkerOptions(false, this.hasPsum(station)),
       ).addTo(this.stationsMapService.stationLayer);
 
-      marker.bindTooltip(`${station.name || station.id}`);
+      marker.bindTooltip(`${station.properties.name || station.id}`);
       marker.on("click", () => this.selectStation(station.id));
       this.stationMarkers[station.id] = marker;
     }
@@ -483,13 +487,17 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     if (this.selectedStationId === id) return;
     const prev = this.stationMarkers[this.selectedStationId];
     const prevStation = this.stationById.get(this.selectedStationId);
-    prev?.setStyle(this.getStationMarkerOptions(false, prevStation?.hasPsum ?? false));
+    prev?.setStyle(this.getStationMarkerOptions(false, this.hasPsum(prevStation)));
     this.selectedStationId = id;
     const newStation = this.stationById.get(id);
-    this.stationMarkers[id]?.setStyle(this.getStationMarkerOptions(true, newStation?.hasPsum ?? false));
+    this.stationMarkers[id]?.setStyle(this.getStationMarkerOptions(true, this.hasPsum(newStation)));
     if (this.showWrapper) {
       this.mountWrapper();
     }
+  }
+
+  hasPsum(feature: Feature): boolean {
+    return isFinite(feature?.properties?.PSUM_6?.value) ?? false;
   }
 
   private getStationMarkerOptions(selected: boolean, psum: boolean): CircleMarkerOptions {
@@ -506,7 +514,6 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   protected getSelectedStationSrc(): string {
     if (!this.selectedStationId) return this.defaultStationSrc;
-    const station = this.stationById.get(this.selectedStationId);
-    return this.graphicsService.resolveStationSrc(station, [1, 0], this.defaultStationSrc);
+    return this.stationById.get(this.selectedStationId).properties.dataURLs[1];
   }
 }
