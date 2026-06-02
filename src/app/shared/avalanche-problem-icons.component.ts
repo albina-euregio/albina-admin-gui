@@ -1,11 +1,12 @@
 import { Component, input } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 
 @Component({
   standalone: true,
-  imports: [],
+  imports: [TranslateModule],
   selector: "app-avalanche-problem-icons",
   templateUrl: "./avalanche-problem-icons.component.html",
 })
@@ -16,5 +17,11 @@ export class AvalancheProblemIconsComponent {
   isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
     const v = this.value();
     return v === avalancheProblem || (typeof v === "object" && v?.avalancheProblem === avalancheProblem);
+  }
+
+  get avalancheProblem(): Enums.AvalancheProblem {
+    const v = this.value();
+    if (typeof v === "object") return v.avalancheProblem;
+    return v;
   }
 }
