@@ -38,6 +38,20 @@
             @if (value()[x.key]) {
               <div class="text-center">{{ valueI18n.replace("#", "" + value()[x.key]) | translate }}</div>
             }
+          } @else if (widget?.widget === "select") {
+            <select
+              [disabled]="disabled()"
+              class="form-select form-select-sm"
+              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="value.set(value())"
+            >
+              @for (v of enumValues; track v) {
+                <option [value]="v">
+                  {{ valueI18n.replace("#", v) | translate }}
+                </option>
+              }
+            </select>
           } @else if (widget?.widget === "radio") {
             @for (v of enumValues; track v) {
               <div class="form-check form-check-inline">
