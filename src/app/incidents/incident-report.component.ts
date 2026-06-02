@@ -32,7 +32,7 @@ export class IncidentReportComponent {
   readonly helpI18n = "incidentReportHelp.#";
 
   showMandatoryOnly = false;
-  activeTab: "meta" | "general" | "avalanche" | "location" | "group" = "meta";
+  activeTab: "meta" | "general" | "avalanche" | "location" | "group" = "general";
 
   getMetaValidationStatus(): "valid" | "invalid" {
     const res = IncidentModels.MetaInformationSchema.safeParse(this.incidentReport());
