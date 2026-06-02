@@ -9,6 +9,7 @@
     "build": "bun build server.ts --target=bun --outfile=dist/observations-api.mjs"
   },
   "dependencies": {
+    "@albina-euregio/linea": "^8.24.1",
     "es-toolkit": "^1.38.0",
     "simple-statistics": "^7.8.7",
     "which-polygon": "^2.2.1",

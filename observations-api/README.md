@@ -6,6 +6,7 @@ HTTP API for observations built with [Bun.serve](https://bun.sh/docs/runtime/htt
 
 ```ini
 .env
+ALBINA_LINEA_STATISTICS_PROVIDERS=
 ALBINA_LOLA_KRONOS_API_TOKEN=
 ALBINA_LWDKIP_PASSWORD=
 ALBINA_LWDKIP_USERNAME=
@@ -58,6 +59,7 @@ After=network-online.target
 
 [Service]
 Environment=ALBINA_ALPSOLUT_API_TOKEN=
+Environment=ALBINA_LINEA_STATISTICS_PROVIDERS=
 Environment=ALBINA_LOLA_KRONOS_API_TOKEN=
 Environment=ALBINA_LWDKIP_PASSWORD=
 Environment=ALBINA_LWDKIP_USERNAME=
