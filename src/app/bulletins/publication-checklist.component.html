@@ -423,26 +423,6 @@
                                   <i class="ph ph-paper-plane-tilt"></i>
                                   <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
                                 </button>
-                                <button
-                                  type="button"
-                                  class="btn btn-outline-primary btn-sm"
-                                  (click)="publish($event, getActiveDate(), 'minimalCAAML')"
-                                  [disabled]="isPublicationDisabled"
-                                  [title]="isPublicationDisabled ? publicationDisabledReason : ''"
-                                  [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
-                                  [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
-                                >
-                                  <i class="ph ph-paper-plane-tilt"></i>
-                                  <span>{{ "bulletins.tooltip.publishMinimal" | translate }}</span>
-                                </button>
-                                <i
-                                  class="ph ph-info text-primary"
-                                  [popover]="'bulletins.tooltip.publishMinimalDescription' | translate"
-                                  [outsideClick]="true"
-                                  style="cursor: pointer"
-                                  placement="auto"
-                                  (click)="$event.stopPropagation()"
-                                ></i>
                               </div>
                               @if (showPublishAllButton() && !print) {
                                 <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
@@ -466,6 +446,28 @@
                                   </button>
                                 </div>
                               }
+                            </li>
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.website.publishMinimalTitle" | translate }}
+                              </div>
+                              <div class="small text-muted mb-2">
+                                {{ "bulletins.publicationChecklist.website.publishMinimalHint" | translate }}
+                              </div>
+                              <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+                                <button
+                                  type="button"
+                                  class="btn btn-outline-primary btn-sm"
+                                  (click)="publish($event, getActiveDate(), 'minimalCAAML')"
+                                  [disabled]="isPublicationDisabled"
+                                  [title]="isPublicationDisabled ? publicationDisabledReason : ''"
+                                  [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
+                                  [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
+                                >
+                                  <i class="ph ph-paper-plane-tilt"></i>
+                                  <span>{{ "bulletins.tooltip.publishMinimal" | translate }}</span>
+                                </button>
+                              </div>
                             </li>
                             <li class="mt-2">
                               <div class="fw-semibold">
