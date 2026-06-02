@@ -28,20 +28,6 @@ export const GeneralInformationSchema = z.object({
     ]),
   ),
 
-  otherDamages: z.enum(["Yes", "No"]),
-
-  damagedAssets: z
-    .enum([
-      "Vehicle",
-      "Forest",
-      "Agriculture",
-      "Livestock",
-      "UtilitiesTechnicalInfrastructure",
-      // "Other [text]", // TODO
-    ])
-    .array()
-    .register(widgetRegistry, { showIf: ["otherDamages", "Yes"] }),
-
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
   publicAvalancheWarningService: z.string(),
 
@@ -303,12 +289,30 @@ export const AvalancheInformationSchema = z.object({
   avalancheDetailsComment: z.string().nullish(),
 });
 
+export const OtherDamagesSchema = z.object({
+  otherDamages: z.enum(["Yes", "No"]),
+
+  damagedAssets: z
+    .enum([
+      "Vehicle",
+      "Forest",
+      "Agriculture",
+      "Livestock",
+      "UtilitiesTechnicalInfrastructure",
+      // "Other [text]", // TODO
+    ])
+    .array()
+    .register(widgetRegistry, { showIf: ["otherDamages", "Yes"] })
+    .nullish(),
+});
+
 export const IncidentReportSchema = z.object({
   ...MetaInformationSchema.shape,
   ...GeneralInformationSchema.shape,
   ...LocationInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
   personInvolvement: z.enum(["Yes", "No", "Unknown"]),
+  ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array(),
 });
 

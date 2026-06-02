@@ -35,7 +35,7 @@ export class IncidentReportComponent {
   personInvolvementOptions: ("Yes" | "No" | "Unknown")[] = ["Yes", "No", "Unknown"];
 
   showMandatoryOnly = false;
-  activeTab: "meta" | "general" | "location" | "avalanche" | "group" = "general";
+  activeTab: "meta" | "general" | "location" | "avalanche" | "other-damages" | "group" = "general";
 
   getMetaValidationStatus(): "valid" | "invalid" {
     const res = IncidentModels.MetaInformationSchema.safeParse(this.incidentReport());
@@ -55,6 +55,18 @@ export class IncidentReportComponent {
   getLocationValidationStatus(): "valid" | "invalid" {
     const res = IncidentModels.LocationInformationSchema.safeParse(this.incidentReport());
     return res.success ? "valid" : "invalid";
+  }
+
+  getOtherDamagesValidationStatus(): "valid" | "invalid" {
+    const res = IncidentModels.OtherDamagesSchema.safeParse(this.incidentReport());
+    if (!res.success) return "invalid";
+    const report = this.incidentReport();
+    if (report.otherDamages === "Yes") {
+      if (!report.damagedAssets || report.damagedAssets.length === 0) {
+        return "invalid";
+      }
+    }
+    return "valid";
   }
 
   getGroupValidationStatus(): "valid" | "invalid" {

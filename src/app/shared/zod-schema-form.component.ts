@@ -39,6 +39,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     | typeof IncidentModels.LocationInformationSchema
     | typeof IncidentModels.GroupInformationSchema
     | typeof IncidentModels.AvalancheInformationSchema
+    | typeof IncidentModels.OtherDamagesSchema
   >(() => {
     const t = this.zodType() as unknown;
     if (t === IncidentModels.MetaInformationSchema) {
@@ -55,6 +56,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     }
     if (t === IncidentModels.AvalancheInformationSchema) {
       return IncidentModels.AvalancheInformationSchema;
+    }
+    if (t === IncidentModels.OtherDamagesSchema) {
+      return IncidentModels.OtherDamagesSchema;
     }
     throw Error();
   });

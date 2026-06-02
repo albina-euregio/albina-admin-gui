@@ -117,6 +117,20 @@
         }
       </button>
     </li>
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'other-damages'"
+        (click)="activeTab = 'other-damages'"
+      >
+        <span>{{ "incidentReport.otherDamages" | translate }}</span>
+        @if (getOtherDamagesValidationStatus() === "valid") {
+          <span class="text-success" title="Valid">✔</span>
+        } @else {
+          <span class="text-danger" title="Incomplete">⚠</span>
+        }
+      </button>
+    </li>
   </ul>
 
   <!-- Tab Content Areas -->
@@ -248,6 +262,22 @@
         }
       </div>
     }
+
+    <!-- Other Damages Tab -->
+    @if (activeTab === "other-damages") {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.otherDamages" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.OtherDamagesSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
   </div>
 
   <!-- Wizard Controls (Next/Back) -->
@@ -265,7 +295,9 @@
                 ? 'location'
                 : activeTab === 'group'
                   ? 'avalanche'
-                  : 'meta'
+                  : activeTab === 'other-damages'
+                    ? 'group'
+                    : 'meta'
       "
     >
       &larr; Back
@@ -273,7 +305,7 @@
 
     <button
       class="btn btn-primary"
-      [disabled]="activeTab === 'group'"
+      [disabled]="activeTab === 'other-damages'"
       (click)="
         activeTab =
           activeTab === 'meta'
@@ -284,7 +316,9 @@
                 ? 'avalanche'
                 : activeTab === 'avalanche'
                   ? 'group'
-                  : activeTab
+                  : activeTab === 'group'
+                    ? 'other-damages'
+                    : activeTab
       "
     >
       Next &rarr;
