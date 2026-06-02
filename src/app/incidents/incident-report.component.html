@@ -1,72 +1,253 @@
-<div class="container bg-white p-4">
-  <h1>{{ "incidentReport.incidentReport" | translate }}</h1>
+<div class="container bg-white p-4 rounded shadow-sm">
+  <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+    <h1 class="h3 mb-0">{{ "incidentReport.incidentReport" | translate }}</h1>
 
-  <details class="border m-2 p-2">
-    <summary>{{ "incidentReport.metaInformation" | translate }}</summary>
-    <app-zod-schema-form
-      [disabled]="disabled()"
-      [value]="incidentReport()"
-      (valueChange)="incidentReport.set($event)"
-      [zodType]="IncidentModels.MetaInformationSchema"
-      [labelI18n]="labelI18n"
-      [helpI18n]="helpI18n"
-    />
-  </details>
+    <div class="d-flex gap-3 align-items-center">
+      <!-- Toggle Mode -->
+      <div class="form-check form-switch mb-0">
+        <input class="form-check-input" type="checkbox" id="toggleMandatoryOnly" [(ngModel)]="showMandatoryOnly" />
+        <label class="form-check-label text-secondary fw-semibold cursor-pointer" for="toggleMandatoryOnly">
+          Show Mandatory Fields Only
+        </label>
+      </div>
 
-  <details class="border m-2 p-2">
-    <summary>{{ "incidentReport.generalInformation" | translate }}</summary>
-    <app-zod-schema-form
-      [disabled]="disabled()"
-      [value]="incidentReport()"
-      (valueChange)="incidentReport.set($event)"
-      [zodType]="IncidentModels.GeneralInformationSchema"
-      [labelI18n]="labelI18n"
-      [helpI18n]="helpI18n"
-    />
-  </details>
+      <!-- Report Status Badge -->
+      <span
+        class="badge px-3 py-2 text-capitalize"
+        [class.bg-warning-subtle]="
+          incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
+        "
+        [class.text-warning-emphasis]="
+          incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
+        "
+        [class.bg-info-subtle]="incidentReport().reportStatus === 'InReview'"
+        [class.text-info-emphasis]="incidentReport().reportStatus === 'InReview'"
+        [class.bg-success-subtle]="incidentReport().reportStatus === 'Verified'"
+        [class.text-success-emphasis]="incidentReport().reportStatus === 'Verified'"
+      >
+        Status: {{ incidentReport().reportStatus }}
+      </span>
+    </div>
+  </div>
 
-  <details class="border m-2 p-2">
-    <summary>{{ "incidentReport.avalancheInformation" | translate }}</summary>
-    <app-zod-schema-form
-      [disabled]="disabled()"
-      [value]="incidentReport()"
-      (valueChange)="incidentReport.set($event)"
-      [zodType]="IncidentModels.AvalancheInformationSchema"
-      [labelI18n]="labelI18n"
-      [helpI18n]="helpI18n"
-    />
-  </details>
+  <!-- Stepped Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4 flex-column flex-sm-row gap-1 border-bottom-0">
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'meta'"
+        (click)="activeTab = 'meta'"
+      >
+        <span>{{ "incidentReport.metaInformation" | translate }}</span>
+        @if (getMetaValidationStatus() === "valid") {
+          <span class="text-success" title="Valid">✔</span>
+        } @else {
+          <span class="text-danger" title="Incomplete">⚠</span>
+        }
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'general'"
+        (click)="activeTab = 'general'"
+      >
+        <span>{{ "incidentReport.generalInformation" | translate }}</span>
+        @if (getGeneralValidationStatus() === "valid") {
+          <span class="text-success" title="Valid">✔</span>
+        } @else {
+          <span class="text-danger" title="Incomplete">⚠</span>
+        }
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'avalanche'"
+        (click)="activeTab = 'avalanche'"
+      >
+        <span>{{ "incidentReport.avalancheInformation" | translate }}</span>
+        @if (getAvalancheValidationStatus() === "valid") {
+          <span class="text-success" title="Valid">✔</span>
+        } @else {
+          <span class="text-danger" title="Incomplete">⚠</span>
+        }
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'location'"
+        (click)="activeTab = 'location'"
+      >
+        <span>{{ "incidentReport.locationInformation" | translate }}</span>
+        @if (getLocationValidationStatus() === "valid") {
+          <span class="text-success" title="Valid">✔</span>
+        } @else {
+          <span class="text-danger" title="Incomplete">⚠</span>
+        }
+      </button>
+    </li>
+    @if (incidentReport().personInvolvement === "Yes") {
+      <li class="nav-item">
+        <button
+          class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+          [class.active]="activeTab === 'group'"
+          (click)="activeTab = 'group'"
+        >
+          <span>{{ "incidentReport.groupInformation" | translate }}</span>
+          @if (getGroupValidationStatus() === "valid") {
+            <span class="text-success" title="Valid">✔</span>
+          } @else {
+            <span class="text-danger" title="Incomplete">⚠</span>
+          }
+        </button>
+      </li>
+    }
+  </ul>
 
-  <details class="border m-2 p-2">
-    <summary>{{ "incidentReport.locationInformation" | translate }}</summary>
-    <app-zod-schema-form
-      [disabled]="disabled()"
-      [value]="incidentReport()"
-      (valueChange)="incidentReport.set($event)"
-      [zodType]="IncidentModels.LocationInformationSchema"
-      [labelI18n]="labelI18n"
-      [helpI18n]="helpI18n"
-    />
-  </details>
+  <!-- Tab Content Areas -->
+  <div class="border p-4 rounded bg-light-subtle shadow-sm">
+    <!-- Meta Info Tab -->
+    @if (activeTab === "meta") {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.metaInformation" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.MetaInformationSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
 
-  @if (incidentReport().personInvolvement === "Yes") {
-    <details class="border m-2 p-2">
-      <summary>{{ "incidentReport.groupInformation" | translate }}</summary>
-      <button class="btn btn-outline btn-success" (click)="newGroupInformation()">+</button>
-      <!-- + and - buttons -->
-      @for (groupInformation of incidentReport().groupInformation; track groupInformation.anonymousGroupIdentifier) {
-        <details class="border m-2 p-2">
-          <summary>{{ groupInformation.anonymousGroupIdentifier }}</summary>
-          <button class="btn btn-outline btn-danger" (click)="removeGroupInformation($index)">&minus;</button>
-          <app-zod-schema-form
-            [disabled]="disabled()"
-            [value]="groupInformation"
-            [zodType]="IncidentModels.GroupInformationSchema"
-            [labelI18n]="labelI18n"
-            [helpI18n]="helpI18n"
-          />
-        </details>
-      }
-    </details>
-  }
+    <!-- General Info Tab -->
+    @if (activeTab === "general") {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.generalInformation" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.GeneralInformationSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
+
+    <!-- Avalanche Info Tab -->
+    @if (activeTab === "avalanche") {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.avalancheInformation" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.AvalancheInformationSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
+
+    <!-- Location Info Tab -->
+    @if (activeTab === "location") {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.locationInformation" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.LocationInformationSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
+
+    <!-- Group Info Tab -->
+    @if (activeTab === "group" && incidentReport().personInvolvement === "Yes") {
+      <div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="mb-0 text-secondary">{{ "incidentReport.groupInformation" | translate }}</h4>
+          <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newGroupInformation()">
+            <span>+</span> Add Group
+          </button>
+        </div>
+
+        @if (!incidentReport().groupInformation?.length) {
+          <div class="alert alert-info">No groups registered. Click "+ Add Group" to add a group.</div>
+        }
+
+        @for (groupInformation of incidentReport().groupInformation; track groupInformation.anonymousGroupIdentifier) {
+          <div class="card mb-3 shadow-sm border">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+              <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
+              <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">
+                &minus; Remove
+              </button>
+            </div>
+            <div class="card-body">
+              <app-zod-schema-form
+                [disabled]="disabled()"
+                [value]="groupInformation"
+                [zodType]="IncidentModels.GroupInformationSchema"
+                [labelI18n]="labelI18n"
+                [helpI18n]="helpI18n"
+                [showMandatoryOnly]="showMandatoryOnly"
+              />
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Wizard Controls (Next/Back) -->
+  <div class="d-flex justify-content-between mt-4 border-top pt-3">
+    <button
+      class="btn btn-outline-secondary"
+      [disabled]="activeTab === 'meta'"
+      (click)="
+        activeTab =
+          activeTab === 'general'
+            ? 'meta'
+            : activeTab === 'avalanche'
+              ? 'general'
+              : activeTab === 'location'
+                ? 'avalanche'
+                : activeTab === 'group'
+                  ? 'location'
+                  : 'meta'
+      "
+    >
+      &larr; Back
+    </button>
+
+    <button
+      class="btn btn-primary"
+      [disabled]="activeTab === 'group' || (activeTab === 'location' && incidentReport().personInvolvement !== 'Yes')"
+      (click)="
+        activeTab =
+          activeTab === 'meta'
+            ? 'general'
+            : activeTab === 'general'
+              ? 'avalanche'
+              : activeTab === 'avalanche'
+                ? 'location'
+                : activeTab === 'location' && incidentReport().personInvolvement === 'Yes'
+                  ? 'group'
+                  : 'location'
+      "
+    >
+      Next &rarr;
+    </button>
+  </div>
 </div>

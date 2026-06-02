@@ -30,6 +30,38 @@ export class IncidentReportComponent {
   readonly disabled = input<boolean>(false);
   readonly labelI18n = "incidentReport.#";
   readonly helpI18n = "incidentReportHelp.#";
+
+  showMandatoryOnly = false;
+  activeTab: "meta" | "general" | "avalanche" | "location" | "group" = "meta";
+
+  getMetaValidationStatus(): "valid" | "invalid" {
+    const res = IncidentModels.MetaInformationSchema.safeParse(this.incidentReport());
+    return res.success ? "valid" : "invalid";
+  }
+
+  getGeneralValidationStatus(): "valid" | "invalid" {
+    const res = IncidentModels.GeneralInformationSchema.safeParse(this.incidentReport());
+    return res.success ? "valid" : "invalid";
+  }
+
+  getAvalancheValidationStatus(): "valid" | "invalid" {
+    const res = IncidentModels.AvalancheInformationSchema.safeParse(this.incidentReport());
+    return res.success ? "valid" : "invalid";
+  }
+
+  getLocationValidationStatus(): "valid" | "invalid" {
+    const res = IncidentModels.LocationInformationSchema.safeParse(this.incidentReport());
+    return res.success ? "valid" : "invalid";
+  }
+
+  getGroupValidationStatus(): "valid" | "invalid" {
+    if (this.incidentReport().personInvolvement !== "Yes") return "valid";
+    for (const group of this.incidentReport().groupInformation ?? []) {
+      const res = IncidentModels.GroupInformationSchema.safeParse(group);
+      if (!res.success) return "invalid";
+    }
+    return "valid";
+  }
   readonly incidentReport = model<IncidentReport>(
     IncidentModels.PartialIncidentReportSchema.parse({
       author: this.authenticationService.getCurrentAuthor()?.email,

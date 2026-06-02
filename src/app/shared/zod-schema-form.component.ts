@@ -90,10 +90,59 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     this.value.set(value);
   }
 
+  readonly showMandatoryOnly = input<boolean>(false);
+
   unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber {
     while (t.type === "optional" || t.type === "nullable" || t.type === "default") {
       t = (t as unknown as z.ZodOptional | z.ZodNullable | z.ZodDefault).unwrap() as T;
     }
     return t;
+  }
+
+  isFieldOptional(zodType: z.ZodType): boolean {
+    return zodType.safeParse(undefined).success || zodType.safeParse(null).success;
+  }
+
+  getDateString(key: string): string {
+    const raw = (this.value() as any)?.[key];
+    if (!raw) return "";
+    const val = new Date(raw as string | number | Date);
+    if (isNaN(val.getTime())) return "";
+    const year = val.getFullYear();
+    const month = String(val.getMonth() + 1).padStart(2, "0");
+    const day = String(val.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  getTimeString(key: string): string {
+    const raw = (this.value() as any)?.[key];
+    if (!raw) return "";
+    const val = new Date(raw as string | number | Date);
+    if (isNaN(val.getTime())) return "";
+    const hours = String(val.getHours()).padStart(2, "0");
+    const minutes = String(val.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  }
+
+  onDateTimeChange(key: string, datePart: string, timePart: string): void {
+    const val = this.value() as any;
+    if (!val) return;
+    if (!datePart) {
+      val[key] = undefined;
+      this.value.set(val);
+      return;
+    }
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [hours, minutes] = (timePart || "00:00").split(":").map(Number);
+    const newDate = new Date(year, month - 1, day, hours, minutes);
+    val[key] = newDate;
+    this.value.set(val);
+  }
+
+  clearDateTime(key: string): void {
+    const val = this.value() as any;
+    if (!val) return;
+    val[key] = undefined;
+    this.value.set(val);
   }
 }

@@ -5,17 +5,25 @@
     @let valueI18n = widget?.valueI18n || `${x.key}.#`;
     <div
       [class.d-none]="
-        widget?.showIf &&
-        value()[widget.showIf[0]] !== widget.showIf[1] &&
-        value()[widget.showIf[0]] !== widget.showIf[2]
+        (widget?.showIf &&
+          value()[widget.showIf[0]] !== widget.showIf[1] &&
+          value()[widget.showIf[0]] !== widget.showIf[2]) ||
+        (showMandatoryOnly() && isFieldOptional(x.value))
       "
       class="mt-4"
       [id]="x.key"
     >
-      <div class="form-label">
-        {{ labelI18n().replace("#", x.key) | translate }}
+      <div class="form-label d-flex align-items-center gap-2">
+        <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
         @if (widget?.unit) {
-          <span>[{{ widget.unit }}]</span>
+          <span class="text-muted">[{{ widget.unit }}]</span>
+        }
+        @if (!isFieldOptional(x.value)) {
+          <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1" style="font-size: 0.65rem"
+            >Required</span
+          >
+        } @else {
+          <span class="badge bg-light text-muted border px-1" style="font-size: 0.65rem">Optional</span>
         }
       </div>
       <div class="form-text">
@@ -107,10 +115,28 @@
         />
       } @else if (inner.type === "date") {
         <div class="input-group">
-          <!-- TODO implement data binding -->
-          <input type="date" class="form-control" [disabled]="disabled()" />
-          <input type="time" class="form-control" [disabled]="disabled()" />
-          <button class="btn btn-outline-secondary" type="button" [disabled]="disabled()">
+          <input
+            type="date"
+            class="form-control"
+            [disabled]="disabled()"
+            [value]="getDateString(x.key)"
+            #dInput
+            (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
+          />
+          <input
+            type="time"
+            class="form-control"
+            [disabled]="disabled()"
+            [value]="getTimeString(x.key)"
+            #tInput
+            (change)="onDateTimeChange(x.key, dInput.value, tInput.value)"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            [disabled]="disabled()"
+            (click)="clearDateTime(x.key); dInput.value = ''; tInput.value = ''"
+          >
             <i class="ph ph-x"></i>
           </button>
         </div>
