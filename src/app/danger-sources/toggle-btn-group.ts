@@ -22,7 +22,6 @@ export class ToggleBtnGroup<T> {
   disabled = input<boolean>(false);
   labelI18n = input<`${string}#${string}`>();
   titleI18n = input<"" | `${string}#${string}`>("");
-  flexColumn = input(false);
 
   isSelected(v: T) {
     return this.value() === v || this.values()?.includes(v);
