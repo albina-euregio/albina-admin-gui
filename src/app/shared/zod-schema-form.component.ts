@@ -84,6 +84,10 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return x as unknown[];
   }
 
+  hasValue(val: unknown): boolean {
+    return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
+  }
+
   onCheckboxArrayChange(key: string, v: string): void {
     const value = this.value();
     Object.assign(value, { [key]: xor(this.castArray(value[key]) ?? [], [v]) });

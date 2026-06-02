@@ -149,12 +149,14 @@
         </div>
       }
 
-      @if (x.value.safeParse(value()[x.key]); as parseResult) {
-        @if (parseResult.error) {
-          <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
-          <div class="invalid-feedback">
-            {{ zPrettifyError(parseResult.error) }}
-          </div>
+      @if (hasValue(value()[x.key])) {
+        @if (x.value.safeParse(value()[x.key]); as parseResult) {
+          @if (parseResult.error) {
+            <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
+            <div class="invalid-feedback">
+              {{ zPrettifyError(parseResult.error) }}
+            </div>
+          }
         }
       }
     </div>
