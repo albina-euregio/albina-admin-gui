@@ -108,14 +108,13 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   readonly showMandatoryOnly = input<boolean>(false);
 
-  unwrap(t: any): any {
-    let current = t;
-    while (current?.type === "optional" || current?.type === "nullable" || current?.type === "default") {
-      current = current.unwrap();
+  unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber | z.ZodBoolean {
+    while (this.isFieldOptional(t)) {
+      t = t.unwrap() as T;
     }
-    return current;
+    return t;
   }
-  isFieldOptional(zodType: z.ZodType): boolean {
+  isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | z.ZodNullable | z.ZodDefault {
     return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
   }
   isFieldValid(schema: z.ZodType, val: unknown): boolean {
@@ -125,7 +124,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     if (inputEl && document.activeElement === inputEl) {
       return inputEl.value;
     }
-    const raw = (this.value() as any)?.[key];
+    const raw = this.value()?.[key];
     if (!raw) return "";
     const val = new Date(raw as string | number | Date);
     if (isNaN(val.getTime())) return "";
@@ -139,7 +138,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     if (inputEl && document.activeElement === inputEl) {
       return inputEl.value;
     }
-    const raw = (this.value() as any)?.[key];
+    const raw = this.value()?.[key];
     if (!raw) return "";
     const val = new Date(raw as string | number | Date);
     if (isNaN(val.getTime())) return "";
@@ -149,11 +148,10 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   }
 
   onDateTimeChange(key: string, datePart: string, timePart: string): void {
-    const val = this.value() as any;
+    const val = this.value();
     if (!val) return;
     if (!datePart) {
-      val[key] = undefined;
-      this.value.set(val);
+      this.clearDateTime(key);
       return;
     }
     const [year, month, day] = datePart.split("-").map(Number);
@@ -162,25 +160,26 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     }
     const [hours, minutes] = (timePart || "00:00").split(":").map(Number);
     const newDate = new Date(year, month - 1, day, hours, minutes);
-    val[key] = newDate;
+    Object.assign(val, { [key]: newDate });
     this.value.set(val);
   }
 
   clearDateTime(key: string): void {
-    const val = this.value() as any;
+    const val = this.value();
     if (!val) return;
-    val[key] = undefined;
+    Object.assign(val, { [key]: undefined });
     this.value.set(val);
   }
 
   get groupSizeUnknown(): boolean {
-    return !!(this.value() as any)?.groupSizeUnknown;
+    const val = this.value() as z.infer<typeof IncidentModels.GroupInformationSchema>;
+    return !!val?.groupSizeUnknown;
   }
 
   onGroupSizeUnknownChange(checked: boolean): void {
-    const val = this.value() as any;
+    const val = this.value() as z.infer<typeof IncidentModels.GroupInformationSchema>;
     if (!val) return;
     val.groupSizeUnknown = checked;
-    this.value.set(val);
+    this.value.set(val as any);
   }
 }
