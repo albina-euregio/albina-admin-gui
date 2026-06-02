@@ -33,6 +33,7 @@ export class RegionConfigurationComponent {
     "coatOfArms",
     "staticUrl",
     "serverImagesUrl",
+    "educationUrl",
     "microRegions",
     "subRegions",
     "superRegions",
