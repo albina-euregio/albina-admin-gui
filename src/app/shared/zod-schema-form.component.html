@@ -4,12 +4,7 @@
     @let widget = widgetRegistry.get(inner);
     @let valueI18n = widget?.valueI18n || `${x.key}.#`;
     <div
-      [class.d-none]="
-        (widget?.showIf &&
-          value()[widget.showIf[0]] !== widget.showIf[1] &&
-          value()[widget.showIf[0]] !== widget.showIf[2]) ||
-        (showMandatoryOnly() && isFieldOptional(x.value))
-      "
+      [class.d-none]="!shouldShowField(widget) || (showMandatoryOnly() && isFieldOptional(x.value))"
       class="mt-4"
       [id]="x.key"
     >
