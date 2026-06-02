@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { BulletinPhotoModel, BulletinPhotoSchema } from "app/models/bulletin-photo.model";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import {
   PublicationChecklistModel,
@@ -392,6 +393,15 @@ export class BulletinsService {
     );
     const body = JSON.stringify(bulletin);
     return this.http.post<BulletinModelAsJSON[]>(url, body);
+  }
+
+  uploadPhoto(file: File): Observable<BulletinPhotoModel> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const url = this.constantsService.getServerUrlPOST("/bulletins/photo", {
+      region: this.authenticationService.getActiveRegionId(),
+    });
+    return this.http.post<BulletinPhotoModel>(url, formData).pipe(map((data) => BulletinPhotoSchema.parse(data)));
   }
 
   deleteBulletin(

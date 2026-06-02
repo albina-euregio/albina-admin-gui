@@ -355,6 +355,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/bulletins/photo": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Upload bulletin photo */
+    post: operations["uploadBulletinPhoto"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/bulletins/preview": {
     parameters: {
       query?: never;
@@ -1230,6 +1247,18 @@ export interface components {
       from?: string;
       /** Format: date-time */
       until?: string;
+    };
+    "AvalancheBulletinCustomData.BulletinPhoto": {
+      url: string;
+      copyright?: string;
+      /** Format: date */
+      date?: string;
+      microRegionId?: string;
+      locationName?: string;
+      /** Format: double */
+      latitude?: number;
+      /** Format: double */
+      longitude?: number;
     };
     AvalancheBulletinDaytimeDescription: components["schemas"]["AbstractPersistentObject"] & {
       id?: string | null;
@@ -2339,6 +2368,35 @@ export interface operations {
         };
         content: {
           "application/pdf": string;
+        };
+      };
+    };
+  };
+  uploadBulletinPhoto: {
+    parameters: {
+      query: {
+        region: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": {
+          /** Format: binary */
+          file?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description uploadBulletinPhoto 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AvalancheBulletinCustomData.BulletinPhoto"];
         };
       };
     };

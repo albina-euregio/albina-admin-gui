@@ -12,6 +12,7 @@
           [photo]="photo"
           [disabled]="disabled()"
           (deleteAvalanchePhotoEvent)="deletePhoto(photo)"
+          (uploadAvalanchePhotoEvent)="updateBulletinOnServer.emit()"
         ></app-avalanche-photo-preview>
       </div>
       <div>

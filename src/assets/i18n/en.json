@@ -442,6 +442,7 @@
         "dangerRatingDirectionDown": "Downwards",
         "addPhoto": "Add photo",
         "removePhoto": "Remove photo",
+        "uploadPhoto": "Upload photo",
         "editPhoto": "Edit photo"
       },
       "save": " Save",
