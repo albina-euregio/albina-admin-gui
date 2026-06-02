@@ -258,11 +258,11 @@ export const AvalancheInformationSchema = z.object({
     .enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"])
     .register(widgetRegistry, { valueI18n: "grainShape.#.code" })
     .nullish(),
-  weakLayerGrainSize1: z.number().nullish(),
   weakLayerGrainType2: z
     .enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"])
     .register(widgetRegistry, { valueI18n: "grainShape.#.code" })
     .nullish(),
+  weakLayerGrainSize1: z.number().nullish(),
   weakLayerGrainSize2: z.number().nullish(),
   weakLayerLocation: z
     .enum(["WithinNewSnow", "AtInterfaceWithOldSnow", "WithinOldSnowpack", "NearTheGround"])
