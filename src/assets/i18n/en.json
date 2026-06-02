@@ -298,6 +298,8 @@
       "submitUpdate": "Submit update",
       "publishChange": "Publish now (no messages)",
       "publishUpdate": "Publish now",
+      "publishMinimal": "Minimal publication",
+      "publishMinimalDescription": "Minimal publication produces only CAAML for the website. No maps, no messages, ...",
       "caaml": "Show CAAML",
       "json": "Show JSON",
       "create": "Create bulletin",

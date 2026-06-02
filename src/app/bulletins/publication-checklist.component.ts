@@ -7,6 +7,7 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { BulletinsService, PublicationStrategy } from "app/providers/bulletins-service/bulletins.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { PopoverDirective } from "ngx-bootstrap/popover";
 import {
   catchError,
   combineLatest,
@@ -49,6 +50,7 @@ const CHECKLIST_CHANNELS: PublicationChannel[] = [
     PublicationTriggerNotificationsComponent,
     BulletinStatusBadgeComponent,
     PublicationInProgressComponent,
+    PopoverDirective,
   ],
 })
 export class PublicationChecklistComponent implements OnInit, OnDestroy {
