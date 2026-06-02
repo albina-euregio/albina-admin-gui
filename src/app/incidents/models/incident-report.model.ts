@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
-import { widgetRegistry } from "../../shared/widget-registry";
+import { widgetRegistry } from "../../shared/zod-schema-form.widget-registry";
 
 export const MetaInformationSchema = z.object({
   author: z.string(),

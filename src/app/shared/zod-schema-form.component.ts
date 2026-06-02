@@ -7,8 +7,8 @@ import { z } from "zod/v4";
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import * as IncidentModels from "../incidents/models/incident-report.model";
 import { SliderComponent, SliderOptions } from "./slider.component";
-import { widgetRegistry } from "./widget-registry";
 import { zodCssClass } from "./zod-css-class";
+import { widgetRegistry } from "./zod-schema-form.widget-registry";
 
 @Component({
   selector: "app-zod-schema-form",
