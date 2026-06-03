@@ -41,6 +41,12 @@
           <option value="InReview">In Review</option>
           <option value="Verified">Verified</option>
         </select>
+        <button
+          class="btn btn-sm btn-success d-flex align-items-center gap-1"
+          [disabled]="disabled() || incidentReport().reportStatus === 'Draft'"
+        >
+          publish/update incident
+        </button>
       </div>
     </div>
   </div>
