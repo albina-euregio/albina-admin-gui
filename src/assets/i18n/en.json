@@ -1700,6 +1700,11 @@
     "drawPointInstructions": "Click anywhere on the map to place the location marker.",
     "drawPolygon": "Draw Polygon",
     "drawPolygonInstructions": "Click on the map to define the corners/vertices of the polygon.",
+    "dropAttachment": "Drop attachment {{fileName}}?",
+    "dropGroup": "Drop group {{number}}?",
+    "dropVictim": "Drop victim {{number}}?",
+    "groupName": "Group {{name}}",
+    "groupUnknown": "Group unknown",
     "incomplete": "Incomplete",
     "line": "Line",
     "locationMap": "Location Map",
@@ -1714,7 +1719,8 @@
     "removeVictim": "Remove Victim",
     "required": "Required",
     "showMandatoryFieldsOnly": "Show Mandatory Fields Only",
-    "valid": "Valid"
+    "valid": "Valid",
+    "victimName": "Victim {{name}}"
   },
   "incidentReport": {
     "incidentReport": "Incident Report",

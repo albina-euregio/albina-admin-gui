@@ -126,7 +126,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       reportStatus: "Draft",
       groupInformation: [
         {
-          anonymousGroupIdentifier: "Group unknown",
+          anonymousGroupIdentifier: this.translateService.instant("incidentReportUI.groupUnknown"),
         } as IncidentModels.GroupInformation,
       ],
       victimInformation: [],
@@ -135,15 +135,17 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   );
 
   newGroupInformation() {
-    const groupInformation = {
-      anonymousGroupIdentifier: "Group " + Math.random(),
-    } as IncidentModels.GroupInformation;
+    const anonymousGroupIdentifier = this.translateService.instant("incidentReportUI.groupName", {
+      name: Math.random(),
+    });
+    const groupInformation = { anonymousGroupIdentifier: anonymousGroupIdentifier } as IncidentModels.GroupInformation;
     this.incidentReport().groupInformation.push(groupInformation);
   }
 
   removeGroupInformation(index: number) {
     if (index === 0) return;
-    if (!confirm(`Kill group ${index + 1}?`)) return;
+    const message = this.translateService.instant("incidentReportUI.dropGroup", { number: index + 1 });
+    if (!confirm(message)) return;
     this.incidentReport().groupInformation.splice(index, 1);
   }
 
@@ -162,14 +164,16 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   newVictimInformation() {
-    const VictimInformation = {
-      anonymousVictimIdentifier: "Victim " + Math.random(),
-    } as IncidentModels.VictimInformation;
+    const anonymousVictimIdentifier = this.translateService.instant("incidentReportUI.victimName", {
+      name: Math.random(),
+    });
+    const VictimInformation = { anonymousVictimIdentifier } as IncidentModels.VictimInformation;
     this.incidentReport().victimInformation.push(VictimInformation);
   }
 
   removeVictimInformation(index: number) {
-    if (!confirm(`Drop victim ${index + 1}?`)) return;
+    const message = this.translateService.instant("incidentReportUI.dropVictim", { number: index + 1 });
+    if (!confirm(message)) return;
     this.incidentReport().victimInformation.splice(index, 1);
   }
 
@@ -446,7 +450,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   removeAttachment(index: number) {
     const attachments = this.incidentReport().attachments;
-    if (!confirm(`Drop attachment ${attachments[index].fileName}?`)) return;
+    const message = this.translateService.instant("incidentReportUI.dropAttachment", {
+      fileName: attachments[index].fileName,
+    });
+    if (!confirm(message)) return;
     attachments.splice(index, 1);
   }
 }
