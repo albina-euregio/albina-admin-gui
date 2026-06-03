@@ -20,6 +20,7 @@ import { ElevationsComponent } from "../shared/elevations.component";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { SliderOptions } from "../shared/slider.component";
+import { zEnumValues } from "../shared/zod-util";
 import { DangerSourcesService } from "./danger-sources.service";
 import {
   DangerSign,
@@ -31,7 +32,6 @@ import {
   GrainShape,
   TerrainType,
 } from "./models/danger-source-variant.model";
-import { zEnumValues } from "./models/zod-util";
 import { ToggleBtnGroup } from "./toggle-btn-group";
 
 @Component({
