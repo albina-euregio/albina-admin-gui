@@ -145,6 +145,16 @@
         }
       </button>
     </li>
+    <li class="nav-item">
+      <button
+        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+        [class.active]="activeTab === 'attachments'"
+        (click)="activeTab = 'attachments'"
+      >
+        <span>{{ "incidentReport.incidentAttachments" | translate }}</span>
+        <span class="badge text-bg-secondary">{{ incidentReport().attachments.length }}</span>
+      </button>
+    </li>
   </ul>
 
   <!-- Tab Content Areas -->
@@ -549,6 +559,47 @@
           [helpI18n]="helpI18n"
           [showMandatoryOnly]="showMandatoryOnly"
         />
+      </div>
+    }
+
+    <!-- Attachments Tab -->
+    @if (activeTab === "attachments") {
+      <div>
+        <h4 class="mb-3 text-secondary">
+          {{ "incidentReport.incidentAttachments" | translate }}
+
+          <button
+            [disabled]="disabled()"
+            class="btn btn-sm btn-success d-flex align-items-center gap-1"
+            (click)="attachmentFileInput.click()"
+            data-toggle="tooltip"
+            title="{{ 'incidentReport.incidentAttachments' | translate }}"
+          >
+            <i class="ph ph-upload"></i>
+            Add Attachment
+          </button>
+          <input
+            #attachmentFileInput
+            type="file"
+            accept="image/*"
+            class="d-none"
+            (change)="uploadIncidentAttachment($event)"
+          />
+        </h4>
+        @for (attachment of incidentReport().attachments; track attachment.fileName) {
+          <details>
+            <summary>{{ attachment.fileName }}</summary>
+            <button class="btn btn-sm btn-outline-danger" (click)="removeAttachment($index)">&minus; Remove</button>
+            <app-zod-schema-form
+              [disabled]="disabled()"
+              [value]="attachment"
+              [zodType]="IncidentModels.IncidentAttachmentSchema"
+              [labelI18n]="labelI18n"
+              [helpI18n]="helpI18n"
+              [showMandatoryOnly]="showMandatoryOnly"
+            />
+          </details>
+        }
       </div>
     }
   </div>

@@ -1695,6 +1695,7 @@
     "victimInformation": "Victim Information",
     "involvementsFatalitiesBurials": "Involvements, Fatalities, and Burials",
     "incidentAnalysis": "Incident Analysis",
+    "incidentAttachments": "Incident Attachments",
 
     "author": "Author",
     "authorAffiliation": "Author Affiliation",
@@ -1835,7 +1836,19 @@
     "criticalWarming": "Critical Warming",
     "takeAways": "Take Aways",
     "analysisStatus": "Analysis Status",
-    "incidentAnalysisComment": "Incident Analysis Comment"
+    "incidentAnalysisComment": "Incident Analysis Comment",
+
+    "uuid": "UUID",
+    "dateAdded": "Date Added",
+    "file": "File",
+    "fileName": "File Name",
+    "mediaType": "Media Type",
+    "attachmentTags": "Tags",
+    "altText": "Alt Text",
+    "credit": "Credit",
+    "caption": "Caption",
+    "public": "Public",
+    "attachmentCategory": "Category"
   },
   "incidentReportHelp": {
     "author": "",
@@ -1972,7 +1985,19 @@
     "criticalWarming": "Use your best judgement to answer the question: Has there been a recent rapid rise in temperature to near 0 C, or is the upper snowpack wet due to strong sun, above-freezing air temperatures or rain?",
     "takeAways": "Summarize the key takeaways of the incident in a few short bullet points. Consider aspects such as warning signs, risk management (e.g. skiing one at a time), use of safety equipment, terrain traps, and group composition.",
     "analysisStatus": "Summarize the key takeaways of the incident in a few short bullet points. Consider aspects such as warning signs, risk management (e.g. skiing one at a time), use of safety equipment, terrain traps, and group composition.",
-    "incidentAnalysisComment": "For further information"
+    "incidentAnalysisComment": "For further information",
+
+    "uuid": "UUID",
+    "dateAdded": "Date is derived from when the attachment was uploaded",
+    "file": "File",
+    "fileName": "Derived from original file name of uploaded attachment",
+    "mediaType": "",
+    "attachmentTags": "",
+    "altText": "",
+    "credit": "",
+    "caption": "",
+    "public": "",
+    "attachmentCategory": ""
   },
   "sourceOfInformation": {
     "PublicObservation": "Public Observation",
@@ -2359,5 +2384,18 @@
     "Draft": "Draft",
     "Review": "Review",
     "Publish": "Publish"
+  },
+  "attachmentTags": {
+    "Picture": "Picture",
+    "PoliceReport": "Police Report",
+    "MedicalReport": "Medical Report"
+  },
+  "attachmentCategory": {
+    "Incident": "Incident",
+    "Avalanche": "Avalanche",
+    "Snowpack": "Snowpack",
+    "Group": "Group",
+    "Person": "Person",
+    "Weather": "Weather"
   }
 }

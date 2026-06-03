@@ -444,6 +444,28 @@ export const IncidentAnalysisSchema = z.object({
   incidentAnalysisComment: z.string().nullish(),
 });
 
+export const IncidentAttachmentSchema = z.object({
+  uuid: z.uuid().nullish(),
+  dateAdded: z.coerce.date(),
+  file: z.file().optional(),
+  fileName: z.string().optional(),
+  mediaType: z.string().optional(),
+  attachmentTags: z
+    .enum([
+      "Picture",
+      "PoliceReport",
+      "MedicalReport",
+      // "Other [text]"
+    ])
+    .array()
+    .optional(),
+  altText: z.string().optional(),
+  credit: z.string().optional(),
+  caption: z.string().optional(),
+  public: z.boolean().optional(),
+  attachmentCategory: z.enum(["Incident", "Avalanche", "Snowpack", "Group", "Person", "Weather"]).optional(),
+});
+
 export const IncidentReportSchema = z.object({
   ...MetaInformationSchema.shape,
   ...GeneralInformationSchema.shape,
@@ -455,6 +477,7 @@ export const IncidentReportSchema = z.object({
   groupInformation: GroupInformationSchema.array(),
   victimInformation: VictimInformationSchema.array(),
   ...IncidentAnalysisSchema.shape,
+  attachments: IncidentAttachmentSchema.array(),
 });
 
 export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({

@@ -47,7 +47,16 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   personInvolvementOptions: ("Yes" | "No" | "Unknown")[] = ["Yes", "No", "Unknown"];
 
   showMandatoryOnly = false;
-  readonly allTabs = ["meta", "general", "location", "avalanche", "group", "other-damages", "analysis"] as const;
+  readonly allTabs = [
+    "meta",
+    "general",
+    "location",
+    "avalanche",
+    "group",
+    "other-damages",
+    "analysis",
+    "attachments",
+  ] as const;
 
   private _activeTab: (typeof this.allTabs)[number] = "general";
   get activeTab(): (typeof this.allTabs)[number] {
@@ -111,6 +120,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         } as IncidentModels.GroupInformation,
       ],
       victimInformation: [],
+      attachments: [],
     } satisfies Partial<IncidentReport>) as IncidentReport,
   );
 
@@ -406,5 +416,27 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     report.polygonCoordinatesText = "";
     this.incidentReport.set({ ...report });
     this.drawOnMap();
+  }
+
+  uploadIncidentAttachment($event: Event) {
+    const input = $event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = "";
+    console.log();
+    if (!file) {
+      return;
+    }
+    this.incidentReport().attachments.push({
+      dateAdded: new Date(),
+      file,
+      fileName: file.name,
+      mediaType: file.type,
+    });
+  }
+
+  removeAttachment(index: number) {
+    const attachments = this.incidentReport().attachments;
+    if (!confirm(`Drop attachment ${attachments[index].fileName}?`)) return;
+    attachments.splice(index, 1);
   }
 }
