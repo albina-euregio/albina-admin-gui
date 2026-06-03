@@ -44,11 +44,18 @@ export function zEnumValues<T extends z.util.EnumLike>(
   }
 }
 
-export function unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber | z.ZodBoolean {
+// Recursively strips optional/nullable/default wrappers at the type level so the
+// return type matches what the runtime loop produces (e.g. `z.boolean().default()`
+// → `z.ZodBoolean`). Distributes over unions via the naked type parameter.
+export type Unwrap<T> = T extends z.ZodOptional<infer Inner> | z.ZodNullable<infer Inner> | z.ZodDefault<infer Inner>
+  ? Unwrap<Inner>
+  : T;
+
+export function unwrap<T extends z.ZodType>(t: T): Unwrap<T> {
   while (isFieldOptional(t)) {
     t = t.unwrap() as T;
   }
-  return t;
+  return t as unknown as Unwrap<T>;
 }
 
 export function isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | z.ZodNullable | z.ZodDefault {

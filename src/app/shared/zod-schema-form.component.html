@@ -1,5 +1,5 @@
 <section>
-  @for (x of zodObject().shape | keyvalue: null; track x) {
+  @for (x of fields(); track x.key) {
     @if (x.key !== "reportStatus" && x.key !== "groupSizeUnknown" && x.key !== "locationType") {
       @let inner = zodUtil.unwrap(x.value);
       @let widget = widgetRegistry.get(inner);

@@ -1,4 +1,3 @@
-import { KeyValuePipe } from "@angular/common";
 import { Component, computed, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
@@ -7,13 +6,27 @@ import { QuillModule } from "ngx-quill";
 import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
-import * as IncidentModels from "../incidents/models/incident-report.model";
+import type * as IncidentModels from "../incidents/models/incident-report.model";
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumSliderComponent } from "./enum-slider.component";
 import { IncidentGroupSizeComponent } from "./incident-group-size.component";
 import { zodCssClass } from "./zod-css-class";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
 import * as zodUtil from "./zod-util";
+
+type IncidentSchema =
+  | typeof IncidentModels.MetaInformationSchema
+  | typeof IncidentModels.GeneralInformationSchema
+  | typeof IncidentModels.LocationInformationSchema
+  | typeof IncidentModels.GroupInformationSchema
+  | typeof IncidentModels.InvolvementsFatalitiesBurialsSchema
+  | typeof IncidentModels.VictimInformationSchema
+  | typeof IncidentModels.AvalancheInformationSchema
+  | typeof IncidentModels.OtherDamagesSchema
+  | typeof IncidentModels.IncidentAnalysisSchema
+  | typeof IncidentModels.IncidentAttachmentSchema;
+
+type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
 
 @Component({
   selector: "app-zod-schema-form",
@@ -24,7 +37,6 @@ import * as zodUtil from "./zod-util";
     EnumSliderComponent,
     FormsModule,
     IncidentGroupSizeComponent,
-    KeyValuePipe,
     QuillModule,
     ToggleBtnGroup,
     TranslateModule,
@@ -45,52 +57,12 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
   readonly groupIdentifiers = input<string[]>([]);
-
-  zodObject = computed<
-    | typeof IncidentModels.MetaInformationSchema
-    | typeof IncidentModels.GeneralInformationSchema
-    | typeof IncidentModels.LocationInformationSchema
-    | typeof IncidentModels.GroupInformationSchema
-    | typeof IncidentModels.InvolvementsFatalitiesBurialsSchema
-    | typeof IncidentModels.VictimInformationSchema
-    | typeof IncidentModels.AvalancheInformationSchema
-    | typeof IncidentModels.OtherDamagesSchema
-    | typeof IncidentModels.IncidentAnalysisSchema
-    | typeof IncidentModels.IncidentAttachmentSchema
-  >(() => {
-    const t = this.zodType() as unknown;
-    if (t === IncidentModels.MetaInformationSchema) {
-      return IncidentModels.MetaInformationSchema;
-    }
-    if (t === IncidentModels.GeneralInformationSchema) {
-      return IncidentModels.GeneralInformationSchema;
-    }
-    if (t === IncidentModels.LocationInformationSchema) {
-      return IncidentModels.LocationInformationSchema;
-    }
-    if (t === IncidentModels.GroupInformationSchema) {
-      return IncidentModels.GroupInformationSchema;
-    }
-    if (t === IncidentModels.InvolvementsFatalitiesBurialsSchema) {
-      return IncidentModels.InvolvementsFatalitiesBurialsSchema;
-    }
-    if (t === IncidentModels.VictimInformationSchema) {
-      return IncidentModels.VictimInformationSchema;
-    }
-    if (t === IncidentModels.AvalancheInformationSchema) {
-      return IncidentModels.AvalancheInformationSchema;
-    }
-    if (t === IncidentModels.OtherDamagesSchema) {
-      return IncidentModels.OtherDamagesSchema;
-    }
-    if (t === IncidentModels.IncidentAnalysisSchema) {
-      return IncidentModels.IncidentAnalysisSchema;
-    }
-    if (t === IncidentModels.IncidentAttachmentSchema) {
-      return IncidentModels.IncidentAttachmentSchema;
-    }
-    throw Error();
-  });
+  readonly fields = computed(() =>
+    Object.entries(this.zodType().shape).map(([key, value]) => ({
+      key,
+      value: value as ShapeFields<IncidentSchema>,
+    })),
+  );
 
   castArray(x: unknown) {
     return x as unknown[];
