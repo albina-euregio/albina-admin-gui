@@ -56,7 +56,6 @@ export const GeneralInformationSchema = z.object({
 });
 
 export const LocationInformationSchema = z.object({
-  // TODO Multilanguage?
   location: z.string(),
   latitude: z.number(),
   longitude: z.number(),
@@ -79,7 +78,6 @@ export const LocationInformationSchema = z.object({
   polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
   country: z.string().nullish(),
   region: z.string().nullish(),
-  // TODO Multilanguage?
   municipality: z.string().nullish(),
   avalancheRegion: z.string().nullish(),
   locationInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
