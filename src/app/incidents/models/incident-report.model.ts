@@ -48,7 +48,7 @@ export const GeneralInformationSchema = z.object({
 
   dangerPattern: z.enum(Enums.DangerPattern).array(),
 
-  reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]),
+  reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
 
   publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 
@@ -99,7 +99,7 @@ export const GroupInformationSchema = z.object({
     "Unknown",
   ]),
   groupSize: z.number().nullish(),
-  groupSizeUnknown: z.boolean().default(false),
+  groupSizeUnknown: z.boolean().register(widgetRegistry, { widget: "none" }).default(false),
   incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
   typeOfControlledTerrain: z
     .enum([
