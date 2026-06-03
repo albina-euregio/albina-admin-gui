@@ -409,7 +409,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   await page.getByRole("button", { name: "Yes" }).click();
   await page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins\/change/) &&
+      response.url().match(/\/api\/bulletins\/publish/) &&
       response.status() === 200 &&
       response.request().method() === "POST",
   );
