@@ -67,9 +67,13 @@
           @if (tab.id === "attachments") {
             <span class="badge text-bg-secondary">{{ incidentReport().attachments.length }}</span>
           } @else if (getTabValidationStatus(tab) === "valid") {
-            <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
+            <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">
+              <i class="ph ph-check"></i>
+            </span>
           } @else {
-            <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
+            <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">
+              <i class="ph ph-warning"></i>
+            </span>
           }
         </button>
       </li>
@@ -372,9 +376,13 @@
                     ></i>
                     <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
                     @if (isGroupValid(groupInformation)) {
-                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
+                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">
+                        <i class="ph ph-check"></i>
+                      </span>
                     } @else {
-                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
+                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">
+                        <i class="ph ph-warning"></i>
+                      </span>
                     }
                   </div>
                   @if ($index > 0) {
@@ -430,9 +438,13 @@
                       {{ victimInformation.anonymousVictimIdentifier }}
                     </h5>
                     @if (isVictimValid(victimInformation)) {
-                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
+                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">
+                        <i class="ph ph-check"></i>
+                      </span>
                     } @else {
-                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
+                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">
+                        <i class="ph ph-warning"></i>
+                      </span>
                     }
                   </div>
                   <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation($index)">
