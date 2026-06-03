@@ -168,21 +168,6 @@
     }
   }
 
-  // Show latitude and longitude fields side-by-side in one line
-  #latitude,
-  #longitude {
-    display: inline-block;
-    width: calc(50% - 10px);
-    vertical-align: top;
-    border-top: none !important;
-    padding-top: 0 !important;
-    margin-top: $space-4 !important;
-  }
-
-  #latitude {
-    margin-right: 20px;
-  }
-
   .clear-btn-embedded {
     background: transparent;
     color: inherit;

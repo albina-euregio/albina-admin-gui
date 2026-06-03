@@ -61,8 +61,8 @@ export const GeneralInformationSchema = z.object({
 
 export const LocationInformationSchema = z.object({
   location: z.string(),
-  latitude: z.number(),
-  longitude: z.number(),
+  latitude: z.number().register(widgetRegistry, { class: "col-6" }),
+  longitude: z.number().register(widgetRegistry, { class: "col-6" }),
   locationAccuracy: z.enum([
     "exact",
     "within15m",

@@ -1,10 +1,10 @@
-<section>
+<section class="row">
   @for (x of fields(); track x.key) {
     @let inner = zodUtil.unwrap(x.value);
     @let widget = widgetRegistry.get(inner);
     @if (widget?.widget !== "none") {
       @let valueI18n = widget?.valueI18n || `${x.key}.#`;
-      <div [class.d-none]="!shouldShowField(x.value)" class="zod-form-field" [id]="x.key">
+      <div [class.d-none]="!shouldShowField(x.value)" class="zod-form-field" [class]="widget?.class" [id]="x.key">
         <div class="form-label d-flex align-items-center gap-2">
           <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
           @if (widget?.unit) {
