@@ -10,7 +10,7 @@
           for="toggleMandatoryOnly"
           style="font-size: 12px"
         >
-          Show Mandatory Fields Only
+          {{ "incidentReportUI.showMandatoryFieldsOnly" | translate }}
         </label>
       </div>
     </div>
@@ -18,10 +18,13 @@
     <div>
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2">
-        <label class="form-label mb-0 text-secondary" style="font-size: 12px" for="reportStatusSelect">STATUS:</label>
+        <label class="form-label mb-0 text-secondary text-uppercase" style="font-size: 12px" for="reportStatusSelect">{{
+          "incidentReport.reportStatus" | translate
+        }}</label>
         <select
           [disabled]="disabled()"
           id="reportStatusSelect"
+          title="{{ 'incidentReportHelp.reportStatus' | translate }}"
           class="form-select fw-semibold text-capitalize border w-auto"
           [class.bg-warning-subtle]="
             incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
@@ -36,16 +39,16 @@
           [(ngModel)]="incidentReport().reportStatus"
           (ngModelChange)="incidentReport.set(incidentReport())"
         >
-          <option value="Draft">Draft</option>
-          <option value="Incomplete">Incomplete</option>
-          <option value="InReview">In Review</option>
-          <option value="Verified">Verified</option>
+          <option value="Draft">{{ "reportStatus.Draft" | translate }}</option>
+          <option value="Incomplete">{{ "reportStatus.Incomplete" | translate }}</option>
+          <option value="InReview">{{ "reportStatus.InReview" | translate }}</option>
+          <option value="Verified">{{ "reportStatus.Verified" | translate }}</option>
         </select>
         <button
           class="btn btn-sm btn-success d-flex align-items-center gap-1"
           [disabled]="disabled() || incidentReport().reportStatus === 'Draft'"
         >
-          publish/update incident
+          {{ "incidentReportUI.publishUpdateIncident" | translate }}
         </button>
       </div>
     </div>
@@ -61,9 +64,9 @@
       >
         <span>{{ "incidentReport.metaInformation" | translate }}</span>
         @if (getValidationStatus(IncidentModels.MetaInformationSchema) === "valid") {
-          <span class="text-success" title="Valid">✔</span>
+          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
         } @else {
-          <span class="text-danger" title="Incomplete">⚠</span>
+          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
         }
       </button>
     </li>
@@ -75,9 +78,9 @@
       >
         <span>{{ "incidentReport.generalInformation" | translate }}</span>
         @if (getValidationStatus(IncidentModels.GeneralInformationSchema) === "valid") {
-          <span class="text-success" title="Valid">✔</span>
+          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
         } @else {
-          <span class="text-danger" title="Incomplete">⚠</span>
+          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
         }
       </button>
     </li>
@@ -89,9 +92,9 @@
       >
         <span>{{ "incidentReport.locationInformation" | translate }}</span>
         @if (getValidationStatus(IncidentModels.LocationInformationSchema) === "valid") {
-          <span class="text-success" title="Valid">✔</span>
+          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
         } @else {
-          <span class="text-danger" title="Incomplete">⚠</span>
+          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
         }
       </button>
     </li>
@@ -103,9 +106,9 @@
       >
         <span>{{ "incidentReport.avalancheInformation" | translate }}</span>
         @if (getValidationStatus(IncidentModels.AvalancheInformationSchema) === "valid") {
-          <span class="text-success" title="Valid">✔</span>
+          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
         } @else {
-          <span class="text-danger" title="Incomplete">⚠</span>
+          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
         }
       </button>
     </li>
@@ -117,9 +120,9 @@
       >
         <span>{{ "incidentReport.personInvolvement" | translate }}</span>
         @if (getGroupValidationStatus() === "valid") {
-          <span class="text-success" title="Valid">✔</span>
+          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
         } @else {
-          <span class="text-danger" title="Incomplete">⚠</span>
+          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
         }
       </button>
     </li>
@@ -131,9 +134,9 @@
       >
         <span>{{ "incidentReport.otherDamages" | translate }}</span>
         @if (getOtherDamagesValidationStatus() === "valid") {
-          <span class="text-success" title="Valid">✔</span>
+          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
         } @else {
-          <span class="text-danger" title="Incomplete">⚠</span>
+          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
         }
       </button>
     </li>
@@ -145,9 +148,9 @@
       >
         <span>{{ "incidentReport.incidentAnalysis" | translate }}</span>
         @if (getValidationStatus(IncidentModels.IncidentAnalysisSchema) === "valid") {
-          <span class="text-success" title="Valid">✔</span>
+          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
         } @else {
-          <span class="text-danger" title="Incomplete">⚠</span>
+          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
         }
       </button>
     </li>
@@ -204,7 +207,7 @@
 
         <!-- 2. Location Map (Same width) -->
         <div class="mb-3 position-relative">
-          <label class="form-label">Location Map</label>
+          <label class="form-label">{{ "incidentReportUI.locationMap" | translate }}</label>
           <div style="position: relative; width: 100%">
             <div
               id="locationMap"
@@ -237,7 +240,7 @@
                 class="fw-bold text-center"
                 style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--bs-gray-700)"
               >
-                Controls
+                {{ "incidentReportUI.controls" | translate }}
               </div>
 
               <!-- Point Button with Embedded Clear -->
@@ -248,15 +251,17 @@
                 [class.btn-light]="activeDrawingMode !== 'Point'"
                 (click)="onLocationTypeChange('Point')"
                 [disabled]="disabled()"
-                title="Draw Point"
+                title="{{ 'incidentReportUI.drawPoint' | translate }}"
                 style="font-size: 12px; padding: 4px 6px"
               >
-                <span class="d-flex align-items-center gap-2"> <i class="ph ph-map-pin"></i> Point </span>
+                <span class="d-flex align-items-center gap-2">
+                  <i class="ph ph-map-pin"></i> {{ "incidentReportUI.point" | translate }}
+                </span>
                 @if (hasPointData && !disabled()) {
                   <span
                     (click)="$event.stopPropagation(); clearPoint()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
-                    title="Clear Point"
+                    title="{{ 'incidentReportUI.clearPoint' | translate }}"
                     style="
                       cursor: pointer;
                       padding: 2px;
@@ -279,15 +284,17 @@
                 [class.btn-light]="activeDrawingMode !== 'Line'"
                 (click)="onLocationTypeChange('Line')"
                 [disabled]="disabled()"
-                title="Draw Line"
+                title="{{ 'incidentReportUI.drawLine' | translate }}"
                 style="font-size: 12px; padding: 4px 6px"
               >
-                <span class="d-flex align-items-center gap-2"> <i class="ph ph-line-segments"></i> Line </span>
+                <span class="d-flex align-items-center gap-2">
+                  <i class="ph ph-line-segments"></i> {{ "incidentReportUI.line" | translate }}
+                </span>
                 @if (hasLineData && !disabled()) {
                   <span
                     (click)="$event.stopPropagation(); clearLine()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
-                    title="Clear Line"
+                    title="{{ 'incidentReportUI.clearLine' | translate }}"
                     style="
                       cursor: pointer;
                       padding: 2px;
@@ -310,15 +317,17 @@
                 [class.btn-light]="activeDrawingMode !== 'Polygon'"
                 (click)="onLocationTypeChange('Polygon')"
                 [disabled]="disabled()"
-                title="Draw Polygon"
+                title="{{ 'incidentReportUI.drawPolygon' | translate }}"
                 style="font-size: 12px; padding: 4px 6px"
               >
-                <span class="d-flex align-items-center gap-2"> <i class="ph ph-polygon"></i> Polygon </span>
+                <span class="d-flex align-items-center gap-2">
+                  <i class="ph ph-polygon"></i> {{ "incidentReportUI.polygon" | translate }}
+                </span>
                 @if (hasPolygonData && !disabled()) {
                   <span
                     (click)="$event.stopPropagation(); clearPolygon()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
-                    title="Clear Polygon"
+                    title="{{ 'incidentReportUI.clearPolygon' | translate }}"
                     style="
                       cursor: pointer;
                       padding: 2px;
@@ -336,11 +345,11 @@
           </div>
           <div class="form-text text-muted mt-2">
             @if (activeDrawingMode === "Point") {
-              Click anywhere on the map to place the location marker.
+              {{ "incidentReportUI.drawPointInstructions" | translate }}
             } @else if (activeDrawingMode === "Line") {
-              Click on the map to add points to the line.
+              {{ "incidentReportUI.drawLineInstructions" | translate }}
             } @else {
-              Click on the map to define the corners/vertices of the polygon.
+              {{ "incidentReportUI.drawPolygonInstructions" | translate }}
             }
           </div>
         </div>
@@ -389,9 +398,13 @@
               incidentReport().personInvolvement &&
               personInvolvementOptions.includes(incidentReport().personInvolvement)
             ) {
-              <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
+              <span class="badge bg-success-subtle text-success border border-success-subtle px-1">
+                {{ "incidentReportUI.required" | translate }}
+              </span>
             } @else {
-              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">
+                {{ "incidentReportUI.required" | translate }}
+              </span>
             }
           </div>
           <div class="form-text mb-2">
@@ -424,12 +437,12 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="mb-0 text-secondary">{{ "incidentReport.groupInformation" | translate }}</h4>
               <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newGroupInformation()">
-                <span>+</span> Add Group
+                <i class="ph ph-plus"></i> {{ "incidentReportUI.addGroup" | translate }}
               </button>
             </div>
 
             @if (!incidentReport().groupInformation?.length) {
-              <div class="alert alert-info">No groups registered. Click "+ Add Group" to add a group.</div>
+              <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
             }
 
             @for (
@@ -449,14 +462,14 @@
                     ></i>
                     <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
                     @if (isGroupValid(groupInformation)) {
-                      <span class="text-success ms-2" title="Valid">✔</span>
+                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
                     } @else {
-                      <span class="text-danger ms-2" title="Incomplete">⚠</span>
+                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
                     }
                   </div>
                   @if ($index > 0) {
                     <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">
-                      &minus; Remove
+                      <i class="ph ph-trash"></i> {{ "incidentReportUI.removeGroup" | translate }}
                     </button>
                   }
                 </div>
@@ -480,12 +493,12 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="mb-0 text-secondary">{{ "incidentReport.victimInformation" | translate }}</h4>
               <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newVictimInformation()">
-                <span>+</span> Add Victim
+                <i class="ph ph-plus"></i> {{ "incidentReportUI.addVictim" | translate }}
               </button>
             </div>
 
             @if (!incidentReport().victimInformation?.length) {
-              <div class="alert alert-info">No victims registered. Click "+ Add Victim" to add a victim.</div>
+              <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
             }
 
             @for (
@@ -507,13 +520,13 @@
                       {{ victimInformation.anonymousVictimIdentifier }}
                     </h5>
                     @if (isVictimValid(victimInformation)) {
-                      <span class="text-success ms-2" title="Valid">✔</span>
+                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
                     } @else {
-                      <span class="text-danger ms-2" title="Incomplete">⚠</span>
+                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
                     }
                   </div>
                   <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation($index)">
-                    &minus; Remove
+                    <i class="ph ph-trash"></i> {{ "incidentReportUI.removeVictim" | translate }}
                   </button>
                 </div>
                 @if (!isVictimCollapsed(victimInformation.anonymousVictimIdentifier)) {
@@ -582,7 +595,7 @@
             title="{{ 'incidentReport.incidentAttachments' | translate }}"
           >
             <i class="ph ph-upload"></i>
-            Add Attachment
+            {{ "incidentReportUI.addAttachment" | translate }}
           </button>
           <input
             #attachmentFileInput
@@ -595,7 +608,9 @@
         @for (attachment of incidentReport().attachments; track attachment.fileName) {
           <details>
             <summary>{{ attachment.fileName }}</summary>
-            <button class="btn btn-sm btn-outline-danger" (click)="removeAttachment($index)">&minus; Remove</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="removeAttachment($index)">
+              <i class="ph ph-trash"></i> {{ "incidentReportUI.removeAttachment" | translate }}
+            </button>
             <app-zod-schema-form
               [disabled]="disabled()"
               [value]="attachment"
@@ -613,11 +628,12 @@
   <!-- Wizard Controls (Next/Back) -->
   <div class="d-flex justify-content-between mt-4 border-top pt-3">
     <button class="btn btn-outline-secondary" [disabled]="activeTab === allTabs[0]" (click)="activeTab = prevTab">
-      &larr; Back
+      <i class="ph ph-skip-back"></i> {{ "incidentReportUI.back" | translate }}
     </button>
 
     <button class="btn btn-primary" [disabled]="activeTab === allTabs.at(-1)" (click)="activeTab = nextTab">
-      Next &rarr;
+      {{ "incidentReportUI.next" | translate }}
+      <i class="ph ph-skip-forward"></i>
     </button>
   </div>
 </div>
