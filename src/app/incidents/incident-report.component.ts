@@ -48,40 +48,50 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   showMandatoryOnly = false;
   readonly allTabs = [
-    "meta",
-    "general",
-    "location",
-    "avalanche",
-    "group",
-    "other-damages",
-    "analysis",
-    "attachments",
+    { id: "meta", label: "incidentReport.metaInformation", schema: IncidentModels.MetaInformationSchema },
+    { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
+    { id: "location", label: "incidentReport.locationInformation", schema: IncidentModels.LocationInformationSchema },
+    {
+      id: "avalanche",
+      label: "incidentReport.avalancheInformation",
+      schema: IncidentModels.AvalancheInformationSchema,
+    },
+    { id: "group", label: "incidentReport.personInvolvement" },
+    { id: "other-damages", label: "incidentReport.otherDamages" },
+    { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
+    { id: "attachments", label: "incidentReport.incidentAttachments" },
   ] as const;
 
-  private _activeTab: (typeof this.allTabs)[number] = "general";
-  get activeTab(): (typeof this.allTabs)[number] {
+  private _activeTab: (typeof this.allTabs)[number]["id"] = "general";
+  get activeTab(): (typeof this.allTabs)[number]["id"] {
     return this._activeTab;
   }
-  set activeTab(tab: (typeof this.allTabs)[number]) {
+  set activeTab(tab: (typeof this.allTabs)[number]["id"]) {
     this._activeTab = tab;
     if (tab === "location") {
       setTimeout(() => this.initLocationMap(), 50);
     }
   }
 
-  get prevTab(): (typeof this.allTabs)[number] {
-    const index = this.allTabs.indexOf(this.activeTab);
-    return this.allTabs[Math.max(index - 1, 0)];
+  get prevTab(): (typeof this.allTabs)[number]["id"] {
+    const index = this.allTabs.findIndex((tab) => tab.id === this.activeTab);
+    return this.allTabs[Math.max(index - 1, 0)].id;
   }
 
-  get nextTab(): (typeof this.allTabs)[number] {
-    const index = this.allTabs.indexOf(this.activeTab);
-    return this.allTabs[Math.min(index + 1, this.allTabs.length - 1)];
+  get nextTab(): (typeof this.allTabs)[number]["id"] {
+    const index = this.allTabs.findIndex((tab) => tab.id === this.activeTab);
+    return this.allTabs[Math.min(index + 1, this.allTabs.length - 1)].id;
   }
 
   getValidationStatus(schema: z.ZodType): "valid" | "invalid" {
     const res = schema.safeParse(this.incidentReport());
     return res.success ? "valid" : "invalid";
+  }
+
+  getTabValidationStatus(tab: (typeof this.allTabs)[number]): "valid" | "invalid" {
+    if (tab.id === "group") return this.getGroupValidationStatus();
+    if (tab.id === "other-damages") return this.getOtherDamagesValidationStatus();
+    return "schema" in tab ? this.getValidationStatus(tab.schema) : "valid";
   }
 
   getOtherDamagesValidationStatus(): "valid" | "invalid" {

@@ -56,114 +56,24 @@
 
   <!-- Stepped Tabs Navigation -->
   <ul class="nav nav-tabs mb-4 flex-column flex-sm-row gap-1 border-bottom-0">
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'meta'"
-        (click)="activeTab = 'meta'"
-      >
-        <span>{{ "incidentReport.metaInformation" | translate }}</span>
-        @if (getValidationStatus(IncidentModels.MetaInformationSchema) === "valid") {
-          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
-        } @else {
-          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
-        }
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'general'"
-        (click)="activeTab = 'general'"
-      >
-        <span>{{ "incidentReport.generalInformation" | translate }}</span>
-        @if (getValidationStatus(IncidentModels.GeneralInformationSchema) === "valid") {
-          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
-        } @else {
-          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
-        }
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'location'"
-        (click)="activeTab = 'location'"
-      >
-        <span>{{ "incidentReport.locationInformation" | translate }}</span>
-        @if (getValidationStatus(IncidentModels.LocationInformationSchema) === "valid") {
-          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
-        } @else {
-          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
-        }
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'avalanche'"
-        (click)="activeTab = 'avalanche'"
-      >
-        <span>{{ "incidentReport.avalancheInformation" | translate }}</span>
-        @if (getValidationStatus(IncidentModels.AvalancheInformationSchema) === "valid") {
-          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
-        } @else {
-          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
-        }
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'group'"
-        (click)="activeTab = 'group'"
-      >
-        <span>{{ "incidentReport.personInvolvement" | translate }}</span>
-        @if (getGroupValidationStatus() === "valid") {
-          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
-        } @else {
-          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
-        }
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'other-damages'"
-        (click)="activeTab = 'other-damages'"
-      >
-        <span>{{ "incidentReport.otherDamages" | translate }}</span>
-        @if (getOtherDamagesValidationStatus() === "valid") {
-          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
-        } @else {
-          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
-        }
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'analysis'"
-        (click)="activeTab = 'analysis'"
-      >
-        <span>{{ "incidentReport.incidentAnalysis" | translate }}</span>
-        @if (getValidationStatus(IncidentModels.IncidentAnalysisSchema) === "valid") {
-          <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
-        } @else {
-          <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
-        }
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
-        [class.active]="activeTab === 'attachments'"
-        (click)="activeTab = 'attachments'"
-      >
-        <span>{{ "incidentReport.incidentAttachments" | translate }}</span>
-        <span class="badge text-bg-secondary">{{ incidentReport().attachments.length }}</span>
-      </button>
-    </li>
+    @for (tab of allTabs; track tab.id) {
+      <li class="nav-item">
+        <button
+          class="nav-link w-100 d-flex align-items-center gap-2 fw-semibold"
+          [class.active]="activeTab === tab.id"
+          (click)="activeTab = tab.id"
+        >
+          <span>{{ tab.label | translate }}</span>
+          @if (tab.id === "attachments") {
+            <span class="badge text-bg-secondary">{{ incidentReport().attachments.length }}</span>
+          } @else if (getTabValidationStatus(tab) === "valid") {
+            <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">✔</span>
+          } @else {
+            <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">⚠</span>
+          }
+        </button>
+      </li>
+    }
   </ul>
 
   <!-- Tab Content Areas -->
@@ -627,11 +537,11 @@
 
   <!-- Wizard Controls (Next/Back) -->
   <div class="d-flex justify-content-between mt-4 border-top pt-3">
-    <button class="btn btn-outline-secondary" [disabled]="activeTab === allTabs[0]" (click)="activeTab = prevTab">
+    <button class="btn btn-outline-secondary" [disabled]="activeTab === allTabs[0].id" (click)="activeTab = prevTab">
       <i class="ph ph-skip-back"></i> {{ "incidentReportUI.back" | translate }}
     </button>
 
-    <button class="btn btn-primary" [disabled]="activeTab === allTabs.at(-1)" (click)="activeTab = nextTab">
+    <button class="btn btn-primary" [disabled]="activeTab === allTabs.at(-1)?.id" (click)="activeTab = nextTab">
       {{ "incidentReportUI.next" | translate }}
       <i class="ph ph-skip-forward"></i>
     </button>
