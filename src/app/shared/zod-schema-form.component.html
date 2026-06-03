@@ -16,20 +16,12 @@
           }
           @if (!isFieldOptional(x.value)) {
             @if (isFieldValid(x.value, value()[x.key])) {
-              <span
-                class="badge bg-success-subtle text-success border border-success-subtle px-1"
-                style="font-size: 0.65rem"
-                >Required</span
-              >
+              <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
             } @else {
-              <span
-                class="badge bg-danger-subtle text-danger border border-danger-subtle px-1"
-                style="font-size: 0.65rem"
-                >Required</span
-              >
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
             }
           } @else {
-            <span class="badge bg-light text-muted border px-1" style="font-size: 0.65rem">Optional</span>
+            <span class="badge bg-light text-muted border px-1">Optional</span>
           }
         </div>
         <div class="form-text">
@@ -49,7 +41,7 @@
           } @else if (widget?.widget === "select") {
             <select
               [disabled]="disabled()"
-              class="form-select form-select-sm"
+              class="form-select"
               [class]="zodCssClass(x.value, value()[x.key], '')"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="value.set(value())"

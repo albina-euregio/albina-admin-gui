@@ -8,7 +8,7 @@
         <label
           class="form-check-label text-secondary fw-semibold cursor-pointer"
           for="toggleMandatoryOnly"
-          style="font-size: 11px"
+          style="font-size: 12px"
         >
           Show Mandatory Fields Only
         </label>
@@ -18,11 +18,11 @@
     <div>
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2">
-        <label class="form-label mb-0 text-secondary" style="font-size: 11px" for="reportStatusSelect">STATUS:</label>
+        <label class="form-label mb-0 text-secondary" style="font-size: 12px" for="reportStatusSelect">STATUS:</label>
         <select
           [disabled]="disabled()"
           id="reportStatusSelect"
-          class="form-select form-select-sm fw-semibold text-capitalize border"
+          class="form-select fw-semibold text-capitalize border"
           [class.bg-warning-subtle]="
             incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
           "
@@ -226,17 +226,9 @@
               incidentReport().personInvolvement &&
               personInvolvementOptions.includes(incidentReport().personInvolvement)
             ) {
-              <span
-                class="badge bg-success-subtle text-success border border-success-subtle px-1"
-                style="font-size: 0.65rem"
-                >Required</span
-              >
+              <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
             } @else {
-              <span
-                class="badge bg-danger-subtle text-danger border border-danger-subtle px-1"
-                style="font-size: 0.65rem"
-                >Required</span
-              >
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
             }
           </div>
           <div class="form-text mb-2">
