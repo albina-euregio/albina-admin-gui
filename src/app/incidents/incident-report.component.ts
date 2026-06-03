@@ -146,4 +146,8 @@ export class IncidentReportComponent {
   isVictimValid(group: IncidentModels.VictimInformation): boolean {
     return IncidentModels.VictimInformationSchema.safeParse(group).success;
   }
+
+  get groupIdentifiers(): string[] {
+    return this.incidentReport().groupInformation?.map((g) => g.anonymousGroupIdentifier) ?? [];
+  }
 }

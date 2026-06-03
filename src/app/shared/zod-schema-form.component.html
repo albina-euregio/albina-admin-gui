@@ -110,7 +110,20 @@
             />
           }
         } @else if (inner.type === "string") {
-          @if (widget?.widget === "textarea") {
+          @if (x.key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
+            <select
+              [disabled]="disabled()"
+              class="form-select"
+              [class]="zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="value.set(value())"
+            >
+              <option [value]="undefined" disabled selected hidden>Select a group...</option>
+              @for (groupId of groupIdentifiers(); track groupId) {
+                <option [value]="groupId">{{ groupId }}</option>
+              }
+            </select>
+          } @else if (widget?.widget === "textarea") {
             <textarea
               [class]="zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"

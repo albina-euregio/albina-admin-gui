@@ -42,6 +42,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly zodType = input<T>();
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
+  readonly groupIdentifiers = input<string[]>([]);
 
   zodObject = computed<
     | typeof IncidentModels.MetaInformationSchema
