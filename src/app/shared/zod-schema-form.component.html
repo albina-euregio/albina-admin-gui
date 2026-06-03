@@ -4,11 +4,7 @@
       @let inner = unwrap(x.value);
       @let widget = widgetRegistry.get(inner);
       @let valueI18n = widget?.valueI18n || `${x.key}.#`;
-      <div
-        [class.d-none]="!shouldShowField(widget) || (showMandatoryOnly() && isFieldOptional(x.value))"
-        class="zod-form-field"
-        [id]="x.key"
-      >
+      <div [class.d-none]="!shouldShowField(x.value)" class="zod-form-field" [id]="x.key">
         <div class="form-label d-flex align-items-center gap-2">
           <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
           @if (widget?.unit) {

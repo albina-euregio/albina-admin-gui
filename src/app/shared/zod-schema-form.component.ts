@@ -98,11 +98,14 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
   }
 
-  shouldShowField(widget: { showIf?: string[] } | undefined): boolean {
-    if (!widget?.showIf || widget.showIf.length < 2) return true;
-    const key = widget.showIf[0];
-    const allowed = widget.showIf.slice(1);
-    const val = (this.value() as Record<string, unknown>)?.[key];
+  readonly showMandatoryOnly = input<boolean>(false);
+
+  shouldShowField(schema: z.ZodType): boolean {
+    if (this.showMandatoryOnly() && this.isFieldOptional(schema)) return false;
+    const showIf = widgetRegistry.get(this.unwrap(schema))?.showIf;
+    if (!showIf || showIf.length < 2) return true;
+    const [key, ...allowed] = showIf;
+    const val = this.value()?.[key];
     return allowed.includes(val as string);
   }
 
@@ -118,8 +121,6 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     Object.assign(value, { [key]: xor(this.castArray(value[key]) ?? [], [v]) });
     this.onFieldChange();
   }
-
-  readonly showMandatoryOnly = input<boolean>(false);
 
   unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber | z.ZodBoolean {
     while (this.isFieldOptional(t)) {
