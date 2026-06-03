@@ -10,8 +10,8 @@ import type * as IncidentModels from "../incidents/models/incident-report.model"
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumSliderComponent } from "./enum-slider.component";
 import { IncidentGroupSizeComponent } from "./incident-group-size.component";
-import { zodCssClass } from "./zod-css-class";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
+import { zodCssClass } from "./zod-util";
 import * as zodUtil from "./zod-util";
 
 type IncidentSchema =

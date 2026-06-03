@@ -69,3 +69,12 @@ export function isFieldValid(schema: z.ZodType, val: unknown): boolean {
 export function hasValue(val: unknown): boolean {
   return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
 }
+export function zodCssClass<T>(zodType: z.ZodType<T>, value: T, mainClass = "form-control") {
+  const result = zodType.safeParse(value);
+  const entered = value !== undefined && value !== null && value !== "" && (!Array.isArray(value) || value.length > 0);
+  return {
+    [mainClass]: true,
+    "is-valid": entered && result.success,
+    "is-invalid": entered && !!result.error,
+  };
+}
