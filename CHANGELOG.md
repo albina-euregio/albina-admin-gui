@@ -2,7 +2,7 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
-## [8.4.2] - 2026-05-26
+## [8.4.2] - 2026-06-03
 
 ### 🚀 Features
 
@@ -11,9 +11,12 @@
 - _(create-bulletin)_ Show publication-in-progress
 - _(publication-checklist)_ Major improvements
 - _(publication-checklist)_ Store on server
+- _(publication-checklist)_ Add print version
 - _(weather)_ Add weather maps (ICON and GFS)
 - _(bulletin)_ Add X for no danger-rating-modificator, check presence of selection
 - _(bulletin)_ Allow to select no_snow as danger rating for warning region
+- _(config)_ Add education URL to region configuration
+- _(bulletin)_ Allow to upload photos to bulletin
 
 ### 🐛 Bug Fixes
 
@@ -25,6 +28,10 @@
 - _(graphics)_ Show menu entry only if enableLineaExport
 - _(bulletins.service)_ Load status for active date outside of preloaded range
 
+### 🚜 Refactor
+
+- _(weather-stations)_ Use LINEA features
+
 ### 🧪 Testing
 
 - _(observations)_ Update weather station tests
@@ -32,7 +39,10 @@
 ### ⚙️ Miscellaneous Tasks
 
 - _(settings)_ Oxc as default formatter for HTML files
-- _(linea)_ Update to v8.24.1
+- _(linea)_ Update to v8.24.2
+- _(pnpm)_ Upgrade to v11.3.0
+- _(vite-plus)_ Upgrade to v0.1.24
+- _(zod)_ Upgrade to v4.4.3
 - _(weather-box)_ Remove component
 
 ## [8.4.1] - 2026-04-10
