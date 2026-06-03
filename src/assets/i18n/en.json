@@ -850,6 +850,7 @@
         "components": {
           "title": "Components",
           "enableDangerSources": "Enable danger sources",
+          "enableIncidents": "Enable incidents",
           "enableObservations": "Enable observations",
           "enableModelling": "Enable modelling",
           "enableWeatherbox": "Enable weather box",

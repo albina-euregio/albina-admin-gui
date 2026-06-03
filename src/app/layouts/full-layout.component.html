@@ -37,7 +37,7 @@
               </a>
             </li>
           }
-          @if (authenticationService.isUserLoggedIn()) {
+          @if (authenticationService.getActiveRegion()?.enableIncidents && authenticationService.isUserLoggedIn()) {
             <li class="nav-item">
               <a class="nav-link" routerLinkActive="active" [routerLink]="['/incidents']" ngxMousetrapKey="g l">
                 {{ "sidebar.incidents" | translate }}
