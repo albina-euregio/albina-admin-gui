@@ -12,7 +12,7 @@ import outline_properties from "@eaws/outline_properties/index.json";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageSchema } from "app/models/text.model";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
-import z from "zod";
+import { z } from "zod/v4";
 
 import aggregatedRegions from "../../../assets/aggregated_regions.json";
 import { AuthenticationService } from "../authentication-service/authentication.service";

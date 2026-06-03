@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { Map as LeafletMap } from "leaflet";
 import { filter, fromEventPattern, map, Observable } from "rxjs";
-import * as z from "zod/v4";
+import { z } from "zod/v4";
 
 import { environment } from "../../../environments/environment";
 import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
@@ -54,6 +54,16 @@ export class LocalStorageService {
     }
     if (!this.translateService.getLangs().includes(language)) {
       language = "en";
+    }
+    if (
+      language === "de" ||
+      language === "it" ||
+      language === "en" ||
+      language === "fr" ||
+      language === "es" ||
+      language === "ca"
+    ) {
+      z.config(z.locales[language]());
     }
     document.documentElement.setAttribute("lang", language);
     this.translateService.use(language);

@@ -1,0 +1,221 @@
+<section class="row">
+  @for (x of fields(); track x.key) {
+    @let inner = zodUtil.unwrap(x.value);
+    @let widget = widgetRegistry.get(inner);
+    @if (widget?.widget !== "none") {
+      @let valueI18n = widget?.valueI18n || `${x.key}.#`;
+      <div [class.d-none]="!shouldShowField(x.value)" class="zod-form-field" [class]="widget?.class" [id]="x.key">
+        <div class="form-label d-flex align-items-center gap-2">
+          <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
+          @if (widget?.unit) {
+            <span class="text-muted">[{{ widget.unit }}]</span>
+          }
+          @if (!zodUtil.isFieldOptional(x.value)) {
+            @if (zodUtil.isFieldValid(x.value, value()[x.key])) {
+              <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
+            } @else {
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
+            }
+          } @else {
+            <span class="badge bg-light text-muted border px-1">Optional</span>
+          }
+        </div>
+        <div class="form-text">
+          {{ helpI18n().replace("#", x.key) | translate }}
+        </div>
+        @if (inner.type === "enum") {
+          @let enumValues = Object.keys(inner.def.entries);
+          @if (widget?.widget === "slider") {
+            <app-enum-slider
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [disabled]="disabled()"
+              [enumValues]="enumValues"
+              [valueI18n]="valueI18n"
+              [(value)]="value()[x.key]"
+              (valueChange)="onFieldChange()"
+            />
+          } @else if (widget?.widget === "select") {
+            <select
+              [disabled]="disabled()"
+              class="form-select"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="onFieldChange()"
+            >
+              @for (v of enumValues; track v) {
+                <option [value]="v">
+                  {{ valueI18n.replace("#", v) | translate }}
+                </option>
+              }
+            </select>
+          } @else if (widget?.widget === "radio") {
+            @for (v of enumValues; track v) {
+              <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    [name]="x.key"
+                    [(ngModel)]="value()[x.key]"
+                    [value]="v"
+                    [disabled]="disabled()"
+                  />
+                  {{ valueI18n.replace("#", v) | translate }}
+                </label>
+              </div>
+            }
+          } @else {
+            <app-toggle-btn-group
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [disabled]="disabled()"
+              [enumValues]="enumValues"
+              [(value)]="value()[x.key]"
+              (valueChange)="onFieldChange()"
+              [labelI18n]="valueI18n"
+            />
+          }
+        } @else if (inner.type === "array" && inner.def.element.type === "enum") {
+          @let enumValues = Object.keys(inner.def.element.def.entries);
+          @if (widget?.widget === "checkbox") {
+            @for (v of enumValues; track v) {
+              <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                  <input
+                    #checkbox
+                    class="form-check-input"
+                    type="checkbox"
+                    [name]="x.key"
+                    [value]="v"
+                    [disabled]="disabled()"
+                    [checked]="castArray(value()[x.key])?.includes(v)"
+                    (change)="onCheckboxArrayChange(x.key, v)"
+                  />
+                  {{ valueI18n.replace("#", v) | translate }}
+                </label>
+              </div>
+            }
+          } @else {
+            <app-toggle-btn-group
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [disabled]="disabled()"
+              [multiple]="true"
+              [enumValues]="enumValues"
+              [values]="castArray(value()[x.key])"
+              (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); onFieldChange()"
+              [labelI18n]="valueI18n"
+            />
+          }
+        } @else if (inner.type === "array" && zodUtil.isEnumWithOther(inner.def.element)) {
+          <app-enum-other
+            [disabled]="disabled()"
+            [multiple]="true"
+            [enumValues]="zodUtil.enumWithOtherValues(inner.def.element)"
+            [valueI18n]="valueI18n"
+            [zodType]="x.value"
+            [(value)]="value()[x.key]"
+            (valueChange)="onFieldChange()"
+          />
+        } @else if (inner.type === "string") {
+          @if (x.key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
+            <select
+              [disabled]="disabled()"
+              class="form-select"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="onFieldChange()"
+            >
+              <option [value]="undefined" disabled selected hidden>Select a group...</option>
+              @for (groupId of groupIdentifiers(); track groupId) {
+                <option [value]="groupId">{{ groupId }}</option>
+              }
+            </select>
+          } @else if (widget?.widget === "textarea") {
+            <textarea
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="onFieldChange()"
+              rows="5"
+              [disabled]="disabled()"
+            ></textarea>
+          } @else if (widget?.widget === "rich-text") {
+            <quill-editor
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [styles]="{ height: '200px' }"
+              [readOnly]="disabled()"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="onFieldChange()"
+            />
+          } @else {
+            <input
+              type="text"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="onFieldChange()"
+              [disabled]="disabled()"
+            />
+          }
+        } @else if (inner.type === "number") {
+          @if (x.key === "groupSize") {
+            <app-incident-group-size
+              [disabled]="disabled()"
+              [cssClass]="zodUtil.zodCssClass(x.value, value()[x.key])"
+              [labelI18n]="labelI18n()"
+              [(groupSize)]="value().groupSize"
+              (groupSizeChange)="onFieldChange()"
+              [(groupSizeUnknown)]="value().groupSizeUnknown"
+              (groupSizeUnknownChange)="onFieldChange()"
+            />
+          } @else {
+            <input
+              type="number"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="onFieldChange()"
+              [disabled]="disabled()"
+            />
+          }
+        } @else if (inner.type === "date") {
+          <app-date-time-input [disabled]="disabled()" [(value)]="value()[x.key]" (valueChange)="onFieldChange()" />
+        } @else if (inner.type === "boolean") {
+          <div class="form-check form-switch mb-0">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [disabled]="disabled()"
+              [(ngModel)]="value()[x.key]"
+              (ngModelChange)="onFieldChange()"
+              [id]="x.key + '-input'"
+            />
+          </div>
+        } @else if (zodUtil.isEnumWithOther(inner)) {
+          <app-enum-other
+            [disabled]="disabled()"
+            [enumValues]="zodUtil.enumWithOtherValues(inner)"
+            [valueI18n]="valueI18n"
+            [zodType]="x.value"
+            [(value)]="value()[x.key]"
+            (valueChange)="onFieldChange()"
+          />
+        } @else {
+          <div class="alert alert-danger" role="alert">
+            Unknown type {{ inner.type }} for key {{ x.key }}
+            <div>{{ x.key }}</div>
+            <div>{{ inner.type }}</div>
+            <div>{{ JSON.stringify(x.value) }}</div>
+          </div>
+        }
+
+        @if (zodUtil.hasValue(value()[x.key])) {
+          @if (x.value.safeParse(value()[x.key]); as parseResult) {
+            @if (parseResult.error) {
+              <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
+              <div class="invalid-feedback">
+                {{ zPrettifyError(parseResult.error) }}
+              </div>
+            }
+          }
+        }
+      </div>
+    }
+  }
+</section>

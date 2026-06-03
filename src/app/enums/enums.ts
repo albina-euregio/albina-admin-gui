@@ -70,6 +70,13 @@ export enum AvalancheType {
   loose = "loose",
   glide = "glide",
 }
+export enum IncidentAvalancheType {
+  slab = "slab",
+  loose = "loose",
+  glide = "glide",
+  cornice = "cornice",
+  unknown = "unknown",
+}
 
 export enum DangerPattern {
   dp1 = "dp1",
@@ -100,6 +107,17 @@ export enum AvalancheSize {
   medium = "medium",
   large = "large",
   very_large = "very_large",
+  extreme = "extreme",
+}
+export enum IncidentAvalancheSize {
+  small = "small",
+  small_medium = "small_medium",
+  medium = "medium",
+  medium_large = "medium_large",
+  large = "large",
+  large_very_large = "large_very_large",
+  very_large = "very_large",
+  very_large_extreme = "very_large_extreme",
   extreme = "extreme",
 }
 

@@ -25,6 +25,13 @@ export default [
     loadChildren: () => import("./danger-sources/routes"),
   },
   {
+    path: "incidents",
+    component: FullLayoutComponent,
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: "always",
+    loadChildren: () => import("./incidents/routes"),
+  },
+  {
     path: "observations",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],

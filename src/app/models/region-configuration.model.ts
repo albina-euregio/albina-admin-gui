@@ -38,6 +38,7 @@ export const RegionConfigurationSchema = z.object({
   enableAvalancheProblemNoDistinctAvalancheProblem: z.boolean().nullish(),
   enableDangerSources: z.boolean().nullish(),
   enableObservations: z.boolean().nullish(),
+  enableIncidents: z.boolean().nullish(),
   enableModelling: z.boolean().nullish(),
   enableIcon: z.boolean().nullish(),
   enableLineaExport: z.boolean().nullish(),

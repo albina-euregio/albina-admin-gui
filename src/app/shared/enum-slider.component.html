@@ -1,0 +1,9 @@
+<app-slider
+  [disabled]="disabled()"
+  [sliderOptions]="sliderOptions()"
+  [sliderValue]="sliderValue()"
+  (sliderValueChange)="onSliderEnumChange($event)"
+/>
+@if (value()) {
+  <div class="text-center">{{ valueI18n().replace("#", "" + value()) | translate }}</div>
+}

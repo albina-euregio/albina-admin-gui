@@ -508,6 +508,19 @@
           <tr>
             <td>
               <label class="col-form-label">{{
+                "admin.region-configuration.table.components.enableIncidents" | translate
+              }}</label>
+            </td>
+            <td>
+              <label class="switch switch-primary">
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableIncidents" />
+                <span class="switch-slider"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{
                 "admin.region-configuration.table.components.enableModelling" | translate
               }}</label>
             </td>

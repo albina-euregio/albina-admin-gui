@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
-import { ZSchema } from "../danger-sources/models/zod-util";
 import * as Enums from "../enums/enums";
+import { ZSchema } from "../shared/zod-util";
 import { AvalancheProblemModel, AvalancheProblemSchema } from "./avalanche-problem.model";
 
 export const BulletinDaytimeDescriptionSchema = z.object({

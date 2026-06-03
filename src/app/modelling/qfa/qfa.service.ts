@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import type { LatLngExpression } from "leaflet";
 import { firstValueFrom, map } from "rxjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { GetDustParamService } from "./dust.service";
 import { ParamService } from "./param.service";

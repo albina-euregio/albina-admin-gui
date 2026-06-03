@@ -1,0 +1,33 @@
+<app-toggle-btn-group
+  [disabled]="disabled()"
+  [multiple]="multiple()"
+  [enumValues]="enumValues()"
+  [labelI18n]="valueI18n()"
+  [value]="multiple() ? undefined : singleEnumValue()"
+  [values]="multiple() ? enumOnlyValues() : undefined"
+  (valueChange)="onEnumValueChange($event)"
+  (valuesChange)="onEnumValuesChange($event)"
+>
+  <button
+    type="reset"
+    [disabled]="disabled()"
+    [class]="otherSelected() ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'"
+    (click)="selectOther()"
+  >
+    <span>{{ valueI18n().replace("#", "Other") | translate }}</span>
+  </button>
+</app-toggle-btn-group>
+
+@if (otherSelected()) {
+  <input
+    type="text"
+    class="mt-2"
+    [class]="cssClasses()"
+    [disabled]="disabled()"
+    [ngModel]="customText()"
+    (ngModelChange)="setCustomText($event)"
+  />
+  @if (prettyError(); as error) {
+    <div class="invalid-feedback">{{ error }}</div>
+  }
+}

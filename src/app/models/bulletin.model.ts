@@ -1,9 +1,9 @@
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 import { z } from "zod/v4";
 
-import { ZSchema } from "../danger-sources/models/zod-util";
 import * as Enums from "../enums/enums";
 import { DangerRating, RegionStatus } from "../enums/enums";
+import { ZSchema } from "../shared/zod-util";
 import {
   BulletinDaytimeDescriptionModel,
   BulletinDaytimeDescriptionSchema,

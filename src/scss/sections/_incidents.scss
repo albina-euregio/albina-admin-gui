@@ -1,0 +1,190 @@
+.incident-report-container {
+  max-width: 1000px;
+  margin: $space-3 auto;
+
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $gray-800;
+  }
+
+  h4 {
+    @include font-m-medium;
+    color: $gray-700;
+  }
+
+  .nav-tabs {
+    border-bottom: 2px solid $gray-200;
+    margin-bottom: $space-4;
+
+    .nav-item {
+      margin-bottom: 0;
+    }
+
+    .nav-link {
+      @include font-m-medium;
+      border: none;
+      color: $gray-600;
+      padding: $space-2 $space-3;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.15s ease-in-out;
+      background: transparent;
+
+      &:hover {
+        border-color: transparent;
+        color: $gray-900;
+        background: $gray-100;
+      }
+
+      &.active {
+        background-color: transparent;
+        border-bottom-color: var(--bs-primary) !important;
+        color: var(--bs-primary) !important;
+        font-weight: 700;
+      }
+    }
+  }
+
+  // Make form fields compact and clean
+  .form-label {
+    @include font-s-bold;
+    margin-bottom: $space-1;
+    color: $gray-700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .form-text {
+    @include font-s;
+    margin-bottom: $space-2;
+    color: $gray-500;
+    font-style: italic;
+  }
+
+  input.form-control,
+  textarea.form-control,
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  textarea {
+    @include font-m;
+    padding: 0.375rem 0.75rem;
+    height: auto;
+    border-radius: var(--bs-border-radius-sm);
+    border-color: $gray-300;
+
+    &:focus {
+      border-color: var(--bs-primary);
+      box-shadow: 0 0 0 2px rgba(var(--bs-primary-rgb), 0.15);
+    }
+  }
+
+  select.form-select,
+  select {
+    @include font-m;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    height: auto;
+    border-radius: var(--bs-border-radius-sm);
+    border-color: $gray-300;
+
+    &:focus {
+      border-color: var(--bs-primary);
+      box-shadow: 0 0 0 2px rgba(var(--bs-primary-rgb), 0.15);
+    }
+  }
+
+  .input-group {
+    input.form-control,
+    select.form-select {
+      border-radius: var(--bs-border-radius-sm) 0 0 var(--bs-border-radius-sm);
+      + input.form-control,
+      + select.form-select {
+        border-radius: 0;
+        border-left: 0;
+      }
+    }
+    .btn {
+      border-radius: 0 var(--bs-border-radius-sm) var(--bs-border-radius-sm) 0;
+    }
+  }
+
+  .btn {
+    @include font-m-medium;
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--bs-border-radius-sm);
+  }
+
+  .form-check-label {
+    @include font-m;
+    color: $gray-700;
+  }
+
+  .form-switch .form-check-input {
+    height: 1.25rem;
+    width: 2.25rem;
+    cursor: pointer;
+  }
+
+  // Custom styling for accordion-like detail cards
+  .card {
+    border-color: $gray-200;
+    border-radius: var(--bs-border-radius-sm);
+
+    .card-header {
+      padding: $space-2 $space-3;
+      border-bottom: 1px solid $gray-200;
+      background-color: $gray-100;
+    }
+
+    .card-body {
+      padding: $space-3;
+    }
+  }
+
+  // Toggle button groups within form
+  .btn-group,
+  .toggle-btn-group {
+    .btn {
+      padding: 0.25rem 0.5rem;
+      @include font-s-medium;
+    }
+  }
+
+  .group-size-unknown-label {
+    @include font-m-medium;
+  }
+
+  // Spacing and separation between fields
+  .zod-form-field {
+    margin-top: $space-4;
+
+    &:not(.d-none) ~ .zod-form-field:not(.d-none) {
+      border-top: 1px solid $gray-200;
+      padding-top: $space-4;
+      margin-top: $space-4;
+    }
+  }
+
+  .clear-btn-embedded {
+    background: transparent;
+    color: inherit;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 1 !important;
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--bs-danger) !important;
+    }
+  }
+
+  .btn-primary .clear-btn-embedded {
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff !important;
+    }
+  }
+}

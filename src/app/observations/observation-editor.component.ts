@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
-import { zodCssClass } from "app/shared/zod-css-class";
+import { zodCssClass } from "app/shared/zod-util";
 import { orderBy, xor } from "es-toolkit";
 import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
