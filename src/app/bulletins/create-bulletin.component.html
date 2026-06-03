@@ -282,7 +282,7 @@
           [disabled]="loading || editRegions"
           type="button"
           class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
-          (click)="publish($event, getActiveDate(), true)"
+          (click)="publish($event, getActiveDate(), 'noMessages')"
           ngxMousetrapKey="mod+shift+enter"
         >
           <i class="ph ph-paper-plane-tilt"></i>

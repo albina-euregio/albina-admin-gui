@@ -414,7 +414,7 @@
                                 <button
                                   type="button"
                                   class="btn btn-outline-primary btn-sm"
-                                  (click)="publish($event, getActiveDate(), true)"
+                                  (click)="publish($event, getActiveDate(), 'noMessages')"
                                   [disabled]="isPublicationDisabled"
                                   [title]="isPublicationDisabled ? publicationDisabledReason : ''"
                                   [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
@@ -423,12 +423,14 @@
                                   <i class="ph ph-paper-plane-tilt"></i>
                                   <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
                                 </button>
-                                @if (showPublishAllButton() && !print) {
+                              </div>
+                              @if (showPublishAllButton() && !print) {
+                                <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
                                   <button
                                     type="button"
                                     class="btn btn-outline-warning btn-sm"
                                     style="--bs-btn-color: #dfd458"
-                                    (click)="publishAll(false)"
+                                    (click)="publishAll('publish')"
                                   >
                                     <i class="ph ph-warning"></i>
                                     <span>{{ "bulletins.tooltip.publishAll" | translate }}</span>
@@ -437,12 +439,34 @@
                                     type="button"
                                     class="btn btn-outline-warning btn-sm"
                                     style="--bs-btn-color: #dfd458"
-                                    (click)="publishAll(true)"
+                                    (click)="publishAll('noMessages')"
                                   >
                                     <i class="ph ph-warning"></i>
                                     <span>{{ "bulletins.tooltip.publishAllNoMessages" | translate }}</span>
                                   </button>
-                                }
+                                </div>
+                              }
+                            </li>
+                            <li class="mt-2">
+                              <div class="fw-semibold">
+                                {{ "bulletins.publicationChecklist.website.publishMinimalTitle" | translate }}
+                              </div>
+                              <div class="small text-muted mb-2">
+                                {{ "bulletins.publicationChecklist.website.publishMinimalHint" | translate }}
+                              </div>
+                              <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+                                <button
+                                  type="button"
+                                  class="btn btn-outline-primary btn-sm"
+                                  (click)="publish($event, getActiveDate(), 'minimalCAAML')"
+                                  [disabled]="isPublicationDisabled"
+                                  [title]="isPublicationDisabled ? publicationDisabledReason : ''"
+                                  [style.cursor]="isPublicationDisabled ? 'not-allowed' : null"
+                                  [style.pointer-events]="isPublicationDisabled ? 'auto' : null"
+                                >
+                                  <i class="ph ph-paper-plane-tilt"></i>
+                                  <span>{{ "bulletins.tooltip.publishMinimal" | translate }}</span>
+                                </button>
                               </div>
                             </li>
                             <li class="mt-2">
