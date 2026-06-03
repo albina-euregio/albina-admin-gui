@@ -322,10 +322,12 @@ export const AvalancheInformationSchema = z.object({
     .enum(["Yes", "No"])
     .register(widgetRegistry, { showIf: ["avalancheType", Enums.IncidentAvalancheType.slab] })
     .nullish(),
-  startZoneAspect: z.enum(Enums.Aspect).register(widgetRegistry, { valueI18n: "aspect.#" }),
-  startZoneAspectAccuracy: z.enum(["Accurate", "Uncertain"]),
-  startZoneElevation: z.number().register(widgetRegistry, { unit: "m" }),
-  startZoneElevationAccuracy: z.enum(["exact", "within50m", "within100m", "within200m", "unknown"]),
+  startZoneAspect: z.enum(Enums.Aspect).register(widgetRegistry, { class: "col-6", valueI18n: "aspect.#" }),
+  startZoneAspectAccuracy: z.enum(["Accurate", "Uncertain"]).register(widgetRegistry, { class: "col-6" }),
+  startZoneElevation: z.number().register(widgetRegistry, { class: "col-6", unit: "m" }),
+  startZoneElevationAccuracy: z
+    .enum(["exact", "within50m", "within100m", "within200m", "unknown"])
+    .register(widgetRegistry, { class: "col-6" }),
   startZoneIncline: z.number().register(widgetRegistry, { unit: "°" }).nullish(),
   startZoneTerrainType: z
     .enum([
