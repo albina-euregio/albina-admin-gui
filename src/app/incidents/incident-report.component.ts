@@ -128,7 +128,6 @@ export class IncidentReportComponent {
   }
 
   removeVictimInformation(index: number) {
-    if (index === 0) return;
     if (!confirm(`Drop victim ${index + 1}?`)) return;
     this.incidentReport().victimInformation.splice(index, 1);
   }

@@ -349,11 +349,9 @@
                       <span class="text-danger ms-2" title="Incomplete">⚠</span>
                     }
                   </div>
-                  @if ($index > 0) {
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation($index)">
-                      &minus; Remove
-                    </button>
-                  }
+                  <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation($index)">
+                    &minus; Remove
+                  </button>
                 </div>
                 @if (!isVictimCollapsed(victimInformation.anonymousVictimIdentifier)) {
                   <div class="card-body">
