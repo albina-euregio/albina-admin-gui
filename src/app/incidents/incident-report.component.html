@@ -22,7 +22,7 @@
         <select
           [disabled]="disabled()"
           id="reportStatusSelect"
-          class="form-select fw-semibold text-capitalize border"
+          class="form-select fw-semibold text-capitalize border w-auto"
           [class.bg-warning-subtle]="
             incidentReport().reportStatus === 'Draft' || incidentReport().reportStatus === 'Incomplete'
           "
