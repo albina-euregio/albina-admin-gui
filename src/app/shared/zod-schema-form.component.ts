@@ -11,7 +11,6 @@ import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumSliderComponent } from "./enum-slider.component";
 import { IncidentGroupSizeComponent } from "./incident-group-size.component";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
-import { zodCssClass } from "./zod-util";
 import * as zodUtil from "./zod-util";
 
 type IncidentSchema =
@@ -46,7 +45,6 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly JSON = JSON;
   readonly Object = Object;
   readonly widgetRegistry = widgetRegistry;
-  readonly zodCssClass = zodCssClass;
   readonly zPrettifyError = z.prettifyError;
   readonly zodUtil = zodUtil;
 

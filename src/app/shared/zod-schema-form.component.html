@@ -27,7 +27,7 @@
           @let enumValues = Object.keys(inner.def.entries);
           @if (widget?.widget === "slider") {
             <app-enum-slider
-              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
               [disabled]="disabled()"
               [enumValues]="enumValues"
               [valueI18n]="valueI18n"
@@ -38,7 +38,7 @@
             <select
               [disabled]="disabled()"
               class="form-select"
-              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
             >
@@ -66,7 +66,7 @@
             }
           } @else {
             <app-toggle-btn-group
-              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
               [disabled]="disabled()"
               [enumValues]="enumValues"
               [(value)]="value()[x.key]"
@@ -96,7 +96,7 @@
             }
           } @else {
             <app-toggle-btn-group
-              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
               [disabled]="disabled()"
               [multiple]="true"
               [enumValues]="enumValues"
@@ -110,7 +110,7 @@
             <select
               [disabled]="disabled()"
               class="form-select"
-              [class]="zodCssClass(x.value, value()[x.key])"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
             >
@@ -121,7 +121,7 @@
             </select>
           } @else if (widget?.widget === "textarea") {
             <textarea
-              [class]="zodCssClass(x.value, value()[x.key])"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
               rows="5"
@@ -129,7 +129,7 @@
             ></textarea>
           } @else if (widget?.widget === "rich-text") {
             <quill-editor
-              [class]="zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
               [styles]="{ height: '200px' }"
               [readOnly]="disabled()"
               [(ngModel)]="value()[x.key]"
@@ -138,7 +138,7 @@
           } @else {
             <input
               type="text"
-              [class]="zodCssClass(x.value, value()[x.key])"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
               [disabled]="disabled()"
@@ -148,7 +148,7 @@
           @if (x.key === "groupSize") {
             <app-incident-group-size
               [disabled]="disabled()"
-              [cssClass]="zodCssClass(x.value, value()[x.key])"
+              [cssClass]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [labelI18n]="labelI18n()"
               [(groupSize)]="value().groupSize"
               (groupSizeChange)="onFieldChange()"
@@ -158,7 +158,7 @@
           } @else {
             <input
               type="number"
-              [class]="zodCssClass(x.value, value()[x.key])"
+              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
               [disabled]="disabled()"
