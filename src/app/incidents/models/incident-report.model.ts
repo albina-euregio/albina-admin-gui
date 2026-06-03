@@ -160,6 +160,8 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
 });
 
 export const VictimInformationSchema = z.object({
+  anonymousVictimIdentifier: z.string(),
+  anonymousGroupIdentifier: z.string(),
   caught: z.enum(["Involved", "NotInvolved", "Unknown"]),
   fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]),
   burialDegree: z.enum([
@@ -170,8 +172,6 @@ export const VictimInformationSchema = z.object({
     "NotBuried",
     "Unknown",
   ]),
-  anonymousVictimIdentifier: z.string(),
-  anonymousGroupIdentifier: z.string(),
   age: z.enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"]),
   gender: z.enum(["Female", "Male", "Other"]),
   country: z.enum(["Austria", "Germany", "Italy", "Switzerland"]), // TODO [standard country list]
