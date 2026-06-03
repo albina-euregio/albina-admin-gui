@@ -1,4 +1,4 @@
-import type { z } from "zod/v4";
+import { z } from "zod/v4";
 
 // https://github.com/colinhacks/zod/issues/38#issuecomment-1938821172
 export interface ZSchemaInterface<T extends z.ZodRawShape, TObject = z.ZodObject<T>> {
@@ -60,6 +60,28 @@ export function unwrap<T extends z.ZodType>(t: T): Unwrap<T> {
 
 export function isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | z.ZodNullable | z.ZodDefault {
   return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
+}
+
+// An enum that additionally allows free-form text via an "Other" option in the UI.
+// Modelled as a union so the schema form can render the enum buttons plus a custom
+// text input (see EnumOtherComponent / isEnumWithOther).
+export function enumWithOther<T extends z.ZodEnum>(enumType: T) {
+  return z.union([enumType, z.string().min(1)]);
+}
+
+// Detects a `z.union([z.enum([...]), z.string()])` field: an enum that additionally
+// allows free-form text via an "Other" option (see model's `enumWithOther`).
+export function isEnumWithOther(zodType: z.ZodType): zodType is z.ZodUnion {
+  if (zodType.type !== "union") return false;
+  const options = (zodType as z.ZodUnion).def.options as z.ZodType[];
+  return options.some((o) => o.type === "enum") && options.some((o) => o.type === "string");
+}
+
+// Returns the enum values of an `enumWithOther` union (excluding the free-form branch).
+export function enumWithOtherValues(zodType: z.ZodType): string[] {
+  const options = (zodType as z.ZodUnion).def.options as z.ZodType[];
+  const enumOption = options.find((o) => o.type === "enum") as z.ZodEnum | undefined;
+  return enumOption ? Object.keys(enumOption.def.entries) : [];
 }
 
 export function isFieldValid(schema: z.ZodType, val: unknown): boolean {

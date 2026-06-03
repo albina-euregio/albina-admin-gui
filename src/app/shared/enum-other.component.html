@@ -1,0 +1,31 @@
+<div class="btn-group flex-wrap">
+  @for (v of enumValues(); track v) {
+    <button
+      type="reset"
+      [disabled]="disabled()"
+      [class]="value() === v ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'"
+      (click)="selectEnum(v)"
+    >
+      <span>{{ valueI18n().replace("#", v) | translate }}</span>
+    </button>
+  }
+  <button
+    type="reset"
+    [disabled]="disabled()"
+    [class]="otherSelected() ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'"
+    (click)="selectOther()"
+  >
+    <span>{{ valueI18n().replace("#", "Other") | translate }}</span>
+  </button>
+</div>
+
+@if (otherSelected()) {
+  <input
+    type="text"
+    class="mt-2"
+    [class]="cssClasses()"
+    [disabled]="disabled()"
+    [ngModel]="value()"
+    (ngModelChange)="value.set($event)"
+  />
+}

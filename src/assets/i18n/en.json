@@ -2110,7 +2110,8 @@
     "Commercial": "Commercial",
     "Industrial": "Industrial",
     "Solo": "Solo",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "Other": "Other"
   },
   "incidentTerrainType": {
     "FreeTerrain": "Free Terrain",

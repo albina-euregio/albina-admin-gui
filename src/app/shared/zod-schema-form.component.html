@@ -177,6 +177,15 @@
               [id]="x.key + '-input'"
             />
           </div>
+        } @else if (zodUtil.isEnumWithOther(inner)) {
+          <app-enum-other
+            [disabled]="disabled()"
+            [enumValues]="zodUtil.enumWithOtherValues(inner)"
+            [valueI18n]="valueI18n"
+            [zodType]="x.value"
+            [(value)]="value()[x.key]"
+            (valueChange)="onFieldChange()"
+          />
         } @else {
           <div class="alert alert-danger" role="alert">
             Unknown type {{ inner.type }} for key {{ x.key }}

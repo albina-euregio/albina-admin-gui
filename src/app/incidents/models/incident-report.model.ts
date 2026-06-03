@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
 import { widgetRegistry } from "../../shared/zod-schema-form.widget-registry";
+import { enumWithOther } from "../../shared/zod-util";
 
 export const MetaInformationSchema = z.object({
   author: z.string(),
@@ -89,15 +90,9 @@ export const LocationInformationSchema = z.object({
 
 export const GroupInformationSchema = z.object({
   anonymousGroupIdentifier: z.string(),
-  groupType: z.enum([
-    "RecreationalFamilyFriends",
-    "Club",
-    "Commercial",
-    "Industrial",
-    "Solo",
-    // "Other [text]", // TODO
-    "Unknown",
-  ]),
+  groupType: enumWithOther(
+    z.enum(["RecreationalFamilyFriends", "Club", "Commercial", "Industrial", "Solo", "Unknown"]),
+  ),
   groupSize: z.number().nullish(),
   groupSizeUnknown: z.boolean().register(widgetRegistry, { widget: "none" }).default(false),
   incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
