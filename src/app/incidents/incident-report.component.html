@@ -185,15 +185,162 @@
     @if (activeTab === "location") {
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.locationInformation" | translate }}</h4>
-        <app-zod-schema-form
-          [disabled]="disabled()"
-          [value]="incidentReport()"
-          (valueChange)="incidentReport.set($event)"
-          [zodType]="IncidentModels.LocationInformationSchema"
-          [labelI18n]="labelI18n"
-          [helpI18n]="helpI18n"
-          [showMandatoryOnly]="showMandatoryOnly"
-        />
+
+        <!-- 2. Location Map (Same width) -->
+        <div class="mb-3 position-relative">
+          <label class="form-label">Location Map</label>
+          <div style="position: relative; width: 100%">
+            <div
+              id="locationMap"
+              style="
+                height: 450px;
+                width: 100%;
+                border: 1px solid var(--bs-border-color);
+                border-radius: var(--bs-border-radius-sm);
+                z-index: 1;
+              "
+            ></div>
+
+            <!-- Map Drawing Mode & Clear Controls Overlay -->
+            <div
+              class="map-drawing-controls d-flex flex-column gap-2"
+              style="
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 1000;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 8px;
+                border-radius: var(--bs-border-radius-sm);
+                border: 1px solid var(--bs-border-color);
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+                width: 130px;
+              "
+            >
+              <div
+                class="fw-bold text-center"
+                style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--bs-gray-700)"
+              >
+                Controls
+              </div>
+
+              <!-- Point Button with Embedded Clear -->
+              <button
+                type="button"
+                class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+                [class.btn-primary]="activeDrawingMode === 'Point'"
+                [class.btn-light]="activeDrawingMode !== 'Point'"
+                (click)="onLocationTypeChange('Point')"
+                [disabled]="disabled()"
+                title="Draw Point"
+                style="font-size: 12px; padding: 4px 6px"
+              >
+                <span class="d-flex align-items-center gap-2"> <i class="ph ph-map-pin"></i> Point </span>
+                @if (hasPointData && !disabled()) {
+                  <span
+                    (click)="$event.stopPropagation(); clearPoint()"
+                    class="clear-btn-embedded d-flex align-items-center justify-content-center"
+                    title="Clear Point"
+                    style="
+                      cursor: pointer;
+                      padding: 2px;
+                      border-radius: 50%;
+                      width: 16px;
+                      height: 16px;
+                      transition: background 0.2s;
+                    "
+                  >
+                    <i class="ph ph-x" style="font-size: 10px"></i>
+                  </span>
+                }
+              </button>
+
+              <!-- Line Button with Embedded Clear -->
+              <button
+                type="button"
+                class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+                [class.btn-primary]="activeDrawingMode === 'Line'"
+                [class.btn-light]="activeDrawingMode !== 'Line'"
+                (click)="onLocationTypeChange('Line')"
+                [disabled]="disabled()"
+                title="Draw Line"
+                style="font-size: 12px; padding: 4px 6px"
+              >
+                <span class="d-flex align-items-center gap-2"> <i class="ph ph-line-segments"></i> Line </span>
+                @if (hasLineData && !disabled()) {
+                  <span
+                    (click)="$event.stopPropagation(); clearLine()"
+                    class="clear-btn-embedded d-flex align-items-center justify-content-center"
+                    title="Clear Line"
+                    style="
+                      cursor: pointer;
+                      padding: 2px;
+                      border-radius: 50%;
+                      width: 16px;
+                      height: 16px;
+                      transition: background 0.2s;
+                    "
+                  >
+                    <i class="ph ph-x" style="font-size: 10px"></i>
+                  </span>
+                }
+              </button>
+
+              <!-- Polygon Button with Embedded Clear -->
+              <button
+                type="button"
+                class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+                [class.btn-primary]="activeDrawingMode === 'Polygon'"
+                [class.btn-light]="activeDrawingMode !== 'Polygon'"
+                (click)="onLocationTypeChange('Polygon')"
+                [disabled]="disabled()"
+                title="Draw Polygon"
+                style="font-size: 12px; padding: 4px 6px"
+              >
+                <span class="d-flex align-items-center gap-2"> <i class="ph ph-polygon"></i> Polygon </span>
+                @if (hasPolygonData && !disabled()) {
+                  <span
+                    (click)="$event.stopPropagation(); clearPolygon()"
+                    class="clear-btn-embedded d-flex align-items-center justify-content-center"
+                    title="Clear Polygon"
+                    style="
+                      cursor: pointer;
+                      padding: 2px;
+                      border-radius: 50%;
+                      width: 16px;
+                      height: 16px;
+                      transition: background 0.2s;
+                    "
+                  >
+                    <i class="ph ph-x" style="font-size: 10px"></i>
+                  </span>
+                }
+              </button>
+            </div>
+          </div>
+          <div class="form-text text-muted mt-2">
+            @if (activeDrawingMode === "Point") {
+              Click anywhere on the map to place the location marker.
+            } @else if (activeDrawingMode === "Line") {
+              Click on the map to add points to the line.
+            } @else {
+              Click on the map to define the corners/vertices of the polygon.
+            }
+          </div>
+        </div>
+
+        <!-- 5. Location Information Schema Form -->
+        <div class="mb-3">
+          <app-zod-schema-form
+            [disabled]="disabled()"
+            [value]="incidentReport()"
+            (valueChange)="onLocationFormChange($event)"
+            [zodType]="IncidentModels.LocationInformationSchema"
+            [labelI18n]="labelI18n"
+            [helpI18n]="helpI18n"
+            [showMandatoryOnly]="showMandatoryOnly"
+          />
+        </div>
       </div>
     }
 

@@ -167,4 +167,39 @@
       margin-top: $space-4;
     }
   }
+
+  // Show latitude and longitude fields side-by-side in one line
+  #latitude,
+  #longitude {
+    display: inline-block;
+    width: calc(50% - 10px);
+    vertical-align: top;
+    border-top: none !important;
+    padding-top: 0 !important;
+    margin-top: $space-4 !important;
+  }
+
+  #latitude {
+    margin-right: 20px;
+  }
+
+  .clear-btn-embedded {
+    background: transparent;
+    color: inherit;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 1 !important;
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--bs-danger) !important;
+    }
+  }
+
+  .btn-primary .clear-btn-embedded {
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff !important;
+    }
+  }
 }

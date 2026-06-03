@@ -1,6 +1,6 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
-    @if (x.key !== "reportStatus" && x.key !== "groupSizeUnknown") {
+    @if (x.key !== "reportStatus" && x.key !== "groupSizeUnknown" && x.key !== "locationType") {
       @let inner = unwrap(x.value);
       @let widget = widgetRegistry.get(inner);
       @let valueI18n = widget?.valueI18n || `${x.key}.#`;
@@ -36,7 +36,7 @@
               [enumValues]="enumValues"
               [valueI18n]="valueI18n"
               [(value)]="value()[x.key]"
-              (valueChange)="value.set(value())"
+              (valueChange)="onFieldChange()"
             />
           } @else if (widget?.widget === "select") {
             <select
@@ -44,7 +44,7 @@
               class="form-select"
               [class]="zodCssClass(x.value, value()[x.key], '')"
               [(ngModel)]="value()[x.key]"
-              (ngModelChange)="value.set(value())"
+              (ngModelChange)="onFieldChange()"
             >
               @for (v of enumValues; track v) {
                 <option [value]="v">
@@ -74,7 +74,7 @@
               [disabled]="disabled()"
               [enumValues]="enumValues"
               [(value)]="value()[x.key]"
-              (valueChange)="value.set(value())"
+              (valueChange)="onFieldChange()"
               [labelI18n]="valueI18n"
             />
           }
@@ -105,7 +105,7 @@
               [multiple]="true"
               [enumValues]="enumValues"
               [values]="castArray(value()[x.key])"
-              (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); value.set(value())"
+              (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); onFieldChange()"
               [labelI18n]="valueI18n"
             />
           }
@@ -116,7 +116,7 @@
               class="form-select"
               [class]="zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
-              (ngModelChange)="value.set(value())"
+              (ngModelChange)="onFieldChange()"
             >
               <option [value]="undefined" disabled selected hidden>Select a group...</option>
               @for (groupId of groupIdentifiers(); track groupId) {
@@ -127,7 +127,7 @@
             <textarea
               [class]="zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
-              (ngModelChange)="value.set(value())"
+              (ngModelChange)="onFieldChange()"
               rows="5"
               [disabled]="disabled()"
             ></textarea>
@@ -137,14 +137,14 @@
               [styles]="{ height: '200px' }"
               [readOnly]="disabled()"
               [(ngModel)]="value()[x.key]"
-              (ngModelChange)="value.set(value())"
+              (ngModelChange)="onFieldChange()"
             />
           } @else {
             <input
               type="text"
               [class]="zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
-              (ngModelChange)="value.set(value())"
+              (ngModelChange)="onFieldChange()"
               [disabled]="disabled()"
             />
           }
@@ -155,21 +155,21 @@
               [cssClass]="zodCssClass(x.value, value()[x.key])"
               [labelI18n]="labelI18n()"
               [(groupSize)]="value().groupSize"
-              (groupSizeChange)="value.set(value())"
+              (groupSizeChange)="onFieldChange()"
               [(groupSizeUnknown)]="value().groupSizeUnknown"
-              (groupSizeUnknownChange)="value.set(value())"
+              (groupSizeUnknownChange)="onFieldChange()"
             />
           } @else {
             <input
               type="number"
               [class]="zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
-              (ngModelChange)="value.set(value())"
+              (ngModelChange)="onFieldChange()"
               [disabled]="disabled()"
             />
           }
         } @else if (inner.type === "date") {
-          <app-date-time-input [disabled]="disabled()" [(value)]="value()[x.key]" (valueChange)="value.set(value())" />
+          <app-date-time-input [disabled]="disabled()" [(value)]="value()[x.key]" (valueChange)="onFieldChange()" />
         } @else if (inner.type === "boolean") {
           <div class="form-check form-switch mb-0">
             <input
@@ -177,7 +177,7 @@
               class="form-check-input"
               [disabled]="disabled()"
               [(ngModel)]="value()[x.key]"
-              (ngModelChange)="value.set(value())"
+              (ngModelChange)="onFieldChange()"
               [id]="x.key + '-input'"
             />
           </div>

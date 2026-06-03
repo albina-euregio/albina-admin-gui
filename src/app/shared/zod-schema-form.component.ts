@@ -102,10 +102,17 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return allowed.includes(val as string);
   }
 
+  onFieldChange() {
+    const val = this.value();
+    if (val) {
+      this.value.set({ ...val });
+    }
+  }
+
   onCheckboxArrayChange(key: string, v: string): void {
     const value = this.value();
     Object.assign(value, { [key]: xor(this.castArray(value[key]) ?? [], [v]) });
-    this.value.set(value);
+    this.onFieldChange();
   }
 
   readonly showMandatoryOnly = input<boolean>(false);

@@ -66,6 +66,8 @@ export const LocationInformationSchema = z.object({
       "unknown",
     ])
     .register(widgetRegistry, { widget: "slider" }),
+  lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
   country: z.string().nullish(),
   region: z.string().nullish(),
   // TODO Multilanguage?
