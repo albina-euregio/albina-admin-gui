@@ -375,17 +375,17 @@ export const IncidentAnalysisSchema = z.object({
 export const IncidentAttachmentSchema = z.object({
   uuid: z.uuid().nullish(),
   dateAdded: z.coerce.date(),
-  file: z.file().optional(),
-  fileName: z.string().optional(),
-  mediaType: z.string().optional(),
+  file: z.file().nullish(),
+  fileName: z.string().nullish(),
+  mediaType: z.string().nullish(),
   attachmentTags: enumWithOther(z.enum(["Picture", "PoliceReport", "MedicalReport"]))
     .array()
-    .optional(),
-  altText: z.string().optional(),
-  credit: z.string().optional(),
-  caption: z.string().optional(),
-  public: z.boolean().optional(),
-  attachmentCategory: z.enum(["Incident", "Avalanche", "Snowpack", "Group", "Person", "Weather"]).optional(),
+    .nullish(),
+  altText: z.string().nullish(),
+  credit: z.string().nullish(),
+  caption: z.string().nullish(),
+  public: z.boolean().nullish(),
+  attachmentCategory: z.enum(["Incident", "Avalanche", "Snowpack", "Group", "Person", "Weather"]).nullish(),
 });
 
 export const IncidentReportSchema = z.object({
