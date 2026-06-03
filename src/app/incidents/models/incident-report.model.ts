@@ -50,7 +50,11 @@ export const GeneralInformationSchema = z.object({
 
   reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]),
 
-  externalLink: z.url().nullish(),
+  publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+
+  privateExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+
+  privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
