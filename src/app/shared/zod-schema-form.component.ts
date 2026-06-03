@@ -13,6 +13,7 @@ import { EnumSliderComponent } from "./enum-slider.component";
 import { IncidentGroupSizeComponent } from "./incident-group-size.component";
 import { zodCssClass } from "./zod-css-class";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
+import * as zodUtil from "./zod-util";
 
 @Component({
   selector: "app-zod-schema-form",
@@ -35,6 +36,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly widgetRegistry = widgetRegistry;
   readonly zodCssClass = zodCssClass;
   readonly zPrettifyError = z.prettifyError;
+  readonly zodUtil = zodUtil;
 
   readonly value = model<V>();
 
@@ -94,15 +96,11 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return x as unknown[];
   }
 
-  hasValue(val: unknown): boolean {
-    return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
-  }
-
   readonly showMandatoryOnly = input<boolean>(false);
 
   shouldShowField(schema: z.ZodType): boolean {
-    if (this.showMandatoryOnly() && this.isFieldOptional(schema)) return false;
-    const showIf = widgetRegistry.get(this.unwrap(schema))?.showIf;
+    if (this.showMandatoryOnly() && zodUtil.isFieldOptional(schema)) return false;
+    const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;
     if (!showIf || showIf.length < 2) return true;
     const [key, ...allowed] = showIf;
     const val = this.value()?.[key];
@@ -120,18 +118,5 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     const value = this.value();
     Object.assign(value, { [key]: xor(this.castArray(value[key]) ?? [], [v]) });
     this.onFieldChange();
-  }
-
-  unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber | z.ZodBoolean {
-    while (this.isFieldOptional(t)) {
-      t = t.unwrap() as T;
-    }
-    return t;
-  }
-  isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | z.ZodNullable | z.ZodDefault {
-    return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
-  }
-  isFieldValid(schema: z.ZodType, val: unknown): boolean {
-    return this.hasValue(val) && schema.safeParse(val).success;
   }
 }

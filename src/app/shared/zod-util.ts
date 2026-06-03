@@ -43,3 +43,22 @@ export function zEnumValues<T extends z.util.EnumLike>(
       return x.options;
   }
 }
+
+export function unwrap<T extends z.ZodType>(t: T): T | z.ZodNumber | z.ZodBoolean {
+  while (isFieldOptional(t)) {
+    t = t.unwrap() as T;
+  }
+  return t;
+}
+
+export function isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | z.ZodNullable | z.ZodDefault {
+  return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
+}
+
+export function isFieldValid(schema: z.ZodType, val: unknown): boolean {
+  return hasValue(val) && schema.safeParse(val).success;
+}
+
+export function hasValue(val: unknown): boolean {
+  return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
+}

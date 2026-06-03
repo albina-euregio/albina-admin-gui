@@ -1,7 +1,7 @@
 <section>
   @for (x of zodObject().shape | keyvalue: null; track x) {
     @if (x.key !== "reportStatus" && x.key !== "groupSizeUnknown" && x.key !== "locationType") {
-      @let inner = unwrap(x.value);
+      @let inner = zodUtil.unwrap(x.value);
       @let widget = widgetRegistry.get(inner);
       @let valueI18n = widget?.valueI18n || `${x.key}.#`;
       <div [class.d-none]="!shouldShowField(x.value)" class="zod-form-field" [id]="x.key">
@@ -10,8 +10,8 @@
           @if (widget?.unit) {
             <span class="text-muted">[{{ widget.unit }}]</span>
           }
-          @if (!isFieldOptional(x.value)) {
-            @if (isFieldValid(x.value, value()[x.key])) {
+          @if (!zodUtil.isFieldOptional(x.value)) {
+            @if (zodUtil.isFieldValid(x.value, value()[x.key])) {
               <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
             } @else {
               <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
@@ -186,7 +186,7 @@
           </div>
         }
 
-        @if (hasValue(value()[x.key])) {
+        @if (zodUtil.hasValue(value()[x.key])) {
           @if (x.value.safeParse(value()[x.key]); as parseResult) {
             @if (parseResult.error) {
               <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
