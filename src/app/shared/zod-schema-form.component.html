@@ -105,6 +105,16 @@
               [labelI18n]="valueI18n"
             />
           }
+        } @else if (inner.type === "array" && zodUtil.isEnumWithOther(inner.def.element)) {
+          <app-enum-other
+            [disabled]="disabled()"
+            [multiple]="true"
+            [enumValues]="zodUtil.enumWithOtherValues(inner.def.element)"
+            [valueI18n]="valueI18n"
+            [zodType]="x.value"
+            [(value)]="value()[x.key]"
+            (valueChange)="onFieldChange()"
+          />
         } @else if (inner.type === "string") {
           @if (x.key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
             <select

@@ -29,15 +29,9 @@ export const GeneralInformationSchema = z.object({
   ]),
 
   sourceOfInformation: z.array(
-    z.enum([
-      "PublicObservation",
-      "AWSInternal",
-      "AWSObserver",
-      "DispatchCentre",
-      "Police",
-      "MountainRescue",
-      // "Other [text]", // TODO
-    ]),
+    enumWithOther(
+      z.enum(["PublicObservation", "AWSInternal", "AWSObserver", "DispatchCentre", "Police", "MountainRescue"]),
+    ),
   ),
 
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
@@ -96,37 +90,30 @@ export const GroupInformationSchema = z.object({
   groupSize: z.number().nullish(),
   groupSizeUnknown: z.boolean().register(widgetRegistry, { widget: "none" }).default(false),
   incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
-  typeOfControlledTerrain: z
-    .enum([
-      "IndoorInsideBuilding",
-      "Street",
-      "TrainTrack",
-      "SkiAreaResort",
-      "CrossCountryTrack",
-      "SledgingTrack",
-      // "Other [text]", // TODO
-    ])
-    .nullish(),
-  incidentActivity: z.enum([
-    "Touring",
-    "Freeriding",
-    "SkiingSnowboarding",
-    "Snowmobiling",
-    "Mountaineering",
-    "IceClimbing",
-    "Snowshoeing",
-    "HikingOnFoot",
-    "CrossCountrySkiing",
-    "HuntingFishing",
-    "Sledging",
-    "Snowbiking",
-    "Biking",
-    "InsideVehicle",
-    "Unknown",
-    // "Other [text] ", // TODO
-  ]),
-  travelDirection: z
-    .enum([
+  typeOfControlledTerrain: enumWithOther(
+    z.enum(["IndoorInsideBuilding", "Street", "TrainTrack", "SkiAreaResort", "CrossCountryTrack", "SledgingTrack"]),
+  ).nullish(),
+  incidentActivity: enumWithOther(
+    z.enum([
+      "Touring",
+      "Freeriding",
+      "SkiingSnowboarding",
+      "Snowmobiling",
+      "Mountaineering",
+      "IceClimbing",
+      "Snowshoeing",
+      "HikingOnFoot",
+      "CrossCountrySkiing",
+      "HuntingFishing",
+      "Sledging",
+      "Snowbiking",
+      "Biking",
+      "InsideVehicle",
+      "Unknown",
+    ]),
+  ),
+  travelDirection: enumWithOther(
+    z.enum([
       "Ascending",
       "Descending",
       "Stationary",
@@ -134,16 +121,9 @@ export const GroupInformationSchema = z.object({
       "MovingOnPeaksRidges",
       "SnowmobileHighMarking",
       "CrossingRunouts",
-      // "Other [text]", // TODO
-    ])
-    .nullish(),
-  vehicleType: z.enum([
-    "Car",
-    "Bus",
-    "SnowPlower",
-    "Snowcat",
-    // "Other [text]" // TODO
-  ]),
+    ]),
+  ).nullish(),
+  vehicleType: enumWithOther(z.enum(["Car", "Bus", "SnowPlower", "Snowcat"])),
   avalancheGear: z.enum(["All", "Some", "None", "Unknown"]),
   groupInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
@@ -183,66 +163,36 @@ export const VictimInformationSchema = z.object({
   country: z.enum(["Austria", "Germany", "Italy", "Switzerland"]), // TODO [standard country list]
   workingAtTime: z.enum(["Yes", "No"]),
   leaderAtTime: z.enum(["Yes", "No"]),
-  professionalCertification: z.enum([
-    "IFMGAGuide",
-    "FullSkiGuide",
-    "AvalancheProfessional",
-    "AvalancheEducator",
-    // "Other [text]",
-  ]),
-  avalancheTraining: z.enum([
-    "None",
-    "Awareness",
-    "BasicREC",
-    "AdvancedREC",
-    "Professional",
-    // "Other [text]"
-  ]),
+  professionalCertification: enumWithOther(
+    z.enum(["IFMGAGuide", "FullSkiGuide", "AvalancheProfessional", "AvalancheEducator"]),
+  ),
+  avalancheTraining: enumWithOther(z.enum(["None", "Awareness", "BasicREC", "AdvancedREC", "Professional"])),
   yearsActive: z.enum(["UpTo2Years", "From3To9Years", "From10Years"]),
   transceiver: z.enum(["NoTransceiver", "TransceiverOn", "TransceiverOff"]),
   shovel: z.enum(["Yes", "No"]),
   probe: z.enum(["Yes", "No"]),
   airbag: z.enum(["NoAirbag", "AirbagDeployed", "AirbagUndeployed"]),
   helmet: z.enum(["Yes", "No"]),
-  terrainTrap: z.enum([
-    "None",
-    "Cliff",
-    "Trees",
-    "Gully",
-    "Depression",
-    "Bench",
-    "Boulder",
-    "CrevasseOrBergschrund",
-    // "Other [text]",
-  ]),
+  terrainTrap: enumWithOther(
+    z.enum(["None", "Cliff", "Trees", "Gully", "Depression", "Bench", "Boulder", "CrevasseOrBergschrund"]),
+  ),
   burialDepth: z.number().register(widgetRegistry, { unit: "cm" }).nullish(),
   burialDuration: z.string().register(widgetRegistry, { unit: "dd:hh:mm" }).nullish(),
-  primaryLocationMethod: z.enum([
-    "NotBuried",
-    "SelfExtraction",
-    "VisualClues",
-    "TransceiverProbeShovel",
-    "SpotProbing",
-    "ProbeLine",
-    "Recco",
-    "RescueDog",
-    "Snowmelt",
-    // "Other [text]",
-  ]),
-  rescuedBy: z.enum([
-    "Self",
-    "Companion",
-    "OtherGroup",
-    "OrganizedRescue",
-    "Unknown",
-    // "Other[text]"
-  ]),
-  medicalIntervention: z.enum([
-    "CPR",
-    "ALS",
-    "ECMO",
-    // "Other [text]"
-  ]),
+  primaryLocationMethod: enumWithOther(
+    z.enum([
+      "NotBuried",
+      "SelfExtraction",
+      "VisualClues",
+      "TransceiverProbeShovel",
+      "SpotProbing",
+      "ProbeLine",
+      "Recco",
+      "RescueDog",
+      "Snowmelt",
+    ]),
+  ),
+  rescuedBy: enumWithOther(z.enum(["Self", "Companion", "OtherGroup", "OrganizedRescue", "Unknown"])),
+  medicalIntervention: enumWithOther(z.enum(["CPR", "ALS", "ECMO"])),
   estimatedTimeOfDeath: z.enum([
     "DuringTheAvalanche",
     "DuringBurial",
@@ -250,12 +200,7 @@ export const VictimInformationSchema = z.object({
     "DuringTransport",
     "InHospital",
   ]),
-  causeOfDeath: z.enum([
-    "Asphyxiation",
-    "TraumaticInjury",
-    "Hypothermia",
-    // "Other[text]"
-  ]),
+  causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"])),
   respiratoryCavity: z.enum(["Yes", "No"]),
   injurySeverity: z.enum(["Minor", "Moderate", "Major"]),
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
@@ -284,8 +229,8 @@ export const AvalancheInformationSchema = z.object({
     .enum(["High", "Low"])
     .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.person] })
     .nullish(),
-  explosives: z
-    .enum([
+  explosives: enumWithOther(
+    z.enum([
       "Artillery",
       "CaseCharge",
       "CorniceControlledByExplosives",
@@ -296,17 +241,11 @@ export const AvalancheInformationSchema = z.object({
       "Avalauncher",
       "PrePlacedRemotelyDetonated",
       "TramOrRopewayDelivery",
-      // "Other [text]",
-    ])
+    ]),
+  )
     .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.explosives] })
     .nullish(),
-  vehicle: z
-    .enum([
-      "OverSnowVehicle",
-      "Snowmobile",
-      "Helicopter",
-      // "Other [text]",
-    ])
+  vehicle: enumWithOther(z.enum(["OverSnowVehicle", "Snowmobile", "Helicopter"]))
     .register(widgetRegistry, { showIf: ["trigger", Trigger.def.entries.vehicle] })
     .nullish(),
   accidentalControlled: z
@@ -324,8 +263,8 @@ export const AvalancheInformationSchema = z.object({
     .enum(["exact", "within50m", "within100m", "within200m", "unknown"])
     .register(widgetRegistry, { class: "col-6" }),
   startZoneIncline: z.number().register(widgetRegistry, { unit: "°" }).nullish(),
-  startZoneTerrainType: z
-    .enum([
+  startZoneTerrainType: enumWithOther(
+    z.enum([
       "AlpineBowl",
       "Couloir",
       "NearRidgeCrest",
@@ -342,8 +281,8 @@ export const AvalancheInformationSchema = z.object({
       "LeewardSlope",
       "WindwardSlope",
       "IceWaterfall",
-      // "Other [text]",
-    ])
+    ]),
+  )
     .array()
     .nullish(),
   slabWidth: z
@@ -394,16 +333,7 @@ export const AvalancheInformationSchema = z.object({
   avalancheMoistureDeposit: z.enum(["Dry", "Moist", "Wet"]).nullish(),
   depositHeight: z.string().register(widgetRegistry, { unit: "cm" }).nullish(),
   depositWidth: z.string().register(widgetRegistry, { unit: "m" }).nullish(),
-  debrisType: z
-    .enum([
-      "Fine",
-      "Blocks",
-      "Hard",
-      "Soft",
-      "Rocks",
-      "Trees",
-      // "Other [text]"
-    ])
+  debrisType: enumWithOther(z.enum(["Fine", "Blocks", "Hard", "Soft", "Rocks", "Trees"]))
     .array()
     .nullish(),
   debrisDensity: z.string().register(widgetRegistry, { unit: "kg/m³" }).nullish(),
@@ -414,15 +344,9 @@ export const AvalancheInformationSchema = z.object({
 export const OtherDamagesSchema = z.object({
   otherDamages: z.enum(["Yes", "No"]),
 
-  damagedAssets: z
-    .enum([
-      "Vehicle",
-      "Forest",
-      "Agriculture",
-      "Livestock",
-      "UtilitiesTechnicalInfrastructure",
-      // "Other [text]", // TODO
-    ])
+  damagedAssets: enumWithOther(
+    z.enum(["Vehicle", "Forest", "Agriculture", "Livestock", "UtilitiesTechnicalInfrastructure"]),
+  )
     .array()
     .register(widgetRegistry, { showIf: ["otherDamages", "Yes"] })
     .nullish(),
@@ -454,13 +378,7 @@ export const IncidentAttachmentSchema = z.object({
   file: z.file().optional(),
   fileName: z.string().optional(),
   mediaType: z.string().optional(),
-  attachmentTags: z
-    .enum([
-      "Picture",
-      "PoliceReport",
-      "MedicalReport",
-      // "Other [text]"
-    ])
+  attachmentTags: enumWithOther(z.enum(["Picture", "PoliceReport", "MedicalReport"]))
     .array()
     .optional(),
   altText: z.string().optional(),

@@ -2056,7 +2056,8 @@
     "AWSObserver": "AWS Observer",
     "DispatchCentre": "Dispatch Centre",
     "Police": "Police",
-    "MountainRescue": "Mountain Rescue"
+    "MountainRescue": "Mountain Rescue",
+    "Other": "Other"
   },
   "otherDamages": {
     "Yes": "Yes",
@@ -2067,7 +2068,8 @@
     "Forest": "Forest",
     "Agriculture": "Agriculture",
     "Livestock": "Livestock",
-    "UtilitiesTechnicalInfrastructure": "Utilities or Technical Infrastructure"
+    "UtilitiesTechnicalInfrastructure": "Utilities or Technical Infrastructure",
+    "Other": "Other"
   },
   "timeAccuracy": {
     "exact": "exact",
@@ -2125,7 +2127,8 @@
     "TrainTrack": "Train Track",
     "SkiAreaResort": "Ski Area Resort",
     "CrossCountryTrack": "Cross Country Track",
-    "SledgingTrack": "Sledging Track"
+    "SledgingTrack": "Sledging Track",
+    "Other": "Other"
   },
   "incidentActivity": {
     "Touring": "Touring",
@@ -2142,7 +2145,8 @@
     "Snowbiking": "Snowbiking",
     "Biking": "Biking",
     "InsideVehicle": "Inside Vehicle",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "Other": "Other"
   },
   "travelDirection": {
     "Ascending": "Ascending",
@@ -2151,13 +2155,15 @@
     "Traversing": "Traversing",
     "MovingOnPeaksRidges": "Moving on peaks/ridges",
     "SnowmobileHighMarking": "Snowmobile High Marking",
-    "CrossingRunouts": "Crossing Runouts"
+    "CrossingRunouts": "Crossing Runouts",
+    "Other": "Other"
   },
   "vehicleType": {
     "Car": "Car",
     "Bus": "Bus",
     "SnowPlower": "Snow Plower",
-    "Snowcat": "Snowcat"
+    "Snowcat": "Snowcat",
+    "Other": "Other"
   },
   "avalancheGear": {
     "All": "All",
@@ -2186,12 +2192,14 @@
     "HelicopterBomb": "Helicopter bomb",
     "Avalauncher": "Avalauncher and other types of launchers",
     "PrePlacedRemotelyDetonated": "Pre-placed remotely detonated explosive charge",
-    "TramOrRopewayDelivery": "Tram or ropeway delivery system"
+    "TramOrRopewayDelivery": "Tram or ropeway delivery system",
+    "Other": "Other"
   },
   "vehicle": {
     "OverSnowVehicle": "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
     "Snowmobile": "Snowmobile",
-    "Helicopter": "Helicopter (e.g. on landing, approach)"
+    "Helicopter": "Helicopter (e.g. on landing, approach)",
+    "Other": "Other"
   },
   "startZoneElevationAccuracy": {
     "exact": "exact",
@@ -2216,7 +2224,8 @@
     "WoodPath": "Wood Path",
     "LeewardSlope": "Leeward Slope",
     "WindwardSlope": "Windward Slope",
-    "IceWaterfall": "Ice Waterfall"
+    "IceWaterfall": "Ice Waterfall",
+    "Other": "Other"
   },
   "weakLayerLocation": {
     "WithinNewSnow": "Within new snow",
@@ -2230,7 +2239,8 @@
     "Hard": "Hard",
     "Soft": "Soft",
     "Rocks": "Rocks",
-    "Trees": "Trees"
+    "Trees": "Trees",
+    "Other": "Other"
   },
   "avalancheMoistureStartZone": {
     "Dry": "Dry",
@@ -2326,14 +2336,16 @@
     "IFMGAGuide": "IFMGA Guide",
     "FullSkiGuide": "Full Ski guide, Ski Instructor, Apprentice Guide",
     "AvalancheProfessional": "Avalanche Professional",
-    "AvalancheEducator": "Avalanche Educator"
+    "AvalancheEducator": "Avalanche Educator",
+    "Other": "Other"
   },
   "avalancheTraining": {
     "None": "None",
     "Awareness": "Awareness",
     "BasicREC": "Basic REC",
     "AdvancedREC": "Advanced REC",
-    "Professional": "Professional"
+    "Professional": "Professional",
+    "Other": "Other"
   },
   "yearsActive": {
     "UpTo2Years": "≤ 2 yrs",
@@ -2370,7 +2382,8 @@
     "Depression": "Depression",
     "Bench": "Bench",
     "Boulder": "Boulder",
-    "CrevasseOrBergschrund": "Crevasse or Bergschrund"
+    "CrevasseOrBergschrund": "Crevasse or Bergschrund",
+    "Other": "Other"
   },
   "primaryLocationMethod": {
     "NotBuried": "Not Buried",
@@ -2381,19 +2394,22 @@
     "ProbeLine": "Probe Line",
     "Recco": "Recco",
     "RescueDog": "Rescue Dog",
-    "Snowmelt": "Snowmelt"
+    "Snowmelt": "Snowmelt",
+    "Other": "Other"
   },
   "rescuedBy": {
     "Self": "Self",
     "Companion": "Companion",
     "OtherGroup": "Other Group",
     "OrganizedRescue": "Organized Rescue",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "Other": "Other"
   },
   "medicalIntervention": {
     "CPR": "CPR",
     "ALS": "ALS",
-    "ECMO": "ECMO"
+    "ECMO": "ECMO",
+    "Other": "Other"
   },
   "estimatedTimeOfDeath": {
     "DuringTheAvalanche": "During the avalanche",
@@ -2405,7 +2421,8 @@
   "causeOfDeath": {
     "Asphyxiation": "Asphyxiation",
     "TraumaticInjury": "Traumatic injury",
-    "Hypothermia": "Hypothermia"
+    "Hypothermia": "Hypothermia",
+    "Other": "Other"
   },
   "respiratoryCavity": {
     "Yes": "Yes",
@@ -2434,7 +2451,8 @@
   "attachmentTags": {
     "Picture": "Picture",
     "PoliceReport": "Police Report",
-    "MedicalReport": "Medical Report"
+    "MedicalReport": "Medical Report",
+    "Other": "Other"
   },
   "attachmentCategory": {
     "Incident": "Incident",

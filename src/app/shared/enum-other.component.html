@@ -3,8 +3,8 @@
     <button
       type="reset"
       [disabled]="disabled()"
-      [class]="value() === v ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'"
-      (click)="selectEnum(v)"
+      [class]="isSelected(v) ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'"
+      (click)="toggleEnum(v)"
     >
       <span>{{ valueI18n().replace("#", v) | translate }}</span>
     </button>
@@ -25,7 +25,10 @@
     class="mt-2"
     [class]="cssClasses()"
     [disabled]="disabled()"
-    [ngModel]="value()"
-    (ngModelChange)="value.set($event)"
+    [ngModel]="customText()"
+    (ngModelChange)="setCustomText($event)"
   />
+  @if (prettyError(); as error) {
+    <div class="invalid-feedback">{{ error }}</div>
+  }
 }
