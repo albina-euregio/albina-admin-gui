@@ -12,9 +12,20 @@ export const MetaInformationSchema = z.object({
 export const GeneralInformationSchema = z.object({
   dateTime: z.coerce.date(),
 
-  timeAccuracy: z
-    .enum(["exact", "PT15M", "PT30M", "PT1H", "PT2H", "PT4H", "PT6H", "PT12H", "P1D", "P2D", "P3D", "unknown"])
-    .register(widgetRegistry, { widget: "slider" }),
+  timeAccuracy: z.enum([
+    "exact",
+    "PT15M",
+    "PT30M",
+    "PT1H",
+    "PT2H",
+    "PT4H",
+    "PT6H",
+    "PT12H",
+    "P1D",
+    "P2D",
+    "P3D",
+    "unknown",
+  ]),
 
   sourceOfInformation: z.array(
     z.enum([
@@ -49,23 +60,21 @@ export const LocationInformationSchema = z.object({
   location: z.string(),
   latitude: z.number(),
   longitude: z.number(),
-  locationAccuracy: z
-    .enum([
-      "exact",
-      "within15m",
-      "within30m",
-      "within100m",
-      "within250m",
-      "within500m",
-      "within1km",
-      "within2km",
-      "within5km",
-      "within10km",
-      "within20km",
-      "within50km",
-      "unknown",
-    ])
-    .register(widgetRegistry, { widget: "slider" }),
+  locationAccuracy: z.enum([
+    "exact",
+    "within15m",
+    "within30m",
+    "within100m",
+    "within250m",
+    "within500m",
+    "within1km",
+    "within2km",
+    "within5km",
+    "within10km",
+    "within20km",
+    "within50km",
+    "unknown",
+  ]),
   lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
   polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
   country: z.string().nullish(),
