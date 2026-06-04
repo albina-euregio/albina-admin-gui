@@ -2,6 +2,7 @@ import { Component, inject, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 import { AvalancheProblem, DangerRating } from "app/enums/enums";
+import { grainShapes } from "app/observations/grain.shapes";
 
 import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
 import { DangerRatingIconComponent } from "./danger-rating-icon.component";
@@ -64,5 +65,10 @@ export class ToggleBtnGroup<T> {
 
   castDangerRating(x: unknown) {
     return x as DangerRating;
+  }
+
+  readonly grainShapes = grainShapes;
+  castGrainShape(x: unknown) {
+    return x as keyof typeof grainShapes;
   }
 }

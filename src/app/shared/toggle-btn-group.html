@@ -13,6 +13,9 @@
     <app-avalanche-problem-icons [value]="castAvalancheProblem(enumValue)" />
     }@else if(widget() === 'dangerRating') {
     <app-danger-rating [value]="castDangerRating(enumValue)" />
+    }@else if(widget() === 'grainShape') {
+    <span>{{ label(enumValue) }}</span>
+    <span style="font-family: snowsymbolsiacs"> {{ grainShapes[castGrainShape(enumValue)]?.key }} </span>
     } @else {
     <span>{{ label(enumValue) }}</span>
     }
