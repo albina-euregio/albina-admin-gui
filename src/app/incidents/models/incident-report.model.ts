@@ -341,15 +341,16 @@ export const AvalancheInformationSchema = z.object({
     .register(widgetRegistry, { class: "bg-weak-layer" })
     .nullish(),
   bedSurfaceStepped: z.enum(["Yes", "No"]).nullish(),
-  avalancheMoistureStartZone: z.enum(["Dry", "Moist", "Wet", "Unknown"]),
-  avalancheMoistureDeposit: z.enum(["Dry", "Moist", "Wet"]).nullish(),
-  depositHeight: z.string().register(widgetRegistry, { unit: "cm" }).nullish(),
-  depositWidth: z.string().register(widgetRegistry, { unit: "m" }).nullish(),
+  avalancheMoistureStartZone: z.enum(["Dry", "Moist", "Wet", "Unknown"]).register(widgetRegistry, { class: "col-6" }),
+  avalancheMoistureDeposit: z.enum(["Dry", "Moist", "Wet"]).register(widgetRegistry, { class: "col-6" }).nullish(),
+  depositHeight: z.string().register(widgetRegistry, { class: "col-4", unit: "cm" }).nullish(),
+  depositWidth: z.string().register(widgetRegistry, { class: "col-4", unit: "m" }).nullish(),
+  depositElevation: z.string().register(widgetRegistry, { class: "col-4", unit: "m" }).nullish(),
   debrisType: enumWithOther(z.enum(["Fine", "Blocks", "Hard", "Soft", "Rocks", "Trees"]))
     .array()
+    .register(widgetRegistry, { class: "col-6" })
     .nullish(),
-  debrisDensity: z.string().register(widgetRegistry, { unit: "kg/m³" }).nullish(),
-  depositElevation: z.string().register(widgetRegistry, { unit: "m" }).nullish(),
+  debrisDensity: z.string().register(widgetRegistry, { class: "col-6", unit: "kg/m³" }).nullish(),
   avalancheDetailsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
