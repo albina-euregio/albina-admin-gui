@@ -14,6 +14,7 @@ export interface WidgetType {
     | "rich-text"
     | "none"
     | "aspect"
+    | "dangerRating"
     | "avalancheProblem";
 }
 

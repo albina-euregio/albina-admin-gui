@@ -1,16 +1,18 @@
 import { Component, inject, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
-import { AvalancheProblem } from "app/enums/enums";
+import { AvalancheProblem, DangerRating } from "app/enums/enums";
 
 import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
+import { DangerRatingIconComponent } from "./danger-rating-icon.component";
+import { DangerRatingComponent } from "./danger-rating.component";
 import type { WidgetType } from "./zod-schema-form.widget-registry";
 
 @Component({
   selector: "app-toggle-btn-group",
   templateUrl: "toggle-btn-group.html",
   standalone: true,
-  imports: [FormsModule, AvalancheProblemIconsComponent],
+  imports: [FormsModule, AvalancheProblemIconsComponent, DangerRatingIconComponent, DangerRatingComponent],
 })
 export class ToggleBtnGroup<T> {
   translateService = inject(TranslateService);
@@ -58,5 +60,9 @@ export class ToggleBtnGroup<T> {
 
   castAvalancheProblem(x: unknown) {
     return x as AvalancheProblem;
+  }
+
+  castDangerRating(x: unknown) {
+    return x as DangerRating;
   }
 }

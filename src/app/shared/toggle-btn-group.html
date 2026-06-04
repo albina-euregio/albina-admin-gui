@@ -11,6 +11,8 @@
   >
     @if(widget() === 'avalancheProblem') {
     <app-avalanche-problem-icons [value]="castAvalancheProblem(enumValue)" />
+    }@else if(widget() === 'dangerRating') {
+    <app-danger-rating [value]="castDangerRating(enumValue)" />
     } @else {
     <span>{{ label(enumValue) }}</span>
     }
