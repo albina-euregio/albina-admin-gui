@@ -94,7 +94,9 @@ export const GroupInformationSchema = z.object({
   incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
   typeOfControlledTerrain: enumWithOther(
     z.enum(["IndoorInsideBuilding", "Street", "TrainTrack", "SkiAreaResort", "CrossCountryTrack", "SledgingTrack"]),
-  ).nullish(),
+  )
+    .register(widgetRegistry, { showIf: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"] })
+    .nullish(),
   incidentActivity: enumWithOther(
     z.enum([
       "Touring",
