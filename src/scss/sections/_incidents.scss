@@ -1,3 +1,5 @@
+@import "bootstrap/scss/variables";
+
 .incident-report-container {
   max-width: 1000px;
   margin: $space-3 auto;
@@ -11,6 +13,17 @@
   h4 {
     @include font-m-medium;
     color: $gray-700;
+  }
+
+  // https://getbootstrap.com/docs/5.3/customize/color/
+  .bg-incident-trigger {
+    background-color: $indigo-100;
+  }
+  .bg-start-zone {
+    background-color: $teal-100;
+  }
+  .bg-weak-layer {
+    background-color: $cyan-100;
   }
 
   .nav-tabs {
@@ -159,12 +172,10 @@
 
   // Spacing and separation between fields
   .zod-form-field {
-    margin-top: $space-4;
-
     &:not(.d-none) ~ .zod-form-field:not(.d-none) {
       border-top: 1px solid $gray-200;
       padding-top: $space-4;
-      margin-top: $space-4;
+      padding-bottom: $space-4;
     }
   }
 
