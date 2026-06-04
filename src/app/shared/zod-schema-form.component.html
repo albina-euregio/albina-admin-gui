@@ -64,6 +64,14 @@
                 </label>
               </div>
             }
+          } @else if (widget?.widget === "aspect") {
+            <app-aspects
+              [aspects]="[castAspect(value()[x.key])]"
+              (aspectsChange)="Object.assign(value(), Object.fromEntries([[x.key, $event[0]]])); onFieldChange()"
+              [disabled]="disabled()"
+              [singleton]="true"
+              [size]="120"
+            />
           } @else {
             <app-toggle-btn-group
               [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"

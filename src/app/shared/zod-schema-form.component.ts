@@ -1,12 +1,14 @@
 import { Component, computed, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+import { Aspect } from "app/enums/enums";
 import { xor } from "es-toolkit";
 import { QuillModule } from "ngx-quill";
 import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import type * as IncidentModels from "../incidents/models/incident-report.model";
+import { AspectsComponent } from "./aspects.component";
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumOtherComponent } from "./enum-other.component";
 import { EnumSliderComponent } from "./enum-slider.component";
@@ -32,6 +34,7 @@ type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
   templateUrl: "zod-schema-form.component.html",
   standalone: true,
   imports: [
+    AspectsComponent,
     DateTimeInputComponent,
     EnumOtherComponent,
     EnumSliderComponent,
@@ -64,6 +67,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   castArray(x: unknown) {
     return x as unknown[];
+  }
+  castAspect(x: unknown) {
+    return x as Aspect;
   }
 
   readonly showMandatoryOnly = input<boolean>(false);

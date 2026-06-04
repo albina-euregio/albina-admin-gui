@@ -266,7 +266,7 @@ export const AvalancheInformationSchema = z.object({
     .nullish(),
   startZoneAspect: z
     .enum(Enums.Aspect)
-    .register(widgetRegistry, { class: "col-6 bg-start-zone", valueI18n: "aspect.#" }),
+    .register(widgetRegistry, { class: "col-6 bg-start-zone", valueI18n: "aspect.#", widget: "aspect" }),
   startZoneAspectAccuracy: z.enum(["Accurate", "Uncertain"]).register(widgetRegistry, { class: "col-6 bg-start-zone" }),
   startZoneElevation: z.number().register(widgetRegistry, { class: "col-6 bg-start-zone", unit: "m" }),
   startZoneElevationAccuracy: z
