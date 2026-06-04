@@ -337,9 +337,8 @@
           <div>
             <h4 class="mb-3 text-secondary">{{ "incidentReport.involvementsFatalitiesBurials" | translate }}</h4>
             <app-zod-schema-form
-              [disabled]="disabled()"
-              [value]="incidentReport()"
-              (valueChange)="incidentReport.set($event)"
+              [disabled]="true"
+              [value]="involvementsFatalitiesBurials"
               [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
               [labelI18n]="labelI18n"
               [helpI18n]="helpI18n"

@@ -82,6 +82,26 @@ export const LocationInformationSchema = z.object({
   locationInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
+const incidentTerrainType = z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]);
+const incidentActivity = enumWithOther(
+  z.enum([
+    "Touring",
+    "Freeriding",
+    "SkiingSnowboarding",
+    "Snowmobiling",
+    "Mountaineering",
+    "IceClimbing",
+    "Snowshoeing",
+    "HikingOnFoot",
+    "CrossCountrySkiing",
+    "HuntingFishing",
+    "Sledging",
+    "Snowbiking",
+    "Biking",
+    "InsideVehicle",
+    "Unknown",
+  ]),
+);
 export const GroupInformationSchema = z.object({
   anonymousGroupIdentifier: z.string(),
   groupType: enumWithOther(
@@ -91,31 +111,13 @@ export const GroupInformationSchema = z.object({
   groupSizeAccuracy: z
     .enum(["Exact", "Approximately", "AtLeast", "Unknown"])
     .register(widgetRegistry, { class: "col-6" }),
-  incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
+  incidentTerrainType,
   typeOfControlledTerrain: enumWithOther(
     z.enum(["IndoorInsideBuilding", "Street", "TrainTrack", "SkiAreaResort", "CrossCountryTrack", "SledgingTrack"]),
   )
     .register(widgetRegistry, { showIf: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"] })
     .nullish(),
-  incidentActivity: enumWithOther(
-    z.enum([
-      "Touring",
-      "Freeriding",
-      "SkiingSnowboarding",
-      "Snowmobiling",
-      "Mountaineering",
-      "IceClimbing",
-      "Snowshoeing",
-      "HikingOnFoot",
-      "CrossCountrySkiing",
-      "HuntingFishing",
-      "Sledging",
-      "Snowbiking",
-      "Biking",
-      "InsideVehicle",
-      "Unknown",
-    ]),
-  ),
+  incidentActivity,
   travelDirection: enumWithOther(
     z.enum([
       "Ascending",
@@ -134,19 +136,18 @@ export const GroupInformationSchema = z.object({
 export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
 export const InvolvementsFatalitiesBurialsSchema = z.object({
-  numberOfGroups: z.number().nullish(),
-  activities: z.string().nullish(),
-  terrainTypes: z.string().nullish(),
-  fatalities: z.number().nullish(),
-  injuredSurvivors: z.number().nullish(),
-  uninjuredSurvivors: z.number().nullish(),
-  caughtOnly: z.number().nullish(),
-  fullyBuried: z.number().nullish(),
-  partlyBuriedHeadCovered: z.number().nullish(),
-  partlyBuriedHeadUncovered: z.number().nullish(),
-  partlyBuried: z.number().nullish(),
-  numberInvolved: z.number().nullish(),
-  involvementsFatalitiesBurialsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  numberOfGroups: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
+  numberInvolved: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
+  incidentActivity: incidentActivity.array().nullish(),
+  incidentTerrainType: incidentTerrainType.array().nullish(),
+  fatalities: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  injuredSurvivors: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  uninjuredSurvivors: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  caughtOnly: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  fullyBuried: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  partlyBuriedHeadCovered: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  partlyBuriedHeadUncovered: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  partlyBuried: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
 });
 
 export const VictimInformationSchema = z.object({
@@ -398,7 +399,6 @@ export const IncidentReportSchema = z.object({
   ...LocationInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
   personInvolvement: z.enum(["Yes", "No", "Unknown"]),
-  ...InvolvementsFatalitiesBurialsSchema.shape,
   ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array(),
   victimInformation: VictimInformationSchema.array(),

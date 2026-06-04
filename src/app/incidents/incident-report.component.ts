@@ -1,7 +1,8 @@
-import { Component, inject, input, model, OnDestroy, OnInit } from "@angular/core";
+import { Component, computed, inject, input, model, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { uniq } from "es-toolkit";
 import {
   Map as LeafletMap,
   TileLayer,
@@ -133,6 +134,32 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       attachments: [],
     } satisfies Partial<IncidentReport>) as IncidentReport,
   );
+
+  get involvementsFatalitiesBurials() {
+    const groups = this.incidentReport().groupInformation ?? [];
+    const victims = this.incidentReport().victimInformation ?? [];
+    const caughtOnly = victims.filter(
+      (v) => v.caught === "Involved" && (!v.burialDegree || v.burialDegree === "NotBuried"),
+    ).length;
+    const fullyBuried = victims.filter((v) => v.burialDegree === "FullyBuried").length;
+    const partlyBuriedHeadCovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadCovered").length;
+    const partlyBuriedHeadUncovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadUncovered").length;
+    const partlyBuried = victims.filter((v) => v.burialDegree === "PartlyBuried").length;
+    return IncidentModels.InvolvementsFatalitiesBurialsSchema.parse({
+      numberOfGroups: groups.length,
+      numberInvolved: caughtOnly + fullyBuried + partlyBuriedHeadCovered + partlyBuriedHeadUncovered + partlyBuried,
+      incidentActivity: uniq(groups.map((g) => g.incidentActivity).filter(Boolean)),
+      incidentTerrainType: uniq(groups.map((g) => g.incidentTerrainType).filter(Boolean)),
+      fatalities: victims.filter((v) => v.fatalInjured === "Fatal").length,
+      injuredSurvivors: victims.filter((v) => v.fatalInjured === "Injured").length,
+      uninjuredSurvivors: victims.filter((v) => v.fatalInjured === "Uninjured").length,
+      caughtOnly,
+      fullyBuried,
+      partlyBuriedHeadCovered,
+      partlyBuriedHeadUncovered,
+      partlyBuried,
+    } satisfies z.infer<typeof IncidentModels.InvolvementsFatalitiesBurialsSchema>);
+  }
 
   newGroupInformation() {
     const anonymousGroupIdentifier = this.translateService.instant("incidentReportUI.groupName", {
