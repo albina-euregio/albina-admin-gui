@@ -6,12 +6,12 @@ import { xor } from "es-toolkit";
 import { QuillModule } from "ngx-quill";
 import { z } from "zod/v4";
 
-import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import type * as IncidentModels from "../incidents/models/incident-report.model";
 import { AspectsComponent } from "./aspects.component";
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumOtherComponent } from "./enum-other.component";
 import { EnumSliderComponent } from "./enum-slider.component";
+import { ToggleBtnGroup } from "./toggle-btn-group";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
 import * as zodUtil from "./zod-util";
 

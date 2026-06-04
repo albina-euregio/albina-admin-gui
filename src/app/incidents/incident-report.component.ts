@@ -18,9 +18,9 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { z } from "zod/v4";
 
-import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import * as IncidentModels from "./models/incident-report.model";
 import { IncidentReport } from "./models/incident-report.model";

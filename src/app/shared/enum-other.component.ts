@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { z } from "zod/v4";
 
-import { ToggleBtnGroup } from "../danger-sources/toggle-btn-group";
+import { ToggleBtnGroup } from "./toggle-btn-group";
 import { zodCssClass } from "./zod-util";
 
 /**
