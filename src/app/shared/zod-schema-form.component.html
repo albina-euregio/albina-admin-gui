@@ -77,9 +77,11 @@
               [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
               [disabled]="disabled()"
               [enumValues]="enumValues"
+              btn-
               [(value)]="value()[x.key]"
               (valueChange)="onFieldChange()"
               [labelI18n]="valueI18n"
+              [widget]="widget?.widget"
             />
           }
         } @else if (inner.type === "array" && inner.def.element.type === "enum") {
@@ -111,6 +113,7 @@
               [values]="castArray(value()[x.key])"
               (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); onFieldChange()"
               [labelI18n]="valueI18n"
+              [widget]="widget?.widget"
             />
           }
         } @else if (inner.type === "array" && zodUtil.isEnumWithOther(inner.def.element)) {

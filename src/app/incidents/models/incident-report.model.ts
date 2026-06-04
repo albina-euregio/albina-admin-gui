@@ -39,7 +39,7 @@ export const GeneralInformationSchema = z.object({
 
   dangerRating: z.enum(Enums.DangerRating),
 
-  avalancheProblem: z.enum(Enums.AvalancheProblem).array(),
+  avalancheProblem: z.enum(Enums.AvalancheProblem).array().register(widgetRegistry, { widget: "avalancheProblem" }),
 
   dangerPattern: z.enum(Enums.DangerPattern).array(),
 
@@ -219,7 +219,7 @@ export const AvalancheInformationSchema = z.object({
   avalancheType: z.enum(Enums.IncidentAvalancheType),
   relevantAvalancheProblem: z
     .enum(Enums.AvalancheProblem)
-    .register(widgetRegistry, { valueI18n: "avalancheProblem.#" })
+    .register(widgetRegistry, { valueI18n: "avalancheProblem.#", widget: "avalancheProblem" })
     .nullish(),
   trigger: Trigger.register(widgetRegistry, { class: "bg-incident-trigger" }).nullish(),
   natural: z

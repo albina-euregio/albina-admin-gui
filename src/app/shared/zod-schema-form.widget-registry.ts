@@ -1,9 +1,20 @@
 import { z } from "zod/v4";
 
-export const widgetRegistry = z.registry<{
+export interface WidgetType {
   class?: string;
   unit?: string;
   valueI18n?: `${string}#${string}`;
   showIf?: string[];
-  widget?: "slider" | "radio" | "checkbox" | "select" | "textarea" | "rich-text" | "none" | "aspect";
-}>();
+  widget?:
+    | "slider"
+    | "radio"
+    | "checkbox"
+    | "select"
+    | "textarea"
+    | "rich-text"
+    | "none"
+    | "aspect"
+    | "avalancheProblem";
+}
+
+export const widgetRegistry = z.registry<WidgetType>();

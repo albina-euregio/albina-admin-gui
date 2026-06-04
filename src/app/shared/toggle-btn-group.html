@@ -9,7 +9,11 @@
     data-toggle="tooltip"
     [title]="title(enumValue)"
   >
+    @if(widget() === 'avalancheProblem') {
+    <app-avalanche-problem-icons [value]="castAvalancheProblem(enumValue)" />
+    } @else {
     <span>{{ label(enumValue) }}</span>
+    }
   </button>
   }
   <ng-content></ng-content>

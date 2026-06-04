@@ -1,12 +1,16 @@
 import { Component, inject, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
+import { AvalancheProblem } from "app/enums/enums";
+
+import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
+import type { WidgetType } from "./zod-schema-form.widget-registry";
 
 @Component({
   selector: "app-toggle-btn-group",
   templateUrl: "toggle-btn-group.html",
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, AvalancheProblemIconsComponent],
 })
 export class ToggleBtnGroup<T> {
   translateService = inject(TranslateService);
@@ -22,6 +26,7 @@ export class ToggleBtnGroup<T> {
   disabled = input<boolean>(false);
   labelI18n = input<`${string}#${string}`>();
   titleI18n = input<"" | `${string}#${string}`>("");
+  widget = input<WidgetType["widget"]>(undefined);
 
   isSelected(v: T) {
     return this.value() === v || this.values()?.includes(v);
@@ -49,5 +54,9 @@ export class ToggleBtnGroup<T> {
   title(v: T) {
     const key = (this.titleI18n() || this.labelI18n()).replace("#", String(v));
     return this.translateService.instant(key);
+  }
+
+  castAvalancheProblem(x: unknown) {
+    return x as AvalancheProblem;
   }
 }
