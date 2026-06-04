@@ -328,14 +328,14 @@ export const AvalancheInformationSchema = z.object({
   weakLayerName: z.string().register(widgetRegistry, { class: "bg-weak-layer" }).nullish(),
   weakLayerGrainType1: z
     .enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"])
-    .register(widgetRegistry, { class: "bg-weak-layer", valueI18n: "grainShape.#.code", widget: "grainShape" })
+    .register(widgetRegistry, { class: "bg-weak-layer col-8", valueI18n: "grainShape.#.code", widget: "grainShape" })
     .nullish(),
+  weakLayerGrainSize1: z.number().register(widgetRegistry, { class: "bg-weak-layer col-4" }).nullish(),
   weakLayerGrainType2: z
     .enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"])
-    .register(widgetRegistry, { class: "bg-weak-layer", valueI18n: "grainShape.#.code", widget: "grainShape" })
+    .register(widgetRegistry, { class: "bg-weak-layer col-8", valueI18n: "grainShape.#.code", widget: "grainShape" })
     .nullish(),
-  weakLayerGrainSize1: z.number().register(widgetRegistry, { class: "bg-weak-layer" }).nullish(),
-  weakLayerGrainSize2: z.number().register(widgetRegistry, { class: "bg-weak-layer" }).nullish(),
+  weakLayerGrainSize2: z.number().register(widgetRegistry, { class: "bg-weak-layer col-4" }).nullish(),
   weakLayerLocation: z
     .enum(["WithinNewSnow", "AtInterfaceWithOldSnow", "WithinOldSnowpack", "NearTheGround"])
     .register(widgetRegistry, { class: "bg-weak-layer" })
