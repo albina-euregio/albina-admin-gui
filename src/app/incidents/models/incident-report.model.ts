@@ -87,8 +87,10 @@ export const GroupInformationSchema = z.object({
   groupType: enumWithOther(
     z.enum(["RecreationalFamilyFriends", "Club", "Commercial", "Industrial", "Solo", "Unknown"]),
   ),
-  groupSize: z.number().nullish(),
-  groupSizeUnknown: z.boolean().register(widgetRegistry, { widget: "none" }).default(false),
+  groupSize: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
+  groupSizeAccuracy: z
+    .enum(["Exact", "Approximately", "AtLeast", "Unknown"])
+    .register(widgetRegistry, { class: "col-6" }),
   incidentTerrainType: z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]),
   typeOfControlledTerrain: enumWithOther(
     z.enum(["IndoorInsideBuilding", "Street", "TrainTrack", "SkiAreaResort", "CrossCountryTrack", "SledgingTrack"]),

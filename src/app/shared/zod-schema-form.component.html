@@ -155,25 +155,13 @@
             />
           }
         } @else if (inner.type === "number") {
-          @if (x.key === "groupSize") {
-            <app-incident-group-size
-              [disabled]="disabled()"
-              [cssClass]="zodUtil.zodCssClass(x.value, value()[x.key])"
-              [labelI18n]="labelI18n()"
-              [(groupSize)]="value().groupSize"
-              (groupSizeChange)="onFieldChange()"
-              [(groupSizeUnknown)]="value().groupSizeUnknown"
-              (groupSizeUnknownChange)="onFieldChange()"
-            />
-          } @else {
-            <input
-              type="number"
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
-              [(ngModel)]="value()[x.key]"
-              (ngModelChange)="onFieldChange()"
-              [disabled]="disabled()"
-            />
-          }
+          <input
+            type="number"
+            [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
+            [(ngModel)]="value()[x.key]"
+            (ngModelChange)="onFieldChange()"
+            [disabled]="disabled()"
+          />
         } @else if (inner.type === "date") {
           <app-date-time-input [disabled]="disabled()" [(value)]="value()[x.key]" (valueChange)="onFieldChange()" />
         } @else if (inner.type === "boolean") {

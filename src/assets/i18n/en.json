@@ -1774,7 +1774,7 @@
     "anonymousGroupIdentifier": "Anonymous Group Identifier",
     "groupType": "Group Type",
     "groupSize": "Group Size",
-    "groupSizeUnknown": "Group Size unknown",
+    "groupSizeAccuracy": "Group Size Accuracy",
     "incidentTerrainType": "Terrain Type",
     "typeOfControlledTerrain": "Type of Controlled Terrain",
     "incidentActivity": "Activity",
@@ -1930,7 +1930,7 @@
     "anonymousGroupIdentifier": "This is used to identify the group throughout the report. For example, you might refer to Group 1, Group 2, etc when reporting on a incident. You could add specific details if it helps keep track of which group is which. If appropriate, you can use the same identifier when referencing this group in the Incident Description.",
     "groupType": "Select the option that best describes the type of group.",
     "groupSize": "Provide the total number of individuals in the group.",
-    "groupSizeUnknown": "Select “Yes” if the total number of individuals in the group is unknown. Note: This field is automatically set to “Yes” if the avalanche was human-triggered or if individuals were impacted.",
+    "groupSizeAccuracy": "Indicate how accurately the group size is known.",
     "incidentTerrainType": "Select the terrain type where people were located at the time of the avalanche. Free terrain refers to areas without any human infrastructure.",
     "typeOfControlledTerrain": "",
     "incidentActivity": "",
@@ -2114,6 +2114,12 @@
     "Solo": "Solo",
     "Unknown": "Unknown",
     "Other": "Other"
+  },
+  "groupSizeAccuracy": {
+    "Exact": "Exact",
+    "Approximately": "Approximately",
+    "AtLeast": "At Least",
+    "Unknown": "Unknown"
   },
   "incidentTerrainType": {
     "FreeTerrain": "Free Terrain",

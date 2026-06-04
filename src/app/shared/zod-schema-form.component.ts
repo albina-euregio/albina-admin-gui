@@ -10,7 +10,6 @@ import type * as IncidentModels from "../incidents/models/incident-report.model"
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumOtherComponent } from "./enum-other.component";
 import { EnumSliderComponent } from "./enum-slider.component";
-import { IncidentGroupSizeComponent } from "./incident-group-size.component";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
 import * as zodUtil from "./zod-util";
 
@@ -37,7 +36,6 @@ type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
     EnumOtherComponent,
     EnumSliderComponent,
     FormsModule,
-    IncidentGroupSizeComponent,
     QuillModule,
     ToggleBtnGroup,
     TranslateModule,
