@@ -75,6 +75,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly showMandatoryOnly = input<boolean>(false);
 
   isPublicField(key: string): boolean {
+    if (key === "public") return true;
     if (!key.endsWith("Public")) return false;
     const baseKey = key.slice(0, -6);
     const shape = this.zodType()?.shape;

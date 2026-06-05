@@ -2,6 +2,7 @@ import { Component, computed, inject, input, model, OnDestroy, OnInit } from "@a
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { environment } from "environments/environment";
 import { uniq } from "es-toolkit";
 import {
   Map as LeafletMap,
@@ -190,6 +191,20 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return IncidentModels.GroupInformationSchema.safeParse(group).success;
   }
 
+  collapsedAttachments: Record<string, boolean> = {};
+
+  toggleAttachmentCollapse(fileName: string) {
+    this.collapsedAttachments[fileName] = !this.collapsedAttachments[fileName];
+  }
+
+  isAttachmentCollapsed(fileName: string): boolean {
+    return !!this.collapsedAttachments[fileName];
+  }
+
+  isAttachmentValid(attachment: any): boolean {
+    return IncidentModels.IncidentAttachmentSchema.safeParse(attachment).success;
+  }
+
   newVictimInformation() {
     const anonymousVictimIdentifier = this.translateService.instant("incidentReportUI.victimName", {
       name: Math.random(),
@@ -248,6 +263,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.locationMapInstance) {
       this.locationMapInstance.remove();
+    }
+    if (this.incidentReport()?.attachments) {
+      for (const attachment of this.incidentReport().attachments as any[]) {
+        if (attachment._previewUrl) {
+          URL.revokeObjectURL(attachment._previewUrl);
+        }
+      }
     }
   }
 
@@ -467,13 +489,17 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!file) {
       return;
     }
-    this.incidentReport().attachments.push({
+    const attachment: any = {
       dateAdded: new Date(),
       dateCreated: undefined as unknown as Date,
       file,
       fileName: file.name,
       mediaType: file.type,
-    });
+    };
+    if (file.type.startsWith("image/")) {
+      attachment._previewUrl = URL.createObjectURL(file);
+    }
+    this.incidentReport().attachments.push(attachment);
   }
 
   removeAttachment(index: number) {
@@ -482,6 +508,23 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       fileName: attachments[index].fileName,
     });
     if (!confirm(message)) return;
+    const attachment = attachments[index] as any;
+    if (attachment._previewUrl) {
+      URL.revokeObjectURL(attachment._previewUrl);
+    }
     attachments.splice(index, 1);
+  }
+
+  getAttachmentPreviewUrl(attachment: any): string | null {
+    if (attachment.file && attachment.file.type.startsWith("image/")) {
+      if (!attachment._previewUrl) {
+        attachment._previewUrl = URL.createObjectURL(attachment.file);
+      }
+      return attachment._previewUrl;
+    }
+    if (attachment.uuid && attachment.mediaType?.startsWith("image/")) {
+      return `${environment.apiBaseUrl}media/${attachment.uuid}`;
+    }
+    return null;
   }
 }
