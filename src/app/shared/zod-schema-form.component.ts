@@ -74,12 +74,26 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   readonly showMandatoryOnly = input<boolean>(false);
 
-  shouldShowField(schema: z.ZodType): boolean {
+  isPublicField(key: string): boolean {
+    if (!key.endsWith("Public")) return false;
+    const baseKey = key.slice(0, -6);
+    const shape = this.zodType()?.shape;
+    return !!shape && baseKey in shape;
+  }
+
+  hasPublicField(key: string): boolean {
+    const shape = this.zodType()?.shape;
+    if (!shape) return false;
+    return key + "Public" in shape;
+  }
+
+  shouldShowField(key: string, schema: z.ZodType): boolean {
+    if (this.isPublicField(key)) return false;
     if (this.showMandatoryOnly() && zodUtil.isFieldOptional(schema)) return false;
     const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;
     if (!showIf || showIf.length < 2) return true;
-    const [key, ...allowed] = showIf;
-    const val = this.value()?.[key];
+    const [key2, ...allowed] = showIf;
+    const val = this.value()?.[key2];
     return allowed.includes(val as string);
   }
 

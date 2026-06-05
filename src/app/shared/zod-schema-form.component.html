@@ -4,18 +4,44 @@
     @let widget = widgetRegistry.get(inner);
     @if (widget?.widget !== "none") {
       @let valueI18n = widget?.valueI18n || `${x.key}.#`;
-      <div [class.d-none]="!shouldShowField(x.value)" class="zod-form-field" [class]="widget?.class" [id]="x.key">
-        <div class="form-label d-flex align-items-center gap-2">
-          <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
-          @if (widget?.unit) {
-            <span class="text-muted">[{{ widget.unit }}]</span>
-          }
-          @if (!zodUtil.isFieldOptional(x.value)) {
-            @if (zodUtil.isFieldValid(x.value, value()[x.key])) {
-              <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
-            } @else {
-              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
+      <div
+        [class.d-none]="!shouldShowField(x.key, x.value)"
+        class="zod-form-field"
+        [class]="widget?.class"
+        [id]="x.key"
+      >
+        <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100">
+          <div class="d-flex align-items-center gap-2">
+            <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
+            @if (widget?.unit) {
+              <span class="text-muted">[{{ widget.unit }}]</span>
             }
+            @if (!zodUtil.isFieldOptional(x.value)) {
+              @if (zodUtil.isFieldValid(x.value, value()[x.key])) {
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
+              } @else {
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
+              }
+            }
+          </div>
+          @if (hasPublicField(x.key)) {
+            <div class="form-switch mb-0 d-flex align-items-center gap-2 p-0">
+              <label
+                class="form-check-label text-secondary cursor-pointer"
+                [attr.for]="x.key + 'Public-input'"
+                style="font-size: 11px; text-transform: none"
+              >
+                {{ labelI18n().replace("#", x.key + "Public") | translate }}
+              </label>
+              <input
+                type="checkbox"
+                class="form-check-input public-switch ms-0 mt-0 float-none"
+                [disabled]="disabled()"
+                [(ngModel)]="value()[x.key + 'Public']"
+                (ngModelChange)="onFieldChange()"
+                [id]="x.key + 'Public-input'"
+              />
+            </div>
           }
         </div>
         <div class="form-text">
