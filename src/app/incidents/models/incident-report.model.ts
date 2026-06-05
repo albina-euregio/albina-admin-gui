@@ -391,20 +391,20 @@ export const IncidentAnalysisSchema = z.object({
 });
 
 export const IncidentAttachmentSchema = z.object({
-  uuid: z.uuid().nullish(),
-  dateAdded: z.coerce.date(),
-  dateCreated: z.coerce.date(),
+  uuid: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
+  dateAdded: z.coerce.date().register(widgetRegistry, { widget: "none" }),
   file: z.file().register(widgetRegistry, { widget: "none" }).nullish(),
-  fileName: z.string().nullish(),
-  mediaType: z.string().nullish(),
+  fileName: z.string().register(widgetRegistry, { widget: "none" }).nullish(),
+  mediaType: z.string().register(widgetRegistry, { widget: "none" }).nullish(),
+  dateCreated: z.coerce.date(),
+  credit: z.string(),
+  caption: z.string().nullish(),
+  altText: z.string().nullish(),
+  public: z.boolean().nullish(),
+  attachmentCategory: z.enum(["Incident", "Avalanche", "Snowpack", "Group", "Person", "Weather"]).nullish(),
   attachmentTags: enumWithOther(z.enum(["Picture", "PoliceReport", "MedicalReport"]))
     .array()
     .nullish(),
-  altText: z.string().nullish(),
-  credit: z.string().nullish(),
-  caption: z.string().nullish(),
-  public: z.boolean().nullish(),
-  attachmentCategory: z.enum(["Incident", "Avalanche", "Snowpack", "Group", "Person", "Weather"]).nullish(),
 });
 
 export const IncidentReportSchema = z.object({
