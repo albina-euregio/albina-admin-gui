@@ -469,6 +469,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     }
     this.incidentReport().attachments.push({
       dateAdded: new Date(),
+      dateCreated: undefined as unknown as Date,
       file,
       fileName: file.name,
       mediaType: file.type,

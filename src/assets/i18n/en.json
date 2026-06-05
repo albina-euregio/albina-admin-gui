@@ -1885,6 +1885,7 @@
 
     "uuid": "UUID",
     "dateAdded": "Date Added",
+    "dateCreated": "Date Created",
     "file": "File",
     "fileName": "File Name",
     "mediaType": "Media Type",
@@ -2042,6 +2043,7 @@
 
     "uuid": "UUID",
     "dateAdded": "Date is derived from when the attachment was uploaded",
+    "dateCreated": "Date when the attachment was captured or created",
     "file": "File",
     "fileName": "Derived from original file name of uploaded attachment",
     "mediaType": "",

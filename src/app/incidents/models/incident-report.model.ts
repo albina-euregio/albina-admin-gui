@@ -393,6 +393,7 @@ export const IncidentAnalysisSchema = z.object({
 export const IncidentAttachmentSchema = z.object({
   uuid: z.uuid().nullish(),
   dateAdded: z.coerce.date(),
+  dateCreated: z.coerce.date(),
   file: z.file().register(widgetRegistry, { widget: "none" }).nullish(),
   fileName: z.string().nullish(),
   mediaType: z.string().nullish(),
