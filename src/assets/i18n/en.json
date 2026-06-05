@@ -1718,7 +1718,7 @@
     "removeGroup": "Remove Group",
     "removeVictim": "Remove Victim",
     "required": "Required",
-    "showMandatoryFieldsOnly": "Show Mandatory Fields Only",
+    "showMandatoryFieldsOnly": "Required only",
     "valid": "Valid",
     "victimName": "Victim {{name}}"
   },
