@@ -382,7 +382,7 @@ export const IncidentAnalysisSchema = z.object({
   signsOfInstability: z.enum(["Present", "Absent", "Unknown"]).nullish(),
   recentLoading: z.enum(["Present", "Absent", "Unknown"]).nullish(),
   criticalWarming: z.enum(["Present", "Absent", "Unknown"]).nullish(),
-  incidentAnalysisComment: z.string().nullish(),
+  incidentAnalysisComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
 export const IncidentAttachmentSchema = z.object({
