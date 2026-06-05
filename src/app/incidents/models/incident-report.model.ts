@@ -363,6 +363,11 @@ export const OtherDamagesSchema = z.object({
     .array()
     .register(widgetRegistry, { showIf: ["otherDamages", "Yes"] })
     .nullish(),
+
+  otherDamagesComment: z
+    .string()
+    .register(widgetRegistry, { widget: "textarea", showIf: ["otherDamages", "Yes"] })
+    .nullish(),
 });
 
 export const IncidentAnalysisSchema = z.object({
