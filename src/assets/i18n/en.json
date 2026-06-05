@@ -1923,8 +1923,8 @@
     "latitude": "Provide the coordinates of the center of the fracture crown.",
     "longitude": "Provide the coordinates of the center of the fracture crown.",
     "locationAccuracy": "Estimate the accuracy of the latitude/longitude coordinates.",
-    "lineCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) or draw a line on the map.",
-    "polygonCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) or draw a polygon on the map.",
+    "lineCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) for the avalanche path.",
+    "polygonCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) for the avalanche outline.",
     "locationInformationComment": "Add any additional relevant details.",
 
     "anonymousGroupIdentifier": "This is used to identify the group throughout the report. For example, you might refer to Group 1, Group 2, etc when reporting on a incident. You could add specific details if it helps keep track of which group is which. If appropriate, you can use the same identifier when referencing this group in the Incident Description.",
