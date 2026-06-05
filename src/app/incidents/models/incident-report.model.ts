@@ -396,7 +396,7 @@ export const IncidentAttachmentSchema = z.object({
   file: z.file().register(widgetRegistry, { widget: "none" }).nullish(),
   fileName: z.string().register(widgetRegistry, { widget: "none" }).nullish(),
   mediaType: z.string().register(widgetRegistry, { widget: "none" }).nullish(),
-  dateCreated: z.coerce.date(),
+  dateCreated: z.coerce.date().register(widgetRegistry, { widget: "date" }),
   credit: z.string(),
   caption: z.string().nullish(),
   altText: z.string().nullish(),

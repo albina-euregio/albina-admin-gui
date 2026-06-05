@@ -5,22 +5,19 @@
     [disabled]="disabled()"
     [value]="getDateString(dInput)"
     #dInput
-    (change)="onDateTimeChange(dInput.value, tInput.value)"
+    (change)="onDatePartChange(dInput.value)"
   />
-  <input
-    type="time"
-    class="form-control"
-    [disabled]="disabled()"
-    [value]="getTimeString(tInput)"
-    #tInput
-    (change)="onDateTimeChange(dInput.value, tInput.value)"
-  />
-  <button
-    class="btn btn-outline-secondary"
-    type="button"
-    [disabled]="disabled()"
-    (click)="clear(); dInput.value = ''; tInput.value = ''"
-  >
+  @if (showTime()) {
+    <input
+      type="time"
+      class="form-control"
+      [disabled]="disabled()"
+      [value]="getTimeString(tInput)"
+      #tInput
+      (change)="onTimePartChange(tInput.value)"
+    />
+  }
+  <button class="btn btn-outline-secondary" type="button" [disabled]="disabled()" (click)="clear(); dInput.value = ''">
     <i class="ph ph-x"></i>
   </button>
 </div>

@@ -13,6 +13,7 @@ export interface WidgetType {
     | "textarea"
     | "rich-text"
     | "none"
+    | "date"
     | "aspect"
     | "grainShape"
     | "dangerRating"

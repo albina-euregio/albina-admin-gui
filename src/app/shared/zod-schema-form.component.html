@@ -198,7 +198,12 @@
             [disabled]="disabled()"
           />
         } @else if (inner.type === "date") {
-          <app-date-time-input [disabled]="disabled()" [(value)]="value()[x.key]" (valueChange)="onFieldChange()" />
+          <app-date-time-input
+            [disabled]="disabled()"
+            [showTime]="widget?.widget !== 'date'"
+            [(value)]="value()[x.key]"
+            (valueChange)="onFieldChange()"
+          />
         } @else if (inner.type === "boolean") {
           <div class="form-check form-switch mb-0">
             <input

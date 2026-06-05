@@ -8,6 +8,7 @@ import { Component, input, model } from "@angular/core";
 export class DateTimeInputComponent {
   readonly value = model<unknown>();
   readonly disabled = input<boolean>(false);
+  readonly showTime = input<boolean>(true);
 
   getDateString(inputEl?: HTMLInputElement): string {
     if (inputEl && document.activeElement === inputEl) {
@@ -36,7 +37,7 @@ export class DateTimeInputComponent {
     return `${hours}:${minutes}`;
   }
 
-  onDateTimeChange(datePart: string, timePart: string): void {
+  onDatePartChange(datePart: string): void {
     if (!datePart) {
       this.value.set(undefined);
       return;
@@ -45,8 +46,24 @@ export class DateTimeInputComponent {
     if (year < 1000) {
       return;
     }
-    const [hours, minutes] = (timePart || "00:00").split(":").map(Number);
+    const currentVal = this.value();
+    let hours = 0;
+    let minutes = 0;
+    if (currentVal) {
+      const val = new Date(currentVal as string | number | Date);
+      if (!isNaN(val.getTime())) {
+        hours = val.getHours();
+        minutes = val.getMinutes();
+      }
+    }
     this.value.set(new Date(year, month - 1, day, hours, minutes));
+  }
+
+  onTimePartChange(timePart: string): void {
+    const currentVal = this.value();
+    const val = currentVal ? new Date(currentVal as string | number | Date) : new Date();
+    const [hours, minutes] = (timePart || "00:00").split(":").map(Number);
+    this.value.set(new Date(val.getFullYear(), val.getMonth(), val.getDate(), hours, minutes));
   }
 
   clear(): void {
