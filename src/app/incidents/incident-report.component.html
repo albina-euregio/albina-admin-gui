@@ -592,14 +592,41 @@
 
             @if (!isAttachmentCollapsed(attachment.fileName)) {
               <div class="card-body">
-                <app-zod-schema-form
-                  [disabled]="disabled()"
-                  [value]="attachment"
-                  [zodType]="IncidentModels.IncidentAttachmentSchema"
-                  [labelI18n]="labelI18n"
-                  [helpI18n]="helpI18n"
-                  [showMandatoryOnly]="showMandatoryOnly"
-                />
+                <div class="row">
+                  @if (getAttachmentPreviewUrl(attachment); as previewUrl) {
+                    <div class="col-12 col-md-4 mb-3 mb-md-0 text-center text-md-start">
+                      <a [href]="previewUrl" target="_blank" class="d-inline-block">
+                        <img
+                          [src]="previewUrl"
+                          class="img-fluid rounded border shadow-sm"
+                          style="max-height: 300px; object-fit: contain; cursor: zoom-in"
+                          alt="Attachment Preview"
+                        />
+                      </a>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      <app-zod-schema-form
+                        [disabled]="disabled()"
+                        [value]="attachment"
+                        [zodType]="IncidentModels.IncidentAttachmentSchema"
+                        [labelI18n]="labelI18n"
+                        [helpI18n]="helpI18n"
+                        [showMandatoryOnly]="showMandatoryOnly"
+                      />
+                    </div>
+                  } @else {
+                    <div class="col-12">
+                      <app-zod-schema-form
+                        [disabled]="disabled()"
+                        [value]="attachment"
+                        [zodType]="IncidentModels.IncidentAttachmentSchema"
+                        [labelI18n]="labelI18n"
+                        [helpI18n]="helpI18n"
+                        [showMandatoryOnly]="showMandatoryOnly"
+                      />
+                    </div>
+                  }
+                </div>
               </div>
             }
           </div>
