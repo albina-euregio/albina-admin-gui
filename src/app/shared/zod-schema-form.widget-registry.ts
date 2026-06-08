@@ -1,10 +1,13 @@
 import { z } from "zod/v4";
 
+export type ShowIfValue = string | number | boolean;
+export type ShowIf = [field: string, ...values: ShowIfValue[]];
+
 export interface WidgetType {
   class?: string;
   unit?: string;
   valueI18n?: `${string}#${string}`;
-  showIf?: string[];
+  showIf?: ShowIf;
   widget?:
     | "slider"
     | "radio"

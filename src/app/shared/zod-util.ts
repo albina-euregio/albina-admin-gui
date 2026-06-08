@@ -1,5 +1,8 @@
 import { z } from "zod/v4";
 
+import { widgetRegistry } from "./zod-schema-form.widget-registry";
+import type { ShowIf, ShowIfValue } from "./zod-schema-form.widget-registry";
+
 // https://github.com/colinhacks/zod/issues/38#issuecomment-1938821172
 export interface ZSchemaInterface<T extends z.ZodRawShape, TObject = z.ZodObject<T>> {
   new (data: z.infer<z.ZodObject<T>>): z.infer<z.ZodObject<T>>;
@@ -60,6 +63,22 @@ export function unwrap<T extends z.ZodType>(t: T): Unwrap<T> {
 
 export function isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | z.ZodNullable | z.ZodDefault {
   return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
+}
+
+type ShowIfRule<V> = { [K in keyof V]: [field: K, ...values: (NonNullable<V[K]> & ShowIfValue)[]] }[keyof V];
+
+// Attaches showIf visibility rules after the schema definition so the rules can
+// reference sibling fields with full type-checking: field names, trigger fields,
+// and trigger values are all validated against the schema's inferred type.
+export function withShowIf<T extends z.ZodObject>(
+  schema: T,
+  rules: { [F in keyof z.output<T>]?: ShowIfRule<z.output<T>> },
+): T {
+  for (const field in rules) {
+    const inner = unwrap(schema.shape[field]);
+    widgetRegistry.add(inner, { ...widgetRegistry.get(inner), showIf: rules[field] as ShowIf });
+  }
+  return schema;
 }
 
 // An enum that additionally allows free-form text via an "Other" option in the UI.
