@@ -48,11 +48,14 @@ export const GeneralInformationSchema = z.object({
       Enums.DangerRating.high,
       Enums.DangerRating.very_high,
     ])
-    .register(widgetRegistry, { widget: "dangerRating" }),
+    .register(widgetRegistry, { widget: "dangerRating", class: "bg-public-danger-rating" }),
 
-  avalancheProblem: z.enum(Enums.AvalancheProblem).array().register(widgetRegistry, { widget: "avalancheProblem" }),
+  avalancheProblem: z
+    .enum(Enums.AvalancheProblem)
+    .array()
+    .register(widgetRegistry, { widget: "avalancheProblem", class: "bg-public-danger-rating" }),
 
-  dangerPattern: z.enum(Enums.DangerPattern).array(),
+  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { class: "bg-public-danger-rating" }),
 
   reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
 
@@ -63,6 +66,25 @@ export const GeneralInformationSchema = z.object({
   privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+withShowIf(GeneralInformationSchema, {
+  dangerRating: ["publicAvalancheWarningServiceOutside", false, undefined],
+  avalancheProblem: [
+    "dangerRating",
+    Enums.DangerRating.low,
+    Enums.DangerRating.moderate,
+    Enums.DangerRating.considerable,
+    Enums.DangerRating.high,
+    Enums.DangerRating.very_high,
+  ],
+  dangerPattern: [
+    "dangerRating",
+    Enums.DangerRating.low,
+    Enums.DangerRating.moderate,
+    Enums.DangerRating.considerable,
+    Enums.DangerRating.high,
+    Enums.DangerRating.very_high,
+  ],
 });
 
 export const LocationInformationSchema = z.object({
