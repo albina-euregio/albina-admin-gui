@@ -37,7 +37,17 @@ export const GeneralInformationSchema = z.object({
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
   publicAvalancheWarningService: z.string(),
 
-  dangerRating: z.enum(Enums.DangerRating).register(widgetRegistry, { widget: "dangerRating" }),
+  dangerRating: z
+    .enum([
+      Enums.DangerRating.no_snow,
+      Enums.DangerRating.no_rating,
+      Enums.DangerRating.low,
+      Enums.DangerRating.moderate,
+      Enums.DangerRating.considerable,
+      Enums.DangerRating.high,
+      Enums.DangerRating.very_high,
+    ])
+    .register(widgetRegistry, { widget: "dangerRating" }),
 
   avalancheProblem: z.enum(Enums.AvalancheProblem).array().register(widgetRegistry, { widget: "avalancheProblem" }),
 

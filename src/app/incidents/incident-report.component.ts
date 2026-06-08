@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, model, OnDestroy, OnInit } from "@angular/core";
+import { Component, inject, input, model, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
