@@ -312,12 +312,12 @@
               incidentReport().personInvolvement &&
               personInvolvementOptions.includes(incidentReport().personInvolvement)
             ) {
-              <span class="badge bg-success-subtle text-success border border-success-subtle px-1">
-                {{ "incidentReportUI.required" | translate }}
+              <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">
+                <i class="ph ph-check"></i>
               </span>
             } @else {
-              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">
-                {{ "incidentReportUI.required" | translate }}
+              <span class="text-danger" title="{{ 'incidentReportUI.required' | translate }}">
+                <i class="ph ph-warning"></i>
               </span>
             }
           </div>

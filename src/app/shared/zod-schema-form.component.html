@@ -18,9 +18,13 @@
             }
             @if (!zodUtil.isFieldOptional(x.value)) {
               @if (zodUtil.isFieldValid(x.value, value()[x.key])) {
-                <span class="badge bg-success-subtle text-success border border-success-subtle px-1">Required</span>
+                <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}"
+                  ><i class="ph ph-check"></i
+                ></span>
               } @else {
-                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-1">Required</span>
+                <span class="text-danger" title="{{ 'incidentReportUI.required' | translate }}"
+                  ><i class="ph ph-warning"></i
+                ></span>
               }
             }
           </div>
