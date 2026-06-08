@@ -88,8 +88,30 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return key + "Public" in shape;
   }
 
+  isOutsideField(key: string): boolean {
+    if (!key.endsWith("Outside")) return false;
+    const baseKey = key.slice(0, -7);
+    const shape = this.zodType()?.shape;
+    return !!shape && baseKey in shape;
+  }
+
+  hasOutsideField(key: string): boolean {
+    const shape = this.zodType()?.shape;
+    if (!shape) return false;
+    return key + "Outside" in shape;
+  }
+
+  onOutsideFieldChange(key: string, isOutside: boolean): void {
+    const val = this.value();
+    if (!val) return;
+    const text = isOutside ? (this.zodType()?.shape?.[key + "Outside"]?.description ?? "") : "";
+    Object.assign(val, { [key]: text });
+    this.onFieldChange();
+  }
+
   shouldShowField(key: string, schema: z.ZodType): boolean {
     if (this.isPublicField(key)) return false;
+    if (this.isOutsideField(key)) return false;
     if (this.showMandatoryOnly() && zodUtil.isFieldOptional(schema)) return false;
     const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;
     if (!showIf || showIf.length < 2) return true;

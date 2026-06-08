@@ -149,6 +149,11 @@
       background-color: var(--bs-success) !important;
       border-color: var(--bs-success) !important;
     }
+
+    &.outside-switch:checked {
+      background-color: var(--bs-primary) !important;
+      border-color: var(--bs-primary) !important;
+    }
   }
 
   // Custom styling for accordion-like detail cards

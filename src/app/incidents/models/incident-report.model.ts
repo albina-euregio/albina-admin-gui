@@ -36,6 +36,7 @@ export const GeneralInformationSchema = z.object({
 
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
   publicAvalancheWarningService: z.string(),
+  publicAvalancheWarningServiceOutside: z.boolean().nullish().describe("Outside AWS Forecast Area"),
 
   dangerRating: z
     .enum([
