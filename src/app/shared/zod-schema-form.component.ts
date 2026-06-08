@@ -13,7 +13,6 @@ import { EnumOtherComponent } from "./enum-other.component";
 import { EnumSliderComponent } from "./enum-slider.component";
 import { ToggleBtnGroup } from "./toggle-btn-group";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
-import type { ShowIf } from "./zod-schema-form.widget-registry";
 import * as zodUtil from "./zod-util";
 
 type IncidentSchema =
@@ -115,12 +114,12 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     if (this.isOutsideField(key)) return false;
     if (this.showMandatoryOnly() && zodUtil.isFieldOptional(schema)) return false;
     const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;
-    if (!showIf || showIf.length < 2) return true;
-    // zod's registry collapses the `ShowIf` tuple to a flat array on read, so the
-    // leading field name comes back widened — but `withShowIf` guarantees it's a string.
-    const [field, ...allowed] = showIf as ShowIf;
-    const val = this.value()?.[field];
-    return (allowed as unknown[]).includes(val);
+    if (!showIf) return true;
+    return showIf.every((cond) => {
+      const val = this.value()?.[cond.field];
+      const matches = (cond.values as unknown[]).includes(val);
+      return cond.negate ? !matches : matches;
+    });
   }
 
   onFieldChange() {

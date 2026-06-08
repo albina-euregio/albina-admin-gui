@@ -2,7 +2,7 @@ import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
 import { widgetRegistry } from "../../shared/zod-schema-form.widget-registry";
-import { enumWithOther, withShowIf } from "../../shared/zod-util";
+import { enumWithOther, not, withShowIf } from "../../shared/zod-util";
 
 export const MetaInformationSchema = z.object({
   author: z.string(),
@@ -68,22 +68,14 @@ export const GeneralInformationSchema = z.object({
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(GeneralInformationSchema, {
-  dangerRating: ["publicAvalancheWarningServiceOutside", false, undefined],
+  dangerRating: not("publicAvalancheWarningServiceOutside", true),
   avalancheProblem: [
-    "dangerRating",
-    Enums.DangerRating.low,
-    Enums.DangerRating.moderate,
-    Enums.DangerRating.considerable,
-    Enums.DangerRating.high,
-    Enums.DangerRating.very_high,
+    not("publicAvalancheWarningServiceOutside", true),
+    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
   ],
   dangerPattern: [
-    "dangerRating",
-    Enums.DangerRating.low,
-    Enums.DangerRating.moderate,
-    Enums.DangerRating.considerable,
-    Enums.DangerRating.high,
-    Enums.DangerRating.very_high,
+    not("publicAvalancheWarningServiceOutside", true),
+    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
   ],
 });
 
@@ -166,6 +158,9 @@ export const GroupInformationSchema = z.object({
 });
 withShowIf(GroupInformationSchema, {
   typeOfControlledTerrain: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"],
+  incidentActivity: not("typeOfControlledTerrain", "IndoorInsideBuilding"),
+  vehicleType: ["incidentActivity", "InsideVehicle"],
+  travelDirection: [not("typeOfControlledTerrain", "IndoorInsideBuilding"), not("incidentActivity", "InsideVehicle")],
 });
 export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
