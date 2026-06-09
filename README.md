@@ -1,6 +1,6 @@
 # albina-admin-gui
 
-https://admin.avalanche.report/ – A frontend to enter avalanche bulletins.
+https://avalanche.report/admin – A frontend to enter avalanche bulletins.
 
 ## Deployment
 

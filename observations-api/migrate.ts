@@ -6,7 +6,7 @@ async function migrate() {
     Authorization: "Bearer ...",
   };
   const response = await fetch(
-    "https://admin.avalanche.report/albina/api/observations?startDate=2000-01-01T00:00:00Z&endDate=2025-01-01T00:00:00Z",
+    "https://avalanche.report/api/observations?startDate=2000-01-01T00:00:00Z&endDate=2025-01-01T00:00:00Z",
     { headers },
   );
   const observations: Observation[] = await response.json();

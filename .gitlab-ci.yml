@@ -92,8 +92,8 @@ build:beta:
   extends: .envsubst
   variables:
     INITIAL_URL: ""
-    API_BASE_URL: "https://admin.avalanche.report/albina/api/"
-    TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
+    API_BASE_URL: "https://avalanche.report/api/"
+    TEXTCAT_URL: "https://avalanche.report/textcat-ng/"
     AWSOME_CONFIG_URL: "https://models.awsome.alpsolut.eu/dcfg/awsome.json"
     HEADER_BG_COLOR: "#839194"
     FAVICON_PATH: "assets/img/admin-favicon-beta.ico"
@@ -116,8 +116,8 @@ build:production:
   extends: .envsubst
   variables:
     INITIAL_URL: ""
-    API_BASE_URL: "https://admin.avalanche.report/albina/api/"
-    TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
+    API_BASE_URL: "https://avalanche.report/api/"
+    TEXTCAT_URL: "https://avalanche.report/textcat-ng/"
     AWSOME_CONFIG_URL: "https://models.awsome.alpsolut.eu/dcfg/awsome.json"
     HEADER_BG_COLOR: "#ffffff"
     FAVICON_PATH: "assets/img/admin-favicon.ico"
