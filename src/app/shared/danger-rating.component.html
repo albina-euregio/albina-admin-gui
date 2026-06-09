@@ -1,6 +1,7 @@
-<img
-  [src]="`./assets/img/danger_rating_${value()}_c.svg`"
-  alt="{{ `dangerRating.${value()}` | translate }}"
-  title="{{ `dangerRating.${value()}` | translate }}"
-  style="height: 3em; width: auto"
-/>
+@if (value()) {
+  <img
+    [src]="`./assets/img/danger_rating_${value()}_c.svg`"
+    alt="{{ `dangerRating.${value()}` | translate }}"
+    title="{{ `dangerRating.${value()}` | translate }}"
+  />
+}
