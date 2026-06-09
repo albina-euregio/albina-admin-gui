@@ -1594,7 +1594,8 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
-      data: Record<string, never>[];
+      /** Embedded incident-report JSON; the server stores and returns it as an object, not a quoted string. */
+      data: import("../incidents/models/incident-report.model").PartialIncidentReport;
     };
     /**
      * @description The enum contains the ISO 639-1 codes for available languages.

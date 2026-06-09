@@ -66,18 +66,13 @@ export class IncidentsOverviewComponent implements OnInit {
     });
   }
 
-  /**
-   * `IncidentView.data` is the embedded report object at runtime (the generated
-   * type says otherwise – see IncidentService docs), so read it as such.
-   */
   private toRow(view: IncidentView): IncidentRow {
-    const data = view.data as unknown as Partial<IncidentReport>;
     return {
       id: view.id,
-      dateTime: data?.dateTime ? new Date(data.dateTime) : undefined,
-      location: data?.location || undefined,
+      dateTime: view.data.dateTime ? new Date(view.data.dateTime) : undefined,
+      location: view.data.location || undefined,
       updatedAt: new Date(view.updatedAt),
-      reportStatus: data?.reportStatus,
+      reportStatus: view.data.reportStatus,
     };
   }
 

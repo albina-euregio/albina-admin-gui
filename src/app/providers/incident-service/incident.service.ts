@@ -5,14 +5,6 @@ import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import type { components } from "../openapi";
 
-/**
- * Server-side view of a stored incident.
- *
- * Note: the server annotates `data` with `@JsonRawValue`, so in responses it is
- * the embedded incident-report JSON (an object), not a quoted string – even
- * though the generated OpenAPI type says `string`. When reading, treat `data`
- * as the parsed report; when writing, pass the serialized report JSON.
- */
 export type IncidentView = components["schemas"]["IncidentService.IncidentView"];
 
 @Injectable()

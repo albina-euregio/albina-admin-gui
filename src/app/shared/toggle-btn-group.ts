@@ -5,7 +5,6 @@ import { AvalancheProblem, DangerRating } from "app/enums/enums";
 import { grainShapes } from "app/observations/grain.shapes";
 
 import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
-import { DangerRatingIconComponent } from "./danger-rating-icon.component";
 import { DangerRatingComponent } from "./danger-rating.component";
 import type { WidgetType } from "./zod-schema-form.widget-registry";
 
@@ -13,7 +12,7 @@ import type { WidgetType } from "./zod-schema-form.widget-registry";
   selector: "app-toggle-btn-group",
   templateUrl: "toggle-btn-group.html",
   standalone: true,
-  imports: [FormsModule, AvalancheProblemIconsComponent, DangerRatingIconComponent, DangerRatingComponent],
+  imports: [FormsModule, AvalancheProblemIconsComponent, DangerRatingComponent],
 })
 export class ToggleBtnGroup<T> {
   translateService = inject(TranslateService);
