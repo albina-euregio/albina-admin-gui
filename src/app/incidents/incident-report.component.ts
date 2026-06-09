@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, Injector, input, model, OnDestroy, OnInit } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { environment } from "environments/environment";
@@ -41,6 +42,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
+  private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
@@ -271,7 +273,22 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (this.activeTab === "location") {
       setTimeout(() => this.initLocationMap(), 50);
     }
+    const id = this.route.snapshot.paramMap.get("id");
+    if (id) {
+      this.loadIncident(id);
+    }
     this.startAutoSave();
+  }
+
+  private loadIncident(id: string) {
+    this.incidentService.getIncident(id).subscribe({
+      next: (view) => {
+        this.incidentId = view.id;
+        const report = IncidentModels.PartialIncidentReportSchema.parse(view.data) as IncidentReport;
+        this.incidentReport.set(report);
+      },
+      error: (error) => console.error("Failed to load incident", error),
+    });
   }
 
   private startAutoSave() {
