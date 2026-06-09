@@ -1,4 +1,5 @@
-import { Component, inject, input, model, OnDestroy, OnInit } from "@angular/core";
+import { Component, DestroyRef, inject, Injector, input, model, OnDestroy, OnInit } from "@angular/core";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
@@ -17,9 +18,11 @@ import {
 } from "leaflet";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
 import { z } from "zod/v4";
 
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { IncidentService } from "../providers/incident-service/incident.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
@@ -37,6 +40,16 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   authenticationService = inject(AuthenticationService);
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
+  private incidentService = inject(IncidentService);
+  private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
+
+  // Server id of the persisted incident, once it has been created.
+  private incidentId: string | null = null;
+  // used to prevent redundant saves
+  private lastSavedData: string | null = null;
+  // Status of the automatic server synchronization, exposed for the template.
+  saveState: "idle" | "saving" | "saved" | "error" = "idle";
 
   readonly IncidentModels = IncidentModels;
   readonly JSON = JSON;
@@ -258,6 +271,47 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (this.activeTab === "location") {
       setTimeout(() => this.initLocationMap(), 50);
     }
+    this.startAutoSave();
+  }
+
+  private startAutoSave() {
+    this.lastSavedData = this.serializeReport(this.incidentReport());
+    toObservable(this.incidentReport, { injector: this.injector })
+      .pipe(
+        map((report) => this.serializeReport(report)),
+        distinctUntilChanged(),
+        debounceTime(1000),
+        concatMap((data) => this.saveIncident(data)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
+
+  /** Serialize the report to JSON, dropping in-memory-only attachment fields. */
+  private serializeReport(report: IncidentReport): string {
+    return JSON.stringify(report, (key, value) => (key === "file" || key === "_previewUrl" ? undefined : value));
+  }
+
+  private saveIncident(data: string): Observable<unknown> {
+    if (data === this.lastSavedData) return EMPTY;
+    const region = this.authenticationService.getActiveRegionId();
+    if (!region) return EMPTY;
+    this.saveState = "saving";
+    const request = this.incidentId
+      ? this.incidentService.updateIncident(this.incidentId, data)
+      : this.incidentService.createIncident(region, data);
+    return request.pipe(
+      tap((view) => {
+        this.incidentId = view.id;
+        this.lastSavedData = data;
+        this.saveState = "saved";
+      }),
+      catchError((error) => {
+        console.error("Failed to save incident", error);
+        this.saveState = "error";
+        return EMPTY;
+      }),
+    );
   }
 
   ngOnDestroy() {
