@@ -89,7 +89,9 @@
         >
           <span>{{ tab.label | translate }}</span>
           @if (tab.id === "attachments") {
-            <span class="badge text-bg-secondary">{{ incidentReport().attachments.length }}</span>
+            <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
+              incidentReport().attachments.length
+            }}</span>
           } @else if (getTabValidationStatus(tab) === "valid") {
             <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">
               <i class="ph ph-check"></i>
