@@ -497,6 +497,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     }
   }
 
+  onReportStatusChange() {
+    const currentAuthor = this.authenticationService.getCurrentAuthor();
+    this.incidentReport.set({
+      ...this.incidentReport(),
+      author: currentAuthor?.email ?? this.incidentReport().author,
+      authorAffiliation: currentAuthor?.organization ?? this.incidentReport().authorAffiliation,
+    });
+  }
+
   onLocationTypeChange(type: "Point" | "Line" | "Polygon") {
     this.activeDrawingMode = type;
   }

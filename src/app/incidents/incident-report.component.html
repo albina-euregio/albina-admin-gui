@@ -61,7 +61,7 @@
           [class.bg-success-subtle]="incidentReport().reportStatus === 'Verified'"
           [class.text-success-emphasis]="incidentReport().reportStatus === 'Verified'"
           [(ngModel)]="incidentReport().reportStatus"
-          (ngModelChange)="incidentReport.set(incidentReport())"
+          (ngModelChange)="onReportStatusChange()"
         >
           <option value="Draft">{{ "reportStatus.Draft" | translate }}</option>
           <option value="Incomplete">{{ "reportStatus.Incomplete" | translate }}</option>
