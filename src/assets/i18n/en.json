@@ -1737,7 +1737,12 @@
     "required": "Required",
     "showMandatoryFieldsOnly": "Required only",
     "valid": "Valid",
-    "victimName": "Victim {{name}}"
+    "victimName": "Victim {{name}}",
+    "saveStateIdle": "No unsaved changes",
+    "saveStateSaving": "Saving…",
+    "saveStateSaved": "Saved successfully",
+    "saveStateError": "Save failed",
+    "lastUpdated": "Last updated"
   },
   "incidentReport": {
     "incidentReport": "Incident Report",
@@ -1753,7 +1758,6 @@
 
     "author": "Author",
     "authorAffiliation": "Author Affiliation",
-    "timestamp": "Timestamp",
 
     "dateTime": "Date/Time",
     "timeAccuracy": "Time Accuracy ",
@@ -1917,7 +1921,6 @@
   "incidentReportHelp": {
     "author": "",
     "authorAffiliation": "",
-    "timestamp": "",
 
     "dateTime": "",
     "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche.",

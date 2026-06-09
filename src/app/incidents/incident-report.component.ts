@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Component, DestroyRef, inject, Injector, input, model, OnDestroy, OnInit } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -34,7 +35,15 @@ import { IncidentReport } from "./models/incident-report.model";
   selector: "app-incident-report",
   templateUrl: "incident-report.component.html",
   standalone: true,
-  imports: [AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent, ToggleBtnGroup],
+  imports: [
+    DatePipe,
+    AccordionModule,
+    BsDropdownModule,
+    FormsModule,
+    TranslateModule,
+    ZodSchemaFormComponent,
+    ToggleBtnGroup,
+  ],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
   constantsService = inject(ConstantsService);
@@ -52,6 +61,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private lastSavedData: string | null = null;
   // Status of the automatic server synchronization, exposed for the template.
   saveState: "idle" | "saving" | "saved" | "error" = "idle";
+  updatedAt: Date | null = null;
 
   readonly IncidentModels = IncidentModels;
   readonly JSON = JSON;
@@ -65,7 +75,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   showMandatoryOnly = false;
   readonly allTabs = [
-    { id: "meta", label: "incidentReport.metaInformation", schema: IncidentModels.MetaInformationSchema },
     { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
     { id: "location", label: "incidentReport.locationInformation", schema: IncidentModels.LocationInformationSchema },
     {
@@ -139,7 +148,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       author: this.authenticationService.getCurrentAuthor()?.email,
       authorAffiliation: this.authenticationService.getCurrentAuthor()?.organization,
       publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
-      timestamp: new Date(),
       reportStatus: "Draft",
       groupInformation: [
         {
@@ -284,6 +292,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.incidentService.getIncident(id).subscribe({
       next: (view) => {
         this.incidentId = view.id;
+        this.updatedAt = new Date(view.updatedAt);
         const report = IncidentModels.PartialIncidentReportSchema.parse(view.data) as IncidentReport;
         this.incidentReport.set(report);
       },
@@ -320,6 +329,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return request.pipe(
       tap((view) => {
         this.incidentId = view.id;
+        this.updatedAt = new Date(view.updatedAt);
         this.lastSavedData = data;
         this.saveState = "saved";
       }),
