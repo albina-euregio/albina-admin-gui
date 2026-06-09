@@ -2,7 +2,7 @@ import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
 import { widgetRegistry } from "../../shared/zod-schema-form.widget-registry";
-import { enumWithOther } from "../../shared/zod-util";
+import { enumWithOther, not, withShowIf } from "../../shared/zod-util";
 
 export const MetaInformationSchema = z.object({
   author: z.string(),
@@ -48,11 +48,14 @@ export const GeneralInformationSchema = z.object({
       Enums.DangerRating.high,
       Enums.DangerRating.very_high,
     ])
-    .register(widgetRegistry, { widget: "dangerRating" }),
+    .register(widgetRegistry, { widget: "dangerRating", class: "bg-public-danger-rating" }),
 
-  avalancheProblem: z.enum(Enums.AvalancheProblem).array().register(widgetRegistry, { widget: "avalancheProblem" }),
+  avalancheProblem: z
+    .enum(Enums.AvalancheProblem)
+    .array()
+    .register(widgetRegistry, { widget: "avalancheProblem", class: "bg-public-danger-rating" }),
 
-  dangerPattern: z.enum(Enums.DangerPattern).array(),
+  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { class: "bg-public-danger-rating" }),
 
   reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
 
@@ -63,6 +66,17 @@ export const GeneralInformationSchema = z.object({
   privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+withShowIf(GeneralInformationSchema, {
+  dangerRating: not("publicAvalancheWarningServiceOutside", true),
+  avalancheProblem: [
+    not("publicAvalancheWarningServiceOutside", true),
+    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
+  ],
+  dangerPattern: [
+    not("publicAvalancheWarningServiceOutside", true),
+    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
+  ],
 });
 
 export const LocationInformationSchema = z.object({
@@ -125,9 +139,7 @@ export const GroupInformationSchema = z.object({
   incidentTerrainType,
   typeOfControlledTerrain: enumWithOther(
     z.enum(["IndoorInsideBuilding", "Street", "TrainTrack", "SkiAreaResort", "CrossCountryTrack", "SledgingTrack"]),
-  )
-    .register(widgetRegistry, { showIf: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"] })
-    .nullish(),
+  ).nullish(),
   incidentActivity,
   travelDirection: enumWithOther(
     z.enum([
@@ -143,6 +155,12 @@ export const GroupInformationSchema = z.object({
   vehicleType: enumWithOther(z.enum(["Car", "Bus", "SnowPlower", "Snowcat"])),
   avalancheGear: z.enum(["All", "Some", "None", "Unknown"]),
   groupInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+withShowIf(GroupInformationSchema, {
+  typeOfControlledTerrain: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"],
+  incidentActivity: not("typeOfControlledTerrain", "IndoorInsideBuilding"),
+  vehicleType: ["incidentActivity", "InsideVehicle"],
+  travelDirection: [not("typeOfControlledTerrain", "IndoorInsideBuilding"), not("incidentActivity", "InsideVehicle")],
 });
 export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
@@ -164,8 +182,8 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
 export const VictimInformationSchema = z.object({
   anonymousVictimIdentifier: z.string(),
   anonymousGroupIdentifier: z.string(),
-  caught: z.enum(["Involved", "NotInvolved", "Unknown"]),
-  fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]),
+  caught: z.enum(["Involved", "NotInvolved", "Unknown"]).register(widgetRegistry, { class: "col-6" }),
+  fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]).register(widgetRegistry, { class: "col-6" }),
   burialDegree: z.enum([
     "FullyBuried",
     "PartlyBuriedHeadCovered",
@@ -174,6 +192,8 @@ export const VictimInformationSchema = z.object({
     "NotBuried",
     "Unknown",
   ]),
+  burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
+  burialDuration: z.string().register(widgetRegistry, { unit: "dd:hh:mm", class: "col-6" }).nullish(),
   age: z.enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"]),
   gender: z.enum(["Female", "Male", "Other"]),
   country: z.enum(["Austria", "Germany", "Italy", "Switzerland"]), // TODO [standard country list]
@@ -192,8 +212,6 @@ export const VictimInformationSchema = z.object({
   terrainTrap: enumWithOther(
     z.enum(["None", "Cliff", "Trees", "Gully", "Depression", "Bench", "Boulder", "CrevasseOrBergschrund"]),
   ),
-  burialDepth: z.number().register(widgetRegistry, { unit: "cm" }).nullish(),
-  burialDuration: z.string().register(widgetRegistry, { unit: "dd:hh:mm" }).nullish(),
   primaryLocationMethod: enumWithOther(
     z.enum([
       "NotBuried",
@@ -221,6 +239,16 @@ export const VictimInformationSchema = z.object({
   injurySeverity: z.enum(["Minor", "Moderate", "Major"]),
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
+withShowIf(VictimInformationSchema, {
+  fatalInjured: ["caught", "Involved", "Unknown"],
+  burialDegree: ["caught", "Involved"],
+  burialDepth: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
+  burialDuration: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
+  estimatedTimeOfDeath: ["fatalInjured", "Fatal"],
+  causeOfDeath: ["fatalInjured", "Fatal"],
+  respiratoryCavity: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
+  injurySeverity: ["fatalInjured", "Injured"],
+});
 export type VictimInformation = z.infer<typeof VictimInformationSchema>;
 
 const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
@@ -235,16 +263,13 @@ export const AvalancheInformationSchema = z.object({
   trigger: Trigger.register(widgetRegistry, { class: "bg-incident-trigger" }).nullish(),
   natural: z
     .enum(["Natural", "CorniceFall", "Earthquake", "IceFall", "RockFall"])
-    .register(widgetRegistry, { class: "bg-incident-trigger", showIf: ["trigger", Trigger.def.entries.natural] })
+    .register(widgetRegistry, { class: "bg-incident-trigger" })
     .nullish(),
   person: z
     .enum(["PersonAccidental", "PersonControlled"])
-    .register(widgetRegistry, { class: "bg-incident-trigger", showIf: ["trigger", Trigger.def.entries.person] })
+    .register(widgetRegistry, { class: "bg-incident-trigger" })
     .nullish(),
-  additionalLoad: z
-    .enum(["High", "Low"])
-    .register(widgetRegistry, { class: "bg-incident-trigger", showIf: ["trigger", Trigger.def.entries.person] })
-    .nullish(),
+  additionalLoad: z.enum(["High", "Low"]).register(widgetRegistry, { class: "bg-incident-trigger" }).nullish(),
   explosives: enumWithOther(
     z.enum([
       "Artillery",
@@ -259,22 +284,16 @@ export const AvalancheInformationSchema = z.object({
       "TramOrRopewayDelivery",
     ]),
   )
-    .register(widgetRegistry, { class: "bg-incident-trigger", showIf: ["trigger", Trigger.def.entries.explosives] })
+    .register(widgetRegistry, { class: "bg-incident-trigger" })
     .nullish(),
   vehicle: enumWithOther(z.enum(["OverSnowVehicle", "Snowmobile", "Helicopter"]))
-    .register(widgetRegistry, { class: "bg-incident-trigger", showIf: ["trigger", Trigger.def.entries.vehicle] })
+    .register(widgetRegistry, { class: "bg-incident-trigger" })
     .nullish(),
   accidentalControlled: z
     .enum(["Accidental", "Controlled"])
-    .register(widgetRegistry, { class: "bg-incident-trigger", showIf: ["trigger", Trigger.def.entries.vehicle] })
+    .register(widgetRegistry, { class: "bg-incident-trigger" })
     .nullish(),
-  remoteTriggering: z
-    .enum(["Yes", "No"])
-    .register(widgetRegistry, {
-      class: "bg-incident-trigger",
-      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab],
-    })
-    .nullish(),
+  remoteTriggering: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-incident-trigger" }).nullish(),
   startZoneAspect: z
     .enum(Enums.Aspect)
     .register(widgetRegistry, { class: "col-6 bg-start-zone", valueI18n: "aspect.#", widget: "aspect" }),
@@ -307,34 +326,10 @@ export const AvalancheInformationSchema = z.object({
     .array()
     .register(widgetRegistry, { class: "bg-start-zone" })
     .nullish(),
-  slabWidth: z
-    .number()
-    .register(widgetRegistry, {
-      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
-      unit: "m",
-    })
-    .nullish(),
-  crownDepthAvg: z
-    .number()
-    .register(widgetRegistry, {
-      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
-      unit: "cm",
-    })
-    .nullish(),
-  crownDepthMin: z
-    .number()
-    .register(widgetRegistry, {
-      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
-      unit: "cm",
-    })
-    .nullish(),
-  crownDepthMax: z
-    .number()
-    .register(widgetRegistry, {
-      showIf: ["avalancheType", Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide],
-      unit: "cm",
-    })
-    .nullish(),
+  slabWidth: z.number().register(widgetRegistry, { unit: "m" }).nullish(),
+  crownDepthAvg: z.number().register(widgetRegistry, { unit: "cm", class: "col-4" }).nullish(),
+  crownDepthMin: z.number().register(widgetRegistry, { unit: "cm", class: "col-4" }).nullish(),
+  crownDepthMax: z.number().register(widgetRegistry, { unit: "cm", class: "col-4" }).nullish(),
   avalancheLength: z.number().register(widgetRegistry, { unit: "m" }).nullish(),
   weakLayerName: z.string().register(widgetRegistry, { class: "bg-weak-layer" }).nullish(),
   weakLayerGrainType1: z
@@ -364,6 +359,20 @@ export const AvalancheInformationSchema = z.object({
   debrisDensity: z.string().register(widgetRegistry, { class: "col-6", unit: "kg/m³" }).nullish(),
   avalancheDetailsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
+const slabGlide = [Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide] as const;
+withShowIf(AvalancheInformationSchema, {
+  natural: ["trigger", "natural"],
+  person: ["trigger", "person"],
+  additionalLoad: ["trigger", "person"],
+  explosives: ["trigger", "explosives"],
+  vehicle: ["trigger", "vehicle"],
+  accidentalControlled: ["trigger", "vehicle"],
+  remoteTriggering: ["avalancheType", Enums.IncidentAvalancheType.slab],
+  slabWidth: ["avalancheType", ...slabGlide],
+  crownDepthAvg: ["avalancheType", ...slabGlide],
+  crownDepthMin: ["avalancheType", ...slabGlide],
+  crownDepthMax: ["avalancheType", ...slabGlide],
+});
 
 export const OtherDamagesSchema = z.object({
   otherDamages: z.enum(["Yes", "No"]),
@@ -372,13 +381,13 @@ export const OtherDamagesSchema = z.object({
     z.enum(["Vehicle", "Forest", "Agriculture", "Livestock", "UtilitiesTechnicalInfrastructure"]),
   )
     .array()
-    .register(widgetRegistry, { showIf: ["otherDamages", "Yes"] })
     .nullish(),
 
-  otherDamagesComment: z
-    .string()
-    .register(widgetRegistry, { widget: "textarea", showIf: ["otherDamages", "Yes"] })
-    .nullish(),
+  otherDamagesComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+withShowIf(OtherDamagesSchema, {
+  damagedAssets: ["otherDamages", "Yes"],
+  otherDamagesComment: ["otherDamages", "Yes"],
 });
 
 export const IncidentAnalysisSchema = z.object({

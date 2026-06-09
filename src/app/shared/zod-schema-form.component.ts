@@ -114,10 +114,12 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     if (this.isOutsideField(key)) return false;
     if (this.showMandatoryOnly() && zodUtil.isFieldOptional(schema)) return false;
     const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;
-    if (!showIf || showIf.length < 2) return true;
-    const [key2, ...allowed] = showIf;
-    const val = this.value()?.[key2];
-    return allowed.includes(val as string);
+    if (!showIf) return true;
+    return showIf.every((cond) => {
+      const val = this.value()?.[cond.field];
+      const matches = (cond.values as unknown[]).includes(val);
+      return cond.negate ? !matches : matches;
+    });
   }
 
   onFieldChange() {

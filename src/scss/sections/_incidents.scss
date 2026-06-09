@@ -25,6 +25,9 @@
   .bg-weak-layer {
     background-color: $cyan-100;
   }
+  .bg-public-danger-rating {
+    background-color: $blue-100;
+  }
 
   app-danger-rating img,
   app-avalanche-problem-icons img {
@@ -77,7 +80,7 @@
   .form-text {
     @include font-s;
     margin-bottom: $space-2;
-    color: $gray-500;
+    color: $gray-600;
     font-style: italic;
   }
 

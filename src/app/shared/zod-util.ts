@@ -1,5 +1,8 @@
 import { z } from "zod/v4";
 
+import { widgetRegistry } from "./zod-schema-form.widget-registry";
+import type { ShowIf, ShowIfValue } from "./zod-schema-form.widget-registry";
+
 // https://github.com/colinhacks/zod/issues/38#issuecomment-1938821172
 export interface ZSchemaInterface<T extends z.ZodRawShape, TObject = z.ZodObject<T>> {
   new (data: z.infer<z.ZodObject<T>>): z.infer<z.ZodObject<T>>;
@@ -60,6 +63,53 @@ export function unwrap<T extends z.ZodType>(t: T): Unwrap<T> {
 
 export function isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | z.ZodNullable | z.ZodDefault {
   return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
+}
+
+type ShowIfValues<V, K extends keyof V> = (NonNullable<V[K]> & ShowIfValue)[];
+export interface NegatedRule<K> {
+  not: K;
+  values: ShowIfValue[];
+}
+// One condition keyed by its trigger field: `[triggerField, ...values]` is satisfied
+// when the trigger equals one of the values; `not(triggerField, ...values)` when it
+// equals none of them.
+// Note: single conditions get full value-type checking; AND-array conditions only check
+// field names (TypeScript can't check the distributed union across multiple elements).
+type ShowIfCond<V> =
+  | { [K in keyof V]: [field: K, ...values: ShowIfValues<V, K>] }[keyof V]
+  | { [K in keyof V]: NegatedRule<K> }[keyof V];
+// A field's rule: a single condition, or an array of conditions that must ALL hold (AND).
+type ShowIfRule<V> = ShowIfCond<V> | ShowIfCond<V>[];
+
+// Negates a showIf condition — see `withShowIf`. Trigger field is type-checked against
+// the schema (via the `rules` map this is assigned into); values accept any ShowIfValue.
+export function not<K extends PropertyKey>(field: K, ...values: ShowIfValue[]): NegatedRule<K> {
+  return { not: field, values };
+}
+
+// `[field, ...values]` tuples have a string head; an AND-array's head is a nested
+// condition (tuple or `not()` object). That's how we tell a lone condition from a list.
+function toConditions(rule: object): ShowIf[] {
+  const list = Array.isArray(rule) && typeof rule[0] !== "string" ? (rule as object[]) : [rule];
+  return list.map((c) =>
+    Array.isArray(c)
+      ? { field: c[0] as string, values: c.slice(1) as ShowIfValue[] }
+      : { field: (c as NegatedRule<string>).not, values: (c as NegatedRule<string>).values, negate: true },
+  );
+}
+
+// Attaches showIf visibility rules after the schema definition so the rules can
+// reference sibling fields with full type-checking: field names, trigger fields,
+// and trigger values are all validated against the schema's inferred type.
+export function withShowIf<T extends z.ZodObject>(
+  schema: T,
+  rules: { [F in keyof z.output<T>]?: ShowIfRule<z.output<T>> },
+): T {
+  for (const field in rules) {
+    const inner = unwrap(schema.shape[field]);
+    widgetRegistry.add(inner, { ...widgetRegistry.get(inner), showIf: toConditions(rules[field]!) });
+  }
+  return schema;
 }
 
 // An enum that additionally allows free-form text via an "Other" option in the UI.
