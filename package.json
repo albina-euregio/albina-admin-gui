@@ -101,6 +101,13 @@
   "resolutions": {
     "@types/css-font-loading-module": "^0.0.13"
   },
+  "engines": {
+    "runtime": {
+      "name": "node",
+      "version": "^26.3.0",
+      "onFail": "download"
+    }
+  },
   "packageManager": "pnpm@11.3.0",
   "angular-cli": {},
   "copyright": "Copyright 2017 Norbert Lanzanasto",
