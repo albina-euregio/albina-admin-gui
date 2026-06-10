@@ -31,7 +31,7 @@ test("Education link", async ({ page }) => {
   await page.getByRole("button", { name: "Playwright" }).click();
   await page.getByRole("link", { name: "Education" }).click();
   const iframeURL = await page.locator("iframe").getAttribute("src");
-  expect(iframeURL).toBe("https://admin.avalanche.report/education/");
+  expect(iframeURL).toBe("https://avalanche.report/education/");
 });
 
 test("Statistics", async ({ page }) => {

@@ -65,10 +65,7 @@ test("Upload media file", async ({ page, baseURL }) => {
   const uploadedAtPattern = new RegExp(
     `${getPart("month")}/${getPart("day")}/${getPart("year")},\\s${getPart("hour")}:${getPart("minute")}:\\d{2}\\s${getPart("dayPeriod")}`,
   );
-  const mediaUrl = baseURL?.includes("admin.avalanche.report")
-    ? "https://static.avalanche.report/media_files_dev/AT-07/en/"
-    : "https://dev.avalanche.report/media_files/AT-07/en/";
-  await page.goto(mediaUrl);
+  await page.goto("https://dev.avalanche.report/media_files/AT-07/en/");
   await expect(page.getByRole("row", { name: "2024-12-25_avalanchereport_playwright.mp3" })).toContainText(
     uploadedAtPattern,
   );
@@ -184,17 +181,14 @@ test("View bulletin", async ({ page, baseURL }) => {
       - button ""
     `);
 
-    // TODO fix SLF login on dev.avalanche.report and reenable test for all environments
-    if (baseURL?.includes("admin.avalanche.report")) {
-      await page.locator("header").filter({ hasText: "SLF (7)" }).getByRole("button").click();
-      await expect(page.locator(".region-thumb").filter({ hasText: "Münstertal + 45" })).toMatchAriaSnapshot(`
+    await page.locator("header").filter({ hasText: "SLF (7)" }).getByRole("button").click();
+    await expect(page.locator(".region-thumb").filter({ hasText: "Münstertal + 45" })).toMatchAriaSnapshot(`
       - button /Münstertal \\+ \\d+/
       - button
       - text: 
       - button "Incomplete"
       - button ""
     `);
-    }
   });
 });
 
