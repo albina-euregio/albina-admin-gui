@@ -339,154 +339,188 @@
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.personInvolvement" | translate }}</h4>
 
-        <app-zod-schema-form
-          [disabled]="disabled()"
-          [(value)]="incidentReport"
-          [zodType]="IncidentModels.IncidentReportSchema"
-          [includeFields]="['personInvolvement']"
-          [labelI18n]="labelI18n"
-          [helpI18n]="helpI18n"
-          [showMandatoryOnly]="showMandatoryOnly"
-        />
+        <!-- Sub-tab nav-pills -->
+        <ul class="nav nav-pills gap-1 mb-4">
+          <li class="nav-item">
+            <button
+              class="nav-link d-flex align-items-center gap-2"
+              [class.active]="activeGroupSubTab === 'overview'"
+              (click)="activeGroupSubTab = 'overview'"
+            >
+              {{ "incidentReportUI.overview" | translate }}
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link d-flex align-items-center gap-2"
+              [class.active]="activeGroupSubTab === 'groups'"
+              [disabled]="incidentReport().personInvolvement !== 'Yes'"
+              (click)="activeGroupSubTab = 'groups'"
+            >
+              {{ "incidentReport.groupInformation" | translate }}
+              <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
+                incidentReport().groupInformation?.length ?? 0
+              }}</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link d-flex align-items-center gap-2"
+              [class.active]="activeGroupSubTab === 'victims'"
+              [disabled]="incidentReport().personInvolvement !== 'Yes'"
+              (click)="activeGroupSubTab = 'victims'"
+            >
+              {{ "incidentReport.victimInformation" | translate }}
+              <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
+                incidentReport().victimInformation?.length ?? 0
+              }}</span>
+            </button>
+          </li>
+        </ul>
 
-        @if (incidentReport().personInvolvement === "Yes") {
-          <div class="rounded border bg-body-secondary px-3 py-3">
-            <h4 class="mb-3 text-secondary d-flex align-items-center gap-2">
-              <i class="ph ph-calculator"></i>
-              {{ "incidentReport.involvementsFatalitiesBurials" | translate }}
-            </h4>
-            <app-zod-schema-form
-              [displayOnly]="true"
-              [value]="involvementsFatalitiesBurials"
-              [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
-              [labelI18n]="labelI18n"
-              [helpI18n]="helpI18n"
-              [showMandatoryOnly]="showMandatoryOnly"
-            />
+        <!-- Overview sub-tab -->
+        @if (activeGroupSubTab === "overview") {
+          <app-zod-schema-form
+            [disabled]="disabled()"
+            [(value)]="incidentReport"
+            [zodType]="IncidentModels.IncidentReportSchema"
+            [includeFields]="['personInvolvement']"
+            [labelI18n]="labelI18n"
+            [helpI18n]="helpI18n"
+            [showMandatoryOnly]="showMandatoryOnly"
+          />
+
+          @if (incidentReport().personInvolvement === "Yes") {
+            <div class="rounded border bg-body-secondary px-3 py-3 mt-3">
+              <h4 class="mb-3 text-secondary d-flex align-items-center gap-2">
+                <i class="ph ph-calculator"></i>
+                {{ "incidentReport.involvementsFatalitiesBurials" | translate }}
+              </h4>
+              <app-zod-schema-form
+                [displayOnly]="true"
+                [value]="involvementsFatalitiesBurials"
+                [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
+                [labelI18n]="labelI18n"
+                [helpI18n]="helpI18n"
+                [showMandatoryOnly]="showMandatoryOnly"
+              />
+            </div>
+          }
+        }
+
+        <!-- Groups sub-tab -->
+        @if (activeGroupSubTab === "groups") {
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <div class="d-flex flex-wrap gap-1 flex-grow-1">
+              @for (group of incidentReport().groupInformation; track $index; let i = $index) {
+                <button
+                  class="btn btn-sm d-flex align-items-center gap-1"
+                  [class.btn-dark]="activeGroupIndex === i"
+                  [class.btn-outline-dark]="activeGroupIndex !== i"
+                  (click)="activeGroupIndex = i"
+                >
+                  {{ group.anonymousGroupIdentifier }}
+                  @if (isGroupValid(group)) {
+                    <i class="ph ph-check text-success" title="{{ 'incidentReportUI.valid' | translate }}"></i>
+                  } @else {
+                    <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
+                  }
+                </button>
+              }
+            </div>
+            <button
+              class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+              (click)="newGroupInformation()"
+            >
+              <i class="ph ph-plus"></i> {{ "incidentReportUI.addGroup" | translate }}
+            </button>
           </div>
 
-          <div class="border-top pt-4 mt-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h4 class="mb-0 text-secondary">{{ "incidentReport.groupInformation" | translate }}</h4>
-              <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newGroupInformation()">
-                <i class="ph ph-plus"></i> {{ "incidentReportUI.addGroup" | translate }}
-              </button>
-            </div>
-
-            @if (!incidentReport().groupInformation?.length) {
-              <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
-            }
-
-            @for (
-              groupInformation of incidentReport().groupInformation;
-              track groupInformation.anonymousGroupIdentifier
-            ) {
-              <div class="card mb-3 shadow-sm border">
+          @if (!incidentReport().groupInformation?.length) {
+            <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
+          } @else {
+            @let activeGroup = incidentReport().groupInformation![activeGroupIndex];
+            @if (activeGroup) {
+              <div class="card shadow-sm border">
                 <div class="card-header d-flex justify-content-between align-items-center bg-light">
-                  <div
-                    class="d-flex align-items-center gap-2 cursor-pointer flex-grow-1 py-1"
-                    (click)="toggleGroupCollapse(groupInformation.anonymousGroupIdentifier)"
-                  >
-                    <i
-                      class="ph"
-                      [class.ph-caret-right]="isGroupCollapsed(groupInformation.anonymousGroupIdentifier)"
-                      [class.ph-caret-down]="!isGroupCollapsed(groupInformation.anonymousGroupIdentifier)"
-                    ></i>
-                    <h5 class="mb-0 h6 fw-semibold text-secondary">{{ groupInformation.anonymousGroupIdentifier }}</h5>
-                    @if (isGroupValid(groupInformation)) {
-                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">
-                        <i class="ph ph-check"></i>
-                      </span>
-                    } @else {
-                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">
-                        <i class="ph ph-warning"></i>
-                      </span>
-                    }
-                  </div>
-                  @if ($index > 0) {
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation($index)">
+                  <span class="fw-semibold text-secondary h6 mb-0">{{ activeGroup.anonymousGroupIdentifier }}</span>
+                  @if (activeGroupIndex > 0) {
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation(activeGroupIndex)">
                       <i class="ph ph-trash"></i> {{ "incidentReportUI.removeGroup" | translate }}
                     </button>
                   }
                 </div>
-                @if (!isGroupCollapsed(groupInformation.anonymousGroupIdentifier)) {
-                  <div class="card-body">
-                    <app-zod-schema-form
-                      [disabled]="disabled()"
-                      [value]="groupInformation"
-                      (valueChange)="updateGroupInformation($index, $event)"
-                      [zodType]="IncidentModels.GroupInformationSchema"
-                      [labelI18n]="labelI18n"
-                      [helpI18n]="helpI18n"
-                      [showMandatoryOnly]="showMandatoryOnly"
-                    />
-                  </div>
-                }
+                <div class="card-body">
+                  <app-zod-schema-form
+                    [disabled]="disabled()"
+                    [value]="activeGroup"
+                    (valueChange)="updateGroupInformation(activeGroupIndex, $event)"
+                    [zodType]="IncidentModels.GroupInformationSchema"
+                    [labelI18n]="labelI18n"
+                    [helpI18n]="helpI18n"
+                    [showMandatoryOnly]="showMandatoryOnly"
+                  />
+                </div>
               </div>
             }
+          }
+        }
+
+        <!-- Victims sub-tab -->
+        @if (activeGroupSubTab === "victims") {
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <div class="d-flex flex-wrap gap-1 flex-grow-1">
+              @for (victim of incidentReport().victimInformation; track $index; let i = $index) {
+                <button
+                  class="btn btn-sm d-flex align-items-center gap-1"
+                  [class.btn-dark]="activeVictimIndex === i"
+                  [class.btn-outline-dark]="activeVictimIndex !== i"
+                  (click)="activeVictimIndex = i"
+                >
+                  {{ victim.anonymousVictimIdentifier }}
+                  @if (isVictimValid(victim)) {
+                    <i class="ph ph-check text-success" title="{{ 'incidentReportUI.valid' | translate }}"></i>
+                  } @else {
+                    <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
+                  }
+                </button>
+              }
+            </div>
+            <button
+              class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+              (click)="newVictimInformation()"
+            >
+              <i class="ph ph-plus"></i> {{ "incidentReportUI.addVictim" | translate }}
+            </button>
           </div>
 
-          <div class="border-top pt-4 mt-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h4 class="mb-0 text-secondary">{{ "incidentReport.victimInformation" | translate }}</h4>
-              <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="newVictimInformation()">
-                <i class="ph ph-plus"></i> {{ "incidentReportUI.addVictim" | translate }}
-              </button>
-            </div>
-
-            @if (!incidentReport().victimInformation?.length) {
-              <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
-            }
-
-            @for (
-              victimInformation of incidentReport().victimInformation;
-              track victimInformation.anonymousVictimIdentifier
-            ) {
-              <div class="card mb-3 shadow-sm border">
+          @if (!incidentReport().victimInformation?.length) {
+            <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
+          } @else {
+            @let activeVictim = incidentReport().victimInformation![activeVictimIndex];
+            @if (activeVictim) {
+              <div class="card shadow-sm border">
                 <div class="card-header d-flex justify-content-between align-items-center bg-light">
-                  <div
-                    class="d-flex align-items-center gap-2 cursor-pointer flex-grow-1 py-1"
-                    (click)="toggleVictimCollapse(victimInformation.anonymousVictimIdentifier)"
-                  >
-                    <i
-                      class="ph"
-                      [class.ph-caret-right]="isVictimCollapsed(victimInformation.anonymousVictimIdentifier)"
-                      [class.ph-caret-down]="!isVictimCollapsed(victimInformation.anonymousVictimIdentifier)"
-                    ></i>
-                    <h5 class="mb-0 h6 fw-semibold text-secondary">
-                      {{ victimInformation.anonymousVictimIdentifier }}
-                    </h5>
-                    @if (isVictimValid(victimInformation)) {
-                      <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">
-                        <i class="ph ph-check"></i>
-                      </span>
-                    } @else {
-                      <span class="text-danger ms-2" title="{{ 'incidentReportUI.incomplete' | translate }}">
-                        <i class="ph ph-warning"></i>
-                      </span>
-                    }
-                  </div>
-                  <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation($index)">
+                  <span class="fw-semibold text-secondary h6 mb-0">{{ activeVictim.anonymousVictimIdentifier }}</span>
+                  <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation(activeVictimIndex)">
                     <i class="ph ph-trash"></i> {{ "incidentReportUI.removeVictim" | translate }}
                   </button>
                 </div>
-                @if (!isVictimCollapsed(victimInformation.anonymousVictimIdentifier)) {
-                  <div class="card-body">
-                    <app-zod-schema-form
-                      [disabled]="disabled()"
-                      [value]="victimInformation"
-                      (valueChange)="updateVictimInformation($index, $event)"
-                      [zodType]="IncidentModels.VictimInformationSchema"
-                      [labelI18n]="labelI18n"
-                      [helpI18n]="helpI18n"
-                      [showMandatoryOnly]="showMandatoryOnly"
-                      [groupIdentifiers]="groupIdentifiers"
-                    />
-                  </div>
-                }
+                <div class="card-body">
+                  <app-zod-schema-form
+                    [disabled]="disabled()"
+                    [value]="activeVictim"
+                    (valueChange)="updateVictimInformation(activeVictimIndex, $event)"
+                    [zodType]="IncidentModels.VictimInformationSchema"
+                    [labelI18n]="labelI18n"
+                    [helpI18n]="helpI18n"
+                    [showMandatoryOnly]="showMandatoryOnly"
+                    [groupIdentifiers]="groupIdentifiers"
+                  />
+                </div>
               </div>
             }
-          </div>
+          }
         }
       </div>
     }

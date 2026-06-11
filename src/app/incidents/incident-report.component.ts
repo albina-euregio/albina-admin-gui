@@ -195,7 +195,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
     const groupInformation = { anonymousGroupIdentifier: anonymousGroupIdentifier } as IncidentModels.GroupInformation;
     const report = this.incidentReport();
-    this.incidentReport.set({ ...report, groupInformation: [...(report.groupInformation ?? []), groupInformation] });
+    const groups = [...(report.groupInformation ?? []), groupInformation];
+    this.incidentReport.set({ ...report, groupInformation: groups });
+    this.activeGroupIndex = groups.length - 1;
   }
 
   removeGroupInformation(index: number) {
@@ -205,6 +207,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const report = this.incidentReport();
     const groups = (report.groupInformation ?? []).filter((_, i) => i !== index);
     this.incidentReport.set({ ...report, groupInformation: groups });
+    if (this.activeGroupIndex >= groups.length) {
+      this.activeGroupIndex = groups.length - 1;
+    }
   }
 
   updateGroupInformation(index: number, updatedGroup: IncidentModels.GroupInformation) {
@@ -213,18 +218,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.incidentReport.set({ ...report, groupInformation: groups });
   }
 
-  collapsedGroups: Record<string, boolean> = {};
-
-  toggleGroupCollapse(groupIdentifier: string) {
-    this.collapsedGroups[groupIdentifier] = !this.collapsedGroups[groupIdentifier];
-  }
-
-  isGroupCollapsed(groupIdentifier: string): boolean {
-    return !!this.collapsedGroups[groupIdentifier];
-  }
+  activeGroupSubTab: "overview" | "groups" | "victims" = "overview";
+  activeGroupIndex = 0;
+  activeVictimIndex = 0;
 
   isGroupValid(group: IncidentModels.GroupInformation): boolean {
-    return IncidentModels.GroupInformationSchema.safeParse(group).success;
+    return isVisibleFieldsValid(IncidentModels.GroupInformationSchema, group as Record<string, unknown>);
   }
 
   collapsedAttachments: Record<string, boolean> = {};
@@ -247,7 +246,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
     const victimInformation = { anonymousVictimIdentifier } as IncidentModels.VictimInformation;
     const report = this.incidentReport();
-    this.incidentReport.set({ ...report, victimInformation: [...(report.victimInformation ?? []), victimInformation] });
+    const victims = [...(report.victimInformation ?? []), victimInformation];
+    this.incidentReport.set({ ...report, victimInformation: victims });
+    this.activeVictimIndex = victims.length - 1;
   }
 
   removeVictimInformation(index: number) {
@@ -256,6 +257,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const report = this.incidentReport();
     const victims = (report.victimInformation ?? []).filter((_, i) => i !== index);
     this.incidentReport.set({ ...report, victimInformation: victims });
+    if (this.activeVictimIndex >= victims.length) {
+      this.activeVictimIndex = Math.max(0, victims.length - 1);
+    }
   }
 
   updateVictimInformation(index: number, updatedVictim: IncidentModels.VictimInformation) {
@@ -264,18 +268,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.incidentReport.set({ ...report, victimInformation: victims });
   }
 
-  collapsedVictims: Record<string, boolean> = {};
-
-  toggleVictimCollapse(id: string) {
-    this.collapsedVictims[id] = !this.collapsedVictims[id];
-  }
-
-  isVictimCollapsed(id: string): boolean {
-    return !!this.collapsedVictims[id];
-  }
-
-  isVictimValid(group: IncidentModels.VictimInformation): boolean {
-    return IncidentModels.VictimInformationSchema.safeParse(group).success;
+  isVictimValid(victim: IncidentModels.VictimInformation): boolean {
+    return isVisibleFieldsValid(IncidentModels.VictimInformationSchema, victim as Record<string, unknown>);
   }
 
   get groupIdentifiers(): string[] {
