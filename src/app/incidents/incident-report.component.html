@@ -350,10 +350,13 @@
         />
 
         @if (incidentReport().personInvolvement === "Yes") {
-          <div>
-            <h4 class="mb-3 text-secondary">{{ "incidentReport.involvementsFatalitiesBurials" | translate }}</h4>
+          <div class="rounded border bg-body-secondary px-3 py-3">
+            <h4 class="mb-3 text-secondary d-flex align-items-center gap-2">
+              <i class="ph ph-calculator"></i>
+              {{ "incidentReport.involvementsFatalitiesBurials" | translate }}
+            </h4>
             <app-zod-schema-form
-              [disabled]="true"
+              [displayOnly]="true"
               [value]="involvementsFatalitiesBurials"
               [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
               [labelI18n]="labelI18n"
