@@ -50,7 +50,6 @@ import { GeocodingService } from "../observations/geocoding.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { IncidentService } from "../providers/incident-service/incident.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid } from "../shared/zod-util";
 import * as IncidentModels from "./models/incident-report.model";
@@ -60,15 +59,7 @@ import { IncidentReport } from "./models/incident-report.model";
   selector: "app-incident-report",
   templateUrl: "incident-report.component.html",
   standalone: true,
-  imports: [
-    DatePipe,
-    AccordionModule,
-    BsDropdownModule,
-    FormsModule,
-    TranslateModule,
-    ZodSchemaFormComponent,
-    ToggleBtnGroup,
-  ],
+  imports: [DatePipe, AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
   constantsService = inject(ConstantsService);
@@ -96,8 +87,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly disabled = input<boolean>(false);
   readonly labelI18n = "incidentReport.#";
   readonly helpI18n = "incidentReportHelp.#";
-
-  personInvolvementOptions: ("Yes" | "No" | "Unknown")[] = ["Yes", "No", "Unknown"];
 
   showMandatoryOnly = false;
   readonly allTabs = [

@@ -339,34 +339,15 @@
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.personInvolvement" | translate }}</h4>
 
-        <!-- Person Involvement Field -->
-        <div class="mb-4">
-          <div class="form-label d-flex align-items-center gap-2">
-            <span>{{ "incidentReport.personInvolvement" | translate }}</span>
-            @if (
-              incidentReport().personInvolvement &&
-              personInvolvementOptions.includes(incidentReport().personInvolvement)
-            ) {
-              <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">
-                <i class="ph ph-check"></i>
-              </span>
-            } @else {
-              <span class="text-danger" title="{{ 'incidentReportUI.required' | translate }}">
-                <i class="ph ph-warning"></i>
-              </span>
-            }
-          </div>
-          <div class="form-text mb-2">
-            {{ "incidentReportHelp.personInvolvement" | translate }}
-          </div>
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="personInvolvementOptions"
-            [value]="incidentReport().personInvolvement"
-            (valueChange)="incidentReport().personInvolvement = $event; incidentReport.set(incidentReport())"
-            [labelI18n]="'personInvolvement.#'"
-          />
-        </div>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [(value)]="incidentReport"
+          [zodType]="IncidentModels.IncidentReportSchema"
+          [includeFields]="['personInvolvement']"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
 
         @if (incidentReport().personInvolvement === "Yes") {
           <div>
