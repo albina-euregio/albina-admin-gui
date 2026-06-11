@@ -9,6 +9,7 @@
         class="zod-form-field"
         [class]="widget?.class"
         [id]="x.key"
+        [title]="displayOnly() ? (helpI18n().replace('#', x.key) | translate) : ''"
       >
         <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100">
           <div class="d-flex align-items-center gap-2">
@@ -295,9 +296,11 @@
             <div>{{ JSON.stringify(x.value) }}</div>
           </div>
         }
-        <div class="form-text">
-          {{ helpI18n().replace("#", x.key) | translate }}
-        </div>
+        @if (!displayOnly()) {
+          <div class="form-text">
+            {{ helpI18n().replace("#", x.key) | translate }}
+          </div>
+        }
         @if (!displayOnly() && zodUtil.hasValue(value()[x.key])) {
           @if (x.value.safeParse(value()[x.key]); as parseResult) {
             @if (parseResult.error) {
