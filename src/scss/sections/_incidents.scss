@@ -17,16 +17,20 @@
 
   // https://getbootstrap.com/docs/5.3/customize/color/
   .bg-incident-trigger {
-    background-color: $indigo-100;
+    background-color: rgba($indigo-100, 0.5);
+    border-left: 3px solid $indigo-400;
   }
   .bg-start-zone {
-    background-color: $teal-100;
+    background-color: rgba($teal-100, 0.5);
+    border-left: 3px solid $teal-400;
   }
   .bg-weak-layer {
-    background-color: $cyan-100;
+    background-color: rgba($cyan-100, 0.5);
+    border-left: 3px solid $cyan-500;
   }
   .bg-public-danger-rating {
-    background-color: $blue-100;
+    background-color: rgba($blue-100, 0.5);
+    border-left: 3px solid $blue-400;
   }
 
   app-danger-rating img,
@@ -204,10 +208,11 @@
 
   // Spacing and separation between fields
   .zod-form-field {
+    padding-top: $space-4;
+    padding-bottom: $space-4;
+
     &:not(.d-none) ~ .zod-form-field:not(.d-none) {
       border-top: 1px solid $gray-200;
-      padding-top: $space-4;
-      padding-bottom: $space-4;
     }
   }
 
