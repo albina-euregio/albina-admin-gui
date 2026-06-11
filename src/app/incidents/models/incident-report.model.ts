@@ -166,8 +166,8 @@ export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 export const InvolvementsFatalitiesBurialsSchema = z.object({
   numberOfGroups: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
   numberInvolved: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
-  incidentActivity: incidentActivity.array().nullish(),
-  incidentTerrainType: incidentTerrainType.array().nullish(),
+  incidentActivity: incidentActivity.array().register(widgetRegistry, { class: "col-6" }).nullish(),
+  incidentTerrainType: incidentTerrainType.array().register(widgetRegistry, { class: "col-6" }).nullish(),
   fatalities: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
   injuredSurvivors: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
   uninjuredSurvivors: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
