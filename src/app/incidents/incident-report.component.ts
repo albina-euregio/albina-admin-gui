@@ -30,9 +30,23 @@ const defaultMarkerIcon = new Icon({
 });
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
+import {
+  catchError,
+  concatMap,
+  debounceTime,
+  distinctUntilChanged,
+  EMPTY,
+  forkJoin,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from "rxjs";
 import { z } from "zod/v4";
 
+import { GeocodingService } from "../observations/geocoding.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { IncidentService } from "../providers/incident-service/incident.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
@@ -62,6 +76,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
+  private geocodingService = inject(GeocodingService);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
@@ -277,6 +292,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   mapLayer?: Layer;
   activeDrawingMode: "Point" | "Line" | "Polygon" = "Point";
 
+  private _lastLat: number | null | undefined;
+  private _lastLng: number | null | undefined;
+  private readonly reverseGeocodeTrigger$ = new Subject<[number, number]>();
+
   ngOnInit() {
     if (this.activeTab === "location") {
       setTimeout(() => this.initLocationMap(), 50);
@@ -286,6 +305,28 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       this.loadIncident(id);
     }
     this.startAutoSave();
+    this.reverseGeocodeTrigger$
+      .pipe(
+        debounceTime(800),
+        switchMap(([lat, lng]) =>
+          forkJoin({
+            addr: this.geocodingService.reverseGeocode(lat, lng).pipe(catchError(() => of(null))),
+            regionId: this.regionsService.findRegionForCoordinates(lat, lng).pipe(catchError(() => of(null))),
+          }),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(({ addr, regionId }) => {
+        this.incidentReport.update((r) => ({
+          ...r,
+          ...(addr && {
+            country: addr.country ?? r.country,
+            region: addr.state ?? r.region,
+            municipality: addr.municipality ?? addr.city ?? addr.town ?? addr.village ?? r.municipality,
+          }),
+          ...(regionId && { avalancheRegion: regionId }),
+        }));
+      });
   }
 
   private loadIncident(id: string) {
@@ -295,6 +336,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         this.updatedAt = new Date(view.updatedAt);
         const report = IncidentModels.PartialIncidentReportSchema.parse(view.data) as IncidentReport;
         this.incidentReport.set(report);
+        this._lastLat = report.latitude;
+        this._lastLng = report.longitude;
       },
       error: (error) => console.error("Failed to load incident", error),
     });
@@ -401,6 +444,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (mode === "Point") {
       report.latitude = Number(lat.toFixed(6));
       report.longitude = Number(lng.toFixed(6));
+      this._lastLat = report.latitude;
+      this._lastLng = report.longitude;
+      this.reverseGeocodeTrigger$.next([report.latitude, report.longitude]);
     } else if (mode === "Line") {
       const points = this.parseCoordinatesText(report.lineCoordinatesText || "");
       points.push([Number(lat.toFixed(6)), Number(lng.toFixed(6))]);
@@ -513,6 +559,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   onLocationFormChange(updatedReport: IncidentReport) {
     this.incidentReport.set({ ...updatedReport });
     this.drawOnMap();
+    if (
+      (updatedReport.latitude !== this._lastLat || updatedReport.longitude !== this._lastLng) &&
+      updatedReport.latitude != null &&
+      updatedReport.longitude != null
+    ) {
+      this.reverseGeocodeTrigger$.next([updatedReport.latitude, updatedReport.longitude]);
+    }
+    this._lastLat = updatedReport.latitude;
+    this._lastLng = updatedReport.longitude;
   }
 
   onLatLngInputChange() {

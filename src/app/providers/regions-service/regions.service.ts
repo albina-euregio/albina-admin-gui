@@ -12,10 +12,12 @@ import outline_properties from "@eaws/outline_properties/index.json";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageSchema } from "app/models/text.model";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
+import { from, map, Observable } from "rxjs";
 import { z } from "zod/v4";
 
 import aggregatedRegions from "../../../assets/aggregated_regions.json";
 import { AuthenticationService } from "../authentication-service/authentication.service";
+import { getRegionForLatLng, initAugmentRegion } from "./augmentRegion";
 import { loadRegions } from "./regions-loader.mjs";
 
 @Injectable()
@@ -91,6 +93,10 @@ export class RegionsService {
 
   getRegionName(id: string): string {
     return this.getRegionNames()[id] ?? id;
+  }
+
+  findRegionForCoordinates(lat: number, lng: number): Observable<string | null> {
+    return from(initAugmentRegion()).pipe(map(() => getRegionForLatLng({ latitude: lat, longitude: lng }) ?? null));
   }
 }
 
