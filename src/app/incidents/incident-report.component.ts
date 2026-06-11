@@ -28,6 +28,7 @@ import { IncidentService } from "../providers/incident-service/incident.service"
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
+import { isFieldValid, isVisibleFieldsValid } from "../shared/zod-util";
 import * as IncidentModels from "./models/incident-report.model";
 import { IncidentReport } from "./models/incident-report.model";
 
@@ -83,7 +84,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       schema: IncidentModels.AvalancheInformationSchema,
     },
     { id: "group", label: "incidentReport.personInvolvement" },
-    { id: "other-damages", label: "incidentReport.otherDamages" },
+    { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
     { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
     { id: "attachments", label: "incidentReport.incidentAttachments" },
   ] as const;
@@ -109,40 +110,29 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return this.allTabs[Math.min(index + 1, this.allTabs.length - 1)].id;
   }
 
-  getValidationStatus(schema: z.ZodType): "valid" | "invalid" {
-    const res = schema.safeParse(this.incidentReport());
-    return res.success ? "valid" : "invalid";
+  getValidationStatus(schema: z.ZodObject): "valid" | "invalid" {
+    return isVisibleFieldsValid(schema, this.incidentReport() as Record<string, unknown>) ? "valid" : "invalid";
   }
 
   getTabValidationStatus(tab: (typeof this.allTabs)[number]): "valid" | "invalid" {
     if (tab.id === "group") return this.getGroupValidationStatus();
-    if (tab.id === "other-damages") return this.getOtherDamagesValidationStatus();
     return "schema" in tab ? this.getValidationStatus(tab.schema) : "valid";
   }
 
-  getOtherDamagesValidationStatus(): "valid" | "invalid" {
-    const res = IncidentModels.OtherDamagesSchema.safeParse(this.incidentReport());
-    if (!res.success) return "invalid";
+  getGroupValidationStatus(): "valid" | "invalid" {
     const report = this.incidentReport();
-    if (report.otherDamages === "Yes") {
-      if (!report.damagedAssets || report.damagedAssets.length === 0) {
-        return "invalid";
-      }
-    }
+    if (!isFieldValid(IncidentModels.IncidentReportSchema.shape.personInvolvement, report.personInvolvement))
+      return "invalid";
+    if (
+      report.personInvolvement === "Yes" &&
+      !(report.groupInformation ?? []).every((g) =>
+        isVisibleFieldsValid(IncidentModels.GroupInformationSchema, g as Record<string, unknown>),
+      )
+    )
+      return "invalid";
     return "valid";
   }
 
-  getGroupValidationStatus(): "valid" | "invalid" {
-    const pi = this.incidentReport().personInvolvement;
-    if (pi !== "Yes" && pi !== "No" && pi !== "Unknown") return "invalid";
-    if (pi === "Yes") {
-      for (const group of this.incidentReport().groupInformation ?? []) {
-        const res = IncidentModels.GroupInformationSchema.safeParse(group);
-        if (!res.success) return "invalid";
-      }
-    }
-    return "valid";
-  }
   readonly incidentReport = model<IncidentReport>(
     IncidentModels.PartialIncidentReportSchema.parse({
       author: this.authenticationService.getCurrentAuthor()?.email,

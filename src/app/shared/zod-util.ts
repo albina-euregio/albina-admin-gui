@@ -138,6 +138,25 @@ export function isFieldValid(schema: z.ZodType, val: unknown): boolean {
   return hasValue(val) && schema.safeParse(val).success;
 }
 
+// Validates only the fields that are currently visible (showIf conditions satisfied).
+// Hidden required fields are treated as satisfied so they don't block tab completion.
+export function isVisibleFieldsValid(schema: z.ZodObject, value: Record<string, unknown>): boolean {
+  for (const [key, fieldType] of Object.entries(schema.shape)) {
+    const zodType = fieldType as z.ZodType;
+    const inner = unwrap(zodType);
+    const showIf = widgetRegistry.get(inner)?.showIf;
+    if (showIf) {
+      const visible = showIf.every((cond) => {
+        const matches = (cond.values as unknown[]).includes(value[cond.field]);
+        return cond.negate ? !matches : matches;
+      });
+      if (!visible) continue;
+    }
+    if (!isFieldValid(zodType, value[key]) && (!isFieldOptional(zodType) || hasValue(value[key]))) return false;
+  }
+  return true;
+}
+
 export function hasValue(val: unknown): boolean {
   return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
 }

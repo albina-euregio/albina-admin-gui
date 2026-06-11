@@ -378,9 +378,7 @@ export const OtherDamagesSchema = z.object({
 
   damagedAssets: enumWithOther(
     z.enum(["Vehicle", "Forest", "Agriculture", "Livestock", "UtilitiesTechnicalInfrastructure"]),
-  )
-    .array()
-    .nullish(),
+  ).array(),
 
   otherDamagesComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
