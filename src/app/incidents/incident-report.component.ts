@@ -194,14 +194,23 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       name: Math.random(),
     });
     const groupInformation = { anonymousGroupIdentifier: anonymousGroupIdentifier } as IncidentModels.GroupInformation;
-    this.incidentReport().groupInformation.push(groupInformation);
+    const report = this.incidentReport();
+    this.incidentReport.set({ ...report, groupInformation: [...(report.groupInformation ?? []), groupInformation] });
   }
 
   removeGroupInformation(index: number) {
     if (index === 0) return;
     const message = this.translateService.instant("incidentReportUI.dropGroup", { number: index + 1 });
     if (!confirm(message)) return;
-    this.incidentReport().groupInformation.splice(index, 1);
+    const report = this.incidentReport();
+    const groups = (report.groupInformation ?? []).filter((_, i) => i !== index);
+    this.incidentReport.set({ ...report, groupInformation: groups });
+  }
+
+  updateGroupInformation(index: number, updatedGroup: IncidentModels.GroupInformation) {
+    const report = this.incidentReport();
+    const groups = (report.groupInformation ?? []).map((g, i) => (i === index ? updatedGroup : g));
+    this.incidentReport.set({ ...report, groupInformation: groups });
   }
 
   collapsedGroups: Record<string, boolean> = {};
@@ -236,14 +245,23 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const anonymousVictimIdentifier = this.translateService.instant("incidentReportUI.victimName", {
       name: Math.random(),
     });
-    const VictimInformation = { anonymousVictimIdentifier } as IncidentModels.VictimInformation;
-    this.incidentReport().victimInformation.push(VictimInformation);
+    const victimInformation = { anonymousVictimIdentifier } as IncidentModels.VictimInformation;
+    const report = this.incidentReport();
+    this.incidentReport.set({ ...report, victimInformation: [...(report.victimInformation ?? []), victimInformation] });
   }
 
   removeVictimInformation(index: number) {
     const message = this.translateService.instant("incidentReportUI.dropVictim", { number: index + 1 });
     if (!confirm(message)) return;
-    this.incidentReport().victimInformation.splice(index, 1);
+    const report = this.incidentReport();
+    const victims = (report.victimInformation ?? []).filter((_, i) => i !== index);
+    this.incidentReport.set({ ...report, victimInformation: victims });
+  }
+
+  updateVictimInformation(index: number, updatedVictim: IncidentModels.VictimInformation) {
+    const report = this.incidentReport();
+    const victims = (report.victimInformation ?? []).map((v, i) => (i === index ? updatedVictim : v));
+    this.incidentReport.set({ ...report, victimInformation: victims });
   }
 
   collapsedVictims: Record<string, boolean> = {};
@@ -634,6 +652,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       attachment._previewUrl = URL.createObjectURL(file);
     }
     this.incidentReport().attachments.push(attachment);
+  }
+
+  updateAttachment(index: number, updatedAttachment: z.infer<typeof IncidentModels.IncidentAttachmentSchema>) {
+    const report = this.incidentReport();
+    const attachments = (report.attachments ?? []).map((a, i) => (i === index ? updatedAttachment : a));
+    this.incidentReport.set({ ...report, attachments });
   }
 
   removeAttachment(index: number) {
