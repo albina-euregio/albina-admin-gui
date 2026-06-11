@@ -21,6 +21,7 @@
     "bulletins": "Lawinen.report",
     "dangerSources": "Gefahrenquellen",
     "observations": "Beobachtungen",
+    "incidents": "Ereignisse",
     "qfa": "QFA",
     "modelling": "Modellierung",
     "modellingForecast": "Vorhersage",
@@ -75,7 +76,7 @@
       "cloudLow": "Low"
     },
     "tooltips": {
-      "levelApproxElevation": "Approx. elevation: ~{{height}} m"
+      "levelApproxElevation": "Ungefähre Höhe: ~{{height}} m"
     },
     "parameters": {
       "gfs": {
@@ -268,6 +269,11 @@
   },
   "avalancheType": {
     "title": "Lawinenart",
+    "slab": "Schneebrett",
+    "loose": "Lockerschneelawine",
+    "glide": "Gleitschneelawine",
+    "cornice": "Wechte",
+    "unknown": "unbekannt",
     "label": {
       "slab": "SCHNEEBRETT",
       "loose": "LOCKERSCHNEE",
@@ -298,6 +304,7 @@
       "submitUpdate": "Update abschicken",
       "publishChange": "Sofort publizieren (keine Nachrichten)",
       "publishUpdate": "Sofort publizieren",
+      "publishMinimal": "Minimal publication",
       "caaml": "CAAML anzeigen",
       "json": "JSON anzeigen",
       "create": "Lawinenvorhersage erstellen",
@@ -347,6 +354,8 @@
         "checkInternetDescriptionPrefix": "Wie ist die Internetverbindung auf deinem Gerät? Navigiere in einem privaten Fenster zu",
         "checkInternetDescriptionSuffix": "Wird das Bulletin von gestern korrekt angezeigt?",
         "republishHint": "Führe diesen Schritt nur aus, wenn »Check Internetverbindung« erfolgreich war und mindestens 5 Minuten seit dem letzten Publikationsversuch vergangen sind.",
+        "publishMinimalTitle": "Minimal publication:",
+        "publishMinimalHint": " Verwenden Sie diese Option nur als Notlösung, wenn die vollständige Veröffentlichung fehlschlägt. Es werden ausschließlich CAAML-Daten veröffentlicht; Karten, Text-to-Speech und Push-Benachrichtigungen werden nicht erzeugt. ⚠️ Diese Aktion betrifft alle Regionen auf diesem Server, nicht nur Ihre eigene. Alle Regionen werden im Minimalmodus erneut veröffentlicht.",
         "editAndResendTitle": "Bearbeiten und erneut senden:",
         "openBulletin": "Öffne das Bulletin",
         "clickEdit": "Klicke auf »Bearbeiten«",
@@ -442,6 +451,7 @@
         "dangerRatingDirectionDown": "Abwärts",
         "addPhoto": "Foto hinzufügen",
         "removePhoto": "Foto entfernen",
+        "uploadPhoto": "Foto hochladen",
         "editPhoto": "Foto bearbeiten"
       },
       "save": " Speichern",
@@ -840,6 +850,7 @@
         "components": {
           "title": "Komponenten",
           "enableDangerSources": "Gefahrenquellen aktivieren",
+          "enableIncidents": "Lawinenunfalldatenbank anschalten",
           "enableObservations": "Beobachtungen aktivieren",
           "enableModelling": "Modellierung aktivieren",
           "enableWeatherbox": "Wetterbox aktivieren",
@@ -1083,11 +1094,15 @@
     }
   },
   "dangerRating": {
+    "missing": "fehlt",
     "noRating": "keine Beurteilung",
+    "no_rating": "keine Beurteilung",
+    "no_snow": "kein Schnee",
     "low": "gering",
     "moderate": "mäßig",
     "considerable": "erheblich",
     "high": "groß",
+    "very_high": "sehr groß",
     "veryHigh": "sehr groß"
   },
   "avalancheProblem": {
@@ -1197,9 +1212,13 @@
   },
   "avalancheSize": {
     "small": "klein",
+    "small_medium": "klein–mittel",
     "medium": "mittel",
+    "medium_large": "mittel–groß",
     "large": "groß",
+    "large_very_large": "groß–sehr groß",
     "very_large": "sehr groß",
+    "very_large_extreme": "sehr groß–extrem",
     "extreme": "extrem"
   },
   "complexity": {
@@ -1381,6 +1400,10 @@
       "code": "FC",
       "class": "kantige Kristalle"
     },
+    "FCxr": {
+      "code": "FCxr",
+      "class": "Kantig, kantenabgerundete Kristalle"
+    },
     "DH": {
       "code": "DH",
       "class": "Tiefenreif"
@@ -1392,6 +1415,10 @@
     "MF": {
       "code": "MF",
       "class": "Schmelzformen"
+    },
+    "MM": {
+      "code": "MM",
+      "class": "Kunstschnee"
     },
     "MFcr": {
       "code": "MFcr",
@@ -1518,6 +1545,7 @@
   "personInvolvement": {
     "Dead": "Personenbeteiligung (tot)",
     "Injured": "Personenbeteiligung (verletzt)",
+    "Yes": "Ereignis mit Personenbeteiligung",
     "No": "Keine Personenbeteiligung",
     "Uninjured": "Personenbeteiligung (unverletzt)",
     "Unknown": "Ereignis (unbekannt)"
@@ -1656,5 +1684,788 @@
       "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
       "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
+  },
+  "incidentReportUI": {
+    "addAttachment": "Anhang hochladen",
+    "addGroup": "Gruppe hinzufügen",
+    "addVictim": "Opfer hinzufügen",
+    "back": "Zurück",
+    "clearLine": "Linie löschen",
+    "clearPoint": "Punkt löschen",
+    "clearPolygon": "Polygon löschen",
+    "controls": "Regler Geometrie",
+    "drawLine": "Linie zeichnen",
+    "drawLineInstructions": "Um der Linie Punkte hinzuzufügen, bitte In die Karte klicken.",
+    "drawPoint": "Punkt zeichnen",
+    "drawPointInstructions": "Klicken Sie auf die Karte, um die Standortmarkierung zu platzieren.",
+    "drawPolygon": "Polygon zeichnen",
+    "drawPolygonInstructions": "Mit Klick auf die Karte, werden die Eckpunkte des Polygons festgelegt.",
+    "dropAttachment": "Drop Anhang {{fileName}}?",
+    "dropGroup": "Drop Gruppe {{number}}?",
+    "dropVictim": "Drop Opfer {{number}}?",
+    "groupName": "Gruppe {{name}}",
+    "groupUnknown": "Gruppe nicht bekannt",
+    "incomplete": "Unvollständig",
+    "line": "Linie",
+    "locationMap": "Karte für die Örtlichkeit",
+    "noGroups": "Keine Gruppen vorhanden. Klicke auf „Gruppe hinzufügen“, um eine Gruppe anzulegen.",
+    "next": "Nächste",
+    "noVictims": "Keine Opfer vorhanden. Klicke auf „Opfer hinzufügen“, um ein Opfer anzulegen.",
+    "point": "Punkt",
+    "polygon": "Polygon",
+    "publishUpdateIncident": " Ereignis veröffentlichen/aktualisieren",
+    "removeAttachment": "Anhang löschen",
+    "removeGroup": "Gruppe löschen",
+    "removeVictim": "Opfer löschen",
+    "required": "Pflichtfelder",
+    "showMandatoryFieldsOnly": "Nur Pflichtfelder anzeigen",
+    "valid": "Gültig",
+    "victimName": "Opfer {{name}}"
+  },
+  "incidentReport": {
+    "incidentReport": "Ereignisdokumentation",
+    "metaInformation": "Metadaten",
+    "generalInformation": "Allgemeine Informationen",
+    "locationInformation": "Informationen zum Ort",
+    "avalancheInformation": "Informationen zur Lawine",
+    "groupInformation": "Informationen zur Gruppe",
+    "victimInformation": "Informationen zum Opfer",
+    "involvementsFatalitiesBurials": "Beteiligungen, Todesopfer und Verschüttungen",
+    "incidentAnalysis": "Ereignisanalyse",
+    "incidentAttachments": "Anhänge zum Ereignis",
+
+    "author": "Autor",
+    "authorAffiliation": "Organisation des Autors",
+    "timestamp": "Zeitangabe",
+
+    "dateTime": "Datum/Zeit",
+    "timeAccuracy": "Genauigkeit des Zeitpunkts",
+    "sourceOfInformation": "Herkunft der Information",
+    "personInvolvement": "Personenbeteiligung",
+    "otherDamages": "Andere Schäden",
+    "damagedAssets": "Beschädigte Objekte",
+    "publicAvalancheWarningService": "Amtlicher Lawinenwarndienst",
+    "dangerRating": "Gefahrenstufe",
+    "avalancheProblem": "Lawinenproblem",
+    "dangerPattern": "Gefahrenmuster",
+    "reportStatus": "Status des Berichts",
+    "publicExternalLinks": "Externe Links für die Öffentlichkeit",
+    "privateExternalLinks": "Externe Links mit vertraulicher Information",
+    "privateExternalDatabaseLinks": "Externe Links mit vertraulicher Information",
+    "generalInformationComment": "Kommentar zu Allgemeinen Informationen",
+
+    "location": "Ort",
+    "country": "Land",
+    "region": "Region",
+    "municipality": "Gemeinde",
+    "avalancheRegion": "Kleinstregion",
+    "latitude": "Breitengrad",
+    "longitude": "Längengrad",
+    "locationAccuracy": "Genauigkeit der Örtlichkeit",
+    "lineCoordinatesText": "Koordinaten der Linie",
+    "polygonCoordinatesText": "Koordinaten des Polygons",
+    "locationInformationComment": "Kommentar zu den Ortsinformationen",
+    "locationType": {
+      "Point": "Punkt",
+      "Line": "Linie",
+      "Polygon": "Polygon"
+    },
+
+    "anonymousGroupIdentifier": "Anonyme Kennung der Gruppe",
+    "groupType": "Art der Gruppe",
+    "groupSize": "Gruppengröße",
+    "groupSizeAccuracy": "Genauigkeit der Gruppengröße",
+    "incidentTerrainType": "Charakter des Geländes",
+    "typeOfControlledTerrain": "Art des gesicherten Geländes",
+    "incidentActivity": "Aktivität",
+    "travelDirection": "Bewegungsrichtung",
+    "vehicleType": "Fahrzeugtyp",
+    "avalancheGear": "Notfallausrüstung",
+    "groupInformationComment": "Kommentar zur Gruppeninformation",
+
+    "numberOfGroups": "Anzahl an Gruppen",
+    "activities": "Aktivitäten",
+    "terrainTypes": "Charakter des Geländes",
+    "fatalities": "Todesopfe",
+    "injuredSurvivors": "Verletzte Personen",
+    "uninjuredSurvivors": "Unverletzte Personen",
+    "caughtOnly": "Nur mitgerissen",
+    "fullyBuried": "Komplett verschüttet",
+    "partlyBuriedHeadCovered": "Teilverschüttet, aber Kopf verschüttet",
+    "partlyBuriedHeadUncovered": "Teilverschüttet, Kopf frei",
+    "partlyBuried": "Teilverschüttet",
+    "numberInvolved": "Anzahl beteiligte Personen",
+    "involvementsFatalitiesBurialsComment": "Kommentare zu Beteiligungen, Todesopfer und Verschüttungen",
+
+    "caught": "Mitgerissen",
+    "fatalInjured": "Schadensausmaß Personen",
+    "burialDegree": "Grad der Verschüttu",
+    "anonymousVictimIdentifier": "Anonyme Kennung des Opfers",
+    "age": "Alter",
+    "gender": "Geschlecht",
+    "workingAtTime": "Während der Ausführung seiner Arbeit unterwegs",
+    "leaderAtTime": "Als Führer unterwegs",
+    "professionalCertification": "Berufliche Qualifikation",
+    "avalancheTraining": "Lawinenausbildung",
+    "yearsActive": "Jahre der Erfahrung",
+    "transceiver": "Lawinenverschüttetensuchgerät (LVS)",
+    "shovel": "Schaufel",
+    "probe": "Sonde",
+    "airbag": "Lawinenrucksack",
+    "helmet": "Helm",
+    "terrainTrap": "Geländefalle",
+    "burialDepth": "Verschüttungstiefe",
+    "burialDuration": "Verschüttungsdauer",
+    "primaryLocationMethod": "Primäre Auffindungsmethode",
+    "rescuedBy": "Gerettet durch",
+    "medicalIntervention": "Medizinische Versorgung",
+    "estimatedTimeOfDeath": "Todeszeitpunkt (geschätzt)",
+    "causeOfDeath": "Todesursache",
+    "respiratoryCavity": "Atemhöhle vohanden",
+    "injurySeverity": "Ausmaß der Verletzung",
+    "victimInformationComment": "Kommentar zu Opferinformationen",
+
+    "multipleAvalanches": "Mehrere Lawinen",
+    "avalancheSize": "Lawinengröße",
+    "avalancheType": "Lawinenart",
+    "relevantAvalancheProblem": "Relevant Avalanche Problem",
+    "trigger": "Trigger",
+    "natural": "Natural",
+    "person": "Person",
+    "additionalLoad": "Additional Load",
+    "explosives": "Explosives",
+    "vehicle": "Vehicle",
+    "accidentalControlled": "Accidental/ Controlled",
+    "remoteTriggering": "Remote Triggering",
+    "startZoneAspect": "Start Zone Aspect",
+    "startZoneAspectAccuracy": "Aspect Accuracy",
+    "startZoneElevation": "Start Zone Elevation",
+    "startZoneElevationAccuracy": "Elevation Accuracy",
+    "startZoneIncline": "Start Zone Incline",
+    "startZoneTerrainType": "Start Zone Terrain Type",
+    "slabWidth": "Slab Width",
+    "crownDepthAvg": "Crown Depth Avg",
+    "crownDepthMin": "Crown Depth Min",
+    "crownDepthMax": "Crown Depth Max",
+    "avalancheLength": "Avalanche Lenght",
+    "weakLayerName": "Weak Layer Name",
+    "weakLayerGrainType1": "Weak Layer Grain Type (1)",
+    "weakLayerGrainSize1": "Weak Layer Grain Size (1)",
+    "weakLayerGrainType2": "Weak Layer Grain Type (2)",
+    "weakLayerGrainSize2": "Weak Layer Grain Size (2)",
+    "weakLayerLocation": "Weak layer Location",
+    "bedSurfaceStepped": "Bed Surface Stepped",
+    "avalancheMoistureStartZone": "Avalanche Moisture: Start Zone",
+    "avalancheMoistureDeposit": "Avalanche Moisture: Deposit",
+    "depositHeight": "Deposit Height",
+    "depositWidth": "Deposit Width",
+    "debrisType": "Debris Type",
+    "debrisDensity": "Debris Density",
+    "depositElevation": "Deposit Elevation",
+    "avalancheDetailsComment": "Avalanche Details Comment",
+
+    "incidentLedePublic": "Publish Incident Lede?",
+    "incidentLede": "Incident Lede",
+    "incidentDescriptionPublic": "Publish Incident Description?",
+    "incidentDescription": "Incident Description",
+    "weatherDescriptionPublic": "Publish Weather Description?",
+    "weatherDescription": "Weather Description",
+    "avalancheDescriptionPublic": "Publish Avalanche Description?",
+    "avalancheDescription": "Avalanche Description",
+    "snowpackDescriptionPublic": "Publish Snowpack Description?",
+    "snowpackDescription": "Snowpack Description",
+    "takeAwaysPublic": "Publish Take Aways?",
+    "takeAways": "Take Aways",
+    "recentSlabAvalanches": "Recent Slab Avalanches",
+    "signsOfInstability": "Signs of Instability",
+    "recentLoading": "Recent Loading",
+    "criticalWarming": "Critical Warming",
+    "incidentAnalysisComment": "Incident Analysis Comment",
+
+    "uuid": "UUID",
+    "dateAdded": "Date Added",
+    "file": "File",
+    "fileName": "File Name",
+    "mediaType": "Media Type",
+    "attachmentTags": "Tags",
+    "altText": "Alt Text",
+    "credit": "Credit",
+    "caption": "Überschrift",
+    "public": "Public",
+    "attachmentCategory": "Category"
+  },
+  "incidentReportHelp": {
+    "author": "",
+    "authorAffiliation": "",
+    "timestamp": "",
+
+    "dateTime": "",
+    "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche.",
+    "sourceOfInformation": "Specify the source(s) of the information.",
+    "personInvolvement": "Select “Yes” if the avalanche was human-triggered (including remote triggering) or if individuals were affected by moving masses.",
+    "otherDamages": "Select “Yes” if the avalanche caused damage to property or other valuable assets.",
+    "damagedAssets": "Indicate the type of object(s) that sustained damage.",
+    "publicAvalancheWarningService": "Name of agency in which area of responsibility the avalanche happened.",
+    "dangerRating": "Publicly available avalanche danger rating valid for the date, time, and location of the incident (including elevation and aspect, if applicable).",
+    "avalancheProblem": "Select the forecasted EAWS Avalanche Problem(s) for that day and location. Choose “None” if none were issued that day.",
+    "dangerPattern": "Select the forecasted Danger Pattern(s) for that day and location.",
+    "reportStatus": "Draft: Not ready for public view; initial entry phase; Incomplete: Not all information has been entered or received; visible to the public but may contain unverified information; In Review: All information has been entered; awaiting review by a supervisor; Complete: All available information has been added; final status.",
+    "publicExternalLinks": "",
+    "privateExternalLinks": "",
+    "privateExternalDatabaseLinks": "Links this incident with other databases.",
+    "generalInformationComment": "Add any additional relevant details.",
+
+    "location": "Brief description of the location. Use the name of the nearest mountain or a prominent geographic feature.",
+    "country": "",
+    "region": "",
+    "municipality": "",
+    "avalancheRegion": "Micro-Regions",
+    "latitude": "Provide the coordinates of the center of the fracture crown.",
+    "longitude": "Provide the coordinates of the center of the fracture crown.",
+    "locationAccuracy": "Estimate the accuracy of the latitude/longitude coordinates.",
+    "lineCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) or draw a line on the map.",
+    "polygonCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) or draw a polygon on the map.",
+    "locationInformationComment": "Add any additional relevant details.",
+
+    "anonymousGroupIdentifier": "This is used to identify the group throughout the report. For example, you might refer to Group 1, Group 2, etc when reporting on a incident. You could add specific details if it helps keep track of which group is which. If appropriate, you can use the same identifier when referencing this group in the Incident Description.",
+    "groupType": "Select the option that best describes the type of group.",
+    "groupSize": "Provide the total number of individuals in the group.",
+    "groupSizeAccuracy": "Indicate how accurately the group size is known.",
+    "incidentTerrainType": "Select the terrain type where people were located at the time of the avalanche. Free terrain refers to areas without any human infrastructure.",
+    "typeOfControlledTerrain": "",
+    "incidentActivity": "",
+    "travelDirection": "Direction of travel at the time of the incident.",
+    "vehicleType": "",
+    "avalancheGear": "Essential avalanche rescue gear is defined as a transceiver, shovel and probe. Give a basic assessment of whether the group was carrying essential avalanche rescue gear. Commonly this information comes from the search and rescue team. It is not necessary to get hung up on exact numbers or require in-depth communication with each party member. More like an answer to the basic question of: Were they carrying rescue gear?.",
+    "groupInformationComment": "Add any additional relevant details.",
+
+    "numberOfGroups": "Number of groups involved",
+    "activities": "",
+    "terrainTypes": "",
+    "fatalities": "All deceased whether they died on scene or afterwards as a result of their injuries.",
+    "injuredSurvivors": "Number people who were caught by the avalanche and who were injured but not killed. Do not include any deceased.",
+    "uninjuredSurvivors": "Number of people who were caught by the avalanche but not injured. Include those dusted by the powder cloud.",
+    "caughtOnly": "Number of people who were caught by the avalanche but not buried. Include those dusted by the powder cloud.",
+    "fullyBuried": "Number of people fully buried by the avalanche. A fully buried person has no part of their body visible.",
+    "partlyBuriedHeadCovered": "Number of people buried with their head covered by snow but part of their body, clothing or attached equipment is visible.",
+    "partlyBuriedHeadUncovered": "Number of people buried with their head uncovered.",
+    "partlyBuried": "Number=Partly Buried, Head Covered+Partly Buried, Head Uncovered",
+    "numberInvolved": "Number=Caught Only+Fully Buried+Partly Buried",
+    "involvementsFatalitiesBurialsComment": "Add any additional relevant details",
+
+    "caught": "Specify whether this individual was involved with the avalanche. Involved means being caught by the avalanche (whether buried or not), buried or dusted by the powder cloud.",
+    "fatalInjured": "Indicate whether the person was fatally injured, injured, or uninjured, regardless of their involvement type.",
+    "burialDegree": "Provide details about the degree of burial. A fully buried victim has all parts of their body submerged under the snow. If the victim was partly buried, try to find out whether their head was covered or uncovered and use these options preferentially. If you are unable to find out this detail, use the Partly Buried option.",
+    "anonymousVictimIdentifier": "This is used to identify the victim throughout the report, without needing to use their name. For example, you might refer to Rider 1, Rider 2, etc when reporting on a snowmobile incident. You could add specific details if it helps keep track of which victim is which, e.g. Male survivor, Female survivor, Male decedant. If appropriate, you can use the same identifier when referencing this person in the Incident Description.",
+    "age": "",
+    "gender": "",
+    "workingAtTime": "Was the person involved performing work duties at the time of the incident, either in a paid capacity or as a volunteer?",
+    "leaderAtTime": "Was the person involved acting in a capacity that clearly placed them at the leader of the group?",
+    "professionalCertification": "Provide details of the professional certification of the individual",
+    "avalancheTraining": "Provide details about the highest level of avalanche safety training the victim had received.",
+    "yearsActive": "Select how many years this person had been practicing the activity prior to the incident",
+    "transceiver": "Select whether the person carried a transceiver and whether it was in send mode",
+    "shovel": "",
+    "probe": "",
+    "airbag": "",
+    "helmet": "",
+    "terrainTrap": "Indicate the type of terrain trap involved, if there was one.",
+    "burialDepth": "Specify the depth of burial in m to the nearerst 0.1 m. The reference to determine the burial depth is the depth from the snow surface to the victim's airway.",
+    "burialDuration": "Specify the duration of the victim's burial in minutes from when they were first buried to when their airway was uncovered.",
+    "primaryLocationMethod": "Specify the primary method that was used to locate the victim. ",
+    "rescuedBy": "",
+    "medicalIntervention": "Provide details about medical interventions applied, either by party members, or external rescue.",
+    "estimatedTimeOfDeath": "Provide a best estimate of when the victim died. This does not have to be consistent with the official time of death, since in many instances, people are only pronounced dead at hospital.",
+    "causeOfDeath": "Estimated cause of death",
+    "respiratoryCavity": "No obstacles in the airways",
+    "injurySeverity": "Major: a serious, often life-threatening condition that requires immediate medical attention and may result in long-term disability or death (e.g. fractures, head injuries, loss of conscousness, heavy bleeding); Moderate: more serious than minor but not immediately life-threatening. It usually needs medical treatment, but recovery is expected without major long-term effects (e.g. dislocations, sprains and strains, deep cuts). Minor: slight injury that can be treated with basic first aid, does not require professional medical care (e.g. small cuts, scratches, bruises).",
+    "victimInformationComment": "Add any additional relevant details",
+
+    "multipleAvalanches": "Choose yes, if there were multiple avalanches associated with the event. If selected, input details of the most impactful avalanche in the Avalanche Details section and provide details of the other avalanches in the Avalanche Comments section.",
+    "avalancheSize": "Estimate the destructive potential of the avalanche based on the deposited snow and assign a size according to the EAWS standard. Size 1 is the minimum rating. Half sizes are generally not defined, but may be used for avalanches that fall between two size classes; they are assigned to the lower class (e.g. size 2.5 is classified as size 2).",
+    "avalancheType": "Specify the avalanche type from the list according to it's failure type. If more than one type applies, choose the most relevant one and add further detail to the Incident Description.",
+    "relevantAvalancheProblem": "Select the most relevant EAWS Avalanche Problem.",
+    "trigger": "Natural: Triggered without human influence; Person: Triggered by one or more people; Explosives: Triggered by explosives, artillery, or gas; Vehicle: Triggered by a vehicle (e.g. snowcat, helicopter); Unknown: Trigger is unknown or unclear",
+    "natural": "",
+    "person": "",
+    "additionalLoad": "Low additional load: single skier/snowboarder, well-spaced group ≥10 m, or snowshoer; High additional load: closely spaced group <10 m,  single person on foot, falling skier/snowboarder.",
+    "explosives": "",
+    "vehicle": "",
+    "accidentalControlled": "",
+    "remoteTriggering": "A remote event is one occurring at some distance (typically > 5 m) from the probable trigger. Snow at the trigger point does not release",
+    "startZoneAspect": "Specify the aspect of the start zone. If the avalanche wraps around multiple aspects, use the median aspect and add further details to the Incident Description.",
+    "startZoneAspectAccuracy": "Indicate whether the aspect of the start zone is accurate or uncertain. Uncertainty applies if deviations greater than ±30° are possible.",
+    "startZoneElevation": "Provide the elevation of the avalanche fracture line in meters above sea level (m a.s.l.), using the highest point rounded to the nearest multiple of 50m (e.g. 2550, 2600m).",
+    "startZoneElevationAccuracy": "",
+    "startZoneIncline": "Slope angle of the start zone (°), rounded to the nearest 5° (e.g. 30, 35, 40)",
+    "startZoneTerrainType": "Select the terrain features that describe the avalanche start zone.",
+    "slabWidth": "Slab width in m. This may be estimated from field reports or measured from mapping using coordinates from the flanks.",
+    "crownDepthAvg": "Average crown depth cm to the nearest 10cm - measured vertically. This may be estimated from field reports (if only one number for the crown depth is supplied, it is usually taken to be the average), or it may be appropriate to calculate this from the min and max crown depth values.",
+    "crownDepthMin": "Minimum crown depth cm to the nearest 10cm - measured vertically. Typically estimated from field reports.",
+    "crownDepthMax": "Maximum crown depth cm to the nearest 10cm - measured vertically. Typically estimated from field reports.",
+    "avalancheLength": "Runout distance along the ground from the highest point of the crown to the lowest point of deposition (m). This can be estimated from field observations or measured using mapped coordinates of the start zone and terminus.",
+    "weakLayerName": "Record the weak layer name if known.",
+    "weakLayerGrainType1": "Primary weak layer grain type.",
+    "weakLayerGrainSize1": "Record size to the nearest 0.5 mm except for fine and very fine grains which may be recorded as 0.1, 0.3 or 0.5 mm.",
+    "weakLayerGrainType2": "Secondary weak layer grain type.",
+    "weakLayerGrainSize2": "Record size to the nearest 0.5 mm except for fine and very fine grains which may be recorded as 0.1, 0.3 or 0.5 mm.",
+    "weakLayerLocation": "Within new snow: Weak layer located within recently fallen and wind-drifted snow from the current snowfall or deposition period; At interface with old snow: Weak layer at the boundary between new and old snow (e.g. surface hoar on the old snow surface before being covered); Within the old snowpack: Weak layer in the middle or upper part of the old snowpack; Near the ground: Weak layer in the lower part of the snowpack, close to the ground, typically consisting of well-developed faceted crystals. Avalanches releasing on this layer often expose the ground.",
+    "bedSurfaceStepped": "Select “Yes” if the avalanche stepped down into a deeper weak layer.",
+    "avalancheMoistureStartZone": "",
+    "avalancheMoistureDeposit": "",
+    "depositHeight": "Maximum height of the deposit",
+    "depositWidth": "Maximum width of the deposit",
+    "debrisType": "Select the options that best describe the composition of the debris shortly after the avalanche.",
+    "debrisDensity": "Density of the debris, expressed as the median of several measurements taken at different locations within the debris.",
+    "depositElevation": "Elevation of the lowest point of the deposition in m.a.s.l.",
+    "avalancheDetailsComment": "Add any additional relevant details",
+
+    "incidentLedePublic": "",
+    "incidentLede": "Short text (500 characters max) that provides the essence of the incident. State what happened, where and when it occurred, and why it is notable. Keep it concise and factual, highlighting the most important outcome (e.g. involvement, burial, fatalities, unusual conditions).",
+    "incidentDescriptionPublic": "",
+    "incidentDescription": "Describe the incident in a clear, chronological manner, avoiding judgement or blame. Include what the group was doing at the time; where they were located (terrain, elevation, aspect if known); how the avalanche was triggered; how many people were involved, buried, injured or killed; who responded; and key details of the rescue. Include any other relevant observations that help reconstruct the event.",
+    "weatherDescriptionPublic": "",
+    "weatherDescription": "Describe the weather conditions that influenced the avalanche, including factors such as weak layer formation, slab development, recent loading, or warming. Link to relevant attachments (e.g. weather station data or graphs).",
+    "avalancheDescriptionPublic": "",
+    "avalancheDescription": "Describe the avalanche(s) itself using clear and objective terms. Include avalanche type, size, and dimensions (e.g. width, crown depth, runout). Note how it was triggered (natural, human-triggered, remote) and how it behaved (e.g. propagation, extent). Include any measurable or observed characteristics. Use the Incident Description to provide details about how and where people were caught, rescue details etc.",
+    "snowpackDescriptionPublic": "",
+    "snowpackDescription": "Explain the snowpack structure and conditions that contributed to the avalanche. Identify relevant weak layers and slab characteristics, and describe their distribution (e.g. by elevation or aspect). Include signs of instability and any available test results. Focus on explaining why the snowpack was susceptible to failure.",
+    "takeAwaysPublic": "",
+    "takeAways": "Summarize the key takeaways of the incident in a few short bullet points. Consider aspects such as warning signs, risk management (e.g. skiing one at a time), use of safety equipment, terrain traps, and group composition.",
+    "recentSlabAvalanches": "Use your best judgement to answer the question: Are there signs of slab avalanches in the area from today or yesterday? Look to information provided by the group themselves, reports from SAR teams or other users of the area that indicate whether other avalanches were noted.",
+    "signsOfInstability": "Use your best judgement to answer the question: Are there signs of snowpack instability including whumpfs, shooting cracks or drum-like sounds? Look to information provided by the group themselves, reports from SAR teams or other users of the area that indicate whether signs of instability were noted.",
+    "recentLoading": "Use your best judgement to answer the question: Has there been loading within the past 48 hours including roughly 30 cm of new snow or more, significant wind transport or rain?",
+    "criticalWarming": "Use your best judgement to answer the question: Has there been a recent rapid rise in temperature to near 0 C, or is the upper snowpack wet due to strong sun, above-freezing air temperatures or rain?",
+    "incidentAnalysisComment": "For further information",
+
+    "uuid": "UUID",
+    "dateAdded": "Date is derived from when the attachment was uploaded",
+    "file": "File",
+    "fileName": "Derived from original file name of uploaded attachment",
+    "mediaType": "",
+    "attachmentTags": "",
+    "altText": "",
+    "credit": "",
+    "caption": "",
+    "public": "",
+    "attachmentCategory": ""
+  },
+  "sourceOfInformation": {
+    "PublicObservation": "Public Observation",
+    "AWSInternal": "AWS Internal",
+    "AWSObserver": "AWS Observer",
+    "DispatchCentre": "Dispatch Centre",
+    "Police": "Police",
+    "MountainRescue": "Mountain Rescue",
+    "Other": "Other"
+  },
+  "otherDamages": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "damagedAssets": {
+    "Vehicle": "Vehicle",
+    "Forest": "Forest",
+    "Agriculture": "Agriculture",
+    "Livestock": "Livestock",
+    "UtilitiesTechnicalInfrastructure": "Utilities or Technical Infrastructure",
+    "Other": "Other"
+  },
+  "timeAccuracy": {
+    "exact": "exakt",
+    "PT15M": "± 15 min",
+    "PT30M": "± 30 min",
+    "PT1H": "± 1 h",
+    "PT2H": "± 2 h",
+    "PT4H": "± 4 h",
+    "PT6H": "± 6 h",
+    "PT12H": "± 12 h",
+    "P1D": "± 1 d",
+    "P2D": "± 2 d",
+    "P3D": "± 3 d",
+    "unknown": "unbekannt"
+  },
+  "reportStatus": {
+    "Draft": "Draft",
+    "Incomplete": "Unvollständig",
+    "InReview": "In Review",
+    "Verified": "Verified"
+  },
+  "locationAccuracy": {
+    "exact": "exakt",
+    "within15m": "± 15 m",
+    "within30m": "± 30 m",
+    "within100m": "± 100 m",
+    "within250m": "± 250 m",
+    "within500m": "± 500 m",
+    "within1km": "± 1 km",
+    "within2km": "± 2 km",
+    "within5km": "± 5 km",
+    "within10km": "± 10 km",
+    "within20km": "± 20 km",
+    "within50km": "± 50 km",
+    "unknown": "unbekannt"
+  },
+  "groupType": {
+    "RecreationalFamilyFriends": "Recreational Family/Friends",
+    "Club": "Club",
+    "Commercial": "Commercial",
+    "Industrial": "Industrial",
+    "Solo": "Solo",
+    "Unknown": "unbekannt",
+    "Other": "Other"
+  },
+  "groupSizeAccuracy": {
+    "Exact": "Exact",
+    "Approximately": "Approximately",
+    "AtLeast": "At Least",
+    "Unknown": "unbekannt"
+  },
+  "incidentTerrainType": {
+    "FreeTerrain": "Free Terrain",
+    "ControlledTerrainOpen": "Controlled Terrain: Open",
+    "ControlledTerrainClosed": "Controlled Terrain: Closed",
+    "Unknown": "unbekannt"
+  },
+  "typeOfControlledTerrain": {
+    "IndoorInsideBuilding": "Indoor (Inside Building)",
+    "Street": "Street",
+    "TrainTrack": "Train Track",
+    "SkiAreaResort": "Ski Area Resort",
+    "CrossCountryTrack": "Cross Country Track",
+    "SledgingTrack": "Sledging Track",
+    "Other": "Other"
+  },
+  "incidentActivity": {
+    "Touring": "Touring",
+    "Freeriding": "Freeriding",
+    "SkiingSnowboarding": "Skiing/Snowboarding",
+    "Snowmobiling": "Snowmobiling",
+    "Mountaineering": "Mountaineering",
+    "IceClimbing": "Ice Climbing",
+    "Snowshoeing": "Snowshoeing",
+    "HikingOnFoot": "Hiking on Foot",
+    "CrossCountrySkiing": "Cross Country Skiing",
+    "HuntingFishing": "Hunting/Fishing",
+    "Sledging": "Sledging",
+    "Snowbiking": "Snowbiking",
+    "Biking": "Biking",
+    "InsideVehicle": "Inside Vehicle",
+    "Unknown": "unbekannt",
+    "Other": "Other"
+  },
+  "travelDirection": {
+    "Ascending": "Ascending",
+    "Descending": "Descending",
+    "Stationary": "Stationary",
+    "Traversing": "Traversing",
+    "MovingOnPeaksRidges": "Moving on peaks/ridges",
+    "SnowmobileHighMarking": "Snowmobile High Marking",
+    "CrossingRunouts": "Crossing Runouts",
+    "Other": "Other"
+  },
+  "vehicleType": {
+    "Car": "Car",
+    "Bus": "Bus",
+    "SnowPlower": "Snow Plower",
+    "Snowcat": "Snowcat",
+    "Other": "Other"
+  },
+  "avalancheGear": {
+    "All": "Alle",
+    "Some": "Wenig",
+    "None": "Keine",
+    "Unknown": "unbekannt"
+  },
+  "natural": {
+    "Natural": "Natural (result of weather events, e.g. snowfall, wind temperature)",
+    "CorniceFall": "Cornice fall, natural",
+    "Earthquake": "Earthquake",
+    "IceFall": "Ice fall",
+    "RockFall": "Rock fall"
+  },
+  "person": {
+    "PersonAccidental": "Person (e.g. skier, snowboarder, hiker, climber), accidental",
+    "PersonControlled": "Person, controlled (i.e., skier deliberately ski cutting a slope, cornice, etc.)"
+  },
+  "explosives": {
+    "Artillery": "Artillery",
+    "CaseCharge": "Case (bag) charge placed on Hand-thrown",
+    "CorniceControlledByExplosives": "Cornice controlled by explosives",
+    "HelicopterDeployedGasExploder": "Helicopter deployed gas exploder (e.g., Daisybell)",
+    "HandThrownOrPlaced": "Hand-thrown or hand-placed explosive charge",
+    "GasExploder": "Gas exploder",
+    "HelicopterBomb": "Helicopter bomb",
+    "Avalauncher": "Avalauncher and other types of launchers",
+    "PrePlacedRemotelyDetonated": "Pre-placed remotely detonated explosive charge",
+    "TramOrRopewayDelivery": "Tram or ropeway delivery system",
+    "Other": "Other"
+  },
+  "vehicle": {
+    "OverSnowVehicle": "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
+    "Snowmobile": "Snowmobile",
+    "Helicopter": "Helicopter (e.g. on landing, approach)",
+    "Other": "Other"
+  },
+  "startZoneElevationAccuracy": {
+    "exact": "exakt",
+    "within50m": "± 50 m",
+    "within100m": "± 100 m",
+    "within200m": "± 200 m",
+    "unknown": "unbekannt"
+  },
+  "startZoneTerrainType": {
+    "AlpineBowl": "Alpine Bowl",
+    "Couloir": "Couloir",
+    "NearRidgeCrest": "Near Ridge Crest",
+    "SparselyTreed": "Sparsely Treed",
+    "OpenForest": "Open Forest",
+    "DenseForest": "Dense Forest",
+    "ForestGlade": "Forest Glade",
+    "Glacier": "Glacier",
+    "OpenSlope": "Open Slope",
+    "Ridge": "Ridge",
+    "ExtremeRockyTerrain": "Extreme Rocky Terrain",
+    "BaseOfRockFace": "Base of Rock Face",
+    "WoodPath": "Wood Path",
+    "LeewardSlope": "Leeward Slope",
+    "WindwardSlope": "Windward Slope",
+    "IceWaterfall": "Ice Waterfall",
+    "Other": "Other"
+  },
+  "weakLayerLocation": {
+    "WithinNewSnow": "Within new snow",
+    "AtInterfaceWithOldSnow": "At the Interface with Old Snow",
+    "WithinOldSnowpack": "Within the Old Snowpack",
+    "NearTheGround": "Near the Ground"
+  },
+  "debrisType": {
+    "Fine": "Fine",
+    "Blocks": "Blocks",
+    "Hard": "Hart",
+    "Soft": "Soft",
+    "Rocks": "Rocks",
+    "Trees": "Trees",
+    "Other": "Other"
+  },
+  "avalancheMoistureStartZone": {
+    "Dry": "Trocken",
+    "Moist": "Moist",
+    "Wet": "Nass",
+    "Unknown": "unbekannt"
+  },
+  "avalancheMoistureDeposit": {
+    "Dry": "Trocken",
+    "Moist": "Moist",
+    "Wet": "Nass"
+  },
+  "bedSurfaceStepped": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "multipleAvalanches": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "trigger": {
+    "natural": "Natural",
+    "person": "Person",
+    "explosives": "Explosives",
+    "vehicle": "Vehicle",
+    "unknown": "unbekannt"
+  },
+  "startZoneAspectAccuracy": {
+    "Accurate": "Accurate",
+    "Uncertain": "Uncertain"
+  },
+  "remoteTriggering": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "additionalLoad": {
+    "High": "High",
+    "Low": "Low"
+  },
+  "accidentalControlled": {
+    "Accidental": "Accidental",
+    "Controlled": "Controlled"
+  },
+  "caught": {
+    "Involved": "Involved",
+    "NotInvolved": "Not Involved",
+    "Unknown": "unbekannt"
+  },
+  "fatalInjured": {
+    "Fatal": "Fatal",
+    "Injured": "Injured",
+    "Uninjured": "Uninjured",
+    "Unknown": "unbekannt"
+  },
+  "burialDegree": {
+    "FullyBuried": "Komplett verschüttet",
+    "PartlyBuriedHeadCovered": "Teilverschüttet, aber Kopf verschüttet",
+    "PartlyBuriedHeadUncovered": "Teilverschüttet, Kopf frei",
+    "PartlyBuried": "Teilverschüttet",
+    "NotBuried": "Not Buried",
+    "Unknown": "unbekannt"
+  },
+  "age": {
+    "UpTo13": "≤ 13",
+    "From14To20": "14–20",
+    "From21To30": "21–30",
+    "From31To40": "31–40",
+    "From41To50": "41–50",
+    "From51To60": "51–60",
+    "From61To70": "61–70",
+    "From71": "≥ 71"
+  },
+  "gender": {
+    "Female": "Female",
+    "Male": "Male",
+    "Other": "Other"
+  },
+  "country": {
+    "Austria": "Österreich",
+    "Germany": "Deutschland",
+    "Italy": "Italien",
+    "Switzerland": "Schweiz"
+  },
+  "workingAtTime": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "leaderAtTime": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "professionalCertification": {
+    "IFMGAGuide": "IFMGA Guide",
+    "FullSkiGuide": "Full Ski guide, Ski Instructor, Apprentice Guide",
+    "AvalancheProfessional": "Avalanche Professional",
+    "AvalancheEducator": "Avalanche Educator",
+    "Other": "Other"
+  },
+  "avalancheTraining": {
+    "None": "Keine",
+    "Awareness": "Awareness",
+    "BasicREC": "Basic REC",
+    "AdvancedREC": "Advanced REC",
+    "Professional": "Professional",
+    "Other": "Other"
+  },
+  "yearsActive": {
+    "UpTo2Years": "≤ 2 yrs",
+    "From3To9Years": "3–9 yrs",
+    "From10Years": "≥ 10 yrs"
+  },
+  "transceiver": {
+    "NoTransceiver": "No Transceiver",
+    "TransceiverOn": "Transceiver: on",
+    "TransceiverOff": "Transceiver: off"
+  },
+  "shovel": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "probe": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "airbag": {
+    "NoAirbag": "No Airbag",
+    "AirbagDeployed": "Airbag: deployed",
+    "AirbagUndeployed": "Airbag: undeployed"
+  },
+  "helmet": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "terrainTrap": {
+    "None": "Keine",
+    "Cliff": "Cliff",
+    "Trees": "Trees",
+    "Gully": "Gully",
+    "Depression": "Depression",
+    "Bench": "Bench",
+    "Boulder": "Boulder",
+    "CrevasseOrBergschrund": "Crevasse or Bergschrund",
+    "Other": "Other"
+  },
+  "primaryLocationMethod": {
+    "NotBuried": "Not Buried",
+    "SelfExtraction": "Self Extraction",
+    "VisualClues": "Visual Clues",
+    "TransceiverProbeShovel": "Transceiver/Probe/Shovel",
+    "SpotProbing": "Spot Probing",
+    "ProbeLine": "Probe Line",
+    "Recco": "Recco",
+    "RescueDog": "Rescue Dog",
+    "Snowmelt": "Snowmelt",
+    "Other": "Other"
+  },
+  "rescuedBy": {
+    "Self": "Self",
+    "Companion": "Companion",
+    "OtherGroup": "Other Group",
+    "OrganizedRescue": "Organized Rescue",
+    "Unknown": "unbekannt",
+    "Other": "Other"
+  },
+  "medicalIntervention": {
+    "CPR": "CPR",
+    "ALS": "ALS",
+    "ECMO": "ECMO",
+    "Other": "Other"
+  },
+  "estimatedTimeOfDeath": {
+    "DuringTheAvalanche": "During the avalanche",
+    "DuringBurial": "During burial",
+    "OnSiteAfterExtrication": "On site after extrication",
+    "DuringTransport": "During transport",
+    "InHospital": "In hospital"
+  },
+  "causeOfDeath": {
+    "Asphyxiation": "Asphyxiation",
+    "TraumaticInjury": "Traumatic injury",
+    "Hypothermia": "Hypothermia",
+    "Other": "Other"
+  },
+  "respiratoryCavity": {
+    "Yes": "Ja",
+    "No": "Nein"
+  },
+  "injurySeverity": {
+    "Minor": "Minor",
+    "Moderate": "mäßig",
+    "Major": "Major"
+  },
+  "signsOfInstability": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "unbekannt"
+  },
+  "recentLoading": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "unbekannt"
+  },
+  "criticalWarming": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "unbekannt"
+  },
+  "attachmentTags": {
+    "Picture": "Foto",
+    "PoliceReport": "Polizeibericht",
+    "MedicalReport": "Medical Report",
+    "Other": "Other"
+  },
+  "attachmentCategory": {
+    "Incident": "Ereignis",
+    "Avalanche": "Lawine",
+    "Snowpack": "Schneedecke",
+    "Group": "Group",
+    "Person": "Person",
+    "Weather": "Wetter"
   }
 }
