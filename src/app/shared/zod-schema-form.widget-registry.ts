@@ -31,7 +31,6 @@ export interface WidgetType {
   showIf?: ShowIf[];
   widget?:
     | "slider"
-    | "radio"
     | "checkbox"
     | "select"
     | "textarea"

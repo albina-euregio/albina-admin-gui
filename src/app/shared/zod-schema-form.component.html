@@ -128,22 +128,6 @@
                 </option>
               }
             </select>
-          } @else if (widget?.widget === "radio") {
-            @for (v of enumValues; track v) {
-              <div class="form-check form-check-inline">
-                <label class="form-check-label">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    [name]="x.key"
-                    [(ngModel)]="value()[x.key]"
-                    [value]="v"
-                    [disabled]="disabled()"
-                  />
-                  {{ valueI18n.replace("#", v) | translate }}
-                </label>
-              </div>
-            }
           } @else if (widget?.widget === "aspect") {
             <app-aspects
               [aspects]="[castAspect(value()[x.key])]"
