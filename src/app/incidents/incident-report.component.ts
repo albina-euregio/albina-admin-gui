@@ -17,7 +17,17 @@ import {
   LayerGroup,
   LeafletMouseEvent,
   Layer,
+  Icon,
 } from "leaflet";
+
+const defaultMarkerIcon = new Icon({
+  iconUrl: "assets/markers/marker-icon-2x-blue.png",
+  shadowUrl: "assets/markers/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  shadowSize: [41, 41],
+  shadowAnchor: [13, 41],
+});
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
@@ -442,7 +452,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       const lat = Number(report.latitude);
       const lng = Number(report.longitude);
       if (!isNaN(lat) && !isNaN(lng)) {
-        const marker = new Marker([lat, lng]);
+        const marker = new Marker([lat, lng], { icon: defaultMarkerIcon });
         layers.push(marker);
         allPoints.push([lat, lng]);
       }
