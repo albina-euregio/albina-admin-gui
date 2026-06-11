@@ -35,9 +35,6 @@
   }
 
   .nav-tabs {
-    border-bottom: 2px solid $gray-200;
-    margin-bottom: $space-4;
-
     .nav-item {
       margin-bottom: 0;
     }
@@ -152,11 +149,6 @@
       background-color: var(--bs-success) !important;
       border-color: var(--bs-success) !important;
     }
-
-    &.outside-switch:checked {
-      background-color: var(--bs-primary) !important;
-      border-color: var(--bs-primary) !important;
-    }
   }
 
   // Custom styling for accordion-like detail cards
@@ -181,6 +173,28 @@
     .btn {
       padding: 0.25rem 0.5rem;
       @include font-s-medium;
+    }
+
+    .btn-outline-secondary {
+      color: $gray-700;
+      background-color: #fff;
+      border-color: $gray-400;
+
+      &:hover:not(:disabled) {
+        color: $gray-900;
+        background-color: $gray-100;
+        border-color: $gray-500;
+      }
+    }
+
+    .btn-secondary {
+      color: #fff;
+      background-color: var(--bs-secondary);
+      border-color: var(--bs-secondary);
+
+      &:hover:not(:disabled) {
+        filter: brightness(0.9);
+      }
     }
   }
 

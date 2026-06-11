@@ -715,6 +715,43 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/incidents": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List incidents for a region */
+    get: operations["getIncidents"];
+    put?: never;
+    /** Create an incident */
+    post: operations["createIncident"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/incidents/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get an incident by ID */
+    get: operations["getIncident"];
+    /** Update an incident */
+    put: operations["updateIncident"];
+    post?: never;
+    /** Delete an incident */
+    delete: operations["deleteIncident"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/media": {
     parameters: {
       query?: never;
@@ -1550,6 +1587,16 @@ export interface components {
     HandHardness: "fist" | "four_fingers" | "one_finger" | "pencil" | "knife" | "ice";
     /** @enum {string} */
     HazardSiteDistribution: "single" | "some" | "many" | "many_most" | "moderately_steep";
+    "IncidentService.IncidentView": {
+      id: string;
+      regionId: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+      /** Embedded incident-report JSON; the server stores and returns it as an object, not a quoted string. */
+      data: import("../incidents/models/incident-report.model").PartialIncidentReport;
+    };
     /**
      * @description The enum contains the ISO 639-1 codes for available languages.
      * @enum {string}
@@ -1657,6 +1704,7 @@ export interface components {
       imageColorbarBwPath?: string;
       enableDangerSources?: boolean;
       enableObservations?: boolean;
+      enableIncidents?: boolean;
       enableModelling?: boolean;
       enabledTextcatFields?: components["schemas"]["TextPart"][];
       enabledEditableFields?: components["schemas"]["TextPart"][];
@@ -2392,7 +2440,7 @@ export interface operations {
     parameters: {
       query: {
         region: string;
-        strategy: components["schemas"]["PublicationStrategy.Type"];
+        strategy?: components["schemas"]["PublicationStrategy.Type"];
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         date: string;
       };
@@ -2416,7 +2464,7 @@ export interface operations {
       query: {
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         date: string;
-        strategy: components["schemas"]["PublicationStrategy.Type"];
+        strategy?: components["schemas"]["PublicationStrategy.Type"];
       };
       header?: never;
       path?: never;
@@ -2996,6 +3044,122 @@ export interface operations {
     };
     responses: {
       /** @description addSubscriber 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  getIncidents: {
+    parameters: {
+      query: {
+        region: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getIncidents 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["IncidentService.IncidentView"][];
+        };
+      };
+    };
+  };
+  createIncident: {
+    parameters: {
+      query: {
+        region: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": string;
+      };
+    };
+    responses: {
+      /** @description createIncident 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["IncidentService.IncidentView"];
+        };
+      };
+    };
+  };
+  getIncident: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getIncident 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["IncidentService.IncidentView"];
+        };
+      };
+    };
+  };
+  updateIncident: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": string;
+      };
+    };
+    responses: {
+      /** @description updateIncident 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["IncidentService.IncidentView"];
+        };
+      };
+    };
+  };
+  deleteIncident: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description deleteIncident 200 response */
       200: {
         headers: {
           [name: string]: unknown;

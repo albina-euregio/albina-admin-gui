@@ -1,0 +1,93 @@
+<div class="bulletins animated fadeIn container">
+  <div class="d-flex gap-2 align-items-center mb-3 flex-wrap">
+    <div class="input-group input-group-sm flex-nowrap" style="width: auto; min-width: 220px">
+      <span class="input-group-text"><i class="ph ph-calendar-blank"></i></span>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="filterDateRange"
+        bsDaterangepicker
+        [placeholder]="'incidentsOverview.table.date' | translate"
+      />
+    </div>
+    <div class="input-group input-group-sm flex-nowrap" style="width: auto">
+      <span class="input-group-text"><i class="ph ph-funnel"></i></span>
+      <select class="form-select" [(ngModel)]="filterStatus">
+        <option value="">{{ "incidentsOverview.filter.anyStatus" | translate }}</option>
+        @for (s of statusOptions; track s) {
+          <option [value]="s">{{ "reportStatus." + s | translate }}</option>
+        }
+      </select>
+    </div>
+    <button (click)="newIncident()" class="btn btn-sm btn-primary px-3 ms-auto">
+      <i class="ph ph-plus"></i> {{ "incidentsOverview.button.new" | translate }}
+    </button>
+  </div>
+
+  <table class="table table-bordered table-hover responsive-table">
+    <thead class="bulletins-table__header">
+      <tr>
+        <th role="button" (click)="sortBy('dateTime')">
+          {{ "incidentsOverview.table.date" | translate }}
+          <i class="ph {{ sortIcon('dateTime') }}"></i>
+        </th>
+        <th>{{ "incidentsOverview.table.location" | translate }}</th>
+        <th role="button" (click)="sortBy('updatedAt')">
+          {{ "incidentsOverview.table.lastChanged" | translate }}
+          <i class="ph {{ sortIcon('updatedAt') }}"></i>
+        </th>
+        <th role="button" (click)="sortBy('reportStatus')">
+          {{ "incidentsOverview.table.status" | translate }}
+          <i class="ph {{ sortIcon('reportStatus') }}"></i>
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="bulletins-table__body">
+      @for (incident of displayedIncidents; track incident.id) {
+        <tr class="align-middle">
+          <td class="text-center" [attr.data-label]="'incidentsOverview.table.date' | translate">
+            @if (incident.dateTime) {
+              {{ incident.dateTime | date: "medium" : undefined : translateService.getCurrentLang() }}
+            }
+          </td>
+          <td class="text-center" [attr.data-label]="'incidentsOverview.table.location' | translate">
+            {{ incident.location }}
+          </td>
+          <td class="text-center" [attr.data-label]="'incidentsOverview.table.lastChanged' | translate">
+            {{ incident.updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
+          </td>
+          <td class="text-center" [attr.data-label]="'incidentsOverview.table.status' | translate">
+            @if (incident.reportStatus) {
+              <span class="badge {{ statusClass(incident.reportStatus) }}">
+                {{ "reportStatus." + incident.reportStatus | translate }}
+              </span>
+            }
+          </td>
+          <td class="text-center">
+            <button
+              type="button"
+              class="btn btn-secondary btn-icon"
+              (click)="openIncident(incident.id)"
+              title="{{ 'incidentsOverview.tooltip.edit' | translate }}"
+            >
+              <i class="ph ph-pencil-line"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-icon ms-1"
+              (click)="deleteIncident(incident)"
+              title="{{ 'incidentsOverview.tooltip.delete' | translate }}"
+            >
+              <i class="ph ph-trash"></i>
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="text-center text-muted">{{ "incidentsOverview.empty" | translate }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

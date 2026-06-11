@@ -1,5 +1,8 @@
-import { Component, inject, input, model, OnDestroy, OnInit } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import { Component, DestroyRef, inject, Injector, input, model, OnDestroy, OnInit } from "@angular/core";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { environment } from "environments/environment";
@@ -17,9 +20,11 @@ import {
 } from "leaflet";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
 import { z } from "zod/v4";
 
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { IncidentService } from "../providers/incident-service/incident.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
@@ -30,13 +35,33 @@ import { IncidentReport } from "./models/incident-report.model";
   selector: "app-incident-report",
   templateUrl: "incident-report.component.html",
   standalone: true,
-  imports: [AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent, ToggleBtnGroup],
+  imports: [
+    DatePipe,
+    AccordionModule,
+    BsDropdownModule,
+    FormsModule,
+    TranslateModule,
+    ZodSchemaFormComponent,
+    ToggleBtnGroup,
+  ],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
   constantsService = inject(ConstantsService);
   authenticationService = inject(AuthenticationService);
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
+  private incidentService = inject(IncidentService);
+  private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
+
+  // Server id of the persisted incident, once it has been created.
+  private incidentId: string | null = null;
+  // used to prevent redundant saves
+  private lastSavedData: string | null = null;
+  // Status of the automatic server synchronization, exposed for the template.
+  saveState: "idle" | "saving" | "saved" | "error" = "idle";
+  updatedAt: Date | null = null;
 
   readonly IncidentModels = IncidentModels;
   readonly JSON = JSON;
@@ -50,7 +75,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   showMandatoryOnly = false;
   readonly allTabs = [
-    { id: "meta", label: "incidentReport.metaInformation", schema: IncidentModels.MetaInformationSchema },
     { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
     { id: "location", label: "incidentReport.locationInformation", schema: IncidentModels.LocationInformationSchema },
     {
@@ -124,7 +148,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       author: this.authenticationService.getCurrentAuthor()?.email,
       authorAffiliation: this.authenticationService.getCurrentAuthor()?.organization,
       publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
-      timestamp: new Date(),
       reportStatus: "Draft",
       groupInformation: [
         {
@@ -258,6 +281,64 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (this.activeTab === "location") {
       setTimeout(() => this.initLocationMap(), 50);
     }
+    const id = this.route.snapshot.paramMap.get("id");
+    if (id) {
+      this.loadIncident(id);
+    }
+    this.startAutoSave();
+  }
+
+  private loadIncident(id: string) {
+    this.incidentService.getIncident(id).subscribe({
+      next: (view) => {
+        this.incidentId = view.id;
+        this.updatedAt = new Date(view.updatedAt);
+        const report = IncidentModels.PartialIncidentReportSchema.parse(view.data) as IncidentReport;
+        this.incidentReport.set(report);
+      },
+      error: (error) => console.error("Failed to load incident", error),
+    });
+  }
+
+  private startAutoSave() {
+    this.lastSavedData = this.serializeReport(this.incidentReport());
+    toObservable(this.incidentReport, { injector: this.injector })
+      .pipe(
+        map((report) => this.serializeReport(report)),
+        distinctUntilChanged(),
+        debounceTime(1000),
+        concatMap((data) => this.saveIncident(data)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
+
+  /** Serialize the report to JSON, dropping in-memory-only attachment fields. */
+  private serializeReport(report: IncidentReport): string {
+    return JSON.stringify(report, (key, value) => (key === "file" || key === "_previewUrl" ? undefined : value));
+  }
+
+  private saveIncident(data: string): Observable<unknown> {
+    if (data === this.lastSavedData) return EMPTY;
+    const region = this.authenticationService.getActiveRegionId();
+    if (!region) return EMPTY;
+    this.saveState = "saving";
+    const request = this.incidentId
+      ? this.incidentService.updateIncident(this.incidentId, data)
+      : this.incidentService.createIncident(region, data);
+    return request.pipe(
+      tap((view) => {
+        this.incidentId = view.id;
+        this.updatedAt = new Date(view.updatedAt);
+        this.lastSavedData = data;
+        this.saveState = "saved";
+      }),
+      catchError((error) => {
+        console.error("Failed to save incident", error);
+        this.saveState = "error";
+        return EMPTY;
+      }),
+    );
   }
 
   ngOnDestroy() {
@@ -414,6 +495,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  onReportStatusChange() {
+    const currentAuthor = this.authenticationService.getCurrentAuthor();
+    this.incidentReport.set({
+      ...this.incidentReport(),
+      author: currentAuthor?.email ?? this.incidentReport().author,
+      authorAffiliation: currentAuthor?.organization ?? this.incidentReport().authorAffiliation,
+    });
   }
 
   onLocationTypeChange(type: "Point" | "Line" | "Polygon") {

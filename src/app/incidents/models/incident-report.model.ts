@@ -7,7 +7,6 @@ import { enumWithOther, not, withShowIf } from "../../shared/zod-util";
 export const MetaInformationSchema = z.object({
   author: z.string(),
   authorAffiliation: z.string(),
-  timestamp: z.coerce.date(),
 });
 
 export const GeneralInformationSchema = z.object({
@@ -441,7 +440,6 @@ export const IncidentReportSchema = z.object({
 });
 
 export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({
-  timestamp: z.coerce.date(),
   groupInformation: GroupInformationSchema.partial().array(),
 });
 

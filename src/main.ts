@@ -53,6 +53,7 @@ import { BulletinsService } from "./app/providers/bulletins-service/bulletins.se
 import { ConfigurationService } from "./app/providers/configuration-service/configuration.service";
 import { ConstantsService } from "./app/providers/constants-service/constants.service";
 import { CopyService } from "./app/providers/copy-service/copy.service";
+import { IncidentService } from "./app/providers/incident-service/incident.service";
 import { LocalStorageService } from "./app/providers/local-storage-service/local-storage.service";
 import { BaseMapService } from "./app/providers/map-service/base-map.service";
 import { CoordinateDataService } from "./app/providers/map-service/coordinate-data.service";
@@ -135,6 +136,7 @@ function bootstrapApplication0() {
       ElevationService,
       GeocodingService,
       GetDustParamService,
+      IncidentService,
       LocalStorageService,
       MapService,
       MediaFileService,
