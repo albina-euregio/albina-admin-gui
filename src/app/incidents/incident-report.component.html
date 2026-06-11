@@ -142,7 +142,20 @@
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.locationInformation" | translate }}</h4>
 
-        <!-- 2. Location Map (Same width) -->
+        <!-- Location name -->
+
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="onLocationFormChange($event)"
+          [zodType]="IncidentModels.LocationInformationSchema"
+          [includeFields]="['location']"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+
+        <!-- Location Map -->
         <div class="mb-3 position-relative">
           <label class="form-label">{{ "incidentReportUI.locationMap" | translate }}</label>
           <div style="position: relative; width: 100%">
@@ -291,18 +304,17 @@
           </div>
         </div>
 
-        <!-- 5. Location Information Schema Form -->
-        <div class="mb-3">
-          <app-zod-schema-form
-            [disabled]="disabled()"
-            [value]="incidentReport()"
-            (valueChange)="onLocationFormChange($event)"
-            [zodType]="IncidentModels.LocationInformationSchema"
-            [labelI18n]="labelI18n"
-            [helpI18n]="helpI18n"
-            [showMandatoryOnly]="showMandatoryOnly"
-          />
-        </div>
+        <!-- Remaining location fields -->
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [value]="incidentReport()"
+          (valueChange)="onLocationFormChange($event)"
+          [zodType]="IncidentModels.LocationInformationSchema"
+          [excludeFields]="['location']"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
       </div>
     }
 
@@ -659,7 +671,7 @@
   </div>
 
   <!-- Wizard Controls (Next/Back) -->
-  <div class="d-flex justify-content-between mt-4 border-top pt-3">
+  <div class="d-flex justify-content-between mt-3 pt-3">
     <button class="btn btn-outline-secondary" [disabled]="activeTab === allTabs[0].id" (click)="activeTab = prevTab">
       <i class="ph ph-skip-back"></i> {{ "incidentReportUI.back" | translate }}
     </button>

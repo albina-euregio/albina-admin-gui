@@ -10,7 +10,7 @@ export const MetaInformationSchema = z.object({
 });
 
 export const GeneralInformationSchema = z.object({
-  dateTime: z.coerce.date(),
+  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5" }),
 
   timeAccuracy: z.enum([
     "exact",
@@ -80,8 +80,8 @@ withShowIf(GeneralInformationSchema, {
 
 export const LocationInformationSchema = z.object({
   location: z.string(),
-  latitude: z.number().register(widgetRegistry, { class: "col-6" }),
-  longitude: z.number().register(widgetRegistry, { class: "col-6" }),
+  latitude: z.number().register(widgetRegistry, { class: "col-3" }),
+  longitude: z.number().register(widgetRegistry, { class: "col-3" }),
   locationAccuracy: z.enum([
     "exact",
     "within15m",
@@ -97,12 +97,12 @@ export const LocationInformationSchema = z.object({
     "within50km",
     "unknown",
   ]),
-  lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-  polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-  country: z.string().nullish(),
-  region: z.string().nullish(),
-  municipality: z.string().nullish(),
-  avalancheRegion: z.string().nullish(),
+  lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
+  polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
+  country: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  region: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  municipality: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  avalancheRegion: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
   locationInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 

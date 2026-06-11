@@ -69,9 +69,6 @@
             }
           </div>
         </div>
-        <div class="form-text">
-          {{ helpI18n().replace("#", x.key) | translate }}
-        </div>
         @if (inner.type === "enum") {
           @let enumValues = Object.keys(inner.def.entries);
           @if (widget?.widget === "slider") {
@@ -265,7 +262,9 @@
             <div>{{ JSON.stringify(x.value) }}</div>
           </div>
         }
-
+        <div class="form-text">
+          {{ helpI18n().replace("#", x.key) | translate }}
+        </div>
         @if (zodUtil.hasValue(value()[x.key])) {
           @if (x.value.safeParse(value()[x.key]); as parseResult) {
             @if (parseResult.error) {

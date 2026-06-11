@@ -58,12 +58,18 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
   readonly groupIdentifiers = input<string[]>([]);
-  readonly fields = computed(() =>
-    Object.entries(this.zodType().shape).map(([key, value]) => ({
-      key,
-      value: value as ShapeFields<IncidentSchema>,
-    })),
-  );
+  readonly includeFields = input<string[]>();
+  readonly excludeFields = input<string[]>();
+  readonly fields = computed(() => {
+    const include = this.includeFields();
+    const exclude = this.excludeFields();
+    return Object.entries(this.zodType().shape)
+      .filter(([key]) => (!include || include.includes(key)) && (!exclude || !exclude.includes(key)))
+      .map(([key, value]) => ({
+        key,
+        value: value as ShapeFields<IncidentSchema>,
+      }));
+  });
 
   castArray(x: unknown) {
     return x as unknown[];
