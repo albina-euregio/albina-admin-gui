@@ -179,10 +179,11 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
 });
 
 export const VictimInformationSchema = z.object({
-  anonymousVictimIdentifier: z.string(),
+  anonymousVictimIdentifier: z.string().nullish(),
   anonymousGroupIdentifier: z.string(),
-  caught: z.enum(["Involved", "NotInvolved", "Unknown"]).register(widgetRegistry, { class: "col-6" }),
+  caught: z.enum(["Involved", "NotInvolved", "Unknown"]),
   fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]).register(widgetRegistry, { class: "col-6" }),
+  injurySeverity: z.enum(["Minor", "Moderate", "Major"]).register(widgetRegistry, { class: "col-6" }).nullish(),
   burialDegree: z.enum([
     "FullyBuried",
     "PartlyBuriedHeadCovered",
@@ -193,24 +194,38 @@ export const VictimInformationSchema = z.object({
   ]),
   burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
   burialDuration: z.string().register(widgetRegistry, { unit: "dd:hh:mm", class: "col-6" }).nullish(),
-  age: z.enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"]),
-  gender: z.enum(["Female", "Male", "Other"]),
-  country: z.enum(["Austria", "Germany", "Italy", "Switzerland"]), // TODO [standard country list]
-  workingAtTime: z.enum(["Yes", "No"]),
-  leaderAtTime: z.enum(["Yes", "No"]),
+  age: z
+    .enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"])
+    .register(widgetRegistry, { class: "col-6" })
+    .nullish(),
+  gender: z.enum(["Female", "Male", "Other"]).register(widgetRegistry, { class: "col-5" }).nullish(),
+  country: enumWithOther(z.enum(["Austria", "Germany", "Italy", "Switzerland"])).nullish(), // TODO [standard country list] or just use "other" with free text
+  workingAtTime: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-6" }).nullish(),
+  leaderAtTime: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-6" }).nullish(),
   professionalCertification: enumWithOther(
     z.enum(["IFMGAGuide", "FullSkiGuide", "AvalancheProfessional", "AvalancheEducator"]),
-  ),
-  avalancheTraining: enumWithOther(z.enum(["None", "Awareness", "BasicREC", "AdvancedREC", "Professional"])),
-  yearsActive: z.enum(["UpTo2Years", "From3To9Years", "From10Years"]),
-  transceiver: z.enum(["NoTransceiver", "TransceiverOn", "TransceiverOff"]),
-  shovel: z.enum(["Yes", "No"]),
-  probe: z.enum(["Yes", "No"]),
-  airbag: z.enum(["NoAirbag", "AirbagDeployed", "AirbagUndeployed"]),
-  helmet: z.enum(["Yes", "No"]),
+  ).nullish(),
+  avalancheTraining: enumWithOther(z.enum(["None", "Awareness", "BasicREC", "AdvancedREC", "Professional"]))
+    .register(widgetRegistry, { class: "col-6" })
+    .nullish(),
+  yearsActive: z
+    .enum(["UpTo2Years", "From3To9Years", "From10Years"])
+    .register(widgetRegistry, { class: "col-6" })
+    .nullish(),
+  transceiver: z
+    .enum(["NoTransceiver", "TransceiverOn", "TransceiverOff"])
+    .register(widgetRegistry, { class: "col-6" })
+    .nullish(),
+  shovel: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-3" }).nullish(),
+  probe: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-3" }).nullish(),
+  airbag: z
+    .enum(["NoAirbag", "AirbagDeployed", "AirbagUndeployed"])
+    .register(widgetRegistry, { class: "col-6" })
+    .nullish(),
+  helmet: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-6" }).nullish(),
   terrainTrap: enumWithOther(
     z.enum(["None", "Cliff", "Trees", "Gully", "Depression", "Bench", "Boulder", "CrevasseOrBergschrund"]),
-  ),
+  ).nullish(),
   primaryLocationMethod: enumWithOther(
     z.enum([
       "NotBuried",
@@ -223,19 +238,18 @@ export const VictimInformationSchema = z.object({
       "RescueDog",
       "Snowmelt",
     ]),
-  ),
-  rescuedBy: enumWithOther(z.enum(["Self", "Companion", "OtherGroup", "OrganizedRescue", "Unknown"])),
-  medicalIntervention: enumWithOther(z.enum(["CPR", "ALS", "ECMO"])),
-  estimatedTimeOfDeath: z.enum([
-    "DuringTheAvalanche",
-    "DuringBurial",
-    "OnSiteAfterExtrication",
-    "DuringTransport",
-    "InHospital",
-  ]),
-  causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"])),
-  respiratoryCavity: z.enum(["Yes", "No"]),
-  injurySeverity: z.enum(["Minor", "Moderate", "Major"]),
+  ).nullish(),
+  rescuedBy: enumWithOther(z.enum(["Self", "Companion", "OtherGroup", "OrganizedRescue", "Unknown"]))
+    .register(widgetRegistry, { class: "col-7" })
+    .nullish(),
+  medicalIntervention: enumWithOther(z.enum(["CPR", "ALS", "ECMO"]))
+    .register(widgetRegistry, { class: "col-5" })
+    .nullish(),
+  estimatedTimeOfDeath: z
+    .enum(["DuringTheAvalanche", "DuringBurial", "OnSiteAfterExtrication", "DuringTransport", "InHospital"])
+    .nullish(),
+  causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"])).nullish(),
+  respiratoryCavity: z.enum(["Yes", "No"]).nullish(),
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(VictimInformationSchema, {

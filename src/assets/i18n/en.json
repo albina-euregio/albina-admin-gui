@@ -2340,7 +2340,8 @@
     "Austria": "Austria",
     "Germany": "Germany",
     "Italy": "Italy",
-    "Switzerland": "Switzerland"
+    "Switzerland": "Switzerland",
+    "Other": "Other"
   },
   "workingAtTime": {
     "Yes": "Yes",
