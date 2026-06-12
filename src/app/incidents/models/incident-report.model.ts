@@ -454,6 +454,7 @@ export const IncidentReportSchema = z.object({
 export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({
   groupInformation: GroupInformationSchema.partial().array(),
   victimInformation: VictimInformationSchema.partial().array(),
+  attachments: IncidentAttachmentSchema.partial().array(),
 });
 
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;
