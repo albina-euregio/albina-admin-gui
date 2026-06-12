@@ -1685,6 +1685,26 @@
       "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
   },
+  "incidentsOverview": {
+    "button": {
+      "new": "New incident"
+    },
+    "table": {
+      "date": "Data",
+      "location": "Localitat",
+      "lastChanged": "Last changed",
+      "status": "Estat"
+    },
+    "tooltip": {
+      "edit": "Edit incident",
+      "delete": "Delete incident"
+    },
+    "deleteConfirm": "Do you want to delete this incident?",
+    "empty": "No incidents for this region.",
+    "filter": {
+      "anyStatus": "Any status"
+    }
+  },
   "incidentReportUI": {
     "addAttachment": "Add Attachment",
     "addGroup": "Add Group",
@@ -1718,9 +1738,14 @@
     "removeGroup": "Remove Group",
     "removeVictim": "Remove Victim",
     "required": "Required",
-    "showMandatoryFieldsOnly": "Show Mandatory Fields Only",
+    "showMandatoryFieldsOnly": "Required only",
     "valid": "Valid",
-    "victimName": "Victim {{name}}"
+    "victimName": "Victim {{name}}",
+    "saveStateIdle": "No unsaved changes",
+    "saveStateSaving": "Saving…",
+    "saveStateSaved": "Saved successfully",
+    "saveStateError": "Save failed",
+    "lastUpdated": "Last updated"
   },
   "incidentReport": {
     "incidentReport": "Incident Report",
@@ -1733,27 +1758,25 @@
     "involvementsFatalitiesBurials": "Involvements, Fatalities, and Burials",
     "incidentAnalysis": "Incident Analysis",
     "incidentAttachments": "Incident Attachments",
-
     "author": "Autor",
     "authorAffiliation": "Author Affiliation",
-    "timestamp": "Timestamp",
-
     "dateTime": "Date/Time",
     "timeAccuracy": "Time Accuracy ",
     "sourceOfInformation": "Source of Information",
     "personInvolvement": "Person Involvement",
     "otherDamages": "Other Damages",
     "damagedAssets": "Damaged Assets",
+    "otherDamagesComment": "Other Damages Comment",
     "publicAvalancheWarningService": "Public Avalanche Warning Service",
+    "publicAvalancheWarningServiceOutside": "Outside AWS Forecast Area",
     "dangerRating": "Grad de perilh",
     "avalancheProblem": "Problèma de lauegi",
     "dangerPattern": "Patron de perilh",
     "reportStatus": "Report Status",
     "publicExternalLinks": "Public External Links",
     "privateExternalLinks": "Private External Links",
-    "privateExternalDatabaseLinks": "Private External Links",
+    "privateExternalDatabaseLinks": "Link to External Databases",
     "generalInformationComment": "General Information Comment",
-
     "location": "Localitat",
     "country": "Country",
     "region": "Region",
@@ -1770,7 +1793,6 @@
       "Line": "Line",
       "Polygon": "Polygon"
     },
-
     "anonymousGroupIdentifier": "Anonymous Group Identifier",
     "groupType": "Group Type",
     "groupSize": "Group Size",
@@ -1782,7 +1804,6 @@
     "vehicleType": "Vehicle Type",
     "avalancheGear": "Avalanche Gear",
     "groupInformationComment": "Group Information Comment",
-
     "numberOfGroups": "Number of groups",
     "activities": "Activities",
     "terrainTypes": "Terrain Types",
@@ -1796,7 +1817,6 @@
     "partlyBuried": "Partly Buried",
     "numberInvolved": "Number Involved",
     "involvementsFatalitiesBurialsComment": "Involvements, Fatalities and Burials Comment",
-
     "caught": "Caught",
     "fatalInjured": "Fatal/Injured",
     "burialDegree": "Burial Degree",
@@ -1824,7 +1844,6 @@
     "respiratoryCavity": "Respiratory Cavity",
     "injurySeverity": "Injury Severity",
     "victimInformationComment": "Victim Information Comment",
-
     "multipleAvalanches": "Multiple Avalanches",
     "avalancheSize": "Mida de lauet",
     "avalancheType": "Avalanche Type",
@@ -1863,7 +1882,6 @@
     "debrisDensity": "Debris Density",
     "depositElevation": "Deposit Elevation",
     "avalancheDetailsComment": "Avalanche Details Comment",
-
     "incidentLedePublic": "Publish Incident Lede?",
     "incidentLede": "Incident Lede",
     "incidentDescriptionPublic": "Publish Incident Description?",
@@ -1881,9 +1899,9 @@
     "recentLoading": "Recent Loading",
     "criticalWarming": "Critical Warming",
     "incidentAnalysisComment": "Incident Analysis Comment",
-
     "uuid": "UUID",
     "dateAdded": "Date Added",
+    "dateCreated": "Date Created",
     "file": "File",
     "fileName": "File Name",
     "mediaType": "Media Type",
@@ -1897,15 +1915,15 @@
   "incidentReportHelp": {
     "author": "",
     "authorAffiliation": "",
-    "timestamp": "",
-
     "dateTime": "",
     "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche.",
     "sourceOfInformation": "Specify the source(s) of the information.",
     "personInvolvement": "Select “Yes” if the avalanche was human-triggered (including remote triggering) or if individuals were affected by moving masses.",
     "otherDamages": "Select “Yes” if the avalanche caused damage to property or other valuable assets.",
     "damagedAssets": "Indicate the type of object(s) that sustained damage.",
+    "otherDamagesComment": "Add any additional details about the damaged assets.",
     "publicAvalancheWarningService": "Name of agency in which area of responsibility the avalanche happened.",
+    "publicAvalancheWarningServiceOutside": "Check if the incident occurred outside any AWS forecast area.",
     "dangerRating": "Publicly available avalanche danger rating valid for the date, time, and location of the incident (including elevation and aspect, if applicable).",
     "avalancheProblem": "Select the forecasted EAWS Avalanche Problem(s) for that day and location. Choose “None” if none were issued that day.",
     "dangerPattern": "Select the forecasted Danger Pattern(s) for that day and location.",
@@ -1914,7 +1932,6 @@
     "privateExternalLinks": "",
     "privateExternalDatabaseLinks": "Links this incident with other databases.",
     "generalInformationComment": "Add any additional relevant details.",
-
     "location": "Brief description of the location. Use the name of the nearest mountain or a prominent geographic feature.",
     "country": "",
     "region": "",
@@ -1923,10 +1940,9 @@
     "latitude": "Provide the coordinates of the center of the fracture crown.",
     "longitude": "Provide the coordinates of the center of the fracture crown.",
     "locationAccuracy": "Estimate the accuracy of the latitude/longitude coordinates.",
-    "lineCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) or draw a line on the map.",
-    "polygonCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) or draw a polygon on the map.",
+    "lineCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) for the avalanche path.",
+    "polygonCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) for the avalanche outline.",
     "locationInformationComment": "Add any additional relevant details.",
-
     "anonymousGroupIdentifier": "This is used to identify the group throughout the report. For example, you might refer to Group 1, Group 2, etc when reporting on a incident. You could add specific details if it helps keep track of which group is which. If appropriate, you can use the same identifier when referencing this group in the Incident Description.",
     "groupType": "Select the option that best describes the type of group.",
     "groupSize": "Provide the total number of individuals in the group.",
@@ -1938,7 +1954,6 @@
     "vehicleType": "",
     "avalancheGear": "Essential avalanche rescue gear is defined as a transceiver, shovel and probe. Give a basic assessment of whether the group was carrying essential avalanche rescue gear. Commonly this information comes from the search and rescue team. It is not necessary to get hung up on exact numbers or require in-depth communication with each party member. More like an answer to the basic question of: Were they carrying rescue gear?.",
     "groupInformationComment": "Add any additional relevant details.",
-
     "numberOfGroups": "Number of groups involved",
     "activities": "",
     "terrainTypes": "",
@@ -1952,7 +1967,6 @@
     "partlyBuried": "Number=Partly Buried, Head Covered+Partly Buried, Head Uncovered",
     "numberInvolved": "Number=Caught Only+Fully Buried+Partly Buried",
     "involvementsFatalitiesBurialsComment": "Add any additional relevant details",
-
     "caught": "Specify whether this individual was involved with the avalanche. Involved means being caught by the avalanche (whether buried or not), buried or dusted by the powder cloud.",
     "fatalInjured": "Indicate whether the person was fatally injured, injured, or uninjured, regardless of their involvement type.",
     "burialDegree": "Provide details about the degree of burial. A fully buried victim has all parts of their body submerged under the snow. If the victim was partly buried, try to find out whether their head was covered or uncovered and use these options preferentially. If you are unable to find out this detail, use the Partly Buried option.",
@@ -1980,7 +1994,6 @@
     "respiratoryCavity": "No obstacles in the airways",
     "injurySeverity": "Major: a serious, often life-threatening condition that requires immediate medical attention and may result in long-term disability or death (e.g. fractures, head injuries, loss of conscousness, heavy bleeding); Moderate: more serious than minor but not immediately life-threatening. It usually needs medical treatment, but recovery is expected without major long-term effects (e.g. dislocations, sprains and strains, deep cuts). Minor: slight injury that can be treated with basic first aid, does not require professional medical care (e.g. small cuts, scratches, bruises).",
     "victimInformationComment": "Add any additional relevant details",
-
     "multipleAvalanches": "Choose yes, if there were multiple avalanches associated with the event. If selected, input details of the most impactful avalanche in the Avalanche Details section and provide details of the other avalanches in the Avalanche Comments section.",
     "avalancheSize": "Estimate the destructive potential of the avalanche based on the deposited snow and assign a size according to the EAWS standard. Size 1 is the minimum rating. Half sizes are generally not defined, but may be used for avalanches that fall between two size classes; they are assigned to the lower class (e.g. size 2.5 is classified as size 2).",
     "avalancheType": "Specify the avalanche type from the list according to it's failure type. If more than one type applies, choose the most relevant one and add further detail to the Incident Description.",
@@ -2019,7 +2032,6 @@
     "debrisDensity": "Density of the debris, expressed as the median of several measurements taken at different locations within the debris.",
     "depositElevation": "Elevation of the lowest point of the deposition in m.a.s.l.",
     "avalancheDetailsComment": "Add any additional relevant details",
-
     "incidentLedePublic": "",
     "incidentLede": "Short text (500 characters max) that provides the essence of the incident. State what happened, where and when it occurred, and why it is notable. Keep it concise and factual, highlighting the most important outcome (e.g. involvement, burial, fatalities, unusual conditions).",
     "incidentDescriptionPublic": "",
@@ -2037,9 +2049,9 @@
     "recentLoading": "Use your best judgement to answer the question: Has there been loading within the past 48 hours including roughly 30 cm of new snow or more, significant wind transport or rain?",
     "criticalWarming": "Use your best judgement to answer the question: Has there been a recent rapid rise in temperature to near 0 C, or is the upper snowpack wet due to strong sun, above-freezing air temperatures or rain?",
     "incidentAnalysisComment": "For further information",
-
     "uuid": "UUID",
     "dateAdded": "Date is derived from when the attachment was uploaded",
+    "dateCreated": "Date when the attachment was captured or created",
     "file": "File",
     "fileName": "Derived from original file name of uploaded attachment",
     "mediaType": "",
