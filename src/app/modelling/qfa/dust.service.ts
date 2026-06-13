@@ -51,7 +51,7 @@ export class GetDustParamService {
     "rgb(202,102,80)": "#CA6650",
   };
 
-  private readonly URL = "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png";
+  private readonly URL = "https://api.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png";
 
   private loadForecast = (time: number): Promise<Blob> => {
     const paddedNumber = time.toString().padStart(3, "0");
