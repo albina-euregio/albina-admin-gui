@@ -10,24 +10,15 @@ export default [
     path: "",
     component: BulletinsComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "Bulletins",
-    },
   },
   {
     path: ":date/publication",
     component: PublicationChecklistComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "Publication Checklist",
-    },
   },
   {
     path: ":date",
     component: CreateBulletinComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "New Bulletin",
-    },
   },
 ] satisfies Routes;

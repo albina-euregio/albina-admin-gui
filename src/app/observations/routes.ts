@@ -8,8 +8,5 @@ export default [
     path: "",
     component: ObservationsComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "Observations",
-    },
   },
 ] satisfies Routes;

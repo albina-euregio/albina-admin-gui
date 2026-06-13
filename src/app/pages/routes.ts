@@ -9,9 +9,6 @@ export default [
       {
         path: "login",
         component: LoginComponent,
-        data: {
-          title: "Login Page",
-        },
       },
     ],
   },

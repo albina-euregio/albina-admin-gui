@@ -8,8 +8,5 @@ export default [
     path: "",
     component: AdminComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "Admin",
-    },
   },
 ] satisfies Routes;

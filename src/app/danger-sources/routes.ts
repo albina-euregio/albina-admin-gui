@@ -9,16 +9,10 @@ export default [
     path: "",
     component: DangerSourcesComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "Danger Sources",
-    },
   },
   {
     path: ":date/:dangerSourceVariantType",
     component: CreateDangerSourcesComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "Create Danger Sources",
-    },
   },
 ] satisfies Routes;

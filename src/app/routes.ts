@@ -82,9 +82,6 @@ export default [
   {
     path: "pages",
     component: SimpleLayoutComponent,
-    data: {
-      title: "Pages",
-    },
     children: [
       {
         path: "",

@@ -8,8 +8,5 @@ export default [
     path: "",
     component: EducationComponent,
     canActivate: [AuthGuard],
-    data: {
-      title: "Education",
-    },
   },
 ] satisfies Routes;
