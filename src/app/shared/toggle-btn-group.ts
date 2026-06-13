@@ -54,7 +54,8 @@ export class ToggleBtnGroup<T> {
   }
 
   title(v: T) {
-    const key = (this.titleI18n() || this.labelI18n()).replace("#", String(v));
+    const key = this.titleI18n()?.replace("#", String(v));
+    if (!key) return "";
     return this.translateService.instant(key);
   }
 
