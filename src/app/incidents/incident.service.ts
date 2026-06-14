@@ -2,8 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { ConstantsService } from "../constants-service/constants.service";
-import type { components } from "../openapi";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import type { components } from "../providers/openapi";
 
 export type IncidentView = components["schemas"]["IncidentService.IncidentView"];
 

@@ -27,11 +27,11 @@ import { z } from "zod/v4";
 
 import { GeocodingService } from "../observations/geocoding.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { IncidentService } from "../providers/incident-service/incident.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid } from "../shared/zod-util";
 import { IncidentReportMapService } from "./incident-report-map.service";
+import { IncidentService } from "./incident.service";
 import * as IncidentModels from "./models/incident-report.model";
 import { IncidentReport } from "./models/incident-report.model";
 
