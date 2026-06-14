@@ -193,7 +193,7 @@ export const WeakLayerSchema = z.object({
   weakLayerGrainShapes: z
     .enum([GrainShape.PP, GrainShape.DF, GrainShape.RG, GrainShape.FC, GrainShape.DH, GrainShape.SH, GrainShape.PPgp])
     .array()
-    .register(widgetRegistry, { class: "bg-weak-layer col-8", valueI18n: "grainShape.#.code", widget: "grainShape" })
+    .register(widgetRegistry, { valueI18n: "grainShape.#.code", widget: "grainShape" })
     .nullish(),
   weakLayerGrainSizeUpperLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
   weakLayerGrainSizeLowerLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
@@ -206,6 +206,35 @@ export const WeakLayerSchema = z.object({
   weakLayerPosition: z.enum(SnowpackPosition).register(widgetRegistry, { valueI18n: "snowpackPosition.#" }).nullish(),
   weakLayerCreation: z.enum(CreationProcess).register(widgetRegistry, { valueI18n: "creationProcess.#" }).nullish(),
   weakLayerDistribution: z.enum(Distribution).register(widgetRegistry, { valueI18n: "distribution.#" }).nullish(),
+});
+
+export const LooseAvalancheSchema = z.object({
+  looseSnowGrainShape: z
+    .enum([GrainShape.PP, GrainShape.DF, GrainShape.FC, GrainShape.DH, GrainShape.SH, GrainShape.MF])
+    .register(widgetRegistry, { valueI18n: "grainShape.#.code", widget: "grainShape" })
+    .nullish(),
+  looseSnowMoisture: z.enum(Wetness).register(widgetRegistry, { valueI18n: "wetness.#" }).nullish(),
+});
+
+export const CharacteristicsSchema = z.object({
+  hasDaytimeDependency: z.boolean().nullish(),
+  dangerIncreaseWithElevation: z.boolean().nullish(),
+  highestDangerAspect: z
+    .enum([Aspect.N, Aspect.E, Aspect.S, Aspect.W])
+    .register(widgetRegistry, { valueI18n: "aspect.#" })
+    .nullish(),
+  dangerPeak: z.enum(Daytime).register(widgetRegistry, { valueI18n: "detailedDaytime.#" }).nullish(),
+  slopeGradient: z.enum(SlopeGradient).nullish(),
+  runoutIntoGreen: z.boolean().nullish(),
+  naturalRelease: z.enum(Probability).register(widgetRegistry, { valueI18n: "probability.#" }).nullish(),
+  dangerSigns: z.enum(DangerSign).array().register(widgetRegistry, { valueI18n: "dangerSign.#" }).nullish(),
+  dangerSpotRecognizability: z
+    .enum(Recognizability)
+    .register(widgetRegistry, { valueI18n: "recognizability.#" })
+    .nullish(),
+  remoteTriggering: z.enum(Probability).register(widgetRegistry, { valueI18n: "probability.#" }).nullish(),
+  penetrateDeepLayers: z.boolean().nullish(),
+  terrainTypes: z.enum(TerrainType).array().register(widgetRegistry, { valueI18n: "terrainType.#" }).nullish(),
 });
 
 export const DangerSourceVariantSchema = z.object({
@@ -226,7 +255,6 @@ export const DangerSourceVariantSchema = z.object({
   dangerSourceVariantType: z.enum(DangerSourceVariantType).nullish(),
   ownerRegion: z.string().nullish(),
   regions: z.string().array().nullish(),
-  hasDaytimeDependency: z.boolean().nullish(),
   avalancheType: z.enum(AvalancheType).nullish(),
   aspects: z.enum(Aspect).array().nullish(),
   elevationHigh: z.number().nullish(),
@@ -238,14 +266,6 @@ export const DangerSourceVariantSchema = z.object({
   treelineHighOfExistence: z.boolean().nullish(),
   elevationLowOfExistence: z.number().nullish(),
   treelineLowOfExistence: z.boolean().nullish(),
-  dangerIncreaseWithElevation: z.boolean().nullish(),
-  highestDangerAspect: z.enum([Aspect.N, Aspect.E, Aspect.S, Aspect.W]).nullish(),
-  dangerPeak: z.enum(Daytime).nullish(),
-  slopeGradient: z.enum(SlopeGradient).nullish(),
-  runoutIntoGreen: z.boolean().nullish(),
-  penetrateDeepLayers: z.boolean().nullish(),
-  naturalRelease: z.enum(Probability).nullish(),
-  dangerSigns: z.enum(DangerSign).array().nullish(),
   eawsMatrixInformation: MatrixInformationSchema.nullish(),
 
   /** --------------------- */
@@ -270,19 +290,19 @@ export const DangerSourceVariantSchema = z.object({
   slabEnergyTransferPotential: z.enum(Characteristic).nullish(),
   slabDistribution: z.enum(Distribution).nullish(),
   ...WeakLayerSchema.shape,
-  dangerSpotRecognizability: z.enum(Recognizability).nullish(),
-  remoteTriggering: z.enum(Probability).nullish(),
-  terrainTypes: z.enum(TerrainType).array().nullish(),
+  ...CharacteristicsSchema.shape,
 
   /** --------------------- */
   /** LOOSE SNOW AVALANCHES */
   /** --------------------- */
-  looseSnowGrainShape: z.enum(GrainShape).nullish(),
-  looseSnowMoisture: z.enum(Wetness).nullish(),
+  ...LooseAvalancheSchema.shape,
 });
 
 withShowIf(DangerSourceVariantSchema, {
-  // WeakLayerSchema is covered by @if isAvalancheType(avalancheTypeEnum.slab) around accordion
+  dangerIncreaseWithElevation: ["avalancheType", Enums.AvalancheType.slab],
+  dangerSpotRecognizability: ["avalancheType", Enums.AvalancheType.slab],
+  remoteTriggering: ["avalancheType", Enums.AvalancheType.slab],
+  penetrateDeepLayers: ["avalancheType", Enums.AvalancheType.slab, Enums.AvalancheType.loose],
 });
 
 export class DangerSourceVariantModel extends ZSchema(DangerSourceVariantSchema) implements PolygonObject {

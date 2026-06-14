@@ -556,50 +556,14 @@
               {{ "dangerSources.create.title.loose" | translate }}
             </h2>
           </div>
-          @if (isAvalancheType(avalancheTypeEnum.loose)) {
-            <div class="form-group row">
-              <label
-                class="form-label"
-                [class.changed]="
-                  isComparedVariant() && variant().looseSnowGrainShape !== comparedVariant()?.looseSnowGrainShape
-                "
-                >{{ "dangerSources.create.label.looseSnowGrainShape" | translate }}</label
-              >
-              <app-toggle-btn-group
-                [disabled]="disabled()"
-                [enumValues]="[
-                  grainShapeEnum.PP,
-                  grainShapeEnum.DF,
-                  grainShapeEnum.FC,
-                  grainShapeEnum.DH,
-                  grainShapeEnum.SH,
-                  grainShapeEnum.MF,
-                ]"
-                [(value)]="variant().looseSnowGrainShape"
-                (valueChange)="updateVariantOnServer()"
-                titleI18n="grainShape.#.class"
-                labelI18n="grainShape.#.code"
-              />
-            </div>
-          }
-          @if (isAvalancheType(avalancheTypeEnum.loose)) {
-            <div class="form-group row">
-              <label
-                class="form-label"
-                [class.changed]="
-                  isComparedVariant() && variant().looseSnowMoisture !== comparedVariant()?.looseSnowMoisture
-                "
-                >{{ "dangerSources.create.label.looseSnowMoisture" | translate }}</label
-              >
-              <app-toggle-btn-group
-                [disabled]="disabled()"
-                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.looseSnowMoisture)"
-                [(value)]="variant().looseSnowMoisture"
-                (valueChange)="updateVariantOnServer()"
-                labelI18n="wetness.#"
-              />
-            </div>
-          }
+          <app-zod-schema-form
+            [zodType]="DangerSourceModels.LooseAvalancheSchema"
+            [disabled]="disabled()"
+            [value]="variant()"
+            [valueForCompare]="comparedVariant()"
+            (valueChange)="updateVariantOnServer()"
+            [labelI18n]="'dangerSources.create.label.#'"
+          />
         </accordion-group>
       }
 
@@ -614,214 +578,14 @@
             {{ "dangerSources.create.title.characteristics" | translate }}
           </h2>
         </div>
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().hasDaytimeDependency !== comparedVariant()?.hasDaytimeDependency
-            "
-            >{{ "dangerSources.create.label.hasDaytimeDependency" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="[true, false]"
-            [(value)]="variant().hasDaytimeDependency"
-            (valueChange)="updateVariantOnServer()"
-            labelI18n="button.#"
-          />
-        </div>
-
-        @if (isAvalancheType(avalancheTypeEnum.slab)) {
-          <div class="form-group row">
-            <label
-              class="form-label"
-              [class.changed]="
-                isComparedVariant() &&
-                variant().dangerIncreaseWithElevation !== comparedVariant()?.dangerIncreaseWithElevation
-              "
-              >{{ "dangerSources.create.label.dangerIncreaseWithElevation" | translate }}</label
-            >
-            <app-toggle-btn-group
-              [disabled]="disabled()"
-              [enumValues]="[true, false]"
-              [(value)]="variant().dangerIncreaseWithElevation"
-              (valueChange)="updateVariantOnServer()"
-              labelI18n="button.#"
-            />
-          </div>
-        }
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().highestDangerAspect !== comparedVariant()?.highestDangerAspect
-            "
-            >{{ "dangerSources.create.label.highestDangerAspect" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.highestDangerAspect)"
-            [(value)]="variant().highestDangerAspect"
-            (valueChange)="updateVariantOnServer()"
-            labelI18n="aspect.#"
-          />
-        </div>
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().dangerPeak !== comparedVariant()?.dangerPeak"
-            >{{ "dangerSources.create.label.dangerPeak" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.dangerPeak)"
-            [(value)]="variant().dangerPeak"
-            (valueChange)="updateVariantOnServer()"
-            labelI18n="detailedDaytime.#"
-          />
-        </div>
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().slopeGradient !== comparedVariant()?.slopeGradient"
-            >{{ "dangerSources.create.label.slopeGradient" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.slopeGradient)"
-            [(value)]="variant().slopeGradient"
-            (valueChange)="updateVariantOnServer()"
-            labelI18n="slopeGradient.#"
-          />
-        </div>
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().runoutIntoGreen !== comparedVariant()?.runoutIntoGreen"
-            >{{ "dangerSources.create.label.runoutIntoGreen" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="[true, false]"
-            [(value)]="variant().runoutIntoGreen"
-            (valueChange)="updateVariantOnServer()"
-            labelI18n="button.#"
-          />
-        </div>
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().naturalRelease !== comparedVariant()?.naturalRelease"
-            >{{ "dangerSources.create.label.naturalRelease" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.naturalRelease)"
-            [(value)]="variant().naturalRelease"
-            (valueChange)="updateVariantOnServer()"
-            labelI18n="probability.#"
-          />
-        </div>
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && !haveSameElements(variant().dangerSigns, comparedVariant()?.dangerSigns)
-            "
-            >{{ "dangerSources.create.label.dangerSigns" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.dangerSigns)"
-            [diminishValues]="dangerSignDiminish()"
-            [(values)]="variant().dangerSigns"
-            (valuesChange)="updateVariantOnServer()"
-            labelI18n="dangerSign.#"
-          />
-        </div>
-
-        @if (isAvalancheType(avalancheTypeEnum.slab)) {
-          <div class="form-group row">
-            <label
-              class="form-label"
-              [class.changed]="
-                isComparedVariant() &&
-                variant().dangerSpotRecognizability !== comparedVariant()?.dangerSpotRecognizability
-              "
-              >{{ "dangerSources.create.label.dangerSpotRecognizability" | translate }}</label
-            >
-            <app-toggle-btn-group
-              [disabled]="disabled()"
-              [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.dangerSpotRecognizability)"
-              [(value)]="variant().dangerSpotRecognizability"
-              (valueChange)="updateVariantOnServer()"
-              labelI18n="recognizability.#"
-            />
-          </div>
-        }
-
-        @if (isAvalancheType(avalancheTypeEnum.slab)) {
-          <div class="form-group row">
-            <label
-              class="form-label"
-              [class.changed]="
-                isComparedVariant() && variant().remoteTriggering !== comparedVariant()?.remoteTriggering
-              "
-              >{{ "dangerSources.create.label.remoteTriggering" | translate }}</label
-            >
-            <app-toggle-btn-group
-              [disabled]="disabled()"
-              [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.remoteTriggering)"
-              [(value)]="variant().remoteTriggering"
-              (valueChange)="updateVariantOnServer()"
-              labelI18n="probability.#"
-            />
-          </div>
-        }
-
-        @if (isAvalancheType(avalancheTypeEnum.slab) || isAvalancheType(avalancheTypeEnum.loose)) {
-          <div class="form-group row">
-            <label
-              class="form-label"
-              [class.changed]="
-                isComparedVariant() && variant().penetrateDeepLayers !== comparedVariant()?.penetrateDeepLayers
-              "
-              >{{ "dangerSources.create.label.penetrateDeepLayers" | translate }}</label
-            >
-            <app-toggle-btn-group
-              [disabled]="disabled()"
-              [enumValues]="[true, false]"
-              [(value)]="variant().penetrateDeepLayers"
-              (valueChange)="updateVariantOnServer()"
-              labelI18n="button.#"
-            />
-          </div>
-        }
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && !haveSameElements(variant().terrainTypes, comparedVariant()?.terrainTypes)
-            "
-            >{{ "dangerSources.create.label.terrainTypes" | translate }}</label
-          >
-          <app-toggle-btn-group
-            [disabled]="disabled()"
-            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.terrainTypes)"
-            [diminishValues]="terrainTypeDiminish()"
-            [(values)]="variant().terrainTypes"
-            (valuesChange)="updateVariantOnServer()"
-            labelI18n="terrainType.#"
-          />
-        </div>
+        <app-zod-schema-form
+          [zodType]="DangerSourceModels.CharacteristicsSchema"
+          [disabled]="disabled()"
+          [value]="variant()"
+          [valueForCompare]="comparedVariant()"
+          (valueChange)="updateVariantOnServer()"
+          [labelI18n]="'dangerSources.create.label.#'"
+        />
       </accordion-group>
 
       <accordion-group
