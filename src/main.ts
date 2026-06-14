@@ -10,7 +10,7 @@ import { provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter, withHashLocation } from "@angular/router";
-import { provideTranslateService, TranslateService } from "@ngx-translate/core";
+import { provideTranslateService } from "@ngx-translate/core";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
@@ -70,7 +70,6 @@ function bootstrapApplication0() {
       provideRouter(routes, withHashLocation()),
       provideTranslateService(),
       DatePipe,
-      TranslateService,
       provideEchartsCore({ echarts }),
       provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
       provideAnimationsAsync("noop"),
