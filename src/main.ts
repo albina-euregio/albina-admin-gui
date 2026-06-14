@@ -6,12 +6,11 @@ import { default as localeEn, default as localeOc } from "@angular/common/locale
 import localeEs from "@angular/common/locales/es";
 import localeFr from "@angular/common/locales/fr";
 import localeIt from "@angular/common/locales/it";
-import { importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
+import { provideZoneChangeDetection } from "@angular/core";
+import { bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter, withHashLocation } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { provideTranslateService, TranslateService } from "@ngx-translate/core";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
@@ -74,7 +73,7 @@ function bootstrapApplication0() {
     providers: [
       provideZoneChangeDetection({ eventCoalescing: true }),
       provideRouter(routes, withHashLocation()),
-      importProvidersFrom(BrowserModule, FormsModule, ReactiveFormsModule, TranslateModule.forRoot()),
+      provideTranslateService(),
       AlertModule,
       BsDropdownModule,
       CollapseModule,
