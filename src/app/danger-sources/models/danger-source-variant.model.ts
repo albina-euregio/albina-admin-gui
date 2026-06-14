@@ -282,18 +282,7 @@ export const DangerSourceVariantSchema = z.object({
 });
 
 withShowIf(DangerSourceVariantSchema, {
-  weakLayerGrainShapes: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerGrainSizeUpperLimit: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerGrainSizeLowerLimit: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerPersistent: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerThickness: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerStrength: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerWet: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerCrustAbove: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerCrustBelow: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerPosition: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerCreation: ["avalancheType", Enums.AvalancheType.slab],
-  weakLayerDistribution: ["avalancheType", Enums.AvalancheType.slab],
+  // WeakLayerSchema is covered by @if isAvalancheType(avalancheTypeEnum.slab) around accordion
 });
 
 export class DangerSourceVariantModel extends ZSchema(DangerSourceVariantSchema) implements PolygonObject {
