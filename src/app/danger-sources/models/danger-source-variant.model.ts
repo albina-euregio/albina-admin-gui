@@ -189,6 +189,25 @@ export enum Wetness {
   dry = "dry",
 }
 
+export const WeakLayerSchema = z.object({
+  weakLayerGrainShapes: z
+    .enum([GrainShape.PP, GrainShape.DF, GrainShape.RG, GrainShape.FC, GrainShape.DH, GrainShape.SH, GrainShape.PPgp])
+    .array()
+    .register(widgetRegistry, { class: "bg-weak-layer col-8", valueI18n: "grainShape.#.code", widget: "grainShape" })
+    .nullish(),
+  weakLayerGrainSizeUpperLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
+  weakLayerGrainSizeLowerLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
+  weakLayerPersistent: z.boolean().nullish(),
+  weakLayerThickness: z.enum(Thickness).register(widgetRegistry, { valueI18n: "thickness.#" }).nullish(),
+  weakLayerStrength: z.enum(Characteristic).register(widgetRegistry, { valueI18n: "characteristic.#" }).nullish(),
+  weakLayerWet: z.boolean().nullish(),
+  weakLayerCrustAbove: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
+  weakLayerCrustBelow: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
+  weakLayerPosition: z.enum(SnowpackPosition).register(widgetRegistry, { valueI18n: "snowpackPosition.#" }).nullish(),
+  weakLayerCreation: z.enum(CreationProcess).register(widgetRegistry, { valueI18n: "creationProcess.#" }).nullish(),
+  weakLayerDistribution: z.enum(Distribution).register(widgetRegistry, { valueI18n: "distribution.#" }).nullish(),
+});
+
 export const DangerSourceVariantSchema = z.object({
   id: z.string().nullish(),
   title: z.string().nullish(),
@@ -250,22 +269,7 @@ export const DangerSourceVariantSchema = z.object({
   slabHardnessProfile: z.enum(Tendency).nullish(),
   slabEnergyTransferPotential: z.enum(Characteristic).nullish(),
   slabDistribution: z.enum(Distribution).nullish(),
-  weakLayerGrainShapes: z
-    .enum([GrainShape.PP, GrainShape.DF, GrainShape.RG, GrainShape.FC, GrainShape.DH, GrainShape.SH, GrainShape.PPgp])
-    .array()
-    .register(widgetRegistry, { class: "bg-weak-layer col-8", valueI18n: "grainShape.#.code", widget: "grainShape" })
-    .nullish(),
-  weakLayerGrainSizeUpperLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
-  weakLayerGrainSizeLowerLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
-  weakLayerPersistent: z.boolean().nullish(),
-  weakLayerThickness: z.enum(Thickness).register(widgetRegistry, { valueI18n: "thickness.#" }).nullish(),
-  weakLayerStrength: z.enum(Characteristic).register(widgetRegistry, { valueI18n: "characteristic.#" }).nullish(),
-  weakLayerWet: z.boolean().nullish(),
-  weakLayerCrustAbove: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
-  weakLayerCrustBelow: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
-  weakLayerPosition: z.enum(SnowpackPosition).register(widgetRegistry, { valueI18n: "snowpackPosition.#" }).nullish(),
-  weakLayerCreation: z.enum(CreationProcess).register(widgetRegistry, { valueI18n: "creationProcess.#" }).nullish(),
-  weakLayerDistribution: z.enum(Distribution).register(widgetRegistry, { valueI18n: "distribution.#" }).nullish(),
+  ...WeakLayerSchema.shape,
   dangerSpotRecognizability: z.enum(Recognizability).nullish(),
   remoteTriggering: z.enum(Probability).nullish(),
   terrainTypes: z.enum(TerrainType).array().nullish(),

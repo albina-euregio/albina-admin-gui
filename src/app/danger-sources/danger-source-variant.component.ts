@@ -34,6 +34,7 @@ import {
   GrainShape,
   TerrainType,
 } from "./models/danger-source-variant.model";
+import * as DangerSourceModels from "./models/danger-source-variant.model";
 
 @Component({
   selector: "app-danger-source-variant",
@@ -70,21 +71,8 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
 
+  readonly DangerSourceModels = DangerSourceModels;
   readonly DangerSourceVariantSchema = DangerSourceVariantSchema;
-  readonly WeakLayerSchema = DangerSourceVariantSchema.pick({
-    weakLayerGrainShapes: true,
-    weakLayerGrainSizeLowerLimit: true,
-    weakLayerGrainSizeUpperLimit: true,
-    weakLayerPersistent: true,
-    weakLayerThickness: true,
-    weakLayerStrength: true,
-    weakLayerWet: true,
-    weakLayerCrustAbove: true,
-    weakLayerCrustBelow: true,
-    weakLayerPosition: true,
-    weakLayerCreation: true,
-    weakLayerDistribution: true,
-  });
   readonly zEnumValues = zEnumValues;
   readonly variant = input<DangerSourceVariantModel>(undefined);
   readonly comparedVariant = input<DangerSourceVariantModel>(undefined);
