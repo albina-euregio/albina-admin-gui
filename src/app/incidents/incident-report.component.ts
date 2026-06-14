@@ -462,7 +462,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.mapService.drawOnMap();
   }
 
-  uploadIncidentAttachment($event: Event) {
+  async uploadIncidentAttachment($event: Event) {
     const input = $event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = "";
@@ -470,7 +470,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!file) {
       return;
     }
-    const attachment: IncidentModels.IncidentAttachment = {
+    const attachment0: IncidentModels.IncidentAttachment = {
       dateAdded: new Date(),
       dateCreated: undefined as unknown as Date,
       file,
@@ -478,29 +478,34 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       mediaType: file.type,
       credit: "",
     };
+    const attachment = await this.incidentService.uploadIncidentAttachment(this.incidentId, attachment0).toPromise();
     if (file.type.startsWith("image/")) {
       attachment.$previewUrl = URL.createObjectURL(file);
     }
-    this.incidentReport().attachments.push(attachment);
+    const attachments = this.incidentReport().attachments ?? [];
+    attachments.push(attachment);
+    this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
   updateAttachment(index: number, updatedAttachment: z.infer<typeof IncidentModels.IncidentAttachmentSchema>) {
-    const report = this.incidentReport();
-    const attachments = (report.attachments ?? []).map((a, i) => (i === index ? updatedAttachment : a));
-    this.incidentReport.set({ ...report, attachments });
+    const attachments = this.incidentReport().attachments ?? [];
+    attachments.splice(index, 1, updatedAttachment);
+    this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
-  removeAttachment(index: number) {
+  async removeAttachment(index: number) {
     const attachments = this.incidentReport().attachments;
     const message = this.translateService.instant("incidentReportUI.dropAttachment", {
       fileName: attachments[index].fileName,
     });
     if (!confirm(message)) return;
     const attachment = attachments[index];
+    await this.incidentService.deleteIncidentAttachment(this.incidentId, attachment).toPromise();
     if (attachment.$previewUrl) {
       URL.revokeObjectURL(attachment.$previewUrl);
     }
     attachments.splice(index, 1);
+    this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
   getAttachmentPreviewUrl(attachment: IncidentModels.IncidentAttachment): string | null {
