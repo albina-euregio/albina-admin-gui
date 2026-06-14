@@ -15,7 +15,7 @@ import { ServerModel, ServerSchema } from "../../models/server.model";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class AuthenticationService {
   private localStorageService = inject(LocalStorageService);
   private http = inject(HttpClient);

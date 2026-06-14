@@ -14,6 +14,7 @@ import { StatisticsService } from "../providers/statistics-service/statistics.se
   selector: "app-statistics",
   standalone: true,
   imports: [FormsModule, BsDatepickerModule, TranslateModule, TabsModule],
+  providers: [StatisticsService],
 })
 export class StatisticsComponent {
   statisticsService = inject(StatisticsService);

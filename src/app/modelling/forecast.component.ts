@@ -24,7 +24,8 @@ import type { Observable } from "rxjs";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 import "bootstrap";
-import { City, ParamService, QfaFile, QfaItem, QfaService } from "./qfa";
+
+import { City, GetDustParamService, ParamService, QfaFile, QfaItem, QfaService } from "./qfa";
 import type { ModellingRouteData } from "./routes";
 import { MeteogramSourceService, MultimodelSourceService, ZamgMeteoSourceService } from "./sources";
 
@@ -38,7 +39,15 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
-  providers: [MeteogramSourceService, MultimodelSourceService, ZamgMeteoSourceService],
+  providers: [
+    BaseMapService,
+    MeteogramSourceService,
+    MultimodelSourceService,
+    ZamgMeteoSourceService,
+    QfaService,
+    ParamService,
+    GetDustParamService,
+  ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })

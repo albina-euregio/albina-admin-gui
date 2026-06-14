@@ -12,7 +12,7 @@ import { UserModel, UserSchema } from "../../models/user.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class UserService {
   http = inject(HttpClient);
   constantsService = inject(ConstantsService);

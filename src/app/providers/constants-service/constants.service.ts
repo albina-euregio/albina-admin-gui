@@ -7,7 +7,7 @@ import * as Enums from "../../enums/enums";
 import type { ServerModel } from "../../models/server.model";
 import type { paths as OpenAPI } from "../openapi";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class ConstantsService {
   public release = [pkg.name, pkg.version].join("@");
   public gitlab = pkg.bugs.url;

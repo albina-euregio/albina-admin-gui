@@ -51,7 +51,7 @@ interface AccordionChangeEvent {
   groupName: AccordionGroupName;
 }
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class BulletinsService {
   http = inject(HttpClient);
   private constantsService = inject(ConstantsService);

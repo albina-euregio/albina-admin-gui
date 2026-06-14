@@ -60,6 +60,7 @@ import { IncidentReport } from "./models/incident-report.model";
   templateUrl: "incident-report.component.html",
   standalone: true,
   imports: [DatePipe, AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent],
+  providers: [GeocodingService, IncidentService],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
   constantsService = inject(ConstantsService);

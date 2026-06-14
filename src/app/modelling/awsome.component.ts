@@ -65,6 +65,7 @@ type DetailsTabLabel = string;
     NgxEchartsDirective,
   ],
   templateUrl: "awsome.component.html",
+  providers: [BaseMapService, ObservationFilterService, ObservationMarkerService],
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
   private route = inject(ActivatedRoute);

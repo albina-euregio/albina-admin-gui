@@ -25,6 +25,7 @@ type Result =
   selector: "app-update-user",
   standalone: true,
   imports: [FormsModule, TranslateModule, PasswordMismatchValidatorDirective],
+  providers: [ConfigurationService],
 })
 export class UpdateUserComponent implements AfterContentInit {
   private imageCompress = inject(NgxImageCompressService);

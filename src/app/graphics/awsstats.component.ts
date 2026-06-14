@@ -23,6 +23,7 @@ import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { lastValueFrom } from "rxjs";
 
 import { AlbinaObservationsService } from "../observations/observations.service";
+import { BlogService } from "../providers/blog-service/blog.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
 import { GraphicsService } from "./graphics.service";
@@ -33,6 +34,7 @@ const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id
   selector: "app-awsstats",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, TooltipModule],
+  providers: [GraphicsService, BlogService, BaseMapService, LineaMapService, AlbinaObservationsService],
   templateUrl: "./awsstats.component.html",
   styleUrls: ["./awsstats.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

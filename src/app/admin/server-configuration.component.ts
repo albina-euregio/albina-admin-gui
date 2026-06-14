@@ -13,6 +13,7 @@ import { ConfigurationService } from "../providers/configuration-service/configu
   selector: "app-server-configuration",
   standalone: true,
   imports: [AlertModule, FormsModule, TranslateModule, ZodInputComponent],
+  providers: [ConfigurationService],
 })
 export class ServerConfigurationComponent {
   private translateService = inject(TranslateService);

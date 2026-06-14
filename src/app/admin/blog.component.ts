@@ -22,6 +22,7 @@ interface PublicationInformation {
   selector: "app-blog",
   standalone: true,
   imports: [AlertModule, TranslateModule],
+  providers: [BlogService],
 })
 export class BlogComponent {
   blogService = inject(BlogService);

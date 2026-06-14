@@ -10,7 +10,7 @@ import { BulletinsService } from "app/providers/bulletins-service/bulletins.serv
 import { UserService } from "app/providers/user-service/user.service";
 import { lastValueFrom } from "rxjs";
 
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class GraphicsService {
   private authentificationService = inject(AuthenticationService);
   private blogService = inject(BlogService);

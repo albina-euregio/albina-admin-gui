@@ -14,6 +14,7 @@ import { RegionConfigurationComponent } from "./region-configuration.component";
   selector: "app-regions-configuration",
   standalone: true,
   imports: [AccordionModule, RegionConfigurationComponent, TranslateModule],
+  providers: [ConfigurationService],
 })
 export class RegionsConfigurationComponent implements AfterContentInit {
   private authenticationService = inject(AuthenticationService);

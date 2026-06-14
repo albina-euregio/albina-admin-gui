@@ -26,6 +26,7 @@ import { TeamStressLevelsComponent } from "./team-stress-levels.component";
   templateUrl: "bulletins.component.html",
   standalone: true,
   imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule, BulletinStatusBadgeComponent],
+  providers: [StatusService],
 })
 export class BulletinsComponent implements OnDestroy {
   translate = inject(TranslateService);

@@ -4,7 +4,7 @@ import { environment } from "environments/environment";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class AuthGuard {
   private router = inject(Router);
   private authService = inject(AuthenticationService);

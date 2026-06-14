@@ -26,7 +26,7 @@ interface AccordionChangeEvent {
   groupName: AccordionGroupName;
 }
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class DangerSourcesService {
   http = inject(HttpClient);
   private constantsService = inject(ConstantsService);

@@ -58,6 +58,7 @@ import { DangerSourceModel } from "./models/danger-source.model";
     AvalancheProblemIconsComponent,
     AspectsComponent,
   ],
+  providers: [MapService],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private router = inject(Router);

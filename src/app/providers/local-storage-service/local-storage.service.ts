@@ -17,7 +17,7 @@ export const MapCenterSchema = z.object({
 });
 type MapCenter = z.infer<typeof MapCenterSchema>;
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class LocalStorageService {
   private translateService = inject(TranslateService);
 

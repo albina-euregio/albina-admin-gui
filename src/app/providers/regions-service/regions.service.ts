@@ -20,7 +20,7 @@ import { AuthenticationService } from "../authentication-service/authentication.
 import { getRegionForLatLng, initAugmentRegion } from "./augmentRegion";
 import { loadRegions } from "./regions-loader.mjs";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class RegionsService {
   private translateService = inject(TranslateService);
   private authenticationService = inject(AuthenticationService);
