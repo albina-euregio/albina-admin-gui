@@ -9,7 +9,6 @@ import localeIt from "@angular/common/locales/it";
 import { importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LineaMapService } from "app/providers/map-service/linea-map.service";
@@ -149,7 +148,6 @@ function bootstrapApplication0() {
       TranslateService,
       UserService,
       provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
-      provideAnimations(),
     ],
   });
 }

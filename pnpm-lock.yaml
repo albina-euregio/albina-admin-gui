@@ -21,9 +21,6 @@ importers:
       '@albina-euregio/linea':
         specifier: ^8.24.2
         version: 8.24.2(zod@4.4.3)
-      '@angular/animations':
-        specifier: ^21.2.6
-        version: 21.2.6(@angular/core@21.2.6(@angular/compiler@21.2.6)(rxjs@7.8.2)(zone.js@0.16.1))
       '@angular/cdk':
         specifier: ^21.2.4
         version: 21.2.4(@angular/common@21.2.6(@angular/core@21.2.6(@angular/compiler@21.2.6)(rxjs@7.8.2)(zone.js@0.16.1))(rxjs@7.8.2))(@angular/core@21.2.6(@angular/compiler@21.2.6)(rxjs@7.8.2)(zone.js@0.16.1))(@angular/platform-browser@21.2.6(@angular/animations@21.2.6(@angular/core@21.2.6(@angular/compiler@21.2.6)(rxjs@7.8.2)(zone.js@0.16.1)))(@angular/common@21.2.6(@angular/core@21.2.6(@angular/compiler@21.2.6)(rxjs@7.8.2)(zone.js@0.16.1))(rxjs@7.8.2))(@angular/core@21.2.6(@angular/compiler@21.2.6)(rxjs@7.8.2)(zone.js@0.16.1)))(rxjs@7.8.2)
