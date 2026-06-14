@@ -18,7 +18,7 @@ import { BulletinModel } from "../models/bulletin.model";
 import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 // services
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { AccordionGroupName, BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
@@ -76,14 +76,7 @@ export class AvalancheBulletinComponent implements OnInit {
 
   public editRegions: boolean;
 
-  public isAccordionDangerRatingOpen: boolean;
-  public isAccordionAvalancheProblemForenoonOpen: boolean;
-  public isAccordionAvalancheProblemAfternoonOpen: boolean;
-  public isAccordionDangerDescriptionOpen: boolean;
-  public isAccordionSnowpackStructureOpen: boolean;
-  public isAccordionPhotosOpen: boolean;
-  public isAccordionTendencyOpen: boolean;
-  public isAccordionSynopsisOpen: boolean;
+  public accordionOpen: Partial<Record<AccordionGroupName, boolean>> = {};
 
   public catalogOfPhrasesModalRef: BsModalRef;
   public pmUrl: SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl);
@@ -106,34 +99,7 @@ export class AvalancheBulletinComponent implements OnInit {
 
   ngOnInit() {
     this.bulletinsService.accordionChanged$.subscribe(({ isOpen, groupName }) => {
-      switch (groupName) {
-        case "dangerRating":
-          this.isAccordionDangerRatingOpen = isOpen;
-          break;
-        case "avalancheProblemForenoon":
-          this.isAccordionAvalancheProblemForenoonOpen = isOpen;
-          break;
-        case "avalancheProblemAfternoon":
-          this.isAccordionAvalancheProblemAfternoonOpen = isOpen;
-          break;
-        case "dangerDescription":
-          this.isAccordionDangerDescriptionOpen = isOpen;
-          break;
-        case "snowpackStructure":
-          this.isAccordionSnowpackStructureOpen = isOpen;
-          break;
-        case "photos":
-          this.isAccordionPhotosOpen = isOpen;
-          break;
-        case "tendency":
-          this.isAccordionTendencyOpen = isOpen;
-          break;
-        case "synopsis":
-          this.isAccordionSynopsisOpen = isOpen;
-          break;
-        default:
-          break;
-      }
+      this.accordionOpen[groupName] = isOpen;
     });
   }
 
@@ -237,7 +203,7 @@ export class AvalancheBulletinComponent implements OnInit {
     );
   }
 
-  accordionChanged(isOpen: boolean, groupName: string) {
+  accordionChanged(isOpen: boolean, groupName: AccordionGroupName) {
     this.bulletinsService.emitAccordionChanged({ isOpen, groupName });
   }
 
@@ -357,10 +323,10 @@ export class AvalancheBulletinComponent implements OnInit {
   createAvalancheProblem(isAfternoon: boolean) {
     let daytime: BulletinDaytimeDescriptionModel;
     if (isAfternoon) {
-      this.isAccordionAvalancheProblemAfternoonOpen = true;
+      this.accordionOpen.avalancheProblemAfternoon = true;
       daytime = this.bulletin().afternoon;
     } else {
-      this.isAccordionAvalancheProblemForenoonOpen = true;
+      this.accordionOpen.avalancheProblemForenoon = true;
       daytime = this.bulletin().forenoon;
     }
     let lastAvalancheProblem = daytime.avalancheProblem1;
@@ -423,7 +389,7 @@ export class AvalancheBulletinComponent implements OnInit {
   createAvalanchePhoto() {
     const newPhoto = BulletinPhotoSchema.parse({ url: "", $accordionOpen: true });
     this.bulletin().photos.push(newPhoto);
-    this.isAccordionPhotosOpen = true;
+    this.accordionOpen.photos = true;
     this.updateBulletinOnServer();
   }
 

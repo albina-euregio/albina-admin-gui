@@ -235,18 +235,12 @@
         <!-- Avalanche problems -->
         <accordion-group
           class="accordion-group"
-          #accordionAvalancheProblemForenoon
-          [isOpen]="isAccordionAvalancheProblemForenoonOpen"
+          [isOpen]="accordionOpen.avalancheProblemForenoon"
           (isOpenChange)="accordionChanged($event, 'avalancheProblemForenoon')"
         >
           <div accordion-heading class="accordion-header accordion-header--with-buttons">
             <h2 class="accordion-header__title">
-              @if (!isAccordionAvalancheProblemForenoonOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionAvalancheProblemForenoonOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               {{ "bulletins.create.title.avalancheProblem" | translate }}
               @if (bulletin().hasDaytimeDependency) {
                 <span>&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span>
@@ -281,19 +275,13 @@
         </accordion-group>
         @if (bulletin().hasDaytimeDependency) {
           <accordion-group
-            #accordionAvalancheProblemAfternoon
-            [isOpen]="isAccordionAvalancheProblemAfternoonOpen"
+            [isOpen]="accordionOpen.avalancheProblemAfternoon"
             (isOpenChange)="accordionChanged($event, 'avalancheProblemAfternoon')"
             class="accordion-group"
           >
             <div accordion-heading class="accordion-header accordion-header--with-buttons">
               <h2 class="accordion-header__title">
-                @if (accordionAvalancheProblemAfternoon.isOpen) {
-                  <i class="accordion__arrow ph ph-caret-down"></i>
-                }
-                @if (!accordionAvalancheProblemAfternoon.isOpen) {
-                  <i class="accordion__arrow ph ph-caret-right"></i>
-                }
+                <i class="accordion__arrow ph ph-caret-right"></i>
                 <span
                   >{{ "bulletins.create.title.avalancheProblem" | translate }}
                   {{ "bulletins.create.title.afternoon" | translate }}</span
@@ -325,12 +313,7 @@
         }
         <!-- show empty afternoon section if compared bulletin has daytime dependency but current bulletin has not -->
         @if (comparedBulletin() && !bulletin()?.hasDaytimeDependency && comparedBulletin()?.hasDaytimeDependency) {
-          <accordion-group
-            #accordionAvalancheProblemAfternoon
-            class="accordion-group"
-            [isOpen]="false"
-            [isDisabled]="true"
-          >
+          <accordion-group class="accordion-group" [isOpen]="false" [isDisabled]="true">
             <div accordion-heading class="accordion-header accordion-header--with-buttons" style="cursor: default">
               <h2 class="accordion-header__title">
                 <i class="accordion__arrow ph ph-caret-right" style="visibility: hidden"></i>
@@ -342,17 +325,12 @@
 
         <!-- Danger description -->
         <accordion-group
-          [isOpen]="isAccordionDangerDescriptionOpen"
+          [isOpen]="accordionOpen.dangerDescription"
           (isOpenChange)="accordionChanged($event, 'dangerDescription')"
         >
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
-              @if (!isAccordionDangerDescriptionOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionDangerDescriptionOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               <span>
                 {{ "bulletins.create.title.dangerDescription" | translate }}
               </span>
@@ -429,15 +407,10 @@
         <!-- End danger description -->
 
         <!-- Photos -->
-        <accordion-group [isOpen]="isAccordionPhotosOpen" (isOpenChange)="accordionChanged($event, 'photos')">
+        <accordion-group [isOpen]="accordionOpen.photos" (isOpenChange)="accordionChanged($event, 'photos')">
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
-              @if (!isAccordionPhotosOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionPhotosOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               <span>{{ "bulletins.create.title.photos" | translate }}</span>
             </h2>
             <div class="btn-group accordion-header__buttons">
@@ -469,17 +442,12 @@
 
         <!-- Snowpack structure -->
         <accordion-group
-          [isOpen]="isAccordionSnowpackStructureOpen"
+          [isOpen]="accordionOpen.snowpackStructure"
           (isOpenChange)="accordionChanged($event, 'snowpackStructure')"
         >
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
-              @if (!isAccordionSnowpackStructureOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionSnowpackStructureOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               <span>
                 {{ "bulletins.create.title.snowpackStructure" | translate }}
               </span>
@@ -543,16 +511,11 @@
         <!-- End Snowpack structure -->
 
         <!-- Tendency -->
-        <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'tendency')">
+        <accordion-group [isOpen]="accordionOpen.tendency" (isOpenChange)="accordionChanged($event, 'tendency')">
           <!-- Tendency -->
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
-              @if (!isAccordionTendencyOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionTendencyOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
 
               <span>
                 {{ "bulletins.create.title.tendency" | translate }}
@@ -607,16 +570,11 @@
 
         <!-- Weather synopsis -->
         @if (this.authenticationService.isTextfieldEnabled("synopsisComment")) {
-          <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'synopsis')">
+          <accordion-group [isOpen]="accordionOpen.tendency" (isOpenChange)="accordionChanged($event, 'synopsis')">
             <!-- Weather synopsis -->
             <div accordion-heading class="accordion-header">
               <h2 class="accordion-header__title">
-                @if (!isAccordionTendencyOpen) {
-                  <i class="accordion__arrow ph ph-caret-right"></i>
-                }
-                @if (isAccordionTendencyOpen) {
-                  <i class="accordion__arrow ph ph-caret-down"></i>
-                }
+                <i class="accordion__arrow ph ph-caret-right"></i>
                 <span>
                   {{ "bulletins.create.title.synopsis" | translate }}
                 </span>

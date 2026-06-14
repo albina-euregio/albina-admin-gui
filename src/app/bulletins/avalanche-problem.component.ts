@@ -4,6 +4,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
 
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { BulletinModel } from "../models/bulletin.model";
+import { AccordionGroupName } from "../providers/bulletins-service/bulletins.service";
 import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.component";
 import { AvalancheProblemPreviewComponent } from "./avalanche-problem-preview.component";
 
@@ -32,7 +33,7 @@ export class AvalancheProblemComponent {
     this.changeAvalancheProblemEvent.emit();
   }
 
-  accordionChanged(isOpen: boolean, groupName: string) {
+  accordionChanged(isOpen: boolean, groupName: AccordionGroupName) {
     this.bulletinsService.emitAccordionChanged({ isOpen, groupName });
   }
 }
