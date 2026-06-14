@@ -6,6 +6,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import type { components } from "../providers/openapi";
 
 export type IncidentView = components["schemas"]["IncidentService.IncidentView"];
+export type IncidentAttachment = components["schemas"]["IncidentAttachment"];
 
 @Injectable()
 export class IncidentService {
@@ -42,6 +43,32 @@ export class IncidentService {
   /** Delete an incident by id. */
   deleteIncident(id: string): Observable<void> {
     const url = this.constantsService.getServerUrlDELETE("/incidents/{id}", null as never, { id });
+    return this.http.delete<void>(url);
+  }
+
+  /** Upload an attachment for an incident. */
+  uploadIncidentAttachment(id: string, file: File): Observable<IncidentAttachment> {
+    const url = this.constantsService.getServerUrlPOST("/incidents/{id}/attachment", null as never, { id });
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.http.post<IncidentAttachment>(url, formData);
+  }
+
+  /** Get a single attachment of an incident by id. */
+  getIncidentAttachment(id: string, attachmentId: string): Observable<IncidentAttachment> {
+    const url = this.constantsService.getServerUrlGET("/incidents/{id}/attachment/{attachmentId}", null as never, {
+      id,
+      attachmentId,
+    });
+    return this.http.get<IncidentAttachment>(url);
+  }
+
+  /** Delete a single attachment of an incident by id. */
+  deleteIncidentAttachment(id: string, attachmentId: string): Observable<void> {
+    const url = this.constantsService.getServerUrlDELETE("/incidents/{id}/attachment/{attachmentId}", null as never, {
+      id,
+      attachmentId,
+    });
     return this.http.delete<void>(url);
   }
 }
