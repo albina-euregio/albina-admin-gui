@@ -13,7 +13,7 @@
       >
         <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100">
           <div class="d-flex align-items-center gap-2">
-            @if (!displayOnly() && inner.type === "boolean") {
+            @if (!displayOnly() && widget?.widget === "switch") {
             } @else if (labelI18n()) {
               <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
             } @else {
@@ -274,7 +274,7 @@
             [(value)]="value()[x.key]"
             (valueChange)="onFieldChange()"
           />
-        } @else if (inner.type === "boolean") {
+        } @else if (inner.type === "boolean" && widget?.widget === "switch") {
           <div class="form-check form-switch form-check-inline">
             <label class="form-check-label">
               <input
@@ -288,6 +288,15 @@
               {{ x.value?.description || x.key }}
             </label>
           </div>
+        } @else if (inner.type === "boolean") {
+          <app-toggle-btn-group
+            [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+            [disabled]="disabled()"
+            [enumValues]="[true, false]"
+            [(value)]="value()[x.key]"
+            (valueChange)="onFieldChange()"
+            [labelI18n]="'button.#'"
+          />
         } @else if (zodUtil.isEnumWithOther(inner)) {
           <app-enum-other
             [disabled]="disabled()"

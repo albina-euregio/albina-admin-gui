@@ -32,6 +32,7 @@ export interface WidgetType {
   widget?:
     | "slider"
     | "checkbox"
+    | "switch"
     | "select"
     | "textarea"
     | "rich-text"
