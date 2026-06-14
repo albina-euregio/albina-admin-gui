@@ -75,6 +75,7 @@ import { ModalMediaFileComponent } from "./modal-media-file.component";
     BulletinTextComponent,
     PublicationInProgressComponent,
   ],
+  providers: [MapService],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
   private router = inject(Router);

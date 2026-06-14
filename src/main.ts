@@ -12,7 +12,6 @@ import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { LineaMapService } from "app/providers/map-service/linea-map.service";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
@@ -46,8 +45,6 @@ import { ConstantsService } from "./app/providers/constants-service/constants.se
 import { CopyService } from "./app/providers/copy-service/copy.service";
 import { IncidentService } from "./app/providers/incident-service/incident.service";
 import { LocalStorageService } from "./app/providers/local-storage-service/local-storage.service";
-import { BaseMapService } from "./app/providers/map-service/base-map.service";
-import { MapService } from "./app/providers/map-service/map.service";
 import { RegionsService } from "./app/providers/regions-service/regions.service";
 import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
@@ -98,7 +95,6 @@ function bootstrapApplication0() {
       AlertModule,
       AuthenticationService,
       AuthGuard,
-      BaseMapService,
       BsDropdownModule,
       BulletinsService,
       CollapseModule,
@@ -107,9 +103,7 @@ function bootstrapApplication0() {
       DangerSourcesService,
       DatePipe,
       IncidentService,
-      LineaMapService,
       LocalStorageService,
-      MapService,
       ModalModule,
       ObservationFilterService,
       RegionsService,

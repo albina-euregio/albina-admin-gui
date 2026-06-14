@@ -22,7 +22,7 @@ import { GraphicsService } from "./graphics.service";
   selector: "app-linea-export",
   standalone: true,
   imports: [CommonModule, TranslateModule],
-  providers: [GraphicsService, BlogService],
+  providers: [GraphicsService, BlogService, LineaMapService],
   templateUrl: "./lineaexport.component.html",
   styleUrls: ["./lineaexport.component.css"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

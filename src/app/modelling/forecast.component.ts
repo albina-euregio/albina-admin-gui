@@ -40,6 +40,7 @@ export interface MultiselectDropdownData {
   standalone: true,
   imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
   providers: [
+    BaseMapService,
     MeteogramSourceService,
     MultimodelSourceService,
     ZamgMeteoSourceService,
