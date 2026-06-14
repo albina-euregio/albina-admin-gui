@@ -36,7 +36,6 @@ import { provideEchartsCore } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
-import { AlbinaObservationsService } from "./app/observations/observations.service";
 import { AuthenticationService } from "./app/providers/authentication-service/authentication.service";
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
 import { BulletinsService } from "./app/providers/bulletins-service/bulletins.service";
@@ -90,7 +89,6 @@ function bootstrapApplication0() {
         provide: LocationStrategy,
         useClass: HashLocationStrategy,
       },
-      AlbinaObservationsService,
       AlertModule,
       AuthenticationService,
       AuthGuard,

@@ -170,6 +170,7 @@ class ObservationData {
   templateUrl: "observations.component.html",
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
+    AlbinaObservationsService,
     BaseMapService,
     ObservationFilterService,
     ObservationMarkerService,

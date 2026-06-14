@@ -34,7 +34,7 @@ const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id
   selector: "app-awsstats",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, TooltipModule],
-  providers: [GraphicsService, BlogService, BaseMapService, LineaMapService],
+  providers: [GraphicsService, BlogService, BaseMapService, LineaMapService, AlbinaObservationsService],
   templateUrl: "./awsstats.component.html",
   styleUrls: ["./awsstats.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
