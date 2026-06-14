@@ -68,7 +68,7 @@
           <option value="Verified">{{ "reportStatus.Verified" | translate }}</option>
         </select>
         <button
-          class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap"
+          class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
           [disabled]="disabled() || incidentReport().reportStatus === 'Draft'"
         >
           {{ "incidentReportUI.publishUpdateIncident" | translate }}
@@ -78,7 +78,7 @@
   </div>
 
   <!-- Stepped Tabs Navigation -->
-  <ul class="nav nav-tabs flex-column flex-sm-row gap-1 border-bottom-0">
+  <ul class="nav nav-tabs flex-column flex-sm-row gap-1 border-bottom-0" [class.d-none]="displayOnly">
     @for (tab of allTabs; track tab.id) {
       <li class="nav-item">
         <button
@@ -106,8 +106,20 @@
   </ul>
 
   <!-- Toggle Mode -->
-  <div class="d-flex justify-content-end mb-2">
-    <div class="form-check form-switch mb-0">
+  <div class="d-flex justify-content-end mb-2 d-print-none">
+    <div class="form-check form-switch mb-0 ms-3">
+      <input class="form-check-input" type="checkbox" id="displayOnly" [(ngModel)]="displayOnly" />
+      <label
+        class="form-check-label text-secondary fw-semibold cursor-pointer"
+        for="displayOnly"
+        style="font-size: 12px"
+      >
+        <i class="ph ph-eyes me-1"></i>
+        <i class="ph ph-printer me-1"></i>
+        {{ "incidentReportUI.displayOnly" | translate }}
+      </label>
+    </div>
+    <div class="form-check form-switch mb-0 ms-3">
       <input class="form-check-input" type="checkbox" id="toggleMandatoryOnly" [(ngModel)]="showMandatoryOnly" />
       <label
         class="form-check-label text-secondary fw-semibold cursor-pointer"
@@ -122,11 +134,12 @@
   <!-- Tab Content Areas -->
   <div class="border p-4 rounded bg-light-subtle shadow-sm">
     <!-- General Info Tab -->
-    @if (activeTab === "general") {
+    @if (activeTab === "general" || displayOnly) {
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.generalInformation" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
+          [displayOnly]="displayOnly"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.GeneralInformationSchema"
@@ -138,7 +151,7 @@
     }
 
     <!-- Location Info Tab -->
-    @if (activeTab === "location") {
+    @if (activeTab === "location" || displayOnly) {
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.locationInformation" | translate }}</h4>
 
@@ -146,6 +159,7 @@
 
         <app-zod-schema-form
           [disabled]="disabled()"
+          [displayOnly]="displayOnly"
           [value]="incidentReport()"
           (valueChange)="onLocationFormChange($event)"
           [zodType]="IncidentModels.LocationInformationSchema"
@@ -197,6 +211,7 @@
               <button
                 type="button"
                 class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+                [class.d-none]="displayOnly"
                 [class.btn-primary]="mapService.activeDrawingMode === 'Point'"
                 [class.btn-light]="mapService.activeDrawingMode !== 'Point'"
                 (click)="mapService.activeDrawingMode = 'Point'"
@@ -230,6 +245,7 @@
               <button
                 type="button"
                 class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+                [class.d-none]="displayOnly"
                 [class.btn-primary]="mapService.activeDrawingMode === 'Line'"
                 [class.btn-light]="mapService.activeDrawingMode !== 'Line'"
                 (click)="mapService.activeDrawingMode = 'Line'"
@@ -263,6 +279,7 @@
               <button
                 type="button"
                 class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+                [class.d-none]="displayOnly"
                 [class.btn-primary]="mapService.activeDrawingMode === 'Polygon'"
                 [class.btn-light]="mapService.activeDrawingMode !== 'Polygon'"
                 (click)="mapService.activeDrawingMode = 'Polygon'"
@@ -307,6 +324,7 @@
         <!-- Remaining location fields -->
         <app-zod-schema-form
           [disabled]="disabled()"
+          [displayOnly]="displayOnly"
           [value]="incidentReport()"
           (valueChange)="onLocationFormChange($event)"
           [zodType]="IncidentModels.LocationInformationSchema"
@@ -319,11 +337,12 @@
     }
 
     <!-- Avalanche Info Tab -->
-    @if (activeTab === "avalanche") {
+    @if (activeTab === "avalanche" || displayOnly) {
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.avalancheInformation" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
+          [displayOnly]="displayOnly"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.AvalancheInformationSchema"
@@ -335,12 +354,12 @@
     }
 
     <!-- Group Info Tab -->
-    @if (activeTab === "group") {
+    @if (activeTab === "group" || displayOnly) {
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.personInvolvement" | translate }}</h4>
 
         <!-- Sub-tab nav-pills -->
-        <ul class="nav nav-pills gap-1 mb-4">
+        <ul class="nav nav-pills gap-1 mb-4" [class.d-none]="displayOnly">
           <li class="nav-item">
             <button
               class="nav-link d-flex align-items-center gap-2"
@@ -379,9 +398,10 @@
         </ul>
 
         <!-- Overview sub-tab -->
-        @if (activeGroupSubTab === "overview") {
+        @if (activeGroupSubTab === "overview" || displayOnly) {
           <app-zod-schema-form
             [disabled]="disabled()"
+            [displayOnly]="displayOnly"
             [(value)]="incidentReport"
             [zodType]="IncidentModels.IncidentReportSchema"
             [includeFields]="['personInvolvement']"
@@ -409,12 +429,13 @@
         }
 
         <!-- Groups sub-tab -->
-        @if (activeGroupSubTab === "groups") {
+        @if (activeGroupSubTab === "groups" || displayOnly) {
           <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
             <div class="d-flex flex-wrap gap-1 flex-grow-1">
               @for (group of incidentReport().groupInformation; track $index; let i = $index) {
                 <button
                   class="btn btn-sm d-flex align-items-center gap-1"
+                  [class.d-none]="displayOnly"
                   [class.btn-dark]="activeGroupIndex === i"
                   [class.btn-outline-dark]="activeGroupIndex !== i"
                   (click)="activeGroupIndex = i"
@@ -430,6 +451,7 @@
             </div>
             <button
               class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+              [class.d-none]="displayOnly"
               (click)="newGroupInformation()"
             >
               <i class="ph ph-plus"></i> {{ "incidentReportUI.addGroup" | translate }}
@@ -445,7 +467,11 @@
                 <div class="card-header d-flex justify-content-between align-items-center bg-light">
                   <span class="fw-semibold text-secondary h6 mb-0">{{ activeGroup.anonymousGroupIdentifier }}</span>
                   @if (activeGroupIndex > 0) {
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation(activeGroupIndex)">
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      [class.d-none]="displayOnly"
+                      (click)="removeGroupInformation(activeGroupIndex)"
+                    >
                       <i class="ph ph-trash"></i> {{ "incidentReportUI.removeGroup" | translate }}
                     </button>
                   }
@@ -453,6 +479,7 @@
                 <div class="card-body">
                   <app-zod-schema-form
                     [disabled]="disabled()"
+                    [displayOnly]="displayOnly"
                     [value]="activeGroup"
                     (valueChange)="updateGroupInformation(activeGroupIndex, $event)"
                     [zodType]="IncidentModels.GroupInformationSchema"
@@ -467,12 +494,13 @@
         }
 
         <!-- Victims sub-tab -->
-        @if (activeGroupSubTab === "victims") {
+        @if (activeGroupSubTab === "victims" || displayOnly) {
           <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
             <div class="d-flex flex-wrap gap-1 flex-grow-1">
               @for (victim of incidentReport().victimInformation; track $index; let i = $index) {
                 <button
                   class="btn btn-sm d-flex align-items-center gap-1"
+                  [class.d-none]="displayOnly"
                   [class.btn-dark]="activeVictimIndex === i"
                   [class.btn-outline-dark]="activeVictimIndex !== i"
                   (click)="activeVictimIndex = i"
@@ -488,6 +516,7 @@
             </div>
             <button
               class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+              [class.d-none]="displayOnly"
               (click)="newVictimInformation()"
             >
               <i class="ph ph-plus"></i> {{ "incidentReportUI.addVictim" | translate }}
@@ -502,13 +531,18 @@
               <div class="card shadow-sm border">
                 <div class="card-header d-flex justify-content-between align-items-center bg-light">
                   <span class="fw-semibold text-secondary h6 mb-0">{{ activeVictim.anonymousVictimIdentifier }}</span>
-                  <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation(activeVictimIndex)">
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    [class.d-none]="displayOnly"
+                    (click)="removeVictimInformation(activeVictimIndex)"
+                  >
                     <i class="ph ph-trash"></i> {{ "incidentReportUI.removeVictim" | translate }}
                   </button>
                 </div>
                 <div class="card-body">
                   <app-zod-schema-form
                     [disabled]="disabled()"
+                    [displayOnly]="displayOnly"
                     [value]="activeVictim"
                     (valueChange)="updateVictimInformation(activeVictimIndex, $event)"
                     [zodType]="IncidentModels.VictimInformationSchema"
@@ -526,11 +560,12 @@
     }
 
     <!-- Other Damages Tab -->
-    @if (activeTab === "other-damages") {
+    @if (activeTab === "other-damages" || displayOnly) {
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.otherDamages" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
+          [displayOnly]="displayOnly"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.OtherDamagesSchema"
@@ -542,11 +577,12 @@
     }
 
     <!-- Incident Analysis Tab -->
-    @if (activeTab === "analysis") {
+    @if (activeTab === "analysis" || displayOnly) {
       <div>
         <h4 class="mb-3 text-secondary">{{ "incidentReport.incidentAnalysis" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
+          [displayOnly]="displayOnly"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.IncidentAnalysisSchema"
@@ -558,9 +594,9 @@
     }
 
     <!-- Attachments Tab -->
-    @if (activeTab === "attachments") {
+    @if (activeTab === "attachments" || displayOnly) {
       <div>
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="mt-4 d-flex justify-content-between align-items-center mb-4">
           <h4 class="m-0 text-secondary">
             {{ "incidentReport.incidentAttachments" | translate }}
           </h4>
@@ -568,6 +604,7 @@
             <button
               [disabled]="disabled()"
               class="btn btn-sm btn-success d-flex align-items-center gap-1"
+              [class.d-none]="displayOnly"
               (click)="attachmentFileInput.click()"
               data-toggle="tooltip"
               title="{{ 'incidentReport.incidentAttachments' | translate }}"
@@ -637,6 +674,7 @@
 
                 <button
                   class="btn btn-sm btn-outline-danger"
+                  [class.d-none]="displayOnly"
                   (click)="removeAttachment($index)"
                   title="{{ 'incidentReportUI.removeAttachment' | translate }}"
                 >
@@ -662,6 +700,7 @@
                     <div class="col-12 col-md-8">
                       <app-zod-schema-form
                         [disabled]="disabled()"
+                        [displayOnly]="displayOnly"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
                         [zodType]="IncidentModels.IncidentAttachmentSchema"
@@ -674,6 +713,7 @@
                     <div class="col-12">
                       <app-zod-schema-form
                         [disabled]="disabled()"
+                        [displayOnly]="displayOnly"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
                         [zodType]="IncidentModels.IncidentAttachmentSchema"
@@ -693,7 +733,7 @@
   </div>
 
   <!-- Wizard Controls (Next/Back) -->
-  <div class="d-flex justify-content-between mt-3 pt-3">
+  <div class="d-flex justify-content-between mt-3 pt-3" [class.d-none]="displayOnly">
     <button class="btn btn-outline-secondary" [disabled]="activeTab === allTabs[0].id" (click)="activeTab = prevTab">
       <i class="ph ph-skip-back"></i> {{ "incidentReportUI.back" | translate }}
     </button>
