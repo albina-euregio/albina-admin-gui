@@ -39,7 +39,6 @@ import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
 import { GetDustParamService, ParamService, QfaService } from "./app/modelling/qfa";
-import { GeocodingService } from "./app/observations/geocoding.service";
 import { ObservationFilterService } from "./app/observations/observation-filter.service";
 import { ObservationMarkerObserverService } from "./app/observations/observation-marker-observer.service";
 import { ObservationMarkerWeatherStationService } from "./app/observations/observation-marker-weather-station.service";
@@ -56,8 +55,6 @@ import { CopyService } from "./app/providers/copy-service/copy.service";
 import { IncidentService } from "./app/providers/incident-service/incident.service";
 import { LocalStorageService } from "./app/providers/local-storage-service/local-storage.service";
 import { BaseMapService } from "./app/providers/map-service/base-map.service";
-import { CoordinateDataService } from "./app/providers/map-service/coordinate-data.service";
-import { ElevationService } from "./app/providers/map-service/elevation.service";
 import { MapService } from "./app/providers/map-service/map.service";
 import { MediaFileService } from "./app/providers/media-file-service/media-file.service";
 import { RegionsService } from "./app/providers/regions-service/regions.service";
@@ -125,11 +122,8 @@ function bootstrapApplication0() {
       LocalStorageService,
       ConfigurationService,
       ConstantsService,
-      CoordinateDataService,
       CopyService,
       DatePipe,
-      ElevationService,
-      GeocodingService,
       GetDustParamService,
       IncidentService,
       LocalStorageService,

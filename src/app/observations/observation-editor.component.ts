@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
+import { ElevationService } from "app/providers/map-service/elevation.service";
 import { zodCssClass } from "app/shared/zod-util";
 import { orderBy, xor } from "es-toolkit";
 import { Feature, Point } from "geojson";
@@ -43,6 +44,7 @@ import {
   ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
+  providers: [GeocodingService, CoordinateDataService, ElevationService],
 })
 export class ObservationEditorComponent implements AfterViewInit {
   private geocodingService = inject(GeocodingService);
