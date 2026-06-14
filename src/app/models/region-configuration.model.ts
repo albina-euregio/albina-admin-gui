@@ -48,6 +48,8 @@ export const RegionConfigurationPublicationSchema = z.object({
   pdfMapWidthAmPm: z.coerce.number().nullish().describe("Map width for PDF (am/pm)"),
   pdfMapWidthFd: z.coerce.number().nullish().describe("Map width for PDF (fd)"),
   pdfMapHeight: z.coerce.number().nullish().describe("Map height for PDF"),
+  logoPath: z.string().nullish().describe("Logo for PDF (color)"),
+  logoBwPath: z.string().nullish().describe("Logo for PDF (bw)"),
   pdfFooterLogo: z.boolean().nullish().describe("Logo for PDF footer"),
   pdfFooterLogoColorPath: z.string().nullish().describe("Logo for PDF footer (color)"),
   pdfFooterLogoBwPath: z.string().nullish().describe("Logo for PDF footer (bw)"),
@@ -110,8 +112,6 @@ export const RegionConfigurationSchema = z.object({
   ...RegionConfigurationConfigurationSchema.shape,
   languageConfigurations: LanguageConfigurationSchema.array().nullish().describe("Language configuration"),
   defaultLang: z.string().nullish().describe("Default language for language dependent configuration"),
-  logoPath: z.string().nullish(),
-  logoBwPath: z.string().nullish(),
 });
 
 withShowIf(RegionConfigurationSchema, {
@@ -132,9 +132,11 @@ withShowIf(RegionConfigurationSchema, {
   pdfMapWidthAmPm: ["createPdf", true],
   pdfMapWidthFd: ["createPdf", true],
   pdfMapHeight: ["createPdf", true],
+  logoPath: ["createPdf", true],
+  logoBwPath: ["createPdf", true],
   pdfFooterLogo: ["createPdf", true],
-  pdfFooterLogoColorPath: ["createPdf", true],
-  pdfFooterLogoBwPath: ["createPdf", true],
+  pdfFooterLogoColorPath: ["pdfFooterLogo", true],
+  pdfFooterLogoBwPath: ["pdfFooterLogo", true],
   imageColorbarColorPath: ["createPdf", true],
   imageColorbarBwPath: ["createPdf", true],
 
