@@ -11,6 +11,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
+import { BlogService } from "../providers/blog-service/blog.service";
 import { GraphicsService } from "./graphics.service";
 
 const AVAILABLE_YEARLY_CHART_TYPES = CONFIGURED_PLOTS.yearlystats.map((c) => c.id);
@@ -19,6 +20,7 @@ const AVAILABLE_YEARLY_CHART_TYPES = CONFIGURED_PLOTS.yearlystats.map((c) => c.i
   selector: "app-yearlystats",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, TooltipModule],
+  providers: [GraphicsService, BlogService],
   templateUrl: "./yearlystats.component.html",
   styleUrls: ["./yearlystats.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

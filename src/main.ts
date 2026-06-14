@@ -45,7 +45,6 @@ import { ObservationMarkerService } from "./app/observations/observation-marker.
 import { AlbinaObservationsService } from "./app/observations/observations.service";
 import { AuthenticationService } from "./app/providers/authentication-service/authentication.service";
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
-import { BlogService } from "./app/providers/blog-service/blog.service";
 import { BulletinsService } from "./app/providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "./app/providers/constants-service/constants.service";
 import { CopyService } from "./app/providers/copy-service/copy.service";
@@ -104,7 +103,6 @@ function bootstrapApplication0() {
       AuthenticationService,
       AuthGuard,
       BaseMapService,
-      BlogService,
       BsDropdownModule,
       BulletinsService,
       CollapseModule,

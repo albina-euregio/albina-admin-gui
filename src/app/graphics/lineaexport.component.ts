@@ -14,6 +14,7 @@ import {
 import { TranslateModule } from "@ngx-translate/core";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
+import { BlogService } from "../providers/blog-service/blog.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
 import { GraphicsService } from "./graphics.service";
 
@@ -21,6 +22,7 @@ import { GraphicsService } from "./graphics.service";
   selector: "app-linea-export",
   standalone: true,
   imports: [CommonModule, TranslateModule],
+  providers: [GraphicsService, BlogService],
   templateUrl: "./lineaexport.component.html",
   styleUrls: ["./lineaexport.component.css"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
