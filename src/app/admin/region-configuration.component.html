@@ -8,16 +8,16 @@
 <div>
   <tabset>
     <tab heading="{{ 'admin.region-configuration.table.general.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="GeneralSchema" />
+      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationGeneralSchema" />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.publication.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="PublicationSchema" />
+      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationPublicationSchema" />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.components.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="ComponentsSchema" />
+      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationComponentsSchema" />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.configuration.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="ConfigurationSchema" />
+      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationConfigurationSchema" />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.languageConfiguration.title' | translate }}">
       <div class="table-responsive">
