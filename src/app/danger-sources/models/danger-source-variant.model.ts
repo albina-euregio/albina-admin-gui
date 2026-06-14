@@ -189,6 +189,29 @@ export enum Wetness {
   dry = "dry",
 }
 
+export const SlabSchema = z.object({
+  slabGrainShape: z
+    .enum([GrainShape.PP, GrainShape.DF, GrainShape.RG, GrainShape.FC, GrainShape.MF, GrainShape.IF, GrainShape.MFcr])
+    .register(widgetRegistry, { valueI18n: "grainShape.#.code", widget: "grainShape" })
+    .nullish(),
+  slabThicknessLowerLimit: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
+  slabThicknessUpperLimit: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
+  slabHandHardnessLowerLimit: z
+    .enum(HandHardness)
+    .register(widgetRegistry, { class: "col-6", valueI18n: "handHardness.#" })
+    .nullish(),
+  slabHandHardnessUpperLimit: z
+    .enum(HandHardness)
+    .register(widgetRegistry, { class: "col-6", valueI18n: "handHardness.#" })
+    .nullish(),
+  slabHardnessProfile: z.enum(Tendency).register(widgetRegistry, { valueI18n: "hardnessTendency.#" }).nullish(),
+  slabEnergyTransferPotential: z
+    .enum(Characteristic)
+    .register(widgetRegistry, { valueI18n: "characteristic.#" })
+    .nullish(),
+  slabDistribution: z.enum(Distribution).register(widgetRegistry, { valueI18n: "distribution.#" }).nullish(),
+});
+
 export const WeakLayerSchema = z.object({
   weakLayerGrainShapes: z
     .enum([GrainShape.PP, GrainShape.DF, GrainShape.RG, GrainShape.FC, GrainShape.DH, GrainShape.SH, GrainShape.PPgp])
@@ -281,14 +304,7 @@ export const DangerSourceVariantSchema = z.object({
   /** --------------- */
   /** SLAB AVALANCHES */
   /** --------------- */
-  slabGrainShape: z.enum(GrainShape).nullish(),
-  slabThicknessUpperLimit: z.number().nullish(),
-  slabThicknessLowerLimit: z.number().nullish(),
-  slabHandHardnessUpperLimit: z.enum(HandHardness).nullish(),
-  slabHandHardnessLowerLimit: z.enum(HandHardness).nullish(),
-  slabHardnessProfile: z.enum(Tendency).nullish(),
-  slabEnergyTransferPotential: z.enum(Characteristic).nullish(),
-  slabDistribution: z.enum(Distribution).nullish(),
+  ...SlabSchema.shape,
   ...WeakLayerSchema.shape,
   ...CharacteristicsSchema.shape,
 
