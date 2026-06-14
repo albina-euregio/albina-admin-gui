@@ -13,6 +13,7 @@ import { ServerConfigurationComponent } from "./server-configuration.component";
   selector: "app-servers-configuration",
   standalone: true,
   imports: [AccordionModule, ServerConfigurationComponent, TranslateModule],
+  providers: [ConfigurationService],
 })
 export class ServersConfigurationComponent implements OnInit {
   private authenticationService = inject(AuthenticationService);

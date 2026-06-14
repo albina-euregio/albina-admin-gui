@@ -21,6 +21,7 @@ import { ZodInputComponent } from "../shared/zod-input.component";
   selector: "app-region-configuration",
   standalone: true,
   imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent],
+  providers: [ConfigurationService],
 })
 export class RegionConfigurationComponent {
   private translateService = inject(TranslateService);

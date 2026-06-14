@@ -15,6 +15,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
   templateUrl: "login.component.html",
   standalone: true,
   imports: [FormsModule, TranslateModule],
+  providers: [ConfigurationService],
 })
 export class LoginComponent implements OnInit {
   private router = inject(Router);

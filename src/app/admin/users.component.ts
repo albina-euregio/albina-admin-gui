@@ -17,6 +17,7 @@ import { UpdateUserComponent } from "./update-user.component";
   selector: "app-users",
   standalone: true,
   imports: [AlertModule, TranslateModule],
+  providers: [ConfigurationService],
 })
 export class UsersComponent implements AfterContentInit {
   authenticationService = inject(AuthenticationService);

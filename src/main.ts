@@ -48,7 +48,6 @@ import { AuthenticationService } from "./app/providers/authentication-service/au
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
 import { BlogService } from "./app/providers/blog-service/blog.service";
 import { BulletinsService } from "./app/providers/bulletins-service/bulletins.service";
-import { ConfigurationService } from "./app/providers/configuration-service/configuration.service";
 import { ConstantsService } from "./app/providers/constants-service/constants.service";
 import { CopyService } from "./app/providers/copy-service/copy.service";
 import { IncidentService } from "./app/providers/incident-service/incident.service";
@@ -118,7 +117,6 @@ function bootstrapApplication0() {
       StatisticsService,
       RegionsService,
       LocalStorageService,
-      ConfigurationService,
       ConstantsService,
       CopyService,
       DatePipe,
