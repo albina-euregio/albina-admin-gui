@@ -25,11 +25,6 @@ import {
 } from "echarts/components";
 import * as echarts from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { CollapseModule } from "ngx-bootstrap/collapse";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { ModalModule } from "ngx-bootstrap/modal";
-import { TabsModule } from "ngx-bootstrap/tabs";
 import { provideEchartsCore } from "ngx-echarts";
 
 import { AppComponent } from "./app/app.component";
@@ -74,12 +69,7 @@ function bootstrapApplication0() {
       provideZoneChangeDetection({ eventCoalescing: true }),
       provideRouter(routes, withHashLocation()),
       provideTranslateService(),
-      AlertModule,
-      BsDropdownModule,
-      CollapseModule,
       DatePipe,
-      ModalModule,
-      TabsModule,
       TranslateService,
       provideEchartsCore({ echarts }),
       provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
