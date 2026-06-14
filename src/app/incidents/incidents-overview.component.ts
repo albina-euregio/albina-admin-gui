@@ -26,6 +26,7 @@ interface IncidentRow {
   templateUrl: "incidents-overview.component.html",
   standalone: true,
   imports: [DatePipe, TranslateModule, FormsModule, BsDatepickerModule],
+  providers: [IncidentService],
 })
 export class IncidentsOverviewComponent implements OnInit {
   private incidentService = inject(IncidentService);
