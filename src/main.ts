@@ -38,10 +38,6 @@ import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
 import { ObservationFilterService } from "./app/observations/observation-filter.service";
-import { ObservationMarkerObserverService } from "./app/observations/observation-marker-observer.service";
-import { ObservationMarkerWeatherStationService } from "./app/observations/observation-marker-weather-station.service";
-import { ObservationMarkerWebcamService } from "./app/observations/observation-marker-webcam.service";
-import { ObservationMarkerService } from "./app/observations/observation-marker.service";
 import { AlbinaObservationsService } from "./app/observations/observations.service";
 import { AuthenticationService } from "./app/providers/authentication-service/authentication.service";
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
@@ -116,10 +112,6 @@ function bootstrapApplication0() {
       MapService,
       ModalModule,
       ObservationFilterService,
-      ObservationMarkerObserverService,
-      ObservationMarkerService,
-      ObservationMarkerWeatherStationService,
-      ObservationMarkerWebcamService,
       RegionsService,
       TabsModule,
       TranslateService,

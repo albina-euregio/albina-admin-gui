@@ -30,6 +30,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { firstValueFrom, type Observable, type Subscription } from "rxjs";
 import Split from "split.js";
 import "@albina-euregio/linea";
+
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
@@ -49,6 +50,7 @@ import {
 } from "./models/generic-observation.model";
 
 import "bootstrap";
+
 import { ObservationChartComponent } from "./observation-chart.component";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
@@ -167,6 +169,12 @@ class ObservationData {
   ],
   templateUrl: "observations.component.html",
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    ObservationMarkerService,
+    ObservationMarkerObserverService,
+    ObservationMarkerWeatherStationService,
+    ObservationMarkerWebcamService,
+  ],
 })
 export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   filter = inject<ObservationFilterService<GenericObservation>>(ObservationFilterService);
