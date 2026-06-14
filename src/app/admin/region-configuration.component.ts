@@ -2,6 +2,7 @@ import { Component, input, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { TabsModule } from "ngx-bootstrap/tabs";
 
@@ -20,8 +21,16 @@ import { ZodInputComponent } from "../shared/zod-input.component";
   templateUrl: "region-configuration.component.html",
   selector: "app-region-configuration",
   standalone: true,
-  imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent],
+  imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent, ZodSchemaFormComponent],
   providers: [ConfigurationService],
+  styles: `
+    ::ng-deep .zod-form-field {
+      margin-top: 1rem;
+    }
+    ::ng-deep .zod-form-field:last-of-type {
+      margin-bottom: 1rem;
+    }
+  `,
 })
 export class RegionConfigurationComponent {
   private translateService = inject(TranslateService);
@@ -29,17 +38,71 @@ export class RegionConfigurationComponent {
   authenticationService = inject(AuthenticationService);
 
   readonly RegionConfigurationSchema = RegionConfigurationSchema;
-  readonly GeneralRegionConfigurationKeys: (keyof RegionConfiguration)[] = [
-    "id",
-    "coatOfArms",
-    "staticUrl",
-    "serverImagesUrl",
-    "educationUrl",
-    "microRegions",
-    "subRegions",
-    "superRegions",
-    "neighborRegions",
-  ];
+  readonly GeneralSchema = RegionConfigurationSchema.pick({
+    id: true,
+    coatOfArms: true,
+    staticUrl: true,
+    serverImagesUrl: true,
+    educationUrl: true,
+    microRegions: true,
+    subRegions: true,
+    superRegions: true,
+    neighborRegions: true,
+  });
+  readonly PublicationSchema = RegionConfigurationSchema.pick({
+    publishBulletins: true,
+    enabledLanguages: true,
+    ttsLanguages: true,
+    publishBlogs: true,
+    createCaamlV5: true,
+    createCaamlV6: true,
+    createJson: true,
+    //
+    createMaps: true,
+    geoDataDirectory: true,
+    mapLogoColorPath: true,
+    mapLogoBwPath: true,
+    mapLogoPosition: true,
+    //
+    createPdf: true,
+    pdfColor: true,
+    pdfMapYAmPm: true,
+    pdfMapYFd: true,
+    pdfMapWidthAmPm: true,
+    pdfMapWidthFd: true,
+    pdfMapHeight: true,
+    pdfFooterLogo: true,
+    pdfFooterLogoColorPath: true,
+    pdfFooterLogoBwPath: true,
+    imageColorbarColorPath: true,
+    imageColorbarBwPath: true,
+    //
+    createSimpleHtml: true,
+    simpleHtmlTemplateName: true,
+    sendEmails: true,
+    emailColor: true,
+    sendTelegramMessages: true,
+    sendWhatsAppMessages: true,
+    sendPushNotifications: true,
+  });
+  readonly ComponentsSchema = RegionConfigurationSchema.pick({
+    enableDangerSources: true,
+    enableObservations: true,
+    enableIncidents: true,
+    enableModelling: true,
+    enableIcon: true,
+    enableLineaExport: true,
+  });
+  readonly ConfigurationSchema = RegionConfigurationSchema.pick({
+    showMatrix: true,
+    enableMediaFile: true,
+    enableStrategicMindset: true,
+    enableStressLevel: true,
+    enableAvalancheProblemCornices: true,
+    enableAvalancheProblemNoDistinctAvalancheProblem: true,
+    enabledTextcatFields: true,
+    enabledEditableFields: true,
+  });
   readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
   readonly LanguageConfigurationKeys: (keyof LanguageConfiguration)[] = [
     "warningServiceName",

@@ -493,9 +493,11 @@
         "avActivityComment": "Description of avalanche danger",
         "travelAdvisoryHighlights": "Headline travel advisory",
         "travelAdvisoryComment": "Description of travel advisory",
+        "snowpackStructureHighlights": "Headline snowpack structure",
         "snowpackStructureComment": "Description of snowpack structure",
         "dangerPatterns": "Danger patterns",
         "tendencyComment": "Description of tendency",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Weather synopsis",
         "notes": "Notes",
         "noSnow": "No snow"

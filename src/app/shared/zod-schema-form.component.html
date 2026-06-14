@@ -13,7 +13,12 @@
       >
         <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100">
           <div class="d-flex align-items-center gap-2">
-            <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
+            @if (!displayOnly() && inner.type === "boolean") {
+            } @else if (labelI18n()) {
+              <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
+            } @else {
+              <span>{{ x.value?.description || x.key }}</span>
+            }
             @if (widget?.unit) {
               <span class="text-muted">[{{ widget.unit }}]</span>
             }
@@ -194,6 +199,13 @@
             [(value)]="value()[x.key]"
             (valueChange)="onFieldChange()"
           />
+        } @else if (inner.type === "array" && inner.def.element.type === "string") {
+          <input
+            type="text"
+            [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
+            [ngModel]="value()[x.key]"
+            (ngModelChange)="Object.assign(value(), Object.fromEntries([[x.key, $event.split(',')]])); onFieldChange()"
+          />
         } @else if (inner.type === "string") {
           @if (x.key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
             <select
@@ -257,15 +269,18 @@
             (valueChange)="onFieldChange()"
           />
         } @else if (inner.type === "boolean") {
-          <div class="form-check form-switch mb-0">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              [disabled]="disabled()"
-              [(ngModel)]="value()[x.key]"
-              (ngModelChange)="onFieldChange()"
-              [id]="x.key + '-input'"
-            />
+          <div class="form-check form-switch form-check-inline">
+            <label class="form-check-label">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled()"
+                [(ngModel)]="value()[x.key]"
+                (ngModelChange)="onFieldChange()"
+                [id]="x.key + '-input'"
+              />
+              {{ x.value?.description || x.key }}
+            </label>
           </div>
         } @else if (zodUtil.isEnumWithOther(inner)) {
           <app-enum-other

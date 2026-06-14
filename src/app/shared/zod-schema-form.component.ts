@@ -8,6 +8,8 @@ import { QuillModule } from "ngx-quill";
 import { z } from "zod/v4";
 
 import type * as IncidentModels from "../incidents/models/incident-report.model";
+import type { RegionConfigurationSchema } from "../models/region-configuration.model";
+import type { ServerConfigurationSchema } from "../models/server-configuration.model";
 import { AspectsComponent } from "./aspects.component";
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumOtherComponent } from "./enum-other.component";
@@ -16,7 +18,9 @@ import { ToggleBtnGroup } from "./toggle-btn-group";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
 import * as zodUtil from "./zod-util";
 
-type IncidentSchema =
+type SupportedSchema =
+  | typeof ServerConfigurationSchema
+  | typeof RegionConfigurationSchema
   | typeof IncidentModels.MetaInformationSchema
   | typeof IncidentModels.GeneralInformationSchema
   | typeof IncidentModels.LocationInformationSchema
@@ -71,7 +75,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
       .filter(([key]) => (!include || include.includes(key)) && (!exclude || !exclude.includes(key)))
       .map(([key, value]) => ({
         key,
-        value: value as ShapeFields<IncidentSchema>,
+        value: value as ShapeFields<SupportedSchema>,
       }));
   });
 
