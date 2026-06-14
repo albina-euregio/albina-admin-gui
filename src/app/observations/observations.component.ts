@@ -171,6 +171,7 @@ class ObservationData {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     BaseMapService,
+    ObservationFilterService,
     ObservationMarkerService,
     ObservationMarkerObserverService,
     ObservationMarkerWeatherStationService,
@@ -317,11 +318,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   async loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
     this.data.observations.loadFrom(
-      this.observationsService.getGenericObservations().pipe(takeUntilDestroyed(this.destroyRef)),
+      this.observationsService
+        .getGenericObservations(this.filter.dateRangeParams)
+        .pipe(takeUntilDestroyed(this.destroyRef)),
       this.observationSearch,
     );
     this.data.weatherStations.loadFrom(
-      this.observationsService.getWeatherStations().pipe(takeUntilDestroyed(this.destroyRef)),
+      this.observationsService
+        .getWeatherStations(this.filter.dateRangeParams)
+        .pipe(takeUntilDestroyed(this.destroyRef)),
       this.observationSearch,
     );
   }

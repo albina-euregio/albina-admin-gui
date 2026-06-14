@@ -6,19 +6,22 @@ import { map, mergeAll, toArray } from "rxjs/operators";
 
 import { environment } from "../../environments/environment";
 import { GenericObservation, toGeoJSON } from "./models/generic-observation.model";
-import { ObservationFilterService } from "./observation-filter.service";
+
+interface DateRangeParams {
+  startDate: string;
+  endDate: string;
+}
 
 @Injectable()
 export class AlbinaObservationsService {
   private http = inject(HttpClient);
-  private filter = inject<ObservationFilterService<GenericObservation>>(ObservationFilterService);
 
-  getGenericObservations(): Observable<GenericObservation> {
+  getGenericObservations(dateRangeParams: DateRangeParams): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/observations";
-    return this.getGenericObservations0(url, this.filter.dateRangeParams);
+    return this.getGenericObservations0(url, dateRangeParams);
   }
 
-  getGenericObservationsGeoJSON(dateRangeParams = this.filter.dateRangeParams): Observable<GeoJSON.FeatureCollection> {
+  getGenericObservationsGeoJSON(dateRangeParams: DateRangeParams): Observable<GeoJSON.FeatureCollection> {
     const url = environment.apiBaseUrl + "../api_ext/observations";
     return this.getGenericObservations0(url, dateRangeParams).pipe(
       toArray(),
@@ -31,9 +34,9 @@ export class AlbinaObservationsService {
     return this.getGenericObservations0(url);
   }
 
-  getWeatherStations(): Observable<GenericObservation> {
+  getWeatherStations(dateRangeParams: DateRangeParams): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/weather-stations";
-    return this.getGenericObservations0(url, this.filter.dateRangeParams);
+    return this.getGenericObservations0(url, dateRangeParams);
   }
 
   getGenericWebcams(): Observable<GenericObservation> {

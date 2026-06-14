@@ -36,7 +36,6 @@ import { provideEchartsCore } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
-import { ObservationFilterService } from "./app/observations/observation-filter.service";
 import { AlbinaObservationsService } from "./app/observations/observations.service";
 import { AuthenticationService } from "./app/providers/authentication-service/authentication.service";
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
@@ -105,7 +104,6 @@ function bootstrapApplication0() {
       IncidentService,
       LocalStorageService,
       ModalModule,
-      ObservationFilterService,
       RegionsService,
       TabsModule,
       TranslateService,
