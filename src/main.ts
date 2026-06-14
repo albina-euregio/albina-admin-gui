@@ -1,4 +1,4 @@
-import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
+import { DatePipe, registerLocaleData } from "@angular/common";
 import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
 import localeCa from "@angular/common/locales/ca";
 import localeDe from "@angular/common/locales/de";
@@ -10,7 +10,7 @@ import { importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
-import { provideRouter } from "@angular/router";
+import { provideRouter, withHashLocation } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
@@ -73,12 +73,8 @@ function bootstrapApplication0() {
   return bootstrapApplication(AppComponent, {
     providers: [
       provideZoneChangeDetection({ eventCoalescing: true }),
-      provideRouter(routes),
+      provideRouter(routes, withHashLocation()),
       importProvidersFrom(BrowserModule, FormsModule, ReactiveFormsModule, TranslateModule.forRoot()),
-      {
-        provide: LocationStrategy,
-        useClass: HashLocationStrategy,
-      },
       AlertModule,
       BsDropdownModule,
       CollapseModule,
