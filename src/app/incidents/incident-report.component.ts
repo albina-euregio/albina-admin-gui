@@ -347,7 +347,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   /** Serialize the report to JSON, dropping in-memory-only attachment fields. */
   private serializeReport(report: IncidentReport): string {
-    return JSON.stringify(report, (key, value) => (key === "file" || key === "_previewUrl" ? undefined : value));
+    return JSON.stringify(report, (key, value) => (key === "file" || key === "$previewUrl" ? undefined : value));
   }
 
   private saveIncident(data: string): Observable<unknown> {
@@ -375,9 +375,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.incidentReport()?.attachments) {
-      for (const attachment of this.incidentReport().attachments as any[]) {
-        if (attachment._previewUrl) {
-          URL.revokeObjectURL(attachment._previewUrl);
+      for (const attachment of this.incidentReport().attachments) {
+        if (attachment.$previewUrl) {
+          URL.revokeObjectURL(attachment.$previewUrl);
         }
       }
     }
@@ -470,15 +470,16 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!file) {
       return;
     }
-    const attachment: any = {
+    const attachment: IncidentModels.IncidentAttachment = {
       dateAdded: new Date(),
       dateCreated: undefined as unknown as Date,
       file,
       fileName: file.name,
       mediaType: file.type,
+      credit: "",
     };
     if (file.type.startsWith("image/")) {
-      attachment._previewUrl = URL.createObjectURL(file);
+      attachment.$previewUrl = URL.createObjectURL(file);
     }
     this.incidentReport().attachments.push(attachment);
   }
@@ -495,19 +496,19 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       fileName: attachments[index].fileName,
     });
     if (!confirm(message)) return;
-    const attachment = attachments[index] as any;
-    if (attachment._previewUrl) {
-      URL.revokeObjectURL(attachment._previewUrl);
+    const attachment = attachments[index];
+    if (attachment.$previewUrl) {
+      URL.revokeObjectURL(attachment.$previewUrl);
     }
     attachments.splice(index, 1);
   }
 
-  getAttachmentPreviewUrl(attachment: any): string | null {
+  getAttachmentPreviewUrl(attachment: IncidentModels.IncidentAttachment): string | null {
     if (attachment.file && attachment.file.type.startsWith("image/")) {
-      if (!attachment._previewUrl) {
-        attachment._previewUrl = URL.createObjectURL(attachment.file);
+      if (!attachment.$previewUrl) {
+        attachment.$previewUrl = URL.createObjectURL(attachment.file);
       }
-      return attachment._previewUrl;
+      return attachment.$previewUrl;
     }
     if (attachment.uuid && attachment.mediaType?.startsWith("image/")) {
       return `${environment.apiBaseUrl}media/${attachment.uuid}`;
