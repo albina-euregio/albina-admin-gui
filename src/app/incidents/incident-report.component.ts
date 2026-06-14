@@ -7,27 +7,6 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { environment } from "environments/environment";
 import { uniq } from "es-toolkit";
-import {
-  Map as LeafletMap,
-  TileLayer,
-  Marker,
-  CircleMarker,
-  Polyline,
-  Polygon,
-  LayerGroup,
-  LeafletMouseEvent,
-  Layer,
-  Icon,
-} from "leaflet";
-
-const defaultMarkerIcon = new Icon({
-  iconUrl: "assets/markers/marker-icon-2x-blue.png",
-  shadowUrl: "assets/markers/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  shadowSize: [41, 41],
-  shadowAnchor: [13, 41],
-});
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import {
@@ -52,6 +31,7 @@ import { IncidentService } from "../providers/incident-service/incident.service"
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid } from "../shared/zod-util";
+import { IncidentReportMapService } from "./incident-report-map.service";
 import * as IncidentModels from "./models/incident-report.model";
 import { IncidentReport } from "./models/incident-report.model";
 
@@ -60,7 +40,7 @@ import { IncidentReport } from "./models/incident-report.model";
   templateUrl: "incident-report.component.html",
   standalone: true,
   imports: [DatePipe, AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent],
-  providers: [GeocodingService, IncidentService],
+  providers: [GeocodingService, IncidentService, IncidentReportMapService],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
   constantsService = inject(ConstantsService);
@@ -69,6 +49,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
   private geocodingService = inject(GeocodingService);
+  readonly mapService = inject(IncidentReportMapService);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
@@ -111,7 +92,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   set activeTab(tab: (typeof this.allTabs)[number]["id"]) {
     this._activeTab = tab;
     if (tab === "location") {
-      setTimeout(() => this.initLocationMap(), 50);
+      setTimeout(() => this.mapService.initLocationMap(), 50);
     }
   }
 
@@ -290,17 +271,23 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return !!this.incidentReport().polygonCoordinatesText?.trim();
   }
 
-  locationMapInstance?: LeafletMap;
-  mapLayer?: Layer;
-  activeDrawingMode: "Point" | "Line" | "Polygon" = "Point";
-
   private _lastLat: number | null | undefined;
   private _lastLng: number | null | undefined;
   private readonly reverseGeocodeTrigger$ = new Subject<[number, number]>();
 
   ngOnInit() {
+    this.mapService.init({
+      incidentReport: this.incidentReport,
+      disabled: () => this.disabled(),
+      isActive: () => this.activeTab === "location",
+      onPointChange: (lat, lng) => {
+        this._lastLat = lat;
+        this._lastLng = lng;
+        this.reverseGeocodeTrigger$.next([lat, lng]);
+      },
+    });
     if (this.activeTab === "location") {
-      setTimeout(() => this.initLocationMap(), 50);
+      setTimeout(() => this.mapService.initLocationMap(), 50);
     }
     const id = this.route.snapshot.paramMap.get("id");
     if (id) {
@@ -387,159 +374,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.locationMapInstance) {
-      this.locationMapInstance.remove();
-    }
     if (this.incidentReport()?.attachments) {
       for (const attachment of this.incidentReport().attachments as any[]) {
         if (attachment._previewUrl) {
           URL.revokeObjectURL(attachment._previewUrl);
-        }
-      }
-    }
-  }
-
-  initLocationMap() {
-    if (this.activeTab !== "location") return;
-
-    const mapDiv = document.getElementById("locationMap");
-    if (!mapDiv || mapDiv.offsetWidth === 0) {
-      setTimeout(() => this.initLocationMap(), 50);
-      return;
-    }
-
-    if (this.locationMapInstance) {
-      this.locationMapInstance.remove();
-      this.locationMapInstance = undefined;
-      this.mapLayer = undefined;
-    }
-
-    // Default center on Tyrol/Innsbruck region
-    const map = new LeafletMap("locationMap").setView([47.268, 11.404], 9);
-    this.locationMapInstance = map;
-
-    new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "© OpenStreetMap contributors",
-    }).addTo(map);
-
-    map.on("click", (e: LeafletMouseEvent) => {
-      if (this.disabled()) return;
-      this.handleMapClick(e.latlng.lat, e.latlng.lng);
-    });
-
-    this.activeDrawingMode = this.activeDrawingMode || "Point";
-
-    // Invalidate size immediately and again after transition delay to ensure map dimensions are correct
-    map.invalidateSize();
-    setTimeout(() => {
-      map.invalidateSize();
-      this.drawOnMap(true);
-    }, 150);
-
-    this.drawOnMap(true);
-  }
-
-  handleMapClick(lat: number, lng: number) {
-    const report = this.incidentReport();
-    const mode = this.activeDrawingMode;
-
-    if (mode === "Point") {
-      report.latitude = Number(lat.toFixed(6));
-      report.longitude = Number(lng.toFixed(6));
-      this._lastLat = report.latitude;
-      this._lastLng = report.longitude;
-      this.reverseGeocodeTrigger$.next([report.latitude, report.longitude]);
-    } else if (mode === "Line") {
-      const points = this.parseCoordinatesText(report.lineCoordinatesText || "");
-      points.push([Number(lat.toFixed(6)), Number(lng.toFixed(6))]);
-      report.lineCoordinatesText = points.map((p) => `${p[0].toFixed(6)}, ${p[1].toFixed(6)}`).join("\n");
-    } else if (mode === "Polygon") {
-      const points = this.parseCoordinatesText(report.polygonCoordinatesText || "");
-      points.push([Number(lat.toFixed(6)), Number(lng.toFixed(6))]);
-      report.polygonCoordinatesText = points.map((p) => `${p[0].toFixed(6)}, ${p[1].toFixed(6)}`).join("\n");
-    }
-
-    this.incidentReport.set({ ...report });
-    this.drawOnMap();
-  }
-
-  parseCoordinatesText(text: string): [number, number][] {
-    if (!text) return [];
-    const lines = text.split("\n");
-    const points: [number, number][] = [];
-    for (const line of lines) {
-      const parts = line.split(",");
-      if (parts.length >= 2) {
-        const lat = parseFloat(parts[0].trim());
-        const lng = parseFloat(parts[1].trim());
-        if (!isNaN(lat) && !isNaN(lng)) {
-          points.push([lat, lng]);
-        }
-      }
-    }
-    return points;
-  }
-
-  drawOnMap(autoFit = false) {
-    const map = this.locationMapInstance;
-    if (!map) return;
-
-    map.invalidateSize();
-
-    if (this.mapLayer) {
-      map.removeLayer(this.mapLayer);
-      this.mapLayer = undefined;
-    }
-
-    const report = this.incidentReport();
-    const allPoints: [number, number][] = [];
-    const layers: Layer[] = [];
-
-    // 1. Point
-    if (report.latitude != null && report.longitude != null) {
-      const lat = Number(report.latitude);
-      const lng = Number(report.longitude);
-      if (!isNaN(lat) && !isNaN(lng)) {
-        const marker = new Marker([lat, lng], { icon: defaultMarkerIcon });
-        layers.push(marker);
-        allPoints.push([lat, lng]);
-      }
-    }
-
-    // 2. Line
-    const linePoints = this.parseCoordinatesText(report.lineCoordinatesText || "");
-    if (linePoints.length > 0) {
-      const lineShape = new Polyline(linePoints, { color: "blue", weight: 4 });
-      layers.push(lineShape);
-      for (const p of linePoints) {
-        const vertex = new CircleMarker(p, { radius: 5, color: "blue", fillColor: "#fff", fillOpacity: 1 });
-        layers.push(vertex);
-        allPoints.push(p);
-      }
-    }
-
-    // 3. Polygon
-    const polygonPoints = this.parseCoordinatesText(report.polygonCoordinatesText || "");
-    if (polygonPoints.length > 0) {
-      const polygonShape = new Polygon(polygonPoints, { color: "green", fillColor: "green", fillOpacity: 0.3 });
-      layers.push(polygonShape);
-      for (const p of polygonPoints) {
-        const vertex = new CircleMarker(p, { radius: 5, color: "green", fillColor: "#fff", fillOpacity: 1 });
-        layers.push(vertex);
-        allPoints.push(p);
-      }
-    }
-
-    if (layers.length > 0) {
-      const group = new LayerGroup(layers);
-      this.mapLayer = group.addTo(map);
-
-      // Auto zoom/pan to show all elements
-      if (autoFit) {
-        if (allPoints.length === 1) {
-          map.setView(allPoints[0], 15);
-        } else if (allPoints.length > 1) {
-          map.fitBounds(new Polyline(allPoints).getBounds(), { maxZoom: 15 });
         }
       }
     }
@@ -554,13 +392,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  onLocationTypeChange(type: "Point" | "Line" | "Polygon") {
-    this.activeDrawingMode = type;
-  }
-
   onLocationFormChange(updatedReport: IncidentReport) {
     this.incidentReport.set({ ...updatedReport });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
     if (
       (updatedReport.latitude !== this._lastLat || updatedReport.longitude !== this._lastLng) &&
       updatedReport.latitude != null &&
@@ -577,21 +411,21 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (report.latitude != null) report.latitude = Number(report.latitude);
     if (report.longitude != null) report.longitude = Number(report.longitude);
     this.incidentReport.set({ ...report });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
   }
 
   onLineCoordinatesTextChange(text: string) {
     const report = this.incidentReport();
     report.lineCoordinatesText = text;
     this.incidentReport.set({ ...report });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
   }
 
   onPolygonCoordinatesTextChange(text: string) {
     const report = this.incidentReport();
     report.polygonCoordinatesText = text;
     this.incidentReport.set({ ...report });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
   }
 
   clearPoint() {
@@ -600,21 +434,21 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     report.longitude = null;
     report.locationAccuracy = null;
     this.incidentReport.set({ ...report });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
   }
 
   clearLine() {
     const report = this.incidentReport();
     report.lineCoordinatesText = "";
     this.incidentReport.set({ ...report });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
   }
 
   clearPolygon() {
     const report = this.incidentReport();
     report.polygonCoordinatesText = "";
     this.incidentReport.set({ ...report });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
   }
 
   clearAllDrawing() {
@@ -625,7 +459,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     report.lineCoordinatesText = "";
     report.polygonCoordinatesText = "";
     this.incidentReport.set({ ...report });
-    this.drawOnMap();
+    this.mapService.drawOnMap();
   }
 
   uploadIncidentAttachment($event: Event) {

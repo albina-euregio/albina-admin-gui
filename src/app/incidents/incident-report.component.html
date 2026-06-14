@@ -197,9 +197,9 @@
               <button
                 type="button"
                 class="btn btn-sm d-flex align-items-center justify-content-between w-100"
-                [class.btn-primary]="activeDrawingMode === 'Point'"
-                [class.btn-light]="activeDrawingMode !== 'Point'"
-                (click)="onLocationTypeChange('Point')"
+                [class.btn-primary]="mapService.activeDrawingMode === 'Point'"
+                [class.btn-light]="mapService.activeDrawingMode !== 'Point'"
+                (click)="mapService.activeDrawingMode = 'Point'"
                 [disabled]="disabled()"
                 title="{{ 'incidentReportUI.drawPoint' | translate }}"
                 style="font-size: 12px; padding: 4px 6px"
@@ -230,9 +230,9 @@
               <button
                 type="button"
                 class="btn btn-sm d-flex align-items-center justify-content-between w-100"
-                [class.btn-primary]="activeDrawingMode === 'Line'"
-                [class.btn-light]="activeDrawingMode !== 'Line'"
-                (click)="onLocationTypeChange('Line')"
+                [class.btn-primary]="mapService.activeDrawingMode === 'Line'"
+                [class.btn-light]="mapService.activeDrawingMode !== 'Line'"
+                (click)="mapService.activeDrawingMode = 'Line'"
                 [disabled]="disabled()"
                 title="{{ 'incidentReportUI.drawLine' | translate }}"
                 style="font-size: 12px; padding: 4px 6px"
@@ -263,9 +263,9 @@
               <button
                 type="button"
                 class="btn btn-sm d-flex align-items-center justify-content-between w-100"
-                [class.btn-primary]="activeDrawingMode === 'Polygon'"
-                [class.btn-light]="activeDrawingMode !== 'Polygon'"
-                (click)="onLocationTypeChange('Polygon')"
+                [class.btn-primary]="mapService.activeDrawingMode === 'Polygon'"
+                [class.btn-light]="mapService.activeDrawingMode !== 'Polygon'"
+                (click)="mapService.activeDrawingMode = 'Polygon'"
                 [disabled]="disabled()"
                 title="{{ 'incidentReportUI.drawPolygon' | translate }}"
                 style="font-size: 12px; padding: 4px 6px"
@@ -294,9 +294,9 @@
             </div>
           </div>
           <div class="form-text text-muted mt-2">
-            @if (activeDrawingMode === "Point") {
+            @if (mapService.activeDrawingMode === "Point") {
               {{ "incidentReportUI.drawPointInstructions" | translate }}
-            } @else if (activeDrawingMode === "Line") {
+            } @else if (mapService.activeDrawingMode === "Line") {
               {{ "incidentReportUI.drawLineInstructions" | translate }}
             } @else {
               {{ "incidentReportUI.drawPolygonInstructions" | translate }}
