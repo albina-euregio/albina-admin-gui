@@ -1,10 +1,11 @@
+import { widgetRegistry } from "app/shared/zod-schema-form.widget-registry";
 import { orderBy } from "es-toolkit";
 import { z } from "zod/v4";
 
 import { Aspect, AvalancheProblem, AvalancheType, DangerRating, RegionStatus, Tendency } from "../../enums/enums";
 import * as Enums from "../../enums/enums";
 import { MatrixInformationSchema } from "../../models/matrix-information.model";
-import { ZSchema } from "../../shared/zod-util";
+import { withShowIf, ZSchema } from "../../shared/zod-util";
 import { DangerSourceSchema } from "./danger-source.model";
 import { PolygonObject } from "./polygon-object.model";
 
@@ -249,18 +250,22 @@ export const DangerSourceVariantSchema = z.object({
   slabHardnessProfile: z.enum(Tendency).nullish(),
   slabEnergyTransferPotential: z.enum(Characteristic).nullish(),
   slabDistribution: z.enum(Distribution).nullish(),
-  weakLayerGrainShapes: z.enum(GrainShape).array().nullish(),
-  weakLayerGrainSizeUpperLimit: z.number().nullish(),
-  weakLayerGrainSizeLowerLimit: z.number().nullish(),
+  weakLayerGrainShapes: z
+    .enum([GrainShape.PP, GrainShape.DF, GrainShape.RG, GrainShape.FC, GrainShape.DH, GrainShape.SH, GrainShape.PPgp])
+    .array()
+    .register(widgetRegistry, { class: "bg-weak-layer col-8", valueI18n: "grainShape.#.code", widget: "grainShape" })
+    .nullish(),
+  weakLayerGrainSizeUpperLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
+  weakLayerGrainSizeLowerLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
   weakLayerPersistent: z.boolean().nullish(),
-  weakLayerThickness: z.enum(Thickness).nullish(),
-  weakLayerStrength: z.enum(Characteristic).nullish(),
+  weakLayerThickness: z.enum(Thickness).register(widgetRegistry, { valueI18n: "thickness.#" }).nullish(),
+  weakLayerStrength: z.enum(Characteristic).register(widgetRegistry, { valueI18n: "characteristic.#" }).nullish(),
   weakLayerWet: z.boolean().nullish(),
-  weakLayerCrustAbove: z.enum(WeakLayerCrust).nullish(),
-  weakLayerCrustBelow: z.enum(WeakLayerCrust).nullish(),
-  weakLayerPosition: z.enum(SnowpackPosition).nullish(),
-  weakLayerCreation: z.enum(CreationProcess).nullish(),
-  weakLayerDistribution: z.enum(Distribution).nullish(),
+  weakLayerCrustAbove: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
+  weakLayerCrustBelow: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
+  weakLayerPosition: z.enum(SnowpackPosition).register(widgetRegistry, { valueI18n: "snowpackPosition.#" }).nullish(),
+  weakLayerCreation: z.enum(CreationProcess).register(widgetRegistry, { valueI18n: "creationProcess.#" }).nullish(),
+  weakLayerDistribution: z.enum(Distribution).register(widgetRegistry, { valueI18n: "distribution.#" }).nullish(),
   dangerSpotRecognizability: z.enum(Recognizability).nullish(),
   remoteTriggering: z.enum(Probability).nullish(),
   terrainTypes: z.enum(TerrainType).array().nullish(),
@@ -270,6 +275,21 @@ export const DangerSourceVariantSchema = z.object({
   /** --------------------- */
   looseSnowGrainShape: z.enum(GrainShape).nullish(),
   looseSnowMoisture: z.enum(Wetness).nullish(),
+});
+
+withShowIf(DangerSourceVariantSchema, {
+  weakLayerGrainShapes: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerGrainSizeUpperLimit: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerGrainSizeLowerLimit: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerPersistent: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerThickness: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerStrength: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerWet: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerCrustAbove: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerCrustBelow: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerPosition: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerCreation: ["avalancheType", Enums.AvalancheType.slab],
+  weakLayerDistribution: ["avalancheType", Enums.AvalancheType.slab],
 });
 
 export class DangerSourceVariantModel extends ZSchema(DangerSourceVariantSchema) implements PolygonObject {

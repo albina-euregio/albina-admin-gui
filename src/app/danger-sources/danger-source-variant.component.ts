@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatrixInformationSchema } from "app/models/matrix-information.model";
+import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -49,7 +50,16 @@ import {
     TranslateModule,
     ToggleBtnGroup,
     NgxMousetrapDirective,
+    ZodSchemaFormComponent,
   ],
+  styles: `
+    ::ng-deep .zod-form-field {
+      margin-top: 1rem;
+    }
+    ::ng-deep .zod-form-field:last-of-type {
+      margin-bottom: 1rem;
+    }
+  `,
 })
 export class DangerSourceVariantComponent implements OnChanges, OnInit {
   dangerSourcesService = inject(DangerSourcesService);
@@ -61,6 +71,20 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   translateService = inject(TranslateService);
 
   readonly DangerSourceVariantSchema = DangerSourceVariantSchema;
+  readonly WeakLayerSchema = DangerSourceVariantSchema.pick({
+    weakLayerGrainShapes: true,
+    weakLayerGrainSizeLowerLimit: true,
+    weakLayerGrainSizeUpperLimit: true,
+    weakLayerPersistent: true,
+    weakLayerThickness: true,
+    weakLayerStrength: true,
+    weakLayerWet: true,
+    weakLayerCrustAbove: true,
+    weakLayerCrustBelow: true,
+    weakLayerPosition: true,
+    weakLayerCreation: true,
+    weakLayerDistribution: true,
+  });
   readonly zEnumValues = zEnumValues;
   readonly variant = input<DangerSourceVariantModel>(undefined);
   readonly comparedVariant = input<DangerSourceVariantModel>(undefined);

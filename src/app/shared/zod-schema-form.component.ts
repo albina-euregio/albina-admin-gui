@@ -59,6 +59,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly zodUtil = zodUtil;
 
   readonly value = model<V>();
+  readonly valueForCompare = input<V | undefined>();
 
   readonly disabled = input<boolean>(false);
   readonly displayOnly = input<boolean>(false);
