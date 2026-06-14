@@ -13,7 +13,6 @@ import { provideAnimationsAsync } from "@angular/platform-browser/animations/asy
 import { provideRouter } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LineaMapService } from "app/providers/map-service/linea-map.service";
-import { StatusService } from "app/providers/status-service/status.service";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
@@ -124,7 +123,6 @@ function bootstrapApplication0() {
       ObservationMarkerWeatherStationService,
       ObservationMarkerWebcamService,
       RegionsService,
-      StatusService,
       TabsModule,
       TranslateService,
       UserService,
