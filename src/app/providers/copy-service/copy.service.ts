@@ -4,7 +4,7 @@ import { BulletinModel } from "app/models/bulletin.model";
 import { LangTexts } from "../../models/text.model";
 import { ConstantsService } from "../constants-service/constants.service";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class CopyService {
   constantsService = inject(ConstantsService);
 

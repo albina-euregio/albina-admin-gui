@@ -34,16 +34,7 @@ import { TabsModule } from "ngx-bootstrap/tabs";
 import { provideEchartsCore } from "ngx-echarts";
 
 import { AppComponent } from "./app/app.component";
-import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
-import { AuthGuard } from "./app/guards/auth.guard";
-import { AuthenticationService } from "./app/providers/authentication-service/authentication.service";
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
-import { BulletinsService } from "./app/providers/bulletins-service/bulletins.service";
-import { ConstantsService } from "./app/providers/constants-service/constants.service";
-import { CopyService } from "./app/providers/copy-service/copy.service";
-import { LocalStorageService } from "./app/providers/local-storage-service/local-storage.service";
-import { RegionsService } from "./app/providers/regions-service/regions.service";
-import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
 
 echarts.use([
@@ -89,21 +80,12 @@ function bootstrapApplication0() {
         useClass: HashLocationStrategy,
       },
       AlertModule,
-      AuthenticationService,
-      AuthGuard,
       BsDropdownModule,
-      BulletinsService,
       CollapseModule,
-      ConstantsService,
-      CopyService,
-      DangerSourcesService,
       DatePipe,
-      LocalStorageService,
       ModalModule,
-      RegionsService,
       TabsModule,
       TranslateService,
-      UserService,
       provideEchartsCore({ echarts }),
       provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
       provideAnimationsAsync("noop"),
