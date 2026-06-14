@@ -752,6 +752,41 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/incidents/{id}/attachment": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Upload incident attachment */
+    post: operations["uploadIncidentAttachment"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/incidents/{id}/attachment/{attachmentId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get incident attachment */
+    get: operations["getIncidentAttachment"];
+    put?: never;
+    post?: never;
+    /** Delete incident attachment */
+    delete: operations["deleteIncidentAttachment"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/media": {
     parameters: {
       query?: never;
@@ -1587,6 +1622,22 @@ export interface components {
     HandHardness: "fist" | "four_fingers" | "one_finger" | "pencil" | "knife" | "ice";
     /** @enum {string} */
     HazardSiteDistribution: "single" | "some" | "many" | "many_most" | "moderately_steep";
+    IncidentAttachment: {
+      /** Format: uuid */
+      uuid: string;
+      /** Format: date-time */
+      dateAdded: string;
+      fileName: string;
+      mediaType: string;
+      /** Format: date-time */
+      dateCreated: string;
+      credit: string;
+      caption: string;
+      altText: string;
+      public: boolean;
+      attachmentCategory: string;
+      attachmentTags: string[];
+    };
     "IncidentService.IncidentView": {
       id: string;
       regionId: string;
@@ -3160,6 +3211,79 @@ export interface operations {
     requestBody?: never;
     responses: {
       /** @description deleteIncident 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  uploadIncidentAttachment: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": {
+          /** Format: binary */
+          file?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description uploadIncidentAttachment 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["IncidentAttachment"];
+        };
+      };
+    };
+  };
+  getIncidentAttachment: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        attachmentId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getIncidentAttachment 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/octet-stream": string;
+        };
+      };
+    };
+  };
+  deleteIncidentAttachment: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        attachmentId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description deleteIncidentAttachment 200 response */
       200: {
         headers: {
           [name: string]: unknown;

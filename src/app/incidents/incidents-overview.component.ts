@@ -7,7 +7,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { IncidentService, IncidentView } from "../providers/incident-service/incident.service";
+import { IncidentService, IncidentView } from "./incident.service";
 import { IncidentReport } from "./models/incident-report.model";
 
 type SortableField = "dateTime" | "updatedAt" | "reportStatus";

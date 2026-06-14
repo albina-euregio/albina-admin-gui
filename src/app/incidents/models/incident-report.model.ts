@@ -437,6 +437,7 @@ export const IncidentAttachmentSchema = z.object({
     .array()
     .nullish(),
 });
+export type IncidentAttachment = z.infer<typeof IncidentAttachmentSchema>;
 
 export const IncidentReportSchema = z.object({
   ...MetaInformationSchema.shape,

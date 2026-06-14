@@ -26,7 +26,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prepare": "vp config",
-    "openapi": "pnpx openapi-typescript https://dev.avalanche.report/api/openapi.json -o ./src/app/providers/openapi.d.ts",
+    "openapi": "pnpx openapi-typescript https://dev.avalanche.report/api/openapi.json -o ./src/app/providers/openapi.d.ts && vp format ./src/app/providers/openapi.d.ts",
     "changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag",
     "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },
