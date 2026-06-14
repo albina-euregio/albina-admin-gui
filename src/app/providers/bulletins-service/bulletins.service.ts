@@ -31,9 +31,24 @@ import { UserService } from "../user-service/user.service";
 
 class TrainingModeError extends Error {}
 
+export type AccordionGroupName =
+  | "dangerRating"
+  | "avalancheProblem1"
+  | "avalancheProblem2"
+  | "avalancheProblem3"
+  | "avalancheProblem4"
+  | "avalancheProblem5"
+  | "avalancheProblemForenoon"
+  | "avalancheProblemAfternoon"
+  | "dangerDescription"
+  | "snowpackStructure"
+  | "photos"
+  | "tendency"
+  | "synopsis";
+
 interface AccordionChangeEvent {
   isOpen: boolean;
-  groupName: string;
+  groupName: AccordionGroupName;
 }
 
 @Injectable()

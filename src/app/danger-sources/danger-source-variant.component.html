@@ -252,17 +252,12 @@
       @if (isAvalancheType(avalancheTypeEnum.glide)) {
         <accordion-group
           class="accordion-group"
-          [isOpen]="isAccordionGlideOpen"
+          [isOpen]="accordionOpen.glide"
           (isOpenChange)="accordionChanged($event, 'glide')"
         >
           <div accordion-heading class="accordion-header accordion-header--with-buttons">
             <h2 class="accordion-header__title">
-              @if (!isAccordionGlideOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionGlideOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               {{ "dangerSources.create.title.glide" | translate }}
             </h2>
           </div>
@@ -359,17 +354,12 @@
       @if (isAvalancheType(avalancheTypeEnum.slab)) {
         <accordion-group
           class="accordion-group"
-          [isOpen]="isAccordionSlabOpen"
+          [isOpen]="accordionOpen.slab"
           (isOpenChange)="accordionChanged($event, 'slab')"
         >
           <div accordion-heading class="accordion-header accordion-header--with-buttons">
             <h2 class="accordion-header__title">
-              @if (!isAccordionSlabOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionSlabOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               {{ "dangerSources.create.title.slab" | translate }}
             </h2>
           </div>
@@ -533,17 +523,12 @@
       @if (isAvalancheType(avalancheTypeEnum.slab)) {
         <accordion-group
           class="accordion-group"
-          [isOpen]="isAccordionWeakLayerOpen"
+          [isOpen]="accordionOpen.weakLayer"
           (isOpenChange)="accordionChanged($event, 'weakLayer')"
         >
           <div accordion-heading class="accordion-header accordion-header--with-buttons">
             <h2 class="accordion-header__title">
-              @if (!isAccordionWeakLayerOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionWeakLayerOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               {{ "dangerSources.create.title.weakLayer" | translate }}
             </h2>
           </div>
@@ -784,17 +769,12 @@
       @if (isAvalancheType(avalancheTypeEnum.loose)) {
         <accordion-group
           class="accordion-group"
-          [isOpen]="isAccordionLooseOpen"
+          [isOpen]="accordionOpen.loose"
           (isOpenChange)="accordionChanged($event, 'loose')"
         >
           <div accordion-heading class="accordion-header accordion-header--with-buttons">
             <h2 class="accordion-header__title">
-              @if (!isAccordionLooseOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionLooseOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
+              <i class="accordion__arrow ph ph-caret-right"></i>
               {{ "dangerSources.create.title.loose" | translate }}
             </h2>
           </div>
@@ -847,17 +827,12 @@
 
       <accordion-group
         class="accordion-group"
-        [isOpen]="isAccordionCharacteristicsOpen"
+        [isOpen]="accordionOpen.characteristics"
         (isOpenChange)="accordionChanged($event, 'characteristics')"
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            @if (!isAccordionCharacteristicsOpen) {
-              <i class="accordion__arrow ph ph-caret-right"></i>
-            }
-            @if (isAccordionCharacteristicsOpen) {
-              <i class="accordion__arrow ph ph-caret-down"></i>
-            }
+            <i class="accordion__arrow ph ph-caret-right"></i>
             {{ "dangerSources.create.title.characteristics" | translate }}
           </h2>
         </div>
@@ -1073,17 +1048,12 @@
 
       <accordion-group
         class="accordion-group"
-        [isOpen]="isAccordionMatrixOpen"
+        [isOpen]="accordionOpen.matrix"
         (isOpenChange)="accordionChanged($event, 'matrix')"
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            @if (!isAccordionMatrixOpen) {
-              <i class="accordion__arrow ph ph-caret-right"></i>
-            }
-            @if (isAccordionMatrixOpen) {
-              <i class="accordion__arrow ph ph-caret-down"></i>
-            }
+            <i class="accordion__arrow ph ph-caret-right"></i>
             {{ "dangerSources.create.title.matrix" | translate }}
           </h2>
         </div>
@@ -1136,17 +1106,12 @@
       </accordion-group>
       <accordion-group
         class="accordion-group"
-        [isOpen]="isAccordionCommentOpen"
+        [isOpen]="accordionOpen.comment"
         (isOpenChange)="accordionChanged($event, 'comment')"
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            @if (!isAccordionCommentOpen) {
-              <i class="accordion__arrow ph ph-caret-right"></i>
-            }
-            @if (isAccordionCommentOpen) {
-              <i class="accordion__arrow ph ph-caret-down"></i>
-            }
+            <i class="accordion__arrow ph ph-caret-right"></i>
             {{ "dangerSources.create.title.comment" | translate }}
           </h2>
         </div>
@@ -1163,17 +1128,12 @@
       </accordion-group>
       <accordion-group
         class="accordion-group"
-        [isOpen]="isAccordionUncertaintiesOpen"
+        [isOpen]="accordionOpen.uncertainties"
         (isOpenChange)="accordionChanged($event, 'uncertainties')"
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            @if (!isAccordionUncertaintiesOpen) {
-              <i class="accordion__arrow ph ph-caret-right"></i>
-            }
-            @if (isAccordionUncertaintiesOpen) {
-              <i class="accordion__arrow ph ph-caret-down"></i>
-            }
+            <i class="accordion__arrow ph ph-caret-right"></i>
             {{ "dangerSources.create.title.uncertainties" | translate }}
           </h2>
         </div>

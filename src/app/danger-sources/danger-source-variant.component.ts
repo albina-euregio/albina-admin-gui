@@ -22,7 +22,7 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { SliderOptions } from "../shared/slider.component";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { zEnumValues } from "../shared/zod-util";
-import { DangerSourcesService } from "./danger-sources.service";
+import { AccordionGroupName, DangerSourcesService } from "./danger-sources.service";
 import {
   DangerSign,
   DangerSourceVariantModel,
@@ -116,14 +116,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   public isEditingTitle = false;
   @ViewChild("titleInput") titleInput?: ElementRef<HTMLInputElement>;
 
-  public isAccordionGlideOpen: boolean;
-  public isAccordionLooseOpen: boolean;
-  public isAccordionSlabOpen: boolean;
-  public isAccordionWeakLayerOpen: boolean;
-  public isAccordionMatrixOpen: boolean;
-  public isAccordionCharacteristicsOpen: boolean;
-  public isAccordionCommentOpen: boolean;
-  public isAccordionUncertaintiesOpen: boolean;
+  public accordionOpen: Partial<Record<AccordionGroupName, boolean>> = {};
 
   public config = {
     animated: false,
@@ -175,34 +168,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
 
   ngOnInit() {
     this.dangerSourcesService.accordionChanged$.subscribe(({ isOpen, groupName }) => {
-      switch (groupName) {
-        case "glide":
-          this.isAccordionGlideOpen = isOpen;
-          break;
-        case "loose":
-          this.isAccordionLooseOpen = isOpen;
-          break;
-        case "slab":
-          this.isAccordionSlabOpen = isOpen;
-          break;
-        case "weakLayer":
-          this.isAccordionWeakLayerOpen = isOpen;
-          break;
-        case "matrix":
-          this.isAccordionMatrixOpen = isOpen;
-          break;
-        case "characteristics":
-          this.isAccordionCharacteristicsOpen = isOpen;
-          break;
-        case "comment":
-          this.isAccordionCommentOpen = isOpen;
-          break;
-        case "uncertainties":
-          this.isAccordionUncertaintiesOpen = isOpen;
-          break;
-        default:
-          break;
-      }
+      this.accordionOpen[groupName] = isOpen;
     });
   }
 
@@ -273,7 +239,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     this.updateVariantOnServer();
   }
 
-  accordionChanged(isOpen: boolean, groupName: string) {
+  accordionChanged(isOpen: boolean, groupName: AccordionGroupName) {
     this.dangerSourcesService.emitAccordionChanged({ isOpen, groupName });
   }
 

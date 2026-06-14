@@ -33,6 +33,13 @@ accordion-group {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  transition: transform 0.2s ease;
+}
+// Rotate the (caret-right) arrow to point down when its own panel is open.
+// `panel-open` is set by ngx-bootstrap on the accordion-group host; scoping to
+// the direct panel-heading avoids rotating arrows of nested closed panels.
+accordion-group.panel-open > .panel > .panel-heading .accordion__arrow {
+  transform: rotate(90deg);
 }
 .accordion-header__title {
   @include font-m-bold;

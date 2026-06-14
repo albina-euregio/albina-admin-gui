@@ -11,9 +11,19 @@ import { UndoRedoState } from "../providers/undo-redo-service/undo-redo.service"
 import { DangerSourceVariantModel, DangerSourceVariantSchema } from "./models/danger-source-variant.model";
 import { DangerSourceModel, DangerSourceSchema } from "./models/danger-source.model";
 
+export type AccordionGroupName =
+  | "glide"
+  | "loose"
+  | "slab"
+  | "weakLayer"
+  | "matrix"
+  | "characteristics"
+  | "comment"
+  | "uncertainties";
+
 interface AccordionChangeEvent {
   isOpen: boolean;
-  groupName: string;
+  groupName: AccordionGroupName;
 }
 
 @Injectable()
