@@ -786,7 +786,7 @@
       },
       "table": {
         "name": "Name",
-        "username": "Username",
+        "userName": "Username",
         "password": "Password",
         "publishAt5PM": "Publish at 5PM",
         "publishAt8AM": "Publish at 8AM",
