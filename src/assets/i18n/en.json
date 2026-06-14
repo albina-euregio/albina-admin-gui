@@ -190,6 +190,8 @@
       "label": {
         "glidingSnowActivity": "Gliding snow activity",
         "snowHeight": "Snow height",
+        "snowHeightLowerLimit": "Min snow height",
+        "snowHeightUpperLimit": "Max snow height",
         "snowHeightAverage": "Average snow height",
         "zeroDegreeIsotherm": "0°C isotherm",
         "looseSnowMoisture": "Loose snow moisture",

@@ -189,6 +189,15 @@ export enum Wetness {
   dry = "dry",
 }
 
+export const GlideAvalancheSchema = z.object({
+  glidingSnowActivity: z.enum(GlidingSnowActivity).register(widgetRegistry, { widget: "none" }).nullish(),
+  glidingSnowActivityValue: z.number().register(widgetRegistry, { widget: "none" }).nullish(),
+  snowHeightLowerLimit: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
+  snowHeightUpperLimit: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
+  snowHeightAverage: z.number().register(widgetRegistry, { unit: "cm" }).nullish(),
+  zeroDegreeIsotherm: z.boolean().nullish(),
+});
+
 export const SlabSchema = z.object({
   slabGrainShape: z
     .enum([GrainShape.PP, GrainShape.DF, GrainShape.RG, GrainShape.FC, GrainShape.MF, GrainShape.IF, GrainShape.MFcr])
@@ -294,12 +303,7 @@ export const DangerSourceVariantSchema = z.object({
   /** --------------------- */
   /** GLIDE SNOW AVALANCHES */
   /** --------------------- */
-  glidingSnowActivity: z.enum(GlidingSnowActivity).nullish(),
-  glidingSnowActivityValue: z.number().nullish(),
-  snowHeightUpperLimit: z.number().nullish(),
-  snowHeightLowerLimit: z.number().nullish(),
-  snowHeightAverage: z.number().nullish(),
-  zeroDegreeIsotherm: z.boolean().nullish(),
+  ...GlideAvalancheSchema.shape,
 
   /** --------------- */
   /** SLAB AVALANCHES */

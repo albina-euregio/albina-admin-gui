@@ -261,92 +261,14 @@
               {{ "dangerSources.create.title.glide" | translate }}
             </h2>
           </div>
-          @if (isAvalancheType(avalancheTypeEnum.glide)) {
-            <div class="form-group row">
-              <label
-                class="form-label me-3"
-                [class.changed]="
-                  isComparedVariant() &&
-                  (variant().snowHeightLowerLimit !== comparedVariant()?.snowHeightLowerLimit ||
-                    variant().snowHeightUpperLimit !== comparedVariant()?.snowHeightUpperLimit)
-                "
-                >{{ "dangerSources.create.label.snowHeight" | translate }}</label
-              >
-              <div class="input-group align-items-baseline">
-                <input
-                  step="1"
-                  min="0"
-                  id="inputSnowHeightLowerLimit"
-                  class="form-control"
-                  size="14"
-                  type="number"
-                  name="snow-height-lower-limit-input"
-                  [disabled]="disabled()"
-                  [(ngModel)]="variant().snowHeightLowerLimit"
-                  (change)="updateVariantOnServer()"
-                />
-                <span class="input-group-text">cm</span>
-                <label class="form-label mx-3"> - </label>
-                <input
-                  step="1"
-                  min="0"
-                  id="inputSnowHeightUpperLimit"
-                  class="form-control"
-                  size="14"
-                  type="number"
-                  name="snow-height-upper-limit-input"
-                  [disabled]="disabled()"
-                  [(ngModel)]="variant().snowHeightUpperLimit"
-                  (change)="updateVariantOnServer()"
-                />
-                <span class="input-group-text">cm</span>
-              </div>
-            </div>
-          }
-          @if (isAvalancheType(avalancheTypeEnum.glide)) {
-            <div class="form-group row">
-              <label
-                class="form-label me-3"
-                [class.changed]="
-                  isComparedVariant() && variant().snowHeightAverage !== comparedVariant()?.snowHeightAverage
-                "
-                >{{ "dangerSources.create.label.snowHeightAverage" | translate }}</label
-              >
-              <div class="input-group align-items-baseline">
-                <input
-                  step="1"
-                  min="0"
-                  id="inputSnowHeightAverage"
-                  class="form-control"
-                  size="14"
-                  type="number"
-                  name="snow-height-average-input"
-                  [disabled]="disabled()"
-                  [(ngModel)]="variant().snowHeightAverage"
-                  (change)="updateVariantOnServer()"
-                />
-                <span class="input-group-text">cm</span>
-              </div>
-            </div>
-          }
-          @if (isAvalancheType(avalancheTypeEnum.glide)) {
-            <div class="form-group row">
-              <label
-                class="form-label"
-                [class.changed]="
-                  isComparedVariant() && variant().zeroDegreeIsotherm !== comparedVariant()?.zeroDegreeIsotherm
-                "
-                >{{ "dangerSources.create.label.zeroDegreeIsotherm" | translate }}</label
-              >
-              <app-toggle-btn-group
-                [disabled]="disabled()"
-                [enumValues]="[true, false]"
-                [value]="variant()?.zeroDegreeIsotherm"
-                (valueChange)="setZeroDegreeIsotherm($event)"
-                labelI18n="button.#"
-              />
-            </div>
-          }
+          <app-zod-schema-form
+            [zodType]="DangerSourceModels.GlideAvalancheSchema"
+            [disabled]="disabled()"
+            [value]="variant()"
+            [valueForCompare]="comparedVariant()"
+            (valueChange)="updateVariantOnServer()"
+            [labelI18n]="'dangerSources.create.label.#'"
+          />
         </accordion-group>
       }
 
