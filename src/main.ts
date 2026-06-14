@@ -55,7 +55,6 @@ import { LocalStorageService } from "./app/providers/local-storage-service/local
 import { BaseMapService } from "./app/providers/map-service/base-map.service";
 import { MapService } from "./app/providers/map-service/map.service";
 import { RegionsService } from "./app/providers/regions-service/regions.service";
-import { StatisticsService } from "./app/providers/statistics-service/statistics.service";
 import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
 
@@ -114,7 +113,6 @@ function bootstrapApplication0() {
       BlogService,
       BulletinsService,
       DangerSourcesService,
-      StatisticsService,
       RegionsService,
       LocalStorageService,
       ConstantsService,
@@ -130,7 +128,6 @@ function bootstrapApplication0() {
       ObservationMarkerWebcamService,
       provideEchartsCore({ echarts }),
       RegionsService,
-      StatisticsService,
       StatusService,
       TranslateService,
       UserService,
