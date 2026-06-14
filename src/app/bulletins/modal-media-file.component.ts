@@ -18,6 +18,7 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
   templateUrl: "modal-media-file.component.html",
   standalone: true,
   imports: [AlertModule, FormsModule, DatePipe, TranslateModule],
+  providers: [MediaFileService],
 })
 export class ModalMediaFileComponent {
   bsModalRef = inject(BsModalRef);
