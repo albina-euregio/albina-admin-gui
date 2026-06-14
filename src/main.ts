@@ -38,7 +38,6 @@ import { provideEchartsCore } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
-import { GetDustParamService, ParamService, QfaService } from "./app/modelling/qfa";
 import { ObservationFilterService } from "./app/observations/observation-filter.service";
 import { ObservationMarkerObserverService } from "./app/observations/observation-marker-observer.service";
 import { ObservationMarkerWeatherStationService } from "./app/observations/observation-marker-weather-station.service";
@@ -124,7 +123,6 @@ function bootstrapApplication0() {
       ConstantsService,
       CopyService,
       DatePipe,
-      GetDustParamService,
       IncidentService,
       LocalStorageService,
       MapService,
@@ -134,9 +132,7 @@ function bootstrapApplication0() {
       ObservationMarkerObserverService,
       ObservationMarkerWeatherStationService,
       ObservationMarkerWebcamService,
-      ParamService,
       provideEchartsCore({ echarts }),
-      QfaService,
       RegionsService,
       StatisticsService,
       StatusService,
