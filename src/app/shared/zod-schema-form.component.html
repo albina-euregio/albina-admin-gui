@@ -11,7 +11,7 @@
         [id]="x.key"
         [title]="displayOnly() && helpI18n() ? (helpI18n().replace('#', x.key) | translate) : ''"
       >
-        @let changed = valueForCompare() && valueForCompare()[x.key] !== value()[x.key];
+        @let changed = valueForCompare() && !isEqual(valueForCompare()[x.key], value()[x.key]);
         <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100" [class.changed]="changed">
           <div class="d-flex align-items-center gap-2">
             @if (!displayOnly() && widget?.widget === "switch") {
