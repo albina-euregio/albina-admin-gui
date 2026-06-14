@@ -60,7 +60,7 @@ export class IncidentService {
   getIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<Blob> {
     const url = this.constantsService.getServerUrlGET("/incidents/{id}/attachment/{attachmentId}", null as never, {
       id,
-      attachmentId: attachment.uuid,
+      attachmentId: attachment.id,
     });
     return this.http.get(url, {
       headers: { Accept: "application/octet-stream" },
@@ -73,7 +73,7 @@ export class IncidentService {
   deleteIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<void> {
     const url = this.constantsService.getServerUrlDELETE("/incidents/{id}/attachment/{attachmentId}", null as never, {
       id,
-      attachmentId: attachment.uuid,
+      attachmentId: attachment.id,
     });
     return this.http.delete<void>(url);
   }

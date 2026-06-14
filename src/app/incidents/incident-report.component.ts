@@ -480,7 +480,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       credit: "",
     };
     const attachment = await this.incidentService.uploadIncidentAttachment(this.incidentId, attachment0).toPromise();
-    this.attachments[attachment.uuid] = Promise.resolve(URL.createObjectURL(file));
+    this.attachments[attachment.id] = Promise.resolve(URL.createObjectURL(file));
     const attachments = this.incidentReport().attachments ?? [];
     attachments.push(attachment);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
@@ -500,19 +500,19 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!confirm(message)) return;
     const attachment = attachments[index];
     await this.incidentService.deleteIncidentAttachment(this.incidentId, attachment).toPromise();
-    this.attachments[attachment.uuid]?.then((url) => URL.revokeObjectURL(url));
+    this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
     attachments.splice(index, 1);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
-  attachments: Record<IncidentModels.IncidentAttachment["uuid"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};
+  attachments: Record<IncidentModels.IncidentAttachment["id"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};
 
   getAttachmentPreviewUrl(
     attachment: IncidentModels.IncidentAttachment,
   ): Promise<ReturnType<typeof URL.createObjectURL>> {
-    if (!attachment?.uuid) return;
+    if (!attachment?.id) return;
     if (!attachment.mediaType?.startsWith("image/")) return;
-    return (this.attachments[attachment.uuid] ??= this.incidentService
+    return (this.attachments[attachment.id] ??= this.incidentService
       .getIncidentAttachment(this.incidentId, attachment)
       .toPromise()
       .then((blob) => {
