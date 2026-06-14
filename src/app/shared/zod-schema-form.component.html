@@ -76,7 +76,7 @@
           @if (inner.type === "number") {
             <span class="form-control-plaintext ps-0">{{ value()[x.key] ?? "—" }}</span>
           } @else if (inner.type === "enum") {
-            @if (value()[x.key] !== null) {
+            @if (value()[x.key]) {
               <span class="form-control-plaintext ps-0">{{
                 valueI18n.replace("#", $any(value()[x.key])) | translate
               }}</span>
@@ -94,6 +94,10 @@
             } @else {
               <span class="form-control-plaintext text-muted ps-0">—</span>
             }
+          } @else if (inner.type === "date") {
+            <span class="form-control-plaintext ps-0">
+              {{ castDate(value()[x.key]) | date: "full" : undefined : translateService.getCurrentLang() }}
+            </span>
           } @else if (inner.type === "string") {
             <span class="form-control-plaintext ps-0">{{ value()[x.key] || "—" }}</span>
           } @else if (inner.type === "boolean") {

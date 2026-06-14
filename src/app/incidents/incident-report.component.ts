@@ -78,6 +78,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly helpI18n = "incidentReportHelp.#";
 
   showMandatoryOnly = false;
+  displayOnly = false;
   readonly allTabs = [
     { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
     { id: "location", label: "incidentReport.locationInformation", schema: IncidentModels.LocationInformationSchema },

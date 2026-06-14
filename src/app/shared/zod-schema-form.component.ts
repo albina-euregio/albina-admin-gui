@@ -1,6 +1,7 @@
-import { Component, computed, input, model } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import { Component, computed, inject, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Aspect } from "app/enums/enums";
 import { xor } from "es-toolkit";
 import { QuillModule } from "ngx-quill";
@@ -35,6 +36,7 @@ type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
   standalone: true,
   imports: [
     AspectsComponent,
+    DatePipe,
     DateTimeInputComponent,
     EnumOtherComponent,
     EnumSliderComponent,
@@ -45,6 +47,7 @@ type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
   ],
 })
 export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>> {
+  readonly translateService = inject(TranslateService);
   readonly JSON = JSON;
   readonly Object = Object;
   readonly widgetRegistry = widgetRegistry;
@@ -74,6 +77,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   castArray(x: unknown) {
     return x as unknown[];
+  }
+  castDate(x: unknown) {
+    return x as Date;
   }
   castAspect(x: unknown) {
     return x as Aspect;
