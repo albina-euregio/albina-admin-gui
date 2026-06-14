@@ -1,11 +1,10 @@
-import { DatePipe } from "@angular/common";
+import { AsyncPipe, DatePipe } from "@angular/common";
 import { Component, DestroyRef, inject, Injector, input, model, OnDestroy, OnInit } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { environment } from "environments/environment";
 import { uniq } from "es-toolkit";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
@@ -39,7 +38,15 @@ import { IncidentReport } from "./models/incident-report.model";
   selector: "app-incident-report",
   templateUrl: "incident-report.component.html",
   standalone: true,
-  imports: [DatePipe, AccordionModule, BsDropdownModule, FormsModule, TranslateModule, ZodSchemaFormComponent],
+  imports: [
+    AsyncPipe,
+    DatePipe,
+    AccordionModule,
+    BsDropdownModule,
+    FormsModule,
+    TranslateModule,
+    ZodSchemaFormComponent,
+  ],
   providers: [GeocodingService, IncidentService, IncidentReportMapService],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
@@ -374,13 +381,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.incidentReport()?.attachments) {
-      for (const attachment of this.incidentReport().attachments) {
-        if (attachment.$previewUrl) {
-          URL.revokeObjectURL(attachment.$previewUrl);
-        }
-      }
-    }
+    Object.values(this.attachments).forEach(async (url) => URL.revokeObjectURL(await url));
   }
 
   onReportStatusChange() {
@@ -479,9 +480,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       credit: "",
     };
     const attachment = await this.incidentService.uploadIncidentAttachment(this.incidentId, attachment0).toPromise();
-    if (file.type.startsWith("image/")) {
-      attachment.$previewUrl = URL.createObjectURL(file);
-    }
+    this.attachments[attachment.uuid] = Promise.resolve(URL.createObjectURL(file));
     const attachments = this.incidentReport().attachments ?? [];
     attachments.push(attachment);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
@@ -501,23 +500,24 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!confirm(message)) return;
     const attachment = attachments[index];
     await this.incidentService.deleteIncidentAttachment(this.incidentId, attachment).toPromise();
-    if (attachment.$previewUrl) {
-      URL.revokeObjectURL(attachment.$previewUrl);
-    }
+    this.attachments[attachment.uuid]?.then((url) => URL.revokeObjectURL(url));
     attachments.splice(index, 1);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
-  getAttachmentPreviewUrl(attachment: IncidentModels.IncidentAttachment): string | null {
-    if (attachment.file && attachment.file.type.startsWith("image/")) {
-      if (!attachment.$previewUrl) {
-        attachment.$previewUrl = URL.createObjectURL(attachment.file);
-      }
-      return attachment.$previewUrl;
-    }
-    if (attachment.uuid && attachment.mediaType?.startsWith("image/")) {
-      return `${environment.apiBaseUrl}media/${attachment.uuid}`;
-    }
-    return null;
+  attachments: Record<IncidentModels.IncidentAttachment["uuid"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};
+
+  getAttachmentPreviewUrl(
+    attachment: IncidentModels.IncidentAttachment,
+  ): Promise<ReturnType<typeof URL.createObjectURL>> {
+    if (!attachment?.uuid) return;
+    if (!attachment.mediaType?.startsWith("image/")) return;
+    return (this.attachments[attachment.uuid] ??= this.incidentService
+      .getIncidentAttachment(this.incidentId, attachment)
+      .toPromise()
+      .then((blob) => {
+        const typedBlob = new Blob([blob], { type: attachment.mediaType });
+        return URL.createObjectURL(typedBlob);
+      }));
   }
 }

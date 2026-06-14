@@ -597,7 +597,7 @@
                   [class.ph-caret-right]="isAttachmentCollapsed(attachment.fileName)"
                   [class.ph-caret-down]="!isAttachmentCollapsed(attachment.fileName)"
                 ></i>
-                @if (getAttachmentPreviewUrl(attachment); as previewUrl) {
+                @if (getAttachmentPreviewUrl(attachment) | async; as previewUrl) {
                   <img
                     [src]="previewUrl"
                     class="rounded border object-fit-cover"
@@ -648,7 +648,7 @@
             @if (!isAttachmentCollapsed(attachment.fileName)) {
               <div class="card-body">
                 <div class="row">
-                  @if (getAttachmentPreviewUrl(attachment); as previewUrl) {
+                  @if (getAttachmentPreviewUrl(attachment) | async; as previewUrl) {
                     <div class="col-12 col-md-4 mb-3 mb-md-0 text-center text-md-start">
                       <a [href]="previewUrl" target="_blank" class="d-inline-block">
                         <img

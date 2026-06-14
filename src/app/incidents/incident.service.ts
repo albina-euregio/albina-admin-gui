@@ -57,12 +57,16 @@ export class IncidentService {
   }
 
   /** Get a single attachment of an incident by id. */
-  getIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<IncidentAttachment> {
+  getIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<Blob> {
     const url = this.constantsService.getServerUrlGET("/incidents/{id}/attachment/{attachmentId}", null as never, {
       id,
       attachmentId: attachment.uuid,
     });
-    return this.http.get(url).pipe(map((json) => IncidentAttachmentSchema.partial().parse(json) as IncidentAttachment));
+    return this.http.get(url, {
+      headers: { Accept: "application/octet-stream" },
+      responseType: "blob",
+      observe: "body",
+    });
   }
 
   /** Delete a single attachment of an incident by id. */

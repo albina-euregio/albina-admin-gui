@@ -1627,8 +1627,6 @@ export interface components {
       uuid: string;
       /** Format: date-time */
       dateAdded: string;
-      /** Format: byte */
-      file: string;
       fileName: string;
       mediaType: string;
       /** Format: date-time */
@@ -3268,7 +3266,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["IncidentAttachment"];
+          "application/octet-stream": string;
         };
       };
     };

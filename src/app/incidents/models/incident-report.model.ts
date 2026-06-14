@@ -436,7 +436,6 @@ export const IncidentAttachmentSchema = z.object({
   attachmentTags: enumWithOther(z.enum(["Picture", "PoliceReport", "MedicalReport"]))
     .array()
     .nullish(),
-  $previewUrl: z.string().register(widgetRegistry, { widget: "none" }).nullish(),
 });
 export type IncidentAttachment = z.infer<typeof IncidentAttachmentSchema>;
 
