@@ -1,36 +1,27 @@
 - button " Create server"
 - tablist:
-    - tab "AINEVA":
-        - button "AINEVA" [expanded]:
-            - strong: AINEVA
-    - tabpanel:
-        - table:
-            - rowgroup:
-                - row "Name AINEVA":
-                    - cell "Name"
-                    - cell "AINEVA":
-                        - textbox: AINEVA
-                - row "Username lawine@tirol.gv.at":
-                    - cell "Username"
-                    - cell "lawine@tirol.gv.at":
-                        - textbox: lawine@tirol.gv.at
-                - row:
-                    - cell "Password"
-                    - cell
-                - row "API URL https://bollettini.aineva.it/albina/api/":
-                    - cell "API URL"
-                    - cell "https://bollettini.aineva.it/albina/api/":
-                        - textbox: https://bollettini.aineva.it/albina/api/
-        - button " Save"
-    - tab "Lauegi":
-        - button "Lauegi":
-            - strong: Lauegi
-    - tab "Lavíny.sk":
-        - button "Lavíny.sk":
-            - strong: Lavíny.sk
-    - tab "GeoSphere":
-        - button "GeoSphere":
-            - strong: GeoSphere
-    - tab "SLF":
-        - button "SLF":
-            - strong: SLF
+  - tab "AINEVA":
+    - button "AINEVA" [expanded]:
+      - strong: AINEVA
+  - tabpanel:
+    - text: Name 
+    - textbox: AINEVA
+    - text: API URL
+    - textbox: https://bollettini.aineva.it/albina/api/
+    - text: Username
+    - textbox: lawine@tirol.gv.at
+    - text: Password
+    - textbox: AlbinaAlbina
+    - button " Save"
+  - tab "Lauegi":
+    - button "Lauegi":
+      - strong: Lauegi
+  - tab "Lavíny.sk":
+    - button "Lavíny.sk":
+      - strong: Lavíny.sk
+  - tab "GeoSphere":
+    - button "GeoSphere":
+      - strong: GeoSphere
+  - tab "SLF":
+    - button "SLF":
+      - strong: SLF

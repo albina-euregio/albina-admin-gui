@@ -1,6 +1,7 @@
 - tab /Tyrol \(AT-\d+\)/:
   - button /Tyrol \(AT-\d+\)/ [expanded]:
     - strong: Tyrol
+    - text: ""
 - tabpanel:
   - tablist "Tabs":
     - listitem:
@@ -14,34 +15,22 @@
     - listitem:
       - tab "Language configuration"
   - tabpanel:
-    - table:
-      - rowgroup:
-        - row /Region ID AT-\d+/:
-          - cell "Region ID"
-          - cell /AT-\d+/:
-            - textbox: /AT-\d+/
-        - row "Image URL for coat of arms https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg":
-          - cell "Image URL for coat of arms"
-          - cell "https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg":
-            - textbox: https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg
-        - row:
-          - cell "URL to static avalanche files"
-          - cell /avalanche\.report/:
-            - textbox: /avalanche\.report/
-        - row /Number of micro regions \d+/:
-          - cell "Number of micro regions"
-          - cell /\d+/:
-            - textbox: /\d+/
-        - row "ID of sub regions":
-          - cell "ID of sub regions"
-          - cell:
-            - textbox
-        - row "ID of super regions EUREGIO":
-          - cell "ID of super regions"
-          - cell "EUREGIO":
-            - textbox: EUREGIO
-        - row /ID of neighbouring regions IT-\d+-BZ,AT-\d+/:
-          - cell "ID of neighbouring regions"
-          - cell /IT-\d+-BZ,AT-\d+/:
-            - textbox: /IT-\d+-BZ,AT-\d+/
+    - text: Region ID
+    - textbox "Region ID"
+    - text: Image URL for coat of arms
+    - textbox "Image URL for coat of arms": https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg
+    - text: URL to static avalanche files
+    - textbox "URL to static avalanche files"
+    - text: URL to server images
+    - textbox "URL to server images": https://avalanche.report/images/
+    - text: URL to education content
+    - textbox "URL to education content": https://avalanche.report/education/
+    - text: Number of micro regions
+    - spinbutton "Number of micro regions"
+    - text: ID of sub regions
+    - textbox
+    - text: ID of super regions
+    - textbox: EUREGIO
+    - text: ID of neighbouring regions
+    - textbox: /IT-\d+-BZ,AT-\d+/
   - button " Save"
