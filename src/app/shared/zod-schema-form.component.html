@@ -125,6 +125,7 @@
             />
           } @else if (widget?.widget === "select") {
             <select
+              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
               [disabled]="disabled()"
               class="form-select"
               [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
@@ -209,6 +210,7 @@
         } @else if (inner.type === "string") {
           @if (x.key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
             <select
+              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
               [disabled]="disabled()"
               class="form-select"
               [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
@@ -222,6 +224,7 @@
             </select>
           } @else if (widget?.widget === "textarea") {
             <textarea
+              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
               [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
@@ -239,6 +242,7 @@
           } @else if (hasOutsideField(x.key)) {
             <input
               type="text"
+              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
               [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
@@ -247,6 +251,7 @@
           } @else {
             <input
               type="text"
+              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
               [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
               [(ngModel)]="value()[x.key]"
               (ngModelChange)="onFieldChange()"
@@ -256,6 +261,7 @@
         } @else if (inner.type === "number") {
           <input
             type="number"
+            [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
             [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
             [(ngModel)]="value()[x.key]"
             (ngModelChange)="onFieldChange()"
