@@ -493,9 +493,11 @@
         "avActivityComment": "Description of avalanche danger",
         "travelAdvisoryHighlights": "Headline travel advisory",
         "travelAdvisoryComment": "Description of travel advisory",
+        "snowpackStructureHighlights": "Headline snowpack structure",
         "snowpackStructureComment": "Description of snowpack structure",
         "dangerPatterns": "Danger patterns",
         "tendencyComment": "Description of tendency",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Weather synopsis",
         "notes": "Notes",
         "noSnow": "No snow"
@@ -786,7 +788,7 @@
       },
       "table": {
         "name": "Name",
-        "username": "Username",
+        "userName": "Username",
         "password": "Password",
         "publishAt5PM": "Publish at 5PM",
         "publishAt8AM": "Publish at 8AM",
@@ -810,63 +812,16 @@
       },
       "table": {
         "general": {
-          "title": "General",
-          "id": "ID"
+          "title": "General"
         },
         "publication": {
-          "title": "Publication",
-          "publishBulletins": "Publish avalanche forecast",
-          "publishBlogs": "Publish blog posts",
-          "createCaamlV5": "Create CAAML v5",
-          "createCaamlV6": "Create CAAML v6",
-          "createJson": "Create JSON",
-          "createMaps": "Create maps",
-          "createPdf": "Create PDF",
-          "sendEmails": "Send emails",
-          "createSimpleHtml": "Create simple HTML",
-          "sendTelegramMessages": "Send telegram messages",
-          "sendWhatsAppMessages": "Send WhatsApp messages",
-          "sendPushNotifications": "Send push notifications",
-          "pdfColor": "PDF color",
-          "emailColor": "Email color",
-          "pdfMapYAmPm": "Y for PDF map (am/pm)",
-          "pdfMapYFd": "Y for PDF map (fd)",
-          "pdfMapWidthAmPm": "Map width for PDF (am/pm)",
-          "pdfMapWidthFd": "Map width for PDF (fd)",
-          "pdfMapHeight": "Map height for PDF",
-          "pdfFooterLogo": "Logo for PDF footer",
-          "pdfFooterLogoColorPath": "Logo for PDF footer (color)",
-          "pdfFooterLogoBwPath": "Logo for PDF footer (bw)",
-          "simpleHtmlTemplateName": "Simple HTML template",
-          "geoDataDirectory": "Geodata directory",
-          "mapLogoColorPath": "Logo for map (color)",
-          "mapLogoBwPath": "Logo for map (bw)",
-          "mapLogoPosition": "Logo position for map",
-          "imageColorbarColorPath": "Colorbar (color)",
-          "imageColorbarBwPath": "Colorbar (b/w)",
-          "enabledLanguages": "Enabled languages",
-          "ttsLanguages": "Text-to-speech languages"
+          "title": "Publication"
         },
         "components": {
-          "title": "Components",
-          "enableDangerSources": "Enable danger sources",
-          "enableIncidents": "Enable incidents",
-          "enableObservations": "Enable observations",
-          "enableModelling": "Enable modelling",
-          "enableWeatherbox": "Enable weather box",
-          "enableIcon": "Enable weather",
-          "enableLineaExport": "Enable LINEA export"
+          "title": "Components"
         },
         "configuration": {
-          "title": "Configuration",
-          "showMatrix": "Show matrix",
-          "enableMediaFile": "Enable media file",
-          "enableStrategicMindset": "Enable strategic mindset",
-          "enableStressLevel": "Enable stress level",
-          "enableAvalancheProblemCornices": "Enable avalanche problem CORNICES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM",
-          "enableGeneralHeadline": "Enable general overall headline for bulletins",
-          "enableWeatherTextField": "Enable text input for weather synopsis"
+          "title": "Configuration"
         },
         "languageConfiguration": {
           "title": "Language configuration"

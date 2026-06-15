@@ -1,3 +1,4 @@
+import { widgetRegistry } from "app/shared/zod-schema-form.widget-registry";
 import { z } from "zod/v4";
 
 export const LocalServerConfigurationSchema = z.object({
@@ -13,12 +14,12 @@ export const LocalServerConfigurationSchema = z.object({
 export type LocalServerConfiguration = z.infer<typeof LocalServerConfigurationSchema>;
 
 export const ServerConfigurationSchema = z.object({
-  id: z.any().nullish(),
+  id: z.any().register(widgetRegistry, { widget: "none" }).nullish(),
   name: z.string(),
   apiUrl: z.url().nullish(),
   userName: z.string().nullish(),
   password: z.string().nullish(),
-  externalServer: z.boolean().default(true),
+  externalServer: z.boolean().register(widgetRegistry, { widget: "none" }).default(true),
 });
 export type ServerConfiguration = z.infer<typeof ServerConfigurationSchema>;
 

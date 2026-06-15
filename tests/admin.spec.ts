@@ -27,12 +27,12 @@ test("Server settings", async ({ page }) => {
     .click();
   // open tab for new server
   await page.getByRole("tab").filter({ hasText: /^$/ }).click();
-  await page.getByRole("row", { name: "Name" }).first().getByRole("textbox").fill("Test");
+  const newServerConfig = page.locator("accordion-group.panel-open");
+  await newServerConfig.getByLabel("Name", { exact: true }).fill("Test");
   await expect(page.getByRole("tab", { name: "Test" })).toBeVisible();
-  await page.getByRole("row", { name: "Username", exact: true }).getByRole("textbox").fill("test");
-  await page.getByRole("row", { name: "Password", exact: true }).getByRole("textbox").fill("1234");
-  await page.getByRole("row", { name: "API URL", exact: true }).getByRole("textbox").fill("test");
-
+  await newServerConfig.getByLabel("Username", { exact: true }).fill("test");
+  await newServerConfig.getByLabel("Password", { exact: true }).fill("1234");
+  await newServerConfig.getByLabel("API URL", { exact: true }).fill("test");
   await expect(page.getByText("✖ Invalid URL")).toBeVisible();
 });
 
@@ -48,18 +48,16 @@ test("Region settings", async ({ page }) => {
     await page.getByRole("button", { name: "PLAYWRIGHT (PLAYWRIGHT)" }).click();
     const regionConfig = page.locator("accordion-group").filter({ hasText: "PLAYWRIGHT (PLAYWRIGHT)" });
     await regionConfig.getByRole("tab", { name: "Configuration", exact: true }).click();
-    await expect(
-      regionConfig.getByRole("row", { name: "Enable stress level" }).getByRole("checkbox"),
-    ).not.toBeChecked();
-    await regionConfig.getByRole("row", { name: "Enable stress level" }).getByRole("checkbox").check();
+    await expect(regionConfig.getByRole("checkbox", { name: "Enable stress level" })).not.toBeChecked();
+    await regionConfig.getByRole("checkbox", { name: "Enable stress level" }).check();
     await regionConfig.getByRole("button", { name: "Save" }).click();
     await expect(page.getByRole("alert")).toHaveText("Configuration successfully saved");
     await page.reload();
     await page.getByRole("tab", { name: "Region", exact: true }).click();
     await page.getByRole("button", { name: "PLAYWRIGHT (PLAYWRIGHT)" }).click();
     await regionConfig.getByRole("tab", { name: "Configuration", exact: true }).click();
-    await expect(regionConfig.getByRole("row", { name: "Enable stress level" }).getByRole("checkbox")).toBeChecked();
-    await regionConfig.getByRole("row", { name: "Enable stress level" }).getByRole("checkbox").uncheck();
+    await expect(regionConfig.getByRole("checkbox", { name: "Enable stress level" })).toBeChecked();
+    await regionConfig.getByRole("checkbox", { name: "Enable stress level" }).uncheck();
     await regionConfig.getByRole("button", { name: "Save" }).click();
     await expect(page.getByRole("alert")).toHaveText("Configuration successfully saved");
   });

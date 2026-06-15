@@ -4,43 +4,11 @@
     <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
   </div>
 }
-
-<table class="table table-hover table-condensed mb-0">
-  <tbody>
-    <tr>
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.name" | translate }}</label>
-      </td>
-      <td>
-        <app-zod-input [zodType]="ServerConfigurationSchema.shape.name" [(value)]="config().name" />
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.username" | translate }}</label>
-      </td>
-      <td>
-        <app-zod-input [zodType]="ServerConfigurationSchema.shape.userName" [(value)]="config().userName" />
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.password" | translate }}</label>
-      </td>
-      <td>
-        <app-zod-input [zodType]="ServerConfigurationSchema.shape.password" [(value)]="config().password" />
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.apiUrl" | translate }}</label>
-      </td>
-      <td>
-        <app-zod-input [zodType]="ServerConfigurationSchema.shape.apiUrl" [(value)]="config().apiUrl" />
-      </td>
-    </tr>
-  </tbody>
-</table>
+<app-zod-schema-form
+  [value]="config()"
+  [zodType]="ServerConfigurationSchema"
+  [labelI18n]="'admin.server-configuration.table.#'"
+/>
 
 @if (!saveConfigurationLoading) {
   <button type="submit" class="btn btn-sm btn-primary px-3" (click)="save()">

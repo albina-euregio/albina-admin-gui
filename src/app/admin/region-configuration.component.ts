@@ -2,9 +2,11 @@ import { Component, input, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { TabsModule } from "ngx-bootstrap/tabs";
 
+import * as RegionModels from "../models/region-configuration.model";
 import {
   LanguageConfiguration,
   LanguageConfigurationSchema,
@@ -20,26 +22,24 @@ import { ZodInputComponent } from "../shared/zod-input.component";
   templateUrl: "region-configuration.component.html",
   selector: "app-region-configuration",
   standalone: true,
-  imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent],
+  imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent, ZodSchemaFormComponent],
   providers: [ConfigurationService],
+  styles: `
+    ::ng-deep .zod-form-field {
+      margin-top: 1rem;
+    }
+    ::ng-deep .zod-form-field:last-of-type {
+      margin-bottom: 1rem;
+    }
+  `,
 })
 export class RegionConfigurationComponent {
   private translateService = inject(TranslateService);
   configurationService = inject(ConfigurationService);
   authenticationService = inject(AuthenticationService);
 
+  readonly RegionModels = RegionModels;
   readonly RegionConfigurationSchema = RegionConfigurationSchema;
-  readonly GeneralRegionConfigurationKeys: (keyof RegionConfiguration)[] = [
-    "id",
-    "coatOfArms",
-    "staticUrl",
-    "serverImagesUrl",
-    "educationUrl",
-    "microRegions",
-    "subRegions",
-    "superRegions",
-    "neighborRegions",
-  ];
   readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
   readonly LanguageConfigurationKeys: (keyof LanguageConfiguration)[] = [
     "warningServiceName",
