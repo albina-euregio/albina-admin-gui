@@ -17,6 +17,9 @@
         @let changed = valueForCompare() && !isEqual(valueForCompare()[key], value()[key]);
         <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100" [class.changed]="changed">
           <div class="d-flex align-items-center gap-2">
+            @if (widget?.icon; as icon) {
+              <span [class]="icon"></span>
+            }
             @if (!displayOnly() && inner.type === "boolean" && widget?.widget !== "yes-no") {
             } @else if (labelI18n()) {
               <span>{{ labelI18n().replace("#", key) | translate }}</span>
