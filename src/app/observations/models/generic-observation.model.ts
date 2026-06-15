@@ -164,31 +164,30 @@ export function degreeToAspect(degree: number): Aspect {
 // https://transform.tools/typescript-to-zod
 export const genericObservationSchema = z.object({
   $data: z.any().describe("Additional data (e.g. original data stored when fetching from external API)"),
-  $id: z.string().nullish().nullable().describe("External ID of this observations"),
+  $id: z.string().nullish().describe("External ID of this observations"),
   $allowEdit: z.boolean().default(false),
   $deleted: z.boolean().default(false),
-  $externalURL: z.string().nullish().nullable().describe("External URL to display as iframe"),
-  $externalImgs: z.string().array().nullish().nullable().describe("External image to display as img"),
+  $externalURL: z.string().nullish().describe("External URL to display as iframe"),
+  $externalImgs: z.string().array().nullish().describe("External image to display as img"),
   stability: z
     .enum(SnowpackStability)
     .nullish()
-    .nullable()
     .describe("Snowpack stability that can be inferred from this observation"),
   $source: z.union([z.enum(ObservationSource), z.enum(ForecastSource)]).describe("Source of this observation"),
   $type: z.enum(ObservationType).describe("Type of this observation"),
-  aspect: z.enum(Aspect).nullish().nullable().describe("Aspect corresponding with this observation"),
-  authorName: z.string().nullish().nullable().describe("Name of the author"),
-  content: z.string().nullish().nullable().describe("Free-text content"),
-  elevation: z.number().nullish().nullable().describe("Elevation in meters"),
-  elevationLowerBound: z.number().nullish().nullable().describe("Lower bound of elevation in meters"),
-  elevationUpperBound: z.number().nullish().nullable().describe("Upper bound of elevation in meters"),
+  aspect: z.enum(Aspect).nullish().describe("Aspect corresponding with this observation"),
+  authorName: z.string().nullish().describe("Name of the author"),
+  content: z.string().nullish().describe("Free-text content"),
+  elevation: z.number().nullish().describe("Elevation in meters"),
+  elevationLowerBound: z.number().nullish().describe("Lower bound of elevation in meters"),
+  elevationUpperBound: z.number().nullish().describe("Upper bound of elevation in meters"),
   eventDate: z.coerce.date().describe("Date when the event occurred"),
-  locationName: z.string().nullish().nullable().describe("Location name"),
-  latitude: z.number().nullish().nullable().describe("Location latitude (WGS 84)"),
-  longitude: z.number().nullish().nullable().describe("Location longitude (WGS 84)"),
-  region: z.string().nullish().nullable().describe("Micro-region code (computed from latitude/longitude)"),
-  reportDate: z.coerce.date().nullish().nullable().describe("Date when the observation has been reported"),
-  dangerSource: z.string().uuid().nullish().nullable().describe("Danger source UUID"),
+  locationName: z.string().nullish().describe("Location name"),
+  latitude: z.number().nullish().describe("Location latitude (WGS 84)"),
+  longitude: z.number().nullish().describe("Location longitude (WGS 84)"),
+  region: z.string().nullish().describe("Micro-region code (computed from latitude/longitude)"),
+  reportDate: z.coerce.date().nullish().describe("Date when the observation has been reported"),
+  dangerSource: z.uuid().nullish().describe("Danger source UUID"),
   avalancheProblems: z
     .enum(AvalancheProblem)
     .array()
@@ -201,8 +200,8 @@ export const genericObservationSchema = z.object({
     .nullish()
     .nullable()
     .describe("Danger pattern corresponding with this observation"),
-  importantObservations: z.enum(ImportantObservation).array().nullish().nullable().describe("Important observations"),
-  personInvolvement: z.enum(PersonInvolvement).nullish().nullable().describe("Person involvement"),
+  importantObservations: z.enum(ImportantObservation).array().nullish().describe("Important observations"),
+  personInvolvement: z.enum(PersonInvolvement).nullish().describe("Person involvement"),
 });
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });
