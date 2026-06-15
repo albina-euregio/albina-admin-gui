@@ -1,3 +1,4 @@
+import { widgetRegistry } from "app/shared/zod-schema-form.widget-registry";
 import { orderBy } from "es-toolkit";
 import { z } from "zod/v4";
 
@@ -172,16 +173,20 @@ export const genericObservationSchema = z.object({
   stability: z
     .enum(SnowpackStability)
     .nullish()
+    .register(widgetRegistry, { class: "col-3", widget: "select", valueI18n: "snowpackStability.#" })
     .describe("Snowpack stability that can be inferred from this observation"),
   $source: z.union([z.enum(ObservationSource), z.enum(ForecastSource)]).describe("Source of this observation"),
-  $type: z.enum(ObservationType).describe("Type of this observation"),
+  $type: z
+    .enum(ObservationType)
+    .register(widgetRegistry, { class: "col-3", widget: "select" })
+    .describe("Type of this observation"),
   aspect: z.enum(Aspect).nullish().describe("Aspect corresponding with this observation"),
   authorName: z.string().nullish().describe("Name of the author"),
   content: z.string().nullish().describe("Free-text content"),
   elevation: z.number().nullish().describe("Elevation in meters"),
   elevationLowerBound: z.number().nullish().describe("Lower bound of elevation in meters"),
   elevationUpperBound: z.number().nullish().describe("Upper bound of elevation in meters"),
-  eventDate: z.coerce.date().describe("Date when the event occurred"),
+  eventDate: z.coerce.date().register(widgetRegistry, { class: "col-3" }).describe("Date when the event occurred"),
   locationName: z.string().nullish().describe("Location name"),
   latitude: z.number().nullish().describe("Location latitude (WGS 84)"),
   longitude: z.number().nullish().describe("Location longitude (WGS 84)"),
@@ -201,7 +206,11 @@ export const genericObservationSchema = z.object({
     .nullable()
     .describe("Danger pattern corresponding with this observation"),
   importantObservations: z.enum(ImportantObservation).array().nullish().describe("Important observations"),
-  personInvolvement: z.enum(PersonInvolvement).nullish().describe("Person involvement"),
+  personInvolvement: z
+    .enum(PersonInvolvement)
+    .register(widgetRegistry, { class: "col-3", widget: "select" })
+    .nullish()
+    .describe("Person involvement"),
 });
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });

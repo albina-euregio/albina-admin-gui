@@ -15,6 +15,7 @@ import { DangerSourcesService } from "app/danger-sources/danger-sources.service"
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { ElevationService } from "app/providers/map-service/elevation.service";
+import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { zodCssClass } from "app/shared/zod-util";
 import { orderBy, xor } from "es-toolkit";
 import { Feature, Point } from "geojson";
@@ -50,6 +51,7 @@ import {
     TypeaheadModule,
     AspectsComponent,
     AvalancheProblemIconsComponent,
+    ZodSchemaFormComponent,
   ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
@@ -77,6 +79,26 @@ export class ObservationEditorComponent implements AfterViewInit {
   personInvolvementValues = Object.values(PersonInvolvement);
   observationTypeValues = Object.values(ObservationType);
   GenericObservationSchema = genericObservationSchema;
+  GenericObservationSchema0 = genericObservationSchema.pick({
+    eventDate: true,
+    $type: true,
+    personInvolvement: true,
+    stability: true,
+    locationName: true,
+    aspect: true,
+    latitude: true,
+    longitude: true,
+    elevation: true,
+    elevationLowerBound: true,
+    elevationUpperBound: true,
+    authorName: true,
+    reportDate: true,
+    avalancheProblems: true,
+    importantObservations: true,
+    dangerSource: true,
+    $externalURL: true,
+    content: true,
+  });
   zodCssClass = zodCssClass;
   ObservationSource = ObservationSource;
   elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];

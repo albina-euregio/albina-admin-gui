@@ -1,6 +1,7 @@
 <!-- eslint-disable @angular-eslint/template/no-autofocus -->
 @if (observation()) {
   <div class="row g-3">
+    <app-zod-schema-form [zodType]="GenericObservationSchema0" [value]="observation()" [labelI18n]="'observations.#'" />
     @if (observation().$source !== ObservationSource.AvalancheWarningService) {
       <div class="d-flex align-items-center">
         <i
