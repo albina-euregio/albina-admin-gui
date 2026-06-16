@@ -1,0 +1,35 @@
+- tab " Description of avalanche danger":
+  - button " Description of avalanche danger" [expanded]:
+    - heading " Description of avalanche danger" [level=2]
+- tabpanel:
+  - text: Special alert
+  - button ""
+  - button ""
+  - button ""
+  - textbox [disabled]
+  - button " Show translations"
+  - text: Headline avalanche situation
+  - button ""
+  - button ""
+  - button ""
+  - textbox [disabled]: A great many small and medium-sized moist loose snow avalanches have been released by people as a consequence of warming during the day.
+  - button " Hide translations"
+  - text: DE
+  - textbox [disabled]: Mit der tageszeitlichen Erwärmung wurden sehr viele kleine und mittlere feuchte Lockerschneelawinen von Personen ausgelöst.
+  - text: FR
+  - textbox [disabled]: De très nombreuses avalanches de neige meuble humide de petite et moyenne taille ont été déclenchées par des personnes avec le réchauffement diurne.
+  - text: IT
+  - textbox [disabled]: Con il rialzo termico diurno, sono state distaccate in seguito al passaggio di persone moltissime valanghe di neve umida a debole coesione di piccole e medie dimensioni.
+  - text: ES
+  - textbox [disabled]: A consecuencia del aumento de la temperatura diurna se han desencadenado debido al paso de personas numerosas avalanchas de nieve húmeda sin cohesión de tamaño pequeño y mediano.
+  - text: CA
+  - textbox [disabled]: A conseqüència de l’augment de la temperatura diürna, s'han desencadenat pel pas de persones nombroses allaus de neu humida sense cohesió de mida petita i mitjana.
+  - text: OC
+  - textbox [disabled]: A conseqüéncia der aument dera temperatura diürna, s'an desencadenat peth pas de persones nombrosi lauegi de nhèu umida sense coesion de mida petita e mejana.
+  - text: Description of avalanche danger
+  - button ""
+  - button ""
+  - button ""
+  - button ""
+  - textbox [disabled]: The wind will be light to moderate for a temporary period in some localities. The danger of wet and gliding avalanches will increase during the day, reaching danger level 4 (high). As a consequence of warming during the day and the solar radiation, the likelihood of wet avalanches being released will increase significantly in particular on steep slopes below the tree line. The surface of the snowpack is hardly frozen at all and will already soften in the late morning. A clear night will be followed in the early morning by quite favourable conditions generally, but the danger of wet and gliding avalanches will increase later. During the morning as well, individual, then as the precipitation becomes heavier more wet avalanches are to be expected. On steep southeast, south and southwest facing slopes and at low and intermediate altitudes numerous medium-sized to large natural wet avalanches are to be expected as a consequence of warming. On sunny slopes a high danger of wet and gliding avalanches will be encountered over a wide area. As the temperature drops there will be a gradual decrease in the avalanche danger towards the evening.
+  - button " Show translations"

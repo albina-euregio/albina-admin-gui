@@ -132,7 +132,7 @@ test("Preview PDF", async ({ page }) => {
   expect(fs.statSync(downloadPath).size).toBeGreaterThan(10 ** 5 * 5); // 500 KB
 });
 
-test("View bulletin", async ({ page, baseURL }) => {
+test("View bulletin", async ({ page }) => {
   const testDate = new Date("2024-12-24");
   await setFixedTime(page, testDate);
   await page.reload();
@@ -480,5 +480,63 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
       from: "2025-03-30T15:00:00Z",
       until: "2025-03-31T15:00:00Z",
     });
+  });
+});
+
+test("Textcat", async ({ page }) => {
+  const testDate = new Date("2025-03-29");
+  await setFixedTime(page, testDate);
+  page.reload();
+  await changeRegion(page, "Tyrol");
+  await page.getByRole("row", { name: "Tuesday, April 1, 2025" }).getByTitle("edit bulletin").click();
+
+  await test.step("Check existing text", async () => {
+    await page.getByTitle("[shift+1]").click();
+    await page.getByRole("button", { name: "Avalanche problems" }).click();
+    await page.getByRole("button", { name: "low Wet snow SLAB" }).click();
+    await page.getByRole("button", { name: "Description of avalanche" }).click();
+    await page.getByRole("button", { name: "Show translations" }).nth(1).click();
+    await expect(page.locator(".panel-open").last()).toMatchAriaSnapshot({ name: "textcat-texts.yaml" });
+  });
+
+  await test.step("Create new Snowpack structure texts", async () => {
+    await page.getByRole("button", { name: " Snowpack structure" }).click();
+    await page.locator("#region-form-snowpack-structure").getByTitle("Edit").click();
+
+    const sentenceSelector = page
+      .locator("iframe")
+      .contentFrame()
+      .locator("label")
+      .filter({ hasText: "Advice_01 — {backcountry" })
+      .getByRole("combobox");
+    await sentenceSelector.press("ArrowDown");
+    await sentenceSelector.selectOption("Empfehlung08");
+    await page.locator("iframe").contentFrame().getByRole("button", { name: "Advice_08 — {distances}" }).click();
+    await page.locator("iframe").contentFrame().getByText("Advice_08 — {⚠ distances}").click();
+    await page.locator("iframe").contentFrame().getByRole("listbox").selectOption("1");
+    await page.locator("iframe").contentFrame().getByRole("button", { name: "Save" }).click();
+    await expect(page.getByTitle("Edit").nth(1)).toBeVisible();
+    await page.getByRole("button", { name: " Show translations" }).first().click();
+    await expect(page.locator("app-avalanche-bulletin")).toMatchAriaSnapshot({ name: "textcat-advice-08.yaml" });
+  });
+
+  await test.step("Edit existing sentence", async () => {
+    await page.locator("#region-form-snowpack-structure").getByTitle("Edit").click();
+    await expect(page.locator("iframe").contentFrame().locator("#app")).toMatchAriaSnapshot({
+      name: "textcat-edit-existing-sentence.yaml",
+    });
+    await page.getByRole("button", { name: "×" }).click();
+  });
+
+  await test.step("Delete text", async () => {
+    await page.locator("#region-form-snowpack-structure").getByTitle("Delete", { exact: true }).click();
+    await expect(page.locator("#region-form-snowpack-structure")).toMatchAriaSnapshot(`
+    - text: Description of snowpack structure
+    - button ""
+    - button ""
+    - button ""
+    - button ""
+    - textbox [disabled]
+    `);
   });
 });

@@ -1,0 +1,203 @@
+- heading "All sentences" [level=2]
+- 'button "Advice_01 — {backcountry touring is to be} {to} {flat} {terrain} {as far as possible}" [disabled]':
+  - img
+- combobox:
+  - 'option "Advice_01 — {backcountry touring is to be} {to} {flat} {terrain} {as far as possible}"'
+  - 'option "Advice_02 — {as before} {it is} {inadvisable} {in} {backcountry touring} {outside marked and open pistes}"'
+  - 'option "Advice_03 — {the conditions are} {dangerous} {for} {backcountry touring} {outside marked and open pistes}"'
+  - 'option "Advice_04 — {backcountry touring calls for} {restraint}"'
+  - 'option "Advice_05 — {experience is necessary}"'
+  - 'option "Advice_08 — {distances}"'
+  - 'option "Advice_09 — {backcountry tours} {and off-piste skiing} {should} {early} {be terminated}"'
+  - 'option "Advice_10 — {in many places} {there is} {a danger of falling} {on the crust}"'
+  - 'option "Advice_11 — {danger of falling}"'
+  - 'option "Advice_12 — {calming weather} {when} {can} {be used} {assessment}"'
+  - 'option "Avalanche_releases_01 — {are} {why/where/when}"'
+  - 'option "Avalanche_size_01 — {type of slope/elevation/regions/starting zones} {and type of slope/elevation/regions/starting zones} {how many} {avalanche size} {type of avalanche} {are} {possible} {Lawinenart_NO} {why/where/when}"'
+  - 'option "Avalanche_size_03 — {often} {avalanches are} {avalanche size} {how easy to trigger}"'
+  - 'option "Avalanche_size_04 — {often/type of slope/elevation/regions} {the avalanches} {can} {old snowpack} {and reach large size}"'
+  - 'option "Avalanche_size_05 — {starting zones} {regions} {the avalanches} {can} {Gebiet_auch_NO} {often} {reach}"'
+  - 'option "Avalanche_size_07 — {oft7_NO} {the avalanches} {can} {often} {reach} {as far as the valley bottom} {starting zones}"'
+  - 'option "Avalanche_size_08 — {where}"'
+  - 'option "Avalanche_size_09 — {runout}"'
+  - 'option "Avalanche_size_10 — {how many} {avalanche size} {natural} {avalanches are} {further} {possible}"'
+  - 'option "Avalanche_size_11 — {other regions} {and regions} {the avalanches} {are} {often} {smaller/larger}"'
+  - 'option "Catchment_area_01 — {starting zones}"'
+  - 'option "Catchment_area_02 — {the avalanches} {can} {occur} {released}"'
+  - 'option "Catchment_area_03 — {the emptied} {starting zones} {will be/have been} {replenished} {further} {as a consequence of the snowfall}"'
+  - 'option "Changes_001 — {why/where} {avalanche prone locations will become more prevalent}"'
+  - 'option "Changes_01 — {type of slope/elevation/regions} {avalanche prone locations more prevalent}"'
+  - 'option "Changes_03 — {The} {peak danger point} {will} {will be reached} {time} {where} {where}"'
+  - 'option "Changes_04 — {time} {the} {level n} {will be} {reached} {where}"'
+  - 'option "Changes_041 — {where will be} {the} {level n} {will be reached}"'
+  - 'option "Changes_05 — {in places where} {more snow} {will increase earlier}"'
+  - 'option "Changes_06 — {How sharp} {increase} {the} {danger} {why/where/when}"'
+  - 'option "Changes_08 — {type of slope/elevation/regions} {and type of slope/elevation/regions} {danger increased}"'
+  - 'option "Changes_09 — {as a consequence of} {natural} {avalanche activity} {nimmt_NO} {appreciably} {in-/decrease} {decrease}"'
+  - 'option "Changes_10 — {as a consequence of} {natural} {avalanche activity} {Änderung10§mit_was_NO} {appreciably} {in-/decreased} {Änderung10§zu.}"'
+  - 'option "Changes_2 — {avalanche prone locations} {will increase} {where/when} {increase}"'
+  - 'option "Colon_01 — {type of slope/elevation} {comma/and} {type of slope/elevation} {colon}"'
+  - 'option "Colon_02 — {regions} {comma} {regions} {comma} {regions} {comma excluding} {regions} {comma colon}"'
+  - 'option "Colon_03 — {time} {colon}"'
+  - 'option "Conditions_01 — {the} {conditions} {are} {dangerous}"'
+  - 'option "Conditions_02 — {where/when} {level n} {danger} {some localities}"'
+  - 'option "Conditions_04 — {where/when} {partially dangerous} {avalanche situation}"'
+  - 'option "Conditions_05 — {where} {how much snow}"'
+  - 'option "Cut_slopes_01 — {cut slopes}"'
+  - 'option "Freeride_01 — {the avalanche situation is} {how much} {more favourable} {in highly frequented} {off-piste terrain}"'
+  - 'option "Gliding_snow_01 — {areas with glide cracks}"'
+  - 'option "Hazard_01 — {danger level 4/5 infrastructure/backcountry}"'
+  - 'option "Hazard_02 — {transportation routes} {and transportation routes} {are} {endangered} {how often} {elevation/regions}"'
+  - 'option "Hazard_021 — {transportation routes} {and transportation routes} {can} {be endangered} {in isolated cases} {elevation/regions}"'
+  - 'option "Hazard_03 — {safety measures} {reviewed}"'
+  - 'option "Hazard_04 — {where} {large} {natural} {with} {avalanches} {reaching valley bottoms} {must be expected} {rarely}"'
+  - 'option "Hazard_06 — {snow supporting structures} {are} {often} {full to capacity} {protection} {elevation/regions}"'
+  - 'option "Hazard_07 — {safety measures} {are} {required} {when}"'
+  - 'option "Hazard_plot_01 — {level}"'
+  - 'option "Hazard_plot_02 — {avalanche prone locations are to be found} {aspects} {above an elevation} {and on}"'
+  - 'option "Hazardous_sites_01 — {places} {problem} {are} {especially} {dangerous}"'
+  - 'option "Hazardous_sites_02 — {avalanche prone locations} {are} {prevalent} {and easy to recognise}"'
+  - 'option "Hazardous_sites_03 — {individual} {avalanche prone locations} {for avalanches} {are to be found} {type of slope/elevation} {and elevation}"'
+  - 'option "Hazardous_sites_04 — {elevation/regions} {and elevation/regions} {are} {these} {avalanche prone locations} {prevalent} {danger is greater}"'
+  - 'option "Hazardous_sites_05 — {avalanche prone locations} {are to be found} {aspects} {elevation/regions} {and on}"'
+  - 'option "Headline_01 — {pattern} {where/when}"'
+  - 'option "Headline_02 — {type of avalanche} {and type of avalanche} {possible}"'
+  - 'option "Headline_021 — {type of avalanche} {and type of avalanche} {unlikely to occcur}"'
+  - 'option "Headline_03 — {pattern}"'
+  - 'option "In_addition_01 — {In addition} {the} {characteristics wind slabs} {wind slabs} {of day} {where} {prone to triggering} {in some cases}"'
+  - 'option "In_addition_02 — {In addition} {consists} {substantial danger} {of avalanche type} {ausgeprägte_Gefahr_NO}"'
+  - 'option "In_addition_03 — {In addition} {the danger of} {of avalanche type} {will increase} {time}"'
+  - 'option "In_addition_04 — {In addition} {characteristics wind slabs} {wind slabs} {should}"'
+  - 'option "In_addition_05 — {In addition} {time} {where} {how many} {avalanche size} {type of avalanche} {are} {possible}"'
+  - 'option "In_addition_06 — {In addition} {characteristics wind slabs} {wind slabs} {will form/formed} {where} {time}"'
+  - 'option "Line_break_01 — {line break}"'
+  - 'option "Map_fields_01 — {title of danger map}"'
+  - 'option "Map_fields_02 — {title of danger map}"'
+  - 'option "New_snow_01 — {the new snow} {characteristics new snow}"'
+  - 'option "New_snow_02 — {the new snow and wind slabs} {of day} {characteristics new snow / wind slabs}"'
+  - 'option "New_snow_03 — {the fresh snow (past)} {and in particular} {size/distribution} {characteristics new snow / wind slabs}"'
+  - 'option "New_snow_04 — {the fresh snow (future)} {and in particular} {size/distribution} {characteristics new snow / wind slabs}"'
+  - 'option "Persistent_weak_layer_01 — {often/which} {weak layers present} {are} {deep in} {snowpack} {type of slope/elevation/regions}"'
+  - 'option "Persistent_weak_layer_02 — {weak layers} {can} {released} {loads} {type of slope/elevation/regions}"'
+  - 'option "Persistent_weak_layer_03 — {signs of instability} {and signs of instability} {can indicate the danger}"'
+  - 'option "Persistent_weak_layer_04 — {avalanches can} {penetrate deeper layers} {and} {where become large}"'
+  - 'option "Persistent_weak_layer_05 — {in addition can} {be released} {in deeper layers} {load/type of slope}"'
+  - 'option "Persistent_weak_layer_06 — {weak layers} {necessitate caution}"'
+  - 'option "Release_01 — {why/where} {how many} {type of avalanche} {are} {possible/to be expected} {time} {Lawinenart5_NO} {even large ones}"'
+  - 'option "Release_02 — {avalanche size} {natural} {avalanches} {are} {possible} {type of slope/elevation/regions/when}"'
+  - 'option "Release_03 — {dry avalanches can} {often} {be released} {load} {size}"'
+  - 'option "Release_04 — {recreationists} {can} {release avalanches} {in isolated cases} {including large ones}"'
+  - 'option "Release_05 — {this} {type of slope/elevation/regions} {how many} {avalanche size} {avalanches} {occurred} {from} {naturally} {starting zones}"'
+  - 'option "Release_06 — {this} {type of slope/elevation/regions} {how many} {avalanche size} {avalanches} {were} {released}"'
+  - 'option "Release_07 — {remotely triggered avalanches are} {possible}"'
+  - 'option "Remark_01 — {uncertain weather report} {consult the most recent avalanche bulletin}"'
+  - 'option "Remark_02 — {small amount of information} {backcountry} {check bulletin}"'
+  - 'option "Remark_03 — {from when} {bulletin}"'
+  - 'option "Remark_04 — {next bulletin} {during weekday} {n.} {month} {publication time} {or sooner}"'
+  - 'option "Remark_05 — {text summer bulletin}"'
+  - 'option "Remark_06 — {correction} {date} {time} {colon/point}"'
+  - 'option "Snowpack_01 — {the snowpack} {will be} {Schneedecke01§wo_NO} {prone to triggering} {where}"'
+  - 'option "Snowpack_02 — {Schneedecke02§oft2_NO} {new snow is lying} {often} {on} {substrate}"'
+  - 'option "Snowpack_03 — {snowpack the} {type of snow surface}"'
+  - 'option "Snowpack_04 — {weather conditions when} {evolution of the snowpack} {snowpack} {snowpack where} {where/how} {elevation snowpack}"'
+  - 'option "Snowpack_05 — {as a consequence of} {temperatures} {comma and} {weather conditions} {and} {wind direction} {consequences snowpack}"'
+  - 'option "Snowpack_07 — {proof} {and proof} {confirm/confirmed} {this situation}"'
+  - 'option "Snowpack_08 — {these conditions} {will facilitate/prevent} {stability evolution snowpack} {time} {type of slope/elevation/regions/how}"'
+  - 'option "This_applies_01 — {Dies_NO} {weather event} {this applies} {type of slope/elevation} {as well as} {in regions} {in regions} {and in regions}"'
+  - 'option "This_applies_02 — {this applies} {type of slope} {elevation ranges} {as well as} {type of slope} {elevation ranges}"'
+  - 'option "This_applies_03 — {this applies} {with load}"'
+  - 'option "This_applies_05 — {this applies} {in case of/below} {steep} {high-elevation} {aspects} {comma/and} {starting zones} {elevation/regions} {release}"'
+  - 'option "Weather_01 — {regions} {weather} {elevation} {point/colon}"'
+  - 'option "Weather_02 — {incorrect weather forecast} {where} {colon}"'
+  - 'option "Weather_03 — {snow} {has fallen} {regions}"'
+  - 'option "Weather_04 — {regions} {how much snow} {more in some localities} {has fallen} {above an elevation}"'
+  - 'option "Weather_05 — {the weather was} {temperature} {regions}"'
+  - 'option "Weather_06 — {wind} {how strong} {regions}"'
+  - 'option "Wet_snow_01 — {time} {why/where} {Nassschnee01§steigt_die_NO} {wie_stark2_NO} {increases} {danger} {how significant} {to level n} {on}"'
+  - 'option "Wet_snow_011 — {why/where} {Nassschnee011§nimmt_die_NO} {wie_stark1_NO} {decreases} {danger} {how significant} {to level n} {from} {time}"'
+  - 'option "Wet_snow_02 — {why/where/when} {how many} {avalanche size} {type of avalanche} {are} {possible} {Lawinenart5_NO} {above an elevation}"'
+  - 'option "Wet_snow_03 — {above an elevation} {avalanche size} {type of avalanche} {are} {possible} {Lawinenart5_NO}"'
+  - 'option "Wet_snow_05 — {the avalanche danger} {increase/decrease}"'
+  - 'option "Wet_snow_06 — {outgoing longwave radiation during the night} {will be/was} {quality} {Nassschnee06§ist_war_NO}"'
+  - 'option "Wet_snow_07 — {snow surface} {has frozen how} {and} {will soften quickly}"'
+  - 'option "Wet_snow_08 — {after a clear night} {quite} {favourable conditions} {where} {then increase}"'
+  - 'option "Wet_snow_09 — {when/why} {likelihood} {of avalanche type} {increase} {how significant} {where/elevation}"'
+  - 'option "Wet_snow_10 — {when} {then numerous} {type of avalanche} {possible}"'
+  - 'option "Wind_slabs_01 — {the} {characteristics wind slabs} {wind slabs} {of day} {characteristics wind slabs}"'
+  - 'option "Wind_slabs_02 — {characteristics of wind slabs} {characteristics wind slabs}"'
+  - 'option "Wind_slabs_04 — {characteristics of wind slabs} {are} {size} {triggering}"'
+  - 'option "Wind_slabs_06 — {when/why/where} {the wind slabs} {increase in size} {additionally} {when} {period}"'
+  - 'option "Wind_slabs_061 — {when} {the wind slabs} {increase in size} {additionally} {period}"'
+  - 'option "Wind_slabs_07 — {the wind} {will transport the snow}"'
+  - 'option "Wind_slabs_08 — {characteristics of wind slabs} {will form} {where}"'
+  - 'option "Wind_slabs_09 — {wie_gut_NO} {the} {various} {wind slabs} {have} {bonded} {how stable} {together}"'
+  - 'option "Wind_slabs_15 — {why} {characteristics wind slabs} {wind slabs} {will form/formed} {when} {where}"'
+  - 'option "Wind_slabs_16 — {when} {characteristics wind slabs} {wind slabs} {will form/formed} {where}"'
+  - 'option "Wind_slabs_17 — {where} {characteristics wind slabs} {wind slabs} {will form/formed}"'
+- heading "Search sentences" [level=2]
+- text: "Search:"
+- 'button "Search: Search sentence by prefix"':
+  - img
+- button "Search sentence by prefix":
+  - img
+- textbox
+- heading "Selected sentences" [level=2]
+- group:
+  - button "Copy sentence":
+    - img
+  - button "Paste sentence below":
+    - img
+  - button "Move sentence up" [disabled]:
+    - img
+  - button "Move sentence down" [disabled]:
+    - img
+  - button "Remove sentence":
+    - img
+  - text: Advice_08 — Maintaining distances between individuals and one-at-a-time descents are recommended.
+- button "Save":
+  - img
+  - text: ""
+- button "Copy sentences":
+  - img
+- button "Paste sentences":
+  - img
+- separator
+- list:
+  - listitem: textcat-ng
+  - listitem: /• Version v8\.0\.0-\d+-g56c6185, \d+-\d+-\d+/
+  - listitem: "• Tip: use mouse wheel and shift key to scroll horizontally"
+  - listitem:
+    - text: •
+    - link "gitlab.com/albina-euregio/textcat-ng":
+      - /url: https://gitlab.com/albina-euregio/textcat-ng
+  - listitem:
+    - text: •
+    - link "GPL v3":
+      - /url: https://gitlab.com/albina-euregio/textcat-ng/-/blob/master/LICENSE
+  - listitem:
+    - text: "• [Language:"
+    - 'combobox "[Language: ]"':
+      - option "de"
+      - option "en" [selected]
+      - option "fr"
+      - option "it"
+      - option "es"
+      - option "ca"
+      - option "oc"
+    - text: "]"
+  - listitem:
+    - text: "• [Region:"
+    - 'combobox "[Region: ]"':
+      - option
+      - option "Switzerland"
+      - option "Tyrol" [selected]
+      - option "South Tyrol"
+      - option "Trentino"
+      - option "Aran"
+      - option "Andorra"
+      - option "Carinthia"
+    - text: "]"
+  - listitem:
+    - text: • [
+    - checkbox "[ Show translations]"
+    - text: Show translations]

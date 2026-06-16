@@ -1,0 +1,227 @@
+- button ""
+- heading "Tyrol" [level=6]
+- heading "Venediger Group South" [level=2]
+- text: Playwright Strategic Mindset 
+- combobox:
+  - option [selected]
+  - option "High Uncertainty"
+  - option "Improving"
+  - option "Status Quo"
+  - option "Deteriorating"
+  - option "Persistent Unstable"
+  - option "Favorable"
+  - option "High Alert"
+  - option "Spring Diurnal"
+- paragraph:  This region can be edited.
+- button ""
+- button ""
+- button ""
+- button ""
+- button ""
+- button "" [disabled]
+- heading "No snow" [level=2]
+- switch "No snow"
+- main:
+  - tablist:
+    - tab " Avalanche problems ":
+      - button " Avalanche problems " [expanded]:
+        - heading " Avalanche problems" [level=2]
+        - button ""
+    - tabpanel:
+      - tablist:
+        - tab " low Wet snow SLAB ":
+          - button " low Wet snow SLAB " [expanded]:
+            - text: ""
+            - img "low"
+            - img "Wet snow"
+            - text: ""
+            - img:
+              - button
+              - button
+              - button
+              - button
+              - button
+              - button
+              - button
+              - button
+              - button "N"
+              - button "S"
+              - button "W"
+              - button "E"
+            - button ""
+        - tabpanel:
+          - text: Avalanche problem
+          - button "Decision tree"
+          - link "Feedback":
+            - /url: https://admin.avalanche.report/umfrage-entscheidungsbaum/en/
+          - img "New snow"
+          - img "Wind slab"
+          - img "Persistent weak layers"
+          - img "Wet snow"
+          - img "Gliding snow"
+          - img "Cornices"
+          - img "No distinct avalanche problem"
+          - text: Avalanche type
+          - button "SLAB"
+          - button "LOOSE"
+          - button "GLIDE" [disabled]
+          - text: Aspects
+          - img:
+            - button
+            - button
+            - button
+            - button
+            - button
+            - button
+            - button
+            - button
+            - button "N"
+            - button "S"
+            - button "W"
+            - button "E"
+          - text: Elevation
+          - checkbox "Below"
+          - text: Below
+          - spinbutton [disabled]
+          - text: m
+          - button "" [disabled]
+          - checkbox "Above"
+          - text: Above
+          - spinbutton [disabled]
+          - text: m
+          - button "" [disabled]
+          - text: Snowpack Stability
+          - slider: /\d+/
+          - listbox:
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+          - text: Frequency
+          - slider: /\d+/
+          - listbox:
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+          - text: Avalanche Size
+          - slider: /\d+/
+          - listbox:
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+            - option
+          - text: Danger Rating
+          - img "low"
+          - button ""
+          - button ""
+          - button ""
+          - button ""
+          - checkbox "(override danger rating)"
+          - text: (override danger rating) Matrix
+          - img: 5 4 3 2 1 Avalanche Size Frequency many some a few (nearly) none Refer to fair stability very poor 5 5 (4) 4 3 (4) 2 (3) 5 (4) 4 3 (4) 3 2 4 3 (4) 3 2 1 (2) poor 5 (4) 4 4 (3) 3 2 4 4 (3) 3 2 (3) 2 3 (4) 3 2 (3) 2 1 fair 4 (3) 3 (4) 3 (2) 2 1 (2) 3 (4) 3 2 (3) 2 1 (2) 3 2 (3) 2 (1) 1 (2) 1 Danger level 1 (Low) Refer to poor stability 5 4 3 2 1 5 4 3 2 1 Snowpack Stability
+    - tab " Description of avalanche danger":
+      - button " Description of avalanche danger" [expanded]:
+        - heading " Description of avalanche danger" [level=2]
+    - tabpanel:
+      - text: Special alert
+      - button ""
+      - button ""
+      - button ""
+      - textbox [disabled]
+      - button " Hide translations"
+      - text: DE
+      - textbox [disabled]
+      - text: FR
+      - textbox [disabled]
+      - text: IT
+      - textbox [disabled]
+      - text: ES
+      - textbox [disabled]
+      - text: CA
+      - textbox [disabled]
+      - text: OC
+      - textbox [disabled]
+      - text: Headline avalanche situation
+      - button ""
+      - button ""
+      - button ""
+      - textbox [disabled]: A great many small and medium-sized moist loose snow avalanches have been released by people as a consequence of warming during the day.
+      - button " Hide translations"
+      - text: DE
+      - textbox [disabled]: Mit der tageszeitlichen Erwärmung wurden sehr viele kleine und mittlere feuchte Lockerschneelawinen von Personen ausgelöst.
+      - text: FR
+      - textbox [disabled]: De très nombreuses avalanches de neige meuble humide de petite et moyenne taille ont été déclenchées par des personnes avec le réchauffement diurne.
+      - text: IT
+      - textbox [disabled]: Con il rialzo termico diurno, sono state distaccate in seguito al passaggio di persone moltissime valanghe di neve umida a debole coesione di piccole e medie dimensioni.
+      - text: ES
+      - textbox [disabled]: A consecuencia del aumento de la temperatura diurna se han desencadenado debido al paso de personas numerosas avalanchas de nieve húmeda sin cohesión de tamaño pequeño y mediano.
+      - text: CA
+      - textbox [disabled]: A conseqüència de l’augment de la temperatura diürna, s'han desencadenat pel pas de persones nombroses allaus de neu humida sense cohesió de mida petita i mitjana.
+      - text: OC
+      - textbox [disabled]: A conseqüéncia der aument dera temperatura diürna, s'an desencadenat peth pas de persones nombrosi lauegi de nhèu umida sense coesion de mida petita e mejana.
+      - text: Description of avalanche danger
+      - button ""
+      - button ""
+      - button ""
+      - button ""
+      - textbox [disabled]: The wind will be light to moderate for a temporary period in some localities. The danger of wet and gliding avalanches will increase during the day, reaching danger level 4 (high). As a consequence of warming during the day and the solar radiation, the likelihood of wet avalanches being released will increase significantly in particular on steep slopes below the tree line. The surface of the snowpack is hardly frozen at all and will already soften in the late morning. A clear night will be followed in the early morning by quite favourable conditions generally, but the danger of wet and gliding avalanches will increase later. During the morning as well, individual, then as the precipitation becomes heavier more wet avalanches are to be expected. On steep southeast, south and southwest facing slopes and at low and intermediate altitudes numerous medium-sized to large natural wet avalanches are to be expected as a consequence of warming. On sunny slopes a high danger of wet and gliding avalanches will be encountered over a wide area. As the temperature drops there will be a gradual decrease in the avalanche danger towards the evening.
+      - button " Show translations"
+    - tab " Photos ":
+      - button " Photos ":
+        - heading " Photos" [level=2]
+        - button ""
+    - tab " Snowpack structure":
+      - button " Snowpack structure" [expanded]:
+        - heading " Snowpack structure" [level=2]
+    - tabpanel:
+      - text: Danger patterns
+      - combobox:
+        - option [selected]
+        - 'option "dp.1: deep persistent weak layer"'
+        - 'option "dp.2: gliding avalanches"'
+        - 'option "dp.3: rain"'
+        - 'option "dp.4: cold following warm / warm following cold"'
+        - 'option "dp.5: snowfall after a long period of cold"'
+        - 'option "dp.6: cold, loose snow and wind"'
+        - 'option "dp.7: shallow snow next to deep snow"'
+        - 'option "dp.8: buried surface hoar"'
+        - 'option "dp.9: buried graupel"'
+        - 'option /dp\.\d+: springtime scenario/'
+      - combobox:
+        - option [selected]
+        - 'option "dp.1: deep persistent weak layer"'
+        - 'option "dp.2: gliding avalanches"'
+        - 'option "dp.3: rain"'
+        - 'option "dp.4: cold following warm / warm following cold"'
+        - 'option "dp.5: snowfall after a long period of cold"'
+        - 'option "dp.6: cold, loose snow and wind"'
+        - 'option "dp.7: shallow snow next to deep snow"'
+        - 'option "dp.8: buried surface hoar"'
+        - 'option "dp.9: buried graupel"'
+        - 'option /dp\.\d+: springtime scenario/'
+      - text: Description of snowpack structure
+      - button ""
+      - button ""
+      - button ""
+      - button ""
+      - textbox [disabled]: Maintaining distances between individuals and one-at-a-time descents are recommended.
+      - button " Show translations"
+    - tab " Tendency":
+      - button " Tendency":
+        - heading " Tendency" [level=2]
