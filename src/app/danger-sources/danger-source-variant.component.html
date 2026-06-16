@@ -361,6 +361,7 @@
           [valueForCompare]="comparedVariant()"
           (valueChange)="updateVariantOnServer()"
           [labelI18n]="'dangerSources.create.label.#'"
+          [diminishValues]="{ terrainTypes: terrainTypeDiminish(), dangerSigns: dangerSignDiminish() }"
         />
       </accordion-group>
 

@@ -157,6 +157,7 @@
               (valueChange)="onFieldChange()"
               [labelI18n]="valueI18n"
               [widget]="widget?.widget"
+              [diminishValues]="diminishValues()[x.key]"
             />
           }
         } @else if (inner.type === "array" && inner.def.element.type === "enum") {
@@ -189,6 +190,7 @@
               (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); onFieldChange()"
               [labelI18n]="valueI18n"
               [widget]="widget?.widget"
+              [diminishValues]="diminishValues()[x.key]"
             />
           }
         } @else if (inner.type === "array" && zodUtil.isEnumWithOther(inner.def.element)) {

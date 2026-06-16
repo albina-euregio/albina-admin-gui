@@ -64,6 +64,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   readonly disabled = input<boolean>(false);
   readonly displayOnly = input<boolean>(false);
+  readonly diminishValues = input<Record<string, Partial<Record<string, boolean>>>>({});
   readonly zodType = input<T>();
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
