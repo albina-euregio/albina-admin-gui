@@ -493,9 +493,11 @@
         "avActivityComment": "Descripció del perill d'allaus",
         "travelAdvisoryHighlights": "Headline travel advisory",
         "travelAdvisoryComment": "Description of travel advisory",
+        "snowpackStructureHighlights": "Titular estructura mantell",
         "snowpackStructureComment": "Descripció de l'estructura del mantell",
         "dangerPatterns": "Patrons de perill",
         "tendencyComment": "Descripció de la tendència",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Sinopsi meteorològica",
         "notes": "Notes",
         "noSnow": "Sense neu"
@@ -786,7 +788,7 @@
       },
       "table": {
         "name": "Nom",
-        "username": "Nom d'usuari",
+        "userName": "Nom d'usuari",
         "password": "Contrasenya",
         "publishAt5PM": "Publica a les 5 PM",
         "publishAt8AM": "Publica a les 8 AM",
@@ -810,63 +812,16 @@
       },
       "table": {
         "general": {
-          "title": "General",
-          "id": "ID"
+          "title": "General"
         },
         "publication": {
-          "title": "Publicació",
-          "publishBulletins": "Publicar la predicció d'allaus",
-          "publishBlogs": "Publicar entrades al blog",
-          "createCaamlV5": "Crear CAAML v5",
-          "createCaamlV6": "Crear CAAML v6",
-          "createJson": "Crear JSON",
-          "createMaps": "Crear mapes",
-          "createPdf": "Crear PDF",
-          "sendEmails": "Enviar correus",
-          "createSimpleHtml": "Crear HTML simple",
-          "sendTelegramMessages": "Enviar missatges de Telegram",
-          "sendWhatsAppMessages": "Enviar missatges de WhatsApp",
-          "sendPushNotifications": "Enviar notificacions push",
-          "pdfColor": "PDF color",
-          "emailColor": "Email color",
-          "pdfMapYAmPm": "Y per al mapa PDF (am/pm)",
-          "pdfMapYFd": "Y per al mapa PDF (fd)",
-          "pdfMapWidthAmPm": "Amplada del mapa per a PDF (am/pm)",
-          "pdfMapWidthFd": "Amplada del mapa per a PDF (fd)",
-          "pdfMapHeight": "Alçada del mapa per a PDF",
-          "pdfFooterLogo": "Logotip per al peu de pàgina de PDF",
-          "pdfFooterLogoColorPath": "Logotip per al peu de pàgina de PDF (color)",
-          "pdfFooterLogoBwPath": "Logotip per al peu de pàgina de PDF (bw)",
-          "simpleHtmlTemplateName": "Plantilla HTML senzilla",
-          "geoDataDirectory": "Directori de geodades",
-          "mapLogoColorPath": "Logotip per al mapa (color)",
-          "mapLogoBwPath": "Logotip per al mapa (bw)",
-          "mapLogoPosition": "Posició del logotip per al mapa",
-          "imageColorbarColorPath": "Barra de colors (color)",
-          "imageColorbarBwPath": "Barra de colors (b/w)",
-          "enabledLanguages": "Idiomes activats",
-          "ttsLanguages": "Idiomes de text a veu"
+          "title": "Publicació"
         },
         "components": {
-          "title": "Components",
-          "enableDangerSources": "Habilitar les fonts de perill",
-          "enableIncidents": "Enable incidents",
-          "enableObservations": "Habilitar les observacions",
-          "enableModelling": "Habilitar la modelització",
-          "enableWeatherbox": "Activar caixa meteorològica",
-          "enableIcon": "Enable weather",
-          "enableLineaExport": "Activar l'exportació LINEA"
+          "title": "Components"
         },
         "configuration": {
-          "title": "Configuració",
-          "showMatrix": "Mostrar la matriu",
-          "enableMediaFile": "Activar el fitxer multimèdia",
-          "enableStrategicMindset": "Habilitar les predisposicions mentals estratègiques",
-          "enableStressLevel": "Habilitar el nivell d'estrès",
-          "enableAvalancheProblemCornices": "Habilitar el problema d'allaus CORNISES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar el problema d'allaus CAP PROBLEMA D'ALLAUS EVIDENT",
-          "enableGeneralHeadline": "Habilitar el títol general per als butlletins",
-          "enableWeatherTextField": "Habilitar l'entrada de text per a la sinopsi meteorològica"
+          "title": "Configuració"
         },
         "languageConfiguration": {
           "title": "Configuració de llengües"
@@ -1730,6 +1685,7 @@
     "locationMap": "Location Map",
     "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
     "next": "Següent",
+    "overview": "Overview",
     "noVictims": "No victims registered. Click \"Add Victim\" to add a victim.",
     "point": "Point",
     "polygon": "Polygon",
@@ -1739,6 +1695,7 @@
     "removeVictim": "Remove Victim",
     "required": "Required",
     "showMandatoryFieldsOnly": "Required only",
+    "displayOnly": "Reading Mode",
     "valid": "Valid",
     "victimName": "Victim {{name}}",
     "saveStateIdle": "No unsaved changes",
@@ -2340,7 +2297,8 @@
     "Austria": "Àustria",
     "Germany": "Alemanya",
     "Italy": "Itàlia",
-    "Switzerland": "Suïssa"
+    "Switzerland": "Suïssa",
+    "Other": "Other"
   },
   "workingAtTime": {
     "Yes": "Si",

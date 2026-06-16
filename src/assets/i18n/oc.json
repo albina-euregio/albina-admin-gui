@@ -493,9 +493,11 @@
         "avActivityComment": "Descripcion deth perilh de lauegi",
         "travelAdvisoryHighlights": "Headline travel advisory",
         "travelAdvisoryComment": "Description of travel advisory",
+        "snowpackStructureHighlights": "Estructura deth celh de nhèu",
         "snowpackStructureComment": "Descripcion deth celh de nhèu",
         "dangerPatterns": "Patrons de perilh",
         "tendencyComment": "Descripcion de tendéncia",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Sinopsi deth temps",
         "notes": "Nòtes",
         "noSnow": "Sense nhèu"
@@ -786,7 +788,7 @@
       },
       "table": {
         "name": "Nòm",
-        "username": "Nòm d'usatgèr",
+        "userName": "Nòm d'usatgèr",
         "password": "Password",
         "publishAt5PM": "Publicar as 5 PM",
         "publishAt8AM": "Publicar as 8 AM",
@@ -810,63 +812,16 @@
       },
       "table": {
         "general": {
-          "title": "Generau",
-          "id": "ID"
+          "title": "Generau"
         },
         "publication": {
-          "title": "Publicacion",
-          "publishBulletins": "Publicar era prediccion de lauegi",
-          "publishBlogs": "Publicar entrades de blòg",
-          "createCaamlV5": "Crear CAAML v5",
-          "createCaamlV6": "Crear CAAML v6",
-          "createJson": "Crear JSON",
-          "createMaps": "Crear mapes",
-          "createPdf": "Crear PDF",
-          "sendEmails": "Corrèus electronics enviadi",
-          "createSimpleHtml": "Crear HTML simple",
-          "sendTelegramMessages": "Enviar messatges de Telegram",
-          "sendWhatsAppMessages": "Enviar messatges de WhatsApp",
-          "sendPushNotifications": "Enviar notificacions push",
-          "pdfColor": "PDF color",
-          "emailColor": "Email color",
-          "pdfMapYAmPm": "Y entà mapa PDF (am/pm)",
-          "pdfMapYFd": "Y entà mapa PDF (fd)",
-          "pdfMapWidthAmPm": "Amplada de mapa entà PDF (am/pm)",
-          "pdfMapWidthFd": "Amplada de map entà PDF (fd)",
-          "pdfMapHeight": "Nautada de mapa entà PDF",
-          "pdfFooterLogo": "Logotip entath pè de pagina de PDF",
-          "pdfFooterLogoColorPath": "Logotip entath pè de pagina de PDF (color)",
-          "pdfFooterLogoBwPath": "Logotip entath pè de pagina de PDF (bw)",
-          "simpleHtmlTemplateName": "Plantilha HTML simpla",
-          "geoDataDirectory": "Directòri de geodonades",
-          "mapLogoColorPath": "Logotip entath mapa (color)",
-          "mapLogoBwPath": "Logotip entath mapa (bw)",
-          "mapLogoPosition": "Posicion deth logotip entath mapa",
-          "imageColorbarColorPath": "Barra de colors (color)",
-          "imageColorbarBwPath": "Barra de colors (bw)",
-          "enabledLanguages": "Lengües activades",
-          "ttsLanguages": "Idiòmes de tèxte a votz"
+          "title": "Publicacion"
         },
         "components": {
-          "title": "Components",
-          "enableDangerSources": "Abilitar hònts de perilh",
-          "enableIncidents": "Enable incidents",
-          "enableObservations": "Abilitar observacions",
-          "enableModelling": "Abilitar modelitzacion",
-          "enableWeatherbox": "Abilitar caisha meteorologica",
-          "enableIcon": "Enable weather",
-          "enableLineaExport": "Activar era exportacion LINEA"
+          "title": "Components"
         },
         "configuration": {
-          "title": "Configuracion",
-          "showMatrix": "Mostrar era mairitz",
-          "enableMediaFile": "Abilitar eth fichèr multimèdia",
-          "enableStrategicMindset": "Abilitar predisposicion mentau",
-          "enableStressLevel": "Abilitar nivèu estrés",
-          "enableAvalancheProblemCornices": "Abilitar eth problèma de lauegi CORNISES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Abilitar problèma de lauegi CAP PROBLÈMA DE LAUEGI EVIDENT",
-          "enableGeneralHeadline": "Abilitar títol globau generau des bulletins",
-          "enableWeatherTextField": "Abilitar entrada de tèxte entara sinopsi meteorologica"
+          "title": "Configuracion"
         },
         "languageConfiguration": {
           "title": "Configuracion de lengües"
@@ -1730,6 +1685,7 @@
     "locationMap": "Location Map",
     "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
     "next": "Següent",
+    "overview": "Overview",
     "noVictims": "No victims registered. Click \"Add Victim\" to add a victim.",
     "point": "Point",
     "polygon": "Polygon",
@@ -1739,6 +1695,7 @@
     "removeVictim": "Remove Victim",
     "required": "Required",
     "showMandatoryFieldsOnly": "Required only",
+    "displayOnly": "Reading Mode",
     "valid": "Valid",
     "victimName": "Victim {{name}}",
     "saveStateIdle": "No unsaved changes",
@@ -2340,7 +2297,8 @@
     "Austria": "Àustria",
     "Germany": "Alemania",
     "Italy": "Itàlia",
-    "Switzerland": "Soïssa"
+    "Switzerland": "Soïssa",
+    "Other": "Other"
   },
   "workingAtTime": {
     "Yes": "Òc",

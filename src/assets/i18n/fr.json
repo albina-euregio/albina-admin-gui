@@ -493,9 +493,11 @@
         "avActivityComment": "Description du danger d'avalanche",
         "travelAdvisoryHighlights": "Titre de la recommandation",
         "travelAdvisoryComment": "Description de la recommandation",
+        "snowpackStructureHighlights": "Titre manteau neigeux",
         "snowpackStructureComment": "Description structure du manteau neigeux",
         "dangerPatterns": "Modèle de risques",
         "tendencyComment": "Description de la tendance",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Bulletin météo",
         "notes": "Notes",
         "noSnow": "Pas de neige"
@@ -786,7 +788,7 @@
       },
       "table": {
         "name": "Nom",
-        "username": "Nom d'utilisateur",
+        "userName": "Nom d'utilisateur",
         "password": "Mot de passe",
         "publishAt5PM": "Publier à 17h00",
         "publishAt8AM": "Publier à 08h00",
@@ -810,63 +812,16 @@
       },
       "table": {
         "general": {
-          "title": "Général",
-          "id": "ID"
+          "title": "Général"
         },
         "publication": {
-          "title": "Publication",
-          "publishBulletins": "Publier prévision d'avalanches",
-          "publishBlogs": "Publier articles de blog",
-          "createCaamlV5": "Créer CAAML v5",
-          "createCaamlV6": "Créer CAAML v6",
-          "createJson": "Créer JSON",
-          "createMaps": "Créer cartes",
-          "createPdf": "Créer PDF",
-          "sendEmails": "Envoyer mails",
-          "createSimpleHtml": "Créer HTML simple",
-          "sendTelegramMessages": "Envoyer messages Telegram",
-          "sendWhatsAppMessages": "Envoyer messages WhatsApp",
-          "sendPushNotifications": "Envoyer notifications push",
-          "pdfColor": "Couleur PDF",
-          "emailColor": "Couleur Mail",
-          "pdfMapYAmPm": "Y pour carte PDF (am/pm)",
-          "pdfMapYFd": "Y pour carte PDF (fd)",
-          "pdfMapWidthAmPm": "Largeur de carte pour PDF (am/pm)",
-          "pdfMapWidthFd": "Largeur de carte pour PDF (fd)",
-          "pdfMapHeight": "Hauteur de carte pour PDF",
-          "pdfFooterLogo": "Logo pour pied de page PDF",
-          "pdfFooterLogoColorPath": "Logo pour pied de page PDF (couleur)",
-          "pdfFooterLogoBwPath": "Logo pour pied de page PDF (noir et blanc)",
-          "simpleHtmlTemplateName": "Modèle HTML simple",
-          "geoDataDirectory": "Répertoire géodonnées",
-          "mapLogoColorPath": "Logo pour carte (couleur)",
-          "mapLogoBwPath": "Logo pour carte (noir et blanc)",
-          "mapLogoPosition": "Position du logo pour carte",
-          "imageColorbarColorPath": "Barre de couleurs (couleur)",
-          "imageColorbarBwPath": "Barre de couleurs (noir et blanc)",
-          "enabledLanguages": "Langues activées",
-          "ttsLanguages": "Langues text-to-speech"
+          "title": "Publication"
         },
         "components": {
-          "title": "Composantes",
-          "enableDangerSources": "Activer sources de dangers",
-          "enableIncidents": "Enable incidents",
-          "enableObservations": "Activer observations",
-          "enableModelling": "Activer modélisation",
-          "enableWeatherbox": "Activer boîte météo",
-          "enableIcon": "Enable weather",
-          "enableLineaExport": "Activer export LINEA"
+          "title": "Composantes"
         },
         "configuration": {
-          "title": "Configuration",
-          "showMatrix": "Afficher matrice",
-          "enableMediaFile": "Activer fichier média",
-          "enableStrategicMindset": "Activer état d'esprit stratégique",
-          "enableStressLevel": "Activer niveau de stress",
-          "enableAvalancheProblemCornices": "Activer situation avalancheuse CONGÈRES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Activer situation avalancheuse PAS DE SITUATION PARTICULIÈRE",
-          "enableGeneralHeadline": "Activer titre général pour bulletins",
-          "enableWeatherTextField": "Activer saisie de texte pour bulletin météo"
+          "title": "Configuration"
         },
         "languageConfiguration": {
           "title": "Configuration langue"
@@ -1730,6 +1685,7 @@
     "locationMap": "Location Map",
     "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
     "next": "Suivant",
+    "overview": "Overview",
     "noVictims": "No victims registered. Click \"Add Victim\" to add a victim.",
     "point": "Point",
     "polygon": "Polygon",
@@ -1739,6 +1695,7 @@
     "removeVictim": "Remove Victim",
     "required": "Required",
     "showMandatoryFieldsOnly": "Required only",
+    "displayOnly": "Reading Mode",
     "valid": "Valid",
     "victimName": "Victim {{name}}",
     "saveStateIdle": "No unsaved changes",
@@ -2340,7 +2297,8 @@
     "Austria": "Autriche",
     "Germany": "Allemagne",
     "Italy": "Italie",
-    "Switzerland": "Suisse"
+    "Switzerland": "Suisse",
+    "Other": "Other"
   },
   "workingAtTime": {
     "Yes": "Oui",

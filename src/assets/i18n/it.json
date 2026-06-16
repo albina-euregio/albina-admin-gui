@@ -493,9 +493,11 @@
         "avActivityComment": "Descrizione pericolo valanghe",
         "travelAdvisoryHighlights": "Titolo consigli su itinerari e gestione terreno",
         "travelAdvisoryComment": "Descrizione consigli su itinerari e gestione terreno",
+        "snowpackStructureHighlights": "Titolo struttura manto nevoso",
         "snowpackStructureComment": "Descrizione struttura manto nevoso",
         "dangerPatterns": "Situazioni tipo",
         "tendencyComment": "Descrizione della tendenza",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Panoramica meteo",
         "notes": "Commenti",
         "noSnow": "Senza neve"
@@ -786,7 +788,7 @@
       },
       "table": {
         "name": "Nome",
-        "username": "Nome utente",
+        "userName": "Nome utente",
         "password": "Password",
         "publishAt5PM": "Pubblica alle 17:00",
         "publishAt8AM": "Publica alle 08:00",
@@ -810,63 +812,16 @@
       },
       "table": {
         "general": {
-          "title": "In generale",
-          "id": "ID"
+          "title": "In generale"
         },
         "publication": {
-          "title": "Pubblicazione",
-          "publishBulletins": "Publica bollettino valanghe",
-          "publishBlogs": "Publica i post blog",
-          "createCaamlV5": "Crea CAAML v5",
-          "createCaamlV6": "Crea CAAML v6",
-          "createJson": "Crea JSON",
-          "createMaps": "Crea mappe",
-          "createPdf": "Crea PDF",
-          "sendEmails": "Invia email",
-          "createSimpleHtml": "Crea HTML semplici",
-          "sendTelegramMessages": "Invia messaggi via Telegram",
-          "sendWhatsAppMessages": "Invia messaggi WhatsApp",
-          "sendPushNotifications": "Invia notifiche push",
-          "pdfColor": "PDF a colori",
-          "emailColor": "Email a colori",
-          "pdfMapYAmPm": "Y per mappa PDF (am/pm)",
-          "pdfMapYFd": "Y per mappa PDF (fd)",
-          "pdfMapWidthAmPm": "Larghezza mappa per PDF (am/pm)",
-          "pdfMapWidthFd": "Larghezza mappa per PDF (fd)",
-          "pdfMapHeight": "Altezza mappa per PDF",
-          "pdfFooterLogo": "Logo per piè di pagina PDF",
-          "pdfFooterLogoColorPath": "Logo per piè di pagina PDF (a colori)",
-          "pdfFooterLogoBwPath": "Logo per piè di pagina PDF (bianco/nero)",
-          "simpleHtmlTemplateName": "Template HTML semplice",
-          "geoDataDirectory": "Cartella geodati",
-          "mapLogoColorPath": "Logo per mappa (a colori)",
-          "mapLogoBwPath": "Logo per mappa (bianco/nero)",
-          "mapLogoPosition": "Posizione del logo nella mappa",
-          "imageColorbarColorPath": "Barra colori (a colori)",
-          "imageColorbarBwPath": "Barra colori (bianco/nero)",
-          "enabledLanguages": "Attiva lingue",
-          "ttsLanguages": "lingue text-to-speech"
+          "title": "Pubblicazione"
         },
         "components": {
-          "title": "Componenti",
-          "enableDangerSources": "Attiva fonti di pericolo",
-          "enableIncidents": "Enable incidents",
-          "enableObservations": "Attiva osservazioni",
-          "enableModelling": "Attiva modellazione",
-          "enableWeatherbox": "Attiva box meteo",
-          "enableIcon": "Attiva informazioni meteo",
-          "enableLineaExport": "Abilita l’esportazione LINEA"
+          "title": "Componenti"
         },
         "configuration": {
-          "title": "Configurazione",
-          "showMatrix": "Mostra matrice",
-          "enableMediaFile": "Attiva file media",
-          "enableStrategicMindset": "Attiva mindset strategico",
-          "enableStressLevel": "Attiva livello di stress",
-          "enableAvalancheProblemCornices": "Attivare problema tipico valanghivo CORNICI",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Attiva problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE",
-          "enableGeneralHeadline": "Attiva titolo generale per tutti i bollettini",
-          "enableWeatherTextField": "Attiva inserire testo per panoramica meteo"
+          "title": "Configurazione"
         },
         "languageConfiguration": {
           "title": "Configurazione lingue"
@@ -1730,6 +1685,7 @@
     "locationMap": "Location Map",
     "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
     "next": "successivo",
+    "overview": "Overview",
     "noVictims": "No victims registered. Click \"Add Victim\" to add a victim.",
     "point": "Point",
     "polygon": "Polygon",
@@ -1739,6 +1695,7 @@
     "removeVictim": "Remove Victim",
     "required": "Required",
     "showMandatoryFieldsOnly": "Required only",
+    "displayOnly": "Reading Mode",
     "valid": "Valid",
     "victimName": "Victim {{name}}",
     "saveStateIdle": "No unsaved changes",
@@ -2340,7 +2297,8 @@
     "Austria": "Austria",
     "Germany": "Germania",
     "Italy": "Italia",
-    "Switzerland": "Svizzera"
+    "Switzerland": "Svizzera",
+    "Other": "Other"
   },
   "workingAtTime": {
     "Yes": "Sì",

@@ -493,9 +493,11 @@
         "avActivityComment": "Descripción del peligro de aludes",
         "travelAdvisoryHighlights": "Headline travel advisory",
         "travelAdvisoryComment": "Description of travel advisory",
+        "snowpackStructureHighlights": "Titular de la estructura del manto",
         "snowpackStructureComment": "Descripción de la estructura del manto",
         "dangerPatterns": "Patrón de peligro",
         "tendencyComment": "Descripción de la tendencia",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Sinopsis del tiempo",
         "notes": "Notas",
         "noSnow": "Sin nieve"
@@ -786,7 +788,7 @@
       },
       "table": {
         "name": "Nombre",
-        "username": "Nombre de usuario",
+        "userName": "Nombre de usuario",
         "password": "Password",
         "publishAt5PM": "Publicar a las 5PM",
         "publishAt8AM": "Publicar a las 8PM",
@@ -810,63 +812,16 @@
       },
       "table": {
         "general": {
-          "title": "General",
-          "id": "ID"
+          "title": "General"
         },
         "publication": {
-          "title": "Publicación",
-          "publishBulletins": "Publicar la predicción de aludes",
-          "publishBlogs": "Publicar las entradas de blog",
-          "createCaamlV5": "Crear CAAML v5",
-          "createCaamlV6": "Crear CAAML v6",
-          "createJson": "Crear JSON",
-          "createMaps": "Crear mapas",
-          "createPdf": "Crear PDF",
-          "sendEmails": "Enviar correos",
-          "createSimpleHtml": "Crear HTML simple",
-          "sendTelegramMessages": "Enviar mensajes de telegram",
-          "sendWhatsAppMessages": "Enviar mensajes de WhatsApp",
-          "sendPushNotifications": "Enviar notificaciones push",
-          "pdfColor": "PDF color",
-          "emailColor": "E-mail color",
-          "pdfMapYAmPm": "Y para el mapa PDF (am/pm)",
-          "pdfMapYFd": "Y para el mapa PDF (fd)",
-          "pdfMapWidthAmPm": "Anchura del mapa para PDF (am/pm)",
-          "pdfMapWidthFd": "Anchura del mapa para PDF (fd)",
-          "pdfMapHeight": "Altura del mapa para PDF",
-          "pdfFooterLogo": "Logotipo para el pie de página del PDF",
-          "pdfFooterLogoColorPath": "Logotipo para el pie de página del PDF (color)",
-          "pdfFooterLogoBwPath": "Logotipo para el pie de página del PDF (bw)",
-          "simpleHtmlTemplateName": "Plantilla HTML simple",
-          "geoDataDirectory": "Directorio de geodatos",
-          "mapLogoColorPath": "Logotipo para el mapa (color)",
-          "mapLogoBwPath": "Logotipo para el mapa (bw)",
-          "mapLogoPosition": "Posición del logotipo para el mapa",
-          "imageColorbarColorPath": "Barra de colores (color)",
-          "imageColorbarBwPath": "Barra de colores (b/w)",
-          "enabledLanguages": "Idiomas habilitados",
-          "ttsLanguages": "Idiomas de texto a voz"
+          "title": "Publicación"
         },
         "components": {
-          "title": "Componentes",
-          "enableDangerSources": "Habilitar fuentes de peligro",
-          "enableIncidents": "Enable incidents",
-          "enableObservations": "Habilitar observaciones",
-          "enableModelling": "Habilitar modelado",
-          "enableWeatherbox": "Habilitar caja meteorológica",
-          "enableIcon": "Enable weather",
-          "enableLineaExport": "Activar exportación LINEA"
+          "title": "Componentes"
         },
         "configuration": {
-          "title": "Configuración",
-          "showMatrix": "Mostrar matriz",
-          "enableMediaFile": "Habilitar ficheros multimedia",
-          "enableStrategicMindset": "Habilitar la predisposición mental estratégica",
-          "enableStressLevel": "Habilitar el nivel de estrés",
-          "enableAvalancheProblemCornices": "Habilitar problema de alud CORNISAS",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar problema de alud NINGÚN PROBLEMA DE ALUDES EVIDENTE",
-          "enableGeneralHeadline": "Habilitar título general para boletines",
-          "enableWeatherTextField": "Habilitar la entrada de texto para la sinopsis del tiempo"
+          "title": "Configuración"
         },
         "languageConfiguration": {
           "title": "Configuración del idioma"
@@ -1730,6 +1685,7 @@
     "locationMap": "Location Map",
     "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
     "next": "Siguiente",
+    "overview": "Overview",
     "noVictims": "No victims registered. Click \"Add Victim\" to add a victim.",
     "point": "Point",
     "polygon": "Polygon",
@@ -1739,6 +1695,7 @@
     "removeVictim": "Remove Victim",
     "required": "Required",
     "showMandatoryFieldsOnly": "Required only",
+    "displayOnly": "Reading Mode",
     "valid": "Valid",
     "victimName": "Victim {{name}}",
     "saveStateIdle": "No unsaved changes",
@@ -2340,7 +2297,8 @@
     "Austria": "Austria",
     "Germany": "Alemania",
     "Italy": "Italia",
-    "Switzerland": "Suiza"
+    "Switzerland": "Suiza",
+    "Other": "Other"
   },
   "workingAtTime": {
     "Yes": "Si",
