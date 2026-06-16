@@ -195,7 +195,7 @@ export const GlideAvalancheSchema = z.object({
   snowHeightLowerLimit: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
   snowHeightUpperLimit: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
   snowHeightAverage: z.number().register(widgetRegistry, { unit: "cm" }).nullish(),
-  zeroDegreeIsotherm: z.boolean().nullish(),
+  zeroDegreeIsotherm: z.boolean().register(widgetRegistry, { widget: "yes-no" }).nullish(),
 });
 
 export const SlabSchema = z.object({
@@ -229,10 +229,10 @@ export const WeakLayerSchema = z.object({
     .nullish(),
   weakLayerGrainSizeUpperLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
   weakLayerGrainSizeLowerLimit: z.number().register(widgetRegistry, { unit: "mm", class: "col-6" }).nullish(),
-  weakLayerPersistent: z.boolean().nullish(),
+  weakLayerPersistent: z.boolean().register(widgetRegistry, { widget: "yes-no" }).nullish(),
   weakLayerThickness: z.enum(Thickness).register(widgetRegistry, { valueI18n: "thickness.#" }).nullish(),
   weakLayerStrength: z.enum(Characteristic).register(widgetRegistry, { valueI18n: "characteristic.#" }).nullish(),
-  weakLayerWet: z.boolean().nullish(),
+  weakLayerWet: z.boolean().register(widgetRegistry, { widget: "yes-no" }).nullish(),
   weakLayerCrustAbove: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
   weakLayerCrustBelow: z.enum(WeakLayerCrust).register(widgetRegistry, { valueI18n: "weakLayerCrust.#" }).nullish(),
   weakLayerPosition: z.enum(SnowpackPosition).register(widgetRegistry, { valueI18n: "snowpackPosition.#" }).nullish(),
@@ -249,15 +249,15 @@ export const LooseAvalancheSchema = z.object({
 });
 
 export const CharacteristicsSchema = z.object({
-  hasDaytimeDependency: z.boolean().nullish(),
-  dangerIncreaseWithElevation: z.boolean().nullish(),
+  hasDaytimeDependency: z.boolean().register(widgetRegistry, { widget: "yes-no" }).nullish(),
+  dangerIncreaseWithElevation: z.boolean().register(widgetRegistry, { widget: "yes-no" }).nullish(),
   highestDangerAspect: z
     .enum([Aspect.N, Aspect.E, Aspect.S, Aspect.W])
     .register(widgetRegistry, { valueI18n: "aspect.#" })
     .nullish(),
   dangerPeak: z.enum(Daytime).register(widgetRegistry, { valueI18n: "detailedDaytime.#" }).nullish(),
   slopeGradient: z.enum(SlopeGradient).nullish(),
-  runoutIntoGreen: z.boolean().nullish(),
+  runoutIntoGreen: z.boolean().register(widgetRegistry, { widget: "yes-no" }).nullish(),
   naturalRelease: z.enum(Probability).register(widgetRegistry, { valueI18n: "probability.#" }).nullish(),
   dangerSigns: z.enum(DangerSign).array().register(widgetRegistry, { valueI18n: "dangerSign.#" }).nullish(),
   dangerSpotRecognizability: z
@@ -265,7 +265,7 @@ export const CharacteristicsSchema = z.object({
     .register(widgetRegistry, { valueI18n: "recognizability.#" })
     .nullish(),
   remoteTriggering: z.enum(Probability).register(widgetRegistry, { valueI18n: "probability.#" }).nullish(),
-  penetrateDeepLayers: z.boolean().nullish(),
+  penetrateDeepLayers: z.boolean().register(widgetRegistry, { widget: "yes-no" }).nullish(),
   terrainTypes: z.enum(TerrainType).array().register(widgetRegistry, { valueI18n: "terrainType.#" }).nullish(),
 });
 
