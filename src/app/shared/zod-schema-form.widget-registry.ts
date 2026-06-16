@@ -38,6 +38,7 @@ export interface WidgetType {
     | "select"
     | "textarea"
     | "rich-text"
+    | "rich-text-multilang"
     | "none"
     | "date"
     | "aspect"

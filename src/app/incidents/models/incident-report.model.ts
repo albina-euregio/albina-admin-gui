@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
+import { LangTextsSchema } from "../../models/text.model";
 import { widgetRegistry } from "../../shared/zod-schema-form.widget-registry";
 import { enumWithOther, not, withShowIf } from "../../shared/zod-util";
 
@@ -458,17 +459,17 @@ export const IncidentAnalysisSchema = z.object({
   recentLoading: z.enum(["Present", "Absent", "Unknown"]).nullish(),
   criticalWarming: z.enum(["Present", "Absent", "Unknown"]).nullish(),
   incidentLedePublic: z.boolean().nullish(),
-  incidentLede: z.string().register(widgetRegistry, { widget: "rich-text" }).nullish(),
+  incidentLede: LangTextsSchema.register(widgetRegistry, { widget: "rich-text-multilang" }).nullish(),
   incidentDescriptionPublic: z.boolean().nullish(),
-  incidentDescription: z.string().register(widgetRegistry, { widget: "rich-text" }).nullish(),
+  incidentDescription: LangTextsSchema.register(widgetRegistry, { widget: "rich-text-multilang" }).nullish(),
   weatherDescriptionPublic: z.boolean().nullish(),
-  weatherDescription: z.string().register(widgetRegistry, { widget: "rich-text" }).nullish(),
+  weatherDescription: LangTextsSchema.register(widgetRegistry, { widget: "rich-text-multilang" }).nullish(),
   avalancheDescriptionPublic: z.boolean().nullish(),
-  avalancheDescription: z.string().register(widgetRegistry, { widget: "rich-text" }).nullish(),
+  avalancheDescription: LangTextsSchema.register(widgetRegistry, { widget: "rich-text-multilang" }).nullish(),
   snowpackDescriptionPublic: z.boolean().nullish(),
-  snowpackDescription: z.string().register(widgetRegistry, { widget: "rich-text" }).nullish(),
+  snowpackDescription: LangTextsSchema.register(widgetRegistry, { widget: "rich-text-multilang" }).nullish(),
   takeAwaysPublic: z.boolean().nullish(),
-  takeAways: z.string().register(widgetRegistry, { widget: "rich-text" }).nullish(),
+  takeAways: LangTextsSchema.register(widgetRegistry, { widget: "rich-text-multilang" }).nullish(),
   incidentAnalysisComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 

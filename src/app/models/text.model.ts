@@ -1,12 +1,12 @@
 import { z } from "zod/v4";
 
-export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"] as const);
+export const LANGUAGES = Object.freeze(["de", "en", "it", "fr", "es", "ca", "oc"] as const);
 
 export const LanguageSchema = z.enum(LANGUAGES);
 
 export type AlbinaLanguage = z.infer<typeof LanguageSchema>;
 
-export const LangTextsSchema = z.record(LanguageSchema, z.string());
+export const LangTextsSchema = z.record(LanguageSchema, z.string().nullish());
 export type LangTexts = z.infer<typeof LangTextsSchema>;
 
 export const TextSchema = z.object({

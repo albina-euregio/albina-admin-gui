@@ -90,7 +90,14 @@
           }
         </div>
         @if (displayOnly()) {
-          <app-zod-display [zodType]="zodType" [value]="value()[key]" [valueI18n]="valueI18n" />
+          @if (widget?.widget === "rich-text-multilang") {
+            <div
+              class="form-control-plaintext ps-0"
+              [innerHTML]="$any(value()[key])?.[translateService.getCurrentLang()] || '—'"
+            ></div>
+          } @else {
+            <app-zod-display [zodType]="zodType" [value]="value()[key]" [valueI18n]="valueI18n" />
+          }
         } @else if (inner.type === "enum") {
           @let enumValues = Object.keys(inner.def.entries);
           @if (widget?.widget === "slider") {
@@ -278,6 +285,12 @@
               {{ zodType?.description || key }}
             </label>
           </div>
+        } @else if (inner.type === "record" && widget?.widget === "rich-text-multilang") {
+          <app-rich-text-multilang
+            [(value)]="$any(value()[x.key])"
+            (valueChange)="onFieldChange()"
+            [disabled]="disabled()"
+          />
         } @else if (zodUtil.isEnumWithOther(inner)) {
           <app-enum-other
             [disabled]="disabled()"

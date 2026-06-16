@@ -13,6 +13,7 @@ import { AspectsComponent } from "./aspects.component";
 import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumOtherComponent } from "./enum-other.component";
 import { EnumSliderComponent } from "./enum-slider.component";
+import { RichTextMultilangComponent } from "./rich-text-multilang.component";
 import { ToggleBtnGroup } from "./toggle-btn-group";
 import { ZodDisplayComponent } from "./zod-display.component";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
@@ -63,6 +64,7 @@ export enum DisplayMode {
     EnumSliderComponent,
     FormsModule,
     QuillModule,
+    RichTextMultilangComponent,
     ToggleBtnGroup,
     TranslatePipe,
     ZodDisplayComponent,
