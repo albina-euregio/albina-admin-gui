@@ -3,7 +3,7 @@ import { Component, computed, inject, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Aspect } from "app/enums/enums";
-import { xor } from "es-toolkit";
+import { isEqual, xor } from "es-toolkit";
 import { QuillModule } from "ngx-quill";
 import { z } from "zod/v4";
 
@@ -57,11 +57,14 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly widgetRegistry = widgetRegistry;
   readonly zPrettifyError = z.prettifyError;
   readonly zodUtil = zodUtil;
+  readonly isEqual = isEqual;
 
   readonly value = model<V>();
+  readonly valueForCompare = input<V | undefined>();
 
   readonly disabled = input<boolean>(false);
   readonly displayOnly = input<boolean>(false);
+  readonly diminishValues = input<Record<string, Partial<Record<string, boolean>>>>({});
   readonly zodType = input<T>();
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();

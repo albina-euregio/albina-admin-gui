@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatrixInformationSchema } from "app/models/matrix-information.model";
+import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -33,6 +34,7 @@ import {
   GrainShape,
   TerrainType,
 } from "./models/danger-source-variant.model";
+import * as DangerSourceModels from "./models/danger-source-variant.model";
 
 @Component({
   selector: "app-danger-source-variant",
@@ -49,7 +51,16 @@ import {
     TranslateModule,
     ToggleBtnGroup,
     NgxMousetrapDirective,
+    ZodSchemaFormComponent,
   ],
+  styles: `
+    ::ng-deep .zod-form-field {
+      margin-top: 1rem;
+    }
+    ::ng-deep .zod-form-field:last-of-type {
+      margin-bottom: 1rem;
+    }
+  `,
 })
 export class DangerSourceVariantComponent implements OnChanges, OnInit {
   dangerSourcesService = inject(DangerSourcesService);
@@ -60,6 +71,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
 
+  readonly DangerSourceModels = DangerSourceModels;
   readonly DangerSourceVariantSchema = DangerSourceVariantSchema;
   readonly zEnumValues = zEnumValues;
   readonly variant = input<DangerSourceVariantModel>(undefined);
