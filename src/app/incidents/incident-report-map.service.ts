@@ -83,8 +83,8 @@ export class IncidentReportMapService implements OnDestroy {
     const map = new LeafletMap(elementId).setView([47.268, 11.404], 9);
     this.map = map;
 
-    new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "© OpenStreetMap contributors",
+    new TileLayer("https://tile.opentopomap.org/{z}/{x}/{y}.png", {
+      attribution: "map data: © OpenStreetMap contributors, SRTM | map style: © OpenTopoMap (CC-BY-SA)",
     }).addTo(map);
 
     map.on("click", (e: LeafletMouseEvent) => {
