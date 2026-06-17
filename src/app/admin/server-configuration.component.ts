@@ -1,4 +1,4 @@
-import { Component, inject, input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, input, ChangeDetectionStrategy, linkedSignal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -22,6 +22,7 @@ export class ServerConfigurationComponent {
 
   ServerConfigurationSchema = ServerConfigurationSchema;
   readonly config = input<ServerConfiguration>(undefined);
+  readonly localConfig = linkedSignal(() => this.config());
 
   public saveConfigurationLoading = false;
 
@@ -30,9 +31,9 @@ export class ServerConfigurationComponent {
   public save() {
     this.saveConfigurationLoading = true;
 
-    this.configurationService.postServerConfiguration(this.config()).subscribe(
+    this.configurationService.postServerConfiguration(this.localConfig()).subscribe(
       (response) => {
-        this.config().id = response.id;
+        this.localConfig().id = response.id;
         console.log(response);
         this.saveConfigurationLoading = false;
         console.debug("Server configuration saved!");

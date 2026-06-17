@@ -8,16 +8,32 @@
 <div>
   <tabset>
     <tab heading="{{ 'admin.region-configuration.table.general.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationGeneralSchema" />
+      <app-zod-schema-form
+        [value]="localConfig()"
+        (valueChange)="localConfig.set($event)"
+        [zodType]="RegionModels.RegionConfigurationGeneralSchema"
+      />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.publication.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationPublicationSchema" />
+      <app-zod-schema-form
+        [value]="localConfig()"
+        (valueChange)="localConfig.set($event)"
+        [zodType]="RegionModels.RegionConfigurationPublicationSchema"
+      />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.components.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationComponentsSchema" />
+      <app-zod-schema-form
+        [value]="localConfig()"
+        (valueChange)="localConfig.set($event)"
+        [zodType]="RegionModels.RegionConfigurationComponentsSchema"
+      />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.configuration.title' | translate }}">
-      <app-zod-schema-form [value]="config()" [zodType]="RegionModels.RegionConfigurationConfigurationSchema" />
+      <app-zod-schema-form
+        [value]="localConfig()"
+        (valueChange)="localConfig.set($event)"
+        [zodType]="RegionModels.RegionConfigurationConfigurationSchema"
+      />
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.languageConfiguration.title' | translate }}">
       <div class="table-responsive">
@@ -30,7 +46,7 @@
                 }}</label>
               </td>
               <td>
-                <input type="text" class="form-control" [(ngModel)]="config().defaultLang" />
+                <input type="text" class="form-control" [(ngModel)]="localConfig().defaultLang" />
               </td>
             </tr>
           </tbody>
@@ -43,21 +59,21 @@
                   LanguageConfigurationSchema.shape.lang.description
                 }}</label>
                 <button
-                  (click)="config().languageConfigurations.splice(0, 0, {})"
+                  (click)="localConfig().languageConfigurations.splice(0, 0, {})"
                   class="btn btn-sm btn-outline-primary float-end"
                   style="min-height: 38px"
                 >
                   <i class="ph ph-plus"></i>
                 </button>
               </td>
-              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+              @for (languageConfiguration of localConfig().languageConfigurations; track languageConfiguration.lang) {
                 <td style="min-width: 20em">
                   <app-zod-input
                     [zodType]="LanguageConfigurationSchema.shape.lang"
                     [(value)]="languageConfiguration.lang"
                   >
                     <button
-                      (click)="config().languageConfigurations.splice($index, 1)"
+                      (click)="localConfig().languageConfigurations.splice($index, 1)"
                       class="btn btn-sm btn-outline-primary"
                     >
                       <i class="ph ph-minus"></i>
@@ -73,7 +89,7 @@
                     {{ LanguageConfigurationSchema.shape[key].description }}
                   </label>
                 </td>
-                @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                @for (languageConfiguration of localConfig().languageConfigurations; track languageConfiguration.lang) {
                   <td>
                     <app-zod-input
                       [lang]="languageConfiguration.lang"
@@ -92,7 +108,7 @@
 </div>
 
 @if (!saveConfigurationLoading) {
-  <button type="submit" [disabled]="!config().id" class="btn btn-sm btn-primary px-3" (click)="save()">
+  <button type="submit" [disabled]="!localConfig().id" class="btn btn-sm btn-primary px-3" (click)="save()">
     <i class="ph ph-check"></i> {{ "admin.region-configuration.button.save" | translate }}
   </button>
 }

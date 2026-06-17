@@ -1,4 +1,4 @@
-import { Component, input, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, input, inject, ChangeDetectionStrategy, linkedSignal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -50,6 +50,7 @@ export class RegionConfigurationComponent {
     "urlWithDate",
   ];
   readonly config = input<RegionConfiguration>(undefined);
+  readonly localConfig = linkedSignal(() => this.config());
   readonly languages = LANGUAGES;
 
   public saveConfigurationLoading = false;
@@ -57,26 +58,26 @@ export class RegionConfigurationComponent {
   public alerts: Alert[] = [];
 
   toggleLanguage(language: string, checked: boolean) {
-    this.config().enabledLanguages ??= [];
+    this.localConfig().enabledLanguages ??= [];
     if (checked) {
-      this.config().enabledLanguages.push(language);
+      this.localConfig().enabledLanguages.push(language);
     } else {
-      this.config().enabledLanguages = this.config().enabledLanguages.filter((l) => l !== language);
+      this.localConfig().enabledLanguages = this.localConfig().enabledLanguages.filter((l) => l !== language);
     }
   }
 
   toggleTTSLanguage(language: string, checked: boolean) {
-    this.config().ttsLanguages ??= [];
+    this.localConfig().ttsLanguages ??= [];
     if (checked) {
-      this.config().ttsLanguages.push(language);
+      this.localConfig().ttsLanguages.push(language);
     } else {
-      this.config().ttsLanguages = this.config().ttsLanguages.filter((l) => l !== language);
+      this.localConfig().ttsLanguages = this.localConfig().ttsLanguages.filter((l) => l !== language);
     }
   }
 
   public save() {
     this.saveConfigurationLoading = true;
-    const config = this.config();
+    const config = this.localConfig();
     if (this.authenticationService.getActiveRegionId() == config.id) {
       this.authenticationService.setActiveRegion(config);
     }
