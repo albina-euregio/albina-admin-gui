@@ -304,7 +304,7 @@
       "submitUpdate": "Update abschicken",
       "publishChange": "Sofort publizieren (keine Nachrichten)",
       "publishUpdate": "Sofort publizieren",
-      "publishMinimal": "Minimal publication",
+      "publishMinimal": "Minimum an Veröffentlichung",
       "caaml": "CAAML anzeigen",
       "json": "JSON anzeigen",
       "create": "Lawinenvorhersage erstellen",
@@ -354,7 +354,7 @@
         "checkInternetDescriptionPrefix": "Wie ist die Internetverbindung auf deinem Gerät? Navigiere in einem privaten Fenster zu",
         "checkInternetDescriptionSuffix": "Wird das Bulletin von gestern korrekt angezeigt?",
         "republishHint": "Führe diesen Schritt nur aus, wenn »Check Internetverbindung« erfolgreich war und mindestens 5 Minuten seit dem letzten Publikationsversuch vergangen sind.",
-        "publishMinimalTitle": "Minimal publication:",
+        "publishMinimalTitle": "Minimum an Veröffentlichung:",
         "publishMinimalHint": " Verwenden Sie diese Option nur als Notlösung, wenn die vollständige Veröffentlichung fehlschlägt. Es werden ausschließlich CAAML-Daten veröffentlicht; Karten, Text-to-Speech und Push-Benachrichtigungen werden nicht erzeugt. ⚠️ Diese Aktion betrifft alle Regionen auf diesem Server, nicht nur Ihre eigene. Alle Regionen werden im Minimalmodus erneut veröffentlicht.",
         "editAndResendTitle": "Bearbeiten und erneut senden:",
         "openBulletin": "Öffne das Bulletin",
@@ -497,7 +497,7 @@
         "snowpackStructureComment": "Beschreibung des Schneedeckenaufbaus",
         "dangerPatterns": "Gefahrenmuster",
         "tendencyComment": "Beschreibung der Tendenz",
-        "synopsisHighlights": "Headline weather synopsis",
+        "synopsisHighlights": "Überschrift zur allgemeinen Wetterlage",
         "synopsisComment": "Wettervorhersage",
         "notes": "Notizen",
         "noSnow": "Kein Schnee"
@@ -1685,7 +1685,7 @@
     "locationMap": "Karte für die Örtlichkeit",
     "noGroups": "Keine Gruppen vorhanden. Klicke auf „Gruppe hinzufügen“, um eine Gruppe anzulegen.",
     "next": "Nächste",
-    "overview": "Overview",
+    "overview": "Überblick",
     "noVictims": "Keine Opfer vorhanden. Klicke auf „Opfer hinzufügen“, um ein Opfer anzulegen.",
     "point": "Punkt",
     "polygon": "Polygon",
@@ -1695,7 +1695,7 @@
     "removeVictim": "Opfer löschen",
     "required": "Pflichtfelder",
     "showMandatoryFieldsOnly": "Nur Pflichtfelder",
-    "displayOnly": "Reading Mode",
+    "displayOnly": "Lese-Modus",
     "valid": "Gültig",
     "victimName": "Opfer {{name}}",
     "saveStateIdle": "Alle Änderungen gespeichert",
@@ -1811,7 +1811,7 @@
     "additionalLoad": "Zusatzbelastung",
     "explosives": "Spregung",
     "vehicle": "Fahrzeug",
-    "accidentalControlled": "Accidental/ Controlled",
+    "accidentalControlled": "Zufällig / absichtlich, kontrolliert",
     "remoteTriggering": "Fernauslösung",
     "startZoneAspect": "Exposition des Anrissgebiets",
     "startZoneAspectAccuracy": "Genauigkeit der Exposition",
@@ -1830,7 +1830,7 @@
     "weakLayerGrainType2": "Kornform (2) der Schwachschicht",
     "weakLayerGrainSize2": "Korngröße (2) der Schwachschicht",
     "weakLayerLocation": "Position der Schwachschicht in der Schneedecke",
-    "bedSurfaceStepped": "Bed Surface Stepped",
+    "bedSurfaceStepped": "Lawine in tiefere Schichten durchgerissen",
     "avalancheMoistureStartZone": "Feuchtegrad der Lawine: Anrissgebiet",
     "avalancheMoistureDeposit": "Feuchtegrad der Lawine: Ablagerung",
     "depositHeight": "Höhe der Ablagerung",
@@ -1998,19 +1998,19 @@
     "avalancheDescriptionPublic": "",
     "avalancheDescription": "Beschreibe die Lawine(n) sachlich und mit klaren, objektiven Begriffen. Gib Lawinenart, Größe und Abmessungen (z. B. Breite, Anrisstiefe und Auslauflänge) an. Beschreibe außerdem, wodurch die Lawine ausgelöst wurde (spontan, durch Personen, Fernauslösung) und wie sie sich entwickelt hat (z. B. Bruchausbreitung oder Ausdehnung). Ergänze alle messbaren oder beobachteten Merkmale. Angaben dazu, wie und wo Personen erfasst wurden sowie Details zur Rettung, gehören in die Ereignisbeschreibung.",
     "snowpackDescriptionPublic": "",
-    "snowpackDescription": "Explain the snowpack structure and conditions that contributed to the avalanche. Identify relevant weak layers and slab characteristics, and describe their distribution (e.g. by elevation or aspect). Include signs of instability and any available test results. Focus on explaining why the snowpack was susceptible to failure.",
+    "snowpackDescription": "Beschreibe den Aufbau und die Eigenschaften der Schneedecke, die zum Lawinenabgang beigetragen haben. Gehe dabei auf relevante Schwachschichten und die Eigenschaften des Schneebretts ein und beschreibe deren Verteilung (z. B. nach Höhenlage oder Exposition). Nenne vorhandene Alarmzeichen sowie verfügbare Ergebnisse durch Schneedeckentests. Der Schwerpunkt sollte darauf liegen zu erklären, warum die Schneedecke störanfällig war.",
     "takeAwaysPublic": "",
-    "takeAways": "Summarize the key takeaways of the incident in a few short bullet points. Consider aspects such as warning signs, risk management (e.g. skiing one at a time), use of safety equipment, terrain traps, and group composition.",
-    "recentSlabAvalanches": "Use your best judgement to answer the question: Are there signs of slab avalanches in the area from today or yesterday? Look to information provided by the group themselves, reports from SAR teams or other users of the area that indicate whether other avalanches were noted.",
-    "signsOfInstability": "Use your best judgement to answer the question: Are there signs of snowpack instability including whumpfs, shooting cracks or drum-like sounds? Look to information provided by the group themselves, reports from SAR teams or other users of the area that indicate whether signs of instability were noted.",
-    "recentLoading": "Use your best judgement to answer the question: Has there been loading within the past 48 hours including roughly 30 cm of new snow or more, significant wind transport or rain?",
-    "criticalWarming": "Use your best judgement to answer the question: Has there been a recent rapid rise in temperature to near 0 C, or is the upper snowpack wet due to strong sun, above-freezing air temperatures or rain?",
-    "incidentAnalysisComment": "For further information",
+    "takeAways": "Fasse die wichtigsten Erkenntnisse aus dem Ereignis in wenigen kurzen Stichpunkten zusammen. Gehe dabei beispielsweise auf Alarmzeichen, Risikomanagement (z. B. einzeln abfahren), die Verwendung der Lawinennotfallausrüstung, Geländefallen oder die Zusammensetzung der Gruppe ein.",
+    "recentSlabAvalanches": "Beantworte die Frage nach best-möglichem Ermessen: Gibt es in der Region Hinweise auf Schneebrettlawinen von heute oder gestern? Berücksichtige dabei Informationen der betroffenen Gruppe selbst, Berichte von Rettungskräften oder Beobachtungen anderer Personen im Gebiet, die darauf hinweisen, ob weitere Lawinen festgestellt wurden.",
+    "signsOfInstability": "Beantworte die Frage nach best-möglichem Ermessen: Gibt es Hinweise auf eine instabile Schneedecke, wie Wummgeräusche, Rissbildung oder Zischgeräusche? Berücksichtige dabei Informationen der betroffenen Gruppe selbst, Berichte von Rettungskräften oder Beobachtungen anderer Personen im Gebiet, die auf solche Instabilitätszeichen hinweisen.",
+    "recentLoading": "Beantworte die Frage nach best-möglichem Ermessen: Hat es in den letzten 48 Stunden eine Zusatzbelastung der Schneedecke gegeben, beispielsweise durch etwa 30 cm oder mehr Neuschnee, erhebliche Windverfrachtung oder Regen?",
+    "criticalWarming": "Beantworte die Frage nach best-möglichem Ermessen: Gab es in jüngster Zeit einen raschen Temperaturanstieg bis nahe 0 °C oder ist die oberste Schneedecke infolge starker Sonneneinstrahlung, Temperaturen über dem Gefrierpunkt oder Regen durchfeuchtet?",
+    "incidentAnalysisComment": "Für weitere Informationen",
     "uuid": "UUID",
-    "dateAdded": "Date is derived from when the attachment was uploaded",
-    "dateCreated": "Date when the attachment was captured or created",
+    "dateAdded": "Das Datum wird aus dem Zeitpunkt des Hochladens des Anhangs übernommen.",
+    "dateCreated": "Datum, an dem der Anhang erstellt oder aufgenommen wurde.",
     "file": "Datei",
-    "fileName": "Derived from original file name of uploaded attachment",
+    "fileName": "Wird aus dem ursprünglichen Dateinamen des hochgeladenen Anhangs übernommen.",
     "mediaType": "",
     "attachmentTags": "",
     "altText": "",
@@ -2020,13 +2020,13 @@
     "attachmentCategory": ""
   },
   "sourceOfInformation": {
-    "PublicObservation": "Public Observation",
-    "AWSInternal": "AWS Internal",
-    "AWSObserver": "AWS Observer",
-    "DispatchCentre": "Dispatch Centre",
-    "Police": "Police",
-    "MountainRescue": "Mountain Rescue",
-    "Other": "Other"
+    "PublicObservation": " Öffentliche Beobachtung",
+    "AWSInternal": "Lawienwarndienst intern",
+    "AWSObserver": "Beobachter des Lawinenwarndienstes",
+    "DispatchCentre": "Leitstelle",
+    "Police": "Polizei",
+    "MountainRescue": "Bergrettung",
+    "Other": "Andere"
   },
   "otherDamages": {
     "Yes": "Ja",
@@ -2034,11 +2034,11 @@
   },
   "damagedAssets": {
     "Vehicle": "Fahrzeug",
-    "Forest": "Forest",
-    "Agriculture": "Agriculture",
-    "Livestock": "Livestock",
-    "UtilitiesTechnicalInfrastructure": "Utilities or Technical Infrastructure",
-    "Other": "Other"
+    "Forest": "Wald ",
+    "Agriculture": "Landwirtschaft",
+    "Livestock": "Vieh",
+    "UtilitiesTechnicalInfrastructure": "Technische Infrastruktur und Versorgungseinrichtungen",
+    "Other": "Andere"
   },
   "timeAccuracy": {
     "exact": "exakt",
@@ -2055,10 +2055,10 @@
     "unknown": "unbekannt"
   },
   "reportStatus": {
-    "Draft": "Draft",
+    "Draft": "Entwurf",
     "Incomplete": "Unvollständig",
-    "InReview": "In Review",
-    "Verified": "Verified"
+    "InReview": "In Begutachtung",
+    "Verified": "Überprüft"
   },
   "locationAccuracy": {
     "exact": "exakt",
@@ -2076,69 +2076,69 @@
     "unknown": "unbekannt"
   },
   "groupType": {
-    "RecreationalFamilyFriends": "Recreational Family/Friends",
-    "Club": "Club",
-    "Commercial": "Commercial",
-    "Industrial": "Industrial",
+    "RecreationalFamilyFriends": "Freizeit Familie/Freunde",
+    "Club": "Verein",
+    "Commercial": "Kommerziel",
+    "Industrial": "Industrie",
     "Solo": "Solo",
     "Unknown": "unbekannt",
-    "Other": "Other"
+    "Other": "Andere"
   },
   "groupSizeAccuracy": {
-    "Exact": "Exact",
-    "Approximately": "Approximately",
-    "AtLeast": "At Least",
+    "Exact": "Exakt",
+    "Approximately": "Ungefähr",
+    "AtLeast": "Zumindest",
     "Unknown": "unbekannt"
   },
   "incidentTerrainType": {
-    "FreeTerrain": "Free Terrain",
-    "ControlledTerrainOpen": "Controlled Terrain: Open",
-    "ControlledTerrainClosed": "Controlled Terrain: Closed",
+    "FreeTerrain": "Ungesichertes Gelände",
+    "ControlledTerrainOpen": "Gesichertes Gelände: Geöffnet",
+    "ControlledTerrainClosed": "Gesichertes Gelände: Gesperrt",
     "Unknown": "unbekannt"
   },
   "typeOfControlledTerrain": {
-    "IndoorInsideBuilding": "Indoor (Inside Building)",
-    "Street": "Street",
-    "TrainTrack": "Train Track",
-    "SkiAreaResort": "Ski Area Resort",
-    "CrossCountryTrack": "Cross Country Track",
-    "SledgingTrack": "Sledging Track",
-    "Other": "Other"
+    "IndoorInsideBuilding": "In einem Gebäude",
+    "Street": "Straße",
+    "TrainTrack": "Zuggleis",
+    "SkiAreaResort": "Skigebiet",
+    "CrossCountryTrack": "Langlaufloipe",
+    "SledgingTrack": "Rodelbahn",
+    "Other": "Andere"
   },
   "incidentActivity": {
-    "Touring": "Touring",
-    "Freeriding": "Freeriding",
-    "SkiingSnowboarding": "Skiing/Snowboarding",
-    "Snowmobiling": "Snowmobiling",
-    "Mountaineering": "Mountaineering",
-    "IceClimbing": "Ice Climbing",
-    "Snowshoeing": "Snowshoeing",
-    "HikingOnFoot": "Hiking on Foot",
-    "CrossCountrySkiing": "Cross Country Skiing",
-    "HuntingFishing": "Hunting/Fishing",
-    "Sledging": "Sledging",
+    "Touring": "Skitour",
+    "Freeriding": "Variante",
+    "SkiingSnowboarding": "Skifahren/Snowboarden",
+    "Snowmobiling": "Schneemobil",
+    "Mountaineering": "Bergsteigen",
+    "IceClimbing": "Eisklettern",
+    "Snowshoeing": "Schneeschuhwandern",
+    "HikingOnFoot": "Wanern (zu Fuß)",
+    "CrossCountrySkiing": "Langlaufen",
+    "HuntingFishing": "Jagen/Fischen",
+    "Sledging": "Rodeln",
     "Snowbiking": "Snowbiking",
-    "Biking": "Biking",
-    "InsideVehicle": "Inside Vehicle",
+    "Biking": "Fahrradfahren",
+    "InsideVehicle": "Im Fahrzeug",
     "Unknown": "unbekannt",
-    "Other": "Other"
+    "Other": "Andere"
   },
   "travelDirection": {
-    "Ascending": "Ascending",
-    "Descending": "Descending",
-    "Stationary": "Stationary",
-    "Traversing": "Traversing",
-    "MovingOnPeaksRidges": "Moving on peaks/ridges",
+    "Ascending": "Aufsteigend",
+    "Descending": "Abfahrend",
+    "Stationary": "Stillstehend",
+    "Traversing": "Querend",
+    "MovingOnPeaksRidges": "Sich auf Gipfel/Grate bewegend",
     "SnowmobileHighMarking": "Snowmobile High Marking",
-    "CrossingRunouts": "Crossing Runouts",
-    "Other": "Other"
+    "CrossingRunouts": "Lawinenausläufe kreuzend",
+    "Other": "Andere"
   },
   "vehicleType": {
-    "Car": "Car",
-    "Bus": "Bus",
-    "SnowPlower": "Snow Plower",
-    "Snowcat": "Snowcat",
-    "Other": "Other"
+    "Car": "Auto",
+    "Bus": "us",
+    "SnowPlower": "Schneepflug",
+    "Snowcat": "Pistengerät",
+    "Other": "Andere"
   },
   "avalancheGear": {
     "All": "Alle",
@@ -2147,34 +2147,34 @@
     "Unknown": "unbekannt"
   },
   "natural": {
-    "Natural": "Natural (result of weather events, e.g. snowfall, wind temperature)",
-    "CorniceFall": "Cornice fall, natural",
-    "Earthquake": "Earthquake",
-    "IceFall": "Ice fall",
-    "RockFall": "Rock fall"
+    "Natural": "Spontan (Ergebnis von Wetterereignissen, z.B. Neuschnee, Wind, Temperatur)",
+    "CorniceFall": "Wechtenbruch, spontan",
+    "Earthquake": "Erdbeben",
+    "IceFall": "Eisabbruch",
+    "RockFall": "Steinschlag"
   },
   "person": {
-    "PersonAccidental": "Person (e.g. skier, snowboarder, hiker, climber), accidental",
-    "PersonControlled": "Person, controlled (i.e., skier deliberately ski cutting a slope, cornice, etc.)"
+    "PersonAccidental": "Person (z.B. Skifahrer:in, Snowboarder:in, Wander:in, Bergesteiger:in), zufällig",
+    "PersonControlled": "Person, absichtlich (d.h., Skifahrer:in, die absichtlich versucht Lawine oder Wechte abzutreten)"
   },
   "explosives": {
-    "Artillery": "Artillery",
-    "CaseCharge": "Case (bag) charge placed on Hand-thrown",
-    "CorniceControlledByExplosives": "Cornice controlled by explosives",
-    "HelicopterDeployedGasExploder": "Helicopter deployed gas exploder (e.g., Daisybell)",
-    "HandThrownOrPlaced": "Hand-thrown or hand-placed explosive charge",
-    "GasExploder": "Gas exploder",
-    "HelicopterBomb": "Helicopter bomb",
-    "Avalauncher": "Avalauncher and other types of launchers",
-    "PrePlacedRemotelyDetonated": "Pre-placed remotely detonated explosive charge",
-    "TramOrRopewayDelivery": "Tram or ropeway delivery system",
-    "Other": "Other"
+    "Artillery": "Artillerie",
+    "CaseCharge": "Sackladung von Hand geworfen",
+    "CorniceControlledByExplosives": "Wechte, durch Sprengung ausgelöst",
+    "HelicopterDeployedGasExploder": "Helikoptergestütztes Gassprengsystem (z. B. DaisyBell)",
+    "HandThrownOrPlaced": "Handladung",
+    "GasExploder": "Gassprengssystem",
+    "HelicopterBomb": "Ladung von Hubschrauber deponiert",
+    "Avalauncher": "Avalauncher oder andere Arten von Werfern",
+    "PrePlacedRemotelyDetonated": "Vorinstallierte, ferngezündete Sprengladung",
+    "TramOrRopewayDelivery": "Sprengseilbahn",
+    "Other": "Andere"
   },
   "vehicle": {
-    "OverSnowVehicle": "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
-    "Snowmobile": "Snowmobile",
-    "Helicopter": "Helicopter (e.g. on landing, approach)",
-    "Other": "Other"
+    "OverSnowVehicle": "Schneefahrzeug (Pistengerät, Wartungsequipment, etc.)",
+    "Snowmobile": "Schneemobil",
+    "Helicopter": "Hubschrauber (z.B. beim Landen oder Annähern)",
+    "Other": "Andere"
   },
   "startZoneElevationAccuracy": {
     "exact": "exakt",
@@ -2184,48 +2184,48 @@
     "unknown": "unbekannt"
   },
   "startZoneTerrainType": {
-    "AlpineBowl": "Alpine Bowl",
-    "Couloir": "Couloir",
-    "NearRidgeCrest": "Near Ridge Crest",
-    "SparselyTreed": "Sparsely Treed",
-    "OpenForest": "Open Forest",
-    "DenseForest": "Dense Forest",
-    "ForestGlade": "Forest Glade",
-    "Glacier": "Glacier",
-    "OpenSlope": "Open Slope",
-    "Ridge": "Ridge",
-    "ExtremeRockyTerrain": "Extreme Rocky Terrain",
-    "BaseOfRockFace": "Base of Rock Face",
-    "WoodPath": "Wood Path",
-    "LeewardSlope": "Leeward Slope",
-    "WindwardSlope": "Windward Slope",
-    "IceWaterfall": "Ice Waterfall",
-    "Other": "Other"
+    "AlpineBowl": "Kar",
+    "Couloir": "Rinne",
+    "NearRidgeCrest": "Kammnaher Bereich",
+    "SparselyTreed": "Lichter Wald",
+    "OpenForest": "Offener Wald",
+    "DenseForest": "Dichter Wald",
+    "ForestGlade": "Waldlichtung",
+    "Glacier": "Gletscher",
+    "OpenSlope": "Offenes Gelände",
+    "Ridge": "Kamm",
+    "ExtremeRockyTerrain": "Felsdurchsetztes Gelände",
+    "BaseOfRockFace": "Felswandfuss",
+    "WoodPath": "Forstweg",
+    "LeewardSlope": "Windgeschützter Hang",
+    "WindwardSlope": "Windzugewandter Hang",
+    "IceWaterfall": "Eisfall",
+    "Other": "Andere"
   },
   "weakLayerLocation": {
-    "WithinNewSnow": "Within new snow",
-    "AtInterfaceWithOldSnow": "At the Interface with Old Snow",
-    "WithinOldSnowpack": "Within the Old Snowpack",
-    "NearTheGround": "Near the Ground"
+    "WithinNewSnow": "Innerhalb des Neuschnees",
+    "AtInterfaceWithOldSnow": "Am Übergang zum Altschnee",
+    "WithinOldSnowpack": "Innerhalb der Altschneedecke",
+    "NearTheGround": "Bodennah"
   },
   "debrisType": {
-    "Fine": "Fine",
-    "Blocks": "Blocks",
+    "Fine": "Fein",
+    "Blocks": "Blockig",
     "Hard": "Hart",
-    "Soft": "Soft",
-    "Rocks": "Rocks",
-    "Trees": "Trees",
-    "Other": "Other"
+    "Soft": "Weich",
+    "Rocks": "Steine",
+    "Trees": "Bäume",
+    "Other": "Andere"
   },
   "avalancheMoistureStartZone": {
     "Dry": "Trocken",
-    "Moist": "Moist",
+    "Moist": "Feucht",
     "Wet": "Nass",
     "Unknown": "unbekannt"
   },
   "avalancheMoistureDeposit": {
     "Dry": "Trocken",
-    "Moist": "Moist",
+    "Moist": "Feucht",
     "Wet": "Nass"
   },
   "bedSurfaceStepped": {
@@ -2244,8 +2244,8 @@
     "unknown": "unbekannt"
   },
   "startZoneAspectAccuracy": {
-    "Accurate": "Accurate",
-    "Uncertain": "Uncertain"
+    "Accurate": "Genau",
+    "Uncertain": "Ungenau"
   },
   "remoteTriggering": {
     "Yes": "Ja",
@@ -2256,18 +2256,18 @@
     "Low": "Low"
   },
   "accidentalControlled": {
-    "Accidental": "Accidental",
-    "Controlled": "Controlled"
+    "Accidental": "Zufällig",
+    "Controlled": "Kontrolliert"
   },
   "caught": {
-    "Involved": "Involved",
-    "NotInvolved": "Not Involved",
+    "Involved": "Beteiligt",
+    "NotInvolved": "Unbeteiligt",
     "Unknown": "unbekannt"
   },
   "fatalInjured": {
-    "Fatal": "Fatal",
-    "Injured": "Injured",
-    "Uninjured": "Uninjured",
+    "Fatal": "Tödlich",
+    "Injured": "Verletzt",
+    "Uninjured": "Unverletzt",
     "Unknown": "unbekannt"
   },
   "burialDegree": {
@@ -2275,7 +2275,7 @@
     "PartlyBuriedHeadCovered": "Teilverschüttet, aber Kopf verschüttet",
     "PartlyBuriedHeadUncovered": "Teilverschüttet, Kopf frei",
     "PartlyBuried": "Teilverschüttet",
-    "NotBuried": "Not Buried",
+    "NotBuried": "Nicht verschüttet",
     "Unknown": "unbekannt"
   },
   "age": {
@@ -2289,16 +2289,16 @@
     "From71": "≥ 71"
   },
   "gender": {
-    "Female": "Female",
-    "Male": "Male",
-    "Other": "Other"
+    "Female": "Weiblich",
+    "Male": "Männlich",
+    "Other": "Andere"
   },
   "country": {
     "Austria": "Österreich",
     "Germany": "Deutschland",
     "Italy": "Italien",
     "Switzerland": "Schweiz",
-    "Other": "Other"
+    "Other": "Andere"
   },
   "workingAtTime": {
     "Yes": "Ja",
@@ -2309,29 +2309,29 @@
     "No": "Nein"
   },
   "professionalCertification": {
-    "IFMGAGuide": "IFMGA Guide",
-    "FullSkiGuide": "Full Ski guide, Ski Instructor, Apprentice Guide",
-    "AvalancheProfessional": "Avalanche Professional",
-    "AvalancheEducator": "Avalanche Educator",
-    "Other": "Other"
+    "IFMGAGuide": "IVBV Bergführer:in",
+    "FullSkiGuide": "Skiführer:in, staatlich geprüfter Skilehrer:in, Berfühger:in-Anwärter",
+    "AvalancheProfessional": "Lawinenprofessionist",
+    "AvalancheEducator": "Ausbildner Lawine",
+    "Other": "Andere"
   },
   "avalancheTraining": {
     "None": "Keine",
-    "Awareness": "Awareness",
-    "BasicREC": "Basic REC",
-    "AdvancedREC": "Advanced REC",
-    "Professional": "Professional",
-    "Other": "Other"
+    "Awareness": "Bewusstsein",
+    "BasicREC": "Grundausbildung Freizeit",
+    "AdvancedREC": "Fortgeschrittene Ausbildung Freizeit",
+    "Professional": "Professionel",
+    "Other": "Andere"
   },
   "yearsActive": {
-    "UpTo2Years": "≤ 2 yrs",
-    "From3To9Years": "3–9 yrs",
-    "From10Years": "≥ 10 yrs"
+    "UpTo2Years": "≤ 2 Jahre",
+    "From3To9Years": "3–9 Jahre",
+    "From10Years": "≥ 10 Jahre"
   },
   "transceiver": {
-    "NoTransceiver": "No Transceiver",
-    "TransceiverOn": "Transceiver: on",
-    "TransceiverOff": "Transceiver: off"
+    "NoTransceiver": "Kein Lawinenverschüttetensuchgerät (LVS)",
+    "TransceiverOn": "LVS: an",
+    "TransceiverOff": "LVS: aus"
   },
   "shovel": {
     "Yes": "Ja",
@@ -2342,9 +2342,9 @@
     "No": "Nein"
   },
   "airbag": {
-    "NoAirbag": "No Airbag",
-    "AirbagDeployed": "Airbag: deployed",
-    "AirbagUndeployed": "Airbag: undeployed"
+    "NoAirbag": "Kein Lawinenairbag",
+    "AirbagDeployed": "Lawinenairbag: aktiviert",
+    "AirbagUndeployed": "Lawinenairbag: nicht aktiviert"
   },
   "helmet": {
     "Yes": "Ja",
@@ -2353,88 +2353,88 @@
   "terrainTrap": {
     "None": "Keine",
     "Cliff": "Cliff",
-    "Trees": "Trees",
-    "Gully": "Gully",
-    "Depression": "Depression",
-    "Bench": "Bench",
-    "Boulder": "Boulder",
-    "CrevasseOrBergschrund": "Crevasse or Bergschrund",
-    "Other": "Other"
+    "Trees": "Bäume",
+    "Gully": "Graben",
+    "Depression": "Mulde",
+    "Bench": "Geländestufe",
+    "Boulder": "Felsblock",
+    "CrevasseOrBergschrund": "Gletscherspalte oder Bergschrund",
+    "Other": "Andere"
   },
   "primaryLocationMethod": {
-    "NotBuried": "Not Buried",
-    "SelfExtraction": "Self Extraction",
-    "VisualClues": "Visual Clues",
-    "TransceiverProbeShovel": "Transceiver/Probe/Shovel",
-    "SpotProbing": "Spot Probing",
-    "ProbeLine": "Probe Line",
+    "NotBuried": "Nicht verschüttet",
+    "SelfExtraction": "Selbst befreit",
+    "VisualClues": "Mit Auge gefunden",
+    "TransceiverProbeShovel": "LVS/Sonde/Schaufel",
+    "SpotProbing": "Stichprobenartiges Sondieren",
+    "ProbeLine": "Sondierkette",
     "Recco": "Recco",
-    "RescueDog": "Rescue Dog",
-    "Snowmelt": "Snowmelt",
-    "Other": "Other"
+    "RescueDog": "Lawinenhund",
+    "Snowmelt": "Ausapern",
+    "Other": "Andere"
   },
   "rescuedBy": {
-    "Self": "Self",
-    "Companion": "Companion",
-    "OtherGroup": "Other Group",
-    "OrganizedRescue": "Organized Rescue",
+    "Self": "Selbst",
+    "Companion": "Kameradenrettung",
+    "OtherGroup": "Andere Gruppe",
+    "OrganizedRescue": "Organisierte Rettung",
     "Unknown": "unbekannt",
-    "Other": "Other"
+    "Other": "Andere"
   },
   "medicalIntervention": {
-    "CPR": "CPR",
-    "ALS": "ALS",
+    "CPR": "Herz-Lungen-Reanimation",
+    "ALS": "Erweiterte Wiederbelebungsmaßnahmen",
     "ECMO": "ECMO",
-    "Other": "Other"
+    "Other": "Andere"
   },
   "estimatedTimeOfDeath": {
-    "DuringTheAvalanche": "During the avalanche",
-    "DuringBurial": "During burial",
-    "OnSiteAfterExtrication": "On site after extrication",
-    "DuringTransport": "During transport",
-    "InHospital": "In hospital"
+    "DuringTheAvalanche": "Während des Lawinenabgangs",
+    "DuringBurial": "Während der Verschüttung",
+    "OnSiteAfterExtrication": "Am Unfallort nach der Bergung",
+    "DuringTransport": "Während des Abtransports",
+    "InHospital": "Im Krankenhaus"
   },
   "causeOfDeath": {
-    "Asphyxiation": "Asphyxiation",
-    "TraumaticInjury": "Traumatic injury",
-    "Hypothermia": "Hypothermia",
-    "Other": "Other"
+    "Asphyxiation": "Asphyxie",
+    "TraumaticInjury": "Trauma",
+    "Hypothermia": "Hypothermie",
+    "Other": "Andere"
   },
   "respiratoryCavity": {
     "Yes": "Ja",
     "No": "Nein"
   },
   "injurySeverity": {
-    "Minor": "Minor",
+    "Minor": "Gering",
     "Moderate": "mäßig",
-    "Major": "Major"
+    "Major": "Gröber"
   },
   "signsOfInstability": {
-    "Present": "Present",
-    "Absent": "Absent",
+    "Present": "Anwesend",
+    "Absent": "Abwesend",
     "Unknown": "unbekannt"
   },
   "recentLoading": {
-    "Present": "Present",
-    "Absent": "Absent",
+    "Present": "Anwesend",
+    "Absent": "Abwesend",
     "Unknown": "unbekannt"
   },
   "criticalWarming": {
-    "Present": "Present",
-    "Absent": "Absent",
+    "Present": "Anwesend",
+    "Absent": "Abwesend",
     "Unknown": "unbekannt"
   },
   "attachmentTags": {
     "Picture": "Foto",
     "PoliceReport": "Polizeibericht",
-    "MedicalReport": "Medical Report",
-    "Other": "Other"
+    "MedicalReport": "Medizinischer Befund",
+    "Other": "Andere"
   },
   "attachmentCategory": {
     "Incident": "Ereignis",
     "Avalanche": "Lawine",
     "Snowpack": "Schneedecke",
-    "Group": "Group",
+    "Group": "Gruppe",
     "Person": "Person",
     "Weather": "Wetter"
   }
