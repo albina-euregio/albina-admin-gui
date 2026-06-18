@@ -22,7 +22,7 @@
     - text: URL to static avalanche files
     - textbox "URL to static avalanche files"
     - text: URL to server images
-    - textbox "URL to server images": https://avalanche.report/images/
+    - textbox "URL to server images": https://admin.avalanche.report/images/
     - text: URL to education content
     - textbox "URL to education content": https://avalanche.report/education/
     - text: Number of micro regions
