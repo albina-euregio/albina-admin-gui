@@ -82,8 +82,7 @@ export class RegionConfigurationComponent {
       this.authenticationService.setActiveRegion(config);
     }
 
-    const json = RegionConfigurationSchema.parse(config);
-    this.configurationService.postRegionConfiguration(json).subscribe(
+    this.configurationService.postRegionConfiguration(config).subscribe(
       () => {
         this.saveConfigurationLoading = false;
         console.debug("Region configuration saved!");

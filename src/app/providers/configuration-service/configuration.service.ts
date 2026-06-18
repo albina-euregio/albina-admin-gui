@@ -53,7 +53,7 @@ export class ConfigurationService {
 
   public postRegionConfiguration(json) {
     const url = this.constantsService.getServerUrlGET("/regions");
-    const body = JSON.stringify(json);
+    const body = JSON.stringify(json, (_, v) => (v === "" ? null : v));
     return this.http.post(url, body);
   }
 }
