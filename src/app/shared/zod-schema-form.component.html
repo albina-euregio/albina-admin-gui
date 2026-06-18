@@ -192,7 +192,9 @@
             type="text"
             [class]="zodUtil.zodCssClass(zodType, value()[key])"
             [ngModel]="value()[key]"
-            (ngModelChange)="Object.assign(value(), Object.fromEntries([[key, $event.split(',')]])); onFieldChange()"
+            (ngModelChange)="
+              Object.assign(value(), Object.fromEntries([[key, $event.split(',').filter((s) => s)]])); onFieldChange()
+            "
           />
         } @else if (inner.type === "string") {
           @if (key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
