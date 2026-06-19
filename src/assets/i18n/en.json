@@ -1835,8 +1835,8 @@
     "weakLayerGrainSize2": "Weak Layer Grain Size (2)",
     "weakLayerLocation": "Weak layer Location",
     "bedSurfaceStepped": "Bed Surface Stepped",
-    "avalancheMoistureStartZone": "Avalanche Moisture: Start Zone",
-    "avalancheMoistureDeposit": "Avalanche Moisture: Deposit",
+    "startZoneMoisture": "Start Zone Moisture",
+    "depositMoisture": "Deposit Moisture",
     "depositHeight": "Deposit Height",
     "depositWidth": "Deposit Width",
     "debrisType": "Debris Type",
@@ -1985,8 +1985,8 @@
     "weakLayerGrainSize2": "Grain size to the nearest 0.25 mm.",
     "weakLayerLocation": "Within new snow: Weak layer located within recently fallen and wind-drifted snow from the current snowfall or deposition period; At interface with old snow: Weak layer at the boundary between new and old snow (e.g. surface hoar on the old snow surface before being covered); Within the old snowpack: Weak layer in the middle or upper part of the old snowpack; Near the ground: Weak layer in the lower part of the snowpack, close to the ground, typically consisting of well-developed faceted crystals. Avalanches releasing on this layer often expose the ground.",
     "bedSurfaceStepped": "Select “Yes” if the avalanche stepped down into a deeper weak layer.",
-    "avalancheMoistureStartZone": "",
-    "avalancheMoistureDeposit": "",
+    "startZoneMoisture": "",
+    "depositMoisture": "",
     "depositHeight": "Maximum height of the deposit",
     "depositWidth": "Maximum width of the deposit",
     "debrisType": "Select the options that best describe the composition of the debris shortly after the avalanche.",
@@ -2221,13 +2221,13 @@
     "Trees": "Trees",
     "Other": "Other"
   },
-  "avalancheMoistureStartZone": {
+  "startZoneMoisture": {
     "Dry": "Dry",
     "Moist": "Moist",
     "Wet": "Wet",
     "Unknown": "Unknown"
   },
-  "avalancheMoistureDeposit": {
+  "depositMoisture": {
     "Dry": "Dry",
     "Moist": "Moist",
     "Wet": "Wet"

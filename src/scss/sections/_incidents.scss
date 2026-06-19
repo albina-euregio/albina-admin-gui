@@ -16,17 +16,29 @@
   }
 
   // https://getbootstrap.com/docs/5.3/customize/color/
-  .bg-incident-trigger {
-    background-color: rgba($indigo-100, 0.5);
-    border-left: 3px solid $indigo-400;
-  }
-  .bg-start-zone {
+  .bg-avalanche-start-zone {
     background-color: rgba($teal-100, 0.5);
     border-left: 3px solid $teal-400;
   }
-  .bg-weak-layer {
+  .bg-avalanche-trigger {
+    background-color: rgba($indigo-100, 0.5);
+    border-left: 3px solid $indigo-400;
+  }
+  .bg-avalanche-weak-layer {
     background-color: rgba($cyan-100, 0.5);
     border-left: 3px solid $cyan-500;
+  }
+  .bg-avalanche-slab {
+    background-color: rgba($pink-100, 0.5);
+    border-left: 3px solid $pink-500;
+  }
+  .bg-avalanche-deposit {
+    background-color: rgba($yellow-100, 0.5);
+    border-left: 3px solid $yellow-500;
+  }
+  .bg-avalanche-communication {
+    background-color: rgba($purple-100, 0.5);
+    border-left: 3px solid $purple-400;
   }
   .bg-public-danger-rating {
     background-color: rgba($blue-100, 0.5);
