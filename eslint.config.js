@@ -31,6 +31,7 @@ module.exports = tseslint.config(
           type: "attribute",
         },
       ],
+      "@angular-eslint/prefer-on-push-component-change-detection": "warn",
       "@typescript-eslint/no-empty-function": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
     },
