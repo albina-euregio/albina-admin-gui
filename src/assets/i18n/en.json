@@ -1961,7 +1961,7 @@
     "relevantAvalancheProblem": "Select the most relevant EAWS Avalanche Problem.",
     "trigger": "Natural: Triggered without human influence; Person: Triggered by one or more people; Explosives: Triggered by explosives, artillery, or gas; Vehicle: Triggered by a vehicle (e.g. snowcat, helicopter); Unknown: Trigger is unknown or unclear",
     "natural": "",
-    "person": "",
+    "person": "Accidental: e.g. skier, snowboarder, hiker, climber; Controlled: e.g. skier deliberately ski cutting a slope or cornice",
     "additionalLoad": "Low additional load: single skier/snowboarder, well-spaced group ≥10 m, or snowshoer; High additional load: closely spaced group <10 m,  single person on foot, falling skier/snowboarder.",
     "explosives": "",
     "vehicle": "",
@@ -2158,8 +2158,8 @@
     "RockFall": "Rock fall"
   },
   "person": {
-    "PersonAccidental": "Person (e.g. skier, snowboarder, hiker, climber), accidental",
-    "PersonControlled": "Person, controlled (i.e., skier deliberately ski cutting a slope, cornice, etc.)"
+    "PersonAccidental": "Accidental",
+    "PersonControlled": "Controlled"
   },
   "explosives": {
     "Artillery": "Artillery",
