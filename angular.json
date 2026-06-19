@@ -23,7 +23,7 @@
               "base": "dist"
             },
             "index": "src/index.html",
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "src/tsconfig.json",
             "polyfills": ["zone.js"],
             "assets": [
               {
