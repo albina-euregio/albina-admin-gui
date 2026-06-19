@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { BulletinStatus } from "../enums/enums";
@@ -7,6 +7,7 @@ import { BulletinStatus } from "../enums/enums";
   selector: "app-bulletin-status-badge",
   templateUrl: "bulletin-status-badge.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateModule],
 })
 export class BulletinStatusBadgeComponent {

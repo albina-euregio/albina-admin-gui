@@ -1,4 +1,4 @@
-import { Component, input, inject } from "@angular/core";
+import { Component, input, inject, ChangeDetectionStrategy } from "@angular/core";
 
 import * as Enums from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -7,6 +7,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
   selector: "app-danger-rating-icon",
   templateUrl: "danger-rating-icon.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class DangerRatingIconComponent {

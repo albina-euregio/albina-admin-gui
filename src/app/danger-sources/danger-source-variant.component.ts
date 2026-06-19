@@ -1,5 +1,15 @@
 import { DatePipe } from "@angular/common";
-import { Component, ElementRef, inject, input, OnChanges, OnInit, output, ViewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  inject,
+  input,
+  OnChanges,
+  OnInit,
+  output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -53,6 +63,7 @@ import * as DangerSourceModels from "./models/danger-source-variant.model";
     NgxMousetrapDirective,
     ZodSchemaFormComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: `
     ::ng-deep .zod-form-field {
       margin-top: 1rem;

@@ -1,4 +1,4 @@
-import { Component, TemplateRef, viewChild, inject } from "@angular/core";
+import { Component, TemplateRef, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -20,6 +20,7 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
   selector: "app-dashboard",
   templateUrl: "./full-layout.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterLinkActive, RouterLink, BsDropdownModule, RouterOutlet, TranslateModule, NgxMousetrapDirective],
 })
 export class FullLayoutComponent {

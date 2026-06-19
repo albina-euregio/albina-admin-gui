@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { NgxMousetrapDirective } from "app/shared/mousetrap-directive";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -7,6 +7,7 @@ import { BsModalRef } from "ngx-bootstrap/modal";
   selector: "app-modal-confirm",
   standalone: true,
   imports: [TranslateModule, NgxMousetrapDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="modal-body text-center">
       <p [innerHTML]="text"></p>

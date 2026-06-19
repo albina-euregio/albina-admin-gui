@@ -1,5 +1,14 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, viewChild, input, inject, signal } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  viewChild,
+  input,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
@@ -44,6 +53,7 @@ import {
   ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [GeocodingService, CoordinateDataService, ElevationService],
 })
 export class ObservationEditorComponent implements AfterViewInit {

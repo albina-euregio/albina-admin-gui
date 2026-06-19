@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, viewChild, inject } from "@angular/core";
+import { Component, OnInit, TemplateRef, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
@@ -15,6 +15,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
   templateUrl: "login.component.html",
   standalone: true,
   imports: [FormsModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })
 export class LoginComponent implements OnInit {

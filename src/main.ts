@@ -8,7 +8,6 @@ import localeFr from "@angular/common/locales/fr";
 import localeIt from "@angular/common/locales/it";
 import { provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter, withHashLocation } from "@angular/router";
 import { provideTranslateService } from "@ngx-translate/core";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
@@ -72,7 +71,6 @@ function bootstrapApplication0() {
       DatePipe,
       provideEchartsCore({ echarts }),
       provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
-      provideAnimationsAsync("noop"),
     ],
   });
 }

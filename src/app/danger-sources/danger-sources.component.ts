@@ -1,5 +1,5 @@
 import { formatDate, DatePipe } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 
@@ -12,6 +12,7 @@ import { DangerSourceVariantType } from "./models/danger-source-variant.model";
 @Component({
   templateUrl: "danger-sources.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DatePipe, TranslateModule],
 })
 export class DangerSourcesComponent {

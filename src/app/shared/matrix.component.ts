@@ -1,4 +1,4 @@
-import { Component, inject, input, model, output } from "@angular/core";
+import { Component, inject, input, model, output, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
 
@@ -18,6 +18,7 @@ interface MatrixCell {
   templateUrl: "matrix.component.html",
   styleUrls: ["matrix.component.scss"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateModule],
 })
 export class MatrixComponent {

@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { BulletinSchema } from "src/app/models/bulletin.model";
+
+import { BulletinSchema } from "../src/app/models/bulletin.model";
 
 test.skip("Bulletin schema validation", async () => {
   const start = Temporal.PlainDate.from({ year: 2025, month: 12, day: 1 });

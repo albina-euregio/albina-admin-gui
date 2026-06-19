@@ -1,5 +1,15 @@
 import { DatePipe } from "@angular/common";
-import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
+import {
+  Component,
+  HostListener,
+  inject,
+  input,
+  OnInit,
+  output,
+  TemplateRef,
+  viewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 // For iframe
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
@@ -32,6 +42,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
   selector: "app-avalanche-bulletin",
   templateUrl: "avalanche-bulletin.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     BsDropdownModule,
     FormsModule,

@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe, formatDate } from "@angular/common";
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinStatus, PublicationChannel } from "app/enums/enums";
@@ -42,6 +42,7 @@ const CHECKLIST_CHANNELS: PublicationChannel[] = [
 @Component({
   templateUrl: "publication-checklist.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     RouterLink,

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { TabsModule } from "ngx-bootstrap/tabs";
 
@@ -10,6 +10,7 @@ import { UsersComponent } from "./users.component";
 @Component({
   templateUrl: "admin.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TabsModule,
     ServersConfigurationComponent,

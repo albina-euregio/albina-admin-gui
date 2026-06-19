@@ -1,4 +1,4 @@
-import { Component, inject, input } from "@angular/core";
+import { Component, inject, input, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -13,6 +13,7 @@ import { ConfigurationService } from "../providers/configuration-service/configu
   selector: "app-server-configuration",
   standalone: true,
   imports: [AlertModule, FormsModule, TranslateModule, ZodSchemaFormComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })
 export class ServerConfigurationComponent {

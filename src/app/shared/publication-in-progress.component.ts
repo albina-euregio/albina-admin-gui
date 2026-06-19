@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 
@@ -10,6 +10,7 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
   selector: "app-publication-in-progress",
   templateUrl: `publication-in-progress.component.html`,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DatePipe, TranslateModule],
 })
 export class PublicationInProgressComponent implements OnInit, OnDestroy {

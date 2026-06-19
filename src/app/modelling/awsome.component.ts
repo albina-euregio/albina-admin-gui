@@ -1,6 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  viewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
@@ -65,6 +73,7 @@ type DetailsTabLabel = string;
     NgxEchartsDirective,
   ],
   templateUrl: "awsome.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [BaseMapService, ObservationFilterService, ObservationMarkerService],
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {

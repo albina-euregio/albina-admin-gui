@@ -1,4 +1,4 @@
-import { Component, AfterContentInit, inject } from "@angular/core";
+import { Component, AfterContentInit, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 
@@ -14,6 +14,7 @@ import { RegionConfigurationComponent } from "./region-configuration.component";
   selector: "app-regions-configuration",
   standalone: true,
   imports: [AccordionModule, RegionConfigurationComponent, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })
 export class RegionsConfigurationComponent implements AfterContentInit {

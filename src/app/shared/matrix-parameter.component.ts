@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output } from "@angular/core";
+import { Component, inject, input, OnInit, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
@@ -14,6 +14,7 @@ import { SliderComponent, SliderOptions } from "./slider.component";
   selector: "app-matrix-parameter",
   templateUrl: "matrix-parameter.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DangerRatingComponent, FormsModule, TranslateModule, SliderComponent],
 })
 export class MatrixParameterComponent implements OnInit {

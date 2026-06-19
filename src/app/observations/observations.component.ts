@@ -14,6 +14,7 @@ import {
   HostListener,
   DestroyRef,
   CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -169,6 +170,7 @@ class ObservationData {
   ],
   templateUrl: "observations.component.html",
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     AlbinaObservationsService,
     BaseMapService,

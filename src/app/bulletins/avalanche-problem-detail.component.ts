@@ -1,5 +1,5 @@
 import { NgClass } from "@angular/common";
-import { Component, inject, input, OnChanges, output } from "@angular/core";
+import { Component, inject, input, OnChanges, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
@@ -22,6 +22,7 @@ import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decis
   templateUrl: "avalanche-problem-detail.component.html",
   styleUrls: ["avalanche-problem-detail.component.scss"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AvalancheProblemIconsComponent,
     NgClass,

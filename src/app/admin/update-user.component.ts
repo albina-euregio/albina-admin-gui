@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, inject } from "@angular/core";
+import { AfterContentInit, Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -25,6 +25,7 @@ type Result =
   selector: "app-update-user",
   standalone: true,
   imports: [FormsModule, TranslateModule, PasswordMismatchValidatorDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })
 export class UpdateUserComponent implements AfterContentInit {

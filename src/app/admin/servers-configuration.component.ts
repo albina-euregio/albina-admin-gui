@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 
@@ -13,6 +13,7 @@ import { ServerConfigurationComponent } from "./server-configuration.component";
   selector: "app-servers-configuration",
   standalone: true,
   imports: [AccordionModule, ServerConfigurationComponent, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })
 export class ServersConfigurationComponent implements OnInit {

@@ -14,6 +14,7 @@ import {
   OnDestroy,
   ViewChild,
   inject,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -37,6 +38,7 @@ const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id
   providers: [GraphicsService, BlogService, BaseMapService, LineaMapService, AlbinaObservationsService],
   templateUrl: "./awsstats.component.html",
   styleUrls: ["./awsstats.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AwsstatsComponent implements AfterViewInit, OnDestroy {

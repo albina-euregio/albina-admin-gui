@@ -9,6 +9,7 @@ import {
   TemplateRef,
   viewChild,
   ViewChild,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
@@ -58,6 +59,7 @@ import { DangerSourceModel } from "./models/danger-source.model";
     AvalancheProblemIconsComponent,
     AspectsComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [MapService],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {

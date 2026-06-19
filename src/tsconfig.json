@@ -1,17 +1,20 @@
 {
   "compilerOptions": {
-    "baseUrl": "",
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "lib": ["es2020", "dom", "ESNext.Array"],
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      "app/*": ["./app/*"],
+      "environments/*": ["./environments/*"]
+    },
     "skipLibCheck": true,
     "mapRoot": "./",
-    "module": "es2020",
+    "module": "ES2022",
     "moduleResolution": "bundler",
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "target": "ES2022",
+    "strict": false,
     "strictNullChecks": false,
     "typeRoots": ["../node_modules/@types"],
     "resolveJsonModule": true,
@@ -19,6 +22,12 @@
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
     "strictTemplates": true
   },
   "files": ["main.ts"],

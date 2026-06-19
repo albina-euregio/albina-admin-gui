@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { PublicationChannel } from "app/enums/enums";
 import { Alert } from "app/models/Alert";
@@ -22,6 +22,7 @@ interface PublicationInformation {
   selector: "app-blog",
   standalone: true,
   imports: [AlertModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [BlogService],
 })
 export class BlogComponent {

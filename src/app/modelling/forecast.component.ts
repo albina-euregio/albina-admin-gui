@@ -8,6 +8,7 @@ import {
   OnDestroy,
   TemplateRef,
   viewChild,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -49,6 +50,7 @@ export interface MultiselectDropdownData {
     GetDustParamService,
   ],
   templateUrl: "./forecast.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {

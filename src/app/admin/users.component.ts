@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, viewChild, inject } from "@angular/core";
+import { AfterContentInit, Component, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TemplateRef } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -17,6 +17,7 @@ import { UpdateUserComponent } from "./update-user.component";
   selector: "app-users",
   standalone: true,
   imports: [AlertModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })
 export class UsersComponent implements AfterContentInit {

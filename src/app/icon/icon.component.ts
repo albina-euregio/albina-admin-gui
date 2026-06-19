@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, ElementRef, HostListener, OnInit, ViewChild, inject } from "@angular/core";
+import { Component, ElementRef, HostListener, OnInit, ViewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 interface SelectorOption {
@@ -73,6 +73,7 @@ const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
   standalone: true,
   imports: [CommonModule, TranslateModule],
   templateUrl: "./icon.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./icon.component.css"],
 })
 export class IconComponent implements OnInit {

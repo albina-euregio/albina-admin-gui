@@ -11,6 +11,7 @@ import {
   TemplateRef,
   viewChild,
   ViewChild,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -75,6 +76,7 @@ import { ModalMediaFileComponent } from "./modal-media-file.component";
     BulletinTextComponent,
     PublicationInProgressComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [MapService],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {

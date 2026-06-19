@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -14,6 +14,7 @@ import { DangerSourceModel } from "./models/danger-source.model";
   selector: "app-modal-create-danger-source",
   templateUrl: "modal-create-danger-source.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, DatePipe, TranslateModule],
 })
 export class ModalCreateDangerSourceComponent {

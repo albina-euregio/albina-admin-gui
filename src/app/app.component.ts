@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -17,6 +17,7 @@ import { LocalStorageService } from "./providers/local-storage-service/local-sto
   selector: "body",
   template: "<router-outlet></router-outlet>",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterOutlet],
 })
 export class AppComponent {
