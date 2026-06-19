@@ -368,32 +368,36 @@
               {{ "incidentReportUI.overview" | translate }}
             </button>
           </li>
-          <li class="nav-item">
-            <button
-              class="nav-link d-flex align-items-center gap-2"
-              [class.active]="activeGroupSubTab === 'groups'"
-              [disabled]="incidentReport().personInvolvement !== 'Yes'"
-              (click)="activeGroupSubTab = 'groups'"
-            >
-              {{ "incidentReport.groupInformation" | translate }}
-              <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
-                incidentReport().groupInformation?.length ?? 0
-              }}</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button
-              class="nav-link d-flex align-items-center gap-2"
-              [class.active]="activeGroupSubTab === 'victims'"
-              [disabled]="incidentReport().personInvolvement !== 'Yes'"
-              (click)="activeGroupSubTab = 'victims'"
-            >
-              {{ "incidentReport.victimInformation" | translate }}
-              <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
-                incidentReport().victimInformation?.length ?? 0
-              }}</span>
-            </button>
-          </li>
+          @if (incidentReport().personInvolvement === "Yes") {
+            <li class="nav-item">
+              <button
+                class="nav-link d-flex align-items-center gap-2"
+                [class.active]="activeGroupSubTab === 'groups'"
+                [disabled]="incidentReport().personInvolvement !== 'Yes'"
+                (click)="activeGroupSubTab = 'groups'"
+              >
+                {{ "incidentReport.groupInformation" | translate }}
+                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
+                  incidentReport().groupInformation?.length ?? 0
+                }}</span>
+              </button>
+            </li>
+          }
+          @if (incidentReport().personInvolvement === "Yes") {
+            <li class="nav-item">
+              <button
+                class="nav-link d-flex align-items-center gap-2"
+                [class.active]="activeGroupSubTab === 'victims'"
+                [disabled]="incidentReport().personInvolvement !== 'Yes'"
+                (click)="activeGroupSubTab = 'victims'"
+              >
+                {{ "incidentReport.victimInformation" | translate }}
+                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
+                  incidentReport().victimInformation?.length ?? 0
+                }}</span>
+              </button>
+            </li>
+          }
         </ul>
 
         <!-- Overview sub-tab -->
