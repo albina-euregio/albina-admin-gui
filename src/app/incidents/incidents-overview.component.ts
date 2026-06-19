@@ -10,7 +10,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { IncidentService } from "./incident.service";
 import { IncidentReport } from "./models/incident-report.model";
 
-type SortableField = "dateTime" | "updatedAt" | "reportStatus";
+type IncidentColumn = Extract<keyof IncidentReport, "dateTime" | "location" | "updatedAt" | "reportStatus">;
 
 @Component({
   selector: "app-incidents-overview",
@@ -30,10 +30,12 @@ export class IncidentsOverviewComponent implements OnInit {
   incidents: IncidentReport[] = [];
   loading = false;
 
-  sortField: SortableField = "updatedAt";
+  sortField: IncidentColumn = "updatedAt";
   sortDir: "asc" | "desc" = "desc";
   filterStatus: IncidentReport["reportStatus"] | "" = "";
   filterDateRange: Date[] = [];
+
+  readonly columns: IncidentColumn[] = ["dateTime", "location", "updatedAt", "reportStatus"];
 
   readonly statusOptions: NonNullable<IncidentReport["reportStatus"]>[] = [
     "Draft",
@@ -82,7 +84,7 @@ export class IncidentsOverviewComponent implements OnInit {
       });
   }
 
-  sortBy(field: SortableField) {
+  sortBy(field: IncidentColumn) {
     if (this.sortField === field) {
       this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
     } else {
@@ -91,7 +93,7 @@ export class IncidentsOverviewComponent implements OnInit {
     }
   }
 
-  sortIcon(field: SortableField): string {
+  sortIcon(field: IncidentColumn): string {
     if (this.sortField !== field) return "ph-arrows-down-up";
     return this.sortDir === "asc" ? "ph-arrow-up" : "ph-arrow-down";
   }
