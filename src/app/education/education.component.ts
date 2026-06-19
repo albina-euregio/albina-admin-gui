@@ -1,9 +1,10 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 @Component({
   templateUrl: "education.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class EducationComponent {

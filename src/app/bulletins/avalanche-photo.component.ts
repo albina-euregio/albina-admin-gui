@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from "@angular/core";
+import { Component, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
@@ -14,6 +14,7 @@ import { AvalanchePhotoPreviewComponent } from "./avalanche-photo-preview.compon
   selector: "app-avalanche-photo",
   templateUrl: "avalanche-photo.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AccordionModule,
     TranslateModule,

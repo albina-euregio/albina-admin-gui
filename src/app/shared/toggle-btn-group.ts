@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from "@angular/core";
+import { Component, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 import { AvalancheProblem, DangerRating } from "app/enums/enums";
@@ -12,6 +12,7 @@ import type { WidgetType } from "./zod-schema-form.widget-registry";
   selector: "app-toggle-btn-group",
   templateUrl: "toggle-btn-group.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, AvalancheProblemIconsComponent, DangerRatingComponent],
 })
 export class ToggleBtnGroup<T> {

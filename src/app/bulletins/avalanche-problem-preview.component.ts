@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from "@angular/core";
+import { Component, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
 
@@ -14,6 +14,7 @@ import { DangerRatingComponent } from "../shared/danger-rating.component";
   selector: "app-avalanche-problem-preview",
   templateUrl: "avalanche-problem-preview.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DangerRatingComponent,
     AvalancheProblemIconsComponent,

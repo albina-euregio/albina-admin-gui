@@ -1,5 +1,5 @@
 import { NgClass, UpperCasePipe } from "@angular/common";
-import { Component, TemplateRef, input, output, inject, effect } from "@angular/core";
+import { Component, TemplateRef, input, output, inject, effect, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -19,6 +19,7 @@ import { HtmlPipe } from "./html.pipe";
   selector: "app-bulletin-text",
   templateUrl: "./bulletin-text.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, FormsModule, UpperCasePipe, TranslateModule, HtmlPipe],
 })
 export class BulletinTextComponent {

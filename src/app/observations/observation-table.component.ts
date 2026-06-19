@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, input, output, inject } from "@angular/core";
+import { Component, input, output, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -17,6 +17,7 @@ import { ObservationMarkerService } from "./observation-marker.service";
   standalone: true,
   imports: [AvalancheProblemIconsComponent, CommonModule, FormsModule, TranslateModule],
   selector: "app-observation-table",
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "observation-table.component.html",
 })
 export class ObservationTableComponent {

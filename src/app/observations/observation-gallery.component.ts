@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Component, input, output } from "@angular/core";
+import { Component, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -12,6 +12,7 @@ import { GenericObservation, ObservationSource, ObservationType } from "./models
   standalone: true,
   imports: [FormsModule, TranslateModule, NgxMousetrapDirective],
   selector: "app-observation-gallery",
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "observation-gallery.component.html",
 })
 export class ObservationGalleryComponent {

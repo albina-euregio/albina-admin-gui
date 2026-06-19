@@ -1,5 +1,5 @@
 import { formatDate, DatePipe } from "@angular/common";
-import { Component, OnDestroy, inject } from "@angular/core";
+import { Component, OnDestroy, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -26,6 +26,7 @@ import { TeamStressLevelsComponent } from "./team-stress-levels.component";
   templateUrl: "bulletins.component.html",
   standalone: true,
   imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule, BulletinStatusBadgeComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [StatusService],
 })
 export class BulletinsComponent implements OnDestroy {

@@ -5,7 +5,15 @@ import {
   type AwsstatsPlotConfig,
 } from "@albina-euregio/linea/aws-stats-plot-config";
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  inject,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
@@ -23,6 +31,7 @@ const AVAILABLE_YEARLY_CHART_TYPES = CONFIGURED_PLOTS.yearlystats.map((c) => c.i
   providers: [GraphicsService, BlogService],
   templateUrl: "./yearlystats.component.html",
   styleUrls: ["./yearlystats.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class YearlystatsComponent implements AfterViewInit {

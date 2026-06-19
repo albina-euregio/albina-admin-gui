@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -17,6 +17,7 @@ type Result =
   templateUrl: "change-password.component.html",
   selector: "app-change-password",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, TranslateModule, Password2MismatchValidatorDirective],
 })
 export class ChangePasswordComponent {

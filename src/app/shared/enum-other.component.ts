@@ -1,4 +1,4 @@
-import { Component, computed, input, model, signal } from "@angular/core";
+import { Component, computed, input, model, signal, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { z } from "zod/v4";
@@ -19,6 +19,7 @@ import { zodCssClass } from "./zod-util";
   selector: "app-enum-other",
   templateUrl: "enum-other.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, ToggleBtnGroup, TranslateModule],
 })
 export class EnumOtherComponent {

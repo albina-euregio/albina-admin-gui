@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, DestroyRef, inject, OnInit } from "@angular/core";
+import { Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -26,6 +26,7 @@ interface IncidentRow {
   templateUrl: "incidents-overview.component.html",
   standalone: true,
   imports: [DatePipe, TranslateModule, FormsModule, BsDatepickerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [IncidentService],
 })
 export class IncidentsOverviewComponent implements OnInit {

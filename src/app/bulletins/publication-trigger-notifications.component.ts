@@ -1,4 +1,4 @@
-import { Component, inject, input } from "@angular/core";
+import { Component, inject, input, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { PublicationChannel } from "app/enums/enums";
 import { AlertModule } from "ngx-bootstrap/alert";
@@ -12,6 +12,7 @@ import { ModalConfirmComponent } from "./modal-confirm.component";
   selector: "app-publication-trigger-notifications",
   standalone: true,
   imports: [AlertModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
       @for (language of languages(); track language) {

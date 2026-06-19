@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { saveAs } from "file-saver";
@@ -14,6 +14,7 @@ import { StatisticsService } from "../providers/statistics-service/statistics.se
   selector: "app-statistics",
   standalone: true,
   imports: [FormsModule, BsDatepickerModule, TranslateModule, TabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [StatisticsService],
 })
 export class StatisticsComponent {

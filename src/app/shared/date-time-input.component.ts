@@ -1,8 +1,9 @@
-import { Component, input, model } from "@angular/core";
+import { Component, input, model, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
   selector: "app-date-time-input",
   templateUrl: "date-time-input.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class DateTimeInputComponent {

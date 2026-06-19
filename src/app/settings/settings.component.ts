@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
@@ -15,6 +15,7 @@ import { LocalStorageService } from "../providers/local-storage-service/local-st
 @Component({
   templateUrl: "settings.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AlertModule, FormsModule, TranslateModule],
 })
 export class SettingsComponent {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, ChangeDetectionStrategy } from "@angular/core";
 import type { EChartsCoreOption as EChartsOption } from "echarts/core";
 import { NgxEchartsDirective } from "ngx-echarts";
 
@@ -10,6 +10,7 @@ import { UserService } from "../providers/user-service/user.service";
   selector: "app-team-stress-levels",
   template: ` <div echarts [options]="dataset"></div> `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgxEchartsDirective],
 })
 export class TeamStressLevelsComponent implements OnInit {

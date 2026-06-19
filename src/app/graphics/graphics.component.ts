@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
@@ -14,6 +14,7 @@ import { YearlystatsComponent } from "./yearlystats.component";
   standalone: true,
   imports: [CommonModule, TranslateModule, AwsstatsComponent, YearlystatsComponent, TabsModule, LineaExportComponent],
   templateUrl: "./graphics.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class GraphicsComponent implements OnInit {

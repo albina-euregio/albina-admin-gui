@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, computed, inject, input, model } from "@angular/core";
+import { Component, computed, inject, input, model, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Aspect } from "app/enums/enums";
@@ -38,6 +38,7 @@ type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
   selector: "app-zod-schema-form",
   templateUrl: "zod-schema-form.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AspectsComponent,
     DatePipe,

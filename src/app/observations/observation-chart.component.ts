@@ -1,4 +1,4 @@
-import { Component, OnInit, output, input, inject } from "@angular/core";
+import { Component, OnInit, output, input, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
@@ -11,6 +11,7 @@ import { ObservationMarkerService } from "./observation-marker.service";
   standalone: true,
   selector: "app-observation-chart",
   imports: [NgxEchartsDirective, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./observation-chart.component.html",
 })
 export class ObservationChartComponent<T> implements OnInit {

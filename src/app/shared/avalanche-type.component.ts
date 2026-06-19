@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 
 import * as Enums from "../enums/enums";
 
@@ -6,6 +6,7 @@ import * as Enums from "../enums/enums";
   selector: "app-avalanche-type",
   templateUrl: "./avalanche-type.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class AvalancheTypeComponent {

@@ -1,4 +1,4 @@
-import { Component, input, inject } from "@angular/core";
+import { Component, input, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -24,6 +24,7 @@ import { ZodInputComponent } from "../shared/zod-input.component";
   standalone: true,
   imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent, ZodSchemaFormComponent],
   providers: [ConfigurationService],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: `
     ::ng-deep .zod-form-field {
       margin-top: 1rem;

@@ -1,5 +1,15 @@
 import { AsyncPipe, DatePipe } from "@angular/common";
-import { Component, DestroyRef, inject, Injector, input, model, OnDestroy, OnInit } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  inject,
+  Injector,
+  input,
+  model,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -47,6 +57,7 @@ import { IncidentReport } from "./models/incident-report.model";
     TranslateModule,
     ZodSchemaFormComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [GeocodingService, IncidentService, IncidentReportMapService],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {

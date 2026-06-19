@@ -1,4 +1,4 @@
-import { Component, input, output } from "@angular/core";
+import { Component, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { z } from "zod/v4";
 
@@ -8,6 +8,7 @@ import { zodCssClass } from "./zod-util";
   selector: "app-zod-input",
   templateUrl: "zod-input.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule],
 })
 export class ZodInputComponent<T> {

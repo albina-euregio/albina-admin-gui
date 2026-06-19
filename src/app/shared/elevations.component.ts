@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, input, OnChanges, output, model } from "@angular/core";
+import { Component, input, OnChanges, output, model, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -7,6 +7,7 @@ import { TranslateModule } from "@ngx-translate/core";
   selector: "app-elevations",
   templateUrl: "elevations.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateModule, FormsModule, CommonModule],
 })
 export class ElevationsComponent implements OnChanges {

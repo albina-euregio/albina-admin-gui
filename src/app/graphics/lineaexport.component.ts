@@ -10,6 +10,7 @@ import {
   QueryList,
   viewChild,
   ViewChildren,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
@@ -25,6 +26,7 @@ import { GraphicsService } from "./graphics.service";
   providers: [GraphicsService, BlogService, LineaMapService],
   templateUrl: "./lineaexport.component.html",
   styleUrls: ["./lineaexport.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LineaExportComponent implements AfterViewInit {
