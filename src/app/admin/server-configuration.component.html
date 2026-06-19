@@ -1,4 +1,3 @@
-<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
 @for (alert of alerts; track alert) {
   <div>
     <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
