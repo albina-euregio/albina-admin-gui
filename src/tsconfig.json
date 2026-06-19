@@ -3,6 +3,10 @@
     "declaration": false,
     "experimentalDecorators": true,
     "lib": ["ES2022", "dom"],
+    "paths": {
+      "app/*": ["./app/*"],
+      "environments/*": ["./environments/*"]
+    },
     "skipLibCheck": true,
     "mapRoot": "./",
     "module": "ES2022",
