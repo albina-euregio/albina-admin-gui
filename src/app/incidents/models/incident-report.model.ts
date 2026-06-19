@@ -285,7 +285,7 @@ export const AvalancheInformationSchema = z.object({
     .enum(["PersonAccidental", "PersonControlled"])
     .register(widgetRegistry, { class: "bg-incident-trigger" })
     .nullish(),
-  additionalLoad: z.enum(["High", "Low"]).register(widgetRegistry, { class: "bg-incident-trigger" }).nullish(),
+  additionalLoad: z.enum(["Low", "High"]).register(widgetRegistry, { class: "bg-incident-trigger" }).nullish(),
   explosives: enumWithOther(
     z.enum([
       "Artillery",
