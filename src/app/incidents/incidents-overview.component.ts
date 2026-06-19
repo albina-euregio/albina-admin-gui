@@ -1,15 +1,15 @@
-import { DatePipe } from "@angular/common";
 import { Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { ZodDisplayComponent } from "app/shared/zod-display.component";
 import { orderBy } from "es-toolkit";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { IncidentService } from "./incident.service";
-import { IncidentReport } from "./models/incident-report.model";
+import { IncidentReport, IncidentReportSchema } from "./models/incident-report.model";
 
 type IncidentColumn = Extract<keyof IncidentReport, "dateTime" | "location" | "updatedAt" | "reportStatus">;
 
@@ -17,7 +17,7 @@ type IncidentColumn = Extract<keyof IncidentReport, "dateTime" | "location" | "u
   selector: "app-incidents-overview",
   templateUrl: "incidents-overview.component.html",
   standalone: true,
-  imports: [DatePipe, TranslateModule, FormsModule, BsDatepickerModule],
+  imports: [TranslateModule, FormsModule, BsDatepickerModule, ZodDisplayComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [IncidentService],
 })
@@ -36,6 +36,7 @@ export class IncidentsOverviewComponent implements OnInit {
   filterStatus: IncidentReport["reportStatus"] | "" = "";
   filterDateRange: Date[] = [];
 
+  readonly IncidentReportSchema = IncidentReportSchema;
   readonly columns: IncidentColumn[] = ["dateTime", "location", "updatedAt", "reportStatus"];
 
   readonly statusOptions: NonNullable<IncidentReport["reportStatus"]>[] = [

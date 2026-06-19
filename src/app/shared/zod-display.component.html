@@ -20,7 +20,7 @@
   }
 } @else if (type === "date") {
   <span class="form-control-plaintext ps-0">
-    {{ castDate(value()) | date: "full" : undefined : translateService.getCurrentLang() }}
+    {{ castDate(value()) | date: dateFormat() : undefined : translateService.getCurrentLang() }}
   </span>
 } @else if (type === "string") {
   <span class="form-control-plaintext ps-0">{{ value() || "—" }}</span>

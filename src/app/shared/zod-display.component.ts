@@ -18,6 +18,7 @@ export class ZodDisplayComponent<T> {
   readonly zodType = input<z.ZodType<T>>();
   readonly value = input<T>();
   readonly valueI18n = input<string>("#");
+  readonly dateFormat = input<string>("full");
 
   readonly inner = computed(() => zodUtil.unwrap(this.zodType()));
 

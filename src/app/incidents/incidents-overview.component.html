@@ -41,23 +41,16 @@
         <tr class="align-middle">
           @for (col of columns; track col) {
             <td class="text-center" [attr.data-label]="`incidentReport.${col}` | translate">
-              @switch (col) {
-                @case ("dateTime") {
-                  {{ incident.dateTime | date: "medium" : undefined : translateService.getCurrentLang() }}
-                }
-                @case ("updatedAt") {
-                  {{ incident.updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
-                }
-                @case ("reportStatus") {
-                  @if (incident.reportStatus) {
-                    <span class="badge {{ statusClass(incident.reportStatus) }}">
-                      {{ "reportStatus." + incident.reportStatus | translate }}
-                    </span>
-                  }
-                }
-                @default {
-                  {{ incident[col] }}
-                }
+              @if (col === "reportStatus" && incident.reportStatus) {
+                <span class="badge {{ statusClass(incident.reportStatus) }}">
+                  {{ "reportStatus." + incident.reportStatus | translate }}
+                </span>
+              } @else {
+                <app-zod-display
+                  [zodType]="IncidentReportSchema.shape[col]"
+                  [value]="incident[col]"
+                  dateFormat="medium"
+                />
               }
             </td>
           }
