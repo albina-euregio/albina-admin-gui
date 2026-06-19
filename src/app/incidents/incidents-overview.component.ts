@@ -13,7 +13,7 @@ import { LocalStorageService } from "../providers/local-storage-service/local-st
 import { IncidentService } from "./incident.service";
 import { IncidentReport, IncidentReportSchema } from "./models/incident-report.model";
 
-type IncidentColumn = Extract<keyof IncidentReport, "dateTime" | "location" | "updatedAt" | "reportStatus">;
+type IncidentColumn = keyof IncidentReport;
 
 @Component({
   selector: "app-incidents-overview",
@@ -41,8 +41,18 @@ export class IncidentsOverviewComponent implements OnInit {
 
   readonly IncidentReportSchema = IncidentReportSchema;
 
-  readonly allColumns: IncidentColumn[] = ["dateTime", "location", "updatedAt", "reportStatus"];
-  readonly columnVisibility: Record<IncidentColumn, boolean> = {
+  readonly allColumns: IncidentColumn[] = [
+    "dateTime",
+    "location",
+    "updatedAt",
+    "reportStatus",
+    "avalancheLength",
+    "avalancheProblem",
+    "avalancheRegion",
+    "avalancheSize",
+    "avalancheType",
+  ];
+  readonly columnVisibility: Partial<Record<IncidentColumn, boolean>> = {
     dateTime: true,
     location: true,
     updatedAt: true,
