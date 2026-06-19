@@ -79,40 +79,7 @@
           }
         </div>
         @if (displayOnly()) {
-          @if (inner.type === "number") {
-            <span class="form-control-plaintext ps-0">{{ value()[x.key] ?? "—" }}</span>
-          } @else if (inner.type === "enum") {
-            @if (value()[x.key]) {
-              <span class="form-control-plaintext ps-0">{{
-                valueI18n.replace("#", $any(value()[x.key])) | translate
-              }}</span>
-            } @else {
-              <span class="form-control-plaintext text-muted ps-0">—</span>
-            }
-          } @else if (inner.type === "array") {
-            @let arr = castArray(value()[x.key]);
-            @if (arr?.length) {
-              <div class="d-flex flex-wrap gap-1 pt-1">
-                @for (v of arr; track v) {
-                  <span class="badge bg-black text-white">{{ valueI18n.replace("#", $any(v)) | translate }}</span>
-                }
-              </div>
-            } @else {
-              <span class="form-control-plaintext text-muted ps-0">—</span>
-            }
-          } @else if (inner.type === "date") {
-            <span class="form-control-plaintext ps-0">
-              {{ castDate(value()[x.key]) | date: "full" : undefined : translateService.getCurrentLang() }}
-            </span>
-          } @else if (inner.type === "string") {
-            <span class="form-control-plaintext ps-0">{{ value()[x.key] || "—" }}</span>
-          } @else if (inner.type === "boolean") {
-            <span class="form-control-plaintext ps-0">
-              <i class="ph" [class.ph-check-circle]="value()[x.key]" [class.ph-minus-circle]="!value()[x.key]"></i>
-            </span>
-          } @else {
-            <span class="form-control-plaintext text-muted ps-0">{{ value()[x.key] ?? "—" }}</span>
-          }
+          <app-zod-display [zodType]="x.value" [value]="value()[x.key]" [valueI18n]="valueI18n" />
         } @else if (inner.type === "enum") {
           @let enumValues = Object.keys(inner.def.entries);
           @if (widget?.widget === "slider") {

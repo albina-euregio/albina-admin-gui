@@ -1,0 +1,33 @@
+@let type = inner().type;
+@if (type === "number") {
+  <span class="form-control-plaintext ps-0">{{ value() ?? "—" }}</span>
+} @else if (type === "enum") {
+  @if (value()) {
+    <span class="form-control-plaintext ps-0">{{ valueI18n().replace("#", $any(value())) | translate }}</span>
+  } @else {
+    <span class="form-control-plaintext text-muted ps-0">—</span>
+  }
+} @else if (type === "array") {
+  @let arr = castArray(value());
+  @if (arr?.length) {
+    <div class="d-flex flex-wrap gap-1 pt-1">
+      @for (v of arr; track v) {
+        <span class="badge bg-black text-white">{{ valueI18n().replace("#", $any(v)) | translate }}</span>
+      }
+    </div>
+  } @else {
+    <span class="form-control-plaintext text-muted ps-0">—</span>
+  }
+} @else if (type === "date") {
+  <span class="form-control-plaintext ps-0">
+    {{ castDate(value()) | date: "full" : undefined : translateService.getCurrentLang() }}
+  </span>
+} @else if (type === "string") {
+  <span class="form-control-plaintext ps-0">{{ value() || "—" }}</span>
+} @else if (type === "boolean") {
+  <span class="form-control-plaintext ps-0">
+    <i class="ph" [class.ph-check-circle]="value()" [class.ph-minus-circle]="!value()"></i>
+  </span>
+} @else {
+  <span class="form-control-plaintext text-muted ps-0">{{ value() ?? "—" }}</span>
+}

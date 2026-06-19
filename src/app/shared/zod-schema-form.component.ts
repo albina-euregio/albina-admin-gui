@@ -1,4 +1,3 @@
-import { DatePipe } from "@angular/common";
 import { Component, computed, inject, input, model, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -15,6 +14,7 @@ import { DateTimeInputComponent } from "./date-time-input.component";
 import { EnumOtherComponent } from "./enum-other.component";
 import { EnumSliderComponent } from "./enum-slider.component";
 import { ToggleBtnGroup } from "./toggle-btn-group";
+import { ZodDisplayComponent } from "./zod-display.component";
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
 import * as zodUtil from "./zod-util";
 
@@ -41,7 +41,6 @@ type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AspectsComponent,
-    DatePipe,
     DateTimeInputComponent,
     EnumOtherComponent,
     EnumSliderComponent,
@@ -49,6 +48,7 @@ type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
     QuillModule,
     ToggleBtnGroup,
     TranslateModule,
+    ZodDisplayComponent,
   ],
 })
 export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>> {
@@ -85,9 +85,6 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   castArray(x: unknown) {
     return x as unknown[];
-  }
-  castDate(x: unknown) {
-    return x as Date;
   }
   castAspect(x: unknown) {
     return x as Aspect;
