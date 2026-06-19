@@ -195,7 +195,7 @@ export const VictimInformationSchema = z.object({
     "Unknown",
   ]),
   burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
-  burialDuration: z.string().register(widgetRegistry, { unit: "dd:hh:mm", class: "col-6" }).nullish(),
+  burialDuration: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
   age: z
     .enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"])
     .register(widgetRegistry, { class: "col-6" })
