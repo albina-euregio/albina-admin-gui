@@ -205,7 +205,14 @@ export const VictimInformationSchema = z.object({
   workingAtTime: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-6" }).nullish(),
   leaderAtTime: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-6" }).nullish(),
   professionalCertification: enumWithOther(
-    z.enum(["IFMGAGuide", "FullSkiGuide", "AvalancheProfessional", "AvalancheEducator"]),
+    z.enum([
+      "IFMGAGuide",
+      "FullSkiGuide",
+      "SkiInstructor",
+      "ApprenticeGuide",
+      "AvalancheProfessional",
+      "AvalancheEducator",
+    ]),
   ).nullish(),
   avalancheTraining: enumWithOther(z.enum(["None", "Awareness", "BasicREC", "AdvancedREC", "Professional"]))
     .register(widgetRegistry, { class: "col-6" })

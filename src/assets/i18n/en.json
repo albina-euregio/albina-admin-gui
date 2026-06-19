@@ -2314,7 +2314,9 @@
   },
   "professionalCertification": {
     "IFMGAGuide": "IFMGA Guide",
-    "FullSkiGuide": "Full Ski guide, Ski Instructor, Apprentice Guide",
+    "FullSkiGuide": "Full Ski guide",
+    "SkiInstructor": "Ski Instructor",
+    "ApprenticeGuide": "Apprentice Guide",
     "AvalancheProfessional": "Avalanche Professional",
     "AvalancheEducator": "Avalanche Educator",
     "Other": "Other"
