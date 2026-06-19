@@ -12,6 +12,7 @@
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "target": "ES2022",
+    "strict": false,
     "strictNullChecks": false,
     "typeRoots": ["../node_modules/@types"],
     "resolveJsonModule": true,
