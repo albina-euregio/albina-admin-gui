@@ -44,6 +44,18 @@
     background-color: rgba($blue-100, 0.5);
     border-left: 3px solid $blue-400;
   }
+  .bg-person-injury {
+    background-color: rgba($teal-100, 0.5);
+    border-left: 3px solid $teal-400;
+  }
+  .bg-person-burial {
+    background-color: rgba($indigo-100, 0.5);
+    border-left: 3px solid $indigo-400;
+  }
+  .bg-person-rescue {
+    background-color: rgba($cyan-100, 0.5);
+    border-left: 3px solid $cyan-400;
+  }
 
   app-danger-rating img,
   app-avalanche-problem-icons img {

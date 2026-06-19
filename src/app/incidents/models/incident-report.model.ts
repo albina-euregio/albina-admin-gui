@@ -183,24 +183,6 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
 export const VictimInformationSchema = z.object({
   anonymousVictimIdentifier: z.string().nullish(),
   anonymousGroupIdentifier: z.string(),
-  caught: z.enum(["Involved", "NotInvolved", "Unknown"]),
-  fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]),
-  injurySeverity: z.enum(["Minor", "Moderate", "Major"]).nullish(),
-  causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"])).nullish(),
-  estimatedTimeOfDeath: z
-    .enum(["DuringTheAvalanche", "DuringBurial", "OnSiteAfterExtrication", "DuringTransport", "InHospital"])
-    .nullish(),
-  burialDegree: z.enum([
-    "FullyBuried",
-    "PartlyBuriedHeadCovered",
-    "PartlyBuriedHeadUncovered",
-    "PartlyBuried",
-    "NotBuried",
-    "Unknown",
-  ]),
-  burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
-  burialDuration: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
-  respiratoryCavity: z.enum(["Yes", "No"]).nullish(),
   age: z
     .enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"])
     .register(widgetRegistry, { class: "col-6" })
@@ -237,9 +219,39 @@ export const VictimInformationSchema = z.object({
     .register(widgetRegistry, { class: "col-6" })
     .nullish(),
   helmet: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-6" }).nullish(),
+  caught: z.enum(["Involved", "NotInvolved", "Unknown"]).register(widgetRegistry, { class: "bg-person-injury" }),
+  fatalInjured: z
+    .enum(["Fatal", "Injured", "Uninjured", "Unknown"])
+    .register(widgetRegistry, { class: "bg-person-injury" }),
+  injurySeverity: z
+    .enum(["Minor", "Moderate", "Major"])
+    .register(widgetRegistry, { class: "bg-person-injury" })
+    .nullish(),
+  causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"]))
+    .register(widgetRegistry, { class: "bg-person-injury" })
+    .nullish(),
+  estimatedTimeOfDeath: z
+    .enum(["DuringTheAvalanche", "DuringBurial", "OnSiteAfterExtrication", "DuringTransport", "InHospital"])
+    .register(widgetRegistry, { class: "bg-person-injury" })
+    .nullish(),
+  burialDegree: z
+    .enum([
+      "FullyBuried",
+      "PartlyBuriedHeadCovered",
+      "PartlyBuriedHeadUncovered",
+      "PartlyBuried",
+      "NotBuried",
+      "Unknown",
+    ])
+    .register(widgetRegistry, { class: "bg-person-burial" }),
+  burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6 bg-person-burial" }).nullish(),
+  burialDuration: z.number().register(widgetRegistry, { class: "col-6 bg-person-burial" }).nullish(),
+  respiratoryCavity: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-person-burial" }).nullish(),
   terrainTrap: enumWithOther(
     z.enum(["None", "Cliff", "Trees", "Gully", "Depression", "Bench", "Boulder", "CrevasseOrBergschrund"]),
-  ).nullish(),
+  )
+    .register(widgetRegistry, { class: "bg-person-burial" })
+    .nullish(),
   primaryLocationMethod: enumWithOther(
     z.enum([
       "NotBuried",
@@ -252,17 +264,20 @@ export const VictimInformationSchema = z.object({
       "RescueDog",
       "Snowmelt",
     ]),
-  ).nullish(),
+  )
+    .register(widgetRegistry, { class: "bg-person-rescue" })
+    .nullish(),
   rescuedBy: enumWithOther(z.enum(["Self", "Companion", "OtherGroup", "OrganizedRescue", "Unknown"]))
-    .register(widgetRegistry, { class: "col-7" })
+    .register(widgetRegistry, { class: "col-7 bg-person-rescue" })
     .nullish(),
   medicalIntervention: enumWithOther(z.enum(["CPR", "ALS", "ECMO"]))
-    .register(widgetRegistry, { class: "col-5" })
+    .register(widgetRegistry, { class: "col-5 bg-person-rescue" })
     .nullish(),
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(VictimInformationSchema, {
   fatalInjured: ["caught", "Involved", "Unknown"],
+  terrainTrap: ["caught", "Involved"],
   burialDegree: ["caught", "Involved"],
   burialDepth: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
   burialDuration: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
