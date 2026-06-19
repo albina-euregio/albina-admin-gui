@@ -4,40 +4,49 @@ import { map, Observable } from "rxjs";
 
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import type { components } from "../providers/openapi";
-import { IncidentAttachment, IncidentAttachmentSchema } from "./models/incident-report.model";
+import {
+  IncidentAttachment,
+  IncidentAttachmentSchema,
+  IncidentReport,
+  PartialIncidentReportSchema,
+} from "./models/incident-report.model";
 
-export type IncidentView = components["schemas"]["IncidentService.IncidentView"];
+type IncidentView = components["schemas"]["IncidentService.IncidentView"];
 
 @Injectable()
 export class IncidentService {
   private http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
 
+  private toIncidentReport(i: IncidentView): IncidentReport {
+    return PartialIncidentReportSchema.parse({ ...i, ...i.data }) as IncidentReport;
+  }
+
   /** List all incidents stored for a region. */
-  getIncidents(region: string): Observable<IncidentView[]> {
+  getIncidents(region: string): Observable<IncidentReport[]> {
     const url = this.constantsService.getServerUrlGET("/incidents", { region });
-    return this.http.get<IncidentView[]>(url);
+    return this.http.get<IncidentView[]>(url).pipe(map((is) => is.map((i) => this.toIncidentReport(i))));
   }
 
   /** Get a single incident by id. */
-  getIncident(id: string): Observable<IncidentView> {
+  getIncident(id: string): Observable<IncidentReport> {
     const url = this.constantsService.getServerUrlGET("/incidents/{id}", null as never, { id });
-    return this.http.get<IncidentView>(url);
+    return this.http.get<IncidentView>(url).pipe(map((i) => this.toIncidentReport(i)));
   }
 
   /**
    * Create an incident. `data` is the serialized incident-report JSON; the
    * server validates and stores it verbatim.
    */
-  createIncident(region: string, data: string): Observable<IncidentView> {
+  createIncident(region: string, data: string): Observable<IncidentReport> {
     const url = this.constantsService.getServerUrlPOST("/incidents", { region });
-    return this.http.post<IncidentView>(url, data);
+    return this.http.post<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
   }
 
   /** Update an existing incident's report data. */
-  updateIncident(id: string, data: string): Observable<IncidentView> {
+  updateIncident(id: string, data: string): Observable<IncidentReport> {
     const url = this.constantsService.getServerUrlPUT("/incidents/{id}", null as never, { id });
-    return this.http.put<IncidentView>(url, data);
+    return this.http.put<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
   }
 
   /** Delete an incident by id. */

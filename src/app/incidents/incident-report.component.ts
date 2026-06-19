@@ -339,10 +339,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   private loadIncident(id: string) {
     this.incidentService.getIncident(id).subscribe({
-      next: (view) => {
-        this.incidentId = view.id;
-        this.updatedAt = new Date(view.updatedAt);
-        const report = IncidentModels.PartialIncidentReportSchema.parse(view.data) as IncidentReport;
+      next: (report) => {
+        this.incidentId = report.id;
+        this.updatedAt = new Date(report.updatedAt);
         this.incidentReport.set(report);
         this._lastLat = report.latitude;
         this._lastLng = report.longitude;

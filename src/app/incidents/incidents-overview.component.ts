@@ -7,19 +7,10 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { IncidentService, IncidentView } from "./incident.service";
+import { IncidentService } from "./incident.service";
 import { IncidentReport } from "./models/incident-report.model";
 
 type SortableField = "dateTime" | "updatedAt" | "reportStatus";
-
-/** A stored incident enriched with the fields the overview table renders. */
-interface IncidentRow {
-  id: string;
-  dateTime: Date | undefined;
-  location: string | undefined;
-  updatedAt: Date;
-  reportStatus: IncidentReport["reportStatus"] | undefined;
-}
 
 @Component({
   selector: "app-incidents-overview",
@@ -36,18 +27,23 @@ export class IncidentsOverviewComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   translateService = inject(TranslateService);
 
-  incidents: IncidentRow[] = [];
+  incidents: IncidentReport[] = [];
   loading = false;
 
   sortField: SortableField = "updatedAt";
   sortDir: "asc" | "desc" = "desc";
-  filterStatus: IncidentRow["reportStatus"] | "" = "";
+  filterStatus: IncidentReport["reportStatus"] | "" = "";
   filterDateRange: Date[] = [];
 
-  readonly statusOptions: NonNullable<IncidentRow["reportStatus"]>[] = ["Draft", "Incomplete", "InReview", "Verified"];
+  readonly statusOptions: NonNullable<IncidentReport["reportStatus"]>[] = [
+    "Draft",
+    "Incomplete",
+    "InReview",
+    "Verified",
+  ];
 
   /** Bootstrap background class for each report status badge. */
-  private readonly statusClasses: Record<NonNullable<IncidentRow["reportStatus"]>, string> = {
+  private readonly statusClasses: Record<NonNullable<IncidentReport["reportStatus"]>, string> = {
     Draft: "bg-secondary",
     Incomplete: "bg-warning",
     InReview: "bg-info",
@@ -59,7 +55,7 @@ export class IncidentsOverviewComponent implements OnInit {
     this.authenticationService.activeRegion$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.load());
   }
 
-  get displayedIncidents(): IncidentRow[] {
+  get displayedIncidents(): IncidentReport[] {
     const [rangeStart, rangeEnd] = this.filterDateRange ?? [];
     const endOfDay = rangeEnd
       ? new Date(rangeEnd.getFullYear(), rangeEnd.getMonth(), rangeEnd.getDate(), 23, 59, 59, 999)
@@ -108,8 +104,8 @@ export class IncidentsOverviewComponent implements OnInit {
     }
     this.loading = true;
     this.incidentService.getIncidents(region).subscribe({
-      next: (views) => {
-        this.incidents = views.map((view) => this.toRow(view));
+      next: (incidents) => {
+        this.incidents = incidents;
         this.loading = false;
       },
       error: (error) => {
@@ -120,17 +116,7 @@ export class IncidentsOverviewComponent implements OnInit {
     });
   }
 
-  private toRow(view: IncidentView): IncidentRow {
-    return {
-      id: view.id,
-      dateTime: view.data.dateTime ? new Date(view.data.dateTime) : undefined,
-      location: view.data.location || undefined,
-      updatedAt: new Date(view.updatedAt),
-      reportStatus: view.data.reportStatus,
-    };
-  }
-
-  statusClass(status: IncidentRow["reportStatus"]): string {
+  statusClass(status: IncidentReport["reportStatus"]): string {
     return status ? this.statusClasses[status] : "bg-secondary";
   }
 
@@ -142,10 +128,10 @@ export class IncidentsOverviewComponent implements OnInit {
     this.router.navigate(["/incidents", "new"]);
   }
 
-  deleteIncident(row: IncidentRow) {
+  deleteIncident(incident: IncidentReport) {
     const message = this.translateService.instant("incidentsOverview.deleteConfirm");
     if (!confirm(message)) return;
-    this.incidentService.deleteIncident(row.id).subscribe({
+    this.incidentService.deleteIncident(incident.id).subscribe({
       next: () => this.load(),
       error: (error) => console.error("Incident could not be deleted!", error),
     });
