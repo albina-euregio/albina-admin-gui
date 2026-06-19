@@ -275,6 +275,7 @@ export const AvalancheInformationSchema = z.object({
     .enum(Enums.AvalancheProblem)
     .register(widgetRegistry, { valueI18n: "avalancheProblem.#", widget: "avalancheProblem" })
     .nullish(),
+  relevantDangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { valueI18n: "dangerPattern.#" }),
   trigger: Trigger.register(widgetRegistry, { class: "bg-incident-trigger" }).nullish(),
   natural: z
     .enum(["Natural", "CorniceFall", "Earthquake", "IceFall", "RockFall"])

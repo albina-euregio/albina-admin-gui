@@ -1808,6 +1808,7 @@
     "avalancheSize": "Avalanche Size",
     "avalancheType": "Avalanche Type",
     "relevantAvalancheProblem": "Relevant Avalanche Problem",
+    "relevantDangerPattern": "Relevant Danger Pattern",
     "trigger": "Trigger",
     "natural": "Natural",
     "person": "Person",
