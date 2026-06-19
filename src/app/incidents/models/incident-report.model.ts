@@ -184,8 +184,8 @@ export const VictimInformationSchema = z.object({
   anonymousVictimIdentifier: z.string().nullish(),
   anonymousGroupIdentifier: z.string(),
   caught: z.enum(["Involved", "NotInvolved", "Unknown"]),
-  fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]).register(widgetRegistry, { class: "col-6" }),
-  injurySeverity: z.enum(["Minor", "Moderate", "Major"]).register(widgetRegistry, { class: "col-6" }).nullish(),
+  fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]),
+  injurySeverity: z.enum(["Minor", "Moderate", "Major"]).nullish(),
   burialDegree: z.enum([
     "FullyBuried",
     "PartlyBuriedHeadCovered",
