@@ -1651,7 +1651,8 @@
   },
   "incidentsOverview": {
     "button": {
-      "new": "New incident"
+      "new": "New incident",
+      "columns": "Columns"
     },
     "tooltip": {
       "edit": "Edit incident",

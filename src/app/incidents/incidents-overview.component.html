@@ -19,6 +19,33 @@
         }
       </select>
     </div>
+
+    <div class="dropdown">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-secondary dropdown-toggle"
+        data-bs-toggle="dropdown"
+        data-bs-auto-close="outside"
+        aria-expanded="false"
+      >
+        <i class="ph ph-columns"></i> {{ "incidentsOverview.button.columns" | translate }}
+      </button>
+      <div class="dropdown-menu dropdown-menu-end p-3">
+        @for (col of allColumns; track col.key) {
+          <div class="form-check">
+            <label class="form-check-label text-nowrap">
+              <input
+                [(ngModel)]="col.visible"
+                [ngModelOptions]="{ standalone: true }"
+                type="checkbox"
+                class="form-check-input"
+              />
+              {{ `incidentReport.${col.key}` | translate }}
+            </label>
+          </div>
+        }
+      </div>
+    </div>
     <button (click)="newIncident()" class="btn btn-sm btn-primary px-3 ms-auto">
       <i class="ph ph-plus"></i> {{ "incidentsOverview.button.new" | translate }}
     </button>

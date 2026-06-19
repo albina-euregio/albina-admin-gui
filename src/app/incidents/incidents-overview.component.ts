@@ -6,6 +6,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ZodDisplayComponent } from "app/shared/zod-display.component";
 import { orderBy } from "es-toolkit";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import "bootstrap";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { IncidentService } from "./incident.service";
@@ -37,7 +38,18 @@ export class IncidentsOverviewComponent implements OnInit {
   filterDateRange: Date[] = [];
 
   readonly IncidentReportSchema = IncidentReportSchema;
-  readonly columns: IncidentColumn[] = ["dateTime", "location", "updatedAt", "reportStatus"];
+
+  /** All available columns with their current visibility, toggled via the column-picker dropdown. */
+  readonly allColumns: { key: IncidentColumn; visible: boolean }[] = [
+    { key: "dateTime", visible: true },
+    { key: "location", visible: true },
+    { key: "updatedAt", visible: true },
+    { key: "reportStatus", visible: true },
+  ];
+
+  get columns(): IncidentColumn[] {
+    return this.allColumns.filter((col) => col.visible).map((col) => col.key);
+  }
 
   readonly statusOptions: NonNullable<IncidentReport["reportStatus"]>[] = [
     "Draft",

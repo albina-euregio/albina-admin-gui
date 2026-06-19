@@ -1651,7 +1651,8 @@
   },
   "incidentsOverview": {
     "button": {
-      "new": "Neues Lawinenereignis"
+      "new": "Neues Lawinenereignis",
+      "columns": "Spalten"
     },
     "tooltip": {
       "edit": "Ereignis bearbeiten",
