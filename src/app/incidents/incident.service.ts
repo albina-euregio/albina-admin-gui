@@ -22,10 +22,21 @@ export class IncidentService {
     return PartialIncidentReportSchema.parse({ ...i, ...i.data }) as IncidentReport;
   }
 
-  /** List all incidents stored for a region. */
+  /** List all incidents stored for a region. Incidents that fail to parse are skipped. */
   getIncidents(region: string): Observable<IncidentReport[]> {
     const url = this.constantsService.getServerUrlGET("/incidents", { region });
-    return this.http.get<IncidentView[]>(url).pipe(map((is) => is.map((i) => this.toIncidentReport(i))));
+    return this.http.get<IncidentView[]>(url).pipe(
+      map((is) =>
+        is.flatMap((i) => {
+          const result = PartialIncidentReportSchema.safeParse({ ...i, ...i.data });
+          if (!result.success) {
+            console.warn(`Skipping incident ${i.id} that failed to parse`, result.error);
+            return [];
+          }
+          return [result.data as IncidentReport];
+        }),
+      ),
+    );
   }
 
   /** Get a single incident by id. */
