@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { orderBy } from "es-toolkit";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -62,26 +63,13 @@ export class IncidentsOverviewComponent implements OnInit {
     const endOfDay = rangeEnd
       ? new Date(rangeEnd.getFullYear(), rangeEnd.getMonth(), rangeEnd.getDate(), 23, 59, 59, 999)
       : undefined;
-    return this.incidents
+    const filtered = this.incidents
       .filter((r) => !this.filterStatus || r.reportStatus === this.filterStatus)
       .filter((r) => {
         if (!rangeStart || !endOfDay) return true;
         return !!r.dateTime && r.dateTime >= rangeStart && r.dateTime <= endOfDay;
-      })
-      .sort((a, b) => {
-        const av = a[this.sortField];
-        const bv = b[this.sortField];
-        if (av == null && bv == null) return 0;
-        if (av == null) return 1;
-        if (bv == null) return -1;
-        let cmp: number;
-        if (av instanceof Date && bv instanceof Date) {
-          cmp = av.getTime() - bv.getTime();
-        } else {
-          cmp = String(av).localeCompare(String(bv));
-        }
-        return this.sortDir === "asc" ? cmp : -cmp;
       });
+    return orderBy(filtered, [this.sortField], [this.sortDir]);
   }
 
   sortBy(field: IncidentColumn) {
