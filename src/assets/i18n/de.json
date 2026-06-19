@@ -1653,12 +1653,6 @@
     "button": {
       "new": "Neues Lawinenereignis"
     },
-    "table": {
-      "date": "Datum",
-      "location": "Ort",
-      "lastChanged": "Zuletzt geändert",
-      "status": "Status"
-    },
     "tooltip": {
       "edit": "Ereignis bearbeiten",
       "delete": "Ereignis löschen"
@@ -1710,8 +1704,7 @@
     "saveStateIdle": "Alle Änderungen gespeichert",
     "saveStateSaving": "Speichern ...",
     "saveStateSaved": "Erfolgreich gespeichert",
-    "saveStateError": "Fehler beim Speichern",
-    "lastUpdated": "Letztes Update"
+    "saveStateError": "Fehler beim Speichern"
   },
   "incidentReport": {
     "incidentReport": "Ereignisdokumentation",
@@ -1727,6 +1720,7 @@
     "author": "Autor",
     "authorAffiliation": "Organisation des Autors",
     "dateTime": "Datum/Zeit",
+    "updatedAt": "Letztes Update",
     "timeAccuracy": "Genauigkeit des Zeitpunkts",
     "sourceOfInformation": "Herkunft der Information",
     "personInvolvement": "Personenbeteiligung",

@@ -7,7 +7,7 @@
         class="form-control"
         [(ngModel)]="filterDateRange"
         bsDaterangepicker
-        [placeholder]="'incidentsOverview.table.date' | translate"
+        [placeholder]="'incidentReport.dateTime' | translate"
       />
     </div>
     <div class="input-group input-group-sm flex-nowrap" style="width: auto">
@@ -28,16 +28,16 @@
     <thead class="bulletins-table__header">
       <tr>
         <th role="button" (click)="sortBy('dateTime')">
-          {{ "incidentsOverview.table.date" | translate }}
+          {{ "incidentReport.dateTime" | translate }}
           <i class="ph {{ sortIcon('dateTime') }}"></i>
         </th>
-        <th>{{ "incidentsOverview.table.location" | translate }}</th>
+        <th>{{ "incidentReport.location" | translate }}</th>
         <th role="button" (click)="sortBy('updatedAt')">
-          {{ "incidentsOverview.table.lastChanged" | translate }}
+          {{ "incidentReport.updatedAt" | translate }}
           <i class="ph {{ sortIcon('updatedAt') }}"></i>
         </th>
         <th role="button" (click)="sortBy('reportStatus')">
-          {{ "incidentsOverview.table.status" | translate }}
+          {{ "incidentReport.reportStatus" | translate }}
           <i class="ph {{ sortIcon('reportStatus') }}"></i>
         </th>
         <th></th>
@@ -46,18 +46,18 @@
     <tbody class="bulletins-table__body">
       @for (incident of displayedIncidents; track incident.id) {
         <tr class="align-middle">
-          <td class="text-center" [attr.data-label]="'incidentsOverview.table.date' | translate">
+          <td class="text-center" [attr.data-label]="'incidentReport.dateTime' | translate">
             @if (incident.dateTime) {
               {{ incident.dateTime | date: "medium" : undefined : translateService.getCurrentLang() }}
             }
           </td>
-          <td class="text-center" [attr.data-label]="'incidentsOverview.table.location' | translate">
+          <td class="text-center" [attr.data-label]="'incidentReport.location' | translate">
             {{ incident.location }}
           </td>
-          <td class="text-center" [attr.data-label]="'incidentsOverview.table.lastChanged' | translate">
+          <td class="text-center" [attr.data-label]="'incidentReport.updatedAt' | translate">
             {{ incident.updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
           </td>
-          <td class="text-center" [attr.data-label]="'incidentsOverview.table.status' | translate">
+          <td class="text-center" [attr.data-label]="'incidentReport.reportStatus' | translate">
             @if (incident.reportStatus) {
               <span class="badge {{ statusClass(incident.reportStatus) }}">
                 {{ "reportStatus." + incident.reportStatus | translate }}

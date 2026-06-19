@@ -13,9 +13,9 @@
           <span class="text-secondary-emphasis">·</span>
         }
         @if (updatedAt) {
-          <span title="{{ 'incidentReportUI.lastUpdated' | translate }}">{{
-            updatedAt | date: "medium" : undefined : translateService.getCurrentLang()
-          }}</span>
+          <span title="{{ 'incidentReport.updatedAt' | translate }}">
+            {{ updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
+          </span>
           <span class="text-secondary-emphasis">·</span>
         }
         @switch (saveState) {

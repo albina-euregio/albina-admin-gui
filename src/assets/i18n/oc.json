@@ -1653,12 +1653,6 @@
     "button": {
       "new": "New incident"
     },
-    "table": {
-      "date": "Data",
-      "location": "Localitat",
-      "lastChanged": "Last changed",
-      "status": "Estat"
-    },
     "tooltip": {
       "edit": "Edit incident",
       "delete": "Delete incident"
@@ -1710,8 +1704,7 @@
     "saveStateIdle": "No unsaved changes",
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
-    "saveStateError": "Save failed",
-    "lastUpdated": "Last updated"
+    "saveStateError": "Save failed"
   },
   "incidentReport": {
     "incidentReport": "Incident Report",
@@ -1727,6 +1720,7 @@
     "author": "Autor",
     "authorAffiliation": "Author Affiliation",
     "dateTime": "Date/Time",
+    "updatedAt": "Last updated",
     "timeAccuracy": "Time Accuracy ",
     "sourceOfInformation": "Source of Information",
     "personInvolvement": "Person Involvement",
