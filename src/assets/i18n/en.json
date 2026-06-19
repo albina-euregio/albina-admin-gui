@@ -2413,6 +2413,11 @@
     "Moderate": "Moderate",
     "Major": "Major"
   },
+  "recentSlabAvalanches": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
   "signsOfInstability": {
     "Present": "Present",
     "Absent": "Absent",

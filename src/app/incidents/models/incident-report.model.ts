@@ -405,7 +405,7 @@ withShowIf(OtherDamagesSchema, {
 });
 
 export const IncidentAnalysisSchema = z.object({
-  recentSlabAvalanches: z.string().nullish(),
+  recentSlabAvalanches: z.enum(["Present", "Absent", "Unknown"]).nullish(),
   signsOfInstability: z.enum(["Present", "Absent", "Unknown"]).nullish(),
   recentLoading: z.enum(["Present", "Absent", "Unknown"]).nullish(),
   criticalWarming: z.enum(["Present", "Absent", "Unknown"]).nullish(),
