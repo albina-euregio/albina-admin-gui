@@ -133,6 +133,14 @@ export class LocalStorageService {
     return this.set("trainingBulletins_" + date[0].toISOString(), bulletins);
   }
 
+  getIncidentColumnVisibility(): Record<string, boolean> {
+    return this.get("incidentColumnVisibility") ?? {};
+  }
+
+  setIncidentColumnVisibility(visibility: Record<string, boolean>): void {
+    return this.set("incidentColumnVisibility", visibility);
+  }
+
   getMapCenter(): MapCenter {
     return this.get("mapCenter");
   }

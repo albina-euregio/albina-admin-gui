@@ -31,16 +31,17 @@
         <i class="ph ph-columns"></i> {{ "incidentsOverview.button.columns" | translate }}
       </button>
       <div class="dropdown-menu dropdown-menu-end p-3">
-        @for (col of allColumns; track col.key) {
+        @for (col of allColumns; track col) {
           <div class="form-check">
             <label class="form-check-label text-nowrap">
               <input
-                [(ngModel)]="col.visible"
+                [(ngModel)]="columnVisibility[col]"
                 [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="saveColumnVisibility()"
                 type="checkbox"
                 class="form-check-input"
               />
-              {{ `incidentReport.${col.key}` | translate }}
+              {{ `incidentReport.${col}` | translate }}
             </label>
           </div>
         }

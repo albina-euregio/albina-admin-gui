@@ -9,6 +9,7 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import "bootstrap";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { IncidentService } from "./incident.service";
 import { IncidentReport, IncidentReportSchema } from "./models/incident-report.model";
 
@@ -27,6 +28,7 @@ export class IncidentsOverviewComponent implements OnInit {
   private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private localStorageService = inject(LocalStorageService);
   translateService = inject(TranslateService);
 
   incidents: IncidentReport[] = [];
@@ -39,16 +41,16 @@ export class IncidentsOverviewComponent implements OnInit {
 
   readonly IncidentReportSchema = IncidentReportSchema;
 
-  /** All available columns with their current visibility, toggled via the column-picker dropdown. */
-  readonly allColumns: { key: IncidentColumn; visible: boolean }[] = [
-    { key: "dateTime", visible: true },
-    { key: "location", visible: true },
-    { key: "updatedAt", visible: true },
-    { key: "reportStatus", visible: true },
-  ];
+  readonly allColumns: IncidentColumn[] = ["dateTime", "location", "updatedAt", "reportStatus"];
+  readonly columnVisibility: Record<IncidentColumn, boolean> = {
+    dateTime: true,
+    location: true,
+    updatedAt: true,
+    reportStatus: true,
+  };
 
   get columns(): IncidentColumn[] {
-    return this.allColumns.filter((col) => col.visible).map((col) => col.key);
+    return this.allColumns.filter((col) => this.columnVisibility[col]);
   }
 
   readonly statusOptions: NonNullable<IncidentReport["reportStatus"]>[] = [
@@ -67,8 +69,18 @@ export class IncidentsOverviewComponent implements OnInit {
   };
 
   ngOnInit() {
+    const visibility = this.localStorageService.getIncidentColumnVisibility();
+    this.allColumns.forEach((col) => {
+      if (typeof visibility[col] === "boolean") {
+        this.columnVisibility[col] = visibility[col];
+      }
+    });
     // The overview is region-scoped: reload whenever the active region changes.
     this.authenticationService.activeRegion$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.load());
+  }
+
+  saveColumnVisibility() {
+    this.localStorageService.setIncidentColumnVisibility(this.columnVisibility);
   }
 
   get displayedIncidents(): IncidentReport[] {
