@@ -186,6 +186,10 @@ export const VictimInformationSchema = z.object({
   caught: z.enum(["Involved", "NotInvolved", "Unknown"]),
   fatalInjured: z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]),
   injurySeverity: z.enum(["Minor", "Moderate", "Major"]).nullish(),
+  causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"])).nullish(),
+  estimatedTimeOfDeath: z
+    .enum(["DuringTheAvalanche", "DuringBurial", "OnSiteAfterExtrication", "DuringTransport", "InHospital"])
+    .nullish(),
   burialDegree: z.enum([
     "FullyBuried",
     "PartlyBuriedHeadCovered",
@@ -255,10 +259,6 @@ export const VictimInformationSchema = z.object({
   medicalIntervention: enumWithOther(z.enum(["CPR", "ALS", "ECMO"]))
     .register(widgetRegistry, { class: "col-5" })
     .nullish(),
-  estimatedTimeOfDeath: z
-    .enum(["DuringTheAvalanche", "DuringBurial", "OnSiteAfterExtrication", "DuringTransport", "InHospital"])
-    .nullish(),
-  causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"])).nullish(),
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(VictimInformationSchema, {
