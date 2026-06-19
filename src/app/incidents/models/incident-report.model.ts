@@ -196,6 +196,7 @@ export const VictimInformationSchema = z.object({
   ]),
   burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6" }).nullish(),
   burialDuration: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
+  respiratoryCavity: z.enum(["Yes", "No"]).nullish(),
   age: z
     .enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"])
     .register(widgetRegistry, { class: "col-6" })
@@ -258,7 +259,6 @@ export const VictimInformationSchema = z.object({
     .enum(["DuringTheAvalanche", "DuringBurial", "OnSiteAfterExtrication", "DuringTransport", "InHospital"])
     .nullish(),
   causeOfDeath: enumWithOther(z.enum(["Asphyxiation", "TraumaticInjury", "Hypothermia"])).nullish(),
-  respiratoryCavity: z.enum(["Yes", "No"]).nullish(),
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(VictimInformationSchema, {
