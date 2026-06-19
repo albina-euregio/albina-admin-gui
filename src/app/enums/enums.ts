@@ -60,7 +60,6 @@ export enum AvalancheProblem {
   persistent_weak_layers = "persistent_weak_layers",
   wet_snow = "wet_snow",
   gliding_snow = "gliding_snow",
-  favourable_situation = "favourable_situation",
   cornices = "cornices",
   no_distinct_avalanche_problem = "no_distinct_avalanche_problem",
 }
