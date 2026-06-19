@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "",
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "lib": ["ES2022", "dom"],
     "skipLibCheck": true,
