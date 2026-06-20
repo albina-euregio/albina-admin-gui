@@ -121,6 +121,20 @@
     appearance: textfield;
   }
 
+  app-toggle-btn-group.is-invalid .btn-group {
+    border: var(--bs-border-width) solid var(--bs-form-invalid-border-color);
+    button.btn {
+      border-top: none;
+      border-bottom: none;
+    }
+    button.btn:first-of-type {
+      border-left: none;
+    }
+    button.btn:last-of-type {
+      border-right: none;
+    }
+  }
+
   input.form-control,
   textarea.form-control,
   input[type="text"],
