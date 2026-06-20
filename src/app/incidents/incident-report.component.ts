@@ -1,6 +1,7 @@
 import { AsyncPipe, DatePipe } from "@angular/common";
 import {
   Component,
+  computed,
   DestroyRef,
   inject,
   Injector,
@@ -163,6 +164,17 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       attachments: [],
     } satisfies Partial<IncidentReport>) as IncidentReport,
   );
+
+  /**
+   * True when the full (non-partial) report schema parses successfully, i.e. no required field is
+   * missing. While invalid, the report stays a "Draft" and cannot be published.
+   *
+   * FIXME: this parses against the raw schema and ignores `showIf` visibility. Fields that are
+   * required but hidden in some configurations — `dangerRating`, `avalancheProblem` and
+   * `dangerPattern`, which are hidden when `publicAvalancheWarningServiceOutside` is set — must
+   * still be filled in for the report to count as valid here.
+   */
+  readonly isReportValid = computed(() => IncidentModels.IncidentReportSchema.safeParse(this.incidentReport()).success);
 
   get involvementsFatalitiesBurials() {
     const groups = this.incidentReport().groupInformation ?? [];

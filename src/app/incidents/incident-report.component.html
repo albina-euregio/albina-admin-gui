@@ -63,13 +63,13 @@
           (ngModelChange)="onReportStatusChange()"
         >
           <option value="Draft">{{ "reportStatus.Draft" | translate }}</option>
-          <option value="Incomplete">{{ "reportStatus.Incomplete" | translate }}</option>
-          <option value="InReview">{{ "reportStatus.InReview" | translate }}</option>
-          <option value="Verified">{{ "reportStatus.Verified" | translate }}</option>
+          <option value="Incomplete" [disabled]="!isReportValid()">{{ "reportStatus.Incomplete" | translate }}</option>
+          <option value="InReview" [disabled]="!isReportValid()">{{ "reportStatus.InReview" | translate }}</option>
+          <option value="Verified" [disabled]="!isReportValid()">{{ "reportStatus.Verified" | translate }}</option>
         </select>
         <button
           class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
-          [disabled]="disabled() || incidentReport().reportStatus === 'Draft'"
+          [disabled]="disabled() || incidentReport().reportStatus === 'Draft' || !isReportValid()"
         >
           {{ "incidentReportUI.publishUpdateIncident" | translate }}
         </button>
