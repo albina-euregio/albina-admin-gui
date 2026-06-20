@@ -31,6 +31,7 @@ type SupportedSchema =
   | typeof IncidentModels.AvalancheInformationSchema
   | typeof IncidentModels.OtherDamagesSchema
   | typeof IncidentModels.IncidentAnalysisSchema
+  | typeof IncidentModels.IncidentLinksSchema
   | typeof IncidentModels.IncidentAttachmentSchema;
 
 type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;

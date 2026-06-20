@@ -625,6 +625,8 @@
           <h4 class="m-0 text-secondary">
             {{ "incidentReport.incidentAttachments" | translate }}
           </h4>
+        </div>
+        <div class="mt-4 d-flex align-items-right mb-4">
           <div>
             <button
               [disabled]="disabled()"
@@ -632,7 +634,7 @@
               [class.d-none]="displayOnly"
               (click)="attachmentFileInput.click()"
               data-toggle="tooltip"
-              title="{{ 'incidentReport.incidentAttachments' | translate }}"
+              title="{{ 'incidentReportUI.addAttachment' | translate }}"
             >
               <i class="ph ph-upload"></i>
               {{ "incidentReportUI.addAttachment" | translate }}
@@ -753,6 +755,16 @@
             }
           </div>
         }
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [displayOnly]="displayOnly"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.IncidentLinksSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
       </div>
     }
   </div>

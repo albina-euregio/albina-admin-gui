@@ -37,12 +37,6 @@ export const GeneralInformationSchema = z.object({
 
   reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
 
-  publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-
-  privateExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-
-  privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
@@ -472,6 +466,12 @@ export const IncidentAnalysisSchema = z.object({
   incidentAnalysisComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
+export const IncidentLinksSchema = z.object({
+  publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  privateExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+
 export const IncidentAttachmentSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
   dateAdded: z.coerce.date().register(widgetRegistry, { widget: "none" }),
@@ -501,6 +501,7 @@ export const IncidentReportSchema = z.object({
   groupInformation: GroupInformationSchema.array(),
   victimInformation: VictimInformationSchema.array(),
   ...IncidentAnalysisSchema.shape,
+  ...IncidentLinksSchema.shape,
   attachments: IncidentAttachmentSchema.array(),
 });
 
