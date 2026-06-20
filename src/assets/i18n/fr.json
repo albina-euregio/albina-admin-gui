@@ -1667,7 +1667,7 @@
   "incidentReportUI": {
     "addAttachment": "Add Attachment",
     "addGroup": "Add Group",
-    "addVictim": "Add Victim",
+    "addVictim": "Add Person",
     "back": "Retour",
     "clearLine": "Clear Line",
     "clearPoint": "Clear Point",
@@ -1681,7 +1681,7 @@
     "drawPolygonInstructions": "Click on the map to define the corners/vertices of the polygon.",
     "dropAttachment": "Drop attachment {{fileName}}?",
     "dropGroup": "Drop group {{number}}?",
-    "dropVictim": "Drop victim {{number}}?",
+    "dropVictim": "Drop person {{number}}?",
     "groupName": "Group {{name}}",
     "groupUnknown": "Group unknown",
     "incomplete": "Incomplet",
@@ -1690,18 +1690,18 @@
     "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
     "next": "Suivant",
     "overview": "Overview",
-    "noVictims": "No victims registered. Click \"Add Victim\" to add a victim.",
+    "noVictims": "No persons registered. Click \"Add Person\" to add a person.",
     "point": "Point",
     "polygon": "Polygon",
     "publishUpdateIncident": "publish/update incident",
     "removeAttachment": "Remove Attachment",
     "removeGroup": "Remove Group",
-    "removeVictim": "Remove Victim",
+    "removeVictim": "Remove Person",
     "required": "Required",
-    "showMandatoryFieldsOnly": "Required only",
-    "displayOnly": "Reading Mode",
+    "showMandatoryFieldsOnly": "Most relevant only",
+    "displayOnly": "Preview Mode",
     "valid": "Valid",
-    "victimName": "Victim {{name}}",
+    "victimName": "Person {{name}}",
     "saveStateIdle": "No unsaved changes",
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
@@ -1714,7 +1714,7 @@
     "locationInformation": "Location Information",
     "avalancheInformation": "Avalanche Information",
     "groupInformation": "Group Information",
-    "victimInformation": "Victim Information",
+    "victimInformation": "Person Information",
     "involvementsFatalitiesBurials": "Involvements, Fatalities, and Burials",
     "incidentAnalysis": "Incident Analysis",
     "incidentAttachments": "Incident Attachments",
@@ -1781,7 +1781,7 @@
     "caught": "Caught",
     "fatalInjured": "Fatal/Injured",
     "burialDegree": "Burial Degree",
-    "anonymousVictimIdentifier": "Anonymous Victim Identifier ",
+    "anonymousVictimIdentifier": "Anonymous Person Identifier ",
     "age": "Age",
     "gender": "Gender",
     "workingAtTime": "Working At Time",
@@ -1809,6 +1809,7 @@
     "avalancheSize": "Taille d'avalanche",
     "avalancheType": "Avalanche Type",
     "relevantAvalancheProblem": "Relevant Avalanche Problem",
+    "relevantDangerPattern": "Relevant Danger Pattern",
     "trigger": "Trigger",
     "natural": "Natural",
     "person": "Person",
@@ -1835,8 +1836,8 @@
     "weakLayerGrainSize2": "Weak Layer Grain Size (2)",
     "weakLayerLocation": "Weak layer Location",
     "bedSurfaceStepped": "Bed Surface Stepped",
-    "avalancheMoistureStartZone": "Avalanche Moisture: Start Zone",
-    "avalancheMoistureDeposit": "Avalanche Moisture: Deposit",
+    "startZoneMoisture": "Start Zone Moisture",
+    "depositMoisture": "Deposit Moisture",
     "depositHeight": "Deposit Height",
     "depositWidth": "Deposit Width",
     "debrisType": "Debris Type",
@@ -1961,7 +1962,7 @@
     "relevantAvalancheProblem": "Select the most relevant EAWS Avalanche Problem.",
     "trigger": "Natural: Triggered without human influence; Person: Triggered by one or more people; Explosives: Triggered by explosives, artillery, or gas; Vehicle: Triggered by a vehicle (e.g. snowcat, helicopter); Unknown: Trigger is unknown or unclear",
     "natural": "",
-    "person": "",
+    "person": "Accidental: e.g. skier, snowboarder, hiker, climber; Controlled: e.g. skier deliberately ski cutting a slope or cornice",
     "additionalLoad": "Low additional load: single skier/snowboarder, well-spaced group ≥10 m, or snowshoer; High additional load: closely spaced group <10 m,  single person on foot, falling skier/snowboarder.",
     "explosives": "",
     "vehicle": "",
@@ -1985,8 +1986,8 @@
     "weakLayerGrainSize2": "Grain size to the nearest 0.25 mm.",
     "weakLayerLocation": "Within new snow: Weak layer located within recently fallen and wind-drifted snow from the current snowfall or deposition period; At interface with old snow: Weak layer at the boundary between new and old snow (e.g. surface hoar on the old snow surface before being covered); Within the old snowpack: Weak layer in the middle or upper part of the old snowpack; Near the ground: Weak layer in the lower part of the snowpack, close to the ground, typically consisting of well-developed faceted crystals. Avalanches releasing on this layer often expose the ground.",
     "bedSurfaceStepped": "Select “Yes” if the avalanche stepped down into a deeper weak layer.",
-    "avalancheMoistureStartZone": "",
-    "avalancheMoistureDeposit": "",
+    "startZoneMoisture": "",
+    "depositMoisture": "",
     "depositHeight": "Maximum height of the deposit",
     "depositWidth": "Maximum width of the deposit",
     "debrisType": "Select the options that best describe the composition of the debris shortly after the avalanche.",
@@ -2158,8 +2159,8 @@
     "RockFall": "Rock fall"
   },
   "person": {
-    "PersonAccidental": "Person (e.g. skier, snowboarder, hiker, climber), accidental",
-    "PersonControlled": "Person, controlled (i.e., skier deliberately ski cutting a slope, cornice, etc.)"
+    "PersonAccidental": "Accidental",
+    "PersonControlled": "Controlled"
   },
   "explosives": {
     "Artillery": "Artillery",
@@ -2221,13 +2222,13 @@
     "Trees": "Trees",
     "Other": "Other"
   },
-  "avalancheMoistureStartZone": {
+  "startZoneMoisture": {
     "Dry": "Dry",
     "Moist": "Moist",
     "Wet": "Wet",
     "Unknown": "Inconnu"
   },
-  "avalancheMoistureDeposit": {
+  "depositMoisture": {
     "Dry": "Dry",
     "Moist": "Moist",
     "Wet": "Wet"
@@ -2314,7 +2315,9 @@
   },
   "professionalCertification": {
     "IFMGAGuide": "IFMGA Guide",
-    "FullSkiGuide": "Full Ski guide, Ski Instructor, Apprentice Guide",
+    "FullSkiGuide": "Full Ski guide",
+    "SkiInstructor": "Ski Instructor",
+    "ApprenticeGuide": "Apprentice Guide",
     "AvalancheProfessional": "Avalanche Professional",
     "AvalancheEducator": "Avalanche Educator",
     "Other": "Other"
@@ -2412,6 +2415,11 @@
     "Minor": "Minor",
     "Moderate": "Limité",
     "Major": "Major"
+  },
+  "recentSlabAvalanches": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Inconnu"
   },
   "signsOfInstability": {
     "Present": "Present",

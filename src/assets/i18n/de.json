@@ -1652,7 +1652,7 @@
   "incidentsOverview": {
     "button": {
       "new": "Neues Lawinenereignis",
-      "columns": "Spalten"
+      "columns": "Columns"
     },
     "tooltip": {
       "edit": "Ereignis bearbeiten",
@@ -1667,7 +1667,7 @@
   "incidentReportUI": {
     "addAttachment": "Anhang hochladen",
     "addGroup": "Gruppe hinzufügen",
-    "addVictim": "Opfer hinzufügen",
+    "addVictim": "Add Person",
     "back": "Zurück",
     "clearLine": "Linie löschen",
     "clearPoint": "Punkt löschen",
@@ -1681,7 +1681,7 @@
     "drawPolygonInstructions": "Mit Klick auf die Karte, werden die Eckpunkte des Polygons festgelegt.",
     "dropAttachment": "Drop Anhang {{fileName}}?",
     "dropGroup": "Drop Gruppe {{number}}?",
-    "dropVictim": "Drop Opfer {{number}}?",
+    "dropVictim": "Drop person {{number}}?",
     "groupName": "Gruppe {{name}}",
     "groupUnknown": "Gruppe nicht bekannt",
     "incomplete": "Unvollständig",
@@ -1690,18 +1690,18 @@
     "noGroups": "Keine Gruppen vorhanden. Klicke auf „Gruppe hinzufügen“, um eine Gruppe anzulegen.",
     "next": "Nächste",
     "overview": "Überblick",
-    "noVictims": "Keine Opfer vorhanden. Klicke auf „Opfer hinzufügen“, um ein Opfer anzulegen.",
+    "noVictims": "No persons registered. Click \"Add Person\" to add a person.",
     "point": "Punkt",
     "polygon": "Polygon",
     "publishUpdateIncident": " Ereignis veröffentlichen/aktualisieren",
     "removeAttachment": "Anhang löschen",
     "removeGroup": "Gruppe löschen",
-    "removeVictim": "Opfer löschen",
+    "removeVictim": "Remove Person",
     "required": "Pflichtfelder",
-    "showMandatoryFieldsOnly": "Nur Pflichtfelder",
-    "displayOnly": "Lese-Modus",
+    "showMandatoryFieldsOnly": "Most relevant only",
+    "displayOnly": "Preview Mode",
     "valid": "Gültig",
-    "victimName": "Opfer {{name}}",
+    "victimName": "Person {{name}}",
     "saveStateIdle": "Alle Änderungen gespeichert",
     "saveStateSaving": "Speichern ...",
     "saveStateSaved": "Erfolgreich gespeichert",
@@ -1714,7 +1714,7 @@
     "locationInformation": "Informationen zum Ort",
     "avalancheInformation": "Informationen zur Lawine",
     "groupInformation": "Informationen zur Gruppe",
-    "victimInformation": "Informationen zum Opfer",
+    "victimInformation": "Person Information",
     "involvementsFatalitiesBurials": "Beteiligungen, Todesopfer und Verschüttungen",
     "incidentAnalysis": "Ereignisanalyse",
     "incidentAttachments": "Anhänge zum Ereignis",
@@ -1781,7 +1781,7 @@
     "caught": "Mitgerissen",
     "fatalInjured": "Schadensausmaß Personen",
     "burialDegree": "Grad der Verschüttu",
-    "anonymousVictimIdentifier": "Anonyme Kennung des Opfers",
+    "anonymousVictimIdentifier": "Anonymous Person Identifier ",
     "age": "Alter",
     "gender": "Geschlecht",
     "workingAtTime": "Während der Ausführung seiner Arbeit unterwegs",
@@ -1809,6 +1809,7 @@
     "avalancheSize": "Lawinengröße",
     "avalancheType": "Lawinenart",
     "relevantAvalancheProblem": "Relevantes Lawinenproblem",
+    "relevantDangerPattern": "Relevant Danger Pattern",
     "trigger": "Auslösung",
     "natural": "Spontan",
     "person": "Person",
@@ -1835,8 +1836,8 @@
     "weakLayerGrainSize2": "Korngröße (2) der Schwachschicht",
     "weakLayerLocation": "Position der Schwachschicht in der Schneedecke",
     "bedSurfaceStepped": "Lawine in tiefere Schichten durchgerissen?",
-    "avalancheMoistureStartZone": "Feuchtegrad der Lawine: Anrissgebiet",
-    "avalancheMoistureDeposit": "Feuchtegrad der Lawine: Ablagerung",
+    "startZoneMoisture": "Start Zone Moisture",
+    "depositMoisture": "Deposit Moisture",
     "depositHeight": "Höhe der Ablagerung",
     "depositWidth": "Breite der Ablagerung",
     "debrisType": "Art der Ablagerung",
@@ -1961,7 +1962,7 @@
     "relevantAvalancheProblem": "Wähle das relevanteste EAWS Lawinenproblem aus.",
     "trigger": "Spontan: Ohne menschlichen Einfluss ausgelöst. Person: Durch eine oder mehrere Personen ausgelöst. Sprengung: Durch Sprengstoff, Artillerie oder Gas ausgelöst. Fahrzeug: Durch ein Fahrzeug ausgelöst (z. B. Pistenfahrzeug oder Hubschrauber). Unbekannt: Auslöser ist unbekannt oder unklar.",
     "natural": "",
-    "person": "",
+    "person": "Accidental: e.g. skier, snowboarder, hiker, climber; Controlled: e.g. skier deliberately ski cutting a slope or cornice",
     "additionalLoad": "Geringe Zusatzbelastung: Einzelne Skifahrer:in oder Snowboarder:in, Guppe mit mindestens 10 m Abstand zwischen den Personen oder einzelne Schneeschuhgeher:in. Große Zusatzbelastung: Eng beieinander gehende Gruppe mit weniger als 10 m Abstand, einzelne Person zu Fuß oder stürzende Skifahrer:in bzw. Snowboarder:in.",
     "explosives": "",
     "vehicle": "",
@@ -1985,8 +1986,8 @@
     "weakLayerGrainSize2": "Korngröße auf 0,25 mm runden.",
     "weakLayerLocation": "Innerhalb des Neuschnees: Die Schwachschicht befindet sich innerhalb des kürzlich gefallenen oder verfrachteten Schnees aus der aktuellen Schneefall- bzw. Verfrachtungsperiode; an der Grenzfläche zum Altschnee: Die Schwachschicht liegt an der Grenze zwischen Neu- und Altschnee (z. B. Oberflächenreif auf der Altschneeoberfläche vor der Überdeckung); innerhalb der Altschneedecke: Die Schwachschicht befindet sich im mittleren oder oberen Bereich der Altschneedecke; bodennah: Die Schwachschicht liegt im unteren Bereich der Schneedecke nahe am Boden und besteht typischerweise aus ausgeprägten kantigen Kristallen. Lawinen, die auf dieser Schwachschicht anreißen, legen häufig den Boden frei.",
     "bedSurfaceStepped": "Wähle „Ja“, wenn die Lawine in eine tiefer liegende Schwachschicht durchgerissen ist.",
-    "avalancheMoistureStartZone": "",
-    "avalancheMoistureDeposit": "",
+    "startZoneMoisture": "",
+    "depositMoisture": "",
     "depositHeight": "Maximale Höhe der Ablagerung",
     "depositWidth": "Maximale Breite der Ablagerung",
     "debrisType": "Wähle die Optionen aus, die die Zusammensetzung der Lawinenablagerung kurz nach dem Lawinenabgang am besten beschreiben.",
@@ -2158,8 +2159,8 @@
     "RockFall": "Steinschlag"
   },
   "person": {
-    "PersonAccidental": "Person (z.B. Skifahrer:in, Snowboarder:in, Wander:in, Bergesteiger:in), zufällig",
-    "PersonControlled": "Person, absichtlich (d.h., Skifahrer:in, die absichtlich versucht Lawine oder Wechte abzutreten)"
+    "PersonAccidental": "Zufällig",
+    "PersonControlled": "Kontrolliert"
   },
   "explosives": {
     "Artillery": "Artillerie",
@@ -2221,13 +2222,13 @@
     "Trees": "Bäume",
     "Other": "Andere"
   },
-  "avalancheMoistureStartZone": {
+  "startZoneMoisture": {
     "Dry": "Trocken",
     "Moist": "Feucht",
     "Wet": "Nass",
     "Unknown": "unbekannt"
   },
-  "avalancheMoistureDeposit": {
+  "depositMoisture": {
     "Dry": "Trocken",
     "Moist": "Feucht",
     "Wet": "Nass"
@@ -2314,7 +2315,9 @@
   },
   "professionalCertification": {
     "IFMGAGuide": "IVBV Bergführer:in",
-    "FullSkiGuide": "Skiführer:in, staatlich geprüfter Skilehrer:in, Berfühger:in-Anwärter",
+    "FullSkiGuide": "Full Ski guide",
+    "SkiInstructor": "Ski Instructor",
+    "ApprenticeGuide": "Apprentice Guide",
     "AvalancheProfessional": "Lawinenprofessionist",
     "AvalancheEducator": "Ausbildner Lawine",
     "Other": "Andere"
@@ -2412,6 +2415,11 @@
     "Minor": "Gering",
     "Moderate": "mäßig",
     "Major": "Gröber"
+  },
+  "recentSlabAvalanches": {
+    "Present": "Anwesend",
+    "Absent": "Abwesend",
+    "Unknown": "unbekannt"
   },
   "signsOfInstability": {
     "Present": "Anwesend",
