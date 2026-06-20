@@ -92,6 +92,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   displayOnly = false;
   readonly allTabs = [
     { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
+    { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },
     { id: "location", label: "incidentReport.locationInformation", schema: IncidentModels.LocationInformationSchema },
     {
       id: "avalanche",

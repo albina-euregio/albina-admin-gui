@@ -35,6 +35,18 @@ export const GeneralInformationSchema = z.object({
     ),
   ),
 
+  reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
+
+  publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+
+  privateExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+
+  privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+
+  generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+});
+
+export const BulletinInformationSchema = z.object({
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
   publicAvalancheWarningService: z.string(),
   publicAvalancheWarningServiceOutside: z.boolean().nullish().describe("Outside AWS Forecast Area"),
@@ -49,26 +61,15 @@ export const GeneralInformationSchema = z.object({
       Enums.DangerRating.high,
       Enums.DangerRating.very_high,
     ])
-    .register(widgetRegistry, { widget: "dangerRating", class: "bg-public-danger-rating" }),
+    .register(widgetRegistry, { widget: "dangerRating" }),
 
-  avalancheProblem: z
-    .enum(Enums.AvalancheProblem)
-    .array()
-    .register(widgetRegistry, { widget: "avalancheProblem", class: "bg-public-danger-rating" }),
+  avalancheProblem: z.enum(Enums.AvalancheProblem).array().register(widgetRegistry, { widget: "avalancheProblem" }),
 
-  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { class: "bg-public-danger-rating" }),
+  dangerPattern: z.enum(Enums.DangerPattern).array(),
 
-  reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
-
-  publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-
-  privateExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-
-  privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
-
-  generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
-withShowIf(GeneralInformationSchema, {
+withShowIf(BulletinInformationSchema, {
   dangerRating: not("publicAvalancheWarningServiceOutside", true),
   avalancheProblem: [
     not("publicAvalancheWarningServiceOutside", true),
@@ -492,6 +493,7 @@ export type IncidentAttachment = z.infer<typeof IncidentAttachmentSchema>;
 export const IncidentReportSchema = z.object({
   ...MetaInformationSchema.shape,
   ...GeneralInformationSchema.shape,
+  ...BulletinInformationSchema.shape,
   ...LocationInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
   personInvolvement: z.enum(["Yes", "No", "Unknown"]),
@@ -509,3 +511,4 @@ export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend
 });
 
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;
+export type PartialIncidentReport = z.infer<typeof PartialIncidentReportSchema>;

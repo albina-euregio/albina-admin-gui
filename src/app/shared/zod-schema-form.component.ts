@@ -23,6 +23,7 @@ type SupportedSchema =
   | typeof RegionConfigurationSchema
   | typeof IncidentModels.MetaInformationSchema
   | typeof IncidentModels.GeneralInformationSchema
+  | typeof IncidentModels.BulletinInformationSchema
   | typeof IncidentModels.LocationInformationSchema
   | typeof IncidentModels.GroupInformationSchema
   | typeof IncidentModels.InvolvementsFatalitiesBurialsSchema
