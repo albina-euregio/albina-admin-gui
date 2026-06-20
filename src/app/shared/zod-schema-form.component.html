@@ -12,6 +12,7 @@
         [class]="widget?.class"
         [id]="key"
         [title]="displayOnly() && helpI18n() ? (helpI18n().replace('#', key) | translate) : ''"
+        [attr.data-json]="JSON.stringify(Object.fromEntries([[key, value()[key] ?? null]]))"
       >
         @let changed = valueForCompare() && !isEqual(valueForCompare()[key], value()[key]);
         <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100" [class.changed]="changed">
