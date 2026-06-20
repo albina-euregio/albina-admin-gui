@@ -20,53 +20,44 @@ export const GeneralInformationSchema = z.object({
     ),
   ),
 
-  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5" }),
-  timeAccuracy: z.enum([
-    "exact",
-    "PT15M",
-    "PT30M",
-    "PT1H",
-    "PT2H",
-    "PT4H",
-    "PT6H",
-    "PT12H",
-    "P1D",
-    "P2D",
-    "P3D",
-    "unknown",
-  ]),
+  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5", public: true }),
+  timeAccuracy: z
+    .enum(["exact", "PT15M", "PT30M", "PT1H", "PT2H", "PT4H", "PT6H", "PT12H", "P1D", "P2D", "P3D", "unknown"])
+    .register(widgetRegistry, { public: true }),
 
-  location: z.string(),
-  latitude: z.number().register(widgetRegistry, { class: "col-6" }),
-  longitude: z.number().register(widgetRegistry, { class: "col-6" }),
-  locationAccuracy: z.enum([
-    "exact",
-    "within15m",
-    "within30m",
-    "within100m",
-    "within250m",
-    "within500m",
-    "within1km",
-    "within2km",
-    "within5km",
-    "within10km",
-    "within20km",
-    "within50km",
-    "unknown",
-  ]),
+  location: z.string().register(widgetRegistry, { public: true }),
+  latitude: z.number().register(widgetRegistry, { class: "col-6", public: true }),
+  longitude: z.number().register(widgetRegistry, { class: "col-6", public: true }),
+  locationAccuracy: z
+    .enum([
+      "exact",
+      "within15m",
+      "within30m",
+      "within100m",
+      "within250m",
+      "within500m",
+      "within1km",
+      "within2km",
+      "within5km",
+      "within10km",
+      "within20km",
+      "within50km",
+      "unknown",
+    ])
+    .register(widgetRegistry, { public: true }),
   lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
   polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
-  country: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  country: z.string().register(widgetRegistry, { class: "col-6", public: true }).nullish(),
   region: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
   municipality: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
-  avalancheRegion: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  avalancheRegion: z.string().register(widgetRegistry, { class: "col-6", public: true }).nullish(),
 
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
 export const BulletinInformationSchema = z.object({
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
-  publicAvalancheWarningService: z.string(),
+  publicAvalancheWarningService: z.string().register(widgetRegistry, { public: true }),
   publicAvalancheWarningServiceOutside: z.boolean().nullish().describe("Outside AWS Forecast Area"),
 
   dangerRating: z
@@ -79,11 +70,14 @@ export const BulletinInformationSchema = z.object({
       Enums.DangerRating.high,
       Enums.DangerRating.very_high,
     ])
-    .register(widgetRegistry, { widget: "dangerRating" }),
+    .register(widgetRegistry, { widget: "dangerRating", public: true }),
 
-  avalancheProblem: z.enum(Enums.AvalancheProblem).array().register(widgetRegistry, { widget: "avalancheProblem" }),
+  avalancheProblem: z
+    .enum(Enums.AvalancheProblem)
+    .array()
+    .register(widgetRegistry, { widget: "avalancheProblem", public: true }),
 
-  dangerPattern: z.enum(Enums.DangerPattern).array(),
+  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { public: true }),
 
   bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
@@ -126,13 +120,13 @@ export const GroupInformationSchema = z.object({
   ),
   groupSizeAccuracy: z
     .enum(["Exact", "Approximately", "AtLeast", "Unknown"])
-    .register(widgetRegistry, { class: "col-6" }),
+    .register(widgetRegistry, { class: "col-6", public: true }),
   groupSize: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
-  incidentTerrainType,
+  incidentTerrainType: incidentTerrainType.register(widgetRegistry, { public: true }),
   typeOfControlledTerrain: enumWithOther(
     z.enum(["IndoorInsideBuilding", "Street", "TrainTrack", "SkiAreaResort", "CrossCountryTrack", "SledgingTrack"]),
   ).nullish(),
-  incidentActivity,
+  incidentActivity: incidentActivity.register(widgetRegistry, { public: true }),
   travelDirection: enumWithOther(
     z.enum([
       "Ascending",
@@ -159,17 +153,17 @@ export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
 export const InvolvementsFatalitiesBurialsSchema = z.object({
   numberOfGroups: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
-  numberInvolved: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
-  incidentActivity: incidentActivity.array().register(widgetRegistry, { class: "col-6" }).nullish(),
-  incidentTerrainType: incidentTerrainType.array().register(widgetRegistry, { class: "col-6" }).nullish(),
-  fatalities: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
-  injuredSurvivors: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
-  uninjuredSurvivors: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
-  caughtOnly: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
-  fullyBuried: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  numberInvolved: z.number().register(widgetRegistry, { class: "col-6", public: true }).nullish(),
+  incidentActivity: incidentActivity.array().register(widgetRegistry, { class: "col-6", public: true }).nullish(),
+  incidentTerrainType: incidentTerrainType.array().register(widgetRegistry, { class: "col-6", public: true }).nullish(),
+  fatalities: z.number().register(widgetRegistry, { class: "col-3", public: true }).nullish(),
+  injuredSurvivors: z.number().register(widgetRegistry, { class: "col-3", public: true }).nullish(),
+  uninjuredSurvivors: z.number().register(widgetRegistry, { class: "col-3", public: true }).nullish(),
+  caughtOnly: z.number().register(widgetRegistry, { class: "col-3", public: true }).nullish(),
+  fullyBuried: z.number().register(widgetRegistry, { class: "col-3", public: true }).nullish(),
   partlyBuriedHeadCovered: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
   partlyBuriedHeadUncovered: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
-  partlyBuried: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
+  partlyBuried: z.number().register(widgetRegistry, { class: "col-3", public: true }).nullish(),
 });
 
 export const VictimInformationSchema = z.object({
@@ -282,27 +276,32 @@ export type VictimInformation = z.infer<typeof VictimInformationSchema>;
 
 const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
 export const AvalancheInformationSchema = z.object({
-  avalancheType: z.enum(Enums.IncidentAvalancheType),
-  avalancheSize: z.enum(Enums.IncidentAvalancheSize),
-  avalancheLength: z.number().register(widgetRegistry, { unit: "m" }).nullish(),
+  avalancheType: z.enum(Enums.IncidentAvalancheType).register(widgetRegistry, { public: true }),
+  avalancheSize: z.enum(Enums.IncidentAvalancheSize).register(widgetRegistry, { public: true }),
+  avalancheLength: z.number().register(widgetRegistry, { unit: "m", public: true }).nullish(),
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
-  startZoneAspect: z
-    .enum(Enums.Aspect)
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", valueI18n: "aspect.#", widget: "aspect" }),
+  startZoneAspect: z.enum(Enums.Aspect).register(widgetRegistry, {
+    class: "col-6 bg-avalanche-start-zone",
+    valueI18n: "aspect.#",
+    widget: "aspect",
+    public: true,
+  }),
   startZoneAspectAccuracy: z
     .enum(["Accurate", "Uncertain"])
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone" }),
-  startZoneElevation: z.number().register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "m" }),
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true }),
+  startZoneElevation: z
+    .number()
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "m", public: true }),
   startZoneElevationAccuracy: z
     .enum(["exact", "within50m", "within100m", "within200m", "unknown"])
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone" }),
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true }),
   startZoneIncline: z
     .number()
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "°" })
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "°", public: true })
     .nullish(),
   startZoneMoisture: z
     .enum(["Dry", "Moist", "Wet", "Unknown"])
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone" }),
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true }),
   startZoneTerrainType: enumWithOther(
     z.enum([
       "AlpineBowl",
@@ -326,7 +325,7 @@ export const AvalancheInformationSchema = z.object({
     .array()
     .register(widgetRegistry, { class: "bg-avalanche-start-zone" })
     .nullish(),
-  trigger: Trigger.register(widgetRegistry, { class: "bg-avalanche-trigger" }).nullish(),
+  trigger: Trigger.register(widgetRegistry, { class: "bg-avalanche-trigger", public: true }).nullish(),
   natural: z
     .enum(["Natural", "CorniceFall", "Earthquake", "IceFall", "RockFall"])
     .register(widgetRegistry, { class: "bg-avalanche-trigger" })
@@ -359,7 +358,10 @@ export const AvalancheInformationSchema = z.object({
     .enum(["Accidental", "Controlled"])
     .register(widgetRegistry, { class: "bg-avalanche-trigger" })
     .nullish(),
-  remoteTriggering: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-avalanche-trigger" }).nullish(),
+  remoteTriggering: z
+    .enum(["Yes", "No"])
+    .register(widgetRegistry, { class: "bg-avalanche-trigger", public: true })
+    .nullish(),
   bedSurfaceStepped: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-avalanche-trigger" }).nullish(),
   weakLayerName: z.string().register(widgetRegistry, { class: "bg-avalanche-weak-layer" }).nullish(),
   weakLayerGrainType1: z
@@ -368,6 +370,7 @@ export const AvalancheInformationSchema = z.object({
       class: "bg-avalanche-weak-layer col-8",
       valueI18n: "grainShape.#.code",
       widget: "grainShape",
+      public: true,
     })
     .nullish(),
   weakLayerGrainSize1: z.number().register(widgetRegistry, { class: "bg-avalanche-weak-layer col-4" }).nullish(),
@@ -377,15 +380,19 @@ export const AvalancheInformationSchema = z.object({
       class: "bg-avalanche-weak-layer col-8",
       valueI18n: "grainShape.#.code",
       widget: "grainShape",
+      public: true,
     })
     .nullish(),
   weakLayerGrainSize2: z.number().register(widgetRegistry, { class: "bg-avalanche-weak-layer col-4" }).nullish(),
   weakLayerLocation: z
     .enum(["WithinNewSnow", "AtInterfaceWithOldSnow", "WithinOldSnowpack", "NearTheGround"])
-    .register(widgetRegistry, { class: "bg-avalanche-weak-layer" })
+    .register(widgetRegistry, { class: "bg-avalanche-weak-layer", public: true })
     .nullish(),
-  slabWidth: z.number().register(widgetRegistry, { unit: "m", class: "bg-avalanche-slab" }).nullish(),
-  crownDepthAvg: z.number().register(widgetRegistry, { unit: "cm", class: "col-4 bg-avalanche-slab" }).nullish(),
+  slabWidth: z.number().register(widgetRegistry, { unit: "m", class: "bg-avalanche-slab", public: true }).nullish(),
+  crownDepthAvg: z
+    .number()
+    .register(widgetRegistry, { unit: "cm", class: "col-4 bg-avalanche-slab", public: true })
+    .nullish(),
   crownDepthMin: z.number().register(widgetRegistry, { unit: "cm", class: "col-4 bg-avalanche-slab" }).nullish(),
   crownDepthMax: z.number().register(widgetRegistry, { unit: "cm", class: "col-4 bg-avalanche-slab" }).nullish(),
   debrisType: enumWithOther(z.enum(["Fine", "Blocks", "Hard", "Soft", "Rocks", "Trees"]))
@@ -406,6 +413,7 @@ export const AvalancheInformationSchema = z.object({
       valueI18n: "avalancheProblem.#",
       widget: "avalancheProblem",
       class: "bg-avalanche-communication",
+      public: true,
     })
     .nullish(),
   relevantDangerPattern: z
@@ -430,7 +438,7 @@ withShowIf(AvalancheInformationSchema, {
 });
 
 export const OtherDamagesSchema = z.object({
-  otherDamages: z.enum(["Yes", "No"]),
+  otherDamages: z.enum(["Yes", "No"]).register(widgetRegistry, { public: true }),
 
   damagedAssets: enumWithOther(
     z.enum(["Vehicle", "Forest", "Agriculture", "Livestock", "UtilitiesTechnicalInfrastructure"]),
@@ -492,7 +500,7 @@ export const IncidentReportSchema = z.object({
   ...GeneralInformationSchema.shape,
   ...BulletinInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
-  personInvolvement: z.enum(["Yes", "No", "Unknown"]),
+  personInvolvement: z.enum(["Yes", "No", "Unknown"]).register(widgetRegistry, { public: true }),
   ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array(),
   victimInformation: VictimInformationSchema.array(),

@@ -29,6 +29,7 @@ export interface WidgetType {
   unit?: string;
   valueI18n?: `${string}#${string}`;
   showIf?: ShowIf[];
+  public?: boolean;
   widget?:
     | "slider"
     | "checkbox"

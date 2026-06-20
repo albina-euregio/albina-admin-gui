@@ -37,6 +37,14 @@
                 ></span>
               }
             }
+            @if (widget?.public) {
+              <span
+                [class.text-success]="zodUtil.isFieldValid(zodType, value()[key])"
+                title="{{ 'incidentReport.public' | translate }}"
+              >
+                <i class="ph ph-eye"></i>
+              </span>
+            }
           </div>
           @if (!displayOnly()) {
             <div class="d-flex align-items-center gap-3">
