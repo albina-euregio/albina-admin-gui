@@ -1,30 +1,32 @@
 <section class="row">
   @for (x of fields(); track x.key) {
-    @let inner = zodUtil.unwrap(x.value);
+    @let key = x.key;
+    @let zodType = x.value;
+    @let inner = zodUtil.unwrap(zodType);
     @let widget = widgetRegistry.get(inner);
     @if (widget?.widget !== "none") {
-      @let valueI18n = widget?.valueI18n || `${x.key}.#`;
+      @let valueI18n = widget?.valueI18n || `${key}.#`;
       <div
-        [class.d-none]="!shouldShowField(x.key, x.value)"
+        [class.d-none]="!shouldShowField(key, zodType)"
         class="zod-form-field"
         [class]="widget?.class"
-        [id]="x.key"
-        [title]="displayOnly() && helpI18n() ? (helpI18n().replace('#', x.key) | translate) : ''"
+        [id]="key"
+        [title]="displayOnly() && helpI18n() ? (helpI18n().replace('#', key) | translate) : ''"
       >
-        @let changed = valueForCompare() && !isEqual(valueForCompare()[x.key], value()[x.key]);
+        @let changed = valueForCompare() && !isEqual(valueForCompare()[key], value()[key]);
         <div class="form-label d-flex align-items-center justify-content-between gap-2 w-100" [class.changed]="changed">
           <div class="d-flex align-items-center gap-2">
             @if (!displayOnly() && inner.type === "boolean" && widget?.widget !== "yes-no") {
             } @else if (labelI18n()) {
-              <span>{{ labelI18n().replace("#", x.key) | translate }}</span>
+              <span>{{ labelI18n().replace("#", key) | translate }}</span>
             } @else {
-              <span>{{ x.value?.description || x.key }}</span>
+              <span>{{ zodType?.description || key }}</span>
             }
             @if (widget?.unit) {
               <span class="text-muted">[{{ widget.unit }}]</span>
             }
-            @if (!displayOnly() && !zodUtil.isFieldOptional(x.value)) {
-              @if (zodUtil.isFieldValid(x.value, value()[x.key])) {
+            @if (!displayOnly() && !zodUtil.isFieldOptional(zodType)) {
+              @if (zodUtil.isFieldValid(zodType, value()[key])) {
                 <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}"
                   ><i class="ph ph-check"></i
                 ></span>
@@ -37,41 +39,41 @@
           </div>
           @if (!displayOnly()) {
             <div class="d-flex align-items-center gap-3">
-              @if (hasOutsideField(x.key)) {
+              @if (hasOutsideField(key)) {
                 <div class="form-switch mb-0 d-flex align-items-center gap-2 p-0">
                   <label
                     class="form-check-label text-secondary fw-semibold cursor-pointer"
-                    [attr.for]="x.key + 'Outside-input'"
+                    [attr.for]="key + 'Outside-input'"
                     style="font-size: 11px; text-transform: none"
                   >
-                    {{ labelI18n().replace("#", x.key + "Outside") | translate }}
+                    {{ labelI18n().replace("#", key + "Outside") | translate }}
                   </label>
                   <input
                     type="checkbox"
                     class="form-check-input outside-switch ms-0 mt-0 float-none"
                     [disabled]="disabled()"
-                    [(ngModel)]="value()[x.key + 'Outside']"
-                    (ngModelChange)="onOutsideFieldChange(x.key, $event)"
-                    [id]="x.key + 'Outside-input'"
+                    [(ngModel)]="value()[key + 'Outside']"
+                    (ngModelChange)="onOutsideFieldChange(key, $event)"
+                    [id]="key + 'Outside-input'"
                   />
                 </div>
               }
-              @if (hasPublicField(x.key)) {
+              @if (hasPublicField(key)) {
                 <div class="form-switch mb-0 d-flex align-items-center gap-2 p-0">
                   <label
                     class="form-check-label text-secondary fw-semibold cursor-pointer"
-                    [attr.for]="x.key + 'Public-input'"
+                    [attr.for]="key + 'Public-input'"
                     style="font-size: 11px; text-transform: none"
                   >
-                    {{ labelI18n().replace("#", x.key + "Public") | translate }}
+                    {{ labelI18n().replace("#", key + "Public") | translate }}
                   </label>
                   <input
                     type="checkbox"
                     class="form-check-input public-switch ms-0 mt-0 float-none"
                     [disabled]="disabled()"
-                    [(ngModel)]="value()[x.key + 'Public']"
+                    [(ngModel)]="value()[key + 'Public']"
                     (ngModelChange)="onFieldChange()"
-                    [id]="x.key + 'Public-input'"
+                    [id]="key + 'Public-input'"
                   />
                 </div>
               }
@@ -79,25 +81,25 @@
           }
         </div>
         @if (displayOnly()) {
-          <app-zod-display [zodType]="x.value" [value]="value()[x.key]" [valueI18n]="valueI18n" />
+          <app-zod-display [zodType]="zodType" [value]="value()[key]" [valueI18n]="valueI18n" />
         } @else if (inner.type === "enum") {
           @let enumValues = Object.keys(inner.def.entries);
           @if (widget?.widget === "slider") {
             <app-enum-slider
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
               [disabled]="disabled()"
               [enumValues]="enumValues"
               [valueI18n]="valueI18n"
-              [(value)]="value()[x.key]"
+              [(value)]="value()[key]"
               (valueChange)="onFieldChange()"
             />
           } @else if (widget?.widget === "select") {
             <select
-              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
+              [attr.aria-label]="fieldAriaLabel(key, zodType)"
               [disabled]="disabled()"
               class="form-select"
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
-              [(ngModel)]="value()[x.key]"
+              [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
+              [(ngModel)]="value()[key]"
               (ngModelChange)="onFieldChange()"
             >
               @for (v of enumValues; track v) {
@@ -108,22 +110,22 @@
             </select>
           } @else if (widget?.widget === "aspect") {
             <app-aspects
-              [aspects]="[castAspect(value()[x.key])]"
-              (aspectsChange)="Object.assign(value(), Object.fromEntries([[x.key, $event[0]]])); onFieldChange()"
+              [aspects]="[castAspect(value()[key])]"
+              (aspectsChange)="Object.assign(value(), Object.fromEntries([[key, $event[0]]])); onFieldChange()"
               [disabled]="disabled()"
               [singleton]="true"
               [size]="120"
             />
           } @else {
             <app-toggle-btn-group
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
               [disabled]="disabled()"
               [enumValues]="enumValues"
-              [(value)]="value()[x.key]"
+              [(value)]="value()[key]"
               (valueChange)="onFieldChange()"
               [labelI18n]="valueI18n"
               [widget]="widget?.widget"
-              [diminishValues]="diminishValues()[x.key]"
+              [diminishValues]="diminishValues()[key]"
             />
           }
         } @else if (inner.type === "array" && inner.def.element.type === "enum") {
@@ -136,11 +138,11 @@
                     #checkbox
                     class="form-check-input"
                     type="checkbox"
-                    [name]="x.key"
+                    [name]="key"
                     [value]="v"
                     [disabled]="disabled()"
-                    [checked]="castArray(value()[x.key])?.includes(v)"
-                    (change)="onCheckboxArrayChange(x.key, v)"
+                    [checked]="castArray(value()[key])?.includes(v)"
+                    (change)="onCheckboxArrayChange(key, v)"
                   />
                   {{ valueI18n.replace("#", v) | translate }}
                 </label>
@@ -148,15 +150,15 @@
             }
           } @else {
             <app-toggle-btn-group
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
               [disabled]="disabled()"
               [multiple]="true"
               [enumValues]="enumValues"
-              [values]="castArray(value()[x.key])"
-              (valuesChange)="Object.assign(value(), Object.fromEntries([[x.key, $event]])); onFieldChange()"
+              [values]="castArray(value()[key])"
+              (valuesChange)="Object.assign(value(), Object.fromEntries([[key, $event]])); onFieldChange()"
               [labelI18n]="valueI18n"
               [widget]="widget?.widget"
-              [diminishValues]="diminishValues()[x.key]"
+              [diminishValues]="diminishValues()[key]"
             />
           }
         } @else if (inner.type === "array" && zodUtil.isEnumWithOther(inner.def.element)) {
@@ -165,25 +167,25 @@
             [multiple]="true"
             [enumValues]="zodUtil.enumWithOtherValues(inner.def.element)"
             [valueI18n]="valueI18n"
-            [zodType]="x.value"
-            [(value)]="value()[x.key]"
+            [zodType]="zodType"
+            [(value)]="value()[key]"
             (valueChange)="onFieldChange()"
           />
         } @else if (inner.type === "array" && inner.def.element.type === "string") {
           <input
             type="text"
-            [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
-            [ngModel]="value()[x.key]"
-            (ngModelChange)="Object.assign(value(), Object.fromEntries([[x.key, $event.split(',')]])); onFieldChange()"
+            [class]="zodUtil.zodCssClass(zodType, value()[key])"
+            [ngModel]="value()[key]"
+            (ngModelChange)="Object.assign(value(), Object.fromEntries([[key, $event.split(',')]])); onFieldChange()"
           />
         } @else if (inner.type === "string") {
-          @if (x.key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
+          @if (key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
             <select
-              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
+              [attr.aria-label]="fieldAriaLabel(key, zodType)"
               [disabled]="disabled()"
               class="form-select"
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
-              [(ngModel)]="value()[x.key]"
+              [class]="zodUtil.zodCssClass(zodType, value()[key])"
+              [(ngModel)]="value()[key]"
               (ngModelChange)="onFieldChange()"
             >
               <option [value]="undefined" disabled selected hidden>Select a group...</option>
@@ -193,36 +195,36 @@
             </select>
           } @else if (widget?.widget === "textarea") {
             <textarea
-              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
-              [(ngModel)]="value()[x.key]"
+              [attr.aria-label]="fieldAriaLabel(key, zodType)"
+              [class]="zodUtil.zodCssClass(zodType, value()[key])"
+              [(ngModel)]="value()[key]"
               (ngModelChange)="onFieldChange()"
               rows="5"
               [disabled]="disabled()"
             ></textarea>
           } @else if (widget?.widget === "rich-text") {
             <quill-editor
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+              [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
               [styles]="{ height: '200px' }"
               [readOnly]="disabled()"
-              [(ngModel)]="value()[x.key]"
+              [(ngModel)]="value()[key]"
               (ngModelChange)="onFieldChange()"
             />
-          } @else if (hasOutsideField(x.key)) {
+          } @else if (hasOutsideField(key)) {
             <input
               type="text"
-              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
-              [(ngModel)]="value()[x.key]"
+              [attr.aria-label]="fieldAriaLabel(key, zodType)"
+              [class]="zodUtil.zodCssClass(zodType, value()[key])"
+              [(ngModel)]="value()[key]"
               (ngModelChange)="onFieldChange()"
-              [disabled]="disabled() || !!value()[x.key + 'Outside']"
+              [disabled]="disabled() || !!value()[key + 'Outside']"
             />
           } @else {
             <input
               type="text"
-              [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
-              [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
-              [(ngModel)]="value()[x.key]"
+              [attr.aria-label]="fieldAriaLabel(key, zodType)"
+              [class]="zodUtil.zodCssClass(zodType, value()[key])"
+              [(ngModel)]="value()[key]"
               (ngModelChange)="onFieldChange()"
               [disabled]="disabled()"
             />
@@ -230,9 +232,9 @@
         } @else if (inner.type === "number") {
           <input
             type="number"
-            [attr.aria-label]="fieldAriaLabel(x.key, x.value)"
-            [class]="zodUtil.zodCssClass(x.value, value()[x.key])"
-            [(ngModel)]="value()[x.key]"
+            [attr.aria-label]="fieldAriaLabel(key, zodType)"
+            [class]="zodUtil.zodCssClass(zodType, value()[key])"
+            [(ngModel)]="value()[key]"
             (ngModelChange)="onFieldChange()"
             [disabled]="disabled()"
           />
@@ -240,15 +242,15 @@
           <app-date-time-input
             [disabled]="disabled()"
             [showTime]="widget?.widget !== 'date'"
-            [(value)]="value()[x.key]"
+            [(value)]="value()[key]"
             (valueChange)="onFieldChange()"
           />
         } @else if (inner.type === "boolean" && widget?.widget === "yes-no") {
           <app-toggle-btn-group
-            [class]="zodUtil.zodCssClass(x.value, value()[x.key], '')"
+            [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
             [disabled]="disabled()"
             [enumValues]="[true, false]"
-            [(value)]="value()[x.key]"
+            [(value)]="value()[key]"
             (valueChange)="onFieldChange()"
             [labelI18n]="'button.#'"
           />
@@ -259,11 +261,11 @@
                 type="checkbox"
                 class="form-check-input"
                 [disabled]="disabled()"
-                [(ngModel)]="value()[x.key]"
+                [(ngModel)]="value()[key]"
                 (ngModelChange)="onFieldChange()"
-                [id]="x.key + '-input'"
+                [id]="key + '-input'"
               />
-              {{ x.value?.description || x.key }}
+              {{ zodType?.description || key }}
             </label>
           </div>
         } @else if (zodUtil.isEnumWithOther(inner)) {
@@ -271,25 +273,25 @@
             [disabled]="disabled()"
             [enumValues]="zodUtil.enumWithOtherValues(inner)"
             [valueI18n]="valueI18n"
-            [zodType]="x.value"
-            [(value)]="value()[x.key]"
+            [zodType]="zodType"
+            [(value)]="value()[key]"
             (valueChange)="onFieldChange()"
           />
         } @else {
           <div class="alert alert-danger" role="alert">
-            Unknown type {{ inner.type }} for key {{ x.key }}
-            <div>{{ x.key }}</div>
+            Unknown type {{ inner.type }} for key {{ key }}
+            <div>{{ key }}</div>
             <div>{{ inner.type }}</div>
-            <div>{{ JSON.stringify(x.value) }}</div>
+            <div>{{ JSON.stringify(zodType) }}</div>
           </div>
         }
         @if (!displayOnly() && helpI18n()) {
           <div class="form-text">
-            {{ helpI18n().replace("#", x.key) | translate }}
+            {{ helpI18n().replace("#", key) | translate }}
           </div>
         }
-        @if (!displayOnly() && zodUtil.hasValue(value()[x.key])) {
-          @if (x.value.safeParse(value()[x.key]); as parseResult) {
+        @if (!displayOnly() && zodUtil.hasValue(value()[key])) {
+          @if (zodType.safeParse(value()[key]); as parseResult) {
             @if (parseResult.error) {
               <!-- previous element needs to have .is-invalid class for this feedback to be shown -->
               <div class="invalid-feedback">
