@@ -241,6 +241,14 @@
           </a>
         </li>
       }
+      @if (authenticationService.getActiveRegion()?.enableIncidents && authenticationService.isUserLoggedIn()) {
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/incidents']">
+            <i class="ph ph-eye"></i>
+            {{ "sidebar.incidents" | translate }}
+          </a>
+        </li>
+      }
       @if (authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()) {
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
