@@ -16,6 +16,14 @@
   }
 
   // https://getbootstrap.com/docs/5.3/customize/color/
+  .bg-general-datetime {
+    background-color: rgba($teal-100, 0.5);
+    border-left: 3px solid $teal-400;
+  }
+  .bg-general-location {
+    background-color: rgba($indigo-100, 0.5);
+    border-left: 3px solid $indigo-400;
+  }
   .bg-avalanche-start-zone {
     background-color: rgba($teal-100, 0.5);
     border-left: 3px solid $teal-400;

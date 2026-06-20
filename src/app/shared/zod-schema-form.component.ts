@@ -24,7 +24,6 @@ type SupportedSchema =
   | typeof IncidentModels.MetaInformationSchema
   | typeof IncidentModels.GeneralInformationSchema
   | typeof IncidentModels.BulletinInformationSchema
-  | typeof IncidentModels.LocationInformationSchema
   | typeof IncidentModels.GroupInformationSchema
   | typeof IncidentModels.InvolvementsFatalitiesBurialsSchema
   | typeof IncidentModels.VictimInformationSchema

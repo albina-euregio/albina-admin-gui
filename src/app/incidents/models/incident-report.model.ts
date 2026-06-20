@@ -12,8 +12,15 @@ export const MetaInformationSchema = z.object({
 });
 
 export const GeneralInformationSchema = z.object({
-  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5" }),
+  reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
 
+  sourceOfInformation: z.array(
+    enumWithOther(
+      z.enum(["PublicObservation", "AWSInternal", "AWSObserver", "DispatchCentre", "Police", "MountainRescue"]),
+    ),
+  ),
+
+  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5" }),
   timeAccuracy: z.enum([
     "exact",
     "PT15M",
@@ -29,13 +36,30 @@ export const GeneralInformationSchema = z.object({
     "unknown",
   ]),
 
-  sourceOfInformation: z.array(
-    enumWithOther(
-      z.enum(["PublicObservation", "AWSInternal", "AWSObserver", "DispatchCentre", "Police", "MountainRescue"]),
-    ),
-  ),
-
-  reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
+  location: z.string(),
+  latitude: z.number().register(widgetRegistry, { class: "col-6" }),
+  longitude: z.number().register(widgetRegistry, { class: "col-6" }),
+  locationAccuracy: z.enum([
+    "exact",
+    "within15m",
+    "within30m",
+    "within100m",
+    "within250m",
+    "within500m",
+    "within1km",
+    "within2km",
+    "within5km",
+    "within10km",
+    "within20km",
+    "within50km",
+    "unknown",
+  ]),
+  lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
+  polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
+  country: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  region: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  municipality: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  avalancheRegion: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
 
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
@@ -73,34 +97,6 @@ withShowIf(BulletinInformationSchema, {
     not("publicAvalancheWarningServiceOutside", true),
     not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
   ],
-});
-
-export const LocationInformationSchema = z.object({
-  location: z.string(),
-  latitude: z.number().register(widgetRegistry, { class: "col-3" }),
-  longitude: z.number().register(widgetRegistry, { class: "col-3" }),
-  locationAccuracy: z.enum([
-    "exact",
-    "within15m",
-    "within30m",
-    "within100m",
-    "within250m",
-    "within500m",
-    "within1km",
-    "within2km",
-    "within5km",
-    "within10km",
-    "within20km",
-    "within50km",
-    "unknown",
-  ]),
-  lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
-  polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
-  country: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
-  region: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
-  municipality: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
-  avalancheRegion: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
-  locationInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
 const incidentTerrainType = z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]);
@@ -494,7 +490,6 @@ export const IncidentReportSchema = z.object({
   ...MetaInformationSchema.shape,
   ...GeneralInformationSchema.shape,
   ...BulletinInformationSchema.shape,
-  ...LocationInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
   personInvolvement: z.enum(["Yes", "No", "Unknown"]),
   ...OtherDamagesSchema.shape,

@@ -145,46 +145,9 @@
           [disabled]="disabled()"
           [displayOnly]="displayOnly"
           [value]="incidentReport()"
-          (valueChange)="incidentReport.set($event)"
-          [zodType]="IncidentModels.GeneralInformationSchema"
-          [labelI18n]="labelI18n"
-          [helpI18n]="helpI18n"
-          [showMandatoryOnly]="showMandatoryOnly"
-        />
-      </div>
-    }
-
-    <!-- Bulletin Info Tab -->
-    @if (activeTab === "bulletin" || displayOnly) {
-      <div>
-        <h4 class="mb-3 text-secondary">{{ "incidentReport.bulletinInformation" | translate }}</h4>
-        <app-zod-schema-form
-          [disabled]="disabled()"
-          [displayOnly]="displayOnly"
-          [value]="incidentReport()"
-          (valueChange)="incidentReport.set($event)"
-          [zodType]="IncidentModels.BulletinInformationSchema"
-          [labelI18n]="labelI18n"
-          [helpI18n]="helpI18n"
-          [showMandatoryOnly]="showMandatoryOnly"
-        />
-      </div>
-    }
-
-    <!-- Location Info Tab -->
-    @if (activeTab === "location" || displayOnly) {
-      <div>
-        <h4 class="mb-3 text-secondary">{{ "incidentReport.locationInformation" | translate }}</h4>
-
-        <!-- Location name -->
-
-        <app-zod-schema-form
-          [disabled]="disabled()"
-          [displayOnly]="displayOnly"
-          [value]="incidentReport()"
           (valueChange)="onLocationFormChange($event)"
-          [zodType]="IncidentModels.LocationInformationSchema"
-          [includeFields]="['location']"
+          [zodType]="IncidentModels.GeneralInformationSchema"
+          [includeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
           [labelI18n]="labelI18n"
           [helpI18n]="helpI18n"
           [showMandatoryOnly]="showMandatoryOnly"
@@ -348,8 +311,25 @@
           [displayOnly]="displayOnly"
           [value]="incidentReport()"
           (valueChange)="onLocationFormChange($event)"
-          [zodType]="IncidentModels.LocationInformationSchema"
-          [excludeFields]="['location']"
+          [zodType]="IncidentModels.GeneralInformationSchema"
+          [excludeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          [showMandatoryOnly]="showMandatoryOnly"
+        />
+      </div>
+    }
+
+    <!-- Bulletin Info Tab -->
+    @if (activeTab === "bulletin" || displayOnly) {
+      <div>
+        <h4 class="mb-3 text-secondary">{{ "incidentReport.bulletinInformation" | translate }}</h4>
+        <app-zod-schema-form
+          [disabled]="disabled()"
+          [displayOnly]="displayOnly"
+          [value]="incidentReport()"
+          (valueChange)="incidentReport.set($event)"
+          [zodType]="IncidentModels.BulletinInformationSchema"
           [labelI18n]="labelI18n"
           [helpI18n]="helpI18n"
           [showMandatoryOnly]="showMandatoryOnly"

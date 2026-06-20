@@ -93,7 +93,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly allTabs = [
     { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
     { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },
-    { id: "location", label: "incidentReport.locationInformation", schema: IncidentModels.LocationInformationSchema },
     {
       id: "avalanche",
       label: "incidentReport.avalancheInformation",
@@ -111,7 +110,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
   set activeTab(tab: (typeof this.allTabs)[number]["id"]) {
     this._activeTab = tab;
-    if (tab === "location") {
+    if (tab === "general") {
       setTimeout(() => this.mapService.initLocationMap(), 50);
     }
   }
@@ -299,14 +298,14 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.mapService.init({
       incidentReport: this.incidentReport,
       disabled: () => this.disabled(),
-      isActive: () => this.activeTab === "location",
+      isActive: () => this.activeTab === "general",
       onPointChange: (lat, lng) => {
         this._lastLat = lat;
         this._lastLng = lng;
         this.reverseGeocodeTrigger$.next([lat, lng]);
       },
     });
-    if (this.activeTab === "location") {
+    if (this.activeTab === "general") {
       setTimeout(() => this.mapService.initLocationMap(), 50);
     }
     const id = this.route.snapshot.paramMap.get("id");
