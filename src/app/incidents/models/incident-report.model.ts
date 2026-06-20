@@ -7,6 +7,7 @@ import { enumWithOther, not, withShowIf } from "../../shared/zod-util";
 export const MetaInformationSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
   updatedAt: z.coerce.date().register(widgetRegistry, { widget: "none" }).nullish(),
+  publishedAt: z.coerce.date().register(widgetRegistry, { widget: "none" }).nullish(),
   author: z.string(),
   authorAffiliation: z.string(),
 });

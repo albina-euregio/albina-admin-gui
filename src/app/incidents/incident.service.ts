@@ -54,6 +54,12 @@ export class IncidentService {
     return this.http.post<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
   }
 
+  /** Publish an existing incident's report data. */
+  publishIncident(id: string, data: string): Observable<IncidentReport> {
+    const url = this.constantsService.getServerUrlPOST("/incidents/{id}/publish", null as never, { id });
+    return this.http.post<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
+  }
+
   /** Update an existing incident's report data. */
   updateIncident(id: string, data: string): Observable<IncidentReport> {
     const url = this.constantsService.getServerUrlPUT("/incidents/{id}", null as never, { id });
