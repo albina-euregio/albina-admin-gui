@@ -149,6 +149,7 @@ export const GroupInformationSchema = z.object({
   groupInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(GroupInformationSchema, {
+  groupSize: not("groupSizeAccuracy", "Unknown"),
   typeOfControlledTerrain: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"],
   incidentActivity: not("typeOfControlledTerrain", "IndoorInsideBuilding"),
   vehicleType: ["incidentActivity", "InsideVehicle"],
