@@ -121,6 +121,10 @@
     appearance: textfield;
   }
 
+  app-date-time-input.is-invalid .form-control {
+    border: var(--bs-border-width) solid var(--bs-form-invalid-border-color);
+  }
+
   app-toggle-btn-group.is-invalid .btn-group {
     border: var(--bs-border-width) solid var(--bs-form-invalid-border-color);
     button.btn {

@@ -241,6 +241,7 @@
           />
         } @else if (inner.type === "date") {
           <app-date-time-input
+            [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
             [disabled]="disabled()"
             [showTime]="widget?.widget !== 'date'"
             [(value)]="value()[key]"
