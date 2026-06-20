@@ -40,7 +40,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
-import { isFieldValid, isVisibleFieldsValid } from "../shared/zod-util";
+import { isFieldValid, isVisibleFieldsValid, pickPublicFields, safeParseVisibleFields } from "../shared/zod-util";
 import { IncidentReportMapService } from "./incident-report-map.service";
 import { IncidentService } from "./incident.service";
 import * as IncidentModels from "./models/incident-report.model";
@@ -182,7 +182,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
    * `dangerPattern`, which are hidden when `publicAvalancheWarningServiceOutside` is set — must
    * still be filled in for the report to count as valid here.
    */
-  readonly isReportValid = computed(() => IncidentModels.IncidentReportSchema.safeParse(this.incidentReport()).success);
+  readonly reportSafeParseVisibleFields = computed(() =>
+    safeParseVisibleFields(IncidentModels.IncidentReportSchema, this.incidentReport()),
+  );
+  readonly isReportValid = computed(() => this.reportSafeParseVisibleFields().success);
+  readonly reportPrettyError = computed(() =>
+    this.reportSafeParseVisibleFields().error ? z.prettifyError(this.reportSafeParseVisibleFields().error) : "",
+  );
 
   get involvementsFatalitiesBurials() {
     const groups = this.incidentReport().groupInformation ?? [];
@@ -384,7 +390,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   /** Serialize the report to JSON, dropping in-memory-only attachment fields. */
-  private serializeReport(report: IncidentReport): string {
+  private serializeReport(report: Partial<IncidentReport>): string {
     return JSON.stringify(report, (key, value) => (key === "file" || key === "$previewUrl" ? undefined : value));
   }
 
@@ -534,6 +540,17 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
     attachments.splice(index, 1);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
+  }
+
+  async publishUpdateIncident() {
+    const message = this.translateService.instant("incidentReportUI.publishUpdateIncident");
+    if (!confirm(message)) return;
+    const publicReport = pickPublicFields(IncidentModels.IncidentReportSchema).parse(this.incidentReport());
+    console.info("Publishing report", publicReport);
+    const data = this.serializeReport(publicReport);
+    const report = await this.incidentService.publishIncident(this.incidentId, data).toPromise();
+    this.incidentReport.set(report);
+    alert("Yay");
   }
 
   attachments: Record<IncidentModels.IncidentAttachment["id"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};

@@ -787,6 +787,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/incidents/{id}/publish": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Publish an incident */
+    post: operations["publishIncident"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/media": {
     parameters: {
       query?: never;
@@ -1624,7 +1641,7 @@ export interface components {
     HazardSiteDistribution: "single" | "some" | "many" | "many_most" | "moderately_steep";
     IncidentAttachment: {
       /** Format: uuid */
-      uuid: string;
+      id: string;
       /** Format: date-time */
       dateAdded: string;
       fileName: string;
@@ -1647,6 +1664,9 @@ export interface components {
       updatedAt: string;
       /** Embedded incident-report JSON; the server stores and returns it as an object, not a quoted string. */
       data: import("../incidents/models/incident-report.model").PartialIncidentReport;
+      /** Format: date-time */
+      publishedAt?: string | null;
+      publicData?: Record<string, never>[] | null;
     };
     /**
      * @description The enum contains the ISO 639-1 codes for available languages.

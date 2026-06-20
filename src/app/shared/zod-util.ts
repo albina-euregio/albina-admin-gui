@@ -138,23 +138,39 @@ export function isFieldValid(schema: z.ZodType, val: unknown): boolean {
   return hasValue(val) && schema.safeParse(val).success;
 }
 
-// Validates only the fields that are currently visible (showIf conditions satisfied).
-// Hidden required fields are treated as satisfied so they don't block tab completion.
-export function isVisibleFieldsValid(schema: z.ZodObject, value: Record<string, unknown>): boolean {
+// Parses only the fields that are currently visible (showIf conditions satisfied).
+// Hidden fields are omitted from the schema so they don't block tab completion, then
+// the remaining (visible) fields are validated in one safeParse.
+export function safeParseVisibleFields(schema: z.ZodObject, value: Record<string, unknown>) {
+  const hidden: Record<string, true> = {};
   for (const [key, fieldType] of Object.entries(schema.shape)) {
-    const zodType = fieldType as z.ZodType;
-    const inner = unwrap(zodType);
-    const showIf = widgetRegistry.get(inner)?.showIf;
-    if (showIf) {
-      const visible = showIf.every((cond) => {
+    const showIf = widgetRegistry.get(unwrap(fieldType as z.ZodType))?.showIf;
+    if (
+      showIf &&
+      !showIf.every((cond) => {
         const matches = (cond.values as unknown[]).includes(value[cond.field]);
         return cond.negate ? !matches : matches;
-      });
-      if (!visible) continue;
+      })
+    ) {
+      hidden[key] = true;
     }
-    if (!isFieldValid(zodType, value[key]) && (!isFieldOptional(zodType) || hasValue(value[key]))) return false;
   }
-  return true;
+  return schema.omit(hidden as Parameters<typeof schema.omit>[0]).safeParse(value);
+}
+
+export function isVisibleFieldsValid(schema: z.ZodObject, value: Record<string, unknown>): boolean {
+  return safeParseVisibleFields(schema, value).success;
+}
+
+// Narrows the schema to only the fields flagged `public: true` in the widget registry,
+// dropping everything else (used to build the public report on publish).
+export function pickPublicFields<T extends z.ZodObject>(schema: T) {
+  const picked = Object.fromEntries(
+    Object.entries(schema.shape)
+      .filter(([, fieldType]) => widgetRegistry.get(unwrap(fieldType as z.ZodType))?.public)
+      .map(([key]) => [key, true]),
+  );
+  return schema.pick(picked as Parameters<typeof schema.pick>[0]);
 }
 
 export function hasValue(val: unknown): boolean {
