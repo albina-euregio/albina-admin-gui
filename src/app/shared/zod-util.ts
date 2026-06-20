@@ -166,6 +166,6 @@ export function zodCssClass<T>(zodType: z.ZodType<T>, value: T, mainClass = "for
   return {
     [mainClass]: true,
     "is-valid": entered && result.success,
-    "is-invalid": entered && !!result.error,
+    "is-invalid": !!result.error,
   };
 }
