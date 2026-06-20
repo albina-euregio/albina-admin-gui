@@ -162,9 +162,11 @@ export function hasValue(val: unknown): boolean {
 }
 export function zodCssClass<T>(zodType: z.ZodType<T>, value: T, mainClass = "form-control") {
   const result = zodType.safeParse(value);
+  // A required (non-optional) array needs at least one element, even though zod parses `[]` as valid.
+  const emptyRequiredArray = !isFieldOptional(zodType) && unwrap(zodType).type === "array" && !hasValue(value);
   return {
     [mainClass]: true,
     "is-valid": hasValue(value) && result.success,
-    "is-invalid": !!result.error,
+    "is-invalid": !!result.error || emptyRequiredArray,
   };
 }

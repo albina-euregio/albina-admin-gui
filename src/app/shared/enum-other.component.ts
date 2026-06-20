@@ -44,8 +44,8 @@ export class EnumOtherComponent {
   });
   readonly enumOnlyValues = computed(() => this.arrayValue().filter((v) => this.enumValues().includes(v)));
 
-  cssClasses() {
-    return zodCssClass(this.zodType(), this.value());
+  cssClasses(mainClass = "form-control") {
+    return zodCssClass(this.zodType(), this.value(), mainClass);
   }
 
   prettyError(): string | undefined {
