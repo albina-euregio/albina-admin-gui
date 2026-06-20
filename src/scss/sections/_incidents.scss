@@ -129,15 +129,6 @@
   input[type="time"],
   textarea {
     @include font-m;
-    padding: 0.375rem 0.75rem;
-    height: auto;
-    border-radius: var(--bs-border-radius-sm);
-    border-color: $gray-300;
-
-    &:focus {
-      border-color: var(--bs-primary);
-      box-shadow: 0 0 0 2px rgba(var(--bs-primary-rgb), 0.15);
-    }
   }
 
   select.form-select,
