@@ -1699,7 +1699,12 @@
     "removeVictim": "Remove Person",
     "required": "Required",
     "showMandatoryFieldsOnly": "Most relevant only",
-    "displayOnly": "Preview Mode",
+    "displayMode": {
+      "edit": "Edit",
+      "all": "Preview all",
+      "public": "Preview public only",
+      "filledOut": "Preview filled out only"
+    },
     "valid": "Valid",
     "victimName": "Person {{name}}",
     "saveStateIdle": "No unsaved changes",

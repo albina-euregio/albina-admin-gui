@@ -38,7 +38,8 @@ import { z } from "zod/v4";
 import { GeocodingService } from "../observations/geocoding.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
+import { ToggleBtnGroup } from "../shared/toggle-btn-group";
+import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid } from "../shared/zod-util";
 import { IncidentReportMapService } from "./incident-report-map.service";
 import { IncidentService } from "./incident.service";
@@ -56,6 +57,7 @@ import { IncidentReport } from "./models/incident-report.model";
     BsDropdownModule,
     FormsModule,
     TranslateModule,
+    ToggleBtnGroup,
     ZodSchemaFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -90,7 +92,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly helpI18n = "incidentReportHelp.#";
 
   showMandatoryOnly = false;
-  displayOnly = false;
+  readonly DisplayMode = DisplayMode;
+  displayMode = DisplayMode.Edit;
+
+  /** True for any read-only preview mode; gates the print/preview layout in the template. */
+  get displayOnly(): boolean {
+    return this.displayMode !== DisplayMode.Edit;
+  }
   readonly allTabs = [
     { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
     { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },

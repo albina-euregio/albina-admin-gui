@@ -35,6 +35,22 @@ type SupportedSchema =
 
 type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
 
+/**
+ * How the form renders its fields. `Edit` is the interactive form; every other value is a
+ * read-only preview that additionally filters which fields are shown. New preview variants
+ * (e.g. a future "mandatory only" preview) can be added here without touching the form's API.
+ */
+export enum DisplayMode {
+  /** Interactive, editable form (default). */
+  Edit = "edit",
+  /** Read-only preview of all fields. */
+  All = "all",
+  /** Read-only preview of fields flagged `public` only. */
+  Public = "public",
+  /** Read-only preview of fields that have a value only. */
+  FilledOut = "filledOut",
+}
+
 @Component({
   selector: "app-zod-schema-form",
   templateUrl: "zod-schema-form.component.html",
@@ -65,7 +81,9 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly valueForCompare = input<V | undefined>();
 
   readonly disabled = input<boolean>(false);
-  readonly displayOnly = input<boolean>(false);
+  readonly displayMode = input<DisplayMode>(DisplayMode.Edit);
+  /** True for any read-only preview mode; drives the existing display-vs-edit branches. */
+  readonly displayOnly = computed(() => this.displayMode() !== DisplayMode.Edit);
   readonly diminishValues = input<Record<string, Partial<Record<string, boolean>>>>({});
   readonly zodType = input<T>();
   readonly labelI18n = input<`${string}#${string}`>();
@@ -132,6 +150,8 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     if (this.isPublicField(key)) return false;
     if (this.isOutsideField(key)) return false;
     if (this.showMandatoryOnly() && zodUtil.isFieldOptional(schema)) return false;
+    if (this.displayMode() === DisplayMode.Public && !widgetRegistry.get(zodUtil.unwrap(schema))?.public) return false;
+    if (this.displayMode() === DisplayMode.FilledOut && !zodUtil.hasValue(this.value()?.[key])) return false;
     const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;
     if (!showIf) return true;
     return showIf.every((cond) => {

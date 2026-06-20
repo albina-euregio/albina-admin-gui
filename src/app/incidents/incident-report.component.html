@@ -78,17 +78,12 @@
   </div>
 
   <div class="d-flex mb-2 d-print-none">
-    <div class="form-check form-switch mb-0 ms-3">
-      <input class="form-check-input" type="checkbox" id="displayOnly" [(ngModel)]="displayOnly" />
-      <label
-        class="form-check-label text-secondary fw-semibold cursor-pointer"
-        for="displayOnly"
-        style="font-size: 12px"
-      >
-        <i class="ph ph-printer me-1"></i>
-        {{ "incidentReportUI.displayOnly" | translate }}
-      </label>
-    </div>
+    <app-toggle-btn-group
+      [enumValues]="[DisplayMode.Edit, DisplayMode.All, DisplayMode.Public, DisplayMode.FilledOut]"
+      [value]="displayMode"
+      (valueChange)="displayMode = $event ?? DisplayMode.Edit"
+      [labelI18n]="'incidentReportUI.displayMode.#'"
+    />
   </div>
 
   <!-- Stepped Tabs Navigation -->
@@ -143,7 +138,7 @@
         <h4 class="mb-3 text-secondary">{{ "incidentReport.generalInformation" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
-          [displayOnly]="displayOnly"
+          [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="onLocationFormChange($event)"
           [zodType]="IncidentModels.GeneralInformationSchema"
@@ -308,7 +303,7 @@
         <!-- Remaining location fields -->
         <app-zod-schema-form
           [disabled]="disabled()"
-          [displayOnly]="displayOnly"
+          [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="onLocationFormChange($event)"
           [zodType]="IncidentModels.GeneralInformationSchema"
@@ -326,7 +321,7 @@
         <h4 class="mb-3 text-secondary">{{ "incidentReport.bulletinInformation" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
-          [displayOnly]="displayOnly"
+          [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.BulletinInformationSchema"
@@ -343,7 +338,7 @@
         <h4 class="mb-3 text-secondary">{{ "incidentReport.avalancheInformation" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
-          [displayOnly]="displayOnly"
+          [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.AvalancheInformationSchema"
@@ -406,7 +401,7 @@
         @if (activeGroupSubTab === "overview" || displayOnly) {
           <app-zod-schema-form
             [disabled]="disabled()"
-            [displayOnly]="displayOnly"
+            [displayMode]="displayMode"
             [(value)]="incidentReport"
             [zodType]="IncidentModels.IncidentReportSchema"
             [includeFields]="['personInvolvement']"
@@ -422,7 +417,7 @@
                 {{ "incidentReport.involvementsFatalitiesBurials" | translate }}
               </h4>
               <app-zod-schema-form
-                [displayOnly]="true"
+                [displayMode]="DisplayMode.All"
                 [value]="involvementsFatalitiesBurials"
                 [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
                 [labelI18n]="labelI18n"
@@ -484,7 +479,7 @@
                 <div class="card-body">
                   <app-zod-schema-form
                     [disabled]="disabled()"
-                    [displayOnly]="displayOnly"
+                    [displayMode]="displayMode"
                     [value]="activeGroup"
                     (valueChange)="updateGroupInformation(activeGroupIndex, $event)"
                     [zodType]="IncidentModels.GroupInformationSchema"
@@ -547,7 +542,7 @@
                 <div class="card-body">
                   <app-zod-schema-form
                     [disabled]="disabled()"
-                    [displayOnly]="displayOnly"
+                    [displayMode]="displayMode"
                     [value]="activeVictim"
                     (valueChange)="updateVictimInformation(activeVictimIndex, $event)"
                     [zodType]="IncidentModels.VictimInformationSchema"
@@ -570,7 +565,7 @@
         <h4 class="mb-3 text-secondary">{{ "incidentReport.otherDamages" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
-          [displayOnly]="displayOnly"
+          [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.OtherDamagesSchema"
@@ -587,7 +582,7 @@
         <h4 class="mb-3 text-secondary">{{ "incidentReport.incidentAnalysis" | translate }}</h4>
         <app-zod-schema-form
           [disabled]="disabled()"
-          [displayOnly]="displayOnly"
+          [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.IncidentAnalysisSchema"
@@ -630,7 +625,10 @@
         </div>
 
         @for (attachment of incidentReport().attachments; track attachment.fileName) {
-          <div class="card mb-3 shadow-sm border">
+          <div
+            class="card mb-3 shadow-sm border"
+            [class.d-none]="displayMode === DisplayMode.Public && !attachment.public"
+          >
             <div class="card-header d-flex justify-content-between align-items-center bg-light">
               <div
                 class="d-flex align-items-center gap-2 cursor-pointer flex-grow-1 py-1"
@@ -707,7 +705,7 @@
                     <div class="col-12 col-md-8">
                       <app-zod-schema-form
                         [disabled]="disabled()"
-                        [displayOnly]="displayOnly"
+                        [displayMode]="displayMode"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
                         [zodType]="IncidentModels.IncidentAttachmentSchema"
@@ -720,7 +718,7 @@
                     <div class="col-12">
                       <app-zod-schema-form
                         [disabled]="disabled()"
-                        [displayOnly]="displayOnly"
+                        [displayMode]="displayMode"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
                         [zodType]="IncidentModels.IncidentAttachmentSchema"
@@ -737,7 +735,7 @@
         }
         <app-zod-schema-form
           [disabled]="disabled()"
-          [displayOnly]="displayOnly"
+          [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"
           [zodType]="IncidentModels.IncidentLinksSchema"
