@@ -37,8 +37,6 @@ export const RegionConfigurationPublicationSchema = z.object({
   //
   createMaps: z.boolean().nullish().describe("Create maps"),
   geoDataDirectory: z.string().nullish().describe("Geodata directory"),
-  mapLogoColorPath: z.string().nullish().describe("Logo for map (color)"),
-  mapLogoBwPath: z.string().nullish().describe("Logo for map (bw)"),
   mapLogoPosition: z.string().nullish().describe("Logo position for map"),
   //
   createPdf: z.boolean().nullish().describe("Create PDF"),
@@ -116,8 +114,6 @@ export const RegionConfigurationSchema = z.object({
 
 withShowIf(RegionConfigurationSchema, {
   geoDataDirectory: ["createMaps", true],
-  mapLogoColorPath: ["createMaps", true],
-  mapLogoBwPath: ["createMaps", true],
   mapLogoPosition: ["createMaps", true],
   createPdf: ["createMaps", true],
   createSimpleHtml: ["createMaps", true],

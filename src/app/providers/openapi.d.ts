@@ -1768,8 +1768,6 @@ export interface components {
       pdfFooterLogoBwPath?: string;
       simpleHtmlTemplateName?: string;
       geoDataDirectory?: string;
-      mapLogoColorPath?: string;
-      mapLogoBwPath?: string;
       mapLogoPosition?: components["schemas"]["Position"];
       imageColorbarColorPath?: string;
       imageColorbarBwPath?: string;
