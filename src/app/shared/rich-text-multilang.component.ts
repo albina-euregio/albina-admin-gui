@@ -1,7 +1,7 @@
 import { UpperCasePipe } from "@angular/common";
 import { Component, inject, input, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { QuillModule } from "ngx-quill";
 
 import type { AlbinaLanguage, LangTexts } from "../models/text.model";
@@ -11,7 +11,7 @@ import { LANGUAGES } from "../models/text.model";
   selector: "app-rich-text-multilang",
   templateUrl: "./rich-text-multilang.component.html",
   standalone: true,
-  imports: [FormsModule, QuillModule, UpperCasePipe, TranslateModule],
+  imports: [FormsModule, QuillModule, UpperCasePipe, TranslatePipe],
 })
 export class RichTextMultilangComponent {
   private translateService = inject(TranslateService);
