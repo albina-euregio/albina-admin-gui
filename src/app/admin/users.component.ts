@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TemplateRef } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { AlertModule } from "ngx-bootstrap/alert";
@@ -16,7 +16,7 @@ import { UpdateUserComponent } from "./update-user.component";
   templateUrl: "users.component.html",
   selector: "app-users",
   standalone: true,
-  imports: [AlertModule, TranslateModule],
+  imports: [AlertModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })

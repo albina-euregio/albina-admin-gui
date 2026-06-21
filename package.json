@@ -47,7 +47,7 @@
     "@eaws/outline_properties": "^8.4.0",
     "@eaws/pmtiles": "^8.2.0",
     "@mapbox/point-geometry": "^1.1.0",
-    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/core": "^18.0.0",
     "@phosphor-icons/web": "^2.1.1",
     "@popperjs/core": "^2.11.8",
     "air-datepicker": "^3.6.0",

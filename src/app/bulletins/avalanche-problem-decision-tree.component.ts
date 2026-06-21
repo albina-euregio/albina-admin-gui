@@ -1,6 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 import * as Enums from "../enums/enums";
@@ -11,7 +11,7 @@ import * as Enums from "../enums/enums";
   styleUrls: ["avalanche-problem-decision-tree.component.scss"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule],
+  imports: [TranslatePipe],
 })
 export class AvalancheProblemDecisionTreeComponent {
   private bsModalRef = inject(BsModalRef);

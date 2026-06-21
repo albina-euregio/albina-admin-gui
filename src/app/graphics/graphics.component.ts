@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { TabsModule } from "ngx-bootstrap/tabs";
 
@@ -12,7 +12,7 @@ import { YearlystatsComponent } from "./yearlystats.component";
 @Component({
   selector: "app-graphics",
   standalone: true,
-  imports: [CommonModule, TranslateModule, AwsstatsComponent, YearlystatsComponent, TabsModule, LineaExportComponent],
+  imports: [CommonModule, TranslatePipe, AwsstatsComponent, YearlystatsComponent, TabsModule, LineaExportComponent],
   templateUrl: "./graphics.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { PublicationChannel } from "app/enums/enums";
 import { Alert } from "app/models/Alert";
 import { AlertModule } from "ngx-bootstrap/alert";
@@ -23,7 +23,7 @@ interface PublicationInformation {
   selector: "app-modal-publication-status",
   templateUrl: "modal-publication-status.component.html",
   standalone: true,
-  imports: [AlertModule, DatePipe, TranslateModule],
+  imports: [AlertModule, DatePipe, TranslatePipe],
 })
 export class ModalPublicationStatusComponent {
   bsModalRef = inject(BsModalRef);

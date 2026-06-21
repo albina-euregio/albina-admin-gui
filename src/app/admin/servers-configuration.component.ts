@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 
 import { LocalServerConfiguration, ServerConfiguration } from "../models/server-configuration.model";
@@ -12,7 +12,7 @@ import { ServerConfigurationComponent } from "./server-configuration.component";
   templateUrl: "servers-configuration.component.html",
   selector: "app-servers-configuration",
   standalone: true,
-  imports: [AccordionModule, ServerConfigurationComponent, TranslateModule],
+  imports: [AccordionModule, ServerConfigurationComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })

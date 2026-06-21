@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe, formatDate } from "@angular/common";
 import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { BulletinStatus, PublicationChannel } from "app/enums/enums";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BulletinsService, PublicationStrategy } from "app/providers/bulletins-service/bulletins.service";
@@ -46,7 +46,7 @@ const CHECKLIST_CHANNELS: PublicationChannel[] = [
   imports: [
     CommonModule,
     RouterLink,
-    TranslateModule,
+    TranslatePipe,
     PublicationTriggerNotificationsComponent,
     BulletinStatusBadgeComponent,
     PublicationInProgressComponent,

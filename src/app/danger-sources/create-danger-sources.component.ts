@@ -13,7 +13,7 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { orderBy } from "es-toolkit";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
@@ -54,7 +54,7 @@ import { DangerSourceModel } from "./models/danger-source.model";
     DangerSourceVariantComponent,
     BsDropdownModule,
     DatePipe,
-    TranslateModule,
+    TranslatePipe,
     NgxMousetrapDirective,
     AvalancheProblemIconsComponent,
     AspectsComponent,

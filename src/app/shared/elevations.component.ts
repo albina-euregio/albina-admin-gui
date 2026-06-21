@@ -1,14 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { Component, input, OnChanges, output, model, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
   selector: "app-elevations",
   templateUrl: "elevations.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule, FormsModule, CommonModule],
+  imports: [TranslatePipe, FormsModule, CommonModule],
 })
 export class ElevationsComponent implements OnChanges {
   elevationHigh = model<number>(undefined);

@@ -1,5 +1,5 @@
 import { Component, inject, input, output, signal, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { finalize } from "rxjs";
@@ -11,7 +11,7 @@ import { BulletinPhotoModel } from "../models/bulletin-photo.model";
   templateUrl: "avalanche-photo-preview.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule],
+  imports: [TranslatePipe],
 })
 export class AvalanchePhotoPreviewComponent {
   regionsService = inject(RegionsService);

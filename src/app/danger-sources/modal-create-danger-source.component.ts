@@ -1,7 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -15,7 +15,7 @@ import { DangerSourceModel } from "./models/danger-source.model";
   templateUrl: "modal-create-danger-source.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, DatePipe, TranslateModule],
+  imports: [FormsModule, DatePipe, TranslatePipe],
 })
 export class ModalCreateDangerSourceComponent {
   bsModalRef = inject(BsModalRef);

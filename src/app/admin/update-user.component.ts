@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
@@ -24,7 +24,7 @@ type Result =
   templateUrl: "update-user.component.html",
   selector: "app-update-user",
   standalone: true,
-  imports: [FormsModule, TranslateModule, PasswordMismatchValidatorDirective],
+  imports: [FormsModule, TranslatePipe, PasswordMismatchValidatorDirective],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })

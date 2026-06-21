@@ -15,7 +15,7 @@ import {
   ChangeDetectionStrategy,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
@@ -27,7 +27,7 @@ const AVAILABLE_YEARLY_CHART_TYPES = CONFIGURED_PLOTS.yearlystats.map((c) => c.i
 @Component({
   selector: "app-yearlystats",
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TooltipModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, TooltipModule],
   providers: [GraphicsService, BlogService],
   templateUrl: "./yearlystats.component.html",
   styleUrls: ["./yearlystats.component.scss"],

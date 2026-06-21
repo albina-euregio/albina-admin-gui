@@ -1,7 +1,7 @@
 import { Component, TemplateRef, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -21,7 +21,7 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
   templateUrl: "./full-layout.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [RouterLinkActive, RouterLink, BsDropdownModule, RouterOutlet, TranslateModule, NgxMousetrapDirective],
+  imports: [RouterLinkActive, RouterLink, BsDropdownModule, RouterOutlet, TranslatePipe, NgxMousetrapDirective],
 })
 export class FullLayoutComponent {
   translateService = inject(TranslateService);

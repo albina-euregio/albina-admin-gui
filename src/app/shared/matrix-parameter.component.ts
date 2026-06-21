@@ -1,6 +1,6 @@
 import { Component, inject, input, OnInit, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "app/models/matrix-information.model";
 
@@ -15,7 +15,7 @@ import { SliderComponent, SliderOptions } from "./slider.component";
   templateUrl: "matrix-parameter.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [DangerRatingComponent, FormsModule, TranslateModule, SliderComponent],
+  imports: [DangerRatingComponent, FormsModule, TranslatePipe, SliderComponent],
 })
 export class MatrixParameterComponent implements OnInit {
   constantsService = inject(ConstantsService);

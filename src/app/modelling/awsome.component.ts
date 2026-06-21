@@ -12,7 +12,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { GridComponentOption } from "echarts/components";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
@@ -68,7 +68,7 @@ type DetailsTabLabel = string;
     FormsModule,
     ObservationChartComponent,
     TabsModule,
-    TranslateModule,
+    TranslatePipe,
     NgxMousetrapDirective,
     NgxEchartsDirective,
   ],

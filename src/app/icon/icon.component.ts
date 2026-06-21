@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, HostListener, OnInit, ViewChild, inject, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 
 interface SelectorOption {
   id: string;
@@ -71,7 +71,7 @@ const CLOUD_LEVEL_OPTIONS: SelectorOption[] = [
 @Component({
   selector: "app-icon",
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: "./icon.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./icon.component.css"],

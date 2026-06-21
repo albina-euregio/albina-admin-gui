@@ -1,5 +1,5 @@
 import { Component, AfterContentInit, inject, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 
 import { RegionConfiguration, RegionConfigurationSchema } from "../models/region-configuration.model";
@@ -13,7 +13,7 @@ import { RegionConfigurationComponent } from "./region-configuration.component";
   templateUrl: "regions-configuration.component.html",
   selector: "app-regions-configuration",
   standalone: true,
-  imports: [AccordionModule, RegionConfigurationComponent, TranslateModule],
+  imports: [AccordionModule, RegionConfigurationComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })

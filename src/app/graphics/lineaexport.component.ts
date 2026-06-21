@@ -12,7 +12,7 @@ import {
   ViewChildren,
   ChangeDetectionStrategy,
 } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
 import { BlogService } from "../providers/blog-service/blog.service";
@@ -22,7 +22,7 @@ import { GraphicsService } from "./graphics.service";
 @Component({
   selector: "app-linea-export",
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslatePipe],
   providers: [GraphicsService, BlogService, LineaMapService],
   templateUrl: "./lineaexport.component.html",
   styleUrls: ["./lineaexport.component.css"],

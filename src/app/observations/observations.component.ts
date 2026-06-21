@@ -19,7 +19,7 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { orderBy } from "es-toolkit";
@@ -165,7 +165,7 @@ class ObservationData {
     ObservationEditorComponent,
     ObservationGalleryComponent,
     ObservationTableComponent,
-    TranslateModule,
+    TranslatePipe,
     NgxMousetrapDirective,
   ],
   templateUrl: "observations.component.html",

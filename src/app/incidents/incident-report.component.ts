@@ -14,7 +14,7 @@ import {
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { uniq } from "es-toolkit";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -56,7 +56,7 @@ import { IncidentReport } from "./models/incident-report.model";
     AccordionModule,
     BsDropdownModule,
     FormsModule,
-    TranslateModule,
+    TranslatePipe,
     ToggleBtnGroup,
     ZodSchemaFormComponent,
   ],

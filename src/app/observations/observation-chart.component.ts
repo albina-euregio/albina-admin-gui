@@ -1,5 +1,5 @@
 import { Component, OnInit, output, input, inject, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { NgxEchartsDirective } from "ngx-echarts";
@@ -10,7 +10,7 @@ import { ObservationMarkerService } from "./observation-marker.service";
 @Component({
   standalone: true,
   selector: "app-observation-chart",
-  imports: [NgxEchartsDirective, TranslateModule],
+  imports: [NgxEchartsDirective, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./observation-chart.component.html",
 })

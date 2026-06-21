@@ -1,6 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
 import { UpdateUserComponent } from "app/admin/update-user.component";
 import { UserModel, UserSchema } from "app/models/user.model";
@@ -16,7 +16,7 @@ import { LocalStorageService } from "../providers/local-storage-service/local-st
   templateUrl: "settings.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [AlertModule, FormsModule, TranslateModule],
+  imports: [AlertModule, FormsModule, TranslatePipe],
 })
 export class SettingsComponent {
   authenticationService = inject(AuthenticationService);

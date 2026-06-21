@@ -1,5 +1,5 @@
 import { Component, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
 
 import * as Enums from "../enums/enums";
@@ -20,7 +20,7 @@ import { DangerRatingComponent } from "../shared/danger-rating.component";
     AvalancheProblemIconsComponent,
     AvalancheTypeComponent,
     AspectsComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class AvalancheProblemPreviewComponent {

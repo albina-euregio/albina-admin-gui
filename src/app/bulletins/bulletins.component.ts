@@ -2,7 +2,7 @@ import { formatDate, DatePipe } from "@angular/common";
 import { Component, OnDestroy, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { StatusInformationModel } from "app/models/status-information.model";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -25,7 +25,7 @@ import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 @Component({
   templateUrl: "bulletins.component.html",
   standalone: true,
-  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule, BulletinStatusBadgeComponent],
+  imports: [FormsModule, DatePipe, TranslatePipe, NgxMousetrapDirective, AlertModule, BulletinStatusBadgeComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [StatusService],
 })

@@ -1,6 +1,5 @@
 import { Component, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
 
 let uniqueId = 0;
 
@@ -18,7 +17,7 @@ export interface SliderOptions {
   templateUrl: "slider.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule, FormsModule],
+  imports: [FormsModule],
 })
 export class SliderComponent {
   id = input(`app-slider-${uniqueId++}`);

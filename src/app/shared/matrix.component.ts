@@ -1,5 +1,5 @@
 import { Component, inject, input, model, output, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
 
 import * as Enums from "../enums/enums";
@@ -19,7 +19,7 @@ interface MatrixCell {
   styleUrls: ["matrix.component.scss"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule],
+  imports: [TranslatePipe],
 })
 export class MatrixComponent {
   constantsService = inject(ConstantsService);

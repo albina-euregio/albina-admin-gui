@@ -1,6 +1,6 @@
 import { Component, computed, input, model, signal, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "./toggle-btn-group";
@@ -20,7 +20,7 @@ import { zodCssClass } from "./zod-util";
   templateUrl: "enum-other.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, ToggleBtnGroup, TranslateModule],
+  imports: [FormsModule, ToggleBtnGroup, TranslatePipe],
 })
 export class EnumOtherComponent {
   // `unknown` so the schema form can two-way bind `value()[key]` (an indexed-access type).

@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, viewChild, inject, ChangeDetectionStrat
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -14,7 +14,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 @Component({
   templateUrl: "login.component.html",
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [FormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConfigurationService],
 })

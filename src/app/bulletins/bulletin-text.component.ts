@@ -1,7 +1,7 @@
 import { NgClass, UpperCasePipe } from "@angular/common";
 import { Component, TemplateRef, input, output, inject, effect, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 import * as Enums from "../enums/enums";
@@ -20,7 +20,7 @@ import { HtmlPipe } from "./html.pipe";
   templateUrl: "./bulletin-text.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [NgClass, FormsModule, UpperCasePipe, TranslateModule, HtmlPipe],
+  imports: [NgClass, FormsModule, UpperCasePipe, TranslatePipe, HtmlPipe],
 })
 export class BulletinTextComponent {
   protected authenticationService = inject(AuthenticationService);

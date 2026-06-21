@@ -1,5 +1,5 @@
 import { Component, input, model, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 
 import * as Enums from "../enums/enums";
 
@@ -8,7 +8,7 @@ import * as Enums from "../enums/enums";
   templateUrl: "aspects.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule],
+  imports: [TranslatePipe],
 })
 export class AspectsComponent {
   readonly aspects = model<Enums.Aspect[]>(undefined);

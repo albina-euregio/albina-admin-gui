@@ -1,5 +1,5 @@
 import { Component, input, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 
 import { BulletinStatus } from "../enums/enums";
 
@@ -8,7 +8,7 @@ import { BulletinStatus } from "../enums/enums";
   templateUrl: "bulletin-status-badge.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule],
+  imports: [TranslatePipe],
 })
 export class BulletinStatusBadgeComponent {
   readonly status = input<BulletinStatus>(undefined);

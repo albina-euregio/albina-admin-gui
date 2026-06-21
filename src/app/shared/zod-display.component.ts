@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, computed, inject, input } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { z } from "zod/v4";
 
 import * as zodUtil from "./zod-util";
@@ -10,7 +10,7 @@ import * as zodUtil from "./zod-util";
   templateUrl: "zod-display.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [DatePipe, TranslateModule],
+  imports: [DatePipe, TranslatePipe],
 })
 export class ZodDisplayComponent<T> {
   readonly translateService = inject(TranslateService);

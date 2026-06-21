@@ -16,7 +16,7 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import {
   DangerSourceVariantModel,
   DangerSourceVariantStatus,
@@ -71,7 +71,7 @@ import { ModalMediaFileComponent } from "./modal-media-file.component";
     AvalancheProblemIconsComponent,
     DatePipe,
     KeyValuePipe,
-    TranslateModule,
+    TranslatePipe,
     NgxMousetrapDirective,
     BulletinTextComponent,
     PublicationInProgressComponent,

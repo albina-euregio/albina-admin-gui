@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, input, output, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { grainShapes } from "./grain.shapes";
@@ -15,7 +15,7 @@ import { ObservationMarkerService } from "./observation-marker.service";
 
 @Component({
   standalone: true,
-  imports: [AvalancheProblemIconsComponent, CommonModule, FormsModule, TranslateModule],
+  imports: [AvalancheProblemIconsComponent, CommonModule, FormsModule, TranslatePipe],
   selector: "app-observation-table",
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "observation-table.component.html",

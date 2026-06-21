@@ -1,7 +1,7 @@
 import { NgClass } from "@angular/common";
 import { Component, inject, input, OnChanges, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
 import { ElevationsComponent } from "app/shared/elevations.component";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -31,7 +31,7 @@ import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decis
     FormsModule,
     MatrixParameterComponent,
     MatrixComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class AvalancheProblemDetailComponent implements OnChanges {

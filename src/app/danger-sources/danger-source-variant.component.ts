@@ -12,7 +12,7 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { MatrixInformationSchema } from "app/models/matrix-information.model";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -58,7 +58,7 @@ import * as DangerSourceModels from "./models/danger-source-variant.model";
     ElevationsComponent,
     MatrixParameterComponent,
     DatePipe,
-    TranslateModule,
+    TranslatePipe,
     ToggleBtnGroup,
     NgxMousetrapDirective,
     ZodSchemaFormComponent,

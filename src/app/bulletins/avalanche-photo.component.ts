@@ -1,6 +1,5 @@
 import { Component, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -15,13 +14,7 @@ import { AvalanchePhotoPreviewComponent } from "./avalanche-photo-preview.compon
   templateUrl: "avalanche-photo.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [
-    AccordionModule,
-    TranslateModule,
-    FormsModule,
-    AvalanchePhotoPreviewComponent,
-    AvalanchePhotoDetailComponent,
-  ],
+  imports: [AccordionModule, FormsModule, AvalanchePhotoPreviewComponent, AvalanchePhotoDetailComponent],
 })
 export class AvalanchePhotoComponent {
   bulletinsService = inject(BulletinsService);

@@ -1,6 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { saveAs } from "file-saver";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { TabsModule } from "ngx-bootstrap/tabs";
@@ -13,7 +13,7 @@ import { StatisticsService } from "../providers/statistics-service/statistics.se
   templateUrl: "statistics.component.html",
   selector: "app-statistics",
   standalone: true,
-  imports: [FormsModule, BsDatepickerModule, TranslateModule, TabsModule],
+  imports: [FormsModule, BsDatepickerModule, TranslatePipe, TabsModule],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [StatisticsService],
 })

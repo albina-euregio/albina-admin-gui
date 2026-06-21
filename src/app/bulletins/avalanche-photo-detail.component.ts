@@ -1,6 +1,6 @@
 import { Component, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import z from "zod/v4";
 
@@ -12,7 +12,7 @@ import { BulletinModel } from "../models/bulletin.model";
   templateUrl: "avalanche-photo-detail.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule, FormsModule],
+  imports: [TranslatePipe, FormsModule],
 })
 export class AvalanchePhotoDetailComponent {
   regionsService = inject(RegionsService);

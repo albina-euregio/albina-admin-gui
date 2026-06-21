@@ -1,5 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { PublicationChannel } from "app/enums/enums";
 import { Alert } from "app/models/Alert";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
@@ -21,7 +21,7 @@ interface PublicationInformation {
   templateUrl: "blog.component.html",
   selector: "app-blog",
   standalone: true,
-  imports: [AlertModule, TranslateModule],
+  imports: [AlertModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [BlogService],
 })

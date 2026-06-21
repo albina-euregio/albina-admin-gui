@@ -1,7 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
 import { MediaFileService } from "app/providers/media-file-service/media-file.service";
 import { AlertModule } from "ngx-bootstrap/alert";
@@ -17,7 +17,7 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
   selector: "app-modal-media-file",
   templateUrl: "modal-media-file.component.html",
   standalone: true,
-  imports: [AlertModule, FormsModule, DatePipe, TranslateModule],
+  imports: [AlertModule, FormsModule, DatePipe, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [MediaFileService],
 })

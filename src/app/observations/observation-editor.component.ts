@@ -10,7 +10,7 @@ import {
   ChangeDetectionStrategy,
 } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
@@ -46,7 +46,7 @@ import {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     TypeaheadModule,
     AspectsComponent,
     AvalancheProblemIconsComponent,

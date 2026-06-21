@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TabsModule } from "ngx-bootstrap/tabs";
 
 import { BlogComponent } from "./blog.component";
@@ -17,7 +17,7 @@ import { UsersComponent } from "./users.component";
     RegionsConfigurationComponent,
     UsersComponent,
     BlogComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class AdminComponent {}

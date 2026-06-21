@@ -1,5 +1,5 @@
 import { Component, inject, input, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { PublicationChannel } from "app/enums/enums";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -11,7 +11,7 @@ import { ModalConfirmComponent } from "./modal-confirm.component";
 @Component({
   selector: "app-publication-trigger-notifications",
   standalone: true,
-  imports: [AlertModule, TranslateModule],
+  imports: [AlertModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="d-flex flex-wrap gap-2 align-items-center mt-2">

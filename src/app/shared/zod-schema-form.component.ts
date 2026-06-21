@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, model, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { Aspect } from "app/enums/enums";
 import { isEqual, xor } from "es-toolkit";
 import { QuillModule } from "ngx-quill";
@@ -64,7 +64,7 @@ export enum DisplayMode {
     FormsModule,
     QuillModule,
     ToggleBtnGroup,
-    TranslateModule,
+    TranslatePipe,
     ZodDisplayComponent,
   ],
 })

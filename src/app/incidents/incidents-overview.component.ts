@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy } from "
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { ZodDisplayComponent } from "app/shared/zod-display.component";
 import { orderBy } from "es-toolkit";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
@@ -19,7 +19,7 @@ type IncidentColumn = keyof IncidentReport;
   selector: "app-incidents-overview",
   templateUrl: "incidents-overview.component.html",
   standalone: true,
-  imports: [TranslateModule, FormsModule, BsDatepickerModule, ZodDisplayComponent],
+  imports: [TranslatePipe, FormsModule, BsDatepickerModule, ZodDisplayComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [IncidentService],
 })

@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, model, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 
 import { SliderComponent, SliderOptions } from "./slider.component";
 
@@ -8,7 +8,7 @@ import { SliderComponent, SliderOptions } from "./slider.component";
   templateUrl: "enum-slider.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [SliderComponent, TranslateModule],
+  imports: [SliderComponent, TranslatePipe],
 })
 export class EnumSliderComponent {
   readonly translateService = inject(TranslateService);

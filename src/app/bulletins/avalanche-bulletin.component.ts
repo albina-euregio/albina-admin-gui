@@ -13,7 +13,7 @@ import {
 import { FormsModule } from "@angular/forms";
 // For iframe
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
@@ -51,7 +51,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     AvalancheProblemComponent,
     BulletinTextComponent,
     DatePipe,
-    TranslateModule,
+    TranslatePipe,
     NgxMousetrapDirective,
   ],
 })

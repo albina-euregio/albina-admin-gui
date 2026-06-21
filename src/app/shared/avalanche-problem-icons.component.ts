@@ -1,12 +1,12 @@
 import { Component, input, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 
 @Component({
   standalone: true,
-  imports: [TranslateModule],
+  imports: [TranslatePipe],
   selector: "app-avalanche-problem-icons",
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./avalanche-problem-icons.component.html",

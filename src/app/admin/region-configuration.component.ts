@@ -1,6 +1,6 @@
 import { Component, input, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { AlertModule } from "ngx-bootstrap/alert";
@@ -22,7 +22,7 @@ import { ZodInputComponent } from "../shared/zod-input.component";
   templateUrl: "region-configuration.component.html",
   selector: "app-region-configuration",
   standalone: true,
-  imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent, ZodSchemaFormComponent],
+  imports: [AlertModule, TabsModule, FormsModule, TranslatePipe, ZodInputComponent, ZodSchemaFormComponent],
   providers: [ConfigurationService],
   changeDetection: ChangeDetectionStrategy.Eager,
   styles: `

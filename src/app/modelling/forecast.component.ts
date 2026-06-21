@@ -12,7 +12,7 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
@@ -39,7 +39,7 @@ export interface MultiselectDropdownData {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
+  imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslatePipe, NgxMousetrapDirective],
   providers: [
     BaseMapService,
     MeteogramSourceService,
