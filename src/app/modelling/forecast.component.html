@@ -181,7 +181,7 @@
       </div>
     }
 
-    @if (selectedModelType === "qfa") {
+    @if (selectedModelType === "qfa" && qfa?.file) {
       <div class="d-inline-block" id="qfa_div">
         <select
           #qfaSelect
@@ -233,7 +233,7 @@
       </div>
     }
 
-    @if (selectedModelType === "qfa") {
+    @if (selectedModelType === "qfa" && qfa?.file) {
       <div id="qfa_div">
         <div class="day-button-wrapper">
           <span class="day-button" [class.active-day]="qfaStartDay === 0" (click)="setQfa(qfa.file, 0)">
