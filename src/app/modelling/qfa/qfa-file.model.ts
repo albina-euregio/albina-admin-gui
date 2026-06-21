@@ -89,7 +89,7 @@ export class QfaFile {
     const nDays = Number(days![2]) - Number(days![1] || 0) + 1;
 
     return {
-      location: data[0],
+      location: data[0].split(/[- ]/)[2],
       coords: {
         lng: Number(data[1]),
         lat: Number(data[2]),

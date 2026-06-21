@@ -9,7 +9,7 @@ test("qfa 2026-04-20", async ({ page }) => {
   const file = new QfaFile({} as QfaItem);
   file.parseText(text!);
   expect(file.metadata).toMatchObject({
-    location: "11120 OS Innsbruck",
+    location: "Innsbruck",
     coords: {
       lng: 11.35,
       lat: 47.27,
@@ -950,7 +950,7 @@ test("qfa 2026-05-01", async ({ page }) => {
   const file = new QfaFile({} as QfaItem);
   file.parseText(text!);
   expect(file.metadata).toMatchObject({
-    location: "11120 OS INNSBRUCK-FLUGHAFEN",
+    location: "INNSBRUCK",
     coords: { lng: 11.35, lat: 47.26 },
     height: 581,
     orog: 1294,

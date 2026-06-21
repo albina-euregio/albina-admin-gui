@@ -145,7 +145,7 @@ export class QfaService {
     run.parseText(plainText);
 
     if (first) {
-      const city = run.metadata.location.split(" ")[2].toLowerCase();
+      const city = run.metadata.location.toLowerCase();
       if (this.dustParams) {
         const dust = this.dustParams[city][startDay / 3];
         run.parameters["DUST"] = dust;
