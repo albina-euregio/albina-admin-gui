@@ -107,12 +107,10 @@ export class GetDustParamService {
   };
 
   private getParamsForCity = (city: string): Promise<string[]>[] => {
-    const nSteps = 35;
     const promises = [];
-
     const px = this.pxOfCity[city];
 
-    for (let i = 0; i <= nSteps * 6; i += 6) {
+    for (let i = 0; i < 210; i += 6) {
       const imageBlobPromise = this.loadForecast(i);
       const dustPromise = imageBlobPromise
         .then((blob) => this.createImageFromBlob(blob))
