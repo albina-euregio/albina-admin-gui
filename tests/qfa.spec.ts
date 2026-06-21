@@ -943,3 +943,19 @@ test("qfa 2026-04-20", async ({ page }) => {
     ],
   });
 });
+
+test("qfa 2026-05-01", async ({ page }) => {
+  await page.goto("https://static.avalanche.report/zamg_qfa/2026/2026-05-01/2026-05-01_0600_QFA00_innsbruck_0002.txt");
+  const text = await page.textContent("body");
+  const file = new QfaFile({} as QfaItem);
+  file.parseText(text!);
+  expect(file.metadata).toMatchObject({
+    location: "11120 OS INNSBRUCK-FLUGHAFEN",
+    coords: { lng: 11.35, lat: 47.26 },
+    height: 581,
+    orog: 1294,
+    timezone: "UTC",
+    model: "MODEL/ECMWF 0.1deg",
+    nDays: 3,
+  });
+});

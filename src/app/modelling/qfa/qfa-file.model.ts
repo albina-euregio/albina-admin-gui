@@ -69,23 +69,36 @@ export class QfaFile {
     const plainMetadata = plainText.split(
       "=======================================================================================",
     )[0];
-    const data = plainMetadata.split(/[\s]{2,}/g);
+    const data = plainMetadata
+      .split(/[\s]{2,}/g)
+      .map((field) => field.trim())
+      .filter(Boolean);
 
-    const days = data[9].match(/\d/g);
-    const nDays = Number(days![1]) - Number(days![0] || 0) + 1;
-    const date = this.parseDate(data[6]);
+    // The header comes in two layouts that differ in how height, orog and date are spaced:
+    //   v1: ["11120 OS Innsbruck", "11.35", "47.27", "579", "Orog : 1262", "AGL : Montag, 20.April 2026", "00 UTC", "ZAMG/ECMWF (0.125 Grad)", "Tage 0-2"]
+    //   v2: ["11120 OS INNSBRUCK-FLUGHAFEN", "11.35", "47.26", "581 Orog : 1294.0\nAGL : Freitag, 01.Mai 2026", "00 UTC", "MODEL/ECMWF 0.1deg", "Tage 0002"]
+    // In v2 the height/orog/date are collapsed into a single field (separated by single spaces/newlines).
+    // Uncollapse it so both layouts share the same indices before reading the fields.
+    const collapsed = data.findIndex((field) => /^\d+\s+Orog/.test(field));
+    if (collapsed >= 0) {
+      const [, height, orog, date] = data[collapsed].match(/^(\d+)\s+(Orog\s*:\s*[\d.]+)\s*(AGL.+)/s)!;
+      data.splice(collapsed, 1, height, orog, date);
+    }
+
+    const days = plainMetadata.match(/Tage (\d\d?)-?(\d\d?)/);
+    const nDays = Number(days![2]) - Number(days![1] || 0) + 1;
 
     return {
-      location: data[1],
+      location: data[0],
       coords: {
-        lng: Number(data[2]),
-        lat: Number(data[3]),
+        lng: Number(data[1]),
+        lat: Number(data[2]),
       },
-      height: Number(data[4]),
-      orog: Number(data[5].match(/[\d]+/g)),
-      date: date,
-      timezone: data[7].split(" ")[1],
-      model: data[8],
+      height: Number(data[3]),
+      orog: Number(data[4].match(/[\d.]+/)),
+      date: this.parseDate(data[5]),
+      timezone: data[6].split(" ")[1],
+      model: data[7],
       nDays: nDays,
     };
   };
