@@ -6,6 +6,8 @@ import {
   Browser,
   Control,
   GeoJSON,
+  GridLayer,
+  GridLayerOptions,
   Layer,
   LayerGroup,
   Map as LeafletMap,
@@ -15,6 +17,7 @@ import {
   TileLayer,
   TileLayerOptions,
 } from "leaflet";
+import { leafletRasterLayer, PMTiles } from "pmtiles";
 import { Subscription } from "rxjs";
 
 import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
@@ -29,6 +32,7 @@ import { AmPmControl } from "./am-pm-control";
 import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
 
 import "leaflet.sync";
+
 import { RegionNameControl } from "./region-name-control";
 
 declare module "leaflet" {
@@ -125,8 +129,8 @@ export class MapService {
   private amControl: Control;
   private pmControl: Control;
 
-  protected baseMaps: Record<string, TileLayer>;
-  protected afternoonBaseMaps: Record<string, TileLayer>;
+  protected baseMaps: Record<string, GridLayer>;
+  protected afternoonBaseMaps: Record<string, GridLayer>;
   overlayMaps: {
     // Micro  regions without elevation
     regions: RegionLayer;
@@ -383,9 +387,8 @@ export class MapService {
     };
   }
 
-  getAlbinaBaseMap(options: TileLayerOptions = {}): TileLayer {
-    return new TileLayer("https://static.avalanche.report/tms/{z}/{x}/{y}.webp", {
-      tms: false,
+  getAlbinaBaseMap(options: GridLayerOptions = {}): GridLayer {
+    return leafletRasterLayer(new PMTiles("https://static.avalanche.report/albina-basemap-z12.pmtiles"), {
       attribution:
         "© <a href='https://sonny.4lima.de/'>Sonny</a>, CC BY 4.0 | © <a href='https://www.eea.europa.eu/en/datahub/datahubitem-view/d08852bc-7b5f-4835-a776-08362e2fbf4b'>EU-DEM</a>, CC BY 4.0 | © avalanche.report, CC BY 4.0",
       ...options,

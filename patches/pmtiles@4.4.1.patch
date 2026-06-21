@@ -1,0 +1,95 @@
+diff --git a/package.json b/package.json
+index 23d6180fc2dc33961145ad070eb18e86d79a9c19..2fbd89a89af27a7e9b7f1bf86cff5ab83ca11edd 100644
+--- a/package.json
++++ b/package.json
+@@ -3,19 +3,12 @@
+   "version": "4.4.1",
+   "description": "PMTiles archive decoder for browsers",
+   "type": "module",
+-  "main": "dist/cjs/index.cjs",
+-  "module": "dist/esm/index.js",
+-  "types": "dist/esm/index.d.ts",
+   "exports": {
+     "./package.json": "./package.json",
+     ".": {
+       "import": {
+         "types": "./dist/esm/index.d.ts",
+-        "default": "./dist/esm/index.js"
+-      },
+-      "require": {
+-        "types": "./dist/cjs/index.d.cts",
+-        "default": "./dist/cjs/index.cjs"
++        "default": "./src/index.ts"
+       }
+     }
+   },
+diff --git a/src/adapters.ts b/src/adapters.ts
+index bd89255fbdbf6b228be183f933043266eb21164a..a3df2f26424ac7e3e7cc3c85a1ac26edbfd2bf3f 100644
+--- a/src/adapters.ts
++++ b/src/adapters.ts
+@@ -1,11 +1,10 @@
+-// biome-ignore lint: needed for Leaflet + IIFE to work
+-declare const L: any;
++import { DomUtil, GridLayer } from "leaflet";
+ // biome-ignore lint: needed for window.URL to disambiguate from cloudflare workers
+ declare const window: any;
+ declare const document: DocumentLike;
+ 
+ import type { Coords } from "leaflet";
+-import { PMTiles, TileType } from "./index";
++import { PMTiles, TileType } from "./index.ts";
+ 
+ interface DocumentLike {
+   // biome-ignore lint: we don't want to bring in the entire document type
+@@ -23,8 +22,8 @@ type DoneCallback = (error?: Error, tile?: any) => void;
+ export const leafletRasterLayer = (source: PMTiles, options: unknown) => {
+   let loaded = false;
+   let mimeType = "";
+-  const cls = L.GridLayer.extend({
+-    createTile: (coord: Coords, done: DoneCallback) => {
++  class cls extends GridLayer {
++    createTile (coord: Coords, done: DoneCallback) {
+       const el = document.createElement("img");
+       const controller = new AbortController();
+       const signal = controller.signal;
+@@ -71,9 +70,9 @@ export const leafletRasterLayer = (source: PMTiles, options: unknown) => {
+           }
+         });
+       return el;
+-    },
++    }
+ 
+-    _removeTile: function (key: string) {
++    _removeTile (key: string) {
+       const tile = this._tiles[key];
+       if (!tile) {
+         return;
+@@ -85,14 +84,14 @@ export const leafletRasterLayer = (source: PMTiles, options: unknown) => {
+       tile.el.width = 0;
+       tile.el.height = 0;
+       tile.el.deleted = true;
+-      L.DomUtil.remove(tile.el);
++      tile.el.remove();
+       delete this._tiles[key];
+       this.fire("tileunload", {
+         tile: tile.el,
+         coords: this._keyToTileCoords(key),
+       });
+-    },
+-  });
++    }
++  }
+   return new cls(options);
+ };
+ 
+diff --git a/src/index.ts b/src/index.ts
+index 5631517842aff0263272306a2b3db98c421abcdd..a5dedb0095c4751faea6273a1e69a9381928e2f9 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,5 +1,5 @@
+ import { decompressSync } from "fflate";
+-export * from "./adapters";
++export * from "./adapters.ts";
+ 
+ /** @hidden */
+ export interface BufferPosition {

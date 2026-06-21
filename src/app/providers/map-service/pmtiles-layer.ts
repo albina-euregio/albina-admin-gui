@@ -54,7 +54,7 @@ export class BlendModePolygonSymbolizer implements PaintSymbolizer {
   }
 }
 
-interface LeafletLayerOptions extends GridLayerOptions {
+export interface LeafletLayerOptions extends GridLayerOptions {
   attribution?: string;
   debug?: string;
   lang?: string;

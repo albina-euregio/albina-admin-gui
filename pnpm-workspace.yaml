@@ -7,6 +7,7 @@ allowBuilds:
 patchedDependencies:
   leaflet: patches/leaflet.patch
   leaflet.sync: patches/leaflet.sync.patch
+  pmtiles@4.4.1: patches/pmtiles@4.4.1.patch
 
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@latest
