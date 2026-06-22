@@ -838,6 +838,38 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/observations": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getGenericObservations"];
+    put?: never;
+    post: operations["saveOrUpdateGenericObservation"];
+    delete: operations["deleteGenericObservation"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/observations/:source/:id": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getGenericObservation"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/openapi.json": {
     parameters: {
       query?: never;
@@ -1585,6 +1617,64 @@ export interface components {
     };
     /** @enum {string} */
     Frequency: "none" | "few" | "some" | "many";
+    GenericObservation: {
+      $source: string;
+      $id: string;
+      $type: components["schemas"]["GenericObservation.ObservationType"];
+      $externalUrl?: string;
+      stability?: string;
+      aspects?: components["schemas"]["Aspect"][];
+      authorName?: string;
+      content?: string;
+      $data?: Record<string, never>;
+      /** Format: int32 */
+      elevation?: number;
+      /** Format: int32 */
+      elevationLowerBound?: number;
+      /** Format: int32 */
+      elevationUpperBound?: number;
+      /** Format: date-time */
+      eventDate?: string;
+      /** Format: double */
+      latitude?: number;
+      locationName?: string;
+      /** Format: double */
+      longitude?: number;
+      regionId?: string;
+      /** Format: date-time */
+      reportDate?: string;
+      avalancheProblems?: components["schemas"]["AvalancheProblem_1"][];
+      dangerPatterns?: components["schemas"]["DangerPattern"][];
+      importantObservation?: components["schemas"]["GenericObservation.ImportantObservation"][];
+      extraDialogRows?: Record<string, never>;
+      $externalImgs?: string;
+      personInvolvement?: components["schemas"]["GenericObservation.PersonInvolvement"];
+      $deleted?: boolean;
+      allowEdit?: boolean;
+      dangerSource?: components["schemas"]["DangerSource"] | null;
+    };
+    /** @enum {string} */
+    "GenericObservation.ImportantObservation":
+      | "SnowLine"
+      | "SurfaceHoar"
+      | "Graupel"
+      | "StabilityTest"
+      | "IceFormation"
+      | "VeryLightNewSnow"
+      | "ForBlog";
+    /** @enum {string} */
+    "GenericObservation.ObservationType":
+      | "SimpleObservation"
+      | "Evaluation"
+      | "Avalanche"
+      | "Blasting"
+      | "Closure"
+      | "Profile"
+      | "TimeSeries"
+      | "Webcam"
+      | "DrySnowfallLevel";
+    /** @enum {string} */
+    "GenericObservation.PersonInvolvement": "Dead" | "Injured" | "Uninjured" | "No" | "Unknown";
     /** @enum {string} */
     GlidingSnowActivity: "low" | "medium" | "high";
     /** @enum {string} */
@@ -3310,6 +3400,32 @@ export interface operations {
       };
     };
   };
+  publishIncident: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": string;
+      };
+    };
+    responses: {
+      /** @description publishIncident 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["IncidentService.IncidentView"];
+        };
+      };
+    };
+  };
   saveMediaFile: {
     parameters: {
       query: {
@@ -3361,6 +3477,98 @@ export interface operations {
         };
         content: {
           "application/rss+xml": string;
+        };
+      };
+    };
+  };
+  getGenericObservations: {
+    parameters: {
+      query: {
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        startDate: string;
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        endDate: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getGenericObservations 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GenericObservation"][];
+        };
+      };
+    };
+  };
+  saveOrUpdateGenericObservation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GenericObservation"];
+      };
+    };
+    responses: {
+      /** @description saveOrUpdateGenericObservation 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  deleteGenericObservation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GenericObservation"];
+      };
+    };
+    responses: {
+      /** @description deleteGenericObservation 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  getGenericObservation: {
+    parameters: {
+      query: {
+        source: string;
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getGenericObservation 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GenericObservation"];
         };
       };
     };
