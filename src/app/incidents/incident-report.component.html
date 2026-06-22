@@ -11,9 +11,8 @@
       </h1>
       <p class="mb-1 text-secondary d-flex align-items-center gap-2" style="font-size: 13px">
         @if (incidentReport().author) {
-          <span title="{{ 'incidentReport.author' | translate }}">
-            {{ incidentReport().author
-            }}{{ incidentReport().authorAffiliation ? " (" + incidentReport().authorAffiliation + ")" : "" }}
+          <span title="{{ incidentReport().authorAffiliation || '' }}">
+            {{ incidentReport().author }}
           </span>
           <span class="text-secondary-emphasis">·</span>
         }
