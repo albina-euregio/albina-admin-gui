@@ -228,7 +228,7 @@ test("Create new observation", async ({ page }) => {
   await page.getByLabel("Person involvement").selectOption("Injured");
   await expect(page.getByLabel("Observation type")).toHaveValue("Avalanche");
   await page.getByLabel("Snowpack Stability").selectOption("fair");
-  await page.getByRole("textbox", { name: "Location" }).fill("Zischgeles");
+  await page.getByRole("combobox", { name: "Location" }).fill("Zischgeles");
   await page.getByRole("option", { name: "Zischgeles, Sankt Sigmund im" }).click();
   await expect(page.getByRole("spinbutton", { name: "Latitude" })).toHaveValue("47.1315444");
   await expect(page.getByRole("spinbutton", { name: "Longitude" })).toHaveValue("11.0950077");

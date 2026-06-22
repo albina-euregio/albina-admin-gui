@@ -147,9 +147,9 @@
       - button " Hide translations"
       - text: DE
       - textbox [disabled]
-      - text: FR
-      - textbox [disabled]
       - text: IT
+      - textbox [disabled]
+      - text: FR
       - textbox [disabled]
       - text: ES
       - textbox [disabled]
@@ -165,10 +165,10 @@
       - button " Hide translations"
       - text: DE
       - textbox [disabled]: Mit der tageszeitlichen Erwärmung wurden sehr viele kleine und mittlere feuchte Lockerschneelawinen von Personen ausgelöst.
-      - text: FR
-      - textbox [disabled]: De très nombreuses avalanches de neige meuble humide de petite et moyenne taille ont été déclenchées par des personnes avec le réchauffement diurne.
       - text: IT
       - textbox [disabled]: Con il rialzo termico diurno, sono state distaccate in seguito al passaggio di persone moltissime valanghe di neve umida a debole coesione di piccole e medie dimensioni.
+      - text: FR
+      - textbox [disabled]: De très nombreuses avalanches de neige meuble humide de petite et moyenne taille ont été déclenchées par des personnes avec le réchauffement diurne.
       - text: ES
       - textbox [disabled]: A consecuencia del aumento de la temperatura diurna se han desencadenado debido al paso de personas numerosas avalanchas de nieve húmeda sin cohesión de tamaño pequeño y mediano.
       - text: CA

@@ -1,0 +1,45 @@
+<div class="rich-text-multilang">
+  <div class="input-group mb-2">
+    <span class="input-group-text">{{ currentLang | uppercase }}</span>
+    <quill-editor
+      style="flex: 1; min-width: 0"
+      [styles]="{ height: '200px' }"
+      [readOnly]="disabled()"
+      [ngModel]="getValueForLang(currentLang)"
+      (ngModelChange)="setValueForLang(currentLang, $event)"
+    />
+  </div>
+
+  @if (showAllLanguages) {
+    <button
+      class="btn btn-sm btn-bare region-form__translation-toggle"
+      type="button"
+      (click)="showAllLanguages = false"
+    >
+      <i class="ph ph-caret-down font-s text-secondary"></i>
+      <span class="font-s text-secondary">{{ "bulletins.create.title.hideTranslations" | translate }}</span>
+    </button>
+  } @else {
+    <button class="btn btn-sm btn-bare region-form__translation-toggle" type="button" (click)="showAllLanguages = true">
+      <i class="ph ph-caret-right font-s text-secondary"></i>
+      <span class="font-s text-secondary">{{ "bulletins.create.title.showTranslations" | translate }}</span>
+    </button>
+  }
+
+  @if (showAllLanguages) {
+    <div class="region-form__translation-block mt-2">
+      @for (lang of otherLanguages; track lang) {
+        <div class="input-group region-form__translation-item">
+          <span class="input-group-text">{{ lang | uppercase }}</span>
+          <quill-editor
+            style="flex: 1; min-width: 0"
+            [styles]="{ height: '200px' }"
+            [readOnly]="disabled()"
+            [ngModel]="getValueForLang(lang)"
+            (ngModelChange)="setValueForLang(lang, $event)"
+          />
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -4,7 +4,8 @@
   </div>
 }
 <app-zod-schema-form
-  [value]="config()"
+  [value]="localConfig()"
+  (valueChange)="localConfig.set($event)"
   [zodType]="ServerConfigurationSchema"
   [labelI18n]="'admin.server-configuration.table.#'"
 />

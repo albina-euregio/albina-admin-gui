@@ -47,6 +47,10 @@ test("Region settings", async ({ page }) => {
   await test.step("Change stress level configuration for PLAYWRIGHT", async () => {
     await page.getByRole("button", { name: "PLAYWRIGHT (PLAYWRIGHT)" }).click();
     const regionConfig = page.locator("accordion-group").filter({ hasText: "PLAYWRIGHT (PLAYWRIGHT)" });
+    await regionConfig
+      .getByRole("textbox", { name: "URL to education content" })
+      .first()
+      .pressSequentially("https://avalanche.report/education/");
     await regionConfig.getByRole("tab", { name: "Configuration", exact: true }).click();
     await expect(regionConfig.getByRole("checkbox", { name: "Enable stress level" })).not.toBeChecked();
     await regionConfig.getByRole("checkbox", { name: "Enable stress level" }).check();
@@ -55,6 +59,10 @@ test("Region settings", async ({ page }) => {
     await page.reload();
     await page.getByRole("tab", { name: "Region", exact: true }).click();
     await page.getByRole("button", { name: "PLAYWRIGHT (PLAYWRIGHT)" }).click();
+    await expect(regionConfig.getByRole("textbox", { name: "URL to education content" })).toHaveValue(
+      "https://avalanche.report/education/",
+    );
+    await regionConfig.getByRole("textbox", { name: "URL to education content" }).fill("");
     await regionConfig.getByRole("tab", { name: "Configuration", exact: true }).click();
     await expect(regionConfig.getByRole("checkbox", { name: "Enable stress level" })).toBeChecked();
     await regionConfig.getByRole("checkbox", { name: "Enable stress level" }).uncheck();
