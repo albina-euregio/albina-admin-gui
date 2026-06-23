@@ -9,27 +9,34 @@ export const MetaInformationSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
   updatedAt: z.coerce.date().register(widgetRegistry, { widget: "none" }).nullish(),
   publishedAt: z.coerce.date().register(widgetRegistry, { widget: "none" }).nullish(),
-  author: z.string(),
-  authorAffiliation: z.string(),
+  author: z.string().register(widgetRegistry, { important: true }).nullish(),
+  authorAffiliation: z.string().register(widgetRegistry, { important: true }).nullish(),
 });
 
 export const GeneralInformationSchema = z.object({
-  reportStatus: z.enum(["Draft", "Incomplete", "InReview", "Verified"]).register(widgetRegistry, { widget: "none" }),
+  reportStatus: z
+    .enum(["Draft", "Incomplete", "InReview", "Verified"])
+    .register(widgetRegistry, { widget: "none", important: true })
+    .nullish(),
 
-  sourceOfInformation: z.array(
-    enumWithOther(
-      z.enum(["PublicObservation", "AWSInternal", "AWSObserver", "DispatchCentre", "Police", "MountainRescue"]),
-    ),
-  ),
+  sourceOfInformation: z
+    .array(
+      enumWithOther(
+        z.enum(["PublicObservation", "AWSInternal", "AWSObserver", "DispatchCentre", "Police", "MountainRescue"]),
+      ),
+    )
+    .register(widgetRegistry, { important: true })
+    .nullish(),
 
-  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5", public: true }),
+  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5", public: true, important: true }).nullish(),
   timeAccuracy: z
     .enum(["exact", "PT15M", "PT30M", "PT1H", "PT2H", "PT4H", "PT6H", "PT12H", "P1D", "P2D", "P3D", "unknown"])
-    .register(widgetRegistry, { public: true }),
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
 
-  location: z.string().register(widgetRegistry, { public: true }),
-  latitude: z.number().register(widgetRegistry, { class: "col-6", public: true }),
-  longitude: z.number().register(widgetRegistry, { class: "col-6", public: true }),
+  location: z.string().register(widgetRegistry, { public: true, important: true }).nullish(),
+  latitude: z.number().register(widgetRegistry, { class: "col-6", public: true, important: true }).nullish(),
+  longitude: z.number().register(widgetRegistry, { class: "col-6", public: true, important: true }).nullish(),
   locationAccuracy: z
     .enum([
       "exact",
@@ -46,7 +53,8 @@ export const GeneralInformationSchema = z.object({
       "within50km",
       "unknown",
     ])
-    .register(widgetRegistry, { public: true }),
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
   lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
   polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
   country: z.string().register(widgetRegistry, { class: "col-6", public: true }).nullish(),
@@ -59,7 +67,7 @@ export const GeneralInformationSchema = z.object({
 
 export const BulletinInformationSchema = z.object({
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
-  publicAvalancheWarningService: z.string().register(widgetRegistry, { public: true }),
+  publicAvalancheWarningService: z.string().register(widgetRegistry, { public: true, important: true }).nullish(),
   publicAvalancheWarningServiceOutside: z.boolean().nullish().describe("Outside AWS Forecast Area"),
 
   dangerRating: z
@@ -72,14 +80,16 @@ export const BulletinInformationSchema = z.object({
       Enums.DangerRating.high,
       Enums.DangerRating.very_high,
     ])
-    .register(widgetRegistry, { widget: "dangerRating", public: true }),
+    .register(widgetRegistry, { widget: "dangerRating", public: true, important: true })
+    .nullish(),
 
   avalancheProblem: z
     .enum(Enums.AvalancheProblem)
     .array()
-    .register(widgetRegistry, { widget: "avalancheProblem", public: true }),
+    .register(widgetRegistry, { widget: "avalancheProblem", public: true, important: true })
+    .nullish(),
 
-  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { public: true }),
+  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { public: true, important: true }).nullish(),
 
   bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
@@ -116,19 +126,22 @@ const incidentActivity = enumWithOther(
   ]),
 );
 export const GroupInformationSchema = z.object({
-  anonymousGroupIdentifier: z.string(),
+  anonymousGroupIdentifier: z.string().register(widgetRegistry, { important: true }).nullish(),
   groupType: enumWithOther(
     z.enum(["RecreationalFamilyFriends", "Club", "Commercial", "Industrial", "Solo", "Unknown"]),
-  ),
+  )
+    .register(widgetRegistry, { important: true })
+    .nullish(),
   groupSizeAccuracy: z
     .enum(["Exact", "Approximately", "AtLeast", "Unknown"])
-    .register(widgetRegistry, { class: "col-6", public: true }),
+    .register(widgetRegistry, { class: "col-6", public: true, important: true })
+    .nullish(),
   groupSize: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
-  incidentTerrainType: incidentTerrainType.register(widgetRegistry, { public: true }),
+  incidentTerrainType: incidentTerrainType.register(widgetRegistry, { public: true, important: true }).nullish(),
   typeOfControlledTerrain: enumWithOther(
     z.enum(["IndoorInsideBuilding", "Street", "TrainTrack", "SkiAreaResort", "CrossCountryTrack", "SledgingTrack"]),
   ).nullish(),
-  incidentActivity: incidentActivity.register(widgetRegistry, { public: true }),
+  incidentActivity: incidentActivity.register(widgetRegistry, { public: true, important: true }).nullish(),
   travelDirection: enumWithOther(
     z.enum([
       "Ascending",
@@ -140,8 +153,10 @@ export const GroupInformationSchema = z.object({
       "CrossingRunouts",
     ]),
   ).nullish(),
-  vehicleType: enumWithOther(z.enum(["Car", "Bus", "SnowPlower", "Snowcat"])),
-  avalancheGear: z.enum(["All", "Some", "None", "Unknown"]),
+  vehicleType: enumWithOther(z.enum(["Car", "Bus", "SnowPlower", "Snowcat"]))
+    .register(widgetRegistry, { important: true })
+    .nullish(),
+  avalancheGear: z.enum(["All", "Some", "None", "Unknown"]).register(widgetRegistry, { important: true }).nullish(),
   groupInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(GroupInformationSchema, {
@@ -170,7 +185,7 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
 
 export const VictimInformationSchema = z.object({
   anonymousVictimIdentifier: z.string().nullish(),
-  anonymousGroupIdentifier: z.string(),
+  anonymousGroupIdentifier: z.string().register(widgetRegistry, { important: true }).nullish(),
   age: z
     .enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"])
     .register(widgetRegistry, { class: "col-6" })
@@ -207,10 +222,14 @@ export const VictimInformationSchema = z.object({
     .register(widgetRegistry, { class: "col-6" })
     .nullish(),
   helmet: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "col-6" }).nullish(),
-  caught: z.enum(["Involved", "NotInvolved", "Unknown"]).register(widgetRegistry, { class: "bg-person-injury" }),
+  caught: z
+    .enum(["Involved", "NotInvolved", "Unknown"])
+    .register(widgetRegistry, { class: "bg-person-injury", important: true })
+    .nullish(),
   fatalInjured: z
     .enum(["Fatal", "Injured", "Uninjured", "Unknown"])
-    .register(widgetRegistry, { class: "bg-person-injury" }),
+    .register(widgetRegistry, { class: "bg-person-injury", important: true })
+    .nullish(),
   injurySeverity: z
     .enum(["Minor", "Moderate", "Major"])
     .register(widgetRegistry, { class: "bg-person-injury" })
@@ -231,7 +250,8 @@ export const VictimInformationSchema = z.object({
       "NotBuried",
       "Unknown",
     ])
-    .register(widgetRegistry, { class: "bg-person-burial" }),
+    .register(widgetRegistry, { class: "bg-person-burial", important: true })
+    .nullish(),
   burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6 bg-person-burial" }).nullish(),
   burialDuration: z.number().register(widgetRegistry, { class: "col-6 bg-person-burial" }).nullish(),
   respiratoryCavity: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-person-burial" }).nullish(),
@@ -278,32 +298,40 @@ export type VictimInformation = z.infer<typeof VictimInformationSchema>;
 
 const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
 export const AvalancheInformationSchema = z.object({
-  avalancheType: z.enum(Enums.IncidentAvalancheType).register(widgetRegistry, { public: true }),
-  avalancheSize: z.enum(Enums.IncidentAvalancheSize).register(widgetRegistry, { public: true }),
+  avalancheType: z.enum(Enums.IncidentAvalancheType).register(widgetRegistry, { public: true, important: true }).nullish(),
+  avalancheSize: z.enum(Enums.IncidentAvalancheSize).register(widgetRegistry, { public: true, important: true }).nullish(),
   avalancheLength: z.number().register(widgetRegistry, { unit: "m", public: true }).nullish(),
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
-  startZoneAspect: z.enum(Enums.Aspect).register(widgetRegistry, {
-    class: "col-6 bg-avalanche-start-zone",
-    valueI18n: "aspect.#",
-    widget: "aspect",
-    public: true,
-  }),
+  startZoneAspect: z
+    .enum(Enums.Aspect)
+    .register(widgetRegistry, {
+      class: "col-6 bg-avalanche-start-zone",
+      valueI18n: "aspect.#",
+      widget: "aspect",
+      public: true,
+      important: true,
+    })
+    .nullish(),
   startZoneAspectAccuracy: z
     .enum(["Accurate", "Uncertain"])
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true }),
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true, important: true })
+    .nullish(),
   startZoneElevation: z
     .number()
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "m", public: true }),
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "m", public: true, important: true })
+    .nullish(),
   startZoneElevationAccuracy: z
     .enum(["exact", "within50m", "within100m", "within200m", "unknown"])
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true }),
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true, important: true })
+    .nullish(),
   startZoneIncline: z
     .number()
     .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "°", public: true })
     .nullish(),
   startZoneMoisture: z
     .enum(["Dry", "Moist", "Wet", "Unknown"])
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true }),
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", public: true, important: true })
+    .nullish(),
   startZoneTerrainType: enumWithOther(
     z.enum([
       "AlpineBowl",
@@ -421,7 +449,8 @@ export const AvalancheInformationSchema = z.object({
   relevantDangerPattern: z
     .enum(Enums.DangerPattern)
     .array()
-    .register(widgetRegistry, { valueI18n: "dangerPattern.#", class: "bg-avalanche-communication" }),
+    .register(widgetRegistry, { valueI18n: "dangerPattern.#", class: "bg-avalanche-communication", important: true })
+    .nullish(),
   avalancheDetailsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 const slabGlide = [Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide] as const;
@@ -440,11 +469,14 @@ withShowIf(AvalancheInformationSchema, {
 });
 
 export const OtherDamagesSchema = z.object({
-  otherDamages: z.enum(["Yes", "No"]).register(widgetRegistry, { public: true }),
+  otherDamages: z.enum(["Yes", "No"]).register(widgetRegistry, { public: true, important: true }).nullish(),
 
   damagedAssets: enumWithOther(
     z.enum(["Vehicle", "Forest", "Agriculture", "Livestock", "UtilitiesTechnicalInfrastructure"]),
-  ).array(),
+  )
+    .array()
+    .register(widgetRegistry, { important: true })
+    .nullish(),
 
   otherDamagesComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
@@ -481,12 +513,12 @@ export const IncidentLinksSchema = z.object({
 
 export const IncidentAttachmentSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
-  dateAdded: z.coerce.date().register(widgetRegistry, { widget: "none" }),
+  dateAdded: z.coerce.date().register(widgetRegistry, { widget: "none", important: true }).nullish(),
   file: z.file().register(widgetRegistry, { widget: "none" }).nullish(),
   fileName: z.string().register(widgetRegistry, { widget: "none" }).nullish(),
   mediaType: z.string().register(widgetRegistry, { widget: "none" }).nullish(),
-  dateCreated: z.coerce.date().register(widgetRegistry, { widget: "date" }),
-  credit: z.string(),
+  dateCreated: z.coerce.date().register(widgetRegistry, { widget: "date", important: true }).nullish(),
+  credit: z.string().register(widgetRegistry, { important: true }).nullish(),
   caption: z.string().nullish(),
   altText: z.string().nullish(),
   public: z.boolean().nullish(),
@@ -502,13 +534,13 @@ export const IncidentReportSchema = z.object({
   ...GeneralInformationSchema.shape,
   ...BulletinInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
-  personInvolvement: z.enum(["Yes", "No", "Unknown"]).register(widgetRegistry, { public: true }),
+  personInvolvement: z.enum(["Yes", "No", "Unknown"]).register(widgetRegistry, { public: true, important: true }).nullish(),
   ...OtherDamagesSchema.shape,
-  groupInformation: GroupInformationSchema.array(),
-  victimInformation: VictimInformationSchema.array(),
+  groupInformation: GroupInformationSchema.array().register(widgetRegistry, { important: true }).nullish(),
+  victimInformation: VictimInformationSchema.array().register(widgetRegistry, { important: true }).nullish(),
   ...IncidentAnalysisSchema.shape,
   ...IncidentLinksSchema.shape,
-  attachments: IncidentAttachmentSchema.array(),
+  attachments: IncidentAttachmentSchema.array().register(widgetRegistry, { important: true }).nullish(),
 });
 
 export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({
