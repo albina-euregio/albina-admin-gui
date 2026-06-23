@@ -1,13 +1,21 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
+import crypto from "crypto";
+import fs from "fs";
+import path from "path";
 
-let XLSX = require("xlsx");
+import XLSX from "xlsx";
+
+import {
+  GroupInformation,
+  IncidentReport,
+  PartialIncidentReport,
+  PartialIncidentReportSchema,
+  VictimInformation,
+} from "./src/app/incidents/models/incident-report.model";
 
 // Default Configuration
-const EXCEL_FILE = "incidents.xlsm";
+const EXCEL_FILE = "/tmp/incidents.xlsm";
 const OUTPUT_SQL = "import_incidents.sql";
 
 // Mappings Configuration
@@ -53,7 +61,7 @@ function parseExcelDate(serial, timeStr) {
       }
     }
   }
-  date.setUTCHours(12, 0, 0, 0); // Default to noon
+  date.setHours(12, 0, 0, 0); // Default to noon
   return date;
 }
 
@@ -82,7 +90,7 @@ function getAvalancheProblems(row) {
   const p2 = row["2. relevantes Lawinenproblem"];
 
   function mapProblem(prob) {
-    if (!prob) return null;
+    if (!prob) return undefined;
     const val = String(prob).trim().toLowerCase();
     if (val.includes("triebschnee") || val.includes("wind")) return "wind_slab";
     if (val.includes("alt") || val.includes("persistent")) return "persistent_weak_layers";
@@ -138,14 +146,14 @@ function mapAvalancheType(type) {
 }
 
 function mapRelevantAvalancheProblem(prob) {
-  if (!prob) return null;
+  if (!prob) return undefined;
   const val = String(prob).trim().toLowerCase();
   if (val.includes("triebschnee")) return "wind_slab";
   if (val.includes("alt")) return "persistent_weak_layers";
   if (val.includes("gleit")) return "gliding_snow";
   if (val.includes("neu")) return "new_snow";
   if (val.includes("nass")) return "wet_snow";
-  return null;
+  return undefined;
 }
 
 function mapTrigger(trigger) {
@@ -162,7 +170,7 @@ function mapTrigger(trigger) {
 }
 
 function mapNaturalTrigger(trigger) {
-  if (!trigger) return null;
+  if (!trigger) return undefined;
   const val = String(trigger).trim().toLowerCase();
   if (val.includes("wechte")) return "CorniceFall";
   return "Natural";
@@ -182,7 +190,7 @@ function mapVehicleTrigger(trigger) {
 }
 
 function mapAspect(aspect) {
-  if (!aspect) return null;
+  if (!aspect) return undefined;
   const val = String(aspect).trim().toUpperCase();
   const map = {
     N: "N",
@@ -197,7 +205,7 @@ function mapAspect(aspect) {
     W: "W",
     NW: "NW",
   };
-  return map[val] || null;
+  return map[val] || undefined;
 }
 
 function mapMoisture(moisture) {
@@ -241,12 +249,12 @@ function mapActivity(act) {
 }
 
 function mapTravelDirection(dir) {
-  if (!dir) return null;
+  if (!dir) return undefined;
   const val = String(dir).trim().toLowerCase();
   if (val.includes("aufstieg") || val.includes("aufsteig")) return "Ascending";
   if (val.includes("abfahrt") || val.includes("abstieg")) return "Descending";
   if (val.includes("stehen")) return "Stationary";
-  return null;
+  return undefined;
 }
 
 function mapGear(gear) {
@@ -268,7 +276,7 @@ function mapCountry(nat) {
   return "Austria";
 }
 
-function getGroupInformation(row) {
+function getGroupInformation(row: Record<string, string>): GroupInformation[] {
   const involvement = row["Personenbeteiligung"];
   if (involvement !== "ja" && involvement !== "Ja") return [];
 
@@ -276,20 +284,20 @@ function getGroupInformation(row) {
     {
       anonymousGroupIdentifier: "group_1",
       groupType: row["gefuehrte Tour"] === "ja" ? "Club" : "RecreationalFamilyFriends",
-      groupSize: typeof row["beteiligte Personen [N]"] === "number" ? row["beteiligte Personen [N]"] : null,
+      groupSize: typeof row["beteiligte Personen [N]"] === "number" ? row["beteiligte Personen [N]"] : undefined,
       groupSizeAccuracy: typeof row["beteiligte Personen [N]"] === "number" ? "Exact" : "Unknown",
       incidentTerrainType: mapTerrainType(row["Gelaende"]),
-      typeOfControlledTerrain: null,
+      typeOfControlledTerrain: undefined,
       incidentActivity: mapActivity(row["Taetigkeit"]),
       travelDirection: mapTravelDirection(row["Aufstieg/Abfahrt"]),
-      vehicleType: null,
+      vehicleType: "Unknown",
       avalancheGear: mapGear(row["Standardausruestung"]),
-      groupInformationComment: null,
+      groupInformationComment: undefined,
     },
   ];
 }
 
-function getVictimInformation(row) {
+function getVictimInformation(row: Record<string, string>) {
   const victims = [];
   const fatalCount = parseInt(row["getoetete Personen"], 10) || 0;
   const injuredCount = parseInt(row["verletzte Personen"], 10) || 0;
@@ -301,37 +309,37 @@ function getVictimInformation(row) {
   let fullyBuriedLeft = parseInt(row["totalverschuettete Personen"], 10) || 0;
   let partlyBuriedLeft = parseInt(row["teilverschuettete Personen"], 10) || 0;
 
-  function createVictim(status) {
+  function createVictim(status): VictimInformation {
     return {
       anonymousVictimIdentifier: `victim_${victims.length + 1}`,
       anonymousGroupIdentifier: "group_1",
       caught: "Involved",
       fatalInjured: status,
       burialDegree: "Unknown",
-      age: "Unknown",
+      // age: "Unknown",
       gender: "Other",
       country: mapCountry(row["Nationalität"]),
       workingAtTime: "No",
       leaderAtTime: "No",
       professionalCertification: "None",
       avalancheTraining: "None",
-      yearsActive: "Unknown",
-      transceiver: "Unknown",
-      shovel: "Unknown",
-      probe: "Unknown",
-      airbag: "Unknown",
-      helmet: "Unknown",
+      // yearsActive: "Unknown",
+      // transceiver: "Unknown",
+      // shovel: "Unknown",
+      // probe: "Unknown",
+      // airbag: "Unknown",
+      // helmet: "Unknown",
       terrainTrap: "None",
-      burialDepth: null,
-      burialDuration: null,
+      burialDepth: undefined,
+      burialDuration: undefined,
       primaryLocationMethod: "Unknown",
       rescuedBy: "Unknown",
       medicalIntervention: "None",
-      estimatedTimeOfDeath: "Unknown",
+      // estimatedTimeOfDeath: "Unknown",
       causeOfDeath: "Unknown",
-      respiratoryCavity: "Unknown",
+      // respiratoryCavity: "Unknown",
       injurySeverity: status === "Fatal" ? "Major" : status === "Injured" ? "Moderate" : "Minor",
-      victimInformationComment: null,
+      victimInformationComment: undefined,
     };
   }
 
@@ -362,7 +370,7 @@ function getVictimInformation(row) {
   return victims;
 }
 
-function convertRowToIncidentJson(row) {
+function convertRowToIncidentJson(row: Record<string, string>) {
   const serialDate = row["Datum"];
   const timeStr = row["Uhrzeit"];
   const parsedDate = parseExcelDate(serialDate, timeStr);
@@ -372,11 +380,11 @@ function convertRowToIncidentJson(row) {
 
   const trigger = mapTrigger(row["Ausloesart"]);
 
-  const data = {
+  const data: PartialIncidentReport = {
     author: "Excel Import",
     authorAffiliation: "Import",
     timestamp: new Date().toISOString(),
-    dateTime: parsedDate.toISOString(),
+    dateTime: parsedDate.toISOString() as unknown as Date,
     timeAccuracy: timeStr ? "exact" : "P1D",
     sourceOfInformation: ["AWSInternal"],
     publicAvalancheWarningService: "AWS",
@@ -384,63 +392,66 @@ function convertRowToIncidentJson(row) {
     avalancheProblem: getAvalancheProblems(row),
     dangerPattern: getDangerPatterns(row),
     reportStatus: "Verified",
-    publicExternalLinks: null,
-    privateExternalLinks: null,
-    privateExternalDatabaseLinks: null,
-    generalInformationComment: row["Allgemeine Bemerkungen"] || null,
+    publicExternalLinks: undefined,
+    privateExternalLinks: undefined,
+    privateExternalDatabaseLinks: undefined,
+    generalInformationComment: row["Allgemeine Bemerkungen"] || "",
 
     location: row["Ereignisort"] || "Unknown",
-    latitude: typeof row["Latitude"] === "number" ? row["Latitude"] : null,
-    longitude: typeof row["Longitude"] === "number" ? row["Longitude"] : null,
+    latitude: typeof row["Latitude"] === "number" ? row["Latitude"] : undefined,
+    longitude: typeof row["Longitude"] === "number" ? row["Longitude"] : undefined,
     locationAccuracy: row["Koord. Verifiziiert"] === "ja" ? "exact" : "unknown",
-    lineCoordinatesText: null,
-    polygonCoordinatesText: null,
-    country: null,
+    lineCoordinatesText: undefined,
+    polygonCoordinatesText: undefined,
+    country: undefined,
     region: regionName || null,
-    municipality: null,
+    municipality: undefined,
     avalancheRegion: row["Subregion alt"] || null,
-    locationInformationComment: null,
+    locationInformationComment: undefined,
 
-    multipleAvalanches: null,
+    multipleAvalanches: undefined,
     avalancheSize: mapAvalancheSize(row["Lawinengroesse"]),
     avalancheType: mapAvalancheType(row["Lawinentyp"]),
     relevantAvalancheProblem: mapRelevantAvalancheProblem(row["1. relevantes Lawinenproblem"]),
     trigger: trigger,
-    natural: trigger === "natural" ? mapNaturalTrigger(row["Ausloesart"]) : null,
-    person: trigger === "person" ? mapPersonTrigger(row["Ausloesart"]) : null,
-    additionalLoad: null,
-    explosives: trigger === "explosives" ? mapExplosivesTrigger(row["Ausloesart"]) : null,
-    vehicle: trigger === "vehicle" ? mapVehicleTrigger(row["Ausloesart"]) : null,
-    accidentalControlled: null,
+    natural: trigger === "natural" ? mapNaturalTrigger(row["Ausloesart"]) : undefined,
+    person: trigger === "person" ? mapPersonTrigger(row["Ausloesart"]) : undefined,
+    additionalLoad: undefined,
+    explosives: trigger === "explosives" ? mapExplosivesTrigger(row["Ausloesart"]) : undefined,
+    vehicle: trigger === "vehicle" ? mapVehicleTrigger(row["Ausloesart"]) : undefined,
+    accidentalControlled: undefined,
     remoteTriggering: row["Fernausloesung"] === "ja" ? "Yes" : "No",
     startZoneAspect: mapAspect(row["Exposition des Anrissgebiets"]),
     startZoneAspectAccuracy: row["Exposition des Anrissgebiets"] ? "Accurate" : "Uncertain",
-    startZoneElevation: typeof row["Seehoehe des Anrisses [m]"] === "number" ? row["Seehoehe des Anrisses [m]"] : null,
+    startZoneElevation:
+      typeof row["Seehoehe des Anrisses [m]"] === "number" ? row["Seehoehe des Anrisses [m]"] : undefined,
     startZoneElevationAccuracy: "unknown",
     startZoneIncline:
-      typeof row["max. Neigung des Anrissgebiets"] === "number" ? row["max. Neigung des Anrissgebiets"] : null,
-    startZoneTerrainType: null,
-    slabWidth: typeof row["Breite des Anrissgebiets [m]"] === "number" ? row["Breite des Anrissgebiets [m]"] : null,
+      typeof row["max. Neigung des Anrissgebiets"] === "number" ? row["max. Neigung des Anrissgebiets"] : undefined,
+    startZoneTerrainType: undefined,
+    slabWidth:
+      typeof row["Breite des Anrissgebiets [m]"] === "number" ? row["Breite des Anrissgebiets [m]"] : undefined,
     crownDepthAvg:
-      typeof row["Anrisshoehe Durchschnitt [cm]"] === "number" ? row["Anrisshoehe Durchschnitt [cm]"] : null,
-    crownDepthMin: typeof row["Anrisshoehe Minimum [cm]"] === "number" ? row["Anrisshoehe Minimum [cm]"] : null,
-    crownDepthMax: typeof row["Anrisshoehe Maximum [cm]"] === "number" ? row["Anrisshoehe Maximum [cm]"] : null,
-    avalancheLength: typeof row["Laenge der Lawinenbahn [m]"] === "number" ? row["Laenge der Lawinenbahn [m]"] : null,
-    weakLayerName: null,
-    weakLayerGrainType1: null,
-    weakLayerGrainSize1: null,
-    weakLayerGrainType2: null,
-    weakLayerGrainSize2: null,
-    weakLayerLocation: null,
-    bedSurfaceStepped: null,
+      typeof row["Anrisshoehe Durchschnitt [cm]"] === "number" ? row["Anrisshoehe Durchschnitt [cm]"] : undefined,
+    crownDepthMin: typeof row["Anrisshoehe Minimum [cm]"] === "number" ? row["Anrisshoehe Minimum [cm]"] : undefined,
+    crownDepthMax: typeof row["Anrisshoehe Maximum [cm]"] === "number" ? row["Anrisshoehe Maximum [cm]"] : undefined,
+    avalancheLength:
+      typeof row["Laenge der Lawinenbahn [m]"] === "number" ? row["Laenge der Lawinenbahn [m]"] : undefined,
+    weakLayerName: undefined,
+    weakLayerGrainType1: undefined,
+    weakLayerGrainSize1: undefined,
+    weakLayerGrainType2: undefined,
+    weakLayerGrainSize2: undefined,
+    weakLayerLocation: undefined,
+    bedSurfaceStepped: undefined,
     avalancheMoistureStartZone: mapMoisture(row["Lawinenfeuchtigkeit"]),
-    avalancheMoistureDeposit: null,
-    depositHeight: null,
-    depositWidth: null,
-    depositElevation: null,
-    debrisType: null,
-    debrisDensity: null,
-    avalancheDetailsComment: null,
+    avalancheMoistureDeposit: undefined,
+    depositHeight: undefined,
+    depositWidth: undefined,
+    depositElevation: undefined,
+    debrisType: undefined,
+    debrisDensity: undefined,
+    avalancheDetailsComment: undefined,
 
     personInvolvement:
       row["Personenbeteiligung"] === "ja" || row["Personenbeteiligung"] === "Ja"
@@ -449,28 +460,28 @@ function convertRowToIncidentJson(row) {
           ? "No"
           : "Unknown",
     otherDamages: "No",
-    damagedAssets: null,
-    otherDamagesComment: null,
+    damagedAssets: [],
+    otherDamagesComment: undefined,
 
     groupInformation: getGroupInformation(row),
     victimInformation: getVictimInformation(row),
 
-    recentSlabAvalanches: null,
-    signsOfInstability: null,
-    recentLoading: null,
-    criticalWarming: null,
+    recentSlabAvalanches: undefined,
+    signsOfInstability: undefined,
+    recentLoading: undefined,
+    criticalWarming: undefined,
     incidentLedePublic: true,
-    incidentLede: null,
+    incidentLede: undefined,
     incidentDescriptionPublic: true,
-    incidentDescription: row["Detailbericht"] || row["LPD Bericht"] || null,
+    incidentDescription: { de: row["Detailbericht"] || row["LPD Bericht"] || "" },
     weatherDescriptionPublic: true,
-    weatherDescription: null,
+    weatherDescription: undefined,
     avalancheDescriptionPublic: true,
-    avalancheDescription: null,
+    avalancheDescription: undefined,
     snowpackDescriptionPublic: true,
-    snowpackDescription: null,
+    snowpackDescription: undefined,
     takeAwaysPublic: true,
-    takeAways: null,
+    takeAways: undefined,
     incidentAnalysisComment: row["Bemerkungen Lawinensituation"] || null,
     attachments: [],
   };
@@ -479,8 +490,11 @@ function convertRowToIncidentJson(row) {
     id: crypto.randomUUID(),
     region_id: regionId,
     created_at: parsedDate.toISOString().replace("T", " ").replace("Z", ""),
-    updated_at: new Date().toISOString().replace("T", " ").replace("Z", ""),
-    data: JSON.stringify(data),
+    updated_at: parsedDate.toISOString().replace("T", " ").replace("Z", ""),
+    data: JSON.stringify(PartialIncidentReportSchema.parse(data))
+      .replaceAll("\\t", "  ")
+      .replaceAll("\\r", "")
+      .replaceAll("\\", "\\\\"),
   };
 }
 
@@ -492,7 +506,7 @@ function main() {
   }
 
   const workbook = XLSX.readFile(EXCEL_FILE);
-  const sheet = workbook.Sheets["incidents"];
+  const sheet = workbook.Sheets["++LE_Gesamtübersicht (seit 1992"];
   if (!sheet) {
     console.error("Error: Could not find sheet 'incidents' in workbook");
     process.exit(1);
@@ -521,7 +535,7 @@ function main() {
       // Escape single quotes for SQL insertion
       const escapedData = incident.data.replace(/'/g, "''");
 
-      const sql = `INSERT INTO incidents (id, region_id, created_at, updated_at, data) VALUES ('${incident.id}', '${incident.region_id}', '${incident.created_at}', '${incident.updated_at}', '${escapedData}');`;
+      const sql = `REPLACE INTO incidents (id, region_id, created_at, updated_at, data) VALUES ('${incident.id}', '${incident.region_id}', '${incident.created_at}', '${incident.updated_at}', '${escapedData}');`;
       sqlStatements.push(sql);
       successCount++;
     } catch (e) {
