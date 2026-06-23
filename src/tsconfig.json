@@ -2,7 +2,7 @@
   "compilerOptions": {
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": ["ES2022", "dom"],
+    "lib": ["ES2022", "dom", "esnext.temporal", "esnext.intl", "esnext.date"],
     "paths": {
       "app/*": ["./app/*"],
       "environments/*": ["./environments/*"]
