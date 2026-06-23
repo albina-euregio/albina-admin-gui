@@ -2955,7 +2955,7 @@ packages:
     resolution: {integrity: sha512-e59CcQNMFFZJWCAGzyFxcsVldWd0cU7G71q2Zh5a5Pbe7ua4G7CNQcKz51IALf0NzOyRF7ws6gjnndiVWkYN+w==}
 
   leaflet@https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b:
-    resolution: {tarball: https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b}
+    resolution: {integrity: sha512-u4zj1bZflETjrZia2hxZ63kDeECt9qmQxwBmbcf3JPrHbAWJBRjWIJHNq7QCZoZOyNCGoGakICPgJA0LtEpXbw==, tarball: https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b}
     version: 2.0.0-alpha.1
 
   levn@0.4.1:
