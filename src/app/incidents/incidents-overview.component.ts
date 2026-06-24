@@ -102,6 +102,33 @@ export class IncidentsOverviewComponent implements OnInit {
     return this.sortDir === "asc" ? "ph-arrow-up" : "ph-arrow-down";
   }
 
+  downloadGeoJSON() {
+    const featureCollection: GeoJSON.FeatureCollection = {
+      type: "FeatureCollection",
+      features: this.displayedIncidents
+        .filter((incident) => incident.latitude && incident.longitude)
+        .map(
+          (incident): GeoJSON.Feature<GeoJSON.Point> => ({
+            type: "Feature",
+            // Stored coordinates are [lat, lng]; GeoJSON requires [lng, lat].
+            geometry: { type: "Point", coordinates: [incident.longitude, incident.latitude] },
+            properties: Object.fromEntries(
+              Object.entries(incident).filter(
+                ([, value]) => value == null || typeof value !== "object" || value instanceof Date,
+              ),
+            ),
+          }),
+        ),
+    };
+    const blob = new Blob([JSON.stringify(featureCollection, null, 2)], { type: "application/geo+json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "incidents.geojson";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   openIncident(id: string) {
     this.router.navigate(["/incidents", id]);
   }

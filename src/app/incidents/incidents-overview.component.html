@@ -48,7 +48,14 @@
         }
       </div>
     </div>
-    <button (click)="newIncident()" class="btn btn-sm btn-primary px-3 ms-auto">
+    <button
+      (click)="downloadGeoJSON()"
+      [disabled]="!displayedIncidents.length"
+      class="btn btn-sm btn-outline-secondary ms-auto"
+    >
+      <i class="ph ph-download-simple"></i> {{ "incidentsOverview.button.download" | translate }}
+    </button>
+    <button (click)="newIncident()" class="btn btn-sm btn-primary px-3">
       <i class="ph ph-plus"></i> {{ "incidentsOverview.button.new" | translate }}
     </button>
   </div>

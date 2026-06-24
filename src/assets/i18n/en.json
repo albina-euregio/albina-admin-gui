@@ -1652,7 +1652,8 @@
   "incidentsOverview": {
     "button": {
       "new": "New incident",
-      "columns": "Columns"
+      "columns": "Columns",
+      "download": "Download GeoJSON"
     },
     "tooltip": {
       "edit": "Edit incident"
