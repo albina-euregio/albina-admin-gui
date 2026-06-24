@@ -23,7 +23,7 @@
     {{ castDate(value()) | date: dateFormat() : undefined : translateService.getCurrentLang() }}
   </span>
 } @else if (type === "string") {
-  <span [class]="cssClass()">{{ value() || "—" }}</span>
+  <span [class]="cssClass()" [title]="value()">{{ value() || "—" }}</span>
 } @else if (type === "boolean") {
   <span [class]="cssClass()">
     <i class="ph" [class.ph-check-circle]="value()" [class.ph-minus-circle]="!value()"></i>

@@ -69,7 +69,7 @@
         @for (incident of displayedIncidents; track incident.id) {
           <tr class="align-middle">
             @for (col of columns; track col) {
-              <td [attr.data-label]="`incidentReport.${col}` | translate">
+              <td style="max-width: 16em" [attr.data-label]="`incidentReport.${col}` | translate">
                 @if (col === "reportStatus" && incident.reportStatus) {
                   <span
                     class="badge"
@@ -85,6 +85,7 @@
                     [zodType]="IncidentReportSchema.shape[col]"
                     [value]="incident[col]"
                     dateFormat="medium"
+                    class="d-block text-truncate"
                   />
                 }
               </td>
