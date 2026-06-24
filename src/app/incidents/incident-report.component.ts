@@ -558,9 +558,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  async publishUpdateIncident() {
-    const message = this.translateService.instant("incidentReportUI.publishUpdateIncident");
-    if (!confirm(message)) return;
+  async publishIncident(confirmMessageKey: string) {
+    if (!confirm(this.translateService.instant(confirmMessageKey))) return;
     const publicReport = pickPublicFields(IncidentModels.IncidentReportSchema).parse(this.incidentReport());
     console.info("Publishing report", publicReport);
     const data = this.serializeReport(publicReport);
