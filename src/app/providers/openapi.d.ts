@@ -1753,7 +1753,7 @@ export interface components {
       /** Format: date-time */
       updatedAt: string;
       /** Embedded incident-report JSON; the server stores and returns it as an object, not a quoted string. */
-      data: import("../incidents/models/incident-report.model").PartialIncidentReport;
+      data: import("../incidents/incident-report.model").PartialIncidentReport;
       /** Format: date-time */
       publishedAt?: string | null;
       publicData?: Record<string, never>[] | null;

@@ -1,9 +1,9 @@
 import { z } from "zod/v4";
 
-import * as Enums from "../../enums/enums";
-import { LangTextsSchema } from "../../models/text.model";
-import { widgetRegistry } from "../../shared/zod-schema-form.widget-registry";
-import { enumWithOther, not, withShowIf } from "../../shared/zod-util";
+import * as Enums from "../enums/enums";
+import { LangTextsSchema } from "../models/text.model";
+import { widgetRegistry } from "../shared/zod-schema-form.widget-registry";
+import { enumWithOther, not, withShowIf } from "../shared/zod-util";
 
 export const MetaInformationSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
@@ -89,7 +89,11 @@ export const BulletinInformationSchema = z.object({
     .register(widgetRegistry, { widget: "avalancheProblem", public: true, important: true })
     .nullish(),
 
-  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { public: true, important: true }).nullish(),
+  dangerPattern: z
+    .enum(Enums.DangerPattern)
+    .array()
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
 
   bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
@@ -127,9 +131,7 @@ const incidentActivity = enumWithOther(
 );
 export const GroupInformationSchema = z.object({
   anonymousGroupIdentifier: z.string().register(widgetRegistry, { important: true }).nullish(),
-  groupType: enumWithOther(
-    z.enum(["RecreationalFamilyFriends", "Club", "Commercial", "Industrial", "Solo", "Unknown"]),
-  )
+  groupType: enumWithOther(z.enum(["RecreationalFamilyFriends", "Club", "Commercial", "Industrial", "Solo", "Unknown"]))
     .register(widgetRegistry, { important: true })
     .nullish(),
   groupSizeAccuracy: z
@@ -298,8 +300,14 @@ export type VictimInformation = z.infer<typeof VictimInformationSchema>;
 
 const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
 export const AvalancheInformationSchema = z.object({
-  avalancheType: z.enum(Enums.IncidentAvalancheType).register(widgetRegistry, { public: true, important: true }).nullish(),
-  avalancheSize: z.enum(Enums.IncidentAvalancheSize).register(widgetRegistry, { public: true, important: true }).nullish(),
+  avalancheType: z
+    .enum(Enums.IncidentAvalancheType)
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
+  avalancheSize: z
+    .enum(Enums.IncidentAvalancheSize)
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
   avalancheLength: z.number().register(widgetRegistry, { unit: "m", public: true }).nullish(),
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
   startZoneAspect: z
@@ -534,7 +542,10 @@ export const IncidentReportSchema = z.object({
   ...GeneralInformationSchema.shape,
   ...BulletinInformationSchema.shape,
   ...AvalancheInformationSchema.shape,
-  personInvolvement: z.enum(["Yes", "No", "Unknown"]).register(widgetRegistry, { public: true, important: true }).nullish(),
+  personInvolvement: z
+    .enum(["Yes", "No", "Unknown"])
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
   ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array().register(widgetRegistry, { important: true }).nullish(),
   victimInformation: VictimInformationSchema.array().register(widgetRegistry, { important: true }).nullish(),

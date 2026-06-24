@@ -13,7 +13,7 @@ import {
   TileLayer,
 } from "leaflet";
 
-import { IncidentReport } from "./models/incident-report.model";
+import { IncidentReport } from "./incident-report.model";
 
 const defaultMarkerIcon = new Icon({
   iconUrl: "assets/markers/marker-icon-2x-blue.png",

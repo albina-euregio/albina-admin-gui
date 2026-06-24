@@ -11,7 +11,7 @@ import {
   IncidentAttachmentSchema,
   IncidentReport,
   PartialIncidentReportSchema,
-} from "./models/incident-report.model";
+} from "./incident-report.model";
 
 type IncidentView = components["schemas"]["IncidentService.IncidentView"];
 

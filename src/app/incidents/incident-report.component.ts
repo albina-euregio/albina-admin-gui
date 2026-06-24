@@ -42,9 +42,9 @@ import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid, pickPublicFields, safeParseVisibleFields } from "../shared/zod-util";
 import { IncidentReportMapService } from "./incident-report-map.service";
+import * as IncidentModels from "./incident-report.model";
+import { IncidentReport } from "./incident-report.model";
 import { IncidentService } from "./incident.service";
-import * as IncidentModels from "./models/incident-report.model";
-import { IncidentReport } from "./models/incident-report.model";
 
 @Component({
   selector: "app-incident-report",

@@ -8,8 +8,8 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import "bootstrap";
 
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
+import { IncidentReport, IncidentReportSchema } from "./incident-report.model";
 import { IncidentService } from "./incident.service";
-import { IncidentReport, IncidentReportSchema } from "./models/incident-report.model";
 
 type IncidentColumn = keyof IncidentReport;
 
