@@ -100,19 +100,27 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   get displayOnly(): boolean {
     return this.displayMode !== DisplayMode.Edit;
   }
-  readonly allTabs = [
-    { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
-    { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },
-    {
-      id: "avalanche",
-      label: "incidentReport.avalancheInformation",
-      schema: IncidentModels.AvalancheInformationSchema,
-    },
-    { id: "group", label: "incidentReport.personInvolvement" },
-    { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
-    { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
-    { id: "attachments", label: "incidentReport.incidentAttachments" },
-  ] as const;
+  /** Tabs visible to the current user; the analysis tab is forecaster-only. */
+  get allTabs() {
+    return [
+      { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
+      { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },
+      {
+        id: "avalanche",
+        label: "incidentReport.avalancheInformation",
+        schema: IncidentModels.AvalancheInformationSchema,
+      },
+      { id: "group", label: "incidentReport.personInvolvement" },
+      { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
+      // The incident analysis is forecaster-only.
+      ...(this.authenticationService.isCurrentUserInRole("FORECASTER")
+        ? ([
+            { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
+          ] as const)
+        : ([] as const)),
+      { id: "attachments", label: "incidentReport.incidentAttachments" },
+    ] as const;
+  }
 
   private _activeTab: (typeof this.allTabs)[number]["id"] = "general";
   get activeTab(): (typeof this.allTabs)[number]["id"] {
@@ -126,13 +134,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   get prevTab(): (typeof this.allTabs)[number]["id"] {
-    const index = this.allTabs.findIndex((tab) => tab.id === this.activeTab);
-    return this.allTabs[Math.max(index - 1, 0)].id;
+    const tabs = this.allTabs;
+    const index = tabs.findIndex((tab) => tab.id === this.activeTab);
+    return tabs[Math.max(index - 1, 0)].id;
   }
 
   get nextTab(): (typeof this.allTabs)[number]["id"] {
-    const index = this.allTabs.findIndex((tab) => tab.id === this.activeTab);
-    return this.allTabs[Math.min(index + 1, this.allTabs.length - 1)].id;
+    const tabs = this.allTabs;
+    const index = tabs.findIndex((tab) => tab.id === this.activeTab);
+    return tabs[Math.min(index + 1, tabs.length - 1)].id;
   }
 
   getValidationStatus(schema: z.ZodObject): "valid" | "invalid" {
