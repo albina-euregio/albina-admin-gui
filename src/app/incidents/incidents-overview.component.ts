@@ -3,9 +3,10 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
 import { ZodDisplayComponent } from "app/shared/zod-display.component";
+import { zEnumValues } from "app/shared/zod-util";
 import { orderBy } from "es-toolkit";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import "bootstrap";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { IncidentReport, IncidentReportSchema } from "./incident-report.model";
@@ -60,12 +61,7 @@ export class IncidentsOverviewComponent implements OnInit {
     return this.allColumns.filter((col) => this.columnVisibility[col]);
   }
 
-  readonly statusOptions: NonNullable<IncidentReport["reportStatus"]>[] = [
-    "Draft",
-    "Incomplete",
-    "InReview",
-    "Verified",
-  ];
+  readonly statusOptions = zEnumValues(IncidentReportSchema.shape.reportStatus);
 
   ngOnInit() {
     const visibility = this.localStorageService.getIncidentColumnVisibility();
