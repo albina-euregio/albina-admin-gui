@@ -70,14 +70,6 @@ export class IncidentsOverviewComponent implements OnInit {
     "Verified",
   ];
 
-  /** Bootstrap background class for each report status badge. */
-  private readonly statusClasses: Record<NonNullable<IncidentReport["reportStatus"]>, string> = {
-    Draft: "bg-secondary",
-    Incomplete: "bg-warning",
-    InReview: "bg-info",
-    Verified: "bg-success",
-  };
-
   ngOnInit() {
     const visibility = this.localStorageService.getIncidentColumnVisibility();
     this.allColumns.forEach((col) => {
@@ -139,10 +131,6 @@ export class IncidentsOverviewComponent implements OnInit {
         this.loading = false;
       },
     });
-  }
-
-  statusClass(status: IncidentReport["reportStatus"]): string {
-    return status ? this.statusClasses[status] : "bg-secondary";
   }
 
   openIncident(id: string) {

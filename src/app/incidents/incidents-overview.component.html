@@ -70,7 +70,13 @@
           @for (col of columns; track col) {
             <td class="text-center" [attr.data-label]="`incidentReport.${col}` | translate">
               @if (col === "reportStatus" && incident.reportStatus) {
-                <span class="badge {{ statusClass(incident.reportStatus) }}">
+                <span
+                  class="badge"
+                  [class.bg-secondary]="incident.reportStatus === 'Draft'"
+                  [class.bg-warning]="incident.reportStatus === 'Incomplete'"
+                  [class.bg-info]="incident.reportStatus === 'InReview'"
+                  [class.bg-success]="incident.reportStatus === 'Verified'"
+                >
                   {{ "reportStatus." + incident.reportStatus | translate }}
                 </span>
               } @else {
