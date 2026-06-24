@@ -13,7 +13,7 @@ import {
   PartialIncidentReportSchema,
 } from "./incident-report.model";
 
-type IncidentView = components["schemas"]["IncidentService.IncidentView"];
+type IncidentView = components["schemas"]["Incident"];
 
 @Injectable()
 export class IncidentService {

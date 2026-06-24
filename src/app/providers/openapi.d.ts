@@ -1618,39 +1618,80 @@ export interface components {
     /** @enum {string} */
     Frequency: "none" | "few" | "some" | "many";
     GenericObservation: {
+      /** @description Source of this observation */
       $source: string;
+      /** @description External ID of this observation */
       $id: string;
+      /** @description Type of this observation */
       $type: components["schemas"]["GenericObservation.ObservationType"];
-      $externalUrl?: string;
+      /** @description External URL to display as iframe */
+      $externalURL?: string;
+      /** @description Snowpack stability that can be inferred from this observation */
       stability?: string;
+      /** @description Aspects corresponding with this observation */
       aspects?: components["schemas"]["Aspect"][];
+      /** @description Name of the author */
       authorName?: string;
+      /** @description Free-text content */
       content?: string;
+      /** @description Additional data (e.g. original data stored when fetching from external API) */
       $data?: Record<string, never>;
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description Elevation in meters
+       */
       elevation?: number;
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description Lower bound of elevation in meters
+       */
       elevationLowerBound?: number;
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description Upper bound of elevation in meters
+       */
       elevationUpperBound?: number;
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description Date when the event occurred
+       */
       eventDate?: string;
-      /** Format: double */
+      /**
+       * Format: double
+       * @description Location latitude (WGS 84)
+       */
       latitude?: number;
+      /** @description Location name */
       locationName?: string;
-      /** Format: double */
+      /**
+       * Format: double
+       * @description Location longitude (WGS 84)
+       */
       longitude?: number;
-      regionId?: string;
-      /** Format: date-time */
+      /** @description Micro-region code (possibly computed from latitude/longitude) */
+      region?: string;
+      /**
+       * Format: date-time
+       * @description Date when the observation has been reported
+       */
       reportDate?: string;
+      /** @description Avalanche problems corresponding with this observation */
       avalancheProblems?: components["schemas"]["AvalancheProblem_1"][];
+      /** @description Danger patterns corresponding with this observation */
       dangerPatterns?: components["schemas"]["DangerPattern"][];
+      /** @description Important observations */
       importantObservation?: components["schemas"]["GenericObservation.ImportantObservation"][];
+      /** @description Additional information to display as table rows in the observation dialog */
       extraDialogRows?: Record<string, never>;
+      /** @description External image to display. Multiple images are persisted using line separator. */
       $externalImgs?: string;
+      /** @description Person involvement */
       personInvolvement?: components["schemas"]["GenericObservation.PersonInvolvement"];
+      /** @description Observations marked as deleted will no longer be returned in the list */
       $deleted?: boolean;
+      /** @description Allows modifying observations fetched from external sources */
       allowEdit?: boolean;
+      /** @description Danger source UUID */
       dangerSource?: components["schemas"]["DangerSource"] | null;
     };
     /** @enum {string} */
@@ -1729,6 +1770,18 @@ export interface components {
     HandHardness: "fist" | "four_fingers" | "one_finger" | "pencil" | "knife" | "ice";
     /** @enum {string} */
     HazardSiteDistribution: "single" | "some" | "many" | "many_most" | "moderately_steep";
+    Incident: components["schemas"]["AbstractPersistentObject"] & {
+      id?: string | null;
+      dateTime?: string;
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+      data?: Record<string, never>;
+      /** Format: date-time */
+      publishedAt?: string;
+      publicData?: Record<string, never>;
+    };
     IncidentAttachment: {
       /** Format: uuid */
       id: string;
@@ -1744,19 +1797,6 @@ export interface components {
       public: boolean;
       attachmentCategory: string;
       attachmentTags: string[];
-    };
-    "IncidentService.IncidentView": {
-      id: string;
-      regionId: string;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      /** Embedded incident-report JSON; the server stores and returns it as an object, not a quoted string. */
-      data: import("../incidents/incident-report.model").PartialIncidentReport;
-      /** Format: date-time */
-      publishedAt?: string | null;
-      publicData?: Record<string, never>[] | null;
     };
     /**
      * @description The enum contains the ISO 639-1 codes for available languages.
@@ -2236,10 +2276,10 @@ export interface operations {
       query: {
         regions: string[];
         region: string;
-        lang: components["schemas"]["LanguageCode"];
-        version?: components["schemas"]["CaamlVersion"];
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
         date: string;
+        lang: components["schemas"]["LanguageCode"];
+        version?: components["schemas"]["CaamlVersion"];
       };
       header?: never;
       path?: never;
@@ -3232,7 +3272,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["IncidentService.IncidentView"][];
+          "application/json": components["schemas"]["Incident"][];
         };
       };
     };
@@ -3258,7 +3298,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["IncidentService.IncidentView"];
+          "application/json": components["schemas"]["Incident"];
         };
       };
     };
@@ -3280,7 +3320,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["IncidentService.IncidentView"];
+          "application/json": components["schemas"]["Incident"];
         };
       };
     };
@@ -3306,7 +3346,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["IncidentService.IncidentView"];
+          "application/json": components["schemas"]["Incident"];
         };
       };
     };
@@ -3425,7 +3465,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["IncidentService.IncidentView"];
+          "application/json": components["schemas"]["Incident"];
         };
       };
     };
@@ -3612,7 +3652,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/x-yaml": string;
+          "application/yaml": string;
         };
       };
     };
