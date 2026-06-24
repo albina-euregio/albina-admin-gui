@@ -46,13 +46,39 @@ echarts.use([
   TransformComponent,
 ]);
 
-registerLocaleData(localeDe, "de");
-registerLocaleData(localeIt, "it");
-registerLocaleData(localeEn, "en");
-registerLocaleData(localeFr, "fr");
-registerLocaleData(localeEs, "es");
-registerLocaleData(localeCa, "ca");
-registerLocaleData(localeOc, "oc");
+for (const [id, data] of Object.entries({
+  de: localeDe,
+  it: localeIt,
+  en: localeEn,
+  fr: localeFr,
+  es: localeEs,
+  ca: localeCa,
+  oc: localeOc,
+})) {
+  /**
+   * Strip seconds from all of the locale's time formats (e.g. "HH:mm:ss" -> "HH:mm"),
+   * which is what the "full"/"long"/"medium"/"short" Time DatePipe formats render.
+   * Index 11 is the TimeFormat array [full, long, medium, short] in Angular's locale
+   * data. Idempotent, so locales sharing the same array object (en/oc) are safe to
+   * process twice.
+   */
+  const timeFormats = data[11] as string[];
+  timeFormats.forEach((format, i) => {
+    timeFormats[i] = format.replace(/[.:\s]*ss/, "");
+  });
+
+  /**
+   * Drop the comma separating date and time in the combined date-time formats
+   * (e.g. "{1}, {0}" -> "{1} {0}"), which is what the "medium"/"short" etc. DatePipe
+   * formats use to join the two. Index 12 is the DateTimeFormat array [full, long,
+   * medium, short]; entries may be null, in which case there is nothing to strip.
+   */
+  const dateTimeFormats = data[12] as (string | null)[];
+  dateTimeFormats.forEach((format, i) => {
+    if (format) dateTimeFormats[i] = format.replace(",", "");
+  });
+  registerLocaleData(data, id);
+}
 
 loadTemporalPolyfill().then(() => bootstrapApplication0());
 
