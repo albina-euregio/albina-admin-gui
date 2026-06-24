@@ -1,11 +1,11 @@
 @let type = inner().type;
 @if (type === "number") {
-  <span class="form-control-plaintext ps-0">{{ value() ?? "—" }}</span>
+  <span [class]="cssClass()">{{ value() ?? "—" }}</span>
 } @else if (type === "enum") {
   @if (value()) {
-    <span class="form-control-plaintext ps-0">{{ valueI18n().replace("#", $any(value())) | translate }}</span>
+    <span [class]="cssClass()">{{ valueI18n().replace("#", $any(value())) | translate }}</span>
   } @else {
-    <span class="form-control-plaintext text-muted ps-0">—</span>
+    <span [class]="cssClass()" class="text-muted">—</span>
   }
 } @else if (type === "array") {
   @let arr = castArray(value());
@@ -16,18 +16,18 @@
       }
     </div>
   } @else {
-    <span class="form-control-plaintext text-muted ps-0">—</span>
+    <span [class]="cssClass()" class="text-muted">—</span>
   }
 } @else if (type === "date") {
-  <span class="form-control-plaintext ps-0">
+  <span [class]="cssClass()">
     {{ castDate(value()) | date: dateFormat() : undefined : translateService.getCurrentLang() }}
   </span>
 } @else if (type === "string") {
-  <span class="form-control-plaintext ps-0">{{ value() || "—" }}</span>
+  <span [class]="cssClass()">{{ value() || "—" }}</span>
 } @else if (type === "boolean") {
-  <span class="form-control-plaintext ps-0">
+  <span [class]="cssClass()">
     <i class="ph" [class.ph-check-circle]="value()" [class.ph-minus-circle]="!value()"></i>
   </span>
 } @else {
-  <span class="form-control-plaintext text-muted ps-0">{{ value() ?? "—" }}</span>
+  <span [class]="cssClass()" class="text-muted">{{ value() ?? "—" }}</span>
 }
