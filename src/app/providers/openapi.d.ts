@@ -3215,6 +3215,10 @@ export interface operations {
     parameters: {
       query: {
         region: string;
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        startDate: string;
+        /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
+        endDate: string;
       };
       header?: never;
       path?: never;

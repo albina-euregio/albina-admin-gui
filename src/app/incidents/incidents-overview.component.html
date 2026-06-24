@@ -5,7 +5,8 @@
       <input
         type="text"
         class="form-control"
-        [(ngModel)]="filterDateRange"
+        [ngModel]="dateRange()"
+        (ngModelChange)="dateRange.set($event)"
         bsDaterangepicker
         [placeholder]="'incidentReport.dateTime' | translate"
       />

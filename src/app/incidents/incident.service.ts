@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { map, Observable } from "rxjs";
 
@@ -22,8 +22,16 @@ export class IncidentService {
   private authenticationService = inject(AuthenticationService);
 
   /**
-   * A region-scoped resource of all incidents for the active region, reloading
-   * automatically whenever the active region changes (idle when none is selected).
+   * Date range filter for the overview, as a `[start, end]` tuple bound to the
+   * date picker. Defaults to the current season. Mutating it reloads
+   * {@link incidentsForActiveRegion}.
+   */
+  readonly dateRange = signal<Date[]>([new Date(2025, 9, 1), new Date(2026, 9, 1)]); // 2025-10-01 – 2026-10-01
+
+  /**
+   * A region-scoped resource of incidents for the active region, reloading
+   * automatically whenever the active region or {@link dateRange} changes
+   * (idle when no region is selected).
    *
    * Call from an injection context (e.g. a component field initializer); the
    * returned resource is tied to that context's lifecycle.
@@ -31,8 +39,13 @@ export class IncidentService {
   incidentsForActiveRegion() {
     const activeRegionId = toSignal(this.authenticationService.activeRegion$.pipe(map((r) => r?.id)));
     return rxResource({
-      params: () => activeRegionId(),
-      stream: ({ params: region }) => this.getIncidents(region),
+      params: () => {
+        const region = activeRegionId();
+        if (!region) return undefined;
+        const [startDate, endDate] = this.dateRange();
+        return { region, startDate, endDate };
+      },
+      stream: ({ params: { region, startDate, endDate } }) => this.getIncidents(region, startDate, endDate),
       defaultValue: [] as IncidentReport[],
     });
   }
@@ -41,9 +54,19 @@ export class IncidentService {
     return PartialIncidentReportSchema.parse({ ...i, ...i.data }) as IncidentReport;
   }
 
-  /** List all incidents stored for a region. Incidents that fail to parse are skipped. */
-  getIncidents(region: string): Observable<IncidentReport[]> {
-    const url = this.constantsService.getServerUrlGET("/incidents", { region });
+  /**
+   * List all incidents stored for a region within a date range. `endDate` is
+   * widened to the end of its day so the whole day is included. Incidents that
+   * fail to parse are skipped.
+   */
+  getIncidents(region: string, startDate: Date, endDate: Date): Observable<IncidentReport[]> {
+    const url = this.constantsService.getServerUrlGET("/incidents", {
+      region,
+      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
+      endDate: this.constantsService.getISOStringWithTimezoneOffset(
+        new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
+      ),
+    });
     return this.http.get<IncidentView[]>(url).pipe(
       map((is) =>
         is.flatMap((i) => {

@@ -23,15 +23,17 @@ type IncidentColumn = keyof IncidentReport;
 })
 export class IncidentsOverviewComponent implements OnInit {
   private incidentService = inject(IncidentService);
-  readonly incidentsResource = this.incidentService.incidentsForActiveRegion();
   private router = inject(Router);
   private localStorageService = inject(LocalStorageService);
   translateService = inject(TranslateService);
 
+  // Server-side date filter, owned by the service; reloads the resource on change.
+  readonly dateRange = this.incidentService.dateRange;
+  readonly incidentsResource = this.incidentService.incidentsForActiveRegion();
+
   sortField: IncidentColumn = "updatedAt";
   sortDir: "asc" | "desc" = "desc";
   filterStatus: IncidentReport["reportStatus"] | "" = "";
-  filterDateRange: Date[] = [];
 
   readonly IncidentReportSchema = IncidentReportSchema;
 
@@ -78,17 +80,10 @@ export class IncidentsOverviewComponent implements OnInit {
   }
 
   get displayedIncidents(): IncidentReport[] {
-    const [rangeStart, rangeEnd] = this.filterDateRange ?? [];
-    const endOfDay = rangeEnd
-      ? new Date(rangeEnd.getFullYear(), rangeEnd.getMonth(), rangeEnd.getDate(), 23, 59, 59, 999)
-      : undefined;
+    // The date range is applied server-side; only status is filtered client-side.
     const filtered = this.incidentsResource
       .value()
-      .filter((r) => !this.filterStatus || r.reportStatus === this.filterStatus)
-      .filter((r) => {
-        if (!rangeStart || !endOfDay) return true;
-        return !!r.dateTime && r.dateTime >= rangeStart && r.dateTime <= endOfDay;
-      });
+      .filter((r) => !this.filterStatus || r.reportStatus === this.filterStatus);
     return orderBy(filtered, [this.sortField], [this.sortDir]);
   }
 
