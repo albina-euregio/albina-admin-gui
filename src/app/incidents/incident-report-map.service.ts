@@ -111,6 +111,9 @@ export class IncidentReportMapService implements OnDestroy {
     const mode = this.activeDrawingMode;
 
     if (mode === "Point") {
+      // Once a point exists, a click must not relocate it (avoids accidental
+      // moves); it can only be repositioned by dragging the marker.
+      if (report.latitude != null && report.longitude != null) return;
       report.latitude = Number(lat.toFixed(6));
       report.longitude = Number(lng.toFixed(6));
       config.onPointChange?.(report.latitude, report.longitude);
@@ -124,6 +127,18 @@ export class IncidentReportMapService implements OnDestroy {
       report.polygonCoordinatesText = points.map((p) => `${p[0].toFixed(6)}, ${p[1].toFixed(6)}`).join("\n");
     }
 
+    config.incidentReport.set({ ...report });
+    this.drawOnMap();
+  }
+
+  /** Repositions the existing point (e.g. after dragging the marker). */
+  movePoint(lat: number, lng: number) {
+    const config = this.config;
+    if (!config) return;
+    const report = config.incidentReport();
+    report.latitude = Number(lat.toFixed(6));
+    report.longitude = Number(lng.toFixed(6));
+    config.onPointChange?.(report.latitude, report.longitude);
     config.incidentReport.set({ ...report });
     this.drawOnMap();
   }
@@ -167,7 +182,14 @@ export class IncidentReportMapService implements OnDestroy {
       const lat = Number(report.latitude);
       const lng = Number(report.longitude);
       if (!isNaN(lat) && !isNaN(lng)) {
-        const marker = new Marker([lat, lng], { icon: defaultMarkerIcon });
+        const draggable = !this.config?.disabled();
+        const marker = new Marker([lat, lng], { icon: defaultMarkerIcon, draggable });
+        if (draggable) {
+          marker.on("dragend", () => {
+            const { lat: newLat, lng: newLng } = marker.getLatLng();
+            this.movePoint(newLat, newLng);
+          });
+        }
         layers.push(marker);
         allPoints.push([lat, lng]);
       }

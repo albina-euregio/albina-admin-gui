@@ -1679,7 +1679,7 @@
     "drawLine": "Draw Line",
     "drawLineInstructions": "Click on the map to add points to the line.",
     "drawPoint": "Draw Point",
-    "drawPointInstructions": "Click anywhere on the map to place the location marker.",
+    "drawPointInstructions": "Click anywhere on the map to place the location marker, then drag it to reposition.",
     "drawPolygon": "Draw Polygon",
     "drawPolygonInstructions": "Click on the map to define the corners/vertices of the polygon.",
     "dropAttachment": "Drop attachment {{fileName}}?",
