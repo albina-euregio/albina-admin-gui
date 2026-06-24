@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ZodDisplayComponent } from "app/shared/zod-display.component";
 import { orderBy } from "es-toolkit";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
@@ -25,7 +25,6 @@ export class IncidentsOverviewComponent implements OnInit {
   private incidentService = inject(IncidentService);
   private router = inject(Router);
   private localStorageService = inject(LocalStorageService);
-  translateService = inject(TranslateService);
 
   // Server-side date filter, owned by the service; reloads the resource on change.
   readonly dateRange = this.incidentService.dateRange;
@@ -107,14 +106,5 @@ export class IncidentsOverviewComponent implements OnInit {
 
   newIncident() {
     this.router.navigate(["/incidents", "new"]);
-  }
-
-  deleteIncident(incident: IncidentReport) {
-    const message = this.translateService.instant("incidentsOverview.deleteConfirm");
-    if (!confirm(message)) return;
-    this.incidentService.deleteIncident(incident.id).subscribe({
-      next: () => this.incidentsResource.reload(),
-      error: (error) => console.error("Incident could not be deleted!", error),
-    });
   }
 }

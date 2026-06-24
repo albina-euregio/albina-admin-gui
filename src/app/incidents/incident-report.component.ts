@@ -13,7 +13,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { uniq } from "es-toolkit";
@@ -72,6 +72,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private geocodingService = inject(GeocodingService);
   readonly mapService = inject(IncidentReportMapService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
@@ -540,6 +541,21 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
     attachments.splice(index, 1);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
+  }
+
+  /** True once the incident has been persisted on the server and can be deleted. */
+  get isPersisted(): boolean {
+    return !!this.incidentId;
+  }
+
+  deleteIncident() {
+    if (!this.incidentId) return;
+    const message = this.translateService.instant("incidentReportUI.deleteIncidentConfirm");
+    if (!confirm(message)) return;
+    this.incidentService.deleteIncident(this.incidentId).subscribe({
+      next: () => this.router.navigate(["/incidents"]),
+      error: (error) => console.error("Incident could not be deleted!", error),
+    });
   }
 
   async publishUpdateIncident() {

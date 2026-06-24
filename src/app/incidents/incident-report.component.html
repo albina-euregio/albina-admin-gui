@@ -78,6 +78,17 @@
         >
           {{ "incidentReportUI.publishUpdateIncident" | translate }}
         </button>
+        @if (isPersisted) {
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger btn-icon d-print-none"
+            [disabled]="disabled()"
+            (click)="deleteIncident()"
+            title="{{ 'incidentReportUI.deleteIncident' | translate }}"
+          >
+            <i class="ph ph-trash"></i>
+          </button>
+        }
       </div>
     </div>
   </div>
