@@ -1660,6 +1660,9 @@
     },
     "deleteConfirm": "Do you want to delete this incident?",
     "empty": "No incidents for this region.",
+    "loading": "Loading incidents…",
+    "error": "Incidents could not be loaded.",
+    "retry": "Retry",
     "filter": {
       "anyStatus": "Any status"
     }

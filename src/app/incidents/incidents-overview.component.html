@@ -111,7 +111,28 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="999" class="text-muted">{{ "incidentsOverview.empty" | translate }}</td>
+            <td colspan="999" class="text-muted">
+              @if (incidentsResource.isLoading()) {
+                <span class="d-flex align-items-center">
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ "incidentsOverview.loading" | translate }}
+                </span>
+              } @else if (incidentsResource.error()) {
+                <span class="d-flex align-items-center text-danger">
+                  <i class="ph ph-warning-circle me-2"></i>
+                  {{ "incidentsOverview.error" | translate }}
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-secondary ms-2"
+                    (click)="incidentsResource.reload()"
+                  >
+                    {{ "incidentsOverview.retry" | translate }}
+                  </button>
+                </span>
+              } @else {
+                {{ "incidentsOverview.empty" | translate }}
+              }
+            </td>
           </tr>
         }
       </tbody>
