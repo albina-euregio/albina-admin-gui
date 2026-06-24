@@ -1,7 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { map, Observable } from "rxjs";
 
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import type { components } from "../providers/openapi";
 import {
@@ -17,6 +19,23 @@ type IncidentView = components["schemas"]["IncidentService.IncidentView"];
 export class IncidentService {
   private http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
+  private authenticationService = inject(AuthenticationService);
+
+  /**
+   * A region-scoped resource of all incidents for the active region, reloading
+   * automatically whenever the active region changes (idle when none is selected).
+   *
+   * Call from an injection context (e.g. a component field initializer); the
+   * returned resource is tied to that context's lifecycle.
+   */
+  incidentsForActiveRegion() {
+    const activeRegionId = toSignal(this.authenticationService.activeRegion$.pipe(map((r) => r?.id)));
+    return rxResource({
+      params: () => activeRegionId(),
+      stream: ({ params: region }) => this.getIncidents(region),
+      defaultValue: [] as IncidentReport[],
+    });
+  }
 
   private toIncidentReport(i: IncidentView): IncidentReport {
     return PartialIncidentReportSchema.parse({ ...i, ...i.data }) as IncidentReport;
