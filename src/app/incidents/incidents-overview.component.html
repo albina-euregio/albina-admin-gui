@@ -67,7 +67,12 @@
           @for (col of columns; track col) {
             <th role="button" (click)="sortBy(col)">
               {{ `incidentReport.${col}` | translate }}
-              <i class="ph {{ sortIcon(col) }}"></i>
+              <i
+                class="ph"
+                [class.ph-arrows-down-up]="sortField !== col"
+                [class.ph-arrow-up]="sortField === col && sortDir === 'asc'"
+                [class.ph-arrow-down]="sortField === col && sortDir === 'desc'"
+              ></i>
             </th>
           }
           <th></th>

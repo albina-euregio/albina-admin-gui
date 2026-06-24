@@ -97,11 +97,6 @@ export class IncidentsOverviewComponent implements OnInit {
     }
   }
 
-  sortIcon(field: IncidentColumn): string {
-    if (this.sortField !== field) return "ph-arrows-down-up";
-    return this.sortDir === "asc" ? "ph-arrow-up" : "ph-arrow-down";
-  }
-
   downloadGeoJSON() {
     const featureCollection: GeoJSON.FeatureCollection = {
       type: "FeatureCollection",
