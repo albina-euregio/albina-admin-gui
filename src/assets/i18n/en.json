@@ -1698,6 +1698,7 @@
     "polygon": "Polygon",
     "publishIncident": "Publish",
     "publishIncidentConfirm": "Do you want to publish this incident?",
+    "publishIncidentSuccess": "The incident report has been published successfully.",
     "republishIncident": "Republish",
     "republishIncidentConfirm": "Do you want to republish this incident?",
     "removeAttachment": "Remove Attachment",

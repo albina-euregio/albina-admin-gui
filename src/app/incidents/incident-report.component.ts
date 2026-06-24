@@ -565,7 +565,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const data = this.serializeReport(publicReport);
     const report = await this.incidentService.publishIncident(this.incidentId, data).toPromise();
     this.incidentReport.set(report);
-    alert("Yay");
+    alert(this.translateService.instant("incidentReportUI.publishIncidentSuccess"));
   }
 
   attachments: Record<IncidentModels.IncidentAttachment["id"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};
