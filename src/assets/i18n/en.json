@@ -1731,6 +1731,7 @@
     "authorAffiliation": "Author Affiliation",
     "dateTime": "Date/Time",
     "updatedAt": "Last updated",
+    "publishedAt": "Published at",
     "timeAccuracy": "Time Accuracy ",
     "sourceOfInformation": "Source of Information",
     "personInvolvement": "Person Involvement",

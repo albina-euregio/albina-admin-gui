@@ -46,12 +46,14 @@ export class IncidentsOverviewComponent implements OnInit {
     "avalancheRegion",
     "avalancheSize",
     "avalancheType",
+    "publishedAt",
   ];
   readonly columnVisibility: Partial<Record<IncidentColumn, boolean>> = {
     dateTime: true,
     location: true,
     updatedAt: true,
     reportStatus: true,
+    publishedAt: true,
   };
 
   get columns(): IncidentColumn[] {
