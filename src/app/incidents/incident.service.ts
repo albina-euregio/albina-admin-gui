@@ -1,7 +1,9 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
+import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { map, Observable } from "rxjs";
 
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import type { components } from "../providers/openapi";
 import {
@@ -9,22 +11,62 @@ import {
   IncidentAttachmentSchema,
   IncidentReport,
   PartialIncidentReportSchema,
-} from "./models/incident-report.model";
+} from "./incident-report.model";
 
-type IncidentView = components["schemas"]["IncidentService.IncidentView"];
+type IncidentView = components["schemas"]["Incident"];
 
 @Injectable()
 export class IncidentService {
   private http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
+  private authenticationService = inject(AuthenticationService);
+
+  /**
+   * Date range filter for the overview, as a `[start, end]` tuple bound to the
+   * date picker. Defaults to the current season. Mutating it reloads
+   * {@link incidentsForActiveRegion}.
+   */
+  readonly dateRange = signal<Date[]>([new Date(2025, 9, 1), new Date(2026, 9, 1)]); // 2025-10-01 – 2026-10-01
+
+  /**
+   * A region-scoped resource of incidents for the active region, reloading
+   * automatically whenever the active region or {@link dateRange} changes
+   * (idle when no region is selected).
+   *
+   * Call from an injection context (e.g. a component field initializer); the
+   * returned resource is tied to that context's lifecycle.
+   */
+  incidentsForActiveRegion() {
+    const activeRegionId = toSignal(this.authenticationService.activeRegion$.pipe(map((r) => r?.id)));
+    return rxResource({
+      params: () => {
+        const region = activeRegionId();
+        if (!region) return undefined;
+        const [startDate, endDate] = this.dateRange();
+        return { region, startDate, endDate };
+      },
+      stream: ({ params: { region, startDate, endDate } }) => this.getIncidents(region, startDate, endDate),
+      defaultValue: [] as IncidentReport[],
+    });
+  }
 
   private toIncidentReport(i: IncidentView): IncidentReport {
     return PartialIncidentReportSchema.parse({ ...i, ...i.data }) as IncidentReport;
   }
 
-  /** List all incidents stored for a region. Incidents that fail to parse are skipped. */
-  getIncidents(region: string): Observable<IncidentReport[]> {
-    const url = this.constantsService.getServerUrlGET("/incidents", { region });
+  /**
+   * List all incidents stored for a region within a date range. `endDate` is
+   * widened to the end of its day so the whole day is included. Incidents that
+   * fail to parse are skipped.
+   */
+  getIncidents(region: string, startDate: Date, endDate: Date): Observable<IncidentReport[]> {
+    const url = this.constantsService.getServerUrlGET("/incidents", {
+      region,
+      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
+      endDate: this.constantsService.getISOStringWithTimezoneOffset(
+        new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
+      ),
+    });
     return this.http.get<IncidentView[]>(url).pipe(
       map((is) =>
         is.flatMap((i) => {
@@ -58,6 +100,12 @@ export class IncidentService {
   publishIncident(id: string, data: string): Observable<IncidentReport> {
     const url = this.constantsService.getServerUrlPOST("/incidents/{id}/publish", null as never, { id });
     return this.http.post<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
+  }
+
+  /** Unpublish an existing incident's report data. */
+  unpublishIncident(id: string): Observable<void> {
+    const url = this.constantsService.getServerUrlDELETE("/incidents/{id}/publish", null as never, { id });
+    return this.http.delete<void>(url);
   }
 
   /** Update an existing incident's report data. */

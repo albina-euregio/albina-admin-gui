@@ -19,6 +19,8 @@ export class ZodDisplayComponent<T> {
   readonly value = input<T>();
   readonly valueI18n = input<string>("#");
   readonly dateFormat = input<string>("full");
+  // eslint-disable-next-line @angular-eslint/no-input-rename -- deliberately aliased to `class` so callers can override the wrapper styling
+  readonly cssClass = input<string>("form-control-plaintext ps-0", { alias: "class" });
 
   readonly inner = computed(() => zodUtil.unwrap(this.zodType()));
 

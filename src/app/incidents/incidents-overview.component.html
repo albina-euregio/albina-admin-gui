@@ -1,11 +1,12 @@
-<div class="bulletins animated fadeIn container">
+<div class="container-fluid mt-4">
   <div class="d-flex gap-2 align-items-center mb-3 flex-wrap">
     <div class="input-group input-group-sm flex-nowrap" style="width: auto; min-width: 220px">
       <span class="input-group-text"><i class="ph ph-calendar-blank"></i></span>
       <input
         type="text"
         class="form-control"
-        [(ngModel)]="filterDateRange"
+        [ngModel]="dateRange()"
+        (ngModelChange)="dateRange.set($event)"
         bsDaterangepicker
         [placeholder]="'incidentReport.dateTime' | translate"
       />
@@ -47,65 +48,99 @@
         }
       </div>
     </div>
-    <button (click)="newIncident()" class="btn btn-sm btn-primary px-3 ms-auto">
+    <button
+      (click)="downloadGeoJSON()"
+      [disabled]="!displayedIncidents.length"
+      class="btn btn-sm btn-outline-secondary ms-auto"
+    >
+      <i class="ph ph-download-simple"></i> {{ "incidentsOverview.button.download" | translate }}
+    </button>
+    <button (click)="newIncident()" class="btn btn-sm btn-primary px-3">
       <i class="ph ph-plus"></i> {{ "incidentsOverview.button.new" | translate }}
     </button>
   </div>
 
-  <table class="table table-bordered table-hover responsive-table">
-    <thead class="bulletins-table__header">
-      <tr>
-        @for (col of columns; track col) {
-          <th role="button" (click)="sortBy(col)">
-            {{ `incidentReport.${col}` | translate }}
-            <i class="ph {{ sortIcon(col) }}"></i>
-          </th>
-        }
-        <th></th>
-      </tr>
-    </thead>
-    <tbody class="bulletins-table__body">
-      @for (incident of displayedIncidents; track incident.id) {
-        <tr class="align-middle">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap">
+      <thead class="bulletins-table__header">
+        <tr>
           @for (col of columns; track col) {
-            <td class="text-center" [attr.data-label]="`incidentReport.${col}` | translate">
-              @if (col === "reportStatus" && incident.reportStatus) {
-                <span class="badge {{ statusClass(incident.reportStatus) }}">
-                  {{ "reportStatus." + incident.reportStatus | translate }}
+            <th role="button" (click)="sortBy(col)">
+              {{ `incidentReport.${col}` | translate }}
+              <i
+                class="ph"
+                [class.ph-arrows-down-up]="sortField !== col"
+                [class.ph-arrow-up]="sortField === col && sortDir === 'asc'"
+                [class.ph-arrow-down]="sortField === col && sortDir === 'desc'"
+              ></i>
+            </th>
+          }
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="bulletins-table__body">
+        @for (incident of displayedIncidents; track incident.id) {
+          <tr class="align-middle">
+            @for (col of columns; track col) {
+              <td style="max-width: 16em" [attr.data-label]="`incidentReport.${col}` | translate">
+                @if (col === "reportStatus" && incident.reportStatus) {
+                  <span
+                    class="badge"
+                    [class.bg-secondary]="incident.reportStatus === 'Draft'"
+                    [class.bg-warning]="incident.reportStatus === 'Incomplete'"
+                    [class.bg-info]="incident.reportStatus === 'InReview'"
+                    [class.bg-success]="incident.reportStatus === 'Verified'"
+                  >
+                    {{ "reportStatus." + incident.reportStatus | translate }}
+                  </span>
+                } @else {
+                  <app-zod-display
+                    [zodType]="IncidentReportSchema.shape[col]"
+                    [value]="incident[col]"
+                    dateFormat="medium"
+                    class="d-block text-truncate"
+                  />
+                }
+              </td>
+            }
+            <td>
+              <button
+                type="button"
+                class="btn btn-secondary btn-icon"
+                (click)="openIncident(incident.id)"
+                title="{{ 'incidentsOverview.tooltip.edit' | translate }}"
+              >
+                <i class="ph ph-pencil-line"></i>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="999" class="text-muted">
+              @if (incidentsResource.isLoading()) {
+                <span class="d-flex align-items-center">
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ "incidentsOverview.loading" | translate }}
+                </span>
+              } @else if (incidentsResource.error()) {
+                <span class="d-flex align-items-center text-danger">
+                  <i class="ph ph-warning-circle me-2"></i>
+                  {{ "incidentsOverview.error" | translate }}
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-secondary ms-2"
+                    (click)="incidentsResource.reload()"
+                  >
+                    {{ "incidentsOverview.retry" | translate }}
+                  </button>
                 </span>
               } @else {
-                <app-zod-display
-                  [zodType]="IncidentReportSchema.shape[col]"
-                  [value]="incident[col]"
-                  dateFormat="medium"
-                />
+                {{ "incidentsOverview.empty" | translate }}
               }
             </td>
-          }
-          <td class="text-center">
-            <button
-              type="button"
-              class="btn btn-secondary btn-icon"
-              (click)="openIncident(incident.id)"
-              title="{{ 'incidentsOverview.tooltip.edit' | translate }}"
-            >
-              <i class="ph ph-pencil-line"></i>
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary btn-icon ms-1"
-              (click)="deleteIncident(incident)"
-              title="{{ 'incidentsOverview.tooltip.delete' | translate }}"
-            >
-              <i class="ph ph-trash"></i>
-            </button>
-          </td>
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="999" class="text-center text-muted">{{ "incidentsOverview.empty" | translate }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>

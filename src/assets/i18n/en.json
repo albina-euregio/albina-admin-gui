@@ -1652,14 +1652,16 @@
   "incidentsOverview": {
     "button": {
       "new": "New incident",
-      "columns": "Columns"
+      "columns": "Columns",
+      "download": "Download GeoJSON"
     },
     "tooltip": {
-      "edit": "Edit incident",
-      "delete": "Delete incident"
+      "edit": "Edit incident"
     },
-    "deleteConfirm": "Do you want to delete this incident?",
     "empty": "No incidents for this region.",
+    "loading": "Loading incidents…",
+    "error": "Incidents could not be loaded.",
+    "retry": "Retry",
     "filter": {
       "anyStatus": "Any status"
     }
@@ -1673,10 +1675,12 @@
     "clearPoint": "Clear Point",
     "clearPolygon": "Clear Polygon",
     "controls": "Controls",
+    "deleteIncident": "Delete incident",
+    "deleteIncidentConfirm": "Do you want to delete this incident?",
     "drawLine": "Draw Line",
     "drawLineInstructions": "Click on the map to add points to the line.",
     "drawPoint": "Draw Point",
-    "drawPointInstructions": "Click anywhere on the map to place the location marker.",
+    "drawPointInstructions": "Click anywhere on the map to place the location marker, then drag it to reposition.",
     "drawPolygon": "Draw Polygon",
     "drawPolygonInstructions": "Click on the map to define the corners/vertices of the polygon.",
     "dropAttachment": "Drop attachment {{fileName}}?",
@@ -1693,7 +1697,14 @@
     "noVictims": "No persons registered. Click \"Add Person\" to add a person.",
     "point": "Point",
     "polygon": "Polygon",
-    "publishUpdateIncident": "publish/update incident",
+    "publishIncident": "Publish",
+    "publishIncidentConfirm": "Do you want to publish this incident?",
+    "publishIncidentSuccess": "The incident report has been published successfully.",
+    "republishIncident": "Republish",
+    "republishIncidentConfirm": "Do you want to republish this incident?",
+    "unpublishIncident": "Unpublish",
+    "unpublishIncidentConfirm": "Do you want to unpublish this incident?",
+    "unpublishIncidentSuccess": "The incident report has been unpublished successfully.",
     "removeAttachment": "Remove Attachment",
     "removeGroup": "Remove Group",
     "removeVictim": "Remove Person",
@@ -1728,6 +1739,7 @@
     "authorAffiliation": "Author Affiliation",
     "dateTime": "Date/Time",
     "updatedAt": "Last updated",
+    "publishedAt": "Published at",
     "timeAccuracy": "Time Accuracy ",
     "sourceOfInformation": "Source of Information",
     "personInvolvement": "Person Involvement",

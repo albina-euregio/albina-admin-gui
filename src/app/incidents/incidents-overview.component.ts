@@ -1,17 +1,16 @@
-import { Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Component, inject, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ZodDisplayComponent } from "app/shared/zod-display.component";
+import { zEnumValues } from "app/shared/zod-util";
 import { orderBy } from "es-toolkit";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import "bootstrap";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
+import { IncidentReport, IncidentReportSchema } from "./incident-report.model";
 import { IncidentService } from "./incident.service";
-import { IncidentReport, IncidentReportSchema } from "./models/incident-report.model";
 
 type IncidentColumn = keyof IncidentReport;
 
@@ -25,19 +24,16 @@ type IncidentColumn = keyof IncidentReport;
 })
 export class IncidentsOverviewComponent implements OnInit {
   private incidentService = inject(IncidentService);
-  private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
-  private destroyRef = inject(DestroyRef);
   private localStorageService = inject(LocalStorageService);
-  translateService = inject(TranslateService);
 
-  incidents: IncidentReport[] = [];
-  loading = false;
+  // Server-side date filter, owned by the service; reloads the resource on change.
+  readonly dateRange = this.incidentService.dateRange;
+  readonly incidentsResource = this.incidentService.incidentsForActiveRegion();
 
   sortField: IncidentColumn = "updatedAt";
   sortDir: "asc" | "desc" = "desc";
   filterStatus: IncidentReport["reportStatus"] | "" = "";
-  filterDateRange: Date[] = [];
 
   readonly IncidentReportSchema = IncidentReportSchema;
 
@@ -51,32 +47,21 @@ export class IncidentsOverviewComponent implements OnInit {
     "avalancheRegion",
     "avalancheSize",
     "avalancheType",
+    "publishedAt",
   ];
   readonly columnVisibility: Partial<Record<IncidentColumn, boolean>> = {
     dateTime: true,
     location: true,
     updatedAt: true,
     reportStatus: true,
+    publishedAt: true,
   };
 
   get columns(): IncidentColumn[] {
     return this.allColumns.filter((col) => this.columnVisibility[col]);
   }
 
-  readonly statusOptions: NonNullable<IncidentReport["reportStatus"]>[] = [
-    "Draft",
-    "Incomplete",
-    "InReview",
-    "Verified",
-  ];
-
-  /** Bootstrap background class for each report status badge. */
-  private readonly statusClasses: Record<NonNullable<IncidentReport["reportStatus"]>, string> = {
-    Draft: "bg-secondary",
-    Incomplete: "bg-warning",
-    InReview: "bg-info",
-    Verified: "bg-success",
-  };
+  readonly statusOptions = zEnumValues(IncidentReportSchema.shape.reportStatus);
 
   ngOnInit() {
     const visibility = this.localStorageService.getIncidentColumnVisibility();
@@ -85,8 +70,6 @@ export class IncidentsOverviewComponent implements OnInit {
         this.columnVisibility[col] = visibility[col];
       }
     });
-    // The overview is region-scoped: reload whenever the active region changes.
-    this.authenticationService.activeRegion$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.load());
   }
 
   saveColumnVisibility() {
@@ -94,16 +77,10 @@ export class IncidentsOverviewComponent implements OnInit {
   }
 
   get displayedIncidents(): IncidentReport[] {
-    const [rangeStart, rangeEnd] = this.filterDateRange ?? [];
-    const endOfDay = rangeEnd
-      ? new Date(rangeEnd.getFullYear(), rangeEnd.getMonth(), rangeEnd.getDate(), 23, 59, 59, 999)
-      : undefined;
-    const filtered = this.incidents
-      .filter((r) => !this.filterStatus || r.reportStatus === this.filterStatus)
-      .filter((r) => {
-        if (!rangeStart || !endOfDay) return true;
-        return !!r.dateTime && r.dateTime >= rangeStart && r.dateTime <= endOfDay;
-      });
+    // The date range is applied server-side; only status is filtered client-side.
+    const filtered = this.incidentsResource
+      .value()
+      .filter((r) => !this.filterStatus || r.reportStatus === this.filterStatus);
     return orderBy(filtered, [this.sortField], [this.sortDir]);
   }
 
@@ -116,33 +93,31 @@ export class IncidentsOverviewComponent implements OnInit {
     }
   }
 
-  sortIcon(field: IncidentColumn): string {
-    if (this.sortField !== field) return "ph-arrows-down-up";
-    return this.sortDir === "asc" ? "ph-arrow-up" : "ph-arrow-down";
-  }
-
-  private load() {
-    const region = this.authenticationService.getActiveRegionId();
-    if (!region) {
-      this.incidents = [];
-      return;
-    }
-    this.loading = true;
-    this.incidentService.getIncidents(region).subscribe({
-      next: (incidents) => {
-        this.incidents = incidents;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error("Incidents could not be loaded!", error);
-        this.incidents = [];
-        this.loading = false;
-      },
-    });
-  }
-
-  statusClass(status: IncidentReport["reportStatus"]): string {
-    return status ? this.statusClasses[status] : "bg-secondary";
+  downloadGeoJSON() {
+    const featureCollection: GeoJSON.FeatureCollection = {
+      type: "FeatureCollection",
+      features: this.displayedIncidents
+        .filter((incident) => incident.latitude && incident.longitude)
+        .map(
+          (incident): GeoJSON.Feature<GeoJSON.Point> => ({
+            type: "Feature",
+            // Stored coordinates are [lat, lng]; GeoJSON requires [lng, lat].
+            geometry: { type: "Point", coordinates: [incident.longitude, incident.latitude] },
+            properties: Object.fromEntries(
+              Object.entries(incident).filter(
+                ([, value]) => value == null || typeof value !== "object" || value instanceof Date,
+              ),
+            ),
+          }),
+        ),
+    };
+    const blob = new Blob([JSON.stringify(featureCollection, null, 2)], { type: "application/geo+json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "incidents.geojson";
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   openIncident(id: string) {
@@ -151,14 +126,5 @@ export class IncidentsOverviewComponent implements OnInit {
 
   newIncident() {
     this.router.navigate(["/incidents", "new"]);
-  }
-
-  deleteIncident(incident: IncidentReport) {
-    const message = this.translateService.instant("incidentsOverview.deleteConfirm");
-    if (!confirm(message)) return;
-    this.incidentService.deleteIncident(incident.id).subscribe({
-      next: () => this.load(),
-      error: (error) => console.error("Incident could not be deleted!", error),
-    });
   }
 }

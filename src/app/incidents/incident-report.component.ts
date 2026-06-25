@@ -13,7 +13,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { uniq } from "es-toolkit";
@@ -42,9 +42,9 @@ import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid, pickPublicFields, safeParseVisibleFields } from "../shared/zod-util";
 import { IncidentReportMapService } from "./incident-report-map.service";
+import * as IncidentModels from "./incident-report.model";
+import { IncidentReport } from "./incident-report.model";
 import { IncidentService } from "./incident.service";
-import * as IncidentModels from "./models/incident-report.model";
-import { IncidentReport } from "./models/incident-report.model";
 
 @Component({
   selector: "app-incident-report",
@@ -72,6 +72,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private geocodingService = inject(GeocodingService);
   readonly mapService = inject(IncidentReportMapService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
@@ -99,19 +100,27 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   get displayOnly(): boolean {
     return this.displayMode !== DisplayMode.Edit;
   }
-  readonly allTabs = [
-    { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
-    { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },
-    {
-      id: "avalanche",
-      label: "incidentReport.avalancheInformation",
-      schema: IncidentModels.AvalancheInformationSchema,
-    },
-    { id: "group", label: "incidentReport.personInvolvement" },
-    { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
-    { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
-    { id: "attachments", label: "incidentReport.incidentAttachments" },
-  ] as const;
+  /** Tabs visible to the current user; the analysis tab is forecaster-only. */
+  get allTabs() {
+    return [
+      { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
+      { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },
+      {
+        id: "avalanche",
+        label: "incidentReport.avalancheInformation",
+        schema: IncidentModels.AvalancheInformationSchema,
+      },
+      { id: "group", label: "incidentReport.personInvolvement" },
+      { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
+      // The incident analysis is forecaster-only.
+      ...(this.authenticationService.isCurrentUserInRole("FORECASTER")
+        ? ([
+            { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
+          ] as const)
+        : ([] as const)),
+      { id: "attachments", label: "incidentReport.incidentAttachments" },
+    ] as const;
+  }
 
   private _activeTab: (typeof this.allTabs)[number]["id"] = "general";
   get activeTab(): (typeof this.allTabs)[number]["id"] {
@@ -125,13 +134,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   get prevTab(): (typeof this.allTabs)[number]["id"] {
-    const index = this.allTabs.findIndex((tab) => tab.id === this.activeTab);
-    return this.allTabs[Math.max(index - 1, 0)].id;
+    const tabs = this.allTabs;
+    const index = tabs.findIndex((tab) => tab.id === this.activeTab);
+    return tabs[Math.max(index - 1, 0)].id;
   }
 
   get nextTab(): (typeof this.allTabs)[number]["id"] {
-    const index = this.allTabs.findIndex((tab) => tab.id === this.activeTab);
-    return this.allTabs[Math.min(index + 1, this.allTabs.length - 1)].id;
+    const tabs = this.allTabs;
+    const index = tabs.findIndex((tab) => tab.id === this.activeTab);
+    return tabs[Math.min(index + 1, tabs.length - 1)].id;
   }
 
   getValidationStatus(schema: z.ZodObject): "valid" | "invalid" {
@@ -542,15 +553,36 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
-  async publishUpdateIncident() {
-    const message = this.translateService.instant("incidentReportUI.publishUpdateIncident");
+  /** True once the incident has been persisted on the server and can be deleted. */
+  get isPersisted(): boolean {
+    return !!this.incidentId;
+  }
+
+  deleteIncident() {
+    if (!this.incidentId) return;
+    const message = this.translateService.instant("incidentReportUI.deleteIncidentConfirm");
     if (!confirm(message)) return;
+    this.incidentService.deleteIncident(this.incidentId).subscribe({
+      next: () => this.router.navigate(["/incidents"]),
+      error: (error) => console.error("Incident could not be deleted!", error),
+    });
+  }
+
+  async publishIncident(confirmMessageKey: string) {
+    if (!confirm(this.translateService.instant(confirmMessageKey))) return;
     const publicReport = pickPublicFields(IncidentModels.IncidentReportSchema).parse(this.incidentReport());
     console.info("Publishing report", publicReport);
     const data = this.serializeReport(publicReport);
     const report = await this.incidentService.publishIncident(this.incidentId, data).toPromise();
     this.incidentReport.set(report);
-    alert("Yay");
+    alert(this.translateService.instant("incidentReportUI.publishIncidentSuccess"));
+  }
+
+  async unpublishIncident() {
+    if (!confirm(this.translateService.instant("incidentReportUI.unpublishIncidentConfirm"))) return;
+    await this.incidentService.unpublishIncident(this.incidentId).toPromise();
+    this.incidentReport.update((report) => ({ ...report, publishedAt: undefined }));
+    alert(this.translateService.instant("incidentReportUI.unpublishIncidentSuccess"));
   }
 
   attachments: Record<IncidentModels.IncidentAttachment["id"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};

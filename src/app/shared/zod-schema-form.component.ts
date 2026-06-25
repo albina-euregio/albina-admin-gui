@@ -6,7 +6,7 @@ import { isEqual, xor } from "es-toolkit";
 import { QuillModule } from "ngx-quill";
 import { z } from "zod/v4";
 
-import type * as IncidentModels from "../incidents/models/incident-report.model";
+import type * as IncidentModels from "../incidents/incident-report.model";
 import type { RegionConfigurationSchema } from "../models/region-configuration.model";
 import type { ServerConfigurationSchema } from "../models/server-configuration.model";
 import { AspectsComponent } from "./aspects.component";
