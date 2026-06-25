@@ -578,6 +578,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     alert(this.translateService.instant("incidentReportUI.publishIncidentSuccess"));
   }
 
+  async unpublishIncident() {
+    if (!confirm(this.translateService.instant("incidentReportUI.unpublishIncidentConfirm"))) return;
+    await this.incidentService.unpublishIncident(this.incidentId).toPromise();
+    this.incidentReport.update((report) => ({ ...report, publishedAt: undefined }));
+    alert(this.translateService.instant("incidentReportUI.unpublishIncidentSuccess"));
+  }
+
   attachments: Record<IncidentModels.IncidentAttachment["id"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};
 
   getAttachmentPreviewUrl(

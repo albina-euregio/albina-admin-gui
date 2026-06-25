@@ -733,6 +733,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/incidents/public": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List published incidents for a region (public report) */
+    get: operations["getPublicIncidents"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/incidents/{id}": {
     parameters: {
       query?: never;
@@ -798,7 +815,8 @@ export interface paths {
     put?: never;
     /** Publish an incident */
     post: operations["publishIncident"];
-    delete?: never;
+    /** Unpublish an incident */
+    delete: operations["unpublishIncident"];
     options?: never;
     head?: never;
     patch?: never;
@@ -1772,7 +1790,6 @@ export interface components {
     HazardSiteDistribution: "single" | "some" | "many" | "many_most" | "moderately_steep";
     Incident: components["schemas"]["AbstractPersistentObject"] & {
       id?: string | null;
-      dateTime?: string;
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
@@ -3303,6 +3320,30 @@ export interface operations {
       };
     };
   };
+  getPublicIncidents: {
+    parameters: {
+      query: {
+        region: string;
+        /** @description Season year, expanded to yyyy-10-01 until (yyyy+1)-10-01 */
+        seasonYear: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description getPublicIncidents 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": Record<string, never>[];
+        };
+      };
+    };
+  };
   getIncident: {
     parameters: {
       query?: never;
@@ -3460,6 +3501,28 @@ export interface operations {
     };
     responses: {
       /** @description publishIncident 200 response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Incident"];
+        };
+      };
+    };
+  };
+  unpublishIncident: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description unpublishIncident 200 response */
       200: {
         headers: {
           [name: string]: unknown;

@@ -102,6 +102,12 @@ export class IncidentService {
     return this.http.post<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
   }
 
+  /** Unpublish an existing incident's report data. */
+  unpublishIncident(id: string): Observable<void> {
+    const url = this.constantsService.getServerUrlDELETE("/incidents/{id}/publish", null as never, { id });
+    return this.http.delete<void>(url);
+  }
+
   /** Update an existing incident's report data. */
   updateIncident(id: string, data: string): Observable<IncidentReport> {
     const url = this.constantsService.getServerUrlPUT("/incidents/{id}", null as never, { id });

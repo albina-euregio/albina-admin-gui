@@ -88,6 +88,15 @@
             {{ "incidentReportUI.publishIncident" | translate }}
           }
         </button>
+        @if (incidentReport().publishedAt) {
+          <button
+            class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 text-nowrap d-print-none"
+            [disabled]="disabled()"
+            (click)="unpublishIncident()"
+          >
+            {{ "incidentReportUI.unpublishIncident" | translate }}
+          </button>
+        }
         @if (isPersisted) {
           <button
             type="button"
