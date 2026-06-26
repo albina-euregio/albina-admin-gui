@@ -588,13 +588,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
-  /** True once the incident has been persisted on the server and can be deleted. */
-  get isPersisted(): boolean {
-    return !!this.incidentId;
-  }
-
   deleteIncident() {
-    if (!this.incidentId) return;
+    if (!this.userCan("DELETE")) return;
     const message = this.translateService.instant("incidentReportUI.deleteIncidentConfirm");
     if (!confirm(message)) return;
     this.incidentService.deleteIncident(this.incidentId).subscribe({
@@ -604,6 +599,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   async publishIncident(confirmMessageKey: string) {
+    if (!this.userCan("PUBLISH") && !this.userCan("REPUBLISH")) return;
     if (!confirm(this.translateService.instant(confirmMessageKey))) return;
     const publicReport = IncidentModels.toPublicIncidentReport(this.incidentReport());
     console.info("Publishing report", publicReport);
@@ -614,6 +610,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   async unpublishIncident() {
+    if (!this.userCan("UNPUBLISH")) return;
     if (!confirm(this.translateService.instant("incidentReportUI.unpublishIncidentConfirm"))) return;
     await this.incidentService.unpublishIncident(this.incidentId).toPromise();
     this.incidentReport.update((report) => ({ ...report, publishedAt: undefined }));
