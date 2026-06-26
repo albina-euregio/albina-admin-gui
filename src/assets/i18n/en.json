@@ -1718,6 +1718,8 @@
     "removeVictim": "Remove Person",
     "invalidNumber": "Please enter a valid number.",
     "required": "Required",
+    "requiredFieldsMissingTitle": "Required fields are missing",
+    "requiredFieldsMissingHint": "The report cannot be saved and its status cannot be changed until all required fields (marked in the form) are filled in.",
     "displayMode": {
       "edit": "Edit",
       "editMostRelevant": "Edit most relevant",
@@ -1730,7 +1732,8 @@
     "saveStateIdle": "No unsaved changes",
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
-    "saveStateError": "Save failed"
+    "saveStateError": "Save failed",
+    "saveStateBlocked": "Not saved — required fields are missing"
   },
   "incidentReport": {
     "incidentReport": "Incident Report",

@@ -59,7 +59,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   // used to prevent redundant saves
   private lastSavedData: string | null = null;
   // Status of the automatic server synchronization, exposed for the template.
-  saveState: "idle" | "saving" | "saved" | "error" = "idle";
+  // "blocked" means the report has missing required fields and is not persisted.
+  saveState: "idle" | "saving" | "saved" | "error" | "blocked" = "idle";
+  updatedAt: Date | null = null;
 
   readonly IncidentModels = IncidentModels;
   readonly JSON = JSON;
@@ -257,6 +259,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   private saveIncident(data: string): Observable<unknown> {
     if (data === this.lastSavedData) return EMPTY;
+    // A report with missing required fields must not be persisted; it stays a
+    // local draft until completed. Validity is re-checked on the next change.
+    if (!this.isReportValid()) {
+      this.saveState = "blocked";
+      return EMPTY;
+    }
     const region = this.authenticationService.getActiveRegionId();
     if (!region) return EMPTY;
     this.saveState = "saving";

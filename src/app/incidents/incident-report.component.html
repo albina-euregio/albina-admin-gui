@@ -38,6 +38,11 @@
               ><i class="ph ph-cloud-slash"></i
             ></span>
           }
+          @case ("blocked") {
+            <span class="text-danger" title="{{ 'incidentReportUI.saveStateBlocked' | translate }}"
+              ><i class="ph ph-cloud-warning"></i
+            ></span>
+          }
         }
         @if (incidentReport().publishedAt; as publishedAt) {
           <span class="text-secondary-emphasis">·</span>
@@ -56,7 +61,7 @@
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2">
         <select
-          [disabled]="disabled() || !userCan('CHANGE_STATUS')"
+          [disabled]="disabled() || !userCan('CHANGE_STATUS') || !isReportValid()"
           id="reportStatusSelect"
           title="{{ 'incidentReportHelp.reportStatus' | translate }}"
           class="form-select fw-semibold text-capitalize border w-auto"
@@ -123,6 +128,16 @@
       </div>
     </div>
   </div>
+
+  @if (!displayOnly && !isReportValid()) {
+    <div class="alert alert-danger d-flex align-items-start gap-2 d-print-none" role="alert">
+      <i class="ph ph-warning-circle fs-4 lh-1 mt-1"></i>
+      <div>
+        <strong class="d-block">{{ "incidentReportUI.requiredFieldsMissingTitle" | translate }}</strong>
+        <span>{{ "incidentReportUI.requiredFieldsMissingHint" | translate }}</span>
+      </div>
+    </div>
+  }
 
   <div class="d-flex mb-2 d-print-none">
     <app-toggle-btn-group
