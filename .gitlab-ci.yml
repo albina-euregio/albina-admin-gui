@@ -182,7 +182,6 @@ build:observations-api:
   extends: .build
   script:
     - cd observations-api/
-    - corepack enable
     - pnpm install --frozen-lockfile
     - pnpm build
   environment:
@@ -229,7 +228,7 @@ deploy:observations-api-dev:
     reports:
       junit: test-results/junit-results.xml
   before_script:
-    - corepack enable
+    - command -v pnpm || npm install --global pnpm@11.9.0
     - pnpm install --frozen-lockfile
     - export TZ="Europe/Vienna"
   script:
