@@ -51,42 +51,6 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "sourceMap": true,
-              "outputHashing": "all"
-            },
-            "docker": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.docker.ts"
-                }
-              ],
-              "sourceMap": true,
-              "outputHashing": "all"
-            },
-            "beta": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.beta.ts"
-                }
-              ],
-              "sourceMap": true,
-              "outputHashing": "all"
-            },
-            "www2": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.www2.ts"
-                }
-              ],
               "sourceMap": true,
               "outputHashing": "all"
             },
@@ -94,13 +58,7 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ]
+              "namedChunks": true
             },
             "local": {
               "optimization": false,
@@ -123,17 +81,8 @@
             "development": {
               "buildTarget": "albina-admin-gui:build:development"
             },
-            "beta": {
-              "buildTarget": "albina-admin-gui:build:beta"
-            },
-            "www2": {
-              "buildTarget": "albina-admin-gui:build:www2"
-            },
             "production": {
               "buildTarget": "albina-admin-gui:build:production"
-            },
-            "aran": {
-              "buildTarget": "albina-admin-gui:build:aran"
             }
           }
         },

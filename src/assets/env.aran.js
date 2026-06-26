@@ -1,6 +1,6 @@
-import type { Environment } from "./environment-type";
-
-export const environment: Environment = {
+// Local development against the Aran (lauegi.report) backend.
+// Selected by `pnpm start-aran` via scripts/use-env.mjs.
+globalThis.ENV = {
   initialUrl: "",
   apiBaseUrl: "https://api.lauegi.report/api/",
   textcatUrl: "https://admin.lauegi.report/textcat-ng/",
@@ -9,5 +9,3 @@ export const environment: Environment = {
   faviconPath: "assets/img/admin-favicon-aran.ico",
   logoPath: "assets/img/admin-logo-aran.svg",
 };
-
-Object.assign(environment, globalThis.ENV);

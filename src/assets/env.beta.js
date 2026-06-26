@@ -1,6 +1,6 @@
-import type { Environment } from "./environment-type";
-
-export const environment: Environment = {
+// Local development against the beta backend.
+// Selected by `pnpm start-beta` via scripts/use-env.mjs.
+globalThis.ENV = {
   initialUrl: "",
   apiBaseUrl: "https://avalanche.report/api/",
   textcatUrl: "https://avalanche.report/textcat-ng/",
@@ -9,5 +9,3 @@ export const environment: Environment = {
   faviconPath: "assets/img/admin-favicon-beta.ico",
   logoPath: "assets/img/admin-logo-beta.svg",
 };
-
-Object.assign(environment, globalThis.ENV);

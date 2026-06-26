@@ -56,3 +56,4 @@ eaws-regions/
 /blob-report/
 /playwright/.cache/
 /playwright/generated-data
+/src/assets/env.js
