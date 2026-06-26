@@ -264,6 +264,11 @@ export class AuthenticationService {
 
   public isCurrentUserInRole(...roles0: (keyof typeof Enums.UserRole)[]): boolean {
     let roles: Enums.UserRole[] = this.currentAuthor?.roles ?? [];
+    // the user may restrict themselves to a single effective role (e.g. an admin who does not want admin powers)
+    const effectiveRole = this.localStorageService.effectiveRole;
+    if (effectiveRole) {
+      roles = roles.includes(effectiveRole) ? [effectiveRole] : [];
+    }
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
     if (roles.includes(Enums.UserRole.OBSERVER) && this.localStorageService.isTrainingEnabled) {
       roles = roles.map((r) => (r === Enums.UserRole.OBSERVER ? Enums.UserRole.FORECASTER : r));

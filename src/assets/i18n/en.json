@@ -1005,6 +1005,8 @@
   },
   "settings": {
     "title": "Settings",
+    "effectiveRole": "Effective role",
+    "effectiveRoleDefault": "All roles",
     "changePassword": {
       "title": "Change password",
       "oldPassword": {
