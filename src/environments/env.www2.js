@@ -1,6 +1,7 @@
-import type { Environment } from "./environment-type";
-
-export const environment: Environment = {
+// @ts-check
+// www2 backend. Used by the build:www2 CI job (copied to env.js).
+/** @type {import("./environment-type").Environment} */
+globalThis.ENV = {
   initialUrl: "",
   apiBaseUrl: "https://www2.avalanche.report/api/",
   textcatUrl: "https://dev.avalanche.report/textcat-ng/",
@@ -9,5 +10,3 @@ export const environment: Environment = {
   faviconPath: "assets/img/admin-favicon.ico",
   logoPath: "assets/img/admin-logo.svg",
 };
-
-Object.assign(environment, globalThis.ENV);

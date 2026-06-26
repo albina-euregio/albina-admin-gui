@@ -1,17 +1,19 @@
-// The file contents for the current environment will overwrite these during build.
-// The build system defaults to the dev environment which uses `environment.ts`, but if you do
-// `ng build --env=prod` then `environment.prod.ts` will be used instead.
-// The list of which env maps to which file can be found in `angular-cli.json`.
 import type { Environment } from "./environment-type";
 
+// Empty base that satisfies the Environment type. Every value is supplied at
+// runtime by `assets/env.js` (see `Object.assign` below):
+//   - in CI, the matching `env.<name>.js` is copied to `env.js`
+//   - in the Docker image, `env.js` is generated at container start from
+//     `env.template.js` via envsubst (see Dockerfile)
+//   - for local dev, `pnpm start-dev` etc. copy `env.<name>.js` to `env.js`
 export const environment: Environment = {
   initialUrl: "",
-  apiBaseUrl: "http://localhost:8080/albina/api/",
-  textcatUrl: "https://dev.avalanche.report/textcat-ng/",
-  awsomeConfigUrl: "https://models.avalanche.report/dcfg/awsome.json",
-  headerBgColor: "#8e2232",
-  faviconPath: "assets/img/admin-favicon-local.ico",
-  logoPath: "assets/img/admin-logo-local.svg",
+  apiBaseUrl: "",
+  textcatUrl: "",
+  awsomeConfigUrl: "",
+  headerBgColor: "",
+  faviconPath: "",
+  logoPath: "",
 };
 
 Object.assign(environment, globalThis.ENV);

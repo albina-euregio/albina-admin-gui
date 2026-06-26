@@ -52,15 +52,16 @@ build:
     paths:
       - dist/
 
-.envsubst:
+# Cheap per-environment re-skin: reuse the single build artifact and select the
+# committed runtime config (src/environments/env.<name>.js) by environment name.
+# env.template.js stays in dist/ for the Docker image, which substitutes env vars at runtime.
+.copy-env:
   stage: build
   image: alpine:latest
   needs:
     - build
-  before_script:
-    - apk add gettext
   script:
-    - envsubst < dist/assets/env.template.js > dist/assets/env.js
+    - cp "src/environments/env.$CI_ENVIRONMENT_NAME.js" dist/assets/env.js
     - cat dist/assets/env.js
   artifacts:
     name: ${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}
@@ -80,15 +81,7 @@ build:
     - rsync -e 'ssh -p2201' --compress --delete --recursive --verbose dist/ $SFTP_SERVER
 
 build:development:
-  extends: .envsubst
-  variables:
-    INITIAL_URL: ""
-    API_BASE_URL: "https://dev.avalanche.report/api/"
-    TEXTCAT_URL: "https://dev.avalanche.report/textcat-ng/"
-    AWSOME_CONFIG_URL: "https://models.avalanche.report/dcfg/awsome.json"
-    HEADER_BG_COLOR: "#f4ea12"
-    FAVICON_PATH: "assets/img/admin-favicon-dev.ico"
-    LOGO_PATH: "assets/img/admin-logo-dev.svg"
+  extends: .copy-env
   environment:
     name: dev
 
@@ -104,15 +97,7 @@ deploy:development:
       allow_failure: true
 
 build:beta:
-  extends: .envsubst
-  variables:
-    INITIAL_URL: ""
-    API_BASE_URL: "https://avalanche.report/api/"
-    TEXTCAT_URL: "https://avalanche.report/textcat-ng/"
-    AWSOME_CONFIG_URL: "https://models.awsome.alpsolut.eu/dcfg/awsome.json"
-    HEADER_BG_COLOR: "#839194"
-    FAVICON_PATH: "assets/img/admin-favicon-beta.ico"
-    LOGO_PATH: "assets/img/admin-logo-beta.svg"
+  extends: .copy-env
   environment:
     name: beta
 
@@ -128,15 +113,7 @@ deploy:beta:
       allow_failure: true
 
 build:production:
-  extends: .envsubst
-  variables:
-    INITIAL_URL: ""
-    API_BASE_URL: "https://avalanche.report/api/"
-    TEXTCAT_URL: "https://avalanche.report/textcat-ng/"
-    AWSOME_CONFIG_URL: "https://models.awsome.alpsolut.eu/dcfg/awsome.json"
-    HEADER_BG_COLOR: "#ffffff"
-    FAVICON_PATH: "assets/img/admin-favicon.ico"
-    LOGO_PATH: "assets/img/admin-logo.svg"
+  extends: .copy-env
   environment:
     name: production
 
@@ -152,15 +129,7 @@ deploy:production:
       allow_failure: true
 
 build:www2:
-  extends: .envsubst
-  variables:
-    INITIAL_URL: ""
-    API_BASE_URL: "https://www2.avalanche.report/api/"
-    TEXTCAT_URL: "https://dev.avalanche.report/textcat-ng/"
-    AWSOME_CONFIG_URL: ""
-    HEADER_BG_COLOR: "#1a8943"
-    FAVICON_PATH: "assets/img/admin-favicon.ico"
-    LOGO_PATH: "assets/img/admin-logo.svg"
+  extends: .copy-env
   environment:
     name: www2
 
@@ -176,20 +145,12 @@ deploy:www2:
       allow_failure: true
 
 build:aran:
-  extends: .envsubst
+  extends: .copy-env
   environment:
     name: aran
-  variables:
-    INITIAL_URL: ""
-    API_BASE_URL: "https://api.lauegi.report/api/"
-    TEXTCAT_URL: "https://admin.lauegi.report/textcat-ng/"
-    AWSOME_CONFIG_URL: "https://models.avalanche.report/dcfg/awsome.json"
-    HEADER_BG_COLOR: "#ffffff"
-    FAVICON_PATH: "assets/img/admin-favicon-aran.ico"
-    LOGO_PATH: "assets/img/admin-logo-aran.svg"
 
 build:docker:
-  extends: .envsubst
+  extends: .copy-env
   environment:
     name: docker
 
