@@ -17,9 +17,9 @@ variables:
 
 .build:
   stage: build
-  image: node:lts
+  image: node:26.4.0
   before_script:
-    - corepack enable
+    - command -v pnpm || npm install --global pnpm@11.9.0
     - pnpm install --frozen-lockfile
     - npm --no-git-tag-version version $(git describe --tags)
 
