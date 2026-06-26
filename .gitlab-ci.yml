@@ -26,6 +26,7 @@ variables:
 .build:
   stage: build
   image: node:26.4.0
+  interruptible: true
   cache:
     - *pnpm-cache
     - key: angular-${CI_COMMIT_REF_SLUG}
@@ -234,6 +235,7 @@ deploy:observations-api-dev:
 .playwright:
   stage: playwright
   image: mcr.microsoft.com/playwright:v1.58.2
+  interruptible: true
   cache:
     - *pnpm-cache
   artifacts:
