@@ -25,7 +25,7 @@ export class TranslatedTitleStrategy extends TitleStrategy {
   }
 
   private setDocumentTitle(): void {
-    const appName = "Avalanche.report";
+    const appName = location.hostname;
     const title = [this.titleKey ? this.translate.instant(this.titleKey) : "", appName]
       .filter(Boolean)
       .filter((v, i, a) => a.indexOf(v) === i)
