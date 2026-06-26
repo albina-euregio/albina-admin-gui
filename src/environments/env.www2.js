@@ -1,4 +1,6 @@
+// @ts-check
 // www2 backend. Used by the build:www2 CI job (copied to env.js).
+/** @type {import("./environment-type").Environment} */
 globalThis.ENV = {
   initialUrl: "",
   apiBaseUrl: "https://www2.avalanche.report/api/",

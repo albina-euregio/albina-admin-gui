@@ -1,5 +1,7 @@
+// @ts-check
 // Local development against the beta backend.
 // Selected by `pnpm start-beta` via scripts/use-env.mjs.
+/** @type {import("./environment-type").Environment} */
 globalThis.ENV = {
   initialUrl: "",
   apiBaseUrl: "https://avalanche.report/api/",
