@@ -428,62 +428,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.geocodeService.reverseGeocodeIfChanged(updatedReport.latitude, updatedReport.longitude);
   }
 
-  onLatLngInputChange() {
-    const report = this.incidentReport();
-    if (report.latitude != null) report.latitude = Number(report.latitude);
-    if (report.longitude != null) report.longitude = Number(report.longitude);
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  onLineCoordinatesTextChange(text: string) {
-    const report = this.incidentReport();
-    report.lineCoordinatesText = text;
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  onPolygonCoordinatesTextChange(text: string) {
-    const report = this.incidentReport();
-    report.polygonCoordinatesText = text;
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearPoint() {
-    const report = this.incidentReport();
-    report.latitude = null;
-    report.longitude = null;
-    report.locationAccuracy = null;
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearLine() {
-    const report = this.incidentReport();
-    report.lineCoordinatesText = "";
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearPolygon() {
-    const report = this.incidentReport();
-    report.polygonCoordinatesText = "";
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearAllDrawing() {
-    const report = this.incidentReport();
-    report.latitude = null;
-    report.longitude = null;
-    report.locationAccuracy = null;
-    report.lineCoordinatesText = "";
-    report.polygonCoordinatesText = "";
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
   async uploadIncidentAttachment($event: Event) {
     const input = $event.target as HTMLInputElement;
     const file = input.files?.[0];

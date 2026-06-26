@@ -243,7 +243,7 @@
                 </span>
                 @if ((incidentReport().latitude || incidentReport().longitude) && !disabled()) {
                   <span
-                    (click)="$event.stopPropagation(); clearPoint()"
+                    (click)="$event.stopPropagation(); mapService.clearPoint()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
                     title="{{ 'incidentReportUI.clearPoint' | translate }}"
                     style="
@@ -277,7 +277,7 @@
                 </span>
                 @if (incidentReport().lineCoordinatesText?.trim() && !disabled()) {
                   <span
-                    (click)="$event.stopPropagation(); clearLine()"
+                    (click)="$event.stopPropagation(); mapService.clearLine()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
                     title="{{ 'incidentReportUI.clearLine' | translate }}"
                     style="
@@ -311,7 +311,7 @@
                 </span>
                 @if (incidentReport().polygonCoordinatesText?.trim() && !disabled()) {
                   <span
-                    (click)="$event.stopPropagation(); clearPolygon()"
+                    (click)="$event.stopPropagation(); mapService.clearPolygon()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
                     title="{{ 'incidentReportUI.clearPolygon' | translate }}"
                     style="
