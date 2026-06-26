@@ -40,7 +40,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
-import { isFieldValid, isVisibleFieldsValid, pickPublicFields, safeParseVisibleFields } from "../shared/zod-util";
+import { isFieldValid, isVisibleFieldsValid, safeParseVisibleFields } from "../shared/zod-util";
 import { IncidentReportMapService } from "./incident-report-map.service";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
@@ -570,7 +570,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   async publishIncident(confirmMessageKey: string) {
     if (!confirm(this.translateService.instant(confirmMessageKey))) return;
-    const publicReport = pickPublicFields(IncidentModels.IncidentReportSchema).parse(this.incidentReport());
+    const publicReport = IncidentModels.toPublicIncidentReport(this.incidentReport());
     console.info("Publishing report", publicReport);
     const data = this.serializeReport(publicReport);
     const report = await this.incidentService.publishIncident(this.incidentId, data).toPromise();

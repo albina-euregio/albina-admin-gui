@@ -162,17 +162,6 @@ export function isVisibleFieldsValid(schema: z.ZodObject, value: Record<string, 
   return safeParseVisibleFields(schema, value).success;
 }
 
-// Narrows the schema to only the fields flagged `public: true` in the widget registry,
-// dropping everything else (used to build the public report on publish).
-export function pickPublicFields<T extends z.ZodObject>(schema: T) {
-  const picked = Object.fromEntries(
-    Object.entries(schema.shape)
-      .filter(([, fieldType]) => widgetRegistry.get(unwrap(fieldType as z.ZodType))?.public)
-      .map(([key]) => [key, true]),
-  );
-  return schema.pick(picked as Parameters<typeof schema.pick>[0]);
-}
-
 export function hasValue(val: unknown): boolean {
   return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
 }
