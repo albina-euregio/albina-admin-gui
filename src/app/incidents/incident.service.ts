@@ -81,11 +81,11 @@ export class IncidentService {
   }
 
   private safeIncidentReport(i: IncidentView) {
-    return PartialIncidentReportSchema.safeParse({ ...i, ...(i.data ?? {}) });
+    return PartialIncidentReportSchema.safeParse({ ...i, ...(i.data ?? i.publicData ?? {}) });
   }
 
   private toIncidentReport(i: IncidentView): IncidentReport {
-    return PartialIncidentReportSchema.parse({ ...i, ...i.data }) as IncidentReport;
+    return PartialIncidentReportSchema.parse({ ...i, ...(i.data ?? i.publicData ?? {}) }) as IncidentReport;
   }
 
   /** Get a single incident by id. */
