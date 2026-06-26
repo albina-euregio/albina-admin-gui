@@ -145,6 +145,31 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return tabs[Math.min(index + 1, tabs.length - 1)].id;
   }
 
+  /**
+   * Whether the current user may perform a report action, combining role and report status.
+   */
+  userCan(
+    op: "DELETE" | "PUBLISH" | "UNPUBLISH" | "CHANGE_STATUS" | "CHANGE_STATUS_TO_REVIEW" | "CHANGE_STATUS_TO_VERIFIED",
+    reportStatus = this.incidentReport().reportStatus,
+  ): boolean {
+    const isForecaster = this.authenticationService.isCurrentUserInRole("FORECASTER");
+    const inReview = reportStatus === "InReview" || reportStatus === "Verified";
+    switch (op) {
+      case "PUBLISH":
+        return isForecaster && reportStatus !== "Draft" && this.isReportValid();
+      case "UNPUBLISH":
+        return isForecaster && !!this.incidentReport().publishedAt;
+      case "CHANGE_STATUS":
+        return isForecaster || !inReview;
+      case "CHANGE_STATUS_TO_REVIEW":
+        return isForecaster;
+      case "CHANGE_STATUS_TO_VERIFIED":
+        return isForecaster;
+      case "DELETE":
+        return isForecaster || inReview;
+    }
+  }
+
   getValidationStatus(schema: z.ZodObject): "valid" | "invalid" {
     return isVisibleFieldsValid(schema, this.incidentReport() as Record<string, unknown>) ? "valid" : "invalid";
   }

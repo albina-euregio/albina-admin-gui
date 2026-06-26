@@ -49,7 +49,7 @@
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2">
         <select
-          [disabled]="disabled()"
+          [disabled]="disabled() || !userCan('CHANGE_STATUS')"
           id="reportStatusSelect"
           title="{{ 'incidentReportHelp.reportStatus' | translate }}"
           class="form-select fw-semibold text-capitalize border w-auto"
@@ -68,27 +68,33 @@
         >
           <option value="Draft">{{ "reportStatus.Draft" | translate }}</option>
           <option value="Incomplete" [disabled]="!isReportValid()">{{ "reportStatus.Incomplete" | translate }}</option>
-          <option value="InReview" [disabled]="!isReportValid()">{{ "reportStatus.InReview" | translate }}</option>
-          <option value="Verified" [disabled]="!isReportValid()">{{ "reportStatus.Verified" | translate }}</option>
+          <option value="InReview" [disabled]="!isReportValid() || !userCan('CHANGE_STATUS_TO_REVIEW')">
+            {{ "reportStatus.InReview" | translate }}
+          </option>
+          <option value="Verified" [disabled]="!isReportValid() || !userCan('CHANGE_STATUS_TO_VERIFIED')">
+            {{ "reportStatus.Verified" | translate }}
+          </option>
         </select>
-        <button
-          class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
-          [disabled]="disabled() || incidentReport().reportStatus === 'Draft' || !isReportValid()"
-          (click)="
-            publishIncident(
-              incidentReport().publishedAt
-                ? 'incidentReportUI.republishIncidentConfirm'
-                : 'incidentReportUI.publishIncidentConfirm'
-            )
-          "
-        >
-          @if (incidentReport().publishedAt) {
-            {{ "incidentReportUI.republishIncident" | translate }}
-          } @else {
-            {{ "incidentReportUI.publishIncident" | translate }}
-          }
-        </button>
-        @if (incidentReport().publishedAt) {
+        @if (userCan("PUBLISH")) {
+          <button
+            class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
+            [disabled]="disabled()"
+            (click)="
+              publishIncident(
+                incidentReport().publishedAt
+                  ? 'incidentReportUI.republishIncidentConfirm'
+                  : 'incidentReportUI.publishIncidentConfirm'
+              )
+            "
+          >
+            @if (incidentReport().publishedAt) {
+              {{ "incidentReportUI.republishIncident" | translate }}
+            } @else {
+              {{ "incidentReportUI.publishIncident" | translate }}
+            }
+          </button>
+        }
+        @if (userCan("UNPUBLISH")) {
           <button
             class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 text-nowrap d-print-none"
             [disabled]="disabled()"
@@ -97,7 +103,7 @@
             {{ "incidentReportUI.unpublishIncident" | translate }}
           </button>
         }
-        @if (isPersisted) {
+        @if (userCan("DELETE")) {
           <button
             type="button"
             class="btn btn-sm btn-outline-danger btn-icon d-print-none"
