@@ -1,0 +1,450 @@
+<!-- General Info Tab -->
+@if (activeTab() === "general" || displayOnly) {
+  <div>
+    <h4 class="mb-3 text-secondary">{{ "incidentReport.generalInformation" | translate }}</h4>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [displayMode]="displayMode()"
+      [value]="incidentReport()"
+      (valueChange)="onLocationFormChange($event)"
+      [zodType]="IncidentModels.GeneralInformationSchema"
+      [includeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
+
+    <!-- Location Map -->
+    <div class="mb-3 position-relative">
+      <label class="form-label">{{ "incidentReportUI.locationMap" | translate }}</label>
+      <div style="position: relative; width: 100%">
+        <div
+          id="locationMap"
+          style="
+            height: 450px;
+            width: 100%;
+            border: 1px solid var(--bs-border-color);
+            border-radius: var(--bs-border-radius-sm);
+            z-index: 1;
+          "
+        ></div>
+
+        <!-- Map Drawing Mode & Clear Controls Overlay -->
+        <div
+          class="map-drawing-controls d-flex flex-column gap-2"
+          style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: var(--bs-border-radius-sm);
+            border: 1px solid var(--bs-border-color);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            width: 130px;
+          "
+        >
+          <div
+            class="fw-bold text-center"
+            style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--bs-gray-700)"
+          >
+            {{ "incidentReportUI.controls" | translate }}
+          </div>
+
+          <!-- Point Button with Embedded Clear -->
+          <button
+            type="button"
+            class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+            [class.d-none]="displayOnly"
+            [class.btn-primary]="mapService.activeDrawingMode === 'Point'"
+            [class.btn-light]="mapService.activeDrawingMode !== 'Point'"
+            (click)="mapService.activeDrawingMode = 'Point'"
+            [disabled]="disabled()"
+            title="{{ 'incidentReportUI.drawPoint' | translate }}"
+            style="font-size: 12px; padding: 4px 6px"
+          >
+            <span class="d-flex align-items-center gap-2">
+              <i class="ph ph-map-pin"></i> {{ "incidentReportUI.point" | translate }}
+            </span>
+            @if ((incidentReport().latitude || incidentReport().longitude) && !disabled()) {
+              <span
+                (click)="$event.stopPropagation(); mapService.clearPoint()"
+                class="clear-btn-embedded d-flex align-items-center justify-content-center"
+                title="{{ 'incidentReportUI.clearPoint' | translate }}"
+                style="
+                  cursor: pointer;
+                  padding: 2px;
+                  border-radius: 50%;
+                  width: 16px;
+                  height: 16px;
+                  transition: background 0.2s;
+                "
+              >
+                <i class="ph ph-x" style="font-size: 10px"></i>
+              </span>
+            }
+          </button>
+
+          <!-- Line Button with Embedded Clear -->
+          <button
+            type="button"
+            class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+            [class.d-none]="displayOnly"
+            [class.btn-primary]="mapService.activeDrawingMode === 'Line'"
+            [class.btn-light]="mapService.activeDrawingMode !== 'Line'"
+            (click)="mapService.activeDrawingMode = 'Line'"
+            [disabled]="disabled()"
+            title="{{ 'incidentReportUI.drawLine' | translate }}"
+            style="font-size: 12px; padding: 4px 6px"
+          >
+            <span class="d-flex align-items-center gap-2">
+              <i class="ph ph-line-segments"></i> {{ "incidentReportUI.line" | translate }}
+            </span>
+            @if (incidentReport().lineCoordinatesText?.trim() && !disabled()) {
+              <span
+                (click)="$event.stopPropagation(); mapService.clearLine()"
+                class="clear-btn-embedded d-flex align-items-center justify-content-center"
+                title="{{ 'incidentReportUI.clearLine' | translate }}"
+                style="
+                  cursor: pointer;
+                  padding: 2px;
+                  border-radius: 50%;
+                  width: 16px;
+                  height: 16px;
+                  transition: background 0.2s;
+                "
+              >
+                <i class="ph ph-x" style="font-size: 10px"></i>
+              </span>
+            }
+          </button>
+
+          <!-- Polygon Button with Embedded Clear -->
+          <button
+            type="button"
+            class="btn btn-sm d-flex align-items-center justify-content-between w-100"
+            [class.d-none]="displayOnly"
+            [class.btn-primary]="mapService.activeDrawingMode === 'Polygon'"
+            [class.btn-light]="mapService.activeDrawingMode !== 'Polygon'"
+            (click)="mapService.activeDrawingMode = 'Polygon'"
+            [disabled]="disabled()"
+            title="{{ 'incidentReportUI.drawPolygon' | translate }}"
+            style="font-size: 12px; padding: 4px 6px"
+          >
+            <span class="d-flex align-items-center gap-2">
+              <i class="ph ph-polygon"></i> {{ "incidentReportUI.polygon" | translate }}
+            </span>
+            @if (incidentReport().polygonCoordinatesText?.trim() && !disabled()) {
+              <span
+                (click)="$event.stopPropagation(); mapService.clearPolygon()"
+                class="clear-btn-embedded d-flex align-items-center justify-content-center"
+                title="{{ 'incidentReportUI.clearPolygon' | translate }}"
+                style="
+                  cursor: pointer;
+                  padding: 2px;
+                  border-radius: 50%;
+                  width: 16px;
+                  height: 16px;
+                  transition: background 0.2s;
+                "
+              >
+                <i class="ph ph-x" style="font-size: 10px"></i>
+              </span>
+            }
+          </button>
+        </div>
+      </div>
+      <div class="form-text text-muted mt-2">
+        @if (mapService.activeDrawingMode === "Point") {
+          {{ "incidentReportUI.drawPointInstructions" | translate }}
+        } @else if (mapService.activeDrawingMode === "Line") {
+          {{ "incidentReportUI.drawLineInstructions" | translate }}
+        } @else {
+          {{ "incidentReportUI.drawPolygonInstructions" | translate }}
+        }
+      </div>
+    </div>
+
+    <!-- Remaining location fields -->
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [displayMode]="displayMode()"
+      [value]="incidentReport()"
+      (valueChange)="onLocationFormChange($event)"
+      [zodType]="IncidentModels.GeneralInformationSchema"
+      [excludeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
+  </div>
+}
+
+<!-- Bulletin Info Tab -->
+@if (activeTab() === "bulletin" || displayOnly) {
+  <div>
+    <h4 class="mb-3 text-secondary">{{ "incidentReport.bulletinInformation" | translate }}</h4>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [displayMode]="displayMode()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="IncidentModels.BulletinInformationSchema"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
+  </div>
+}
+
+<!-- Avalanche Info Tab -->
+@if (activeTab() === "avalanche" || displayOnly) {
+  <div>
+    <h4 class="mb-3 text-secondary">{{ "incidentReport.avalancheInformation" | translate }}</h4>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [displayMode]="displayMode()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="IncidentModels.AvalancheInformationSchema"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
+  </div>
+}
+
+<!-- Group Info Tab -->
+@if (activeTab() === "group" || displayOnly) {
+  <div>
+    <h4 class="mb-3 text-secondary">{{ "incidentReport.personInvolvement" | translate }}</h4>
+
+    <!-- Sub-tab nav-pills -->
+    <ul class="nav nav-pills gap-1 mb-4" [class.d-none]="displayOnly">
+      <li class="nav-item">
+        <button
+          class="nav-link d-flex align-items-center gap-2"
+          [class.active]="activeGroupSubTab === 'overview'"
+          (click)="activeGroupSubTab = 'overview'"
+        >
+          {{ "incidentReportUI.overview" | translate }}
+        </button>
+      </li>
+      @if (incidentReport().personInvolvement === "Yes") {
+        <li class="nav-item">
+          <button
+            class="nav-link d-flex align-items-center gap-2"
+            [class.active]="activeGroupSubTab === 'groups'"
+            [disabled]="incidentReport().personInvolvement !== 'Yes'"
+            (click)="activeGroupSubTab = 'groups'"
+          >
+            {{ "incidentReport.groupInformation" | translate }}
+            <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
+              incidentReport().groupInformation?.length ?? 0
+            }}</span>
+          </button>
+        </li>
+      }
+      @if (incidentReport().personInvolvement === "Yes") {
+        <li class="nav-item">
+          <button
+            class="nav-link d-flex align-items-center gap-2"
+            [class.active]="activeGroupSubTab === 'victims'"
+            [disabled]="incidentReport().personInvolvement !== 'Yes'"
+            (click)="activeGroupSubTab = 'victims'"
+          >
+            {{ "incidentReport.victimInformation" | translate }}
+            <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
+              incidentReport().victimInformation?.length ?? 0
+            }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+
+    <!-- Overview sub-tab -->
+    @if (activeGroupSubTab === "overview" || displayOnly) {
+      <app-zod-schema-form
+        [disabled]="disabled()"
+        [displayMode]="displayMode()"
+        [(value)]="incidentReport"
+        [zodType]="IncidentModels.IncidentReportSchema"
+        [includeFields]="['personInvolvement']"
+        [labelI18n]="labelI18n"
+        [helpI18n]="helpI18n"
+      />
+
+      @if (incidentReport().personInvolvement === "Yes") {
+        <div class="rounded border bg-body-secondary px-3 py-3 mt-3">
+          <h4 class="mb-3 text-secondary d-flex align-items-center gap-2">
+            <i class="ph ph-calculator"></i>
+            {{ "incidentReport.involvementsFatalitiesBurials" | translate }}
+          </h4>
+          <app-zod-schema-form
+            [displayMode]="DisplayMode.All"
+            [value]="involvementsFatalitiesBurials"
+            [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
+            [labelI18n]="labelI18n"
+            [helpI18n]="helpI18n"
+          />
+        </div>
+      }
+    }
+
+    <!-- Groups sub-tab -->
+    @if (activeGroupSubTab === "groups" || displayOnly) {
+      <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+        <div class="d-flex flex-wrap gap-1 flex-grow-1">
+          @for (group of incidentReport().groupInformation; track $index; let i = $index) {
+            <button
+              class="btn btn-sm d-flex align-items-center gap-1"
+              [class.d-none]="displayOnly"
+              [class.btn-dark]="activeGroupIndex === i"
+              [class.btn-outline-dark]="activeGroupIndex !== i"
+              (click)="activeGroupIndex = i"
+            >
+              {{ group.anonymousGroupIdentifier }}
+              @if (isGroupValid(group)) {
+                <i class="ph ph-check text-success" title="{{ 'incidentReportUI.valid' | translate }}"></i>
+              } @else {
+                <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
+              }
+            </button>
+          }
+        </div>
+        <button
+          class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+          [class.d-none]="displayOnly"
+          (click)="newGroupInformation()"
+        >
+          <i class="ph ph-plus"></i> {{ "incidentReportUI.addGroup" | translate }}
+        </button>
+      </div>
+
+      @if (!incidentReport().groupInformation?.length) {
+        <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
+      } @else {
+        @let activeGroup = incidentReport().groupInformation![activeGroupIndex];
+        @if (activeGroup) {
+          <div class="card shadow-sm border">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+              <span class="fw-semibold text-secondary h6 mb-0">{{ activeGroup.anonymousGroupIdentifier }}</span>
+              @if (activeGroupIndex > 0) {
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  [class.d-none]="displayOnly"
+                  (click)="removeGroupInformation(activeGroupIndex)"
+                >
+                  <i class="ph ph-trash"></i> {{ "incidentReportUI.removeGroup" | translate }}
+                </button>
+              }
+            </div>
+            <div class="card-body">
+              <app-zod-schema-form
+                [disabled]="disabled()"
+                [displayMode]="displayMode()"
+                [value]="activeGroup"
+                (valueChange)="updateGroupInformation(activeGroupIndex, $event)"
+                [zodType]="IncidentModels.GroupInformationSchema"
+                [labelI18n]="labelI18n"
+                [helpI18n]="helpI18n"
+              />
+            </div>
+          </div>
+        }
+      }
+    }
+
+    <!-- Victims sub-tab -->
+    @if (activeGroupSubTab === "victims" || displayOnly) {
+      <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+        <div class="d-flex flex-wrap gap-1 flex-grow-1">
+          @for (victim of incidentReport().victimInformation; track $index; let i = $index) {
+            <button
+              class="btn btn-sm d-flex align-items-center gap-1"
+              [class.d-none]="displayOnly"
+              [class.btn-dark]="activeVictimIndex === i"
+              [class.btn-outline-dark]="activeVictimIndex !== i"
+              (click)="activeVictimIndex = i"
+            >
+              {{ victim.anonymousVictimIdentifier }}
+              @if (isVictimValid(victim)) {
+                <i class="ph ph-check text-success" title="{{ 'incidentReportUI.valid' | translate }}"></i>
+              } @else {
+                <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
+              }
+            </button>
+          }
+        </div>
+        <button
+          class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+          [class.d-none]="displayOnly"
+          (click)="newVictimInformation()"
+        >
+          <i class="ph ph-plus"></i> {{ "incidentReportUI.addVictim" | translate }}
+        </button>
+      </div>
+
+      @if (!incidentReport().victimInformation?.length) {
+        <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
+      } @else {
+        @let activeVictim = incidentReport().victimInformation![activeVictimIndex];
+        @if (activeVictim) {
+          <div class="card shadow-sm border">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+              <span class="fw-semibold text-secondary h6 mb-0">{{ activeVictim.anonymousVictimIdentifier }}</span>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                [class.d-none]="displayOnly"
+                (click)="removeVictimInformation(activeVictimIndex)"
+              >
+                <i class="ph ph-trash"></i> {{ "incidentReportUI.removeVictim" | translate }}
+              </button>
+            </div>
+            <div class="card-body">
+              <app-zod-schema-form
+                [disabled]="disabled()"
+                [displayMode]="displayMode()"
+                [value]="activeVictim"
+                (valueChange)="updateVictimInformation(activeVictimIndex, $event)"
+                [zodType]="IncidentModels.VictimInformationSchema"
+                [labelI18n]="labelI18n"
+                [helpI18n]="helpI18n"
+                [groupIdentifiers]="groupIdentifiers"
+              />
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+}
+
+<!-- Other Damages Tab -->
+@if (activeTab() === "other-damages" || displayOnly) {
+  <div>
+    <h4 class="mb-3 text-secondary">{{ "incidentReport.otherDamages" | translate }}</h4>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [displayMode]="displayMode()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="IncidentModels.OtherDamagesSchema"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
+  </div>
+}
+
+<!-- Incident Analysis Tab -->
+@if (activeTab() === "analysis" || displayOnly) {
+  <div>
+    <h4 class="mb-3 text-secondary">{{ "incidentReport.incidentAnalysis" | translate }}</h4>
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [displayMode]="displayMode()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="IncidentModels.IncidentAnalysisSchema"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
+  </div>
+}

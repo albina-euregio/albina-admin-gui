@@ -143,6 +143,35 @@ export class IncidentReportMapService implements OnDestroy {
     this.drawOnMap();
   }
 
+  clearPoint() {
+    const config = this.config;
+    if (!config) return;
+    const report = config.incidentReport();
+    report.latitude = null;
+    report.longitude = null;
+    report.locationAccuracy = null;
+    config.incidentReport.set({ ...report });
+    this.drawOnMap();
+  }
+
+  clearLine() {
+    const config = this.config;
+    if (!config) return;
+    const report = config.incidentReport();
+    report.lineCoordinatesText = "";
+    config.incidentReport.set({ ...report });
+    this.drawOnMap();
+  }
+
+  clearPolygon() {
+    const config = this.config;
+    if (!config) return;
+    const report = config.incidentReport();
+    report.polygonCoordinatesText = "";
+    config.incidentReport.set({ ...report });
+    this.drawOnMap();
+  }
+
   parseCoordinatesText(text: string): [number, number][] {
     if (!text) return [];
     const lines = text.split("\n");

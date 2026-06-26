@@ -1,7 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { rxResource, toSignal } from "@angular/core/rxjs-interop";
-import { map, Observable } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
+import { combineLatest, map, Observable } from "rxjs";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -20,6 +21,7 @@ export class IncidentService {
   private http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
+  private route = inject(ActivatedRoute);
 
   /**
    * Date range filter for the overview, as a `[start, end]` tuple bound to the
@@ -37,7 +39,14 @@ export class IncidentService {
    * returned resource is tied to that context's lifecycle.
    */
   incidentsForActiveRegion() {
-    const activeRegionId = toSignal(this.authenticationService.activeRegion$.pipe(map((r) => r?.id)));
+    // Without authentication there is no active region, so fall back to a
+    // `?region=AT-07` query parameter (e.g. http://localhost:4200/#/incidents?region=AT-07).
+    const activeRegionId = toSignal(
+      combineLatest([
+        this.authenticationService.activeRegion$.pipe(map((r) => r?.id)),
+        this.route.queryParamMap.pipe(map((p) => p.get("region") ?? undefined)),
+      ]).pipe(map(([active, fromUrl]) => active ?? fromUrl)),
+    );
     return rxResource({
       params: () => {
         const region = activeRegionId();
@@ -45,40 +54,38 @@ export class IncidentService {
         const [startDate, endDate] = this.dateRange();
         return { region, startDate, endDate };
       },
-      stream: ({ params: { region, startDate, endDate } }) => this.getIncidents(region, startDate, endDate),
+      stream: ({ params: { region, startDate, endDate } }) => {
+        const url = this.constantsService.getServerUrlGET("/incidents", {
+          region,
+          seasonYear: startDate.getMonth() >= 9 ? startDate.getFullYear() : startDate.getFullYear() - 1,
+          startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
+          endDate: this.constantsService.getISOStringWithTimezoneOffset(
+            new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
+          ),
+        });
+        return this.http.get<IncidentView[]>(url).pipe(
+          map((is) =>
+            is.flatMap((i) => {
+              const result = this.safeIncidentReport(i);
+              if (!result.success) {
+                console.warn(`Skipping incident ${i.id} that failed to parse`, result.error);
+                return [];
+              }
+              return [result.data as IncidentReport];
+            }),
+          ),
+        );
+      },
       defaultValue: [] as IncidentReport[],
     });
   }
 
-  private toIncidentReport(i: IncidentView): IncidentReport {
-    return PartialIncidentReportSchema.parse({ ...i, ...i.data }) as IncidentReport;
+  private safeIncidentReport(i: IncidentView) {
+    return PartialIncidentReportSchema.safeParse({ ...i, ...(i.data ?? i.publicData ?? {}) });
   }
 
-  /**
-   * List all incidents stored for a region within a date range. `endDate` is
-   * widened to the end of its day so the whole day is included. Incidents that
-   * fail to parse are skipped.
-   */
-  getIncidents(region: string, startDate: Date, endDate: Date): Observable<IncidentReport[]> {
-    const url = this.constantsService.getServerUrlGET("/incidents", {
-      region,
-      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
-      endDate: this.constantsService.getISOStringWithTimezoneOffset(
-        new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
-      ),
-    });
-    return this.http.get<IncidentView[]>(url).pipe(
-      map((is) =>
-        is.flatMap((i) => {
-          const result = PartialIncidentReportSchema.safeParse({ ...i, ...i.data });
-          if (!result.success) {
-            console.warn(`Skipping incident ${i.id} that failed to parse`, result.error);
-            return [];
-          }
-          return [result.data as IncidentReport];
-        }),
-      ),
-    );
+  private toIncidentReport(i: IncidentView): IncidentReport {
+    return PartialIncidentReportSchema.parse({ ...i, ...(i.data ?? i.publicData ?? {}) }) as IncidentReport;
   }
 
   /** Get a single incident by id. */

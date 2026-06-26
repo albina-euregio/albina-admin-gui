@@ -99,6 +99,26 @@
               </button>
             </div>
           </div>
+          @if (roles.length > 1) {
+            <div class="form-group row">
+              <label for="effectiveRole" class="col-sm-2 col-form-label">
+                {{ "settings.effectiveRole" | translate }}
+              </label>
+              <div class="col-sm-10">
+                <select
+                  class="form-select"
+                  id="effectiveRole"
+                  name="effectiveRole"
+                  [(ngModel)]="localStorageService.effectiveRole"
+                >
+                  <option [ngValue]="undefined">{{ "settings.effectiveRoleDefault" | translate }}</option>
+                  @for (role of roles; track role) {
+                    <option [ngValue]="role">{{ "role." + role | translate }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
         </div>
         <!-- Footer -->
         <div class="card-footer">

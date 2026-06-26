@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 import * as Enums from "../enums/enums";
 import { LangTextsSchema } from "../models/text.model";
 import { widgetRegistry } from "../shared/zod-schema-form.widget-registry";
-import { enumWithOther, not, withShowIf } from "../shared/zod-util";
+import { enumWithOther, not, unwrap, withShowIf } from "../shared/zod-util";
 
 export const MetaInformationSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
@@ -562,3 +562,19 @@ export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend
 
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;
 export type PartialIncidentReport = z.infer<typeof PartialIncidentReportSchema>;
+
+export const PublicIncidentReportSchema = PartialIncidentReportSchema.pick(
+  Object.fromEntries(
+    Object.entries(PartialIncidentReportSchema.shape)
+      .filter(([, fieldType]) => widgetRegistry.get(unwrap(fieldType as z.ZodType))?.public)
+      .map(([key]) => [key, true as const]),
+  ) as { [K in keyof typeof PartialIncidentReportSchema.shape]?: true },
+);
+
+export function toPublicIncidentReport(report: IncidentReport) {
+  const publicReport = PublicIncidentReportSchema.parse(report);
+  publicReport.victimInformation = [];
+  publicReport.groupInformation = [];
+  publicReport.attachments = (report.attachments ?? []).filter((a) => a.public);
+  return publicReport;
+}

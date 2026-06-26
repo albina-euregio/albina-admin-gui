@@ -30,8 +30,7 @@ export default [
     path: "incidents",
     title: "sidebar.incidents",
     component: FullLayoutComponent,
-    canActivate: [AuthGuard],
-    runGuardsAndResolvers: "always",
+    canActivate: [], // no authentication (partially)
     loadChildren: () => import("./incidents/routes"),
   },
   {

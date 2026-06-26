@@ -47,10 +47,6 @@ export class DangerSourcesService {
     (json) => DangerSourceVariantModel.parse(json),
   );
 
-  constructor() {
-    this.init();
-  }
-
   init({ days } = { days: 10 }) {
     this.isEditable = false;
     this.isReadOnly = false;

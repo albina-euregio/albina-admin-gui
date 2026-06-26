@@ -8,7 +8,7 @@ export default [
   {
     path: "",
     component: IncidentsOverviewComponent,
-    canActivate: [AuthGuard],
+    canActivate: [],
   },
   {
     path: "new",
@@ -18,6 +18,6 @@ export default [
   {
     path: ":id",
     component: IncidentReportComponent,
-    canActivate: [AuthGuard],
+    canActivate: [],
   },
 ] satisfies Routes;

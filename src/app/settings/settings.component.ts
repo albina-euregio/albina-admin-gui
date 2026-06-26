@@ -84,4 +84,9 @@ export class SettingsComponent {
   isAdmin() {
     return this.authenticationService.isCurrentUserInRole("ADMIN");
   }
+
+  /** The roles granted to the current user, selectable as the effective role. */
+  get roles() {
+    return this.authenticationService.getCurrentAuthor()?.roles ?? [];
+  }
 }

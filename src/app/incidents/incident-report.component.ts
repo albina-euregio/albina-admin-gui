@@ -16,32 +16,15 @@ import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { uniq } from "es-toolkit";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import {
-  catchError,
-  concatMap,
-  debounceTime,
-  distinctUntilChanged,
-  EMPTY,
-  forkJoin,
-  map,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  tap,
-} from "rxjs";
+import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
 import { z } from "zod/v4";
 
-import { GeocodingService } from "../observations/geocoding.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { RegionsService } from "../providers/regions-service/regions.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
-import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
-import { isFieldValid, isVisibleFieldsValid, pickPublicFields, safeParseVisibleFields } from "../shared/zod-util";
-import { IncidentReportMapService } from "./incident-report-map.service";
+import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
+import { isFieldValid, isVisibleFieldsValid, safeParseVisibleFields } from "../shared/zod-util";
+import { IncidentReportEditorComponent } from "./incident-report-editor.component";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
 import { IncidentService } from "./incident.service";
@@ -59,25 +42,20 @@ import { IncidentService } from "./incident.service";
     TranslatePipe,
     ToggleBtnGroup,
     ZodSchemaFormComponent,
+    IncidentReportEditorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [GeocodingService, IncidentService, IncidentReportMapService],
+  providers: [IncidentService],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
-  constantsService = inject(ConstantsService);
   authenticationService = inject(AuthenticationService);
-  regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
-  private geocodingService = inject(GeocodingService);
-  readonly mapService = inject(IncidentReportMapService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
-  // Server id of the persisted incident, once it has been created.
-  private incidentId: string | null = null;
   // used to prevent redundant saves
   private lastSavedData: string | null = null;
   // Status of the automatic server synchronization, exposed for the template.
@@ -92,13 +70,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly labelI18n = "incidentReport.#";
   readonly helpI18n = "incidentReportHelp.#";
 
-  showMandatoryOnly = false;
   readonly DisplayMode = DisplayMode;
   displayMode = DisplayMode.Edit;
 
   /** True for any read-only preview mode; gates the print/preview layout in the template. */
   get displayOnly(): boolean {
-    return this.displayMode !== DisplayMode.Edit;
+    return !isEditableDisplayMode(this.displayMode);
   }
   /** Tabs visible to the current user; the analysis tab is forecaster-only. */
   get allTabs() {
@@ -113,7 +90,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       { id: "group", label: "incidentReport.personInvolvement" },
       { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
       // The incident analysis is forecaster-only.
-      ...(this.authenticationService.isCurrentUserInRole("FORECASTER")
+      ...(this.userCan("VIEW_ANALYSIS")
         ? ([
             { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
           ] as const)
@@ -122,16 +99,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     ] as const;
   }
 
-  private _activeTab: (typeof this.allTabs)[number]["id"] = "general";
-  get activeTab(): (typeof this.allTabs)[number]["id"] {
-    return this._activeTab;
-  }
-  set activeTab(tab: (typeof this.allTabs)[number]["id"]) {
-    this._activeTab = tab;
-    if (tab === "general") {
-      setTimeout(() => this.mapService.initLocationMap(), 50);
-    }
-  }
+  activeTab: (typeof this.allTabs)[number]["id"] = "general";
 
   get prevTab(): (typeof this.allTabs)[number]["id"] {
     const tabs = this.allTabs;
@@ -143,6 +111,44 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const tabs = this.allTabs;
     const index = tabs.findIndex((tab) => tab.id === this.activeTab);
     return tabs[Math.min(index + 1, tabs.length - 1)].id;
+  }
+
+  /**
+   * Whether the current user may perform a report action, combining role and report status.
+   */
+  userCan(
+    op:
+      | "DELETE"
+      | "PUBLISH"
+      | "REPUBLISH"
+      | "UNPUBLISH"
+      | "CHANGE_STATUS"
+      | "CHANGE_STATUS_TO_REVIEW"
+      | "CHANGE_STATUS_TO_VERIFIED"
+      | "VIEW_ANALYSIS",
+    reportStatus = this.incidentReport().reportStatus,
+  ): boolean {
+    const isForecaster = this.authenticationService.isCurrentUserInRole("FORECASTER");
+    const inReview = reportStatus === "InReview" || reportStatus === "Verified";
+    const isPublished = !!this.incidentReport().publishedAt;
+    switch (op) {
+      case "PUBLISH":
+        return isForecaster && reportStatus !== "Draft" && this.isReportValid() && !isPublished;
+      case "REPUBLISH":
+        return isForecaster && reportStatus !== "Draft" && this.isReportValid() && isPublished;
+      case "UNPUBLISH":
+        return isForecaster && isPublished;
+      case "CHANGE_STATUS":
+        return isForecaster || !inReview;
+      case "CHANGE_STATUS_TO_REVIEW":
+        return isForecaster;
+      case "CHANGE_STATUS_TO_VERIFIED":
+        return isForecaster;
+      case "VIEW_ANALYSIS":
+        return isForecaster;
+      case "DELETE":
+        return isForecaster || inReview;
+    }
   }
 
   getValidationStatus(schema: z.ZodObject): "valid" | "invalid" {
@@ -201,69 +207,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.reportSafeParseVisibleFields().error ? z.prettifyError(this.reportSafeParseVisibleFields().error) : "",
   );
 
-  get involvementsFatalitiesBurials() {
-    const groups = this.incidentReport().groupInformation ?? [];
-    const victims = this.incidentReport().victimInformation ?? [];
-    const caughtOnly = victims.filter(
-      (v) => v.caught === "Involved" && (!v.burialDegree || v.burialDegree === "NotBuried"),
-    ).length;
-    const fullyBuried = victims.filter((v) => v.burialDegree === "FullyBuried").length;
-    const partlyBuriedHeadCovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadCovered").length;
-    const partlyBuriedHeadUncovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadUncovered").length;
-    const partlyBuried = victims.filter((v) => v.burialDegree === "PartlyBuried").length;
-    return IncidentModels.InvolvementsFatalitiesBurialsSchema.parse({
-      numberOfGroups: groups.length,
-      numberInvolved: caughtOnly + fullyBuried + partlyBuriedHeadCovered + partlyBuriedHeadUncovered + partlyBuried,
-      incidentActivity: uniq(groups.map((g) => g.incidentActivity).filter(Boolean)),
-      incidentTerrainType: uniq(groups.map((g) => g.incidentTerrainType).filter(Boolean)),
-      fatalities: victims.filter((v) => v.fatalInjured === "Fatal").length,
-      injuredSurvivors: victims.filter((v) => v.fatalInjured === "Injured").length,
-      uninjuredSurvivors: victims.filter((v) => v.fatalInjured === "Uninjured").length,
-      caughtOnly,
-      fullyBuried,
-      partlyBuriedHeadCovered,
-      partlyBuriedHeadUncovered,
-      partlyBuried,
-    } satisfies z.infer<typeof IncidentModels.InvolvementsFatalitiesBurialsSchema>);
-  }
-
-  newGroupInformation() {
-    const anonymousGroupIdentifier = this.translateService.instant("incidentReportUI.groupName", {
-      name: Math.random(),
-    });
-    const groupInformation = { anonymousGroupIdentifier: anonymousGroupIdentifier } as IncidentModels.GroupInformation;
-    const report = this.incidentReport();
-    const groups = [...(report.groupInformation ?? []), groupInformation];
-    this.incidentReport.set({ ...report, groupInformation: groups });
-    this.activeGroupIndex = groups.length - 1;
-  }
-
-  removeGroupInformation(index: number) {
-    if (index === 0) return;
-    const message = this.translateService.instant("incidentReportUI.dropGroup", { number: index + 1 });
-    if (!confirm(message)) return;
-    const report = this.incidentReport();
-    const groups = (report.groupInformation ?? []).filter((_, i) => i !== index);
-    this.incidentReport.set({ ...report, groupInformation: groups });
-    if (this.activeGroupIndex >= groups.length) {
-      this.activeGroupIndex = groups.length - 1;
-    }
-  }
-
-  updateGroupInformation(index: number, updatedGroup: IncidentModels.GroupInformation) {
-    const report = this.incidentReport();
-    const groups = (report.groupInformation ?? []).map((g, i) => (i === index ? updatedGroup : g));
-    this.incidentReport.set({ ...report, groupInformation: groups });
-  }
-
-  activeGroupSubTab: "overview" | "groups" | "victims" = "overview";
-  activeGroupIndex = 0;
-  activeVictimIndex = 0;
-
-  isGroupValid(group: IncidentModels.GroupInformation): boolean {
-    return isVisibleFieldsValid(IncidentModels.GroupInformationSchema, group as Record<string, unknown>);
-  }
-
   collapsedAttachments: Record<string, boolean> = {};
 
   toggleAttachmentCollapse(fileName: string) {
@@ -278,110 +221,19 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return IncidentModels.IncidentAttachmentSchema.safeParse(attachment).success;
   }
 
-  newVictimInformation() {
-    const anonymousVictimIdentifier = this.translateService.instant("incidentReportUI.victimName", {
-      name: Math.random(),
-    });
-    const victimInformation = { anonymousVictimIdentifier } as IncidentModels.VictimInformation;
-    const report = this.incidentReport();
-    const victims = [...(report.victimInformation ?? []), victimInformation];
-    this.incidentReport.set({ ...report, victimInformation: victims });
-    this.activeVictimIndex = victims.length - 1;
-  }
-
-  removeVictimInformation(index: number) {
-    const message = this.translateService.instant("incidentReportUI.dropVictim", { number: index + 1 });
-    if (!confirm(message)) return;
-    const report = this.incidentReport();
-    const victims = (report.victimInformation ?? []).filter((_, i) => i !== index);
-    this.incidentReport.set({ ...report, victimInformation: victims });
-    if (this.activeVictimIndex >= victims.length) {
-      this.activeVictimIndex = Math.max(0, victims.length - 1);
-    }
-  }
-
-  updateVictimInformation(index: number, updatedVictim: IncidentModels.VictimInformation) {
-    const report = this.incidentReport();
-    const victims = (report.victimInformation ?? []).map((v, i) => (i === index ? updatedVictim : v));
-    this.incidentReport.set({ ...report, victimInformation: victims });
-  }
-
-  isVictimValid(victim: IncidentModels.VictimInformation): boolean {
-    return isVisibleFieldsValid(IncidentModels.VictimInformationSchema, victim as Record<string, unknown>);
-  }
-
-  get groupIdentifiers(): string[] {
-    return this.incidentReport().groupInformation?.map((g) => g.anonymousGroupIdentifier) ?? [];
-  }
-
-  get hasPointData(): boolean {
-    const report = this.incidentReport();
-    return report.latitude != null || report.longitude != null;
-  }
-
-  get hasLineData(): boolean {
-    return !!this.incidentReport().lineCoordinatesText?.trim();
-  }
-
-  get hasPolygonData(): boolean {
-    return !!this.incidentReport().polygonCoordinatesText?.trim();
-  }
-
-  private _lastLat: number | null | undefined;
-  private _lastLng: number | null | undefined;
-  private readonly reverseGeocodeTrigger$ = new Subject<[number, number]>();
-
   ngOnInit() {
-    this.mapService.init({
-      incidentReport: this.incidentReport,
-      disabled: () => this.disabled(),
-      isActive: () => this.activeTab === "general",
-      onPointChange: (lat, lng) => {
-        this._lastLat = lat;
-        this._lastLng = lng;
-        this.reverseGeocodeTrigger$.next([lat, lng]);
-      },
-    });
-    if (this.activeTab === "general") {
-      setTimeout(() => this.mapService.initLocationMap(), 50);
-    }
     const id = this.route.snapshot.paramMap.get("id");
     if (id) {
       this.loadIncident(id);
     }
     this.startAutoSave();
-    this.reverseGeocodeTrigger$
-      .pipe(
-        debounceTime(800),
-        switchMap(([lat, lng]) =>
-          forkJoin({
-            addr: this.geocodingService.reverseGeocode(lat, lng).pipe(catchError(() => of(null))),
-            regionId: this.regionsService.findRegionForCoordinates(lat, lng).pipe(catchError(() => of(null))),
-          }),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(({ addr, regionId }) => {
-        this.incidentReport.update((r) => ({
-          ...r,
-          ...(addr && {
-            country: addr.country ?? r.country,
-            region: addr.state ?? r.region,
-            municipality: addr.municipality ?? addr.city ?? addr.town ?? addr.village ?? r.municipality,
-          }),
-          ...(regionId && { avalancheRegion: regionId }),
-        }));
-      });
   }
 
   private loadIncident(id: string) {
     this.incidentService.getIncident(id).subscribe({
       next: (report) => {
-        this.incidentId = report.id;
         this.updatedAt = new Date(report.updatedAt);
         this.incidentReport.set(report);
-        this._lastLat = report.latitude;
-        this._lastLng = report.longitude;
       },
       error: (error) => console.error("Failed to load incident", error),
     });
@@ -400,9 +252,16 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  /** Serialize the report to JSON, dropping in-memory-only attachment fields. */
+  /**
+   * Serialize the report to JSON, dropping in-memory-only attachment fields and
+   * the server-managed top-level `id` (the latter so that folding the assigned
+   * id back into the report after a create does not register as an edit and
+   * trigger a redundant save).
+   */
   private serializeReport(report: Partial<IncidentReport>): string {
-    return JSON.stringify(report, (key, value) => (key === "file" || key === "$previewUrl" ? undefined : value));
+    return JSON.stringify({ ...report, id: undefined }, (key, value) =>
+      key === "file" || key === "$previewUrl" ? undefined : value,
+    );
   }
 
   private saveIncident(data: string): Observable<unknown> {
@@ -410,15 +269,20 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const region = this.authenticationService.getActiveRegionId();
     if (!region) return EMPTY;
     this.saveState = "saving";
-    const request = this.incidentId
-      ? this.incidentService.updateIncident(this.incidentId, data)
+    const id = this.incidentReport().id;
+    const request = id
+      ? this.incidentService.updateIncident(id, data)
       : this.incidentService.createIncident(region, data);
     return request.pipe(
       tap((view) => {
-        this.incidentId = view.id;
         this.updatedAt = new Date(view.updatedAt);
         this.lastSavedData = data;
         this.saveState = "saved";
+        // Fold the server-assigned id into the report so it is the single source
+        // of truth for subsequent saves, attachments, publishing, etc.
+        if (this.incidentReport().id !== view.id) {
+          this.incidentReport.update((report) => ({ ...report, id: view.id }));
+        }
       }),
       catchError((error) => {
         console.error("Failed to save incident", error);
@@ -441,81 +305,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  onLocationFormChange(updatedReport: IncidentReport) {
-    this.incidentReport.set({ ...updatedReport });
-    this.mapService.drawOnMap();
-    if (
-      (updatedReport.latitude !== this._lastLat || updatedReport.longitude !== this._lastLng) &&
-      updatedReport.latitude != null &&
-      updatedReport.longitude != null
-    ) {
-      this.reverseGeocodeTrigger$.next([updatedReport.latitude, updatedReport.longitude]);
-    }
-    this._lastLat = updatedReport.latitude;
-    this._lastLng = updatedReport.longitude;
-  }
-
-  onLatLngInputChange() {
-    const report = this.incidentReport();
-    if (report.latitude != null) report.latitude = Number(report.latitude);
-    if (report.longitude != null) report.longitude = Number(report.longitude);
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  onLineCoordinatesTextChange(text: string) {
-    const report = this.incidentReport();
-    report.lineCoordinatesText = text;
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  onPolygonCoordinatesTextChange(text: string) {
-    const report = this.incidentReport();
-    report.polygonCoordinatesText = text;
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearPoint() {
-    const report = this.incidentReport();
-    report.latitude = null;
-    report.longitude = null;
-    report.locationAccuracy = null;
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearLine() {
-    const report = this.incidentReport();
-    report.lineCoordinatesText = "";
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearPolygon() {
-    const report = this.incidentReport();
-    report.polygonCoordinatesText = "";
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
-  clearAllDrawing() {
-    const report = this.incidentReport();
-    report.latitude = null;
-    report.longitude = null;
-    report.locationAccuracy = null;
-    report.lineCoordinatesText = "";
-    report.polygonCoordinatesText = "";
-    this.incidentReport.set({ ...report });
-    this.mapService.drawOnMap();
-  }
-
   async uploadIncidentAttachment($event: Event) {
     const input = $event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = "";
-    console.log();
     if (!file) {
       return;
     }
@@ -527,7 +320,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       mediaType: file.type,
       credit: "",
     };
-    const attachment = await this.incidentService.uploadIncidentAttachment(this.incidentId, attachment0).toPromise();
+    const attachment = await this.incidentService
+      .uploadIncidentAttachment(this.incidentReport().id, attachment0)
+      .toPromise();
     this.attachments[attachment.id] = Promise.resolve(URL.createObjectURL(file));
     const attachments = this.incidentReport().attachments ?? [];
     attachments.push(attachment);
@@ -547,40 +342,37 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
     if (!confirm(message)) return;
     const attachment = attachments[index];
-    await this.incidentService.deleteIncidentAttachment(this.incidentId, attachment).toPromise();
+    await this.incidentService.deleteIncidentAttachment(this.incidentReport().id, attachment).toPromise();
     this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
     attachments.splice(index, 1);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
   }
 
-  /** True once the incident has been persisted on the server and can be deleted. */
-  get isPersisted(): boolean {
-    return !!this.incidentId;
-  }
-
   deleteIncident() {
-    if (!this.incidentId) return;
+    if (!this.userCan("DELETE")) return;
     const message = this.translateService.instant("incidentReportUI.deleteIncidentConfirm");
     if (!confirm(message)) return;
-    this.incidentService.deleteIncident(this.incidentId).subscribe({
+    this.incidentService.deleteIncident(this.incidentReport().id).subscribe({
       next: () => this.router.navigate(["/incidents"]),
       error: (error) => console.error("Incident could not be deleted!", error),
     });
   }
 
   async publishIncident(confirmMessageKey: string) {
+    if (!this.userCan("PUBLISH") && !this.userCan("REPUBLISH")) return;
     if (!confirm(this.translateService.instant(confirmMessageKey))) return;
-    const publicReport = pickPublicFields(IncidentModels.IncidentReportSchema).parse(this.incidentReport());
+    const publicReport = IncidentModels.toPublicIncidentReport(this.incidentReport());
     console.info("Publishing report", publicReport);
     const data = this.serializeReport(publicReport);
-    const report = await this.incidentService.publishIncident(this.incidentId, data).toPromise();
+    const report = await this.incidentService.publishIncident(this.incidentReport().id, data).toPromise();
     this.incidentReport.set(report);
     alert(this.translateService.instant("incidentReportUI.publishIncidentSuccess"));
   }
 
   async unpublishIncident() {
+    if (!this.userCan("UNPUBLISH")) return;
     if (!confirm(this.translateService.instant("incidentReportUI.unpublishIncidentConfirm"))) return;
-    await this.incidentService.unpublishIncident(this.incidentId).toPromise();
+    await this.incidentService.unpublishIncident(this.incidentReport().id).toPromise();
     this.incidentReport.update((report) => ({ ...report, publishedAt: undefined }));
     alert(this.translateService.instant("incidentReportUI.unpublishIncidentSuccess"));
   }
@@ -593,7 +385,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!attachment?.id) return;
     if (!attachment.mediaType?.startsWith("image/")) return;
     return (this.attachments[attachment.id] ??= this.incidentService
-      .getIncidentAttachment(this.incidentId, attachment)
+      .getIncidentAttachment(this.incidentReport().id, attachment)
       .toPromise()
       .then((blob) => {
         const typedBlob = new Blob([blob], { type: attachment.mediaType });

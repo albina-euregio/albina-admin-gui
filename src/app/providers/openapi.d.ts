@@ -722,28 +722,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List incidents for a region */
+    /** List incidents for a region (public report data when unauthenticated) */
     get: operations["getIncidents"];
     put?: never;
     /** Create an incident */
     post: operations["createIncident"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/incidents/public": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** List published incidents for a region (public report) */
-    get: operations["getPublicIncidents"];
-    put?: never;
-    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -757,7 +740,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get an incident by ID */
+    /** Get an incident by ID (public data when unauthenticated) */
     get: operations["getIncident"];
     /** Update an incident */
     put: operations["updateIncident"];
@@ -793,7 +776,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get incident attachment */
+    /** Get incident attachment (public data when unauthenticated) */
     get: operations["getIncidentAttachment"];
     put?: never;
     post?: never;
@@ -3272,10 +3255,12 @@ export interface operations {
     parameters: {
       query: {
         region: string;
+        /** @description Season year, expanded to yyyy-10-01 until (yyyy+1)-10-01 */
+        seasonYear: number;
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
-        startDate: string;
+        startDate?: string | null;
         /** @description Date in the format yyyy-MM-dd'T'HH:mm:ssZZ */
-        endDate: string;
+        endDate?: string | null;
       };
       header?: never;
       path?: never;
@@ -3289,7 +3274,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Incident"][];
+          "application/json": string;
         };
       };
     };
@@ -3320,30 +3305,6 @@ export interface operations {
       };
     };
   };
-  getPublicIncidents: {
-    parameters: {
-      query: {
-        region: string;
-        /** @description Season year, expanded to yyyy-10-01 until (yyyy+1)-10-01 */
-        seasonYear: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description getPublicIncidents 200 response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": Record<string, never>[];
-        };
-      };
-    };
-  };
   getIncident: {
     parameters: {
       query?: never;
@@ -3361,7 +3322,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["Incident"];
+          "application/json": string;
         };
       };
     };
