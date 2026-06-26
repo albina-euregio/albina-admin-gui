@@ -113,7 +113,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       { id: "group", label: "incidentReport.personInvolvement" },
       { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
       // The incident analysis is forecaster-only.
-      ...(this.authenticationService.isCurrentUserInRole("FORECASTER")
+      ...(this.userCan("VIEW_ANALYSIS")
         ? ([
             { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
           ] as const)
@@ -156,7 +156,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       | "UNPUBLISH"
       | "CHANGE_STATUS"
       | "CHANGE_STATUS_TO_REVIEW"
-      | "CHANGE_STATUS_TO_VERIFIED",
+      | "CHANGE_STATUS_TO_VERIFIED"
+      | "VIEW_ANALYSIS",
     reportStatus = this.incidentReport().reportStatus,
   ): boolean {
     const isForecaster = this.authenticationService.isCurrentUserInRole("FORECASTER");
@@ -174,6 +175,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       case "CHANGE_STATUS_TO_REVIEW":
         return isForecaster;
       case "CHANGE_STATUS_TO_VERIFIED":
+        return isForecaster;
+      case "VIEW_ANALYSIS":
         return isForecaster;
       case "DELETE":
         return isForecaster || inReview;
