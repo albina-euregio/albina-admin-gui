@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Selects which runtime environment is served locally by copying
-// `src/assets/env.<name>.js` to `src/assets/env.js` (loaded by index.html).
+// `src/environments/env.<name>.js` to `src/assets/env.js` (loaded by index.html).
 // `env.js` itself is gitignored; the `env.<name>.js` snippets are the source.
 //
 // Usage: node scripts/use-env.mjs <name>   (e.g. local, dev, beta, aran)
@@ -14,9 +14,9 @@ if (!name) {
   process.exit(1);
 }
 
-const assets = resolve(dirname(fileURLToPath(import.meta.url)), "../src/assets");
-const source = resolve(assets, `env.${name}.js`);
-const target = resolve(assets, "env.js");
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const source = resolve(root, "src/environments", `env.${name}.js`);
+const target = resolve(root, "src/assets/env.js");
 
 if (!existsSync(source)) {
   console.error(`environment snippet not found: ${source}`);
