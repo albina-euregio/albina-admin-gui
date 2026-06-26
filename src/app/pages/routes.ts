@@ -8,6 +8,7 @@ export default [
     children: [
       {
         path: "login",
+        title: "login.title",
         component: LoginComponent,
       },
     ],

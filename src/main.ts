@@ -9,7 +9,7 @@ import localeIt from "@angular/common/locales/it";
 import localeOc from "@angular/common/locales/oc";
 import { provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideRouter, withHashLocation } from "@angular/router";
+import { provideRouter, TitleStrategy, withHashLocation } from "@angular/router";
 import { provideTranslateService } from "@ngx-translate/core";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
@@ -30,6 +30,7 @@ import { provideEchartsCore } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
 import routes from "./app/routes";
+import { TranslatedTitleStrategy } from "./app/shared/translated-title-strategy";
 
 echarts.use([
   BarChart,
@@ -94,6 +95,7 @@ function bootstrapApplication0() {
     providers: [
       provideZoneChangeDetection({ eventCoalescing: true }),
       provideRouter(routes, withHashLocation()),
+      { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
       provideTranslateService(),
       DatePipe,
       provideEchartsCore({ echarts }),
