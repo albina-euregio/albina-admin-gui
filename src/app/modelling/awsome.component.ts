@@ -13,6 +13,7 @@ import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { GridComponentOption } from "echarts/components";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
@@ -84,9 +85,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private sanitizer = inject(DomSanitizer);
   private httpClient = inject(HttpClient);
   private translateService = inject(TranslateService);
+  private authenticationService = inject(AuthenticationService);
 
   // https://gitlab.com/avalanche-warning
-  private configURL = environment.awsomeConfigUrl;
+  private configURL = "";
   private config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
   date = "";
@@ -115,6 +117,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async ngOnInit() {
+    this.configURL = this.authenticationService.getActiveRegion()?.awsomeUrl || environment.awsomeConfigUrl;
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
     this.route.queryParamMap.subscribe((params) => {
       this.configURL = params.get("config") || this.configURL;

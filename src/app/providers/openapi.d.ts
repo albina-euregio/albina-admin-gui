@@ -1930,6 +1930,7 @@ export interface components {
       coatOfArms?: string;
       serverImagesUrl?: string;
       educationUrl?: string;
+      awsomeUrl?: string;
     };
     RegionLanguageConfiguration: {
       lang?: components["schemas"]["LanguageCode"];

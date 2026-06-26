@@ -20,6 +20,7 @@ export const RegionConfigurationGeneralSchema = z.object({
   staticUrl: z.url().nullish().describe("URL to static avalanche files"),
   serverImagesUrl: z.url().nullish().describe("URL to server images"),
   educationUrl: z.url().nullish().describe("URL to education content"),
+  awsomeUrl: z.url().nullish().describe("URL to AWSOME modelling configuration"),
   microRegions: z.coerce.number().nullish().describe("Number of micro regions"),
   subRegions: z.string().array().nullish().describe("ID of sub regions"),
   superRegions: z.string().array().nullish().describe("ID of super regions"),
