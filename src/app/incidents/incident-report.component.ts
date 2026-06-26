@@ -16,19 +16,15 @@ import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { uniq } from "es-toolkit";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
 import { z } from "zod/v4";
 
-import { GeocodingService } from "../observations/geocoding.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid, safeParseVisibleFields } from "../shared/zod-util";
-import { IncidentReportGeocodeService } from "./incident-report-geocode.service";
-import { IncidentReportMapService } from "./incident-report-map.service";
+import { IncidentReportEditorComponent } from "./incident-report-editor.component";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
 import { IncidentService } from "./incident.service";
@@ -46,17 +42,15 @@ import { IncidentService } from "./incident.service";
     TranslatePipe,
     ToggleBtnGroup,
     ZodSchemaFormComponent,
+    IncidentReportEditorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [GeocodingService, IncidentService, IncidentReportMapService, IncidentReportGeocodeService],
+  providers: [IncidentService],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
-  constantsService = inject(ConstantsService);
   authenticationService = inject(AuthenticationService);
   translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
-  readonly mapService = inject(IncidentReportMapService);
-  private geocodeService = inject(IncidentReportGeocodeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
@@ -106,16 +100,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     ] as const;
   }
 
-  private _activeTab: (typeof this.allTabs)[number]["id"] = "general";
-  get activeTab(): (typeof this.allTabs)[number]["id"] {
-    return this._activeTab;
-  }
-  set activeTab(tab: (typeof this.allTabs)[number]["id"]) {
-    this._activeTab = tab;
-    if (tab === "general") {
-      setTimeout(() => this.mapService.initLocationMap(), 50);
-    }
-  }
+  activeTab: (typeof this.allTabs)[number]["id"] = "general";
 
   get prevTab(): (typeof this.allTabs)[number]["id"] {
     const tabs = this.allTabs;
@@ -223,69 +208,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.reportSafeParseVisibleFields().error ? z.prettifyError(this.reportSafeParseVisibleFields().error) : "",
   );
 
-  get involvementsFatalitiesBurials() {
-    const groups = this.incidentReport().groupInformation ?? [];
-    const victims = this.incidentReport().victimInformation ?? [];
-    const caughtOnly = victims.filter(
-      (v) => v.caught === "Involved" && (!v.burialDegree || v.burialDegree === "NotBuried"),
-    ).length;
-    const fullyBuried = victims.filter((v) => v.burialDegree === "FullyBuried").length;
-    const partlyBuriedHeadCovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadCovered").length;
-    const partlyBuriedHeadUncovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadUncovered").length;
-    const partlyBuried = victims.filter((v) => v.burialDegree === "PartlyBuried").length;
-    return IncidentModels.InvolvementsFatalitiesBurialsSchema.parse({
-      numberOfGroups: groups.length,
-      numberInvolved: caughtOnly + fullyBuried + partlyBuriedHeadCovered + partlyBuriedHeadUncovered + partlyBuried,
-      incidentActivity: uniq(groups.map((g) => g.incidentActivity).filter(Boolean)),
-      incidentTerrainType: uniq(groups.map((g) => g.incidentTerrainType).filter(Boolean)),
-      fatalities: victims.filter((v) => v.fatalInjured === "Fatal").length,
-      injuredSurvivors: victims.filter((v) => v.fatalInjured === "Injured").length,
-      uninjuredSurvivors: victims.filter((v) => v.fatalInjured === "Uninjured").length,
-      caughtOnly,
-      fullyBuried,
-      partlyBuriedHeadCovered,
-      partlyBuriedHeadUncovered,
-      partlyBuried,
-    } satisfies z.infer<typeof IncidentModels.InvolvementsFatalitiesBurialsSchema>);
-  }
-
-  newGroupInformation() {
-    const anonymousGroupIdentifier = this.translateService.instant("incidentReportUI.groupName", {
-      name: Math.random(),
-    });
-    const groupInformation = { anonymousGroupIdentifier: anonymousGroupIdentifier } as IncidentModels.GroupInformation;
-    const report = this.incidentReport();
-    const groups = [...(report.groupInformation ?? []), groupInformation];
-    this.incidentReport.set({ ...report, groupInformation: groups });
-    this.activeGroupIndex = groups.length - 1;
-  }
-
-  removeGroupInformation(index: number) {
-    if (index === 0) return;
-    const message = this.translateService.instant("incidentReportUI.dropGroup", { number: index + 1 });
-    if (!confirm(message)) return;
-    const report = this.incidentReport();
-    const groups = (report.groupInformation ?? []).filter((_, i) => i !== index);
-    this.incidentReport.set({ ...report, groupInformation: groups });
-    if (this.activeGroupIndex >= groups.length) {
-      this.activeGroupIndex = groups.length - 1;
-    }
-  }
-
-  updateGroupInformation(index: number, updatedGroup: IncidentModels.GroupInformation) {
-    const report = this.incidentReport();
-    const groups = (report.groupInformation ?? []).map((g, i) => (i === index ? updatedGroup : g));
-    this.incidentReport.set({ ...report, groupInformation: groups });
-  }
-
-  activeGroupSubTab: "overview" | "groups" | "victims" = "overview";
-  activeGroupIndex = 0;
-  activeVictimIndex = 0;
-
-  isGroupValid(group: IncidentModels.GroupInformation): boolean {
-    return isVisibleFieldsValid(IncidentModels.GroupInformationSchema, group as Record<string, unknown>);
-  }
-
   collapsedAttachments: Record<string, boolean> = {};
 
   toggleAttachmentCollapse(fileName: string) {
@@ -300,53 +222,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return IncidentModels.IncidentAttachmentSchema.safeParse(attachment).success;
   }
 
-  newVictimInformation() {
-    const anonymousVictimIdentifier = this.translateService.instant("incidentReportUI.victimName", {
-      name: Math.random(),
-    });
-    const victimInformation = { anonymousVictimIdentifier } as IncidentModels.VictimInformation;
-    const report = this.incidentReport();
-    const victims = [...(report.victimInformation ?? []), victimInformation];
-    this.incidentReport.set({ ...report, victimInformation: victims });
-    this.activeVictimIndex = victims.length - 1;
-  }
-
-  removeVictimInformation(index: number) {
-    const message = this.translateService.instant("incidentReportUI.dropVictim", { number: index + 1 });
-    if (!confirm(message)) return;
-    const report = this.incidentReport();
-    const victims = (report.victimInformation ?? []).filter((_, i) => i !== index);
-    this.incidentReport.set({ ...report, victimInformation: victims });
-    if (this.activeVictimIndex >= victims.length) {
-      this.activeVictimIndex = Math.max(0, victims.length - 1);
-    }
-  }
-
-  updateVictimInformation(index: number, updatedVictim: IncidentModels.VictimInformation) {
-    const report = this.incidentReport();
-    const victims = (report.victimInformation ?? []).map((v, i) => (i === index ? updatedVictim : v));
-    this.incidentReport.set({ ...report, victimInformation: victims });
-  }
-
-  isVictimValid(victim: IncidentModels.VictimInformation): boolean {
-    return isVisibleFieldsValid(IncidentModels.VictimInformationSchema, victim as Record<string, unknown>);
-  }
-
-  get groupIdentifiers(): string[] {
-    return this.incidentReport().groupInformation?.map((g) => g.anonymousGroupIdentifier) ?? [];
-  }
-
   ngOnInit() {
-    this.geocodeService.init({ incidentReport: this.incidentReport });
-    this.mapService.init({
-      incidentReport: this.incidentReport,
-      disabled: () => this.disabled(),
-      isActive: () => this.activeTab === "general",
-      onPointChange: (lat, lng) => this.geocodeService.reverseGeocode(lat, lng),
-    });
-    if (this.activeTab === "general") {
-      setTimeout(() => this.mapService.initLocationMap(), 50);
-    }
     const id = this.route.snapshot.paramMap.get("id");
     if (id) {
       this.loadIncident(id);
@@ -359,7 +235,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       next: (report) => {
         this.updatedAt = new Date(report.updatedAt);
         this.incidentReport.set(report);
-        this.geocodeService.setLastPoint(report.latitude, report.longitude);
       },
       error: (error) => console.error("Failed to load incident", error),
     });
@@ -431,17 +306,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  onLocationFormChange(updatedReport: IncidentReport) {
-    this.incidentReport.set({ ...updatedReport });
-    this.mapService.drawOnMap();
-    this.geocodeService.reverseGeocodeIfChanged(updatedReport.latitude, updatedReport.longitude);
-  }
-
   async uploadIncidentAttachment($event: Event) {
     const input = $event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = "";
-    console.log();
     if (!file) {
       return;
     }
