@@ -62,8 +62,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
 
-  // Server id of the persisted incident, once it has been created.
-  private incidentId: string | null = null;
   // used to prevent redundant saves
   private lastSavedData: string | null = null;
   // Status of the automatic server synchronization, exposed for the template.
@@ -359,7 +357,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private loadIncident(id: string) {
     this.incidentService.getIncident(id).subscribe({
       next: (report) => {
-        this.incidentId = report.id;
         this.updatedAt = new Date(report.updatedAt);
         this.incidentReport.set(report);
         this.geocodeService.setLastPoint(report.latitude, report.longitude);
@@ -381,9 +378,16 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  /** Serialize the report to JSON, dropping in-memory-only attachment fields. */
+  /**
+   * Serialize the report to JSON, dropping in-memory-only attachment fields and
+   * the server-managed top-level `id` (the latter so that folding the assigned
+   * id back into the report after a create does not register as an edit and
+   * trigger a redundant save).
+   */
   private serializeReport(report: Partial<IncidentReport>): string {
-    return JSON.stringify(report, (key, value) => (key === "file" || key === "$previewUrl" ? undefined : value));
+    return JSON.stringify({ ...report, id: undefined }, (key, value) =>
+      key === "file" || key === "$previewUrl" ? undefined : value,
+    );
   }
 
   private saveIncident(data: string): Observable<unknown> {
@@ -391,15 +395,20 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const region = this.authenticationService.getActiveRegionId();
     if (!region) return EMPTY;
     this.saveState = "saving";
-    const request = this.incidentId
-      ? this.incidentService.updateIncident(this.incidentId, data)
+    const id = this.incidentReport().id;
+    const request = id
+      ? this.incidentService.updateIncident(id, data)
       : this.incidentService.createIncident(region, data);
     return request.pipe(
       tap((view) => {
-        this.incidentId = view.id;
         this.updatedAt = new Date(view.updatedAt);
         this.lastSavedData = data;
         this.saveState = "saved";
+        // Fold the server-assigned id into the report so it is the single source
+        // of truth for subsequent saves, attachments, publishing, etc.
+        if (this.incidentReport().id !== view.id) {
+          this.incidentReport.update((report) => ({ ...report, id: view.id }));
+        }
       }),
       catchError((error) => {
         console.error("Failed to save incident", error);
@@ -444,7 +453,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       mediaType: file.type,
       credit: "",
     };
-    const attachment = await this.incidentService.uploadIncidentAttachment(this.incidentId, attachment0).toPromise();
+    const attachment = await this.incidentService
+      .uploadIncidentAttachment(this.incidentReport().id, attachment0)
+      .toPromise();
     this.attachments[attachment.id] = Promise.resolve(URL.createObjectURL(file));
     const attachments = this.incidentReport().attachments ?? [];
     attachments.push(attachment);
@@ -464,7 +475,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     });
     if (!confirm(message)) return;
     const attachment = attachments[index];
-    await this.incidentService.deleteIncidentAttachment(this.incidentId, attachment).toPromise();
+    await this.incidentService.deleteIncidentAttachment(this.incidentReport().id, attachment).toPromise();
     this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
     attachments.splice(index, 1);
     this.incidentReport.set({ ...this.incidentReport(), attachments });
@@ -474,7 +485,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!this.userCan("DELETE")) return;
     const message = this.translateService.instant("incidentReportUI.deleteIncidentConfirm");
     if (!confirm(message)) return;
-    this.incidentService.deleteIncident(this.incidentId).subscribe({
+    this.incidentService.deleteIncident(this.incidentReport().id).subscribe({
       next: () => this.router.navigate(["/incidents"]),
       error: (error) => console.error("Incident could not be deleted!", error),
     });
@@ -486,7 +497,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const publicReport = IncidentModels.toPublicIncidentReport(this.incidentReport());
     console.info("Publishing report", publicReport);
     const data = this.serializeReport(publicReport);
-    const report = await this.incidentService.publishIncident(this.incidentId, data).toPromise();
+    const report = await this.incidentService.publishIncident(this.incidentReport().id, data).toPromise();
     this.incidentReport.set(report);
     alert(this.translateService.instant("incidentReportUI.publishIncidentSuccess"));
   }
@@ -494,7 +505,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   async unpublishIncident() {
     if (!this.userCan("UNPUBLISH")) return;
     if (!confirm(this.translateService.instant("incidentReportUI.unpublishIncidentConfirm"))) return;
-    await this.incidentService.unpublishIncident(this.incidentId).toPromise();
+    await this.incidentService.unpublishIncident(this.incidentReport().id).toPromise();
     this.incidentReport.update((report) => ({ ...report, publishedAt: undefined }));
     alert(this.translateService.instant("incidentReportUI.unpublishIncidentSuccess"));
   }
@@ -507,7 +518,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!attachment?.id) return;
     if (!attachment.mediaType?.startsWith("image/")) return;
     return (this.attachments[attachment.id] ??= this.incidentService
-      .getIncidentAttachment(this.incidentId, attachment)
+      .getIncidentAttachment(this.incidentReport().id, attachment)
       .toPromise()
       .then((blob) => {
         const typedBlob = new Blob([blob], { type: attachment.mediaType });
