@@ -241,7 +241,7 @@
                 <span class="d-flex align-items-center gap-2">
                   <i class="ph ph-map-pin"></i> {{ "incidentReportUI.point" | translate }}
                 </span>
-                @if (hasPointData && !disabled()) {
+                @if ((incidentReport().latitude || incidentReport().longitude) && !disabled()) {
                   <span
                     (click)="$event.stopPropagation(); clearPoint()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
@@ -275,7 +275,7 @@
                 <span class="d-flex align-items-center gap-2">
                   <i class="ph ph-line-segments"></i> {{ "incidentReportUI.line" | translate }}
                 </span>
-                @if (hasLineData && !disabled()) {
+                @if (incidentReport().lineCoordinatesText?.trim() && !disabled()) {
                   <span
                     (click)="$event.stopPropagation(); clearLine()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"
@@ -309,7 +309,7 @@
                 <span class="d-flex align-items-center gap-2">
                   <i class="ph ph-polygon"></i> {{ "incidentReportUI.polygon" | translate }}
                 </span>
-                @if (hasPolygonData && !disabled()) {
+                @if (incidentReport().polygonCoordinatesText?.trim() && !disabled()) {
                   <span
                     (click)="$event.stopPropagation(); clearPolygon()"
                     class="clear-btn-embedded d-flex align-items-center justify-content-center"

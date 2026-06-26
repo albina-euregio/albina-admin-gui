@@ -338,19 +338,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return this.incidentReport().groupInformation?.map((g) => g.anonymousGroupIdentifier) ?? [];
   }
 
-  get hasPointData(): boolean {
-    const report = this.incidentReport();
-    return report.latitude != null || report.longitude != null;
-  }
-
-  get hasLineData(): boolean {
-    return !!this.incidentReport().lineCoordinatesText?.trim();
-  }
-
-  get hasPolygonData(): boolean {
-    return !!this.incidentReport().polygonCoordinatesText?.trim();
-  }
-
   ngOnInit() {
     this.geocodeService.init({ incidentReport: this.incidentReport });
     this.mapService.init({
