@@ -573,5 +573,8 @@ export const PublicIncidentReportSchema = PartialIncidentReportSchema.pick(
 
 export function toPublicIncidentReport(report: IncidentReport) {
   const publicReport = PublicIncidentReportSchema.parse(report);
+  publicReport.victimInformation = [];
+  publicReport.groupInformation = [];
+  publicReport.attachments = (report.attachments ?? []).filter((a) => a.public);
   return publicReport;
 }
