@@ -11,7 +11,6 @@
       [includeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
-      [showMandatoryOnly]="showMandatoryOnly()"
     />
 
     <!-- Location Map -->
@@ -176,7 +175,6 @@
       [excludeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
-      [showMandatoryOnly]="showMandatoryOnly()"
     />
   </div>
 }
@@ -193,7 +191,6 @@
       [zodType]="IncidentModels.BulletinInformationSchema"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
-      [showMandatoryOnly]="showMandatoryOnly()"
     />
   </div>
 }
@@ -210,7 +207,6 @@
       [zodType]="IncidentModels.AvalancheInformationSchema"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
-      [showMandatoryOnly]="showMandatoryOnly()"
     />
   </div>
 }
@@ -273,7 +269,6 @@
         [includeFields]="['personInvolvement']"
         [labelI18n]="labelI18n"
         [helpI18n]="helpI18n"
-        [showMandatoryOnly]="showMandatoryOnly()"
       />
 
       @if (incidentReport().personInvolvement === "Yes") {
@@ -288,7 +283,6 @@
             [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
             [labelI18n]="labelI18n"
             [helpI18n]="helpI18n"
-            [showMandatoryOnly]="showMandatoryOnly()"
           />
         </div>
       }
@@ -351,7 +345,6 @@
                 [zodType]="IncidentModels.GroupInformationSchema"
                 [labelI18n]="labelI18n"
                 [helpI18n]="helpI18n"
-                [showMandatoryOnly]="showMandatoryOnly()"
               />
             </div>
           </div>
@@ -414,7 +407,6 @@
                 [zodType]="IncidentModels.VictimInformationSchema"
                 [labelI18n]="labelI18n"
                 [helpI18n]="helpI18n"
-                [showMandatoryOnly]="showMandatoryOnly()"
                 [groupIdentifiers]="groupIdentifiers"
               />
             </div>
@@ -437,7 +429,6 @@
       [zodType]="IncidentModels.OtherDamagesSchema"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
-      [showMandatoryOnly]="showMandatoryOnly()"
     />
   </div>
 }
@@ -454,7 +445,6 @@
       [zodType]="IncidentModels.IncidentAnalysisSchema"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
-      [showMandatoryOnly]="showMandatoryOnly()"
     />
   </div>
 }

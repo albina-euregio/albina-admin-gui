@@ -1711,9 +1711,9 @@
     "removeGroup": "Remove Group",
     "removeVictim": "Remove Person",
     "required": "Required",
-    "showMandatoryFieldsOnly": "Most relevant only",
     "displayMode": {
       "edit": "Edit",
+      "editMostRelevant": "Edit most relevant",
       "all": "Preview all",
       "public": "Preview public only",
       "filledOut": "Preview filled out only"

@@ -4,7 +4,7 @@ import { uniq } from "es-toolkit";
 import { z } from "zod/v4";
 
 import { GeocodingService } from "../observations/geocoding.service";
-import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
+import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isVisibleFieldsValid } from "../shared/zod-util";
 import { IncidentReportGeocodeService } from "./incident-report-geocode.service";
 import { IncidentReportMapService } from "./incident-report-map.service";
@@ -43,7 +43,6 @@ export class IncidentReportEditorComponent implements OnInit {
   readonly incidentReport = model.required<IncidentReport>();
   readonly disabled = input<boolean>(false);
   readonly displayMode = input<DisplayMode>(DisplayMode.Edit);
-  readonly showMandatoryOnly = input<boolean>(false);
   readonly activeTab = input<IncidentReportTab>("general");
 
   readonly IncidentModels = IncidentModels;
@@ -60,7 +59,7 @@ export class IncidentReportEditorComponent implements OnInit {
 
   /** True for any read-only preview mode; mirrors the parent's display mode. */
   get displayOnly(): boolean {
-    return this.displayMode() !== DisplayMode.Edit;
+    return !isEditableDisplayMode(this.displayMode());
   }
 
   constructor() {

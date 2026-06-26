@@ -119,7 +119,13 @@
 
   <div class="d-flex mb-2 d-print-none">
     <app-toggle-btn-group
-      [enumValues]="[DisplayMode.Edit, DisplayMode.All, DisplayMode.Public, DisplayMode.FilledOut]"
+      [enumValues]="[
+        DisplayMode.Edit,
+        DisplayMode.EditMostRelevant,
+        DisplayMode.All,
+        DisplayMode.Public,
+        DisplayMode.FilledOut,
+      ]"
       [value]="displayMode"
       (valueChange)="displayMode = $event ?? DisplayMode.Edit"
       [labelI18n]="'incidentReportUI.displayMode.#'"
@@ -154,29 +160,12 @@
     }
   </ul>
 
-  <!-- Toggle Mode -->
-  @if (!displayOnly) {
-    <div class="d-flex justify-content-end mb-2 d-print-none">
-      <div class="form-check form-switch mb-0 ms-3">
-        <input class="form-check-input" type="checkbox" id="toggleMandatoryOnly" [(ngModel)]="showMandatoryOnly" />
-        <label
-          class="form-check-label text-secondary fw-semibold cursor-pointer"
-          for="toggleMandatoryOnly"
-          style="font-size: 12px"
-        >
-          {{ "incidentReportUI.showMandatoryFieldsOnly" | translate }}
-        </label>
-      </div>
-    </div>
-  }
-
   <!-- Tab Content Areas -->
   <div class="border p-4 rounded bg-light-subtle shadow-sm">
     <app-incident-report-editor
       [(incidentReport)]="incidentReport"
       [disabled]="disabled()"
       [displayMode]="displayMode"
-      [showMandatoryOnly]="showMandatoryOnly"
       [activeTab]="activeTab"
     />
 
@@ -298,7 +287,6 @@
                         [zodType]="IncidentModels.IncidentAttachmentSchema"
                         [labelI18n]="labelI18n"
                         [helpI18n]="helpI18n"
-                        [showMandatoryOnly]="showMandatoryOnly"
                       />
                     </div>
                   } @else {
@@ -311,7 +299,6 @@
                         [zodType]="IncidentModels.IncidentAttachmentSchema"
                         [labelI18n]="labelI18n"
                         [helpI18n]="helpI18n"
-                        [showMandatoryOnly]="showMandatoryOnly"
                       />
                     </div>
                   }
@@ -328,7 +315,6 @@
           [zodType]="IncidentModels.IncidentLinksSchema"
           [labelI18n]="labelI18n"
           [helpI18n]="helpI18n"
-          [showMandatoryOnly]="showMandatoryOnly"
         />
       </div>
     }

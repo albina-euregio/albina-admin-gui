@@ -22,7 +22,7 @@ import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, 
 import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
-import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
+import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid, safeParseVisibleFields } from "../shared/zod-util";
 import { IncidentReportEditorComponent } from "./incident-report-editor.component";
 import * as IncidentModels from "./incident-report.model";
@@ -70,13 +70,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly labelI18n = "incidentReport.#";
   readonly helpI18n = "incidentReportHelp.#";
 
-  showMandatoryOnly = false;
   readonly DisplayMode = DisplayMode;
   displayMode = DisplayMode.Edit;
 
   /** True for any read-only preview mode; gates the print/preview layout in the template. */
   get displayOnly(): boolean {
-    return this.displayMode !== DisplayMode.Edit;
+    return !isEditableDisplayMode(this.displayMode);
   }
   /** Tabs visible to the current user; the analysis tab is forecaster-only. */
   get allTabs() {

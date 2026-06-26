@@ -37,19 +37,26 @@ type SupportedSchema =
 type ShapeFields<T> = T extends { shape: infer S } ? S[keyof S] : never;
 
 /**
- * How the form renders its fields. `Edit` is the interactive form; every other value is a
- * read-only preview that additionally filters which fields are shown. New preview variants
- * (e.g. a future "mandatory only" preview) can be added here without touching the form's API.
+ * How the form renders its fields. `Edit` and `EditMostRelevant` are interactive forms; every
+ * other value is a read-only preview that additionally filters which fields are shown. New
+ * variants can be added here without touching the form's API.
  */
 export enum DisplayMode {
   /** Interactive, editable form (default). */
   Edit = "edit",
+  /** Interactive, editable form showing mandatory ("most relevant") fields only. */
+  EditMostRelevant = "editMostRelevant",
   /** Read-only preview of all fields. */
   All = "all",
   /** Read-only preview of fields flagged `public` only. */
   Public = "public",
   /** Read-only preview of fields that have a value only. */
   FilledOut = "filledOut",
+}
+
+/** Whether the given display mode renders an interactive, editable form (vs. a read-only preview). */
+export function isEditableDisplayMode(mode: DisplayMode): boolean {
+  return mode === DisplayMode.Edit || mode === DisplayMode.EditMostRelevant;
 }
 
 @Component({
@@ -85,7 +92,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly disabled = input<boolean>(false);
   readonly displayMode = input<DisplayMode>(DisplayMode.Edit);
   /** True for any read-only preview mode; drives the existing display-vs-edit branches. */
-  readonly displayOnly = computed(() => this.displayMode() !== DisplayMode.Edit);
+  readonly displayOnly = computed(() => !isEditableDisplayMode(this.displayMode()));
   readonly diminishValues = input<Record<string, Partial<Record<string, boolean>>>>({});
   readonly zodType = input<T>();
   readonly labelI18n = input<`${string}#${string}`>();
@@ -111,7 +118,8 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return x as Aspect;
   }
 
-  readonly showMandatoryOnly = input<boolean>(false);
+  /** True in the {@link DisplayMode.EditMostRelevant} mode, which hides optional fields. */
+  readonly showMandatoryOnly = computed(() => this.displayMode() === DisplayMode.EditMostRelevant);
 
   isPublicField(key: string): boolean {
     if (key === "public") return true;
