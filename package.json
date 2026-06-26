@@ -15,7 +15,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node scripts/use-env.mjs local && ng serve",
-    "start-local": "node scripts/use-env.mjs local && ng serve --configuration local",
+    "start-local": "node scripts/use-env.mjs local && ng serve --configuration development",
     "start-dev": "node scripts/use-env.mjs dev && ng serve --configuration development",
     "start-beta": "node scripts/use-env.mjs beta && ng serve",
     "start-aran": "node scripts/use-env.mjs aran && ng serve",
