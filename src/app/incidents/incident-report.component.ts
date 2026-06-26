@@ -19,28 +19,15 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { uniq } from "es-toolkit";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import {
-  catchError,
-  concatMap,
-  debounceTime,
-  distinctUntilChanged,
-  EMPTY,
-  forkJoin,
-  map,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  tap,
-} from "rxjs";
+import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
 import { z } from "zod/v4";
 
 import { GeocodingService } from "../observations/geocoding.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { RegionsService } from "../providers/regions-service/regions.service";
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { DisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isFieldValid, isVisibleFieldsValid, safeParseVisibleFields } from "../shared/zod-util";
+import { IncidentReportGeocodeService } from "./incident-report-geocode.service";
 import { IncidentReportMapService } from "./incident-report-map.service";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
@@ -61,16 +48,15 @@ import { IncidentService } from "./incident.service";
     ZodSchemaFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [GeocodingService, IncidentService, IncidentReportMapService],
+  providers: [GeocodingService, IncidentService, IncidentReportMapService, IncidentReportGeocodeService],
 })
 export class IncidentReportComponent implements OnInit, OnDestroy {
   constantsService = inject(ConstantsService);
   authenticationService = inject(AuthenticationService);
-  regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
-  private geocodingService = inject(GeocodingService);
   readonly mapService = inject(IncidentReportMapService);
+  private geocodeService = inject(IncidentReportGeocodeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
@@ -365,20 +351,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return !!this.incidentReport().polygonCoordinatesText?.trim();
   }
 
-  private _lastLat: number | null | undefined;
-  private _lastLng: number | null | undefined;
-  private readonly reverseGeocodeTrigger$ = new Subject<[number, number]>();
-
   ngOnInit() {
+    this.geocodeService.init({ incidentReport: this.incidentReport });
     this.mapService.init({
       incidentReport: this.incidentReport,
       disabled: () => this.disabled(),
       isActive: () => this.activeTab === "general",
-      onPointChange: (lat, lng) => {
-        this._lastLat = lat;
-        this._lastLng = lng;
-        this.reverseGeocodeTrigger$.next([lat, lng]);
-      },
+      onPointChange: (lat, lng) => this.geocodeService.reverseGeocode(lat, lng),
     });
     if (this.activeTab === "general") {
       setTimeout(() => this.mapService.initLocationMap(), 50);
@@ -388,28 +367,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       this.loadIncident(id);
     }
     this.startAutoSave();
-    this.reverseGeocodeTrigger$
-      .pipe(
-        debounceTime(800),
-        switchMap(([lat, lng]) =>
-          forkJoin({
-            addr: this.geocodingService.reverseGeocode(lat, lng).pipe(catchError(() => of(null))),
-            regionId: this.regionsService.findRegionForCoordinates(lat, lng).pipe(catchError(() => of(null))),
-          }),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(({ addr, regionId }) => {
-        this.incidentReport.update((r) => ({
-          ...r,
-          ...(addr && {
-            country: addr.country ?? r.country,
-            region: addr.state ?? r.region,
-            municipality: addr.municipality ?? addr.city ?? addr.town ?? addr.village ?? r.municipality,
-          }),
-          ...(regionId && { avalancheRegion: regionId }),
-        }));
-      });
   }
 
   private loadIncident(id: string) {
@@ -418,8 +375,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         this.incidentId = report.id;
         this.updatedAt = new Date(report.updatedAt);
         this.incidentReport.set(report);
-        this._lastLat = report.latitude;
-        this._lastLng = report.longitude;
+        this.geocodeService.setLastPoint(report.latitude, report.longitude);
       },
       error: (error) => console.error("Failed to load incident", error),
     });
@@ -482,15 +438,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   onLocationFormChange(updatedReport: IncidentReport) {
     this.incidentReport.set({ ...updatedReport });
     this.mapService.drawOnMap();
-    if (
-      (updatedReport.latitude !== this._lastLat || updatedReport.longitude !== this._lastLng) &&
-      updatedReport.latitude != null &&
-      updatedReport.longitude != null
-    ) {
-      this.reverseGeocodeTrigger$.next([updatedReport.latitude, updatedReport.longitude]);
-    }
-    this._lastLat = updatedReport.latitude;
-    this._lastLng = updatedReport.longitude;
+    this.geocodeService.reverseGeocodeIfChanged(updatedReport.latitude, updatedReport.longitude);
   }
 
   onLatLngInputChange() {
