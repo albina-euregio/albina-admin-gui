@@ -55,18 +55,14 @@ export class IncidentService {
         return { region, startDate, endDate };
       },
       stream: ({ params: { region, startDate, endDate } }) => {
-        const url = this.authenticationService.isUserLoggedIn()
-          ? this.constantsService.getServerUrlGET("/incidents", {
-              region,
-              startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
-              endDate: this.constantsService.getISOStringWithTimezoneOffset(
-                new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
-              ),
-            })
-          : this.constantsService.getServerUrlGET("/incidents/public", {
-              region,
-              seasonYear: startDate.getFullYear(),
-            });
+        const url = this.constantsService.getServerUrlGET("/incidents", {
+          region,
+          seasonYear: startDate.getMonth() >= 9 ? startDate.getFullYear() : startDate.getFullYear() - 1,
+          startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
+          endDate: this.constantsService.getISOStringWithTimezoneOffset(
+            new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
+          ),
+        });
         return this.http.get<IncidentView[]>(url).pipe(
           map((is) =>
             is.flatMap((i) => {
