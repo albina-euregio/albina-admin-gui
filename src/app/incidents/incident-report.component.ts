@@ -149,16 +149,26 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
    * Whether the current user may perform a report action, combining role and report status.
    */
   userCan(
-    op: "DELETE" | "PUBLISH" | "UNPUBLISH" | "CHANGE_STATUS" | "CHANGE_STATUS_TO_REVIEW" | "CHANGE_STATUS_TO_VERIFIED",
+    op:
+      | "DELETE"
+      | "PUBLISH"
+      | "REPUBLISH"
+      | "UNPUBLISH"
+      | "CHANGE_STATUS"
+      | "CHANGE_STATUS_TO_REVIEW"
+      | "CHANGE_STATUS_TO_VERIFIED",
     reportStatus = this.incidentReport().reportStatus,
   ): boolean {
     const isForecaster = this.authenticationService.isCurrentUserInRole("FORECASTER");
     const inReview = reportStatus === "InReview" || reportStatus === "Verified";
+    const isPublished = !!this.incidentReport().publishedAt;
     switch (op) {
       case "PUBLISH":
-        return isForecaster && reportStatus !== "Draft" && this.isReportValid();
+        return isForecaster && reportStatus !== "Draft" && this.isReportValid() && !isPublished;
+      case "REPUBLISH":
+        return isForecaster && reportStatus !== "Draft" && this.isReportValid() && isPublished;
       case "UNPUBLISH":
-        return isForecaster && !!this.incidentReport().publishedAt;
+        return isForecaster && isPublished;
       case "CHANGE_STATUS":
         return isForecaster || !inReview;
       case "CHANGE_STATUS_TO_REVIEW":

@@ -79,19 +79,18 @@
           <button
             class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
             [disabled]="disabled()"
-            (click)="
-              publishIncident(
-                incidentReport().publishedAt
-                  ? 'incidentReportUI.republishIncidentConfirm'
-                  : 'incidentReportUI.publishIncidentConfirm'
-              )
-            "
+            (click)="publishIncident('incidentReportUI.publishIncidentConfirm')"
           >
-            @if (incidentReport().publishedAt) {
-              {{ "incidentReportUI.republishIncident" | translate }}
-            } @else {
-              {{ "incidentReportUI.publishIncident" | translate }}
-            }
+            {{ "incidentReportUI.publishIncident" | translate }}
+          </button>
+        }
+        @if (userCan("REPUBLISH")) {
+          <button
+            class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
+            [disabled]="disabled()"
+            (click)="publishIncident('incidentReportUI.republishIncidentConfirm')"
+          >
+            {{ "incidentReportUI.republishIncident" | translate }}
           </button>
         }
         @if (userCan("UNPUBLISH")) {
