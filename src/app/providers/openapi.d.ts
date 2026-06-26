@@ -1913,7 +1913,6 @@ export interface components {
       pdfFooterLogo?: boolean;
       pdfFooterLogoColorPath?: string;
       pdfFooterLogoBwPath?: string;
-      simpleHtmlTemplateName?: string;
       geoDataDirectory?: string;
       mapLogoPosition?: components["schemas"]["Position"];
       imageColorbarColorPath?: string;

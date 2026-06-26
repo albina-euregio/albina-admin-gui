@@ -55,7 +55,6 @@ export const RegionConfigurationPublicationSchema = z.object({
   imageColorbarBwPath: z.string().nullish().describe("Colorbar (b/w)"),
   //
   createSimpleHtml: z.boolean().nullish().describe("Create simple HTML"),
-  simpleHtmlTemplateName: z.string().nullish().describe("Simple HTML template"),
   sendEmails: z.boolean().nullish().describe("Send emails"),
   emailColor: z.string().nullish().describe("Email color"),
   sendTelegramMessages: z.boolean().nullish().describe("Send telegram messages"),
@@ -135,8 +134,6 @@ withShowIf(RegionConfigurationSchema, {
   pdfFooterLogoBwPath: ["pdfFooterLogo", true],
   imageColorbarColorPath: ["createPdf", true],
   imageColorbarBwPath: ["createPdf", true],
-
-  simpleHtmlTemplateName: ["createSimpleHtml", true],
 
   emailColor: ["sendEmails", true],
 });
