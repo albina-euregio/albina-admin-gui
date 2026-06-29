@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
 import { ZodDisplayComponent } from "app/shared/zod-display.component";
-import { zEnumValues } from "app/shared/zod-util";
+import { unwrap, zEnumValues } from "app/shared/zod-util";
 import { orderBy } from "es-toolkit";
 import "bootstrap";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
@@ -37,18 +37,9 @@ export class IncidentsOverviewComponent implements OnInit {
 
   readonly IncidentReportSchema = IncidentReportSchema;
 
-  readonly allColumns: IncidentColumn[] = [
-    "dateTime",
-    "location",
-    "updatedAt",
-    "reportStatus",
-    "avalancheLength",
-    "avalancheProblem",
-    "avalancheRegion",
-    "avalancheSize",
-    "avalancheType",
-    "publishedAt",
-  ];
+  readonly allColumns: IncidentColumn[] = Object.entries(IncidentReportSchema.shape).flatMap(([k, v]) =>
+    unwrap(v).type !== "array" ? [k as IncidentColumn] : [],
+  );
   readonly columnVisibility: Partial<Record<IncidentColumn, boolean>> = {
     dateTime: true,
     location: true,
