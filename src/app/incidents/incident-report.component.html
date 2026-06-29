@@ -5,9 +5,6 @@
     <div>
       <h1 class="h5 mb-1 fw-bold">
         {{ "incidentReport.incidentReport" | translate }}
-        @if (reportPrettyError(); as error) {
-          <i class="ph ph-warning text-danger" [title]="error"></i>
-        }
       </h1>
       <p class="mb-1 text-secondary d-flex align-items-center gap-2" style="font-size: 13px">
         @if (incidentReport().author) {
@@ -152,16 +149,18 @@
           (click)="activeTab = tab.id"
         >
           <span>{{ tab.label | translate }}</span>
+          @let safeParse = getTabValidationStatus(tab);
           @if (tab.id === "attachments") {
             <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
               incidentReport().attachments.length
             }}</span>
-          } @else if (getTabValidationStatus(tab) === "valid") {
+          } @else if (safeParse.success) {
             <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">
               <i class="ph ph-check"></i>
             </span>
           } @else {
-            <span class="text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}">
+            @let error = prettifyError(safeParse.error);
+            <span class="text-danger" [title]="error">
               <i class="ph ph-warning"></i>
             </span>
           }

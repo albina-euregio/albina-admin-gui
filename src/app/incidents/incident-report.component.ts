@@ -23,7 +23,6 @@ import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
 import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
-import { isFieldValid, isVisibleFieldsValid, safeParseVisibleFields } from "../shared/zod-util";
 import { IncidentReportEditorComponent } from "./incident-report-editor.component";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
@@ -64,6 +63,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly IncidentModels = IncidentModels;
   readonly JSON = JSON;
   readonly Object = Object;
+  readonly prettifyError = z.prettifyError;
 
   readonly disabled = input<boolean>(false);
   readonly labelI18n = "incidentReport.#";
@@ -150,28 +150,28 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTabValidationStatus(tab: (typeof this.allTabs)[number]): "valid" | "invalid" {
+  getTabValidationStatus(tab: (typeof this.allTabs)[number]): z.ZodSafeParseResult<unknown> {
     if (tab.id === "group") {
       return this.getGroupValidationStatus();
     }
     if (!("schema" in tab)) {
-      return "valid";
+      return { success: true, data: null };
     }
-    return tab.schema.safeParse(this.incidentReport()).success ? "valid" : "invalid";
+    return tab.schema.safeParse(this.incidentReport());
   }
 
-  getGroupValidationStatus(): "valid" | "invalid" {
+  getGroupValidationStatus(): z.ZodSafeParseResult<unknown> {
     const report = this.incidentReport();
-    if (!isFieldValid(IncidentModels.IncidentReportSchema.shape.personInvolvement, report.personInvolvement))
-      return "invalid";
-    if (
-      report.personInvolvement === "Yes" &&
-      !(report.groupInformation ?? []).every((g) =>
-        isVisibleFieldsValid(IncidentModels.GroupInformationSchema, g as Record<string, unknown>),
-      )
-    )
-      return "invalid";
-    return "valid";
+    const personInvolvement = IncidentModels.IncidentReportSchema.shape.personInvolvement.safeParse(
+      report.personInvolvement,
+    );
+    if (!personInvolvement.success) {
+      return personInvolvement;
+    }
+    if (report.personInvolvement !== "Yes") {
+      return { success: true, data: null };
+    }
+    return IncidentModels.IncidentReportSchema.shape.groupInformation.safeParse(report.groupInformation);
   }
 
   readonly incidentReport = model<IncidentReport>(
@@ -191,22 +191,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     } satisfies Partial<IncidentReport>) as IncidentReport,
   );
 
-  /**
-   * True when the full (non-partial) report schema parses successfully, i.e. no required field is
-   * missing. While invalid, the report stays a "Draft" and cannot be published.
-   *
-   * FIXME: this parses against the raw schema and ignores `showIf` visibility. Fields that are
-   * required but hidden in some configurations — `dangerRating`, `avalancheProblem` and
-   * `dangerPattern`, which are hidden when `publicAvalancheWarningServiceOutside` is set — must
-   * still be filled in for the report to count as valid here.
-   */
-  readonly reportSafeParseVisibleFields = computed(() =>
-    safeParseVisibleFields(IncidentModels.IncidentReportSchema, this.incidentReport()),
-  );
-  readonly isReportValid = computed(() => this.reportSafeParseVisibleFields().success);
-  readonly reportPrettyError = computed(() =>
-    this.reportSafeParseVisibleFields().error ? z.prettifyError(this.reportSafeParseVisibleFields().error) : "",
-  );
+  readonly isReportValid = computed(() => IncidentModels.IncidentReportSchema.safeParse(this.incidentReport()).success);
 
   collapsedAttachments: Record<string, boolean> = {};
 
