@@ -62,29 +62,26 @@ export const GeneralInformationSchema = z.object({
   generalInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 
+export const AvalancheProblemSchema = z.object({
+  problemType: z.enum(Enums.AvalancheProblem).register(widgetRegistry, { widget: "avalancheProblem" }).nullish(),
+  aspects: z.enum(Enums.Aspect).array().register(widgetRegistry, { valueI18n: "aspect.#", widget: "aspect" }).nullish(),
+  elevationLowerBound: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
+  elevationUpperBound: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
+  snowpackStability: z.enum(Enums.SnowpackStability).nullish(),
+  frequency: z.enum(Enums.Frequency).register(widgetRegistry, { valueI18n: "frequency.#" }).nullish(),
+  avalancheSize: z.enum(Enums.AvalancheSize).register(widgetRegistry, {}).nullish(),
+  dangerRating: z.enum(Enums.DangerRating).register(widgetRegistry, { widget: "dangerRating" }).nullish(),
+});
+export type AvalancheProblem = z.infer<typeof AvalancheProblemSchema>;
+
 export const BulletinInformationSchema = z.object({
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
   publicAvalancheWarningService: z.string().register(widgetRegistry, { public: true, important: true }).nullish(),
   publicAvalancheWarningServiceOutside: z.boolean().nullish().describe("Outside AWS Forecast Area"),
 
-  dangerRating: z
-    .enum([
-      Enums.DangerRating.no_snow,
-      Enums.DangerRating.no_rating,
-      Enums.DangerRating.low,
-      Enums.DangerRating.moderate,
-      Enums.DangerRating.considerable,
-      Enums.DangerRating.high,
-      Enums.DangerRating.very_high,
-    ])
-    .register(widgetRegistry, { widget: "dangerRating", public: true, important: true })
-    .nullish(),
-
-  avalancheProblem: z
-    .enum(Enums.AvalancheProblem)
-    .array()
-    .register(widgetRegistry, { widget: "avalancheProblem", public: true, important: true })
-    .nullish(),
+  avalancheProblems: AvalancheProblemSchema.array()
+    .register(widgetRegistry, { widget: "none", public: true, important: true })
+    .default(() => [{}]),
 
   dangerPattern: z
     .enum(Enums.DangerPattern)
@@ -95,15 +92,15 @@ export const BulletinInformationSchema = z.object({
   bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(BulletinInformationSchema, {
-  dangerRating: not("publicAvalancheWarningServiceOutside", true),
-  avalancheProblem: [
-    not("publicAvalancheWarningServiceOutside", true),
-    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
-  ],
-  dangerPattern: [
-    not("publicAvalancheWarningServiceOutside", true),
-    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
-  ],
+  // dangerRating: not("publicAvalancheWarningServiceOutside", true),
+  // avalancheProblem: [
+  //   not("publicAvalancheWarningServiceOutside", true),
+  //   not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
+  // ],
+  // dangerPattern: [
+  //   not("publicAvalancheWarningServiceOutside", true),
+  //   not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
+  // ],
 });
 
 const incidentTerrainType = z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]);

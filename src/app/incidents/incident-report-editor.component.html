@@ -192,6 +192,31 @@
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
     />
+
+    @for (p of incidentReport().avalancheProblems; track p) {
+      <hr />
+      <button class="btn btn-sm btn-outline-danger" [class.d-none]="displayOnly" (click)="removeAvalancheProblem(p)">
+        <i class="ph ph-trash"></i> {{ "incidentReportUI.removeAvalancheProblem" | translate }}
+      </button>
+
+      <app-zod-schema-form
+        [disabled]="disabled()"
+        [displayMode]="displayMode()"
+        [value]="p"
+        [zodType]="IncidentModels.AvalancheProblemSchema"
+        [labelI18n]="labelI18n"
+        [helpI18n]="helpI18n"
+      />
+    }
+
+    <hr />
+    <button
+      class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+      [class.d-none]="displayOnly"
+      (click)="incidentReport().avalancheProblems.push({})"
+    >
+      <i class="ph ph-plus"></i> {{ "incidentReportUI.addAvalancheProblem" | translate }}
+    </button>
   </div>
 }
 

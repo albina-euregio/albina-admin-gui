@@ -192,4 +192,12 @@ export class IncidentReportEditorComponent implements OnInit {
   get groupIdentifiers(): string[] {
     return this.incidentReport().groupInformation?.map((g) => g.anonymousGroupIdentifier) ?? [];
   }
+
+  addAvalancheProblem() {
+    this.incidentReport().avalancheProblems.push({});
+  }
+
+  removeAvalancheProblem(p: IncidentModels.AvalancheProblem) {
+    this.incidentReport().avalancheProblems = this.incidentReport().avalancheProblems.filter((p0) => p0 !== p);
+  }
 }
