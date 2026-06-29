@@ -42,6 +42,16 @@
             ></span>
           }
         }
+        @if (incidentReport().publishedAt; as publishedAt) {
+          <span class="text-secondary-emphasis">·</span>
+          <span title="{{ 'incidentReport.publishedAt' | translate }}">
+            {{ publishedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
+          </span>
+          <span class="text-secondary-emphasis">·</span>
+          <span class="text-success" title="{{ 'incidentReport.publishedAt' | translate }}">
+            <i class="ph ph-eye"></i>
+          </span>
+        }
       </p>
     </div>
 
