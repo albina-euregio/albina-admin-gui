@@ -1,5 +1,6 @@
 import { AsyncPipe, DatePipe } from "@angular/common";
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -9,7 +10,6 @@ import {
   model,
   OnDestroy,
   OnInit,
-  ChangeDetectionStrategy,
 } from "@angular/core";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -150,13 +150,14 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     }
   }
 
-  getValidationStatus(schema: z.ZodObject): "valid" | "invalid" {
-    return isVisibleFieldsValid(schema, this.incidentReport() as Record<string, unknown>) ? "valid" : "invalid";
-  }
-
   getTabValidationStatus(tab: (typeof this.allTabs)[number]): "valid" | "invalid" {
-    if (tab.id === "group") return this.getGroupValidationStatus();
-    return "schema" in tab ? this.getValidationStatus(tab.schema) : "valid";
+    if (tab.id === "group") {
+      return this.getGroupValidationStatus();
+    }
+    if (!("schema" in tab)) {
+      return "valid";
+    }
+    return tab.schema.safeParse(this.incidentReport()).success ? "valid" : "invalid";
   }
 
   getGroupValidationStatus(): "valid" | "invalid" {
@@ -174,11 +175,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   readonly incidentReport = model<IncidentReport>(
-    IncidentModels.PartialIncidentReportSchema.parse({
+    IncidentModels.IncidentReportSchema.partial().parse({
       author: this.authenticationService.getCurrentAuthor()?.email,
       authorAffiliation: this.authenticationService.getCurrentAuthor()?.organization,
       publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
       reportStatus: "Draft",
+      personInvolvement: "Unknown",
       groupInformation: [
         {
           anonymousGroupIdentifier: this.translateService.instant("incidentReportUI.groupUnknown"),

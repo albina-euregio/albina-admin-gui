@@ -25,18 +25,16 @@ export const GeneralInformationSchema = z.object({
         z.enum(["PublicObservation", "AWSInternal", "AWSObserver", "DispatchCentre", "Police", "MountainRescue"]),
       ),
     )
-    .register(widgetRegistry, { important: true })
-    .nullish(),
+    .register(widgetRegistry, { important: true }),
 
-  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5", public: true, important: true }).nullish(),
+  dateTime: z.coerce.date().register(widgetRegistry, { class: "col-5", public: true, important: true }),
   timeAccuracy: z
     .enum(["exact", "PT15M", "PT30M", "PT1H", "PT2H", "PT4H", "PT6H", "PT12H", "P1D", "P2D", "P3D", "unknown"])
-    .register(widgetRegistry, { public: true, important: true })
-    .nullish(),
+    .register(widgetRegistry, { public: true, important: true }),
 
-  location: z.string().register(widgetRegistry, { public: true, important: true }).nullish(),
-  latitude: z.number().register(widgetRegistry, { class: "col-6", public: true, important: true }).nullish(),
-  longitude: z.number().register(widgetRegistry, { class: "col-6", public: true, important: true }).nullish(),
+  location: z.string().register(widgetRegistry, { public: true, important: true }),
+  latitude: z.number().register(widgetRegistry, { class: "col-6", public: true, important: true }),
+  longitude: z.number().register(widgetRegistry, { class: "col-6", public: true, important: true }),
   locationAccuracy: z
     .enum([
       "exact",
@@ -53,8 +51,7 @@ export const GeneralInformationSchema = z.object({
       "within50km",
       "unknown",
     ])
-    .register(widgetRegistry, { public: true, important: true })
-    .nullish(),
+    .register(widgetRegistry, { public: true, important: true }),
   lineCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
   polygonCoordinatesText: z.string().register(widgetRegistry, { widget: "textarea", class: "col-6" }).nullish(),
   country: z.string().register(widgetRegistry, { class: "col-6", public: true }).nullish(),
@@ -553,22 +550,14 @@ export const IncidentReportSchema = z.object({
   ...IncidentLinksSchema.shape,
   attachments: IncidentAttachmentSchema.array().register(widgetRegistry, { important: true }).nullish(),
 });
-
-export const PartialIncidentReportSchema = IncidentReportSchema.partial().extend({
-  groupInformation: GroupInformationSchema.partial().array(),
-  victimInformation: VictimInformationSchema.partial().array(),
-  attachments: IncidentAttachmentSchema.partial().array(),
-});
-
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;
-export type PartialIncidentReport = z.infer<typeof PartialIncidentReportSchema>;
 
-export const PublicIncidentReportSchema = PartialIncidentReportSchema.pick(
+export const PublicIncidentReportSchema = IncidentReportSchema.pick(
   Object.fromEntries(
-    Object.entries(PartialIncidentReportSchema.shape)
+    Object.entries(IncidentReportSchema.shape)
       .filter(([, fieldType]) => widgetRegistry.get(unwrap(fieldType as z.ZodType))?.public)
       .map(([key]) => [key, true as const]),
-  ) as { [K in keyof typeof PartialIncidentReportSchema.shape]?: true },
+  ) as { [K in keyof typeof IncidentReportSchema.shape]?: true },
 );
 
 export function toPublicIncidentReport(report: IncidentReport) {
