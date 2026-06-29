@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { AvalancheSize } from "app/enums/enums";
 import { uniq } from "es-toolkit";
 import { z } from "zod/v4";
 
@@ -10,6 +11,7 @@ import { IncidentReportGeocodeService } from "./incident-report-geocode.service"
 import { IncidentReportMapService } from "./incident-report-map.service";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
+import { IncidentService } from "./incident.service";
 
 /** Ids of the tabs the editor renders; mirrors the parent's tab list. */
 export type IncidentReportTab =
@@ -39,6 +41,7 @@ export class IncidentReportEditorComponent implements OnInit {
   readonly mapService = inject(IncidentReportMapService);
   private geocodeService = inject(IncidentReportGeocodeService);
   private translateService = inject(TranslateService);
+  private incidentService = inject(IncidentService);
 
   readonly incidentReport = model.required<IncidentReport>();
   readonly disabled = input<boolean>(false);
@@ -199,5 +202,39 @@ export class IncidentReportEditorComponent implements OnInit {
 
   removeAvalancheProblem(p: IncidentModels.AvalancheProblem) {
     this.incidentReport().avalancheProblems = this.incidentReport().avalancheProblems.filter((p0) => p0 !== p);
+  }
+
+  async fetchPublishedBulletin() {
+    const incidentReport = this.incidentReport();
+    const bulletin = await this.incidentService.fetchPublishedBulletin(incidentReport).toPromise();
+    if (!bulletin) return;
+    console.info("Obtained bulletin for incident", { bulletin, incidentReport });
+    this.incidentReport.update((incidentReport) => ({
+      ...incidentReport,
+      publicAvalancheWarningService: bulletin.source?.provider?.name,
+      publicAvalancheWarningServiceOutside: false,
+      dangerPattern: IncidentModels.IncidentReportSchema.shape.dangerPattern.parse(
+        bulletin.customData?.LWD_Tyrol?.dangerPatterns?.map((p: string) => p.toLowerCase()) ?? [],
+      ),
+      avalancheProblems: bulletin.avalancheProblems.map((p) =>
+        IncidentModels.AvalancheProblemSchema.parse({
+          aspects: p.aspects,
+          avalancheSize: [
+            undefined,
+            AvalancheSize.small,
+            AvalancheSize.medium,
+            AvalancheSize.large,
+            AvalancheSize.very_large,
+            AvalancheSize.extreme,
+          ][p.avalancheSize],
+          dangerRating: p.dangerRatingValue,
+          elevationLowerBound: p.elevation?.lowerBound,
+          elevationUpperBound: p.elevation?.upperBound,
+          frequency: p.frequency,
+          problemType: p.problemType,
+          snowpackStability: p.snowpackStability,
+        } satisfies IncidentModels.AvalancheProblem),
+      ),
+    }));
   }
 }

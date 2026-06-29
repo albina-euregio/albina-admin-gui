@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
+import { Bulletin, Bulletins, BulletinsSchema } from "app/models/CAAMLv6";
 import { combineLatest, map, Observable } from "rxjs";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -157,5 +158,20 @@ export class IncidentService {
       attachmentId: attachment.id,
     });
     return this.http.delete<void>(url);
+  }
+
+  fetchPublishedBulletin({
+    dateTime,
+    avalancheRegion,
+  }: Pick<IncidentReport, "dateTime" | "avalancheRegion">): Observable<Bulletin> {
+    const region = this.authenticationService.getActiveRegionId();
+    const date = this.constantsService.getISODateString(dateTime);
+    return this.http
+      .get<Bulletins>(`https://static.avalanche.report/eaws_bulletins/${date}/${date}-${region}.json`)
+      .pipe(
+        map((bulletins) =>
+          BulletinsSchema.parse(bulletins).bulletins.find((b) => b.regions.some((r) => r.regionID === avalancheRegion)),
+        ),
+      );
   }
 }

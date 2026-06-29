@@ -1689,6 +1689,7 @@
     "dropAttachment": "Drop attachment {{fileName}}?",
     "dropGroup": "Drop group {{number}}?",
     "dropVictim": "Drop person {{number}}?",
+    "fetchPublishedBulletin": "Fetch bulletin information from published CAAML bulletin",
     "groupName": "Group {{name}}",
     "groupUnknown": "Group unknown",
     "incomplete": "Incomplete",

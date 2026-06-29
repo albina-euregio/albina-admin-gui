@@ -65,8 +65,8 @@ export const GeneralInformationSchema = z.object({
 export const AvalancheProblemSchema = z.object({
   problemType: z.enum(Enums.AvalancheProblem).register(widgetRegistry, { widget: "avalancheProblem" }).nullish(),
   aspects: z.enum(Enums.Aspect).array().register(widgetRegistry, { valueI18n: "aspect.#", widget: "aspect" }).nullish(),
-  elevationLowerBound: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
-  elevationUpperBound: z.number().register(widgetRegistry, { class: "col-6" }).nullish(),
+  elevationLowerBound: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
+  elevationUpperBound: z.string().register(widgetRegistry, { class: "col-6" }).nullish(),
   snowpackStability: z.enum(Enums.SnowpackStability).nullish(),
   frequency: z.enum(Enums.Frequency).register(widgetRegistry, { valueI18n: "frequency.#" }).nullish(),
   avalancheSize: z.enum(Enums.AvalancheSize).register(widgetRegistry, {}).nullish(),
