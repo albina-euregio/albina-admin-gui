@@ -60,7 +60,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private lastSavedData: string | null = null;
   // Status of the automatic server synchronization, exposed for the template.
   saveState: "idle" | "saving" | "saved" | "error" = "idle";
-  updatedAt: Date | null = null;
 
   readonly IncidentModels = IncidentModels;
   readonly JSON = JSON;
@@ -232,7 +231,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private loadIncident(id: string) {
     this.incidentService.getIncident(id).subscribe({
       next: (report) => {
-        this.updatedAt = new Date(report.updatedAt);
         this.incidentReport.set(report);
       },
       error: (error) => console.error("Failed to load incident", error),
@@ -254,12 +252,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   /**
    * Serialize the report to JSON, dropping in-memory-only attachment fields and
-   * the server-managed top-level `id` (the latter so that folding the assigned
-   * id back into the report after a create does not register as an edit and
-   * trigger a redundant save).
+   * the server-managed top-level `id` and `updatedAt` (the latter two so that
+   * folding the assigned id/timestamp back into the report after a save does not
+   * register as an edit and trigger a redundant save).
    */
   private serializeReport(report: Partial<IncidentReport>): string {
-    return JSON.stringify({ ...report, id: undefined }, (key, value) =>
+    return JSON.stringify({ ...report, id: undefined, updatedAt: undefined }, (key, value) =>
       key === "file" || key === "$previewUrl" ? undefined : value,
     );
   }
@@ -275,14 +273,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       : this.incidentService.createIncident(region, data);
     return request.pipe(
       tap((view) => {
-        this.updatedAt = new Date(view.updatedAt);
         this.lastSavedData = data;
         this.saveState = "saved";
-        // Fold the server-assigned id into the report so it is the single source
-        // of truth for subsequent saves, attachments, publishing, etc.
-        if (this.incidentReport().id !== view.id) {
-          this.incidentReport.update((report) => ({ ...report, id: view.id }));
-        }
+        // Fold the server-assigned id and updatedAt into the report so it is the
+        // single source of truth for subsequent saves, attachments, publishing,
+        // etc. Both are dropped from the serialized payload, so this does not
+        // register as an edit and trigger a redundant save.
+        this.incidentReport.update((report) => ({ ...report, id: view.id, updatedAt: view.updatedAt }));
       }),
       catchError((error) => {
         console.error("Failed to save incident", error);

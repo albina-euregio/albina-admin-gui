@@ -16,7 +16,7 @@
           </span>
           <span class="text-secondary-emphasis">·</span>
         }
-        @if (updatedAt) {
+        @if (incidentReport().updatedAt; as updatedAt) {
           <span title="{{ 'incidentReport.updatedAt' | translate }}">
             {{ updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
           </span>
