@@ -12,7 +12,7 @@ import {
   IncidentAttachment,
   IncidentAttachmentSchema,
   IncidentReport,
-  IncidentReportSchema,
+  PartialIncidentReportSchema,
 } from "./incident-report.model";
 
 type IncidentView = components["schemas"]["Incident"];
@@ -82,11 +82,11 @@ export class IncidentService {
   }
 
   private safeIncidentReport(i: IncidentView) {
-    return IncidentReportSchema.safeParse({ ...(i.data ?? i.publicData ?? {}), ...i });
+    return PartialIncidentReportSchema.safeParse({ ...(i.data ?? i.publicData ?? {}), ...i });
   }
 
   private toIncidentReport(i: IncidentView): IncidentReport {
-    return IncidentReportSchema.parse({ ...(i.data ?? i.publicData ?? {}), ...i }) as IncidentReport;
+    return PartialIncidentReportSchema.parse({ ...(i.data ?? i.publicData ?? {}), ...i }) as IncidentReport;
   }
 
   /** Get a single incident by id. */

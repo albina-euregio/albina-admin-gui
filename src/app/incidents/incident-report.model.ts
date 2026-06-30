@@ -549,6 +549,13 @@ export const IncidentReportSchema = z.object({
 });
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;
 
+/**
+ * Used when *loading* a report from the server (including the
+ * response to a create/update save). Parsing stored data strictly
+ * would reject every in-progress draft and break loading and auto-save.
+ */
+export const PartialIncidentReportSchema = IncidentReportSchema.partial();
+
 export const PublicIncidentReportSchema = IncidentReportSchema.pick(
   Object.fromEntries(
     Object.entries(IncidentReportSchema.shape)
