@@ -70,7 +70,11 @@ export const AvalancheProblemSchema = z.object({
   snowpackStability: z.enum(Enums.SnowpackStability).nullish(),
   frequency: z.enum(Enums.Frequency).register(widgetRegistry, { valueI18n: "frequency.#" }).nullish(),
   avalancheSize: z.enum(Enums.AvalancheSize).register(widgetRegistry, {}).nullish(),
-  dangerRating: z.enum(Enums.DangerRating).register(widgetRegistry, { widget: "dangerRating" }).nullish(),
+  dangerRating: z
+    .enum(Enums.DangerRating)
+    .exclude([Enums.DangerRating.missing])
+    .register(widgetRegistry, { widget: "dangerRating" })
+    .nullish(),
 });
 export type AvalancheProblem = z.infer<typeof AvalancheProblemSchema>;
 
