@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe } from "@angular/common";
+import { AsyncPipe, DatePipe, Location } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -50,6 +50,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   authenticationService = inject(AuthenticationService);
   translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
+  private location = inject(Location);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
@@ -267,6 +268,11 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         // etc. Both are dropped from the serialized payload, so this does not
         // register as an edit and trigger a redundant save.
         this.incidentReport.update((report) => ({ ...report, id: view.id, updatedAt: view.updatedAt }));
+        // After the first save of a new report, update the URL from /incidents/new
+        // to /incidents/{id} so that F5 reloads the same report.
+        if (!id) {
+          this.location.replaceState(`/incidents/${view.id}`);
+        }
       }),
       catchError((error) => {
         console.error("Failed to save incident", error);
