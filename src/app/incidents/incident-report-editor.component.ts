@@ -245,7 +245,6 @@ export class IncidentReportEditorComponent implements OnInit {
             AvalancheSize.very_large,
             AvalancheSize.extreme,
           ][p.avalancheSize],
-          dangerRating: p.dangerRatingValue,
           elevationLowerBound: p.elevation?.lowerBound,
           elevationUpperBound: p.elevation?.upperBound,
           frequency: p.frequency,

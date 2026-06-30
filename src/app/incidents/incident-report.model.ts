@@ -70,11 +70,6 @@ export const AvalancheProblemSchema = z.object({
   snowpackStability: z.enum(Enums.SnowpackStability).nullish(),
   frequency: z.enum(Enums.Frequency).register(widgetRegistry, { valueI18n: "frequency.#" }).nullish(),
   avalancheSize: z.enum(Enums.AvalancheSize).register(widgetRegistry, {}).nullish(),
-  dangerRating: z
-    .enum(Enums.DangerRating)
-    .exclude([Enums.DangerRating.missing])
-    .register(widgetRegistry, { widget: "dangerRating" })
-    .nullish(),
 });
 export type AvalancheProblem = z.infer<typeof AvalancheProblemSchema>;
 
@@ -82,6 +77,12 @@ export const BulletinInformationSchema = z.object({
   // [all warning services]; Outside AWS Forecast Area (default: Author affiliation (warning service of Author))
   publicAvalancheWarningService: z.string().register(widgetRegistry, { public: true, important: true }).nullish(),
   publicAvalancheWarningServiceOutside: z.boolean().nullish().describe("Outside AWS Forecast Area"),
+
+  dangerRating: z
+    .enum(Enums.DangerRating)
+    .exclude([Enums.DangerRating.missing])
+    .register(widgetRegistry, { widget: "dangerRating" })
+    .nullish(),
 
   avalancheProblems: AvalancheProblemSchema.array()
     .register(widgetRegistry, { widget: "none", public: true, important: true })
