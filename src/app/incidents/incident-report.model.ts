@@ -97,15 +97,15 @@ export const BulletinInformationSchema = z.object({
   bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(BulletinInformationSchema, {
-  // dangerRating: not("publicAvalancheWarningServiceOutside", true),
-  // avalancheProblem: [
-  //   not("publicAvalancheWarningServiceOutside", true),
-  //   not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
-  // ],
-  // dangerPattern: [
-  //   not("publicAvalancheWarningServiceOutside", true),
-  //   not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
-  // ],
+  dangerRating: not("publicAvalancheWarningServiceOutside", true),
+  avalancheProblems: [
+    not("publicAvalancheWarningServiceOutside", true),
+    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
+  ],
+  dangerPattern: [
+    not("publicAvalancheWarningServiceOutside", true),
+    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
+  ],
 });
 
 const incidentTerrainType = z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]);
