@@ -1,0 +1,2473 @@
+{
+  "daytime": {
+    "earlier": "dopoldne",
+    "later": "popoldne"
+  },
+  "login": {
+    "title": "Prijava",
+    "text": "Prijavi se v svoj račun",
+    "button": "Prijava",
+    "stressLevel": "Stress Level",
+    "errorDialog": {
+      "message": "Napačno uporabniško ime ali geslo!",
+      "accept": "V redu"
+    },
+    "placeholder": {
+      "username": "Prosim, vnesite uporabniško ime.",
+      "password": "Prosim, vnesite geslo."
+    }
+  },
+  "sidebar": {
+    "bulletins": "Avalanche.report",
+    "dangerSources": "Danger Sources",
+    "observations": "Opazovanja",
+    "incidents": "Nesreče",
+    "qfa": "QFA",
+    "modelling": "Modeliranje",
+    "modellingForecast": "Napoved",
+    "modellingZamg": "ZAMG multi model",
+    "modellingZamgECMWF": "ZAMG ECMWF-EPS",
+    "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
+    "modellingZamgMeteogram": "GeoSphere meteogram",
+    "modellingSnowpack": "SNOWPACK model",
+    "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
+    "awsome": "AWSOME",
+    "snowpack": "SNOWPACK",
+    "geosphere": "GeoSphere",
+    "lineaexport": "LINEA",
+    "awsstats": "AWS Stats",
+    "yearlystats": "Yearly Stats",
+    "graphics": "Graphics",
+    "icon": "Vreme"
+  },
+  "weather": {
+    "loading": "Loading weather parameters and images...",
+    "noPng": "Image not found.",
+    "error": {
+      "noParameters": "No forecast parameters available.",
+      "loadFailed": "Could not load forecast data."
+    },
+    "headings": {
+      "model": "Model",
+      "modelRun": "Model run",
+      "region": "Regija",
+      "parameters": "Parameters",
+      "level": "Level"
+    },
+    "alt": {
+      "fallback": "Forecast map",
+      "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
+    },
+    "models": {
+      "icon": "ICON",
+      "gfs": "GFS"
+    },
+    "regions": {
+      "atlantic": "Atlantic",
+      "europe": "Europe",
+      "alps": "Alps",
+      "euregio": "EUREGIO"
+    },
+    "levels": {
+      "surface": "Surface",
+      "cloudTotal": "Total",
+      "cloudHigh": "High",
+      "cloudMid": "Mid",
+      "cloudLow": "Low"
+    },
+    "tooltips": {
+      "levelApproxElevation": "Approx. elevation: ~{{height}} m"
+    },
+    "parameters": {
+      "gfs": {
+        "equivalentPotentialTemp": "Equivalent Potential Temp.",
+        "relativeHumidity": "Relativna vlažnost",
+        "geopotentialAndIsotachs": "Geopotential and Isotachs",
+        "precipitation": "Precipitation",
+        "cape": "CAPE"
+      },
+      "icon": {
+        "cloudCover": "Cloud Cover",
+        "ns": "Precipitation 1h",
+        "ns24": "Precipitation 24h",
+        "nsacc": "Acc. Precipitation",
+        "nsprob24gt20": "Prob. Prec. > 20 mm / 24h",
+        "nsprob24gt40": "Prob. Prec. > 40 mm / 24h",
+        "nsprob24gt80": "Prob. Prec. > 80 mm / 24h",
+        "d2m": "Dew Point 2m",
+        "gust": "Max. Wind Gust 10m",
+        "cape": "MU-CAPE"
+      }
+    }
+  },
+  "menu": {
+    "logout": "Izpiši se",
+    "language": "Jezik",
+    "en": "angleščina",
+    "de": "nemščina",
+    "fr": "francoščina",
+    "it": "italijanščina",
+    "es": "španščina",
+    "ca": "katalonščina",
+    "oc": "Aranese",
+    "fullscreen": "Cel zaslon",
+    "settings": "Nastavitve",
+    "statistics": "Statistika",
+    "admin": "Admi",
+    "region": "Regija",
+    "education": "Znanje"
+  },
+  "matrix": {
+    "label": {
+      "snowpackStability": "Stabilnost snežne odeje",
+      "frequency": "Pogostost",
+      "avalancheSize": "Velikost plazu",
+      "dangerRating": "Ocena nevarnosti",
+      "override": "(prepiši oceno nevarnosti)",
+      "matrix": "Matrica",
+      "referToFairStability": "Nanaša se na dobro stabilnost",
+      "referToPoorStability": "Nanaša se na slabo stabilnost",
+      "dangerLevel1": "Stopnja nevarnosti 1 (majhna)"
+    }
+  },
+  "dangerSources": {
+    "status": {
+      "missing": "manjka",
+      "available": "na voljo",
+      "forecast": "napoved",
+      "analysis": "analiza",
+      "loading": "Loading danger sources ...",
+      "saveError": "Danger source could not be saved!",
+      "loadDangerSourcesError": "Danger sources could not be loaded!",
+      "loadVariantsError": "Danger source variants could not be loaded!",
+      "noTitle": "<no title>"
+    },
+    "variantStatus": {
+      "active": "active",
+      "dormant": "dormant",
+      "inactive": "inactive"
+    },
+    "tooltip": {
+      "read": "Read danger sources",
+      "edit": "Edit danger sources"
+    },
+    "table": {
+      "loadMore": "Load {{count}} more days",
+      "title": {
+        "forecast": "Napoved",
+        "analysis": "Analiza"
+      }
+    },
+    "create": {
+      "variantStatus": "Stanje",
+      "variantEditable": "This variant can be edited.",
+      "variantNotEditable": "This variant can not be edited.",
+      "noVariantsForSelectedDay": "No variants defined for this date.",
+      "tooltip": {
+        "editDangerSource": "Edit danger source",
+        "loadVariants": "Load variants from the day before",
+        "loadVariantsFromForecast": "Load variants from forecast",
+        "showVariantsOnMap": "Show variants on map",
+        "edit": "Uredi mikro-regije",
+        "copy": "Copy variant",
+        "delete": "Delete variant",
+        "compare": "Compare variant",
+        "forecast": "Compare with forecast"
+      },
+      "createDangerSource": "Create danger source",
+      "createVariant": "Create new variant",
+      "noDangerSources": "No danger sources",
+      "title": {
+        "slab": "Plošča",
+        "weakLayer": "Šibka plast",
+        "loose": "Nesprijet sneg",
+        "glide": "Drseči sneg",
+        "matrix": "Matrica",
+        "characteristics": "Characteristics",
+        "comment": "Komentar",
+        "uncertainties": "Uncertainties"
+      },
+      "label": {
+        "glidingSnowActivity": "Gliding snow activity",
+        "snowHeight": "Višina snežne odeje",
+        "snowHeightLowerLimit": "Min snow height",
+        "snowHeightUpperLimit": "Max snow height",
+        "snowHeightAverage": "Average snow height",
+        "zeroDegreeIsotherm": "Nulta izoterma",
+        "looseSnowMoisture": "Vlažnost nesprijetega snega",
+        "looseSnowGrainShape": "Oblika zrn nesprijetega snega",
+        "slabGrainShape": "Oblika zrn snežne plošče",
+        "slabThickness": "Debelina snežne plošče",
+        "slabThicknessLowerLimit": "Min slab thickness",
+        "slabThicknessUpperLimit": "Max slab thickness",
+        "slabHandHardness": "Trdota snežne plošče, merjena z roko",
+        "slabHandHardnessLowerLimit": "Min slab hand hardness",
+        "slabHandHardnessUpperLimit": "Max slab hand hardness",
+        "slabHardnessProfile": "Trdota snežne plošče",
+        "slabEnergyTransferPotential": "Potencial snežne plošče za prenos energije",
+        "slabDistribution": "Slab distribution",
+        "weakLayerGrainShape": "Oblika zrn šibke plasti",
+        "weakLayerGrainShapes": "Weak layer grain shapes",
+        "weakLayerGrainSize": "Velikost zrn šibke plasti",
+        "weakLayerGrainSizeLowerLimit": "Min weak layer grain size",
+        "weakLayerGrainSizeUpperLimit": "Max weak layer grain size",
+        "weakLayerPersistent": "Weak layer persistent",
+        "weakLayerThickness": "Debelina šibke plasti",
+        "weakLayerStrength": "Nosilnost šibke plasti",
+        "weakLayerWet": "Šibka plast je mokra",
+        "weakLayerCrustAbove": "Šibka plasat pod skorjo",
+        "weakLayerCrustBelow": "Šibka plast nad skorjo",
+        "weakLayerPosition": "Položaj šibke plasti",
+        "weakLayerCreation": "Nastanek šibke plasti",
+        "weakLayerDistribution": "Razporeditev šibkih plasti",
+        "dangerSpotRecognizability": "Prepoznavnost nevarnih mest",
+        "remoteTriggering": "Proženje na daljavo",
+        "hasDaytimeDependency": "Daytime dependency",
+        "dangerIncreaseWithElevation": "Povečanje nevarnosti z višino",
+        "runoutIntoGreen": "Runout into green",
+        "penetrateDeepLayers": "Penetrate deep layers",
+        "highestDangerAspect": "Pobočja z največjo nevarnostjo",
+        "dangerPeak": "Danger peak",
+        "slopeGradient": "Naklon pobočja",
+        "naturalRelease": "Natural release",
+        "terrainTypes": "Terrain types",
+        "dangerSigns": "Znaki nevarnosti",
+        "aspects": "Usmerjenost"
+      },
+      "createDangerSourceDialog": {
+        "title": "Naslov",
+        "description": "Opis",
+        "save": "Shrani",
+        "cancel": "Prekliči"
+      },
+      "editDangerSourceDialog": {
+        "title": "Naslov",
+        "description": "Opis",
+        "update": "Posodobitev",
+        "cancel": "Prekliči"
+      },
+      "deleteVariantDialog": {
+        "message": "Ali želiš shraniti to različico?",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "noRegionDialog": {
+        "message": "Izberi vsaj eno svojo mikro-regijo",
+        "accept": "V redu"
+      },
+      "discardDialog": {
+        "message": "Ali želiš zavreči spremembe?",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "saveErrorDialog": {
+        "message": "Napaka pri shranjevanju virov nevarnosti!",
+        "accept": "V redu"
+      },
+      "loadDialog": {
+        "message": "Do you want to load all danger source variants from the day before?<br><strong>Existing analysis variants will be overwritten.</strong>",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "loadFromForecastDialog": {
+        "message": "Do you want to load all variants from the forecast?<br><strong>Existing analysis variants will be overwritten.</strong>",
+        "accept": "Da",
+        "reject": "Ne"
+      }
+    }
+  },
+  "avalancheType": {
+    "title": "Vrsta plazu",
+    "slab": "slab",
+    "loose": "loose",
+    "glide": "glide",
+    "cornice": "opast",
+    "unknown": "neznano",
+    "label": {
+      "slab": "SPRIJET",
+      "loose": "NESPRIJET",
+      "glide": "ZDRSNI"
+    },
+    "tooltip": {
+      "slab": "Plaz sprijetega snega",
+      "loose": "Plaz nesprijetega snega",
+      "glide": "Zdrsni plaz"
+    }
+  },
+  "elevation": {
+    "title": "Nadmorska višina",
+    "high": "Pod",
+    "low": "Nad",
+    "treeline": "Gozdna meja"
+  },
+  "bulletins": {
+    "title": "Avalanche.report",
+    "tooltip": {
+      "edit": "Uredi bilten",
+      "read": "Preberi bilten",
+      "copy": "Kopiraj bilten",
+      "paste": "Prilepi bilten",
+      "cancel": "Prekliči kopiranje",
+      "update": "Uredi",
+      "submit": "Oddaj",
+      "submitUpdate": "Oddaj posodobitev",
+      "publishChange": "Objavi zdaj (brez sporočil)",
+      "publishUpdate": "Objavi zdaj",
+      "publishMinimal": "Minimal publication",
+      "caaml": "Pokaži CAAML",
+      "json": "Pokaži JSON",
+      "create": "Naredi bilten",
+      "preview": "Predogled biltena (PDF)",
+      "check": "Preveri bilten",
+      "info": "Prikaži stanje objave",
+      "loadSuggestionFromDangerSources": "Load suggestion from danger sources",
+      "deleteAllWarningRegions": "Izbriši vse plazovne regije",
+      "publishAll": "Objavi vse plazovne regije",
+      "publishAllNoMessages": "Objavi vse plazovine regije (brez sporočil)",
+      "mediaFile": "Naloži media datoteko",
+      "publicationChecklist": "Open publication checklist"
+    },
+    "publicationChecklist": {
+      "title": "Publication checklist",
+      "description": {
+        "website": "The map on the website shows the danger levels with their corresponding colors. Clicking on a region shows the avalanche problems and texts.",
+        "email": "An email was sent and contains a report.",
+        "telegram": "A message containing a link to the website was posted.",
+        "whatsapp": "A message containing a link to the website was posted."
+      },
+      "ok": "V redu",
+      "problem": "Problem",
+      "problemDescription": "Problem description",
+      "problemPlaceholder": "Describe the encountered problem",
+      "channel": {
+        "website": "Website",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram",
+        "email": "E-pošta"
+      },
+      "publicationInProgress": "Publication in progress",
+      "publicationFinishedOnServer": "Finished publication on server",
+      "publishDisabled": {
+        "inProgress": "Publication is currently in progress.",
+        "wrongStatus": "The bulletin must be submitted or published."
+      },
+      "emailWaitHint": "Email delivery usually takes longer than social media messages. At least 5 minutes should have passed since publication before you proceed to the next step.",
+      "email": {
+        "waitTitle": "Wait:"
+      },
+      "options": "Options",
+      "republish": "Republish:",
+      "resend": "Resend:",
+      "website": {
+        "checkInternetTitle": "Check internet connection:",
+        "checkInternetDescriptionPrefix": "How is the internet connection on your device? Open",
+        "checkInternetDescriptionSuffix": "in a private window. Is yesterday's bulletin displayed correctly?",
+        "republishHint": "Only perform this step if “Check internet connection” was successful and at least 5 minutes have passed since the last publication attempt.",
+        "publishMinimalTitle": "Minimal publication:",
+        "publishMinimalHint": "Use this as a fallback if the full publication fails. Publishes CAAML data only — no maps, text-to-speech, or push messages. ⚠️ Also affects other regions on this server, not just your own. All will be republished in minimal mode.",
+        "editAndResendTitle": "Edit and resend:",
+        "openBulletin": "Open the bulletin",
+        "clickEdit": "Click “Edit”",
+        "clickSubmit": "Click “Submit”",
+        "clickPublishNow": "Click “Publish now”"
+      },
+      "manualSend": {
+        "title": "Manual send:",
+        "description": {
+          "telegram": "Copy the text below and send it to the specified Telegram group.",
+          "whatsapp": "Copy the text below to the specified WhatsApp channel."
+        },
+        "copyText": "Copy {{language}} {{channel}} text"
+      },
+      "newChecklist": "New checklist",
+      "savedInfo": "Saved by {{user}}, {{time}}",
+      "print": {
+        "contact": {
+          "emailLabel": "Email:",
+          "nameLabel": "Name:",
+          "phoneLabel": "Phone:"
+        },
+        "emergencyTitle": "If serious problems occur",
+        "fallback": {
+          "title": "Use fallback instance:",
+          "step1": "Navigate to the fallback Admin-GUI and publish the bulletin there.",
+          "step2": "Manually send messages to subscribed channels. Use the text below:",
+          "step3": "Inform the public by creating social media posts linking to the fallback website URL.",
+          "step4": "Inform the PR department about the situation."
+        },
+        "hide": "Hide print version",
+        "hint": "Fill in the hosting service contact details and the fallback URLs below, then click \"Print\".",
+        "hostingDescription": "Ask about server status. If applicable, request a server restart.",
+        "hostingTitle": "Contact hosting service:",
+        "print": "Print",
+        "toggle": "Print version"
+      }
+    },
+    "status": {
+      "submittedInfo": "Bilten bo objavljen ob 17:00.",
+      "resubmittedInfo": "Bilten bo objavljen ob 8:00.",
+      "publishedInfo": "Bilten je bil objavljen",
+      "noPublicationInfo": "Bilten NE BO objavljen samodejno.",
+      "loadingPreview": "Ustvarjanje predogleda PDF ...",
+      "loading": "Nalaganje biltena ...",
+      "loadMoreBulletins": "Naloži {{count}} več biltenov",
+      "publishing": "Objavljam bilten ...",
+      "submitting": "Oddajam bilten ...",
+      "saveError": "Biltena ni mogoče shraniti!",
+      "loadBulletinsError": "Biltenov ni mogoče naložiti!"
+    },
+    "create": {
+      "tooltip": {
+        "edit": "Uredi mikro-regije",
+        "copy": "Kopiraj regijo",
+        "delete": "Izbriši regijo",
+        "deleteProblem": "Izbriši problem",
+        "compare": "Primeraj regije",
+        "undo": "Razveljavi zadnjo spremebo v regiji",
+        "redo": "Ponovi spremembo v regiji",
+        "createRegion": "Ustvari regij",
+        "cancel": "Prekliči",
+        "acceptSuggestion": "Sprejmi predlagane regije",
+        "rejectSuggestion": "Zavrni predlagane regije",
+        "saveChanges": "Shrani spremembe",
+        "discardChanges": "Zavrzi spremembe",
+        "incompleteAvalancheProblem": "Nepopoln plazovni problem",
+        "saveBulletin": "Shrani bilten",
+        "discardBulletin": "Zavrzi spremembe biltena",
+        "loadBulletin": "Naloži bilten prejšnjega dne",
+        "uploadCaamlBulletin": "Upload bulletin in CAAML format",
+        "uploadJsonBulletin": "Naloži bilten v formatu JSON",
+        "downloadCaamlBulletin": "Download bulletin in CAAML format",
+        "downloadJsonBulletin": "Shrani bilten v formatu JSON",
+        "daytimeDependency": "Daytime dependency",
+        "treeline": "Gozdna meja",
+        "tendency": {
+          "decreasing": "Nevarnost plazov se zmanjša",
+          "steady": "Nevarnost plazov ostane enaka",
+          "increasing": "Nevarnost plazov se poveča",
+          "danger": "Nevarnost plazov"
+        },
+        "textcat": {
+          "edit": "Uredi",
+          "copy": "Kopiraj",
+          "paste": "Prilepi",
+          "example": "Naloži vzorčno besedilo",
+          "delete": "Izbriš"
+        },
+        "moveUpAvalancheProblem": "Move avalanche problem up",
+        "moveDownAvalancheProblem": "Move avalanche problem down",
+        "dangerRatingDirectionUp": "Navzgor",
+        "dangerRatingDirectionDown": "Navzdol",
+        "addPhoto": "Add photo",
+        "removePhoto": "Remove photo",
+        "uploadPhoto": "Upload photo",
+        "editPhoto": "Edit photo"
+      },
+      "save": "Shrani",
+      "discard": "Zavrzi",
+      "back": "Nazaj",
+      "createAggregatedRegion": "Nova regije",
+      "pasteAggregatedRegion": "Prilepi regijo",
+      "pendingSuggestions": "Predlogi",
+      "rejectSuggestion": "Zavrni",
+      "acceptSuggestion": "Sprejmi",
+      "cancelCopyBulletin": "Prekliči",
+      "createAvalancheProblem": "Nov problem",
+      "ownRegions": "Lastne regije",
+      "foreignRegions": "Tuje regije",
+      "externalRegions": "Zunanje regije",
+      "mapSelectRegion": "Izberi regije na zemljevidu.",
+      "statusHeader": "Stanje biltena.",
+      "suggestions": "Predlogi",
+      "noBulletinsForSelectedDay": "Za ta da ni določenih regij",
+      "autosave": "Samodejno shranjeno",
+      "regionEditable": "To regijo je mogoče urediti.",
+      "regionNotEditable": "Te regije ni mogoče urediti.",
+      "regionLocked": "Ta regija je zaklenjena.",
+      "changeDangerRatingElevation": "Extend the danger level",
+      "mapTop": "Zemljevid zgoraj",
+      "mapLeft": "Zemljevid ob strani",
+      "showExternalRegions": "Prikaži zunanje regije",
+      "hideExternalRegions": "Skrij zunanje regije",
+      "showNotes": "Prikaže opombe",
+      "hideNotes": "Skrij opombe",
+      "incompleteAvalancheProblem": "Nepopolno",
+      "label": {
+        "generalHeadlineComment": "General overall headline",
+        "importantObservations": "Important observations",
+        "avalancheProblems": "Plazovni problem",
+        "aspects": "Usmerjenost",
+        "highlights": "Posebno opozorilo",
+        "avActivityHighlights": "Headline avalanche situation",
+        "avActivityComment": "Opis plazovne nevarnosti",
+        "travelAdvisoryHighlights": "Headline travel advisory",
+        "travelAdvisoryComment": "Description of travel advisory",
+        "snowpackStructureHighlights": "Headline snowpack structure",
+        "snowpackStructureComment": "Opis sestave snežne odeje",
+        "dangerPatterns": "Vzorci nevarnosti",
+        "tendencyComment": "Description of tendency",
+        "synopsisHighlights": "Headline weather synopsis",
+        "synopsisComment": "Weather synopsis",
+        "notes": "Opombe",
+        "noSnow": "Ni snega"
+      },
+      "copyRegion": {
+        "label": "Kopiraj regijo v drug bilten",
+        "select": "Prilepi v ...",
+        "currentBulletin": "Ta bilten"
+      },
+      "title": {
+        "avalancheProblem": "Plazovni problemi",
+        "dangerDescription": "Opis plazovne nevarnosti",
+        "forenoon": "Dopoldne",
+        "afternoon": "Popoldne",
+        "photos": "Photos",
+        "snowpackStructure": "Sestava snežne odeje",
+        "tendency": "Obeti",
+        "synopsis": "Vreme",
+        "showTranslations": "Skrij prevode",
+        "hideTranslations": "Prikaži prevode"
+      },
+      "photos": {
+        "url": "Image URL",
+        "locationName": "Lokacija",
+        "microregion": "Microregion",
+        "copyright": "Copyright",
+        "date": "Datum"
+      },
+      "placeholder": {
+        "notes": "Sem si zapiši opombe .."
+      },
+      "pmDialog": {
+        "noIFrameSupport": "Tvoj brskalnik ne podpira IFrame!"
+      },
+      "discardDialog": {
+        "message": "Ali želiš zavreči spremembe?",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "deleteAggregatedRegionDialog": {
+        "message": "Ali želiš izbrisati to regijo?",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "noRegionDialog": {
+        "message": "Izberi vsaj eno svojo mikro-regijo",
+        "accept": "V redu"
+      },
+      "loadDialog": {
+        "message": "Do you want to load the bulletins from the day before?<br><strong>This will delete all existing regions!</strong>",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "deleteAllWarningRegionsDialog": {
+        "message": "Ali želiš izbrisati vse regije?",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "loadSuggestionsFromDangerSourcesDialog": {
+        "message": "Do you want to load suggestions from danger sources?<br><strong>This will delete all existing regions!</strong>",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "loadAutoSaveDialog": {
+        "message": "Ali želiš naložiti samodejno shranjene biltene?",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "saveErrorDialog": {
+        "message": "Med shranjevanjem biltenov je prišlo do napake!",
+        "accept": "V redu"
+      },
+      "changeErrorDialog": {
+        "message": "Med spreminjanjem biltenov je prišlo do napake!",
+        "accept": "V redu"
+      },
+      "loadingErrorDialog": {
+        "message": "Med nalaganjem biltenov je prišlo do napake!",
+        "accept": "V redu"
+      },
+      "loadingJsonFileErrorDialog": {
+        "message": "Med nalaganjem biltenov iz JSON je prišlo do napake!",
+        "accept": "V redu"
+      },
+      "avalancheProblemErrorDialog": {
+        "message": "Manjkajo plazovni problem, pobočja, stabilnost snežne odeje, pogostost in/ali velikost plazu za vsak en plazovni problem!",
+        "accept": "V redu"
+      },
+      "loadAvActivityCommentExampleTextDialog": {
+        "message": "For which situation do you want to load an example text?",
+        "newSnow": "Nov sneg",
+        "windSlab": "Napihan sneg",
+        "persistentWeakLayers": "Trdožive šibke plasti",
+        "wetSnow": "Moker sneg",
+        "glidingSnow": "Drseč sneg",
+        "favourableSituation": "Ugodne razmere",
+        "cancel": "Prekliči"
+      },
+      "removeDaytimeDependencyDialog": {
+        "message": "Katere plazovne probleme želiš obdržati?",
+        "cancel": "Prekliči"
+      },
+      "strategicMindsetDialog": {
+        "title": "Strategic Mindsets",
+        "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
+        "description": {
+          "title": "Description:",
+          "text": {
+            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
+            "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
+            "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
+            "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
+            "entrenchment": "<b>Almost constant, tense hazardous situation.</b> The main danger comes from (a) <b>persistent weak layer</b>(s) susceptible to interference.",
+            "free_ride": "<b>Low avalanche danger</b> with generally stable snow cover. Only small avalanches are possible in extremely steep terrain. ",
+            "high_alert": "Exceptional situation with <b>high or very high avalanche danger</b>. Spontaneous avalanches of <b>very large or extreme magnitude</b> are possible",
+            "spring_diurnal": "Wet snow avalanches during the course of the day, which are subject to a <b>clear diurnal cycle</b>, are decisive for the risk assessment."
+          }
+        },
+        "communication": {
+          "title": "Communication:",
+          "text": {
+            "assessment": "Avalanche situation must be checked locally. Restraint is recommended.",
+            "stepping_out": "Gradual decrease in danger. However, caution is still required and the improving situation should be assessed locally before entering riskier terrain.  ",
+            "status_quo": "Hazardous situation is unchanged. Feedback from observers helps to better outline the hazardous situation. More favourable terrain should be communicated with emphasis. ",
+            "stepping_back": "Clear communication of the increase in avalanche danger - even within a danger level. Information on the causes supports comprehensibility in communication. ",
+            "entrenchment": "Caution and restraint are required. Situation hardly changes. If possible, provide as precise information as possible on distribution and possibility to trigger. Increased communication of observations that reveal the situation and trigger restraint.",
+            "free_ride": "Little text. Emphasise the generally favourable overall situation and potentially isolated hazard areas",
+            "high_alert": "Communication across all channels. The focus is no longer on winter sports. Danger even in areas that are not usually at risk of avalanches.",
+            "spring_diurnal": "Favourable situation in the morning, increasing during the day. Assessment should be made locally by observing the softening of the melt-freeze crust and the increasing soaking of the snow cover."
+          }
+        },
+        "examples": {
+          "title": "Examples:",
+          "text": {
+            "assessment": "Start of the season.",
+            "stepping_out": "Cooling leads to a decrease in the risk of wet snow avalanches after a warm and humid weather phase.",
+            "status_quo": "Consistent wind-slab problem with cold temperatures, loose snow and wind.",
+            "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
+            "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
+            "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
+            "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
+            "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
+          }
+        },
+        "strategicMindset": {
+          "assessment": "Velika negotovost",
+          "stepping_out": "Improving",
+          "status_quo": "Status Quo",
+          "stepping_back": "Deteriorating",
+          "entrenchment": "Persistent Unstable",
+          "free_ride": "Favorable",
+          "high_alert": "High Alert",
+          "spring_diurnal": "Spring Diurnal"
+        }
+      },
+      "decisionTree": {
+        "filepath": "./assets/img/decision_tree-en.svg",
+        "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
+        "decisionTree": "Decision tree",
+        "feedback": "Odziv",
+        "save": "Shrani",
+        "discard": "Zavrzi"
+      }
+    },
+    "table": {
+      "title": {
+        "date": "Datum"
+      },
+      "status": {
+        "missing": "manjka",
+        "draft": "osnutek",
+        "submitted": "oddano",
+        "published": "objavljeno",
+        "updated": "posodobljeno",
+        "resubmitted": "ponovno oddano",
+        "republished": "ponovno objavljeno"
+      },
+      "publishBulletinsDialog": {
+        "message": "Ali želiš objaviti bilten?"
+      },
+      "publicationStatusDialog": {
+        "headline": "Stanje objave",
+        "publishedBy": "Objavil:",
+        "publishedAt": "Objavljeno:",
+        "validFor": "Velja za:",
+        "title": {
+          "prod": "Serious stuff",
+          "test": "Test system",
+          "task": "Task",
+          "language": {
+            "all": "ALL",
+            "de": "NEM",
+            "it": "IT",
+            "en": "ANG"
+          }
+        },
+        "email": {
+          "label": "Emails",
+          "tooltip": "Pošlji e-pošto",
+          "success": "E-pošta uspešno poslana!",
+          "error": "E-pošte ni bilo mogoče poslati!"
+        },
+        "telegram": {
+          "label": "Sporočilo Telegram",
+          "tooltip": "Pošlji sporočilo Telegram",
+          "success": "Sporočilo na Telegram uspešno poslano!",
+          "error": "Sporočila na Telegram ni bilo mogoče poslati!"
+        },
+        "whatsapp": {
+          "label": "Sporočilo WhatsApp",
+          "tooltip": "Pošlji sporočilo WhatsApp",
+          "success": "Sporočilo WhatsApp poslano!",
+          "error": "Sporočila WhatsApp ni bilo mogoče poslati!"
+        },
+        "push": {
+          "label": "Potisno obvestil",
+          "tooltip": "Pošlji potisno obvestil",
+          "success": "Potistno obvestilo poslano!",
+          "error": "Potisnega obvestila ni bilo mogoče poslati!"
+        },
+        "accept": "V redu",
+        "confirm": "Do you want to send {{channel}} ({{language}})?"
+      },
+      "mediaFileDialog": {
+        "headline": "Media File",
+        "important": "POMEMBNO",
+        "missingFile": "Izbrana ni nobena datoteka!",
+        "uploadError": "Nalaganje ni uspelo!",
+        "accept": "Pošlj",
+        "reject": "Prekliči"
+      },
+      "publishBulletinsErrorDialog": {
+        "message": "Med objavo biltena je prišlo do napake!",
+        "accept": "V redu"
+      },
+      "submitBulletinsDialog": {
+        "message": "Ali želiš oddati bilten?"
+      },
+      "submitBulletinsErrorDialog": {
+        "message": "Med oddajo biltena je prišlo do napake!",
+        "accept": "V redu"
+      },
+      "submitBulletinsDuplicateRegionDialog": {
+        "message": "Nekatere regije so vključene v več regij. Biltena ni mogoče oddati.",
+        "accept": "V redu"
+      },
+      "checkBulletinsErrorDialog": {
+        "message": "Med preverjanjem biltena je prišlo do napake!",
+        "accept": "V redu"
+      },
+      "previewErrorDialog": {
+        "message": "Predogleda ni mogoče naložiti!",
+        "accept": "V redu"
+      },
+      "checkBulletinsDialog": {
+        "message": "Preveri bilten",
+        "ok": "(everything alright)"
+      },
+      "publishAllDialog": {
+        "message": "Do you want to publish all regions?",
+        "changeMessage": "Do you want to publish all regions? (no messages)"
+      },
+      "bulletinCheck": {
+        "missingDangerRating": "Ni določena stopnja nevarnosti",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingRegion": "Nekatere regije nimajo določene stopnje",
+        "duplicateRegion": "Nekatere regije so vključene v več regij",
+        "missingAvActivityHighlights": "Headline avalanche situation missing",
+        "missingAvActivityComment": "Manjka opis plazovne nevarnosti",
+        "missingSnowpackStructureHighlights": "Headline snowpack structure missing",
+        "missingSnowpackStructureComment": "Manjka opis sestave snežne odeje",
+        "pendingSuggestions": "Pending suggestions",
+        "incompleteTranslation": "Nepopoln prevod"
+      }
+    }
+  },
+  "training": {
+    "training": "Training",
+    "timestamp": "Training timestamp"
+  },
+  "admin": {
+    "loadingStatistics": "Ustvarjanje CSV ...",
+    "server-configuration": {
+      "title": "Strežni",
+      "button": {
+        "create": "Ustvari strežnik",
+        "save": "Shrani"
+      },
+      "table": {
+        "name": "Ime",
+        "userName": "Uporabniško ime",
+        "password": "Geslo",
+        "publishAt5PM": "Objavi ob 17:0",
+        "publishAt8AM": "Objavi ob 8:00",
+        "pdfDirectory": "Mapa za PDF",
+        "htmlDirectory": "Mapa za HTML",
+        "serverImagesUrl": "Pot do slik na strežnik",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
+        "mapsPath": "Pot do zemljevidov",
+        "mediaPath": "Path to media files",
+        "mapProductionUrl": "URL for map production",
+        "apiUrl": "API URL"
+      },
+      "success": "Konfiguracija je bila uspešno shranjena.",
+      "error": "Konfiguracije ni bilo mogoče shraniti."
+    },
+    "region-configuration": {
+      "title": "Regija",
+      "button": {
+        "create": "Ustvari regij",
+        "save": "Shrani"
+      },
+      "table": {
+        "general": {
+          "title": "Splošn"
+        },
+        "publication": {
+          "title": "Publication"
+        },
+        "components": {
+          "title": "Components"
+        },
+        "configuration": {
+          "title": "Configuration"
+        },
+        "languageConfiguration": {
+          "title": "Language configuration"
+        }
+      },
+      "success": "Konfiguracija je bila uspešno shranjena.",
+      "error": "Konfiguracije ni bilo mogoče shraniti."
+    },
+    "users": {
+      "title": "Uporabnik",
+      "button": {
+        "create": "Ustvari uporabnika"
+      },
+      "tooltip": {
+        "edit": "Uredi uporabnika",
+        "changePassword": "Spremeni gesl",
+        "delete": "Izbriši uporabnika"
+      },
+      "table": {
+        "name": "Ime",
+        "email": "E-pošta",
+        "organization": "Organizacija",
+        "regions": "Regije",
+        "roles": "Vloge"
+      },
+      "deleteUserModalDialog": {
+        "message": "Ali želiš izbrisati uporabnika?",
+        "accept": "Da",
+        "reject": "Ne"
+      },
+      "deleteUser": {
+        "success": "Uporabnik je bil izbrisan",
+        "error": "Uporabnika ni mogoče izbrisati"
+      },
+      "createUser": {
+        "success": "Uporabnik je bil ustvarjen",
+        "error": "Uporabnika ni mogoče ustvariti"
+      },
+      "updateUser": {
+        "success": "User saved",
+        "error": "User could not be saved"
+      }
+    },
+    "createUser": {
+      "table": {
+        "image": "Image",
+        "name": "Ime",
+        "email": "E-pošta",
+        "organization": "Organizacija",
+        "password": "Geslo",
+        "password2": "Ponovi geslo",
+        "roles": "Vloge",
+        "regions": "Regije"
+      },
+      "error": {
+        "name": {
+          "required": "Prosim, vnesi ime"
+        },
+        "email": {
+          "required": "Prosim, vnesi e-naslov",
+          "invalid": "E-naslov je neveljaven"
+        },
+        "password": {
+          "required": "Prosim, vnesi geslo",
+          "length": "Geslo mora vsebovati vsaj 8 znakov",
+          "mismatch": "Gesli se ne ujemata"
+        }
+      },
+      "button": {
+        "create": "Ustvari uporabnika",
+        "update": "Posodobi uporabnika",
+        "cancel": "Prekliči"
+      }
+    },
+    "observations": {
+      "table": "Tabela",
+      "map": "Zemljevid",
+      "gallery": "Galerija",
+      "filters": "Filtri",
+      "details": "Podrobnosti",
+      "title": "Opazovanja",
+      "newObservation": "Novo opazovanje",
+      "exportObservations": "Izvozi opazovanja (GeoJSON)",
+      "exportStatistics": "Izvozi statistiko (CSV)",
+      "toggleFilterBar": "Prikaži/skrij vrstico s filtri",
+      "button": {
+        "submit": "Shrani"
+      },
+      "label": {
+        "dateRange": "Obdobje",
+        "observer": "Opazovalec"
+      },
+      "selectRegion": {
+        "placeholder": "Regija",
+        "selectionLabel": "število izbranih regij: {0}"
+      },
+      "selectSources": {
+        "placeholder": "Viri",
+        "selectionLabel": "Število izbranih virov: {0}"
+      },
+      "charts": {
+        "charts": "Charts",
+        "nan": "Without specification",
+        "reload": "Ponovno naloži",
+        "classify": "Classify",
+        "label": "Label",
+        "invert": "Invert",
+        "reset": "Ponastavi",
+        "aspect": {
+          "caption": "Usmerjenost pobočja"
+        },
+        "elevation": {
+          "caption": "Nadmorska višina"
+        },
+        "stability": {
+          "caption": "Stabilnost"
+        },
+        "observationType": {
+          "caption": "Vrsta opazovanja"
+        },
+        "importantObservation": {
+          "caption": "Important"
+        },
+        "avalancheProblem": {
+          "caption": "Plazovni problem"
+        },
+        "dangerPattern": {
+          "caption": "Danger Pattern"
+        },
+        "dangerSource": {
+          "caption": "Danger Source"
+        },
+        "days": {
+          "caption": "Dan"
+        }
+      }
+    },
+    "blog": {
+      "title": "Blog",
+      "language": {
+        "title": "Jezik",
+        "de": "NEM",
+        "it": "IT",
+        "en": "ANG"
+      },
+      "all": {
+        "tooltip": "Pošlji sporočila na e-pošto, Telegram, WhatsApp in potisna obvestila",
+        "success": "Sporočila na e-pošto, Telegram, WhatsApp in potisna obvestila so bila uspešno poslana!",
+        "error": "Sporočil na e-pošto, Telegram, WhatsApp in potisnih obvestil ni bilo mogoče poslati!"
+      },
+      "email": {
+        "tooltip": "Pošlji e-sporočila",
+        "success": "E-pošta je bila uspešno poslana!",
+        "error": "E-pošte ni bilo mogoče poslati!"
+      },
+      "telegram": {
+        "tooltip": "Send via Telegram Channel",
+        "success": "Telegram successfully sent!",
+        "error": "Telegram could not be sent!"
+      },
+      "whatsapp": {
+        "tooltip": "Send via WhatsApp Channel",
+        "success": "WhatsApp successfully sent!",
+        "error": "WhatsApp could not be sent!"
+      },
+      "push": {
+        "tooltip": "Send via Push Notifications",
+        "success": "Push successfully sent!",
+        "error": "Push could not be sent!"
+      }
+    }
+  },
+  "settings": {
+    "title": "Nastavitve",
+    "changePassword": {
+      "title": "Spremeni gesl",
+      "oldPassword": {
+        "label": "Trenutno geslo",
+        "placeholder": "Trenutno geslo"
+      },
+      "newPassword1": {
+        "label": "Novo gesl",
+        "placeholder": "Novo gesl"
+      },
+      "newPassword2": {
+        "label": "Novo geslo (ponovi)",
+        "placeholder": "Novo geslo"
+      },
+      "submit": "Spremeni gesl",
+      "passwordChanged": "Geslo je bilo uspešno spremenjeno",
+      "passwordChangeError": "Gesla ni bilo mogoče spremeniti",
+      "passwordIncorrect": "Vneseno trenutno geslo je napačn",
+      "error": {
+        "oldPassword": {
+          "required": "Prosim, vnesi svoje trenutno geslo\n"
+        },
+        "newPassword": {
+          "required": "Prosim, vnesi novo geslo",
+          "mismatch": "Gesli se ne ujemata"
+        }
+      }
+    },
+    "display": {
+      "title": "Prikaz",
+      "table": {
+        "showCaaml": "Pokaži CAAML",
+        "showJson": "Pokaži JSON"
+      }
+    }
+  },
+  "statistics": {
+    "title": "Statistika",
+    "bulletins": "Lavinski bilteni",
+    "dangerSources": "Danger Sources",
+    "button": {
+      "submit": "Shrani"
+    },
+    "label": {
+      "dateRange": "Obdobje",
+      "extended": "Extended",
+      "duplicates": "Dvojniki"
+    },
+    "error": {
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
+    }
+  },
+  "dangerRating": {
+    "missing": "manjka",
+    "noRating": "no rating",
+    "no_rating": "no rating",
+    "no_snow": "no snow",
+    "low": "majhna",
+    "moderate": "zmerna",
+    "considerable": "znatna",
+    "high": "velika",
+    "very_high": "zelo velika",
+    "veryHigh": "zelo velika"
+  },
+  "avalancheProblem": {
+    "newSnow": "Nov sneg",
+    "new_snow": "Nov sneg",
+    "windSlab": "Napihan sneg",
+    "wind_slab": "Napihan sneg",
+    "persistentWeakLayers": "Trdožive šibke plasti",
+    "persistent_weak_layers": "Trdožive šibke plasti",
+    "wetSnow": "Moker sneg",
+    "wet_snow": "Moker sneg",
+    "glidingSnow": "Drseč sneg",
+    "gliding_snow": "Drseč sneg",
+    "cornices": "Opasti",
+    "noDistinctAvalancheProblem": "No distinct avalanche problem",
+    "no_distinct_avalanche_problem": "No distinct avalanche problem",
+    "favourableSituation": "Ugodne razmere",
+    "favourable_situation": "Ugodne razmere"
+  },
+  "dangerPattern": {
+    "dp1": "dp.1: globoka trdoživa šibka plast",
+    "dp2": "vn.2: zdrsni plazovi",
+    "dp3": "dp.3: dež",
+    "dp4": "dp.4: ohladitev po toploti / otoplitev po mrazu",
+    "dp5": "dp.5: sneženje po dolgem hladnem obdobju",
+    "dp6": "dp.6: mrzel nesprijet sneg z vetrom",
+    "dp7": "vn.7: tanka snežna odeja ob globoki snežni odeji",
+    "dp8": "vn.8: zakopan površinski srež",
+    "dp9": "dp.9: zakopano babje pšeno",
+    "dp10": "dp.10: spomladanske razmere"
+  },
+  "strategicMindset": {
+    "title": "Strategic Mindset",
+    "assessment": "Velika negotovost",
+    "stepping_out": "Improving",
+    "status_quo": "Status Quo",
+    "stepping_back": "Deteriorating",
+    "entrenchment": "Persistent Unstable",
+    "free_ride": "Favorable",
+    "high_alert": "High Alert",
+    "spring_diurnal": "Spring Diurnal"
+  },
+  "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
+    "TimeSeries": "Time series",
+    "Incident": "Incident",
+    "Profile": "Snow profile",
+    "Closure": "Closure",
+    "Blasting": "Blasting",
+    "Avalanche": "Avalanche",
+    "Evaluation": "Evaluation",
+    "SimpleObservation": "Preprosto opazovanje",
+    "Webcam": "Spletna kamera"
+  },
+  "importantObservation": {
+    "ForBlog": "Za blog",
+    "SurfaceHoar": "Površinski srež",
+    "Graupel": "Babje pšeno",
+    "StabilityTest": "Preizkus stabilnosti",
+    "IceFormation": "Ice formation",
+    "VeryLightNewSnow": "Very light new snow"
+  },
+  "elevationTolerance": {
+    "exact": "natančno",
+    "50m": "±50m",
+    "100m": "±100 m",
+    "200": "±200 m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
+  },
+  "aspect": {
+    "N": "S",
+    "NE": "SV",
+    "E": "V",
+    "SE": "JV",
+    "S": "J",
+    "SW": "JZ",
+    "W": "Z",
+    "NW": "SZ"
+  },
+  "role": {
+    "SUPERADMIN": "Super Administrator",
+    "ADMIN": "Administrator",
+    "FORECASTER": "Prognosti",
+    "FOREMAN": "Foreman",
+    "OBSERVER": "Opazovalec"
+  },
+  "tendency": {
+    "decreasing": "Nevarnost plazov se bo zmanjšala",
+    "steady": "Nevarnost plazov bo ostala enaka",
+    "increasing": "Nevarnost plazov se bo povečala"
+  },
+  "snowpackStability": {
+    "unknown": "neznano",
+    "good": "dobra",
+    "fair": "zadovoljiva",
+    "poor": "slaba",
+    "very_poor": "zelo slaba"
+  },
+  "frequency": {
+    "none": "(skoraj) nič",
+    "few": "redki",
+    "some": "nekaj",
+    "many": "veliko"
+  },
+  "avalancheSize": {
+    "small": "majhni",
+    "small_medium": "small–medium",
+    "medium": "srednji",
+    "medium_large": "medium–large",
+    "large": "veliki",
+    "large_very_large": "large–very large",
+    "very_large": "zelo veliki",
+    "very_large_extreme": "very large–extreme",
+    "extreme": "izjemno veliki"
+  },
+  "complexity": {
+    "easy": " Easy",
+    "challenging": " Challenging",
+    "complex": " Complex"
+  },
+  "glidingSnowActivity": {
+    "low": "majhna",
+    "medium": "srednji",
+    "high": "velika"
+  },
+  "wetness": {
+    "dry": "suh",
+    "moist": "vlažen",
+    "wet": "moker"
+  },
+  "characteristic": {
+    "low": "majhna",
+    "medium": "srednji",
+    "high": "velika",
+    "very_high": "zelo velika"
+  },
+  "thickness": {
+    "thin": "tanek",
+    "thick": "debel"
+  },
+  "snowpackPosition": {
+    "upper": "zgornji",
+    "middle": "srednj",
+    "lower": "spodnj",
+    "ground": "tla"
+  },
+  "weakLayerCrust": {
+    "no": "brez",
+    "partly": "deloma",
+    "yes": "da/z"
+  },
+  "creationProcess": {
+    "radiation_recrystallization": "sevanje",
+    "diurnal_recrystallization": "dnevno",
+    "melt_layer_recrystallization": "melt layer",
+    "surface_hoar_formation": "površinski srež"
+  },
+  "recognizability": {
+    "very_easy": "zelo preprosto",
+    "easy": "preprosto",
+    "hard": "težko",
+    "very_hard": "zelo težko"
+  },
+  "distribution": {
+    "isolated": "osamljeni",
+    "specific": "značilni",
+    "widespread": "obsežni"
+  },
+  "probability": {
+    "likely": "verjetno",
+    "possible": "mogoče",
+    "unlikely": "malo verjetno"
+  },
+  "detailedDaytime": {
+    "evening": "večer",
+    "first_night_half": "v prvi polovici noči",
+    "second_night_half": "v drugi polovici noč",
+    "morning": "zjutraj",
+    "forenoon": "dopoldne",
+    "afternoon": "popoldne"
+  },
+  "slopeGradient": {
+    "moderately_steep": "zmerno strm",
+    "steep": "strm",
+    "very_steep": "zelo strm",
+    "extremely_steep": "izjemno strmo"
+  },
+  "handHardness": {
+    "fist": "P",
+    "four_fingers": "4P",
+    "one_finger": "1P",
+    "pencil": "S",
+    "knife": "N",
+    "ice": "L"
+  },
+  "hardnessTendency": {
+    "decreasing": "mehkejši pod",
+    "steady": "enakomeren",
+    "increasing": "mehkejši nad"
+  },
+  "terrainType": {
+    "gullies_and_bowls": "grape in kotli",
+    "adjacent_to_ridgelines": "v bližini grebenov",
+    "distant_from_ridgelines": "daleč od grebenov",
+    "in_the_vicinity_of_peaks": "v bližini vrhov",
+    "pass_areas": "okoli prevalov",
+    "shady_slopes": "senčna pobočja",
+    "sunny_slopes": "sončena pobočja",
+    "grassy_slopes": "travnata pobočja",
+    "cut_slopes": "cut slopes",
+    "wind_loaded_slopes": "wind loaded slopes",
+    "base_of_rock_walls": "vznožje skalnih sten",
+    "behind_abrupt_changes_in_the_terrain": "behind abrupt changes in the terrain",
+    "transitions_into_gullies_and_bowls": "transitions into gullies and bowls",
+    "areas_where_the_snow_cover_is_rather_shallow": "areas where the snow cover is rather shallow",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "transitions from a shallow to a deep snowpack",
+    "highly_frequented_off_piste_terrain": "highly frequented off piste terrain",
+    "little_used_backcountry_terrain": "little used backcountry terrain",
+    "places_that_are_protected_from_the_wind": "places that are protected from the wind",
+    "regions_exposed_to_the_foehn_wind": "regions exposed to the foehn wind",
+    "regions_with_a_lot_of_snow": "regions with a lot of snow",
+    "regions_exposed_to_precipitation": "regions exposed to precipitation",
+    "regions_exposed_to_heavier_precipitation": "regions exposed to heavier precipitation"
+  },
+  "dangerSign": {
+    "shooting_cracks": "shooting cracks",
+    "whumpfing": "whumpfing",
+    "fresh_avalanches": "fresh avalanches",
+    "glide_cracks": "glide cracks"
+  },
+  "changeRegionDialog": {
+    "message": "Do you want to change the region?",
+    "accept": "Da",
+    "reject": "Ne"
+  },
+  "zamg": {
+    "table": "Tabela",
+    "map": "Zemljevid",
+    "region": "Regija",
+    "newSnow": "Nov sneg"
+  },
+  "snowpack": {
+    "plotType": {
+      "LWC_stratigraphy": "moker sneg: vodnatost",
+      "wet_snow_instability": "moker sneg: nestabilnost",
+      "Sk38_stratigraphy": "trdoživa šibka plast: kazalnik stabilnosti SK38",
+      "stratigraphy": "trdoživa šibka plast: stratigrafija snežne odeje"
+    },
+    "aspect": {
+      "flat": "ravnina",
+      "north": "sever",
+      "south": "jug"
+    },
+    "meteo": {
+      "new_snow_plot_3day": "nov sneg (3 dni)",
+      "new_snow_plot_7day": "nov sneg (7 dni)",
+      "new_snow_plot_1month": "nov snega (31 dni)",
+      "new_snow_plot_season": "nov sneg (sezona)",
+      "new_snow_plot_forecast": "nov snega (napoved)",
+      "wet_snow_plot_3day": "moker sneg (3 dni)",
+      "wet_snow_plot_7day": "moker sneg (7 dni)",
+      "wet_snow_plot_1month": "moker sneg (31 dni)",
+      "wet_snow_plot_season": "moker sneg (sezona)",
+      "wet_snow_plot_forecast": "moker sneg (napoved)",
+      "HS_table_24h": "snow height table (1d)",
+      "HS_table_72h": "snow height table (3d)",
+      "HS_table_season": "snow height table (season)",
+      "HS_table_forecast": "snow height table (forecast)",
+      "TA_table_24h": "temperature table (1d)",
+      "TA_table_72h": "temperature table (3h)",
+      "TA_table_season": "temperature table (season)"
+    }
+  },
+  "grainShape": {
+    "PP": {
+      "code": "PP",
+      "class": "padavinski delci"
+    },
+    "PPgp": {
+      "code": "PPgp",
+      "class": "babje pšeno"
+    },
+    "DF": {
+      "code": "DF",
+      "class": "Decomposing and Fragmented precipitation particles"
+    },
+    "RG": {
+      "code": "RG",
+      "class": "zrnec"
+    },
+    "FC": {
+      "code": "FC",
+      "class": "srež"
+    },
+    "FCxr": {
+      "code": "FCxr",
+      "class": "Rounding Faceted Crystals"
+    },
+    "DH": {
+      "code": "DH",
+      "class": "globinski srež"
+    },
+    "SH": {
+      "code": "SH",
+      "class": "površinski srež"
+    },
+    "MF": {
+      "code": "MF",
+      "class": "srenec"
+    },
+    "MM": {
+      "code": "MM",
+      "class": "Machine Made"
+    },
+    "MFcr": {
+      "code": "MFcr",
+      "class": "sren, osrenica"
+    },
+    "IF": {
+      "code": "IF",
+      "class": "Ice Formations"
+    }
+  },
+  "button": {
+    "true": "Da",
+    "false": "Ne",
+    "ok": "V redu",
+    "yes": "Da",
+    "no": "Ne"
+  },
+  "observations": {
+    "allowEdit": "Uredi zunanje opazovanje",
+    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
+    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
+    "aspect": "Usmerjenost pobočja",
+    "authorName": "Ime avtorja",
+    "avalancheLength": "Dolžina plazu",
+    "avalancheProblem": "Plazovni problem",
+    "avalancheSize": "Velikost plazov",
+    "avalancheType": "Vrsta plazu",
+    "avalancheWidth": "Širina plazu",
+    "search": "Išči",
+    "count": "Število opazovanj:",
+    "elevationTolerance": "Točnost podatkov o višini",
+    "elevationPeriod": "Elevation time period",
+    "layers": {
+      "observers": "Opazovalci",
+      "weatherStations": "Vremenske postaje",
+      "webcams": "Spletne kamere",
+      "observations": "Opazovanja"
+    },
+    "weatherStations": {
+      "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
+        "globalRadiation": "Globalno sevanje",
+        "newSnow": "Nov sneg",
+        "snowLine": "Snow line",
+        "snowHeight": "Višina snežne odeje",
+        "snowDifference": "Snow difference",
+        "airTemperature": "Temperatura zraka",
+        "airTemperatureMax": "Najvišja temperatura zraka",
+        "airTemperatureMin": "Najnižja temperatura zraka",
+        "surfaceTemperature": "Temperatura površja",
+        "surfaceHoar": "Potential surface hoar formation",
+        "surfaceHoarCalc": "Potential surface hoar formation (Lehning et. al.)",
+        "dewPoint": "Temperatura rosišča",
+        "relativeHumidity": "Vlažnost zraka",
+        "windDirection": "Smer vetra",
+        "windSpeed": "Hitrost vetra",
+        "windGust": "Sunki vetra"
+      }
+    },
+    "webcams": {
+      "tooltips": {
+        "minusTenMinutes": "10 minut nazaj",
+        "minusOneHour": "1 uro nazaj",
+        "plusTenMinutes": "10 minut naprej",
+        "plusOneHour": "1 uro naprej"
+      }
+    },
+    "button": {
+      "add": "Dodaj opazovanje",
+      "save": "Shrani opazovanje",
+      "delete": "Izbriši opazovanje",
+      "deleteConfirm": "Izbrišem opazovanje?",
+      "discard": "Zavrzi",
+      "copyDate": "Kopiraj datum dogodka"
+    },
+    "comment": "Komentar",
+    "content": "Vsebina",
+    "dangerRating": "Stopnja nevarnosti",
+    "dangerSource": "Danger source",
+    "elevation": "Nadmorska višina",
+    "elevationRange": "Elevation range",
+    "elevationLowerBound": "Elevation lower bound",
+    "elevationUpperBound": "Elevation upper bound",
+    "eventDate": "Datum dogodka",
+    "eventType": "Vrsta dogodka",
+    "eventTypes": {
+      "IMPORTANT": "Pomemben dogodek",
+      "NEIGHBOR_REGION": "Neighbouring region",
+      "NORMAL": "Normal event",
+      "PERSON_DEAD": "Nesreča (mrtvi)",
+      "PERSON_INJURED": "Nesreča (poškodovani)",
+      "PERSON_NO": "Dogodek brez ljudi",
+      "PERSON_UNINJURED": "Dogodek brez poškodovanih",
+      "PERSON_UNKNOWN": "Dogodek (neznano)",
+      "TRAFFIC": "Promet"
+    },
+    "externalURL": "Zunanji URL (npr. do zbirke fotografij)",
+    "fractureDepth": "Fracture depth",
+    "hasCoordinates": "Ima koordinate",
+    "incline": "Incline",
+    "latitude": "Geografska širina",
+    "locationName": "Lokacija",
+    "longitude": "Geografska višina",
+    "observationType": "Vrsta opazovanja",
+    "personInvolvement": "Person involvement",
+    "reportDate": "Datum poročila",
+    "showTable": "Tabela",
+    "withoutCoordinates": "Opazovanje brez koordinat:",
+    "sidebar": {
+      "filter": {
+        "title": "Filter"
+      },
+      "legend": {
+        "title": "Legenda"
+      },
+      "sources": {
+        "title": "Viri podatkov"
+      },
+      "views": {
+        "title": "Pogledi"
+      }
+    }
+  },
+  "personInvolvement": {
+    "Dead": "Nesreča (mrtvi)",
+    "Injured": "Nesreča (poškodovani)",
+    "Yes": "Event involving persons",
+    "No": "Dogodek brez ljudi",
+    "Uninjured": "Dogodek brez poškodovanih",
+    "Unknown": "Dogodek (neznano)"
+  },
+  "units": {
+    "cm": "cm",
+    "mm": "mm",
+    "m": "m"
+  },
+  "qfa": {
+    "day": "Dan",
+    "time": "Čas",
+    "back": "Nazaj",
+    "parameters": {
+      "DUST": "puščavski prah",
+      "N": "skupna oblačnost v /8",
+      "Nh": "visoka oblačnost v /8",
+      "Nm": "srednja oblačnost v /8",
+      "Nl": "nizka oblačnost v /8",
+      "N-CU": "konvektivna oblačnost v /8",
+      "AUSL.T": "trigger temperature",
+      "SHW-IX": "Showalter-Index",
+      "WX -CUF": "significant weather: NIL (none), RASH (rain), TS (thunder storm)",
+      "RR": "skupna količina padavin [mm]",
+      "RR-str": "stratiformne padavine [mm]",
+      "CONV": "konvektivne padavine [mm]",
+      "SN": "padavine v obliki snega [mm]",
+      "SN--RA": "meja sneženja [m]",
+      "QAO ": "{{value}} hPa eq. mean wind, direction and strength, [°] and [m/s]",
+      "QAN": "mean wind on the ground, direction and strength, [°] and [m/s]",
+      "QANmax": "max. wind (gusts) on the ground [m/s]",
+      "T ": "{{value}} hPa eq. temperature [°C]",
+      "T m": "temperature on {{value}}m [°C]",
+      "T 2m": "temperature on 2m [°C]",
+      "Tk 2m": "temperature on 2m [°K]",
+      "T GND": "ground temperature",
+      "Max-ADI": "maximum mixing temperature [°C]",
+      "Min Max": "min./max. temperature in the last 24h",
+      "FROST": "zero degree line [m]",
+      "W cm": "500 hPa eq. vertical wind [cm/s]",
+      "W --": "700 hPa eq. vertical wind [cm/s]",
+      "W s": "{{value}} hPa eq. vertical wind [cm/s]",
+      "H ": "{{value}} hPa geopotential height [m]",
+      "RF ": "{{value}} hPa eq. relative moisture [%]"
+    }
+  },
+  "awsome": {
+    "Aggregation band": "Aggregation band",
+    "Date": "Datum",
+    "Datetag": "Datetag",
+    "Depth": "Depth",
+    "Dry instability": "Dry instability",
+    "fair (<0.77)": "fair (<0.77)",
+    "fair (<1.05)": "fair (<1.05)",
+    "Grain type": "Grain type",
+    "LWC index": "LWC index",
+    "New snow": "Nov sneg",
+    "poor (<=3)": "poor (<=3)",
+    "poor (<0.95)": "poor (<0.95)",
+    "poor (>=0.77)": "poor (>=0.77)",
+    "Punstable": "Punstable",
+    "rather stable (<0.7)": "rather stable (<0.7)",
+    "rather stable (<1)": "rather stable (<1)",
+    "rather stable (>1.05)": "rather stable (>1.05)",
+    "Size estimate": "Size estimate",
+    "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
+    "very poor (<=0.5)": "very poor (<=0.5)",
+    "very poor (>3)": "very poor (>3)",
+    "Wet instability": "Wet instability"
+  },
+  "channelStatus": {
+    "loading": "Loading channel status information...",
+    "triggerStatusChecks": "Trigger status checks"
+  },
+  "lineaexport": {
+    "searchfieldplaceholder": "Search stations...",
+    "hint": "Press Enter to add"
+  },
+  "awsstats": {
+    "title": "AWS statistics",
+    "label": {
+      "loading": "Loading data...",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "selectWeatherStation": "Select weather station",
+      "selectMicroRegions": "Select micro-regions",
+      "clearselection": "Clear selection",
+      "noMicroRegionsSelected": "nič",
+      "last7days": "Last 7 days",
+      "last30days": "Last 30 days",
+      "last90days": "Last 90 days",
+      "loadData": "Load data",
+      "charttypes": "Chart types"
+    },
+    "charts": {
+      "aws-observations": "AWS observations",
+      "aws-danger-rating": "Stopnja nevarnosti",
+      "aws-danger-rating-altitude": "Danger rating by altitude",
+      "aws-avalanche-activity-index": "Avalanche activity index",
+      "aws-danger-rating-danger-source-variants": "Danger source variants",
+      "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
+    },
+    "error": {
+      "startDateBeforeEndDate": "Start date must be before or equal to end date.",
+      "failedLoadData": "Failed to load data for selected date range.",
+      "startDateEndDateRequired": "Start date and end date are required."
+    }
+  },
+  "yearlystats": {
+    "title": "Yearly Statistics",
+    "label": {
+      "startDate": "Start date",
+      "endDate": "End date",
+      "loaddata": "Load data",
+      "last90Days": "Last 90 days",
+      "last180Days": "Last 180 days",
+      "currentSeason": "Current season",
+      "regionCode": "Region code",
+      "allRegions": "ALL",
+      "virtualTrainings": "Virtual trainings (dates)",
+      "fieldTrainings": "Field trainings (dates)",
+      "dangerRatingReference": "Danger rating reference"
+    },
+    "charts": {
+      "aws-danger-rating-micro-regions-bars": "AWS Danger Rating - Micro Regions - Bars",
+      "aws-danger-rating-micro-regions": "AWS Danger Rating - Micro Regions",
+      "aws-danger-rating-distribution": "AWS Danger Rating - Distribution",
+      "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
+      "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
+      "aws-products": "AWS Products",
+      "aws-stress-level": "Team Stress Level"
+    },
+    "hint": {
+      "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
+      "dateChange": "After changing the date, the 'Load data' button must be pressed."
+    }
+  },
+  "incidentsOverview": {
+    "button": {
+      "new": "New incident",
+      "columns": "Columns",
+      "download": "Download GeoJSON"
+    },
+    "tooltip": {
+      "edit": "Edit incident"
+    },
+    "empty": "No incidents for this region.",
+    "loading": "Loading incidents…",
+    "error": "Incidents could not be loaded.",
+    "retry": "Retry",
+    "filter": {
+      "anyStatus": "Any status"
+    }
+  },
+  "incidentReportUI": {
+    "addAttachment": "Add Attachment",
+    "addGroup": "Add Group",
+    "addVictim": "Add Person",
+    "back": "Nazaj",
+    "clearLine": "Clear Line",
+    "clearPoint": "Clear Point",
+    "clearPolygon": "Clear Polygon",
+    "controls": "Controls",
+    "deleteIncident": "Delete incident",
+    "deleteIncidentConfirm": "Do you want to delete this incident?",
+    "drawLine": "Draw Line",
+    "drawLineInstructions": "Click on the map to add points to the line.",
+    "drawPoint": "Draw Point",
+    "drawPointInstructions": "Click anywhere on the map to place the location marker, then drag it to reposition.",
+    "drawPolygon": "Draw Polygon",
+    "drawPolygonInstructions": "Click on the map to define the corners/vertices of the polygon.",
+    "dropAttachment": "Drop attachment {{fileName}}?",
+    "dropGroup": "Drop group {{number}}?",
+    "dropVictim": "Drop person {{number}}?",
+    "groupName": "Group {{name}}",
+    "groupUnknown": "Group unknown",
+    "incomplete": "Nepopolno",
+    "line": "Line",
+    "locationMap": "Location Map",
+    "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
+    "next": "Naslednji",
+    "overview": "Overview",
+    "noVictims": "No persons registered. Click \"Add Person\" to add a person.",
+    "point": "Point",
+    "polygon": "Polygon",
+    "publishIncident": "Publish",
+    "publishIncidentConfirm": "Do you want to publish this incident?",
+    "publishIncidentSuccess": "The incident report has been published successfully.",
+    "republishIncident": "Republish",
+    "republishIncidentConfirm": "Do you want to republish this incident?",
+    "unpublishIncident": "Unpublish",
+    "unpublishIncidentConfirm": "Do you want to unpublish this incident?",
+    "unpublishIncidentSuccess": "The incident report has been unpublished successfully.",
+    "removeAttachment": "Remove Attachment",
+    "removeGroup": "Remove Group",
+    "removeVictim": "Remove Person",
+    "required": "Required",
+    "showMandatoryFieldsOnly": "Most relevant only",
+    "displayMode": {
+      "edit": "Uredi",
+      "all": "Preview all",
+      "public": "Preview public only",
+      "filledOut": "Preview filled out only"
+    },
+    "valid": "Valid",
+    "victimName": "Person {{name}}",
+    "saveStateIdle": "No unsaved changes",
+    "saveStateSaving": "Saving…",
+    "saveStateSaved": "Saved successfully",
+    "saveStateError": "Save failed"
+  },
+  "incidentReport": {
+    "incidentReport": "Incident Report",
+    "metaInformation": "Meta Information",
+    "generalInformation": "General Information",
+    "bulletinInformation": "Bulletin Information",
+    "locationInformation": "Location Information",
+    "avalancheInformation": "Avalanche Information",
+    "groupInformation": "Group Information",
+    "victimInformation": "Person Information",
+    "involvementsFatalitiesBurials": "Involvements, Fatalities, and Burials",
+    "incidentAnalysis": "Incident Analysis",
+    "incidentAttachments": "Attachments and Links",
+    "author": "Avtor",
+    "authorAffiliation": "Author Affiliation",
+    "dateTime": "Date/Time",
+    "updatedAt": "Last updated",
+    "publishedAt": "Published at",
+    "timeAccuracy": "Time Accuracy ",
+    "sourceOfInformation": "Source of Information",
+    "personInvolvement": "Person Involvement",
+    "otherDamages": "Other Damages",
+    "damagedAssets": "Damaged Assets",
+    "otherDamagesComment": "Other Damages Comment",
+    "publicAvalancheWarningService": "Public Avalanche Warning Service",
+    "publicAvalancheWarningServiceOutside": "Outside AWS Forecast Area",
+    "dangerRating": "Ocena nevarnosti",
+    "avalancheProblem": "Plazovni problem",
+    "dangerPattern": "Danger Pattern",
+    "reportStatus": "Report Status",
+    "publicExternalLinks": "Public External Links",
+    "privateExternalLinks": "Private External Links",
+    "privateExternalDatabaseLinks": "Link to External Databases",
+    "generalInformationComment": "General Information Comment",
+    "bulletinInformationComment": "Bulletin Information Comment",
+    "location": "Lokacija",
+    "country": "Country",
+    "region": "Regija",
+    "municipality": "Municipality",
+    "avalancheRegion": "Avalanche Region",
+    "latitude": "Geografska širina",
+    "longitude": "Geografska višina",
+    "locationAccuracy": "Location Accuracy",
+    "lineCoordinatesText": "Line Coordinates",
+    "polygonCoordinatesText": "Polygon Coordinates",
+    "locationInformationComment": "Location Information Comment",
+    "locationType": {
+      "Point": "Point",
+      "Line": "Line",
+      "Polygon": "Polygon"
+    },
+    "anonymousGroupIdentifier": "Anonymous Group Identifier",
+    "groupType": "Group Type",
+    "groupSize": "Group Size",
+    "groupSizeAccuracy": "Group Size Accuracy",
+    "incidentTerrainType": "Terrain Type",
+    "typeOfControlledTerrain": "Type of Controlled Terrain",
+    "incidentActivity": "Activity",
+    "travelDirection": "Travel Direction",
+    "vehicleType": "Vehicle Type",
+    "avalancheGear": "Avalanche Gear",
+    "groupInformationComment": "Group Information Comment",
+    "numberOfGroups": "Number of groups",
+    "activities": "Activities",
+    "terrainTypes": "Terrain Types",
+    "fatalities": "Fatalities",
+    "injuredSurvivors": "Injured Survivors",
+    "uninjuredSurvivors": "Uninjured Survivors",
+    "caughtOnly": "Caught Only",
+    "fullyBuried": "Fully Buried",
+    "partlyBuriedHeadCovered": "Partly Buried, Head Covered",
+    "partlyBuriedHeadUncovered": "Partly Buried, Head Uncovered",
+    "partlyBuried": "Partly Buried",
+    "numberInvolved": "Number Involved",
+    "involvementsFatalitiesBurialsComment": "Involvements, Fatalities and Burials Comment",
+    "caught": "Caught",
+    "fatalInjured": "Fatal/Injured",
+    "burialDegree": "Burial Degree",
+    "anonymousVictimIdentifier": "Anonymous Person Identifier ",
+    "age": "Age",
+    "gender": "Gender",
+    "workingAtTime": "Working At Time",
+    "leaderAtTime": "Leader At Time",
+    "professionalCertification": "Professional Certification",
+    "avalancheTraining": "Avalanche Training",
+    "yearsActive": "Years Active",
+    "transceiver": "Transceiver",
+    "shovel": "Shovel",
+    "probe": "Probe",
+    "airbag": "Airbag",
+    "helmet": "Helmet",
+    "terrainTrap": "Terrain trap",
+    "burialDepth": "Burial Depth",
+    "burialDuration": "Burial Duration",
+    "primaryLocationMethod": "Primary Location Method",
+    "rescuedBy": "Rescued by",
+    "medicalIntervention": "Medical Intervention",
+    "estimatedTimeOfDeath": "Estimated Time Of Death",
+    "causeOfDeath": "Cause of Death",
+    "respiratoryCavity": "Respiratory Cavity",
+    "injurySeverity": "Injury Severity",
+    "victimInformationComment": "Victim Information Comment",
+    "multipleAvalanches": "Multiple Avalanches",
+    "avalancheSize": "Velikost plazu",
+    "avalancheType": "Avalanche Type",
+    "relevantAvalancheProblem": "Relevant Avalanche Problem",
+    "relevantDangerPattern": "Relevant Danger Pattern",
+    "trigger": "Trigger",
+    "natural": "Natural",
+    "person": "Person",
+    "additionalLoad": "Additional Load",
+    "explosives": "Explosives",
+    "vehicle": "Vehicle",
+    "accidentalControlled": "Accidental/ Controlled",
+    "remoteTriggering": "Remote Triggering",
+    "startZoneAspect": "Start Zone Aspect",
+    "startZoneAspectAccuracy": "Aspect Accuracy",
+    "startZoneElevation": "Start Zone Elevation",
+    "startZoneElevationAccuracy": "Elevation Accuracy",
+    "startZoneIncline": "Start Zone Incline",
+    "startZoneTerrainType": "Start Zone Terrain Type",
+    "slabWidth": "Slab Width",
+    "crownDepthAvg": "Crown Depth Avg",
+    "crownDepthMin": "Crown Depth Min",
+    "crownDepthMax": "Crown Depth Max",
+    "avalancheLength": "Avalanche Lenght",
+    "weakLayerName": "Weak Layer Name",
+    "weakLayerGrainType1": "Weak Layer Grain Type (1)",
+    "weakLayerGrainSize1": "Weak Layer Grain Size (1)",
+    "weakLayerGrainType2": "Weak Layer Grain Type (2)",
+    "weakLayerGrainSize2": "Weak Layer Grain Size (2)",
+    "weakLayerLocation": "Weak layer Location",
+    "bedSurfaceStepped": "Bed Surface Stepped",
+    "startZoneMoisture": "Start Zone Moisture",
+    "depositMoisture": "Deposit Moisture",
+    "depositHeight": "Deposit Height",
+    "depositWidth": "Deposit Width",
+    "debrisType": "Debris Type",
+    "debrisDensity": "Debris Density",
+    "depositElevation": "Deposit Elevation",
+    "avalancheDetailsComment": "Avalanche Details Comment",
+    "incidentLedePublic": "Publish Incident Lede?",
+    "incidentLede": "Incident Lede",
+    "incidentDescriptionPublic": "Publish Incident Description?",
+    "incidentDescription": "Incident Description",
+    "weatherDescriptionPublic": "Publish Weather Description?",
+    "weatherDescription": "Weather Description",
+    "avalancheDescriptionPublic": "Publish Avalanche Description?",
+    "avalancheDescription": "Avalanche Description",
+    "snowpackDescriptionPublic": "Publish Snowpack Description?",
+    "snowpackDescription": "Snowpack Description",
+    "takeAwaysPublic": "Publish Take Aways?",
+    "takeAways": "Take Aways",
+    "recentSlabAvalanches": "Recent Slab Avalanches",
+    "signsOfInstability": "Signs of Instability",
+    "recentLoading": "Recent Loading",
+    "criticalWarming": "Critical Warming",
+    "incidentAnalysisComment": "Incident Analysis Comment",
+    "uuid": "UUID",
+    "dateAdded": "Date Added",
+    "dateCreated": "Date Created",
+    "file": "File",
+    "fileName": "File Name",
+    "mediaType": "Media Type",
+    "attachmentTags": "Tags",
+    "altText": "Alt Text",
+    "credit": "Credit",
+    "caption": "Caption",
+    "public": "Public",
+    "attachmentCategory": "Category"
+  },
+  "incidentReportHelp": {
+    "author": "",
+    "authorAffiliation": "",
+    "dateTime": "",
+    "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche.",
+    "sourceOfInformation": "Specify the source(s) of the information.",
+    "personInvolvement": "Select “Yes” if the avalanche was human-triggered (including remote triggering) or if individuals were affected by moving masses.",
+    "otherDamages": "Select “Yes” if the avalanche caused damage to property or other valuable assets.",
+    "damagedAssets": "Indicate the type of object(s) that sustained damage.",
+    "otherDamagesComment": "Add any additional details about the damaged assets.",
+    "publicAvalancheWarningService": "Name of agency in which area of responsibility the avalanche happened.",
+    "publicAvalancheWarningServiceOutside": "Check if the incident occurred outside any AWS forecast area.",
+    "dangerRating": "Publicly available avalanche danger rating valid for the date, time, and location of the incident (including elevation and aspect, if applicable).",
+    "avalancheProblem": "Select the forecasted EAWS Avalanche Problem(s) for that day and location. Choose “None” if none were issued that day.",
+    "dangerPattern": "Select the forecasted Danger Pattern(s) for that day and location.",
+    "reportStatus": "Draft: Not ready for public view; initial entry phase; Incomplete: Not all information has been entered or received; visible to the public but may contain unverified information; In Review: All information has been entered; awaiting review by a supervisor; Complete: All available information has been added; final status.",
+    "publicExternalLinks": "",
+    "privateExternalLinks": "",
+    "privateExternalDatabaseLinks": "Links this incident with other databases.",
+    "generalInformationComment": "Add any additional relevant details.",
+    "bulletinInformationComment": "Add any additional relevant details.",
+    "location": "Brief description of the location. Use the name of the nearest mountain or a prominent geographic feature.",
+    "country": "",
+    "region": "",
+    "municipality": "",
+    "avalancheRegion": "Micro-Regions",
+    "latitude": "Provide the coordinates of the center of the fracture crown.",
+    "longitude": "Provide the coordinates of the center of the fracture crown.",
+    "locationAccuracy": "Estimate the accuracy of the latitude/longitude coordinates.",
+    "lineCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) for the avalanche path.",
+    "polygonCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) for the avalanche outline.",
+    "locationInformationComment": "Add any additional relevant details.",
+    "anonymousGroupIdentifier": "This is used to identify the group throughout the report. For example, you might refer to Group 1, Group 2, etc when reporting on a incident. You could add specific details if it helps keep track of which group is which. If appropriate, you can use the same identifier when referencing this group in the Incident Description.",
+    "groupType": "Select the option that best describes the type of group.",
+    "groupSize": "Provide the total number of individuals in the group.",
+    "groupSizeAccuracy": "Indicate how accurately the group size is known.",
+    "incidentTerrainType": "Select the terrain type where people were located at the time of the avalanche. Free terrain refers to areas without any human infrastructure.",
+    "typeOfControlledTerrain": "",
+    "incidentActivity": "",
+    "travelDirection": "Direction of travel at the time of the incident.",
+    "vehicleType": "",
+    "avalancheGear": "Essential avalanche rescue gear is defined as a transceiver, shovel and probe. Give a basic assessment of whether the group was carrying essential avalanche rescue gear. Commonly this information comes from the search and rescue team. It is not necessary to get hung up on exact numbers or require in-depth communication with each party member. More like an answer to the basic question of: Were they carrying rescue gear?.",
+    "groupInformationComment": "Add any additional relevant details.",
+    "numberOfGroups": "Number of groups involved",
+    "activities": "",
+    "terrainTypes": "",
+    "fatalities": "All deceased whether they died on scene or afterwards as a result of their injuries.",
+    "injuredSurvivors": "Number people who were caught by the avalanche and who were injured but not killed. Do not include any deceased.",
+    "uninjuredSurvivors": "Number of people who were caught by the avalanche but not injured. Include those dusted by the powder cloud.",
+    "caughtOnly": "Number of people who were caught by the avalanche but not buried. Include those dusted by the powder cloud.",
+    "fullyBuried": "Number of people fully buried by the avalanche. A fully buried person has no part of their body visible.",
+    "partlyBuriedHeadCovered": "Number of people buried with their head covered by snow but part of their body, clothing or attached equipment is visible.",
+    "partlyBuriedHeadUncovered": "Number of people buried with their head uncovered.",
+    "partlyBuried": "Number=Partly Buried, Head Covered+Partly Buried, Head Uncovered",
+    "numberInvolved": "Number=Caught Only+Fully Buried+Partly Buried",
+    "involvementsFatalitiesBurialsComment": "Add any additional relevant details",
+    "caught": "Specify whether this individual was involved with the avalanche. Involved means being caught by the avalanche (whether buried or not), buried or dusted by the powder cloud.",
+    "fatalInjured": "Indicate whether the person was fatally injured, injured, or uninjured, regardless of their involvement type.",
+    "burialDegree": "Provide details about the degree of burial. A fully buried victim has all parts of their body submerged under the snow. If the victim was partly buried, try to find out whether their head was covered or uncovered and use these options preferentially. If you are unable to find out this detail, use the Partly Buried option.",
+    "anonymousVictimIdentifier": "This is used to identify the victim throughout the report, without needing to use their name. For example, you might refer to Rider 1, Rider 2, etc when reporting on a snowmobile incident. You could add specific details if it helps keep track of which victim is which, e.g. Male survivor, Female survivor, Male decedant. If appropriate, you can use the same identifier when referencing this person in the Incident Description.",
+    "age": "",
+    "gender": "",
+    "workingAtTime": "Was the person involved performing work duties at the time of the incident, either in a paid capacity or as a volunteer?",
+    "leaderAtTime": "Was the person involved acting in a capacity that clearly placed them at the leader of the group?",
+    "professionalCertification": "Provide details of the professional certification of the individual",
+    "avalancheTraining": "Provide details about the highest level of avalanche safety training the victim had received.",
+    "yearsActive": "Select how many years this person had been practicing the activity prior to the incident",
+    "transceiver": "Select whether the person carried a transceiver and whether it was in send mode",
+    "shovel": "",
+    "probe": "",
+    "airbag": "",
+    "helmet": "",
+    "terrainTrap": "Indicate the type of terrain trap involved, if there was one.",
+    "burialDepth": "Specify the depth of burial in m to the nearerst 0.1 m. The reference to determine the burial depth is the depth from the snow surface to the victim's airway.",
+    "burialDuration": "Specify the duration of the victim's burial in minutes from when they were first buried to when their airway was uncovered.",
+    "primaryLocationMethod": "Specify the primary method that was used to locate the victim. ",
+    "rescuedBy": "",
+    "medicalIntervention": "Provide details about medical interventions applied, either by party members, or external rescue.",
+    "estimatedTimeOfDeath": "Provide a best estimate of when the victim died. This does not have to be consistent with the official time of death, since in many instances, people are only pronounced dead at hospital.",
+    "causeOfDeath": "Estimated cause of death",
+    "respiratoryCavity": "No obstacles in the airways",
+    "injurySeverity": "Major: a serious, often life-threatening condition that requires immediate medical attention and may result in long-term disability or death (e.g. fractures, head injuries, loss of conscousness, heavy bleeding); Moderate: more serious than minor but not immediately life-threatening. It usually needs medical treatment, but recovery is expected without major long-term effects (e.g. dislocations, sprains and strains, deep cuts). Minor: slight injury that can be treated with basic first aid, does not require professional medical care (e.g. small cuts, scratches, bruises).",
+    "victimInformationComment": "Add any additional relevant details",
+    "multipleAvalanches": "Choose yes, if there were multiple avalanches associated with the event. If selected, input details of the most impactful avalanche in the Avalanche Details section and provide details of the other avalanches in the Avalanche Comments section.",
+    "avalancheSize": "Estimate the destructive potential of the avalanche based on the deposited snow and assign a size according to the EAWS standard. Size 1 is the minimum rating. Half sizes are generally not defined, but may be used for avalanches that fall between two size classes; they are assigned to the lower class (e.g. size 2.5 is classified as size 2).",
+    "avalancheType": "Specify the avalanche type from the list according to it's failure type. If more than one type applies, choose the most relevant one and add further detail to the Incident Description.",
+    "relevantAvalancheProblem": "Select the most relevant EAWS Avalanche Problem.",
+    "trigger": "Natural: Triggered without human influence; Person: Triggered by one or more people; Explosives: Triggered by explosives, artillery, or gas; Vehicle: Triggered by a vehicle (e.g. snowcat, helicopter); Unknown: Trigger is unknown or unclear",
+    "natural": "",
+    "person": "Accidental: e.g. skier, snowboarder, hiker, climber; Controlled: e.g. skier deliberately ski cutting a slope or cornice",
+    "additionalLoad": "Low additional load: single skier/snowboarder, well-spaced group ≥10 m, or snowshoer; High additional load: closely spaced group <10 m,  single person on foot, falling skier/snowboarder.",
+    "explosives": "",
+    "vehicle": "",
+    "accidentalControlled": "",
+    "remoteTriggering": "A remote event is one occurring at some distance (typically > 5 m) from the probable trigger. Snow at the trigger point does not release",
+    "startZoneAspect": "Specify the aspect of the start zone. If the avalanche wraps around multiple aspects, use the median aspect and add further details to the Incident Description.",
+    "startZoneAspectAccuracy": "Indicate whether the aspect of the start zone is accurate or uncertain. Uncertainty applies if deviations greater than ±30° are possible.",
+    "startZoneElevation": "Provide the elevation of the avalanche fracture line in meters above sea level (m a.s.l.), using the highest point rounded to the nearest multiple of 50m (e.g. 2550, 2600m).",
+    "startZoneElevationAccuracy": "",
+    "startZoneIncline": "Slope angle of the start zone (°), rounded to the nearest 5° (e.g. 30, 35, 40)",
+    "startZoneTerrainType": "Select the terrain features that describe the avalanche start zone.",
+    "slabWidth": "Slab width in m. This may be estimated from field reports or measured from mapping using coordinates from the flanks.",
+    "crownDepthAvg": "Average crown depth cm to the nearest 10cm - measured vertically. This may be estimated from field reports (if only one number for the crown depth is supplied, it is usually taken to be the average), or it may be appropriate to calculate this from the min and max crown depth values.",
+    "crownDepthMin": "Minimum crown depth cm to the nearest 10cm - measured vertically. Typically estimated from field reports.",
+    "crownDepthMax": "Maximum crown depth cm to the nearest 10cm - measured vertically. Typically estimated from field reports.",
+    "avalancheLength": "Runout distance along the ground from the highest point of the crown to the lowest point of deposition (m). This can be estimated from field observations or measured using mapped coordinates of the start zone and terminus.",
+    "weakLayerName": "Record the weak layer name if known.",
+    "weakLayerGrainType1": "Primary weak layer grain type.",
+    "weakLayerGrainSize1": "Grain size to the nearest 0.25 mm.",
+    "weakLayerGrainType2": "Secondary weak layer grain type.",
+    "weakLayerGrainSize2": "Grain size to the nearest 0.25 mm.",
+    "weakLayerLocation": "Within new snow: Weak layer located within recently fallen and wind-drifted snow from the current snowfall or deposition period; At interface with old snow: Weak layer at the boundary between new and old snow (e.g. surface hoar on the old snow surface before being covered); Within the old snowpack: Weak layer in the middle or upper part of the old snowpack; Near the ground: Weak layer in the lower part of the snowpack, close to the ground, typically consisting of well-developed faceted crystals. Avalanches releasing on this layer often expose the ground.",
+    "bedSurfaceStepped": "Select “Yes” if the avalanche stepped down into a deeper weak layer.",
+    "startZoneMoisture": "",
+    "depositMoisture": "",
+    "depositHeight": "Maximum height of the deposit",
+    "depositWidth": "Maximum width of the deposit",
+    "debrisType": "Select the options that best describe the composition of the debris shortly after the avalanche.",
+    "debrisDensity": "Density of the debris, expressed as the median of several measurements taken at different locations within the debris.",
+    "depositElevation": "Elevation of the lowest point of the deposition in m.a.s.l.",
+    "avalancheDetailsComment": "Add any additional relevant details",
+    "incidentLedePublic": "",
+    "incidentLede": "Short text (500 characters max) that provides the essence of the incident. State what happened, where and when it occurred, and why it is notable. Keep it concise and factual, highlighting the most important outcome (e.g. involvement, burial, fatalities, unusual conditions).",
+    "incidentDescriptionPublic": "",
+    "incidentDescription": "Describe the incident in a clear, chronological manner, avoiding judgement or blame. Include what the group was doing at the time; where they were located (terrain, elevation, aspect if known); how the avalanche was triggered; how many people were involved, buried, injured or killed; who responded; and key details of the rescue. Include any other relevant observations that help reconstruct the event.",
+    "weatherDescriptionPublic": "",
+    "weatherDescription": "Describe the weather conditions that influenced the avalanche, including factors such as weak layer formation, slab development, recent loading, or warming. Link to relevant attachments (e.g. weather station data or graphs).",
+    "avalancheDescriptionPublic": "",
+    "avalancheDescription": "Describe the avalanche(s) itself using clear and objective terms. Include avalanche type, size, and dimensions (e.g. width, crown depth, runout). Note how it was triggered (natural, human-triggered, remote) and how it behaved (e.g. propagation, extent). Include any measurable or observed characteristics. Use the Incident Description to provide details about how and where people were caught, rescue details etc.",
+    "snowpackDescriptionPublic": "",
+    "snowpackDescription": "Explain the snowpack structure and conditions that contributed to the avalanche. Identify relevant weak layers and slab characteristics, and describe their distribution (e.g. by elevation or aspect). Include signs of instability and any available test results. Focus on explaining why the snowpack was susceptible to failure.",
+    "takeAwaysPublic": "",
+    "takeAways": "Summarize the key takeaways of the incident in a few short bullet points. Consider aspects such as warning signs, risk management (e.g. skiing one at a time), use of safety equipment, terrain traps, and group composition.",
+    "recentSlabAvalanches": "Use your best judgement to answer the question: Are there signs of slab avalanches in the area from today or yesterday? Look to information provided by the group themselves, reports from SAR teams or other users of the area that indicate whether other avalanches were noted.",
+    "signsOfInstability": "Use your best judgement to answer the question: Are there signs of snowpack instability including whumpfs, shooting cracks or drum-like sounds? Look to information provided by the group themselves, reports from SAR teams or other users of the area that indicate whether signs of instability were noted.",
+    "recentLoading": "Use your best judgement to answer the question: Has there been loading within the past 48 hours including roughly 30 cm of new snow or more, significant wind transport or rain?",
+    "criticalWarming": "Use your best judgement to answer the question: Has there been a recent rapid rise in temperature to near 0 C, or is the upper snowpack wet due to strong sun, above-freezing air temperatures or rain?",
+    "incidentAnalysisComment": "For further information",
+    "uuid": "UUID",
+    "dateAdded": "Date is derived from when the attachment was uploaded",
+    "dateCreated": "Date when the attachment was captured or created",
+    "file": "File",
+    "fileName": "Derived from original file name of uploaded attachment",
+    "mediaType": "",
+    "attachmentTags": "",
+    "altText": "",
+    "credit": "",
+    "caption": "",
+    "public": "",
+    "attachmentCategory": ""
+  },
+  "sourceOfInformation": {
+    "PublicObservation": "Public Observation",
+    "AWSInternal": "AWS Internal",
+    "AWSObserver": "AWS Observer",
+    "DispatchCentre": "Dispatch Centre",
+    "Police": "Police",
+    "MountainRescue": "Mountain Rescue",
+    "Other": "Other"
+  },
+  "otherDamages": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "damagedAssets": {
+    "Vehicle": "Vehicle",
+    "Forest": "Forest",
+    "Agriculture": "Agriculture",
+    "Livestock": "Livestock",
+    "UtilitiesTechnicalInfrastructure": "Utilities or Technical Infrastructure",
+    "Other": "Other"
+  },
+  "timeAccuracy": {
+    "exact": "natančno",
+    "PT15M": "± 15 min",
+    "PT30M": "± 30 min",
+    "PT1H": "± 1 h",
+    "PT2H": "± 2 h",
+    "PT4H": "± 4 h",
+    "PT6H": "± 6 h",
+    "PT12H": "± 12 h",
+    "P1D": "± 1 d",
+    "P2D": "± 2 d",
+    "P3D": "± 3 d",
+    "unknown": "neznano"
+  },
+  "reportStatus": {
+    "Draft": "Draft",
+    "Incomplete": "Nepopolno",
+    "InReview": "In Review",
+    "Verified": "Verified"
+  },
+  "locationAccuracy": {
+    "exact": "natančno",
+    "within15m": "± 15 m",
+    "within30m": "± 30 m",
+    "within100m": "± 100 m",
+    "within250m": "± 250 m",
+    "within500m": "± 500 m",
+    "within1km": "± 1 km",
+    "within2km": "± 2 km",
+    "within5km": "± 5 km",
+    "within10km": "± 10 km",
+    "within20km": "± 20 km",
+    "within50km": "± 50 km",
+    "unknown": "neznano"
+  },
+  "groupType": {
+    "RecreationalFamilyFriends": "Recreational Family/Friends",
+    "Club": "Club",
+    "Commercial": "Commercial",
+    "Industrial": "Industrial",
+    "Solo": "Solo",
+    "Unknown": "Unknown",
+    "Other": "Other"
+  },
+  "groupSizeAccuracy": {
+    "Exact": "Exact",
+    "Approximately": "Approximately",
+    "AtLeast": "At Least",
+    "Unknown": "Unknown"
+  },
+  "incidentTerrainType": {
+    "FreeTerrain": "Free Terrain",
+    "ControlledTerrainOpen": "Controlled Terrain: Open",
+    "ControlledTerrainClosed": "Controlled Terrain: Closed",
+    "Unknown": "Unknown"
+  },
+  "typeOfControlledTerrain": {
+    "IndoorInsideBuilding": "Indoor (Inside Building)",
+    "Street": "Street",
+    "TrainTrack": "Train Track",
+    "SkiAreaResort": "Ski Area Resort",
+    "CrossCountryTrack": "Cross Country Track",
+    "SledgingTrack": "Sledging Track",
+    "Other": "Other"
+  },
+  "incidentActivity": {
+    "Touring": "Touring",
+    "Freeriding": "Freeriding",
+    "SkiingSnowboarding": "Skiing/Snowboarding",
+    "Snowmobiling": "Snowmobiling",
+    "Mountaineering": "Mountaineering",
+    "IceClimbing": "Ice Climbing",
+    "Snowshoeing": "Snowshoeing",
+    "HikingOnFoot": "Hiking on Foot",
+    "CrossCountrySkiing": "Cross Country Skiing",
+    "HuntingFishing": "Hunting/Fishing",
+    "Sledging": "Sledging",
+    "Snowbiking": "Snowbiking",
+    "Biking": "Biking",
+    "InsideVehicle": "Inside Vehicle",
+    "Unknown": "Unknown",
+    "Other": "Other"
+  },
+  "travelDirection": {
+    "Ascending": "Ascending",
+    "Descending": "Descending",
+    "Stationary": "Stationary",
+    "Traversing": "Traversing",
+    "MovingOnPeaksRidges": "Moving on peaks/ridges",
+    "SnowmobileHighMarking": "Snowmobile High Marking",
+    "CrossingRunouts": "Crossing Runouts",
+    "Other": "Other"
+  },
+  "vehicleType": {
+    "Car": "Car",
+    "Bus": "Bus",
+    "SnowPlower": "Snow Plower",
+    "Snowcat": "Snowcat",
+    "Other": "Other"
+  },
+  "avalancheGear": {
+    "All": "Vse",
+    "Some": "Some",
+    "None": "None",
+    "Unknown": "Unknown"
+  },
+  "natural": {
+    "Natural": "Natural (result of weather events, e.g. snowfall, wind temperature)",
+    "CorniceFall": "Cornice fall, natural",
+    "Earthquake": "Earthquake",
+    "IceFall": "Ice fall",
+    "RockFall": "Rock fall"
+  },
+  "person": {
+    "PersonAccidental": "Accidental",
+    "PersonControlled": "Controlled"
+  },
+  "explosives": {
+    "Artillery": "Artillery",
+    "CaseCharge": "Case (bag) charge placed on Hand-thrown",
+    "CorniceControlledByExplosives": "Cornice controlled by explosives",
+    "HelicopterDeployedGasExploder": "Helicopter deployed gas exploder (e.g., Daisybell)",
+    "HandThrownOrPlaced": "Hand-thrown or hand-placed explosive charge",
+    "GasExploder": "Gas exploder",
+    "HelicopterBomb": "Helicopter bomb",
+    "Avalauncher": "Avalauncher and other types of launchers",
+    "PrePlacedRemotelyDetonated": "Pre-placed remotely detonated explosive charge",
+    "TramOrRopewayDelivery": "Tram or ropeway delivery system",
+    "Other": "Other"
+  },
+  "vehicle": {
+    "OverSnowVehicle": "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
+    "Snowmobile": "Snowmobile",
+    "Helicopter": "Helicopter (e.g. on landing, approach)",
+    "Other": "Other"
+  },
+  "startZoneElevationAccuracy": {
+    "exact": "natančno",
+    "within50m": "± 50 m",
+    "within100m": "± 100 m",
+    "within200m": "± 200 m",
+    "unknown": "neznano"
+  },
+  "startZoneTerrainType": {
+    "AlpineBowl": "Alpine Bowl",
+    "Couloir": "Couloir",
+    "NearRidgeCrest": "Near Ridge Crest",
+    "SparselyTreed": "Sparsely Treed",
+    "OpenForest": "Open Forest",
+    "DenseForest": "Dense Forest",
+    "ForestGlade": "Forest Glade",
+    "Glacier": "Glacier",
+    "OpenSlope": "Open Slope",
+    "Ridge": "Ridge",
+    "ExtremeRockyTerrain": "Extreme Rocky Terrain",
+    "BaseOfRockFace": "Base of Rock Face",
+    "WoodPath": "Wood Path",
+    "LeewardSlope": "Leeward Slope",
+    "WindwardSlope": "Windward Slope",
+    "IceWaterfall": "Ice Waterfall",
+    "Other": "Other"
+  },
+  "weakLayerLocation": {
+    "WithinNewSnow": "Within new snow",
+    "AtInterfaceWithOldSnow": "At the Interface with Old Snow",
+    "WithinOldSnowpack": "Within the Old Snowpack",
+    "NearTheGround": "Near the Ground"
+  },
+  "debrisType": {
+    "Fine": "Fine",
+    "Blocks": "Blocks",
+    "Hard": "Hard",
+    "Soft": "Soft",
+    "Rocks": "Rocks",
+    "Trees": "Trees",
+    "Other": "Other"
+  },
+  "startZoneMoisture": {
+    "Dry": "Dry",
+    "Moist": "Moist",
+    "Wet": "Wet",
+    "Unknown": "Unknown"
+  },
+  "depositMoisture": {
+    "Dry": "Dry",
+    "Moist": "Moist",
+    "Wet": "Wet"
+  },
+  "bedSurfaceStepped": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "multipleAvalanches": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "trigger": {
+    "natural": "Natural",
+    "person": "Person",
+    "explosives": "Explosives",
+    "vehicle": "Vehicle",
+    "unknown": "Unknown"
+  },
+  "startZoneAspectAccuracy": {
+    "Accurate": "Accurate",
+    "Uncertain": "Uncertain"
+  },
+  "remoteTriggering": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "additionalLoad": {
+    "High": "High",
+    "Low": "Low"
+  },
+  "accidentalControlled": {
+    "Accidental": "Accidental",
+    "Controlled": "Controlled"
+  },
+  "caught": {
+    "Involved": "Involved",
+    "NotInvolved": "Not Involved",
+    "Unknown": "Unknown"
+  },
+  "fatalInjured": {
+    "Fatal": "Fatal",
+    "Injured": "Injured",
+    "Uninjured": "Uninjured",
+    "Unknown": "Unknown"
+  },
+  "burialDegree": {
+    "FullyBuried": "Fully Buried",
+    "PartlyBuriedHeadCovered": "Partly Buried, Head Covered",
+    "PartlyBuriedHeadUncovered": "Partly Buried, Head Uncovered",
+    "PartlyBuried": "Partly Buried",
+    "NotBuried": "Not Buried",
+    "Unknown": "Unknown"
+  },
+  "age": {
+    "UpTo13": "≤ 13",
+    "From14To20": "14–20",
+    "From21To30": "21–30",
+    "From31To40": "31–40",
+    "From41To50": "41–50",
+    "From51To60": "51–60",
+    "From61To70": "61–70",
+    "From71": "≥ 71"
+  },
+  "gender": {
+    "Female": "Female",
+    "Male": "Male",
+    "Other": "Other"
+  },
+  "country": {
+    "Austria": "Austria",
+    "Germany": "Germany",
+    "Italy": "Italy",
+    "Switzerland": "Switzerland",
+    "Other": "Other"
+  },
+  "workingAtTime": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "leaderAtTime": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "professionalCertification": {
+    "IFMGAGuide": "IFMGA Guide",
+    "FullSkiGuide": "Full Ski guide",
+    "SkiInstructor": "Ski Instructor",
+    "ApprenticeGuide": "Apprentice Guide",
+    "AvalancheProfessional": "Avalanche Professional",
+    "AvalancheEducator": "Avalanche Educator",
+    "Other": "Other"
+  },
+  "avalancheTraining": {
+    "None": "None",
+    "Awareness": "Awareness",
+    "BasicREC": "Basic REC",
+    "AdvancedREC": "Advanced REC",
+    "Professional": "Professional",
+    "Other": "Other"
+  },
+  "yearsActive": {
+    "UpTo2Years": "≤ 2 yrs",
+    "From3To9Years": "3–9 yrs",
+    "From10Years": "≥ 10 yrs"
+  },
+  "transceiver": {
+    "NoTransceiver": "No Transceiver",
+    "TransceiverOn": "Transceiver: on",
+    "TransceiverOff": "Transceiver: off"
+  },
+  "shovel": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "probe": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "airbag": {
+    "NoAirbag": "No Airbag",
+    "AirbagDeployed": "Airbag: deployed",
+    "AirbagUndeployed": "Airbag: undeployed"
+  },
+  "helmet": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "terrainTrap": {
+    "None": "None",
+    "Cliff": "Cliff",
+    "Trees": "Trees",
+    "Gully": "Gully",
+    "Depression": "Depression",
+    "Bench": "Bench",
+    "Boulder": "Boulder",
+    "CrevasseOrBergschrund": "Crevasse or Bergschrund",
+    "Other": "Other"
+  },
+  "primaryLocationMethod": {
+    "NotBuried": "Not Buried",
+    "SelfExtraction": "Self Extraction",
+    "VisualClues": "Visual Clues",
+    "TransceiverProbeShovel": "Transceiver/Probe/Shovel",
+    "SpotProbing": "Spot Probing",
+    "ProbeLine": "Probe Line",
+    "Recco": "Recco",
+    "RescueDog": "Rescue Dog",
+    "Snowmelt": "Snowmelt",
+    "Other": "Other"
+  },
+  "rescuedBy": {
+    "Self": "Self",
+    "Companion": "Companion",
+    "OtherGroup": "Other Group",
+    "OrganizedRescue": "Organized Rescue",
+    "Unknown": "Unknown",
+    "Other": "Other"
+  },
+  "medicalIntervention": {
+    "CPR": "CPR",
+    "ALS": "ALS",
+    "ECMO": "ECMO",
+    "Other": "Other"
+  },
+  "estimatedTimeOfDeath": {
+    "DuringTheAvalanche": "During the avalanche",
+    "DuringBurial": "During burial",
+    "OnSiteAfterExtrication": "On site after extrication",
+    "DuringTransport": "During transport",
+    "InHospital": "In hospital"
+  },
+  "causeOfDeath": {
+    "Asphyxiation": "Asphyxiation",
+    "TraumaticInjury": "Traumatic injury",
+    "Hypothermia": "Hypothermia",
+    "Other": "Other"
+  },
+  "respiratoryCavity": {
+    "Yes": "Da",
+    "No": "Ne"
+  },
+  "injurySeverity": {
+    "Minor": "Minor",
+    "Moderate": "Moderate",
+    "Major": "Major"
+  },
+  "recentSlabAvalanches": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
+  "signsOfInstability": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
+  "recentLoading": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
+  "criticalWarming": {
+    "Present": "Present",
+    "Absent": "Absent",
+    "Unknown": "Unknown"
+  },
+  "attachmentTags": {
+    "Picture": "Picture",
+    "PoliceReport": "Police Report",
+    "MedicalReport": "Medical Report",
+    "Other": "Other"
+  },
+  "attachmentCategory": {
+    "Incident": "Incident",
+    "Avalanche": "Avalanche",
+    "Snowpack": "Snežna odeja",
+    "Group": "Group",
+    "Person": "Person",
+    "Weather": "Vreme"
+  }
+}
