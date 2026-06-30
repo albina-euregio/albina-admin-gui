@@ -41,21 +41,21 @@
     "icon": "Météo"
   },
   "weather": {
-    "loading": "Loading weather parameters and images...",
-    "noPng": "Image not found.",
+    "loading": "Chargement des paramètres météorologiques et des images...",
+    "noPng": "Image non trouvée.",
     "error": {
-      "noParameters": "No forecast parameters available.",
-      "loadFailed": "Could not load forecast data."
+      "noParameters": "Aucun paramètre de prévision n'est disponible.",
+      "loadFailed": "Impossible de charger les données de prévisions."
     },
     "headings": {
-      "model": "Model",
-      "modelRun": "Model run",
+      "model": "Modèle",
+      "modelRun": "Simulation",
       "region": "Région de prévision",
-      "parameters": "Parameters",
-      "level": "Level"
+      "parameters": "Paramètres",
+      "level": "Niveau"
     },
     "alt": {
-      "fallback": "Forecast map",
+      "fallback": "Carte des prévisions",
       "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
     },
     "models": {
@@ -63,39 +63,39 @@
       "gfs": "GFS"
     },
     "regions": {
-      "atlantic": "Atlantic",
+      "atlantic": "Atlantique",
       "europe": "Europe",
-      "alps": "Alps",
-      "euregio": "EUREGIO"
+      "alps": "Alpes",
+      "euregio": "EURORÉGION"
     },
     "levels": {
       "surface": "Surface",
       "cloudTotal": "Total",
-      "cloudHigh": "High",
-      "cloudMid": "Mid",
-      "cloudLow": "Low"
+      "cloudHigh": "Haut",
+      "cloudMid": "Moyen",
+      "cloudLow": "Bas"
     },
     "tooltips": {
-      "levelApproxElevation": "Approx. elevation: ~{{height}} m"
+      "levelApproxElevation": "Hauteur approximative :  ~\n{{height}} m"
     },
     "parameters": {
       "gfs": {
-        "equivalentPotentialTemp": "Equivalent Potential Temp.",
-        "relativeHumidity": "Relative Humidity",
+        "equivalentPotentialTemp": "Temp. équivalente potentielle",
+        "relativeHumidity": "Humidité relative",
         "geopotentialAndIsotachs": "Geopotential and Isotachs",
         "precipitation": "Precipitation",
         "cape": "CAPE"
       },
       "icon": {
-        "cloudCover": "Cloud Cover",
-        "ns": "Precipitation 1h",
-        "ns24": "Precipitation 24h",
-        "nsacc": "Acc. Precipitation",
-        "nsprob24gt20": "Prob. Prec. > 20 mm / 24h",
-        "nsprob24gt40": "Prob. Prec. > 40 mm / 24h",
-        "nsprob24gt80": "Prob. Prec. > 80 mm / 24h",
-        "d2m": "Dew Point 2m",
-        "gust": "Max. Wind Gust 10m",
+        "cloudCover": "Couverture nuageuse",
+        "ns": "Précipitations 1h",
+        "ns24": "Précipitations 24h",
+        "nsacc": "Précipitations accumulées",
+        "nsprob24gt20": "Précip. prob. > 20 mm / 24h",
+        "nsprob24gt40": "Précip. prob. > 40 mm / 24h",
+        "nsprob24gt80": "Précip. prob.. > 80 mm / 24h",
+        "d2m": "Point de rosée 2m",
+        "gust": "Rafale de vent max. 10m",
         "cape": "MU-CAPE"
       }
     }
@@ -190,27 +190,27 @@
       "label": {
         "glidingSnowActivity": "Activité de neige glissante",
         "snowHeight": "Hauteur de neige",
-        "snowHeightLowerLimit": "Min snow height",
-        "snowHeightUpperLimit": "Max snow height",
+        "snowHeightLowerLimit": "Hauteur de neige min.",
+        "snowHeightUpperLimit": "Hauteur de neige max.",
         "snowHeightAverage": "Hauteur moyenne de neige",
         "zeroDegreeIsotherm": "Isotherme 0 °C",
         "looseSnowMoisture": "Humidité de la neige meuble",
         "looseSnowGrainShape": "Forme des grains de neige meuble",
         "slabGrainShape": "Forme des grains de neige de la plaque",
         "slabThickness": "Épaisseur de la plaque",
-        "slabThicknessLowerLimit": "Min slab thickness",
-        "slabThicknessUpperLimit": "Max slab thickness",
+        "slabThicknessLowerLimit": "Épaisseur min. de la plaque",
+        "slabThicknessUpperLimit": "Épaisseur max. de la plaque",
         "slabHandHardness": "Dureté de la plaque au test manuel",
-        "slabHandHardnessLowerLimit": "Min slab hand hardness",
-        "slabHandHardnessUpperLimit": "Max slab hand hardness",
+        "slabHandHardnessLowerLimit": "Dureté min. de la plaque au test manuel",
+        "slabHandHardnessUpperLimit": "Dureté max. de la plaque au test manuel",
         "slabHardnessProfile": "Dureté de la plaque",
         "slabEnergyTransferPotential": "Potentiel de transfert d'énergie de la plaque",
         "slabDistribution": "Répartition de la plaque",
         "weakLayerGrainShape": "Forme des grains de la couche fragile",
-        "weakLayerGrainShapes": "Weak layer grain shapes",
+        "weakLayerGrainShapes": "Formes des grains de la couche fragile",
         "weakLayerGrainSize": "Taille des grains de la couche fragile",
-        "weakLayerGrainSizeLowerLimit": "Min weak layer grain size",
-        "weakLayerGrainSizeUpperLimit": "Max weak layer grain size",
+        "weakLayerGrainSizeLowerLimit": "Taille min. des grains de la couche fragile",
+        "weakLayerGrainSizeUpperLimit": "Taille max. des grains de la couche fragile",
         "weakLayerPersistent": "Persistance de la couche fragile",
         "weakLayerThickness": "Épaisseur de la couche fragile",
         "weakLayerStrength": "Résistance de la couche fragile",
@@ -278,9 +278,9 @@
   },
   "avalancheType": {
     "title": "Type d'avalanche",
-    "slab": "slab",
-    "loose": "loose",
-    "glide": "glide",
+    "slab": "avalanche de plaque",
+    "loose": "avalanche de neige meuble",
+    "glide": "avalanche de glissement",
     "cornice": "congère",
     "unknown": "inconnue",
     "label": {
@@ -313,7 +313,7 @@
       "submitUpdate": "Envoyer la mise à jour",
       "publishChange": "Publication directe (pas de messages)",
       "publishUpdate": "Publication directe",
-      "publishMinimal": "Minimal publication",
+      "publishMinimal": "Publication minimale",
       "caaml": "Afficher CAAML",
       "json": "Afficher JSON",
       "create": "Créer le bulletin",
@@ -345,7 +345,7 @@
         "telegram": "Telegram",
         "email": "Mail"
       },
-      "publicationInProgress": "Publication in progress",
+      "publicationInProgress": "Publication en cours",
       "publicationFinishedOnServer": "Publication sur le serveur terminée",
       "publishDisabled": {
         "inProgress": "Publication en cours",
@@ -363,8 +363,8 @@
         "checkInternetDescriptionPrefix": "La connexion Internet sur votre appareil, est-elle bonne ? Ouvrir une fenêtre de navigation privée et aller sur",
         "checkInternetDescriptionSuffix": "Le bulletin d'hier s'affiche-t-il correctement ?",
         "republishHint": "N'effectuez cette étape que si la « vérification de la connexion Internet » s'est déroulée avec succès et qu'au moins 5 minutes se sont écoulées depuis la dernière tentative de publication.",
-        "publishMinimalTitle": "Minimal publication:",
-        "publishMinimalHint": "Use this as a fallback if the full publication fails. Publishes CAAML data only — no maps, text-to-speech, or push messages. ⚠️ Also affects other regions on this server, not just your own. All will be republished in minimal mode.",
+        "publishMinimalTitle": "Publication minimale :",
+        "publishMinimalHint": "Utilisez cette option comme solution de secours en cas d'échec de la publication complète. Elle ne publie que les données CAAML — pas de cartes, de synthèse vocale ni de notifications push. ⚠️ Cela concerne toutes les régions sur ce serveur, pas seulement la vôtre. Toutes seront republiées en mode minimal.",
         "editAndResendTitle": "Éditer et envoyer à nouveau :",
         "openBulletin": "Afficher le bulletin",
         "clickEdit": "Cliquer sur « Éditer »",
@@ -383,24 +383,24 @@
       "savedInfo": "Enregistré par {{user}}, {{time}}",
       "print": {
         "contact": {
-          "emailLabel": "Email:",
-          "nameLabel": "Name:",
-          "phoneLabel": "Phone:"
+          "emailLabel": "E-mail :",
+          "nameLabel": "Nom :",
+          "phoneLabel": "Téléphone :"
         },
-        "emergencyTitle": "If serious problems occur",
+        "emergencyTitle": "En cas de problèmes graves",
         "fallback": {
-          "title": "Use fallback instance:",
-          "step1": "Navigate to the fallback Admin-GUI and publish the bulletin there.",
-          "step2": "Manually send messages to subscribed channels. Use the text below:",
-          "step3": "Inform the public by creating social media posts linking to the fallback website URL.",
-          "step4": "Inform the PR department about the situation."
+          "title": "Utilisez une instance de secours :",
+          "step1": "Accédez à Admin-GUI de secours pour y publier le bulletin.",
+          "step2": "Envoyez manuellement des messages aux chaînes abonnées. Utilisez le texte ci-dessous :",
+          "step3": "Informez le public en publiant des messages sur les réseaux sociaux contenant un lien vers l'URL du site web de secours.",
+          "step4": "Informez le service des relations publiques de la situation."
         },
-        "hide": "Hide print version",
-        "hint": "Fill in the hosting service contact details and the fallback URLs below, then click \"Print\".",
-        "hostingDescription": "Ask about server status. If applicable, request a server restart.",
-        "hostingTitle": "Contact hosting service:",
-        "print": "Print",
-        "toggle": "Print version"
+        "hide": "Masquer version imprimable",
+        "hint": "Indiquez ci-dessous les coordonnées du service d'hébergement et les URL de secours, puis cliquez sur « Imprimer ».",
+        "hostingDescription": "Renseignez-vous sur l'état du serveur. Le cas échéant, demandez son redémarrage.",
+        "hostingTitle": "Contacter le service d'hébergement :",
+        "print": "Imprimer",
+        "toggle": "Version imprimable"
       }
     },
     "status": {
@@ -460,7 +460,7 @@
         "dangerRatingDirectionDown": "Vers le bas",
         "addPhoto": "Ajouter une photo",
         "removePhoto": "Supprimer la photo",
-        "uploadPhoto": "Upload photo",
+        "uploadPhoto": "Télécharger une photo",
         "editPhoto": "Éditer la photo"
       },
       "save": "Sauvegarder",
@@ -506,7 +506,7 @@
         "snowpackStructureComment": "Description structure du manteau neigeux",
         "dangerPatterns": "Modèle de risques",
         "tendencyComment": "Description de la tendance",
-        "synopsisHighlights": "Headline weather synopsis",
+        "synopsisHighlights": "Titre météo en bref",
         "synopsisComment": "Bulletin météo",
         "notes": "Notes",
         "noSnow": "Pas de neige"
@@ -771,7 +771,7 @@
       },
       "bulletinCheck": {
         "missingDangerRating": "Indice de risque non défini",
-        "missingDangerRatingModificator": "Danger rating modificator not set",
+        "missingDangerRatingModificator": "Le modificateur de l'indice de risque n'est pas défini",
         "missingRegion": "Régions non évaluée",
         "duplicateRegion": "Régions notées plusieurs fois",
         "missingAvActivityHighlights": "Titre situation avalancheuse manque",
@@ -1054,14 +1054,14 @@
       "duplicates": "Doublons"
     },
     "error": {
-      "downloadFailed": "The statistics export could not be downloaded. Please try again."
+      "downloadFailed": "Le téléchargement de l'exportation des statistiques a échoué. Veuillez réessayer."
     }
   },
   "dangerRating": {
     "missing": "manquant",
     "noRating": "pas noté",
     "no_rating": "pas noté",
-    "no_snow": "no snow",
+    "no_snow": "pas de neige",
     "low": "faible",
     "moderate": "limité",
     "considerable": "marqué",
@@ -1176,13 +1176,13 @@
   },
   "avalancheSize": {
     "small": "petit",
-    "small_medium": "small–medium",
-    "medium": "moyen",
-    "medium_large": "medium–large",
-    "large": "large",
-    "large_very_large": "large–very large",
-    "very_large": "très large",
-    "very_large_extreme": "very large–extreme",
+    "small_medium": "petite à moyenne",
+    "medium": "moyenne",
+    "medium_large": "moyenne à grande",
+    "large": "grande",
+    "large_very_large": "grande à très grande",
+    "very_large": "très grande",
+    "very_large_extreme": "très grande à extrême",
     "extreme": "extrême"
   },
   "complexity": {
@@ -1366,7 +1366,7 @@
     },
     "FCxr": {
       "code": "FCxr",
-      "class": "Rounding Faceted Crystals"
+      "class": "Grains anguleux arrondis"
     },
     "DH": {
       "code": "DH",
@@ -1382,7 +1382,7 @@
     },
     "MM": {
       "code": "MM",
-      "class": "Machine Made"
+      "class": "Neige de culture"
     },
     "MFcr": {
       "code": "MFcr",
@@ -1509,7 +1509,7 @@
   "personInvolvement": {
     "Dead": "Personnes emportées (décès)",
     "Injured": "Personnes emportées (blessures)",
-    "Yes": "Event involving persons",
+    "Yes": "Personnes emportées",
     "No": "Pas de personnes emportées",
     "Uninjured": "Personnes emportées (aucun blessé)",
     "Unknown": "Événement (inconnu)"
@@ -1651,84 +1651,102 @@
   },
   "incidentsOverview": {
     "button": {
-      "new": "New incident",
-      "columns": "Columns"
+      "new": "Nouvel événement avalancheux",
+      "columns": "Rubriques",
+      "download": "Download GeoJSON"
     },
     "tooltip": {
-      "edit": "Edit incident",
-      "delete": "Delete incident"
+      "edit": "Éditer incident"
     },
-    "deleteConfirm": "Do you want to delete this incident?",
-    "empty": "No incidents for this region.",
+    "empty": "Pas d'incidents pour cette région.",
+    "loading": "Loading incidents…",
+    "error": "Incidents could not be loaded.",
+    "retry": "Retry",
     "filter": {
-      "anyStatus": "Any status"
+      "anyStatus": "Tout statut"
     }
   },
   "incidentReportUI": {
-    "addAttachment": "Add Attachment",
-    "addGroup": "Add Group",
-    "addVictim": "Add Person",
+    "addAttachment": "Ajouter pièce jointe",
+    "addGroup": "Ajouter groupe",
+    "addVictim": "Ajouter une personne",
     "back": "Retour",
-    "clearLine": "Clear Line",
-    "clearPoint": "Clear Point",
-    "clearPolygon": "Clear Polygon",
-    "controls": "Controls",
-    "drawLine": "Draw Line",
-    "drawLineInstructions": "Click on the map to add points to the line.",
-    "drawPoint": "Draw Point",
-    "drawPointInstructions": "Click anywhere on the map to place the location marker.",
-    "drawPolygon": "Draw Polygon",
-    "drawPolygonInstructions": "Click on the map to define the corners/vertices of the polygon.",
-    "dropAttachment": "Drop attachment {{fileName}}?",
-    "dropGroup": "Drop group {{number}}?",
-    "dropVictim": "Drop person {{number}}?",
-    "groupName": "Group {{name}}",
-    "groupUnknown": "Group unknown",
+    "clearLine": "Effacer ligne",
+    "clearPoint": "Effacer point",
+    "clearPolygon": "Effacer polygone",
+    "controls": "Régulateurs",
+    "deleteIncident": "Supprimer incident",
+    "deleteIncidentConfirm": "Supprimer cet incident ?",
+    "drawLine": "Tracer ligne",
+    "drawLineInstructions": "Cliquer sur la carte pour ajouter des points.",
+    "drawPoint": "Tracer point",
+    "drawPointInstructions": "Click anywhere on the map to place the location marker, then drag it to reposition.",
+    "drawPolygon": "Tracer polygone",
+    "drawPolygonInstructions": "Cliquer sur la carte pour définir les sommets du polygone.",
+    "dropAttachment": "Déposer pièce jointe {{fileName}}?",
+    "dropGroup": "Déposer groupe {{number}}?",
+    "dropVictim": "Déposer personne {{number}}?",
+    "groupName": "Groupe {{name}}",
+    "groupUnknown": "Groupe inconnu",
     "incomplete": "Incomplet",
-    "line": "Line",
-    "locationMap": "Location Map",
-    "noGroups": "No groups registered. Click \"Add Group\" to add a group.",
+    "line": "Ligne",
+    "locationMap": "Plan du site",
+    "noGroups": "Aucun groupe n'est enregistré. Cliquer sur « Ajouter groupe » pour en ajouter un.",
     "next": "Suivant",
-    "overview": "Overview",
-    "noVictims": "No persons registered. Click \"Add Person\" to add a person.",
+    "overview": "Aperçu",
+    "noVictims": "Aucune personne n'est enregistrée. Cliquer sur « Ajouter une personne » pour en ajouter une.",
     "point": "Point",
-    "polygon": "Polygon",
-    "publishUpdateIncident": "publish/update incident",
-    "removeAttachment": "Remove Attachment",
-    "removeGroup": "Remove Group",
-    "removeVictim": "Remove Person",
-    "required": "Required",
-    "showMandatoryFieldsOnly": "Most relevant only",
-    "displayOnly": "Preview Mode",
+    "polygon": "Polygone",
+    "publishIncident": "Publier",
+    "publishIncidentConfirm": "Do you want to publish this incident?",
+    "publishIncidentSuccess": "The incident report has been published successfully.",
+    "republishIncident": "Republish",
+    "republishIncidentConfirm": "Do you want to republish this incident?",
+    "unpublishIncident": "Unpublish",
+    "unpublishIncidentConfirm": "Do you want to unpublish this incident?",
+    "unpublishIncidentSuccess": "The incident report has been unpublished successfully.",
+    "removeAttachment": "Supprimer pièce jointe",
+    "removeGroup": "Supprimer groupe",
+    "removeVictim": "Supprimer cette personne",
+    "required": "Champ obligatoire",
+    "showMandatoryFieldsOnly": "Uniquement les plus pertinents",
+    "displayMode": {
+      "edit": "Éditer",
+      "all": "Aperçu de tout",
+      "public": "Preview public only",
+      "filledOut": "Preview filled out only"
+    },
     "valid": "Valid",
-    "victimName": "Person {{name}}",
-    "saveStateIdle": "No unsaved changes",
+    "victimName": "Personne {{name}}",
+    "saveStateIdle": "Toutes les modifications ont été enregistrées",
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
     "saveStateError": "Save failed"
   },
   "incidentReport": {
-    "incidentReport": "Incident Report",
-    "metaInformation": "Meta Information",
-    "generalInformation": "General Information",
-    "locationInformation": "Location Information",
-    "avalancheInformation": "Avalanche Information",
-    "groupInformation": "Group Information",
-    "victimInformation": "Person Information",
-    "involvementsFatalitiesBurials": "Involvements, Fatalities, and Burials",
-    "incidentAnalysis": "Incident Analysis",
-    "incidentAttachments": "Incident Attachments",
+    "incidentReport": "Rapport d'incident",
+    "metaInformation": "Métadonnées",
+    "generalInformation": "Informations générales",
+    "bulletinInformation": "Informations bulletin",
+    "locationInformation": "Informations localisation",
+    "avalancheInformation": "Informations sur l'avalanche",
+    "groupInformation": "Informations sur le groupe",
+    "victimInformation": "Informations sur la personne",
+    "involvementsFatalitiesBurials": "Personnes impliquées, victimes et ensevelissements",
+    "incidentAnalysis": "Analyse de l'incident",
+    "incidentAttachments": "Pièces jointes et liens",
     "author": "Auteur",
-    "authorAffiliation": "Author Affiliation",
-    "dateTime": "Date/Time",
-    "updatedAt": "Last updated",
+    "authorAffiliation": "Organisation de l'auteur",
+    "dateTime": "Date/heure",
+    "updatedAt": "Dernière mise à jour",
+    "publishedAt": "Published at",
     "timeAccuracy": "Time Accuracy ",
-    "sourceOfInformation": "Source of Information",
-    "personInvolvement": "Person Involvement",
-    "otherDamages": "Other Damages",
-    "damagedAssets": "Damaged Assets",
-    "otherDamagesComment": "Other Damages Comment",
-    "publicAvalancheWarningService": "Public Avalanche Warning Service",
+    "sourceOfInformation": "Source de l'information",
+    "personInvolvement": "Implication de personnes",
+    "otherDamages": "Autres dommages",
+    "damagedAssets": "Biens endommagés",
+    "otherDamagesComment": "Autres dommages - Remarque",
+    "publicAvalancheWarningService": "Service public de Prévision des Avalanches",
     "publicAvalancheWarningServiceOutside": "Outside AWS Forecast Area",
     "dangerRating": "Degré de danger ",
     "avalancheProblem": "Situation avalancheuse typique",
@@ -1738,6 +1756,7 @@
     "privateExternalLinks": "Private External Links",
     "privateExternalDatabaseLinks": "Link to External Databases",
     "generalInformationComment": "General Information Comment",
+    "bulletinInformationComment": "Bulletin Information Comment",
     "location": "Localisation",
     "country": "Country",
     "region": "Région de prévision",
@@ -1745,14 +1764,14 @@
     "avalancheRegion": "Avalanche Region",
     "latitude": "Latitude",
     "longitude": "Longitude",
-    "locationAccuracy": "Location Accuracy",
+    "locationAccuracy": "Précision de localisation",
     "lineCoordinatesText": "Line Coordinates",
     "polygonCoordinatesText": "Polygon Coordinates",
-    "locationInformationComment": "Location Information Comment",
+    "locationInformationComment": "Commentaire informations localisation",
     "locationType": {
       "Point": "Point",
-      "Line": "Line",
-      "Polygon": "Polygon"
+      "Line": "Ligne",
+      "Polygon": "Polygone"
     },
     "anonymousGroupIdentifier": "Anonymous Group Identifier",
     "groupType": "Group Type",
@@ -1789,15 +1808,15 @@
     "professionalCertification": "Professional Certification",
     "avalancheTraining": "Avalanche Training",
     "yearsActive": "Years Active",
-    "transceiver": "Transceiver",
-    "shovel": "Shovel",
+    "transceiver": "DVA",
+    "shovel": "Pelle",
     "probe": "Probe",
     "airbag": "Airbag",
     "helmet": "Helmet",
     "terrainTrap": "Terrain trap",
     "burialDepth": "Burial Depth",
     "burialDuration": "Burial Duration",
-    "primaryLocationMethod": "Primary Location Method",
+    "primaryLocationMethod": "Méthode principale de recherche",
     "rescuedBy": "Rescued by",
     "medicalIntervention": "Medical Intervention",
     "estimatedTimeOfDeath": "Estimated Time Of Death",
@@ -1812,7 +1831,7 @@
     "relevantDangerPattern": "Relevant Danger Pattern",
     "trigger": "Trigger",
     "natural": "Natural",
-    "person": "Person",
+    "person": "Personne",
     "additionalLoad": "Additional Load",
     "explosives": "Explosives",
     "vehicle": "Vehicle",
@@ -1872,19 +1891,19 @@
     "credit": "Credit",
     "caption": "En-tête",
     "public": "Public",
-    "attachmentCategory": "Category"
+    "attachmentCategory": "Catégorie"
   },
   "incidentReportHelp": {
     "author": "",
     "authorAffiliation": "",
     "dateTime": "",
-    "timeAccuracy": "Specify the accuracy of the date/ time of the avalanche.",
-    "sourceOfInformation": "Specify the source(s) of the information.",
-    "personInvolvement": "Select “Yes” if the avalanche was human-triggered (including remote triggering) or if individuals were affected by moving masses.",
-    "otherDamages": "Select “Yes” if the avalanche caused damage to property or other valuable assets.",
-    "damagedAssets": "Indicate the type of object(s) that sustained damage.",
-    "otherDamagesComment": "Add any additional details about the damaged assets.",
-    "publicAvalancheWarningService": "Name of agency in which area of responsibility the avalanche happened.",
+    "timeAccuracy": "Précisez la date et l'heure de l'avalanche.",
+    "sourceOfInformation": "Précisez les sources de l'information.",
+    "personInvolvement": "Sélectionnez « Oui » si l'avalanche a été déclenchée par des personnes (y compris à distance) ou si des personnes ont été emportées par les masses de neige en mouvement.",
+    "otherDamages": "Sélectionnez « Oui » si l'avalanche a causé des dommages matériels ou endommagé d'autres biens de valeur.",
+    "damagedAssets": "Précisez la nature des objets endommagés.",
+    "otherDamagesComment": "Fournissez des informations supplémentaires sur les objets endommagés.",
+    "publicAvalancheWarningService": "Nom de l'organisme dont relève la zone où l'avalanche s'est produite.",
     "publicAvalancheWarningServiceOutside": "Check if the incident occurred outside any AWS forecast area.",
     "dangerRating": "Publicly available avalanche danger rating valid for the date, time, and location of the incident (including elevation and aspect, if applicable).",
     "avalancheProblem": "Select the forecasted EAWS Avalanche Problem(s) for that day and location. Choose “None” if none were issued that day.",
@@ -1894,6 +1913,7 @@
     "privateExternalLinks": "",
     "privateExternalDatabaseLinks": "Links this incident with other databases.",
     "generalInformationComment": "Add any additional relevant details.",
+    "bulletinInformationComment": "Add any additional relevant details.",
     "location": "Brief description of the location. Use the name of the nearest mountain or a prominent geographic feature.",
     "country": "",
     "region": "",
@@ -2031,7 +2051,7 @@
     "DispatchCentre": "Dispatch Centre",
     "Police": "Police",
     "MountainRescue": "Mountain Rescue",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "otherDamages": {
     "Yes": "Oui",
@@ -2043,7 +2063,7 @@
     "Agriculture": "Agriculture",
     "Livestock": "Livestock",
     "UtilitiesTechnicalInfrastructure": "Utilities or Technical Infrastructure",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "timeAccuracy": {
     "exact": "exacte",
@@ -2087,7 +2107,7 @@
     "Industrial": "Industrial",
     "Solo": "Solo",
     "Unknown": "Inconnu",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "groupSizeAccuracy": {
     "Exact": "Exact",
@@ -2108,7 +2128,7 @@
     "SkiAreaResort": "Ski Area Resort",
     "CrossCountryTrack": "Cross Country Track",
     "SledgingTrack": "Sledging Track",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "incidentActivity": {
     "Touring": "Touring",
@@ -2126,7 +2146,7 @@
     "Biking": "Biking",
     "InsideVehicle": "Inside Vehicle",
     "Unknown": "Inconnu",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "travelDirection": {
     "Ascending": "Ascending",
@@ -2136,14 +2156,14 @@
     "MovingOnPeaksRidges": "Moving on peaks/ridges",
     "SnowmobileHighMarking": "Snowmobile High Marking",
     "CrossingRunouts": "Crossing Runouts",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "vehicleType": {
     "Car": "Car",
     "Bus": "Bus",
     "SnowPlower": "Snow Plower",
     "Snowcat": "Snowcat",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "avalancheGear": {
     "All": "Tout",
@@ -2173,13 +2193,13 @@
     "Avalauncher": "Avalauncher and other types of launchers",
     "PrePlacedRemotelyDetonated": "Pre-placed remotely detonated explosive charge",
     "TramOrRopewayDelivery": "Tram or ropeway delivery system",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "vehicle": {
     "OverSnowVehicle": "Over-snow vehicles (snowcats, maintenance equipment, etc.)",
     "Snowmobile": "Snowmobile",
     "Helicopter": "Helicopter (e.g. on landing, approach)",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "startZoneElevationAccuracy": {
     "exact": "exacte",
@@ -2205,7 +2225,7 @@
     "LeewardSlope": "Leeward Slope",
     "WindwardSlope": "Windward Slope",
     "IceWaterfall": "Ice Waterfall",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "weakLayerLocation": {
     "WithinNewSnow": "Within new snow",
@@ -2219,8 +2239,8 @@
     "Hard": "Hard",
     "Soft": "Soft",
     "Rocks": "Rocks",
-    "Trees": "Trees",
-    "Other": "Other"
+    "Trees": "Arbres",
+    "Other": "Autres"
   },
   "startZoneMoisture": {
     "Dry": "Dry",
@@ -2243,7 +2263,7 @@
   },
   "trigger": {
     "natural": "Natural",
-    "person": "Person",
+    "person": "Personne",
     "explosives": "Explosives",
     "vehicle": "Vehicle",
     "unknown": "Inconnu"
@@ -2280,7 +2300,7 @@
     "PartlyBuriedHeadCovered": "Partly Buried, Head Covered",
     "PartlyBuriedHeadUncovered": "Partly Buried, Head Uncovered",
     "PartlyBuried": "Partly Buried",
-    "NotBuried": "Not Buried",
+    "NotBuried": "Pas ensevelie",
     "Unknown": "Inconnu"
   },
   "age": {
@@ -2296,14 +2316,14 @@
   "gender": {
     "Female": "Female",
     "Male": "Male",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "country": {
     "Austria": "Autriche",
     "Germany": "Allemagne",
     "Italy": "Italie",
     "Switzerland": "Suisse",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "workingAtTime": {
     "Yes": "Oui",
@@ -2320,25 +2340,25 @@
     "ApprenticeGuide": "Apprentice Guide",
     "AvalancheProfessional": "Avalanche Professional",
     "AvalancheEducator": "Avalanche Educator",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "avalancheTraining": {
     "None": "Aucune",
-    "Awareness": "Awareness",
-    "BasicREC": "Basic REC",
-    "AdvancedREC": "Advanced REC",
-    "Professional": "Professional",
-    "Other": "Other"
+    "Awareness": "Sensibilisation",
+    "BasicREC": "Formation de base loisirs",
+    "AdvancedREC": "Formation avancée loisirs",
+    "Professional": "Professionnel",
+    "Other": "Autres"
   },
   "yearsActive": {
-    "UpTo2Years": "≤ 2 yrs",
-    "From3To9Years": "3–9 yrs",
-    "From10Years": "≥ 10 yrs"
+    "UpTo2Years": "≤ 2 ans",
+    "From3To9Years": "3–9 ans",
+    "From10Years": "≥ 10 ans"
   },
   "transceiver": {
-    "NoTransceiver": "No Transceiver",
-    "TransceiverOn": "Transceiver: on",
-    "TransceiverOff": "Transceiver: off"
+    "NoTransceiver": "Pas de DVA",
+    "TransceiverOn": "DVA : marche",
+    "TransceiverOff": "DVA : arrêt"
   },
   "shovel": {
     "Yes": "Oui",
@@ -2349,9 +2369,9 @@
     "No": "Non"
   },
   "airbag": {
-    "NoAirbag": "No Airbag",
-    "AirbagDeployed": "Airbag: deployed",
-    "AirbagUndeployed": "Airbag: undeployed"
+    "NoAirbag": "Pas d'airbag",
+    "AirbagDeployed": "Airbag : activé",
+    "AirbagUndeployed": "Airbag : désactivé"
   },
   "helmet": {
     "Yes": "Oui",
@@ -2359,95 +2379,95 @@
   },
   "terrainTrap": {
     "None": "Aucune",
-    "Cliff": "Cliff",
-    "Trees": "Trees",
-    "Gully": "Gully",
-    "Depression": "Depression",
-    "Bench": "Bench",
-    "Boulder": "Boulder",
-    "CrevasseOrBergschrund": "Crevasse or Bergschrund",
-    "Other": "Other"
+    "Cliff": "Falaise",
+    "Trees": "Arbres",
+    "Gully": "Ravine",
+    "Depression": "Dépression de terrain",
+    "Bench": "Niveau de terrain",
+    "Boulder": "Rocher",
+    "CrevasseOrBergschrund": "Crevasse ou fissure de glacier",
+    "Other": "Autres"
   },
   "primaryLocationMethod": {
-    "NotBuried": "Not Buried",
-    "SelfExtraction": "Self Extraction",
-    "VisualClues": "Visual Clues",
-    "TransceiverProbeShovel": "Transceiver/Probe/Shovel",
-    "SpotProbing": "Spot Probing",
-    "ProbeLine": "Probe Line",
+    "NotBuried": "Pas ensevelie",
+    "SelfExtraction": "Sauvetage en autonomie",
+    "VisualClues": "Indices visuels",
+    "TransceiverProbeShovel": "DVA, sonde, pelle",
+    "SpotProbing": "Sondage aléatoire",
+    "ProbeLine": "Chaîne de sondage",
     "Recco": "Recco",
-    "RescueDog": "Rescue Dog",
-    "Snowmelt": "Snowmelt",
-    "Other": "Other"
+    "RescueDog": "Chien d'avalanche",
+    "Snowmelt": "Fonte nivale",
+    "Other": "Autres"
   },
   "rescuedBy": {
-    "Self": "Self",
-    "Companion": "Companion",
-    "OtherGroup": "Other Group",
-    "OrganizedRescue": "Organized Rescue",
+    "Self": "En autonomie",
+    "Companion": "Par camarade",
+    "OtherGroup": "Autre groupe",
+    "OrganizedRescue": "Sauvetage organisé",
     "Unknown": "Inconnu",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "medicalIntervention": {
-    "CPR": "CPR",
-    "ALS": "ALS",
+    "CPR": "Réanimation cardio-pulmonaire - RCP",
+    "ALS": "Mesures de réanimation avancées",
     "ECMO": "ECMO",
-    "Other": "Other"
+    "Other": "Autres"
   },
   "estimatedTimeOfDeath": {
-    "DuringTheAvalanche": "During the avalanche",
-    "DuringBurial": "During burial",
-    "OnSiteAfterExtrication": "On site after extrication",
-    "DuringTransport": "During transport",
-    "InHospital": "In hospital"
+    "DuringTheAvalanche": "Pendant le déclenchement de l'avalanche",
+    "DuringBurial": "Pendant l'ensevelissement",
+    "OnSiteAfterExtrication": "Sur le lieu de l'accident, après le sauvetage",
+    "DuringTransport": "Pendant le transport",
+    "InHospital": "À l'hôpital"
   },
   "causeOfDeath": {
-    "Asphyxiation": "Asphyxiation",
-    "TraumaticInjury": "Traumatic injury",
-    "Hypothermia": "Hypothermia",
-    "Other": "Other"
+    "Asphyxiation": "Asphyxie",
+    "TraumaticInjury": "Lésion traumatique",
+    "Hypothermia": "Hypothermie",
+    "Other": "Autres"
   },
   "respiratoryCavity": {
     "Yes": "Oui",
     "No": "Non"
   },
   "injurySeverity": {
-    "Minor": "Minor",
+    "Minor": "Faible",
     "Moderate": "Limité",
-    "Major": "Major"
+    "Major": "Majeur"
   },
   "recentSlabAvalanches": {
-    "Present": "Present",
+    "Present": "Présent",
     "Absent": "Absent",
     "Unknown": "Inconnu"
   },
   "signsOfInstability": {
-    "Present": "Present",
+    "Present": "Présent",
     "Absent": "Absent",
     "Unknown": "Inconnu"
   },
   "recentLoading": {
-    "Present": "Present",
+    "Present": "Présent",
     "Absent": "Absent",
     "Unknown": "Inconnu"
   },
   "criticalWarming": {
-    "Present": "Present",
+    "Present": "Présent",
     "Absent": "Absent",
     "Unknown": "Inconnu"
   },
   "attachmentTags": {
-    "Picture": "Picture",
-    "PoliceReport": "Police Report",
-    "MedicalReport": "Medical Report",
-    "Other": "Other"
+    "Picture": "Photo",
+    "PoliceReport": "Rapport de police",
+    "MedicalReport": "Rapport médical",
+    "Other": "Autres"
   },
   "attachmentCategory": {
     "Incident": "Incident",
     "Avalanche": "Avalanche",
     "Snowpack": "Manteau neigeux",
-    "Group": "Group",
-    "Person": "Person",
+    "Group": "Groupe",
+    "Person": "Personne",
     "Weather": "Météo"
   }
 }
