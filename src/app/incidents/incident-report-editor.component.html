@@ -188,6 +188,18 @@
       <i class="ph ph-arrows-clockwise"></i> {{ "incidentReportUI.fetchPublishedBulletin" | translate }}
     </button>
 
+    @if (fetchBulletinResult(); as result) {
+      <div
+        class="alert alert-dismissible mt-2"
+        [class.alert-success]="result.type === 'success'"
+        [class.alert-danger]="result.type === 'danger'"
+        role="alert"
+      >
+        {{ result.message }}
+        <button type="button" class="btn-close" aria-label="Close" (click)="fetchBulletinResult.set(null)"></button>
+      </div>
+    }
+
     <app-zod-schema-form
       [disabled]="disabled()"
       [displayMode]="displayMode()"

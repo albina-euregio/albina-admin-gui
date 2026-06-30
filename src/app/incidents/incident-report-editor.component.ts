@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit, signal } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AvalancheSize } from "app/enums/enums";
 import { uniq } from "es-toolkit";
+import { firstValueFrom } from "rxjs";
 import { z } from "zod/v4";
 
 import { GeocodingService } from "../observations/geocoding.service";
@@ -56,6 +57,9 @@ export class IncidentReportEditorComponent implements OnInit {
   activeGroupSubTab: "overview" | "groups" | "victims" = "overview";
   activeGroupIndex = 0;
   activeVictimIndex = 0;
+
+  /** Result of the last CAAML bulletin fetch, shown as an inline alert next to the button. */
+  readonly fetchBulletinResult = signal<{ type: "success" | "danger"; message: string } | null>(null);
 
   /** Report id the geocoder's last point was last seeded for (see constructor). */
   private geocodeSeededForId: string | null = null;
@@ -206,8 +210,22 @@ export class IncidentReportEditorComponent implements OnInit {
 
   async fetchPublishedBulletin() {
     const incidentReport = this.incidentReport();
-    const bulletin = await this.incidentService.fetchPublishedBulletin(incidentReport).toPromise();
-    if (!bulletin) return;
+    const bulletin = await firstValueFrom(this.incidentService.fetchPublishedBulletin(incidentReport)).catch(
+      (error) => {
+        console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
+        return undefined;
+      },
+    );
+    if (!bulletin) {
+      this.fetchBulletinResult.set({
+        type: "danger",
+        message: this.translateService.instant("incidentReportUI.fetchPublishedBulletinError", {
+          region: incidentReport.avalancheRegion,
+          date: incidentReport.dateTime?.toLocaleDateString(this.translateService.currentLang() ?? undefined),
+        }),
+      });
+      return;
+    }
     console.info("Obtained bulletin for incident", { bulletin, incidentReport });
     this.incidentReport.update((incidentReport) => ({
       ...incidentReport,
@@ -236,5 +254,16 @@ export class IncidentReportEditorComponent implements OnInit {
         } satisfies IncidentModels.AvalancheProblem),
       ),
     }));
+    const region = bulletin.regions?.find((r) => r.regionID === incidentReport.avalancheRegion);
+    this.fetchBulletinResult.set({
+      type: "success",
+      message: this.translateService.instant("incidentReportUI.fetchPublishedBulletinSuccess", {
+        count: this.incidentReport().avalancheProblems.length,
+        region: region?.name ?? region?.regionID ?? incidentReport.avalancheRegion,
+        date: (bulletin.validTime?.startTime ?? bulletin.publicationTime).toLocaleDateString(
+          this.translateService.currentLang() ?? undefined,
+        ),
+      }),
+    });
   }
 }
