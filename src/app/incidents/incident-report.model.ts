@@ -1,9 +1,10 @@
+import { uniq } from "es-toolkit";
 import { z } from "zod/v4";
 
 import * as Enums from "../enums/enums";
 import { LangTextsSchema } from "../models/text.model";
 import { widgetRegistry } from "../shared/zod-schema-form.widget-registry";
-import { enumWithOther, not, unwrap, withShowIf } from "../shared/zod-util";
+import { enumWithOther, not, pickPublicFields, withShowIf } from "../shared/zod-util";
 
 export const MetaInformationSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
@@ -297,6 +298,35 @@ withShowIf(VictimInformationSchema, {
 });
 export type VictimInformation = z.infer<typeof VictimInformationSchema>;
 
+export function computeInvolvementsFatalitiesBurials(report: {
+  groupInformation?: GroupInformation[] | null;
+  victimInformation?: VictimInformation[] | null;
+}): z.infer<typeof InvolvementsFatalitiesBurialsSchema> {
+  const groups = report.groupInformation ?? [];
+  const victims = report.victimInformation ?? [];
+  const caughtOnly = victims.filter(
+    (v) => v.caught === "Involved" && (!v.burialDegree || v.burialDegree === "NotBuried"),
+  ).length;
+  const fullyBuried = victims.filter((v) => v.burialDegree === "FullyBuried").length;
+  const partlyBuriedHeadCovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadCovered").length;
+  const partlyBuriedHeadUncovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadUncovered").length;
+  const partlyBuried = victims.filter((v) => v.burialDegree === "PartlyBuried").length;
+  return InvolvementsFatalitiesBurialsSchema.parse({
+    numberOfGroups: groups.length,
+    numberInvolved: caughtOnly + fullyBuried + partlyBuriedHeadCovered + partlyBuriedHeadUncovered + partlyBuried,
+    incidentActivity: uniq(groups.map((g) => g.incidentActivity).filter((x) => x != null)),
+    incidentTerrainType: uniq(groups.map((g) => g.incidentTerrainType).filter((x) => x != null)),
+    fatalities: victims.filter((v) => v.fatalInjured === "Fatal").length,
+    injuredSurvivors: victims.filter((v) => v.fatalInjured === "Injured").length,
+    uninjuredSurvivors: victims.filter((v) => v.fatalInjured === "Uninjured").length,
+    caughtOnly,
+    fullyBuried,
+    partlyBuriedHeadCovered,
+    partlyBuriedHeadUncovered,
+    partlyBuried,
+  } satisfies z.infer<typeof InvolvementsFatalitiesBurialsSchema>);
+}
+
 export const AvalancheInformationSchema = z.object({
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
   avalancheSize: z
@@ -543,6 +573,7 @@ export const IncidentReportSchema = z.object({
   ...OtherDamagesSchema.shape,
   groupInformation: GroupInformationSchema.array().register(widgetRegistry, { important: true }).nullish(),
   victimInformation: VictimInformationSchema.array().register(widgetRegistry, { important: true }).nullish(),
+  involvementsFatalitiesBurials: InvolvementsFatalitiesBurialsSchema.nullish(),
   ...IncidentAnalysisSchema.shape,
   ...IncidentLinksSchema.shape,
   attachments: IncidentAttachmentSchema.array().register(widgetRegistry, { important: true }).nullish(),
@@ -556,18 +587,16 @@ export type IncidentReport = z.infer<typeof IncidentReportSchema>;
  */
 export const PartialIncidentReportSchema = IncidentReportSchema.partial();
 
-export const PublicIncidentReportSchema = IncidentReportSchema.pick(
-  Object.fromEntries(
-    Object.entries(IncidentReportSchema.shape)
-      .filter(([, fieldType]) => widgetRegistry.get(unwrap(fieldType as z.ZodType))?.public)
-      .map(([key]) => [key, true as const]),
-  ) as { [K in keyof typeof IncidentReportSchema.shape]?: true },
-);
+const PublicIncidentReportSchema = pickPublicFields(IncidentReportSchema);
+const PublicInvolvementsFatalitiesBurialsSchema = pickPublicFields(InvolvementsFatalitiesBurialsSchema);
 
 export function toPublicIncidentReport(report: IncidentReport) {
   const publicReport = PublicIncidentReportSchema.parse(report);
+  const involvementsFatalitiesBurials = PublicInvolvementsFatalitiesBurialsSchema.parse(
+    computeInvolvementsFatalitiesBurials(report),
+  );
   publicReport.victimInformation = [];
   publicReport.groupInformation = [];
   publicReport.attachments = (report.attachments ?? []).filter((a) => a.public);
-  return publicReport;
+  return { ...publicReport, involvementsFatalitiesBurials };
 }

@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnIni
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AvalancheSize } from "app/enums/enums";
 import { Bulletin } from "app/models/CAAMLv6";
-import { uniq } from "es-toolkit";
 import { firstValueFrom } from "rxjs";
-import { z } from "zod/v4";
 
 import { GeocodingService } from "../observations/geocoding.service";
 import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
@@ -107,29 +105,7 @@ export class IncidentReportEditorComponent implements OnInit {
   }
 
   get involvementsFatalitiesBurials() {
-    const groups = this.incidentReport().groupInformation ?? [];
-    const victims = this.incidentReport().victimInformation ?? [];
-    const caughtOnly = victims.filter(
-      (v) => v.caught === "Involved" && (!v.burialDegree || v.burialDegree === "NotBuried"),
-    ).length;
-    const fullyBuried = victims.filter((v) => v.burialDegree === "FullyBuried").length;
-    const partlyBuriedHeadCovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadCovered").length;
-    const partlyBuriedHeadUncovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadUncovered").length;
-    const partlyBuried = victims.filter((v) => v.burialDegree === "PartlyBuried").length;
-    return IncidentModels.InvolvementsFatalitiesBurialsSchema.parse({
-      numberOfGroups: groups.length,
-      numberInvolved: caughtOnly + fullyBuried + partlyBuriedHeadCovered + partlyBuriedHeadUncovered + partlyBuried,
-      incidentActivity: uniq(groups.map((g) => g.incidentActivity).filter(Boolean)),
-      incidentTerrainType: uniq(groups.map((g) => g.incidentTerrainType).filter(Boolean)),
-      fatalities: victims.filter((v) => v.fatalInjured === "Fatal").length,
-      injuredSurvivors: victims.filter((v) => v.fatalInjured === "Injured").length,
-      uninjuredSurvivors: victims.filter((v) => v.fatalInjured === "Uninjured").length,
-      caughtOnly,
-      fullyBuried,
-      partlyBuriedHeadCovered,
-      partlyBuriedHeadUncovered,
-      partlyBuried,
-    } satisfies z.infer<typeof IncidentModels.InvolvementsFatalitiesBurialsSchema>);
+    return IncidentModels.computeInvolvementsFatalitiesBurials(this.incidentReport());
   }
 
   newGroupInformation() {
