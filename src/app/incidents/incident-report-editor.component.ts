@@ -105,7 +105,22 @@ export class IncidentReportEditorComponent implements OnInit {
   }
 
   get involvementsFatalitiesBurials() {
-    return IncidentModels.computeInvolvementsFatalitiesBurials(this.incidentReport());
+    return {
+      ...IncidentModels.computeInvolvementsFatalitiesBurials(this.incidentReport()),
+      involvementsFatalitiesBurialsComment:
+        this.incidentReport().involvementsFatalitiesBurials?.involvementsFatalitiesBurialsComment,
+    };
+  }
+
+  onInvolvementsCommentChange(val: IncidentModels.InvolvementsFatalitiesBurials) {
+    const report = this.incidentReport();
+    this.incidentReport.set({
+      ...report,
+      involvementsFatalitiesBurials: {
+        ...this.involvementsFatalitiesBurials,
+        involvementsFatalitiesBurialsComment: val.involvementsFatalitiesBurialsComment,
+      },
+    });
   }
 
   newGroupInformation() {

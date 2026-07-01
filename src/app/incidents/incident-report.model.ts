@@ -183,7 +183,9 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
   partlyBuriedHeadCovered: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
   partlyBuriedHeadUncovered: z.number().register(widgetRegistry, { class: "col-3" }).nullish(),
   partlyBuried: z.number().register(widgetRegistry, { class: "col-3", public: true }).nullish(),
+  involvementsFatalitiesBurialsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
+export type InvolvementsFatalitiesBurials = z.infer<typeof InvolvementsFatalitiesBurialsSchema>;
 
 export const VictimInformationSchema = z.object({
   anonymousVictimIdentifier: z.string().nullish(),

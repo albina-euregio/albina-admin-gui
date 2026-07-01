@@ -329,11 +329,21 @@
             [displayMode]="DisplayMode.All"
             [value]="involvementsFatalitiesBurials"
             [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
+            [excludeFields]="['involvementsFatalitiesBurialsComment']"
             [labelI18n]="labelI18n"
             [helpI18n]="helpI18n"
           />
         </div>
       }
+      <app-zod-schema-form
+        [displayMode]="displayMode()"
+        [value]="involvementsFatalitiesBurials"
+        [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
+        [includeFields]="['involvementsFatalitiesBurialsComment']"
+        [labelI18n]="labelI18n"
+        [helpI18n]="helpI18n"
+        (valueChange)="onInvolvementsCommentChange($event)"
+      />
     }
 
     <!-- Groups sub-tab -->

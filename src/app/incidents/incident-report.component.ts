@@ -245,8 +245,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
    * register as an edit and trigger a redundant save).
    */
   private serializeReport(report: Partial<IncidentReport>): string {
-    const involvementsFatalitiesBurials =
-      report.involvementsFatalitiesBurials ?? IncidentModels.computeInvolvementsFatalitiesBurials(report);
+    const involvementsFatalitiesBurials = {
+      ...IncidentModels.computeInvolvementsFatalitiesBurials(report),
+      involvementsFatalitiesBurialsComment: report.involvementsFatalitiesBurials?.involvementsFatalitiesBurialsComment,
+    };
     return JSON.stringify(
       { ...report, involvementsFatalitiesBurials, id: undefined, updatedAt: undefined },
       (key, value) => (key === "file" || key === "$previewUrl" ? undefined : value),
