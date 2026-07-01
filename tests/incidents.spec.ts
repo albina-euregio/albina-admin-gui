@@ -65,3 +65,21 @@ test("Load bulletin information from CAAML", async () => {
   // 2. example with no problem, but a danger rating: https://avalanche.report/bulletin/2026-02-04?region=AT-07-05
   // 3. example with no report at all (e.g. pre-season -> November)
 });
+
+test("Edit/Delete existing incident report", async () => {
+  // Mock API
+  // 1. select stuff in multi-select
+  // 2. type text in text area, check that full text is being saved
+  // 3. check that updatedAt is updated
+});
+
+test("(Re)publish incident report", async () => {
+  // Mock API or use server?
+});
+
+test("View table with incidents", async () => {
+  // 1. sort by date/time
+  // 2. filter by status
+  // 3. change date in date picker
+  // 4. change columns
+});
