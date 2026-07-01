@@ -8,6 +8,7 @@
         [ngModel]="dateRange()"
         (ngModelChange)="dateRange.set($event)"
         bsDaterangepicker
+        [bsConfig]="{ adaptivePosition: true }"
         [placeholder]="'incidentReport.dateTime' | translate"
       />
     </div>

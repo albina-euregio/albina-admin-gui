@@ -26,6 +26,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "playwright": "NODE_OPTIONS=--disable-warning=DEP0205 playwright test",
     "prepare": "vp config",
     "openapi": "pnpx openapi-typescript https://dev.avalanche.report/api/openapi.json -o ./src/app/providers/openapi.d.ts && vp format ./src/app/providers/openapi.d.ts",
     "changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag",

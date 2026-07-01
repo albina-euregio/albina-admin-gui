@@ -118,6 +118,7 @@ export enum IncidentAvalancheSize {
   very_large = "very_large",
   very_large_extreme = "very_large_extreme",
   extreme = "extreme",
+  unknown = "unknown",
 }
 
 export enum SnowpackStability {

@@ -24,7 +24,7 @@
     - text: URL to server images
     - textbox "URL to server images": https://admin.avalanche.report/images/
     - text: URL to education content
-    - textbox "URL to education content": https://avalanche.report/education/
+    - textbox "URL to education content": https://avalanche.report/admin/education/
     - text: Number of micro regions
     - spinbutton "Number of micro regions"
     - text: ID of sub regions

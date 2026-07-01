@@ -146,7 +146,14 @@
           }
         } @else if (inner.type === "array" && inner.def.element.type === "enum") {
           @let enumValues = Object.keys(inner.def.element.def.entries);
-          @if (widget?.widget === "checkbox") {
+          @if (widget?.widget === "aspect") {
+            <app-aspects
+              [aspects]="$any(value()[key])"
+              (aspectsChange)="Object.assign(value(), Object.fromEntries([[key, $event]])); onFieldChange()"
+              [disabled]="disabled()"
+              [size]="120"
+            />
+          } @else if (widget?.widget === "checkbox") {
             @for (v of enumValues; track v) {
               <div class="form-check form-check-inline">
                 <label class="form-check-label">
@@ -249,13 +256,20 @@
           }
         } @else if (inner.type === "number") {
           <input
+            #numInput
             type="number"
             [attr.aria-label]="fieldAriaLabel(key, zodType)"
             [class]="zodUtil.zodCssClass(zodType, value()[key])"
+            [class.is-invalid]="numInput.validity.badInput"
             [(ngModel)]="value()[key]"
             (ngModelChange)="onFieldChange()"
             [disabled]="disabled()"
           />
+          @if (!displayOnly() && numInput.validity.badInput) {
+            <div class="invalid-feedback d-block">
+              {{ "incidentReportUI.invalidNumber" | translate }}
+            </div>
+          }
         } @else if (inner.type === "date") {
           <app-date-time-input
             [class]="zodUtil.zodCssClass(zodType, value()[key], '')"

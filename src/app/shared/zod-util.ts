@@ -165,6 +165,16 @@ export function isVisibleFieldsValid(schema: z.ZodObject, value: Record<string, 
 export function hasValue(val: unknown): boolean {
   return val !== undefined && val !== null && val !== "" && (!Array.isArray(val) || val.length > 0);
 }
+export function pickPublicFields<T extends z.ZodRawShape>(schema: z.ZodObject<T>) {
+  return schema.pick(
+    Object.fromEntries(
+      Object.entries(schema.shape)
+        .filter(([, fieldType]) => widgetRegistry.get(unwrap(fieldType as z.ZodType))?.public)
+        .map(([key]) => [key, true as const]),
+    ) as any,
+  );
+}
+
 export function zodCssClass<T>(zodType: z.ZodType<T>, value: T, mainClass = "form-control") {
   const result = zodType.safeParse(value);
   // A required (non-optional) array needs at least one element, even though zod parses `[]` as valid.

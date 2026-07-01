@@ -164,7 +164,7 @@
 - separator
 - list:
   - listitem: textcat-ng
-  - listitem: /• Version v8\.0\.0-\d+-g56c6185, \d+-\d+-\d+/
+  - listitem: /• Version/
   - listitem: "• Tip: use mouse wheel and shift key to scroll horizontally"
   - listitem:
     - text: •

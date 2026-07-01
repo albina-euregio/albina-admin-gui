@@ -1185,7 +1185,8 @@
     "large_very_large": "large–very large",
     "very_large": "very large",
     "very_large_extreme": "very large–extreme",
-    "extreme": "extreme"
+    "extreme": "extreme",
+    "unknown": "unknown"
   },
   "complexity": {
     "easy": " Easy",
@@ -1691,7 +1692,7 @@
     "dropVictim": "Drop person {{number}}?",
     "fetchPublishedBulletin": "Fetch from published CAAML bulletin",
     "fetchPublishedBulletinError": "No published CAAML bulletin could be fetched for {{region}} on {{date}}.",
-    "fetchPublishedBulletinSuccess": "Updated {{count}} avalanche problems for {{region}} on {{date}}.",
+    "fetchPublishedBulletinSuccess": "Updated bulletin information with {{count}} avalanche problems for {{region}} on {{date}}.",
     "groupName": "Group {{name}}",
     "groupUnknown": "Group unknown",
     "incomplete": "Incomplete",
@@ -1715,7 +1716,10 @@
     "removeAvalancheProblem": "Remove Avalanche Problem",
     "removeGroup": "Remove Group",
     "removeVictim": "Remove Person",
+    "invalidNumber": "Please enter a valid number.",
     "required": "Required",
+    "requiredFieldsMissingTitle": "Required fields are missing",
+    "requiredFieldsMissingHint": "The report cannot be saved and its status cannot be changed until all required fields (marked in the form) are filled in.",
     "displayMode": {
       "edit": "Edit",
       "editMostRelevant": "Edit most relevant",
@@ -1728,7 +1732,8 @@
     "saveStateIdle": "No unsaved changes",
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
-    "saveStateError": "Save failed"
+    "saveStateError": "Save failed",
+    "saveStateBlocked": "Not saved — required fields are missing"
   },
   "incidentReport": {
     "incidentReport": "Incident Report",
@@ -1841,7 +1846,6 @@
     "avalancheSize": "Avalanche Size",
     "avalancheType": "Avalanche Type",
     "relevantAvalancheProblem": "Relevant Avalanche Problem",
-    "relevantDangerPattern": "Relevant Danger Pattern",
     "trigger": "Trigger",
     "natural": "Natural",
     "person": "Person",
@@ -1860,7 +1864,7 @@
     "crownDepthAvg": "Crown Depth Avg",
     "crownDepthMin": "Crown Depth Min",
     "crownDepthMax": "Crown Depth Max",
-    "avalancheLength": "Avalanche Lenght",
+    "avalancheLength": "Avalanche Length",
     "weakLayerName": "Weak Layer Name",
     "weakLayerGrainType1": "Weak Layer Grain Type (1)",
     "weakLayerGrainSize1": "Weak Layer Grain Size (1)",
@@ -2285,7 +2289,8 @@
     "person": "Person",
     "explosives": "Explosives",
     "vehicle": "Vehicle",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "Other": "Other"
   },
   "startZoneAspectAccuracy": {
     "Accurate": "Accurate",

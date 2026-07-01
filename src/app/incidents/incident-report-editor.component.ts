@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit, signal } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AvalancheSize } from "app/enums/enums";
-import { uniq } from "es-toolkit";
+import { Bulletin } from "app/models/CAAMLv6";
 import { firstValueFrom } from "rxjs";
-import { z } from "zod/v4";
 
 import { GeocodingService } from "../observations/geocoding.service";
 import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
@@ -106,29 +105,22 @@ export class IncidentReportEditorComponent implements OnInit {
   }
 
   get involvementsFatalitiesBurials() {
-    const groups = this.incidentReport().groupInformation ?? [];
-    const victims = this.incidentReport().victimInformation ?? [];
-    const caughtOnly = victims.filter(
-      (v) => v.caught === "Involved" && (!v.burialDegree || v.burialDegree === "NotBuried"),
-    ).length;
-    const fullyBuried = victims.filter((v) => v.burialDegree === "FullyBuried").length;
-    const partlyBuriedHeadCovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadCovered").length;
-    const partlyBuriedHeadUncovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadUncovered").length;
-    const partlyBuried = victims.filter((v) => v.burialDegree === "PartlyBuried").length;
-    return IncidentModels.InvolvementsFatalitiesBurialsSchema.parse({
-      numberOfGroups: groups.length,
-      numberInvolved: caughtOnly + fullyBuried + partlyBuriedHeadCovered + partlyBuriedHeadUncovered + partlyBuried,
-      incidentActivity: uniq(groups.map((g) => g.incidentActivity).filter(Boolean)),
-      incidentTerrainType: uniq(groups.map((g) => g.incidentTerrainType).filter(Boolean)),
-      fatalities: victims.filter((v) => v.fatalInjured === "Fatal").length,
-      injuredSurvivors: victims.filter((v) => v.fatalInjured === "Injured").length,
-      uninjuredSurvivors: victims.filter((v) => v.fatalInjured === "Uninjured").length,
-      caughtOnly,
-      fullyBuried,
-      partlyBuriedHeadCovered,
-      partlyBuriedHeadUncovered,
-      partlyBuried,
-    } satisfies z.infer<typeof IncidentModels.InvolvementsFatalitiesBurialsSchema>);
+    return {
+      ...IncidentModels.computeInvolvementsFatalitiesBurials(this.incidentReport()),
+      involvementsFatalitiesBurialsComment:
+        this.incidentReport().involvementsFatalitiesBurials?.involvementsFatalitiesBurialsComment,
+    };
+  }
+
+  onInvolvementsCommentChange(val: IncidentModels.InvolvementsFatalitiesBurials) {
+    const report = this.incidentReport();
+    this.incidentReport.set({
+      ...report,
+      involvementsFatalitiesBurials: {
+        ...this.involvementsFatalitiesBurials,
+        involvementsFatalitiesBurialsComment: val.involvementsFatalitiesBurialsComment,
+      },
+    });
   }
 
   newGroupInformation() {
@@ -210,12 +202,12 @@ export class IncidentReportEditorComponent implements OnInit {
 
   async fetchPublishedBulletin() {
     const incidentReport = this.incidentReport();
-    const bulletin = await firstValueFrom(this.incidentService.fetchPublishedBulletin(incidentReport)).catch(
-      (error) => {
-        console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
-        return undefined;
-      },
-    );
+    const bulletin: Bulletin | undefined = await firstValueFrom(
+      this.incidentService.fetchPublishedBulletin(incidentReport),
+    ).catch((error) => {
+      console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
+      return undefined;
+    });
     if (!bulletin) {
       this.fetchBulletinResult.set({
         type: "danger",
@@ -231,10 +223,11 @@ export class IncidentReportEditorComponent implements OnInit {
       ...incidentReport,
       publicAvalancheWarningService: bulletin.source?.provider?.name,
       publicAvalancheWarningServiceOutside: false,
+      dangerRating: bulletin.dangerRatings?.[0].mainValue,
       dangerPattern: IncidentModels.IncidentReportSchema.shape.dangerPattern.parse(
         bulletin.customData?.LWD_Tyrol?.dangerPatterns?.map((p: string) => p.toLowerCase()) ?? [],
       ),
-      avalancheProblems: bulletin.avalancheProblems.map((p) =>
+      avalancheProblems: (bulletin.avalancheProblems ?? []).map((p) =>
         IncidentModels.AvalancheProblemSchema.parse({
           aspects: p.aspects,
           avalancheSize: [
@@ -245,7 +238,6 @@ export class IncidentReportEditorComponent implements OnInit {
             AvalancheSize.very_large,
             AvalancheSize.extreme,
           ][p.avalancheSize],
-          dangerRating: p.dangerRatingValue,
           elevationLowerBound: p.elevation?.lowerBound,
           elevationUpperBound: p.elevation?.upperBound,
           frequency: p.frequency,
