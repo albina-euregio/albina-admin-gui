@@ -297,18 +297,25 @@ withShowIf(VictimInformationSchema, {
 });
 export type VictimInformation = z.infer<typeof VictimInformationSchema>;
 
-const Trigger = z.enum(["natural", "person", "explosives", "vehicle", "unknown"]);
 export const AvalancheInformationSchema = z.object({
-  avalancheType: z
-    .enum(Enums.IncidentAvalancheType)
-    .register(widgetRegistry, { public: true, important: true })
-    .nullish(),
+  multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
   avalancheSize: z
     .enum(Enums.IncidentAvalancheSize)
     .register(widgetRegistry, { public: true, important: true })
     .nullish(),
+  avalancheType: z
+    .enum(Enums.IncidentAvalancheType)
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
+  relevantAvalancheProblem: z
+    .enum(Enums.AvalancheProblem)
+    .register(widgetRegistry, {
+      valueI18n: "avalancheProblem.#",
+      widget: "avalancheProblem",
+      public: true,
+    })
+    .nullish(),
   avalancheLength: z.number().register(widgetRegistry, { unit: "m", public: true }).nullish(),
-  multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
   startZoneAspect: z
     .enum(Enums.Aspect)
     .register(widgetRegistry, {
@@ -362,16 +369,22 @@ export const AvalancheInformationSchema = z.object({
     .array()
     .register(widgetRegistry, { class: "bg-avalanche-start-zone" })
     .nullish(),
-  trigger: Trigger.register(widgetRegistry, { class: "bg-avalanche-trigger", public: true }).nullish(),
+  trigger: enumWithOther(z.enum(["natural", "person", "explosives", "vehicle", "unknown"]))
+    .register(widgetRegistry, { class: "bg-avalanche-trigger", public: true })
+    .nullish(),
+  remoteTriggering: z
+    .enum(["Yes", "No"])
+    .register(widgetRegistry, { class: "bg-avalanche-trigger", public: true })
+    .nullish(),
   natural: z
     .enum(["Natural", "CorniceFall", "Earthquake", "IceFall", "RockFall"])
     .register(widgetRegistry, { class: "bg-avalanche-trigger" })
     .nullish(),
   person: z
     .enum(["PersonAccidental", "PersonControlled"])
-    .register(widgetRegistry, { class: "bg-avalanche-trigger" })
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-trigger" })
     .nullish(),
-  additionalLoad: z.enum(["Low", "High"]).register(widgetRegistry, { class: "bg-avalanche-trigger" }).nullish(),
+  additionalLoad: z.enum(["Low", "High"]).register(widgetRegistry, { class: "col-6 bg-avalanche-trigger" }).nullish(),
   explosives: enumWithOther(
     z.enum([
       "Artillery",
@@ -395,11 +408,6 @@ export const AvalancheInformationSchema = z.object({
     .enum(["Accidental", "Controlled"])
     .register(widgetRegistry, { class: "bg-avalanche-trigger" })
     .nullish(),
-  remoteTriggering: z
-    .enum(["Yes", "No"])
-    .register(widgetRegistry, { class: "bg-avalanche-trigger", public: true })
-    .nullish(),
-  bedSurfaceStepped: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-avalanche-trigger" }).nullish(),
   weakLayerName: z.string().register(widgetRegistry, { class: "bg-avalanche-weak-layer" }).nullish(),
   weakLayerGrainType1: z
     .enum(["PP", "PPgp", "DF", "RG", "FC", "FCxr", "DH", "SH", "MF", "MM"])
@@ -425,6 +433,7 @@ export const AvalancheInformationSchema = z.object({
     .enum(["WithinNewSnow", "AtInterfaceWithOldSnow", "WithinOldSnowpack", "NearTheGround"])
     .register(widgetRegistry, { class: "bg-avalanche-weak-layer", public: true })
     .nullish(),
+  bedSurfaceStepped: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-avalanche-weak-layer" }).nullish(),
   slabWidth: z.number().register(widgetRegistry, { unit: "m", class: "bg-avalanche-slab", public: true }).nullish(),
   crownDepthAvg: z
     .number()
@@ -436,28 +445,14 @@ export const AvalancheInformationSchema = z.object({
     .array()
     .register(widgetRegistry, { class: "col-6  bg-avalanche-deposit" })
     .nullish(),
-  depositElevation: z.string().register(widgetRegistry, { class: "col-6 bg-avalanche-deposit", unit: "m" }).nullish(),
-  depositHeight: z.string().register(widgetRegistry, { class: "col-6 bg-avalanche-deposit", unit: "cm" }).nullish(),
-  depositWidth: z.string().register(widgetRegistry, { class: "col-6 bg-avalanche-deposit", unit: "m" }).nullish(),
+  debrisDensity: z.number().register(widgetRegistry, { class: "col-6  bg-avalanche-deposit", unit: "kg/m³" }).nullish(),
+  depositElevation: z.number().register(widgetRegistry, { class: "col-6 bg-avalanche-deposit", unit: "m" }).nullish(),
   depositMoisture: z
     .enum(["Dry", "Moist", "Wet"])
     .register(widgetRegistry, { class: "col-6 bg-avalanche-deposit" })
     .nullish(),
-  debrisDensity: z.string().register(widgetRegistry, { class: "col-6  bg-avalanche-deposit", unit: "kg/m³" }).nullish(),
-  relevantAvalancheProblem: z
-    .enum(Enums.AvalancheProblem)
-    .register(widgetRegistry, {
-      valueI18n: "avalancheProblem.#",
-      widget: "avalancheProblem",
-      class: "bg-avalanche-communication",
-      public: true,
-    })
-    .nullish(),
-  relevantDangerPattern: z
-    .enum(Enums.DangerPattern)
-    .array()
-    .register(widgetRegistry, { valueI18n: "dangerPattern.#", class: "bg-avalanche-communication", important: true })
-    .nullish(),
+  depositHeight: z.number().register(widgetRegistry, { class: "col-6 bg-avalanche-deposit", unit: "cm" }).nullish(),
+  depositWidth: z.number().register(widgetRegistry, { class: "col-6 bg-avalanche-deposit", unit: "m" }).nullish(),
   avalancheDetailsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 const slabGlide = [Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide] as const;
