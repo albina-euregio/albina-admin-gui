@@ -1691,7 +1691,7 @@
     "dropVictim": "Drop person {{number}}?",
     "fetchPublishedBulletin": "Fetch from published CAAML bulletin",
     "fetchPublishedBulletinError": "No published CAAML bulletin could be fetched for {{region}} on {{date}}.",
-    "fetchPublishedBulletinSuccess": "Updated {{count}} avalanche problems for {{region}} on {{date}}.",
+    "fetchPublishedBulletinSuccess": "Updated bulletin information with {{count}} avalanche problems for {{region}} on {{date}}.",
     "groupName": "Group {{name}}",
     "groupUnknown": "Group unknown",
     "incomplete": "Incomplete",

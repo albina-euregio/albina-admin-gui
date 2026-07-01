@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit, signal } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AvalancheSize } from "app/enums/enums";
+import { Bulletin } from "app/models/CAAMLv6";
 import { uniq } from "es-toolkit";
 import { firstValueFrom } from "rxjs";
 import { z } from "zod/v4";
@@ -210,12 +211,12 @@ export class IncidentReportEditorComponent implements OnInit {
 
   async fetchPublishedBulletin() {
     const incidentReport = this.incidentReport();
-    const bulletin = await firstValueFrom(this.incidentService.fetchPublishedBulletin(incidentReport)).catch(
-      (error) => {
-        console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
-        return undefined;
-      },
-    );
+    const bulletin: Bulletin | undefined = await firstValueFrom(
+      this.incidentService.fetchPublishedBulletin(incidentReport),
+    ).catch((error) => {
+      console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
+      return undefined;
+    });
     if (!bulletin) {
       this.fetchBulletinResult.set({
         type: "danger",
@@ -231,10 +232,11 @@ export class IncidentReportEditorComponent implements OnInit {
       ...incidentReport,
       publicAvalancheWarningService: bulletin.source?.provider?.name,
       publicAvalancheWarningServiceOutside: false,
+      dangerRating: bulletin.dangerRatings?.[0].mainValue,
       dangerPattern: IncidentModels.IncidentReportSchema.shape.dangerPattern.parse(
         bulletin.customData?.LWD_Tyrol?.dangerPatterns?.map((p: string) => p.toLowerCase()) ?? [],
       ),
-      avalancheProblems: bulletin.avalancheProblems.map((p) =>
+      avalancheProblems: (bulletin.avalancheProblems ?? []).map((p) =>
         IncidentModels.AvalancheProblemSchema.parse({
           aspects: p.aspects,
           avalancheSize: [
