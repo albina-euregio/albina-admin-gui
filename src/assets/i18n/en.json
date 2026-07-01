@@ -1185,7 +1185,8 @@
     "large_very_large": "large–very large",
     "very_large": "very large",
     "very_large_extreme": "very large–extreme",
-    "extreme": "extreme"
+    "extreme": "extreme",
+    "unknown": "unknown"
   },
   "complexity": {
     "easy": " Easy",
