@@ -249,13 +249,20 @@
           }
         } @else if (inner.type === "number") {
           <input
+            #numInput
             type="number"
             [attr.aria-label]="fieldAriaLabel(key, zodType)"
             [class]="zodUtil.zodCssClass(zodType, value()[key])"
+            [class.is-invalid]="numInput.validity.badInput"
             [(ngModel)]="value()[key]"
             (ngModelChange)="onFieldChange()"
             [disabled]="disabled()"
           />
+          @if (!displayOnly() && numInput.validity.badInput) {
+            <div class="invalid-feedback d-block">
+              {{ "incidentReportUI.invalidNumber" | translate }}
+            </div>
+          }
         } @else if (inner.type === "date") {
           <app-date-time-input
             [class]="zodUtil.zodCssClass(zodType, value()[key], '')"

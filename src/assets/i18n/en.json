@@ -1715,6 +1715,7 @@
     "removeAvalancheProblem": "Remove Avalanche Problem",
     "removeGroup": "Remove Group",
     "removeVictim": "Remove Person",
+    "invalidNumber": "Please enter a valid number.",
     "required": "Required",
     "displayMode": {
       "edit": "Edit",
