@@ -2,23 +2,18 @@
   "incidentsOverview": {
     "button": {
       "new": "Neues Lawinenereignis",
-      "columns": "Spalten",
-      "download": "Download GeoJSON"
+      "columns": "Spalten"
     },
     "tooltip": {
       "edit": "Ereignis bearbeiten"
     },
     "empty": "Keine Ereignisse für diese Region.",
-    "loading": "Loading incidents…",
-    "error": "Incidents could not be loaded.",
-    "retry": "Retry",
     "filter": {
       "anyStatus": "Status auswählen"
     }
   },
   "incidentReportUI": {
     "addAttachment": "Anhang hochladen",
-    "addAvalancheProblem": "Add Avalanche Problem",
     "addGroup": "Gruppe hinzufügen",
     "addVictim": "Person hinzufügen",
     "back": "Zurück",
@@ -37,9 +32,6 @@
     "dropAttachment": "Drop Anhang {{fileName}}?",
     "dropGroup": "Drop Gruppe {{number}}?",
     "dropVictim": "Person {{number}} löschen?",
-    "fetchPublishedBulletin": "Fetch from published CAAML bulletin",
-    "fetchPublishedBulletinError": "No published CAAML bulletin could be fetched for {{region}} on {{date}}.",
-    "fetchPublishedBulletinSuccess": "Updated bulletin information with {{count}} avalanche problems for {{region}} on {{date}}.",
     "groupName": "Gruppe {{name}}",
     "groupUnknown": "Gruppe nicht bekannt",
     "incomplete": "Unvollständig",
@@ -50,34 +42,17 @@
     "overview": "Überblick",
     "noVictims": " Es sind keine Personen registriert. Klicken Sie auf „Person hinzufügen“.",
     "point": "Punkt",
-    "polygon": "Polygon",
     "publishIncident": "Publizieren",
-    "publishIncidentConfirm": "Do you want to publish this incident?",
-    "publishIncidentSuccess": "The incident report has been published successfully.",
-    "republishIncident": "Republish",
-    "republishIncidentConfirm": "Do you want to republish this incident?",
-    "unpublishIncident": "Unpublish",
-    "unpublishIncidentConfirm": "Do you want to unpublish this incident?",
-    "unpublishIncidentSuccess": "The incident report has been unpublished successfully.",
     "removeAttachment": "Anhang löschen",
-    "removeAvalancheProblem": "Remove Avalanche Problem",
     "removeGroup": "Gruppe löschen",
     "removeVictim": "Person löschen",
-    "requiredFieldsMissingTitle": "Required fields are missing",
-    "requiredFieldsMissingHint": "The report cannot be saved and its status cannot be changed until all required fields (marked in the form) are filled in.",
     "displayMode": {
-      "edit": "Bearbeiten",
-      "editMostRelevant": "Edit most relevant",
-      "all": "Preview all",
-      "public": "Preview public only",
-      "filledOut": "Preview filled out only"
+      "edit": "Bearbeiten"
     },
-    "victimName": "Person {{name}}",
     "saveStateIdle": "Alle Änderungen gespeichert",
     "saveStateSaving": "Speichern ...",
     "saveStateSaved": "Erfolgreich gespeichert",
-    "saveStateError": "Fehler beim Speichern",
-    "saveStateBlocked": "Not saved — required fields are missing"
+    "saveStateError": "Fehler beim Speichern"
   },
   "incidentReport": {
     "incidentReport": "Ereignisdokumentation",
@@ -95,7 +70,6 @@
     "authorAffiliation": "Organisation des Autors",
     "dateTime": "Datum/Zeit",
     "updatedAt": "Letztes Update",
-    "publishedAt": "Published at",
     "timeAccuracy": "Genauigkeit des Zeitpunkts",
     "sourceOfInformation": "Herkunft der Information",
     "personInvolvement": "Personenbeteiligung",
@@ -106,12 +80,6 @@
     "publicAvalancheWarningServiceOutside": "Außerhalb des Beurteilungsgebiets des Lawinenwarndienstes",
     "dangerRating": "Gefahrenstufe",
     "avalancheProblem": "Lawinenproblem",
-    "problemType": "Avalanche Problem",
-    "aspects": "Aspects",
-    "elevationLowerBound": "Elevation lower bound",
-    "elevationUpperBound": "Elevation upper bound",
-    "snowpackStability": "Snowpack Stability",
-    "frequency": "Frequency",
     "dangerPattern": "Gefahrenmuster",
     "reportStatus": "Status des Berichts",
     "publicExternalLinks": "Externe Links für die Öffentlichkeit",
@@ -268,7 +236,6 @@
     "publicAvalancheWarningServiceOutside": "Aktiviere dieses Feld, wenn sich das Ereignis außerhalb eines Vorhersagegebiets eines Lawinenwarndienstes ereignet hat.",
     "dangerRating": " Öffentlich verfügbare Lawinengefahrenstufe, die für Datum, Uhrzeit und Ort des Ereignisses gültig war (einschließlich Höhenlage und Exposition, falls vorhanden).",
     "avalancheProblem": " Wähle die für diesen Tag und Ort prognostizierten EAWS-Lawinenprobleme aus. Wähle „Keine“, wenn für diesen Tag keine Lawinenprobleme ausgegeben wurden.",
-    "problemType": "Select the forecasted EAWS Avalanche Problem(s) for that day and location. Choose “None” if none were issued that day.",
     "aspects": "",
     "elevationLowerBound": "",
     "elevationUpperBound": "",
@@ -349,7 +316,6 @@
     "relevantAvalancheProblem": "Wähle das relevanteste EAWS Lawinenproblem aus.",
     "trigger": "Spontan: Ohne menschlichen Einfluss ausgelöst. Person: Durch eine oder mehrere Personen ausgelöst. Sprengung: Durch Sprengstoff, Artillerie oder Gas ausgelöst. Fahrzeug: Durch ein Fahrzeug ausgelöst (z. B. Pistenfahrzeug oder Hubschrauber). Unbekannt: Auslöser ist unbekannt oder unklar.",
     "natural": "",
-    "person": "Accidental: e.g. skier, snowboarder, hiker, climber; Controlled: e.g. skier deliberately ski cutting a slope or cornice",
     "additionalLoad": "Geringe Zusatzbelastung: Einzelne Skifahrer:in oder Snowboarder:in, Guppe mit mindestens 10 m Abstand zwischen den Personen oder einzelne Schneeschuhgeher:in. Große Zusatzbelastung: Eng beieinander gehende Gruppe mit weniger als 10 m Abstand, einzelne Person zu Fuß oder stürzende Skifahrer:in bzw. Snowboarder:in.",
     "explosives": "",
     "vehicle": "",
@@ -633,8 +599,7 @@
     "person": "Person",
     "explosives": "Spregung",
     "vehicle": "Fahrzeug",
-    "unknown": "unbekannt",
-    "Other": "Other"
+    "unknown": "unbekannt"
   },
   "startZoneAspectAccuracy": {
     "Accurate": "Genau",
@@ -643,10 +608,6 @@
   "remoteTriggering": {
     "Yes": "Ja",
     "No": "Nein"
-  },
-  "additionalLoad": {
-    "High": "High",
-    "Low": "Low"
   },
   "accidentalControlled": {
     "Accidental": "Zufällig",
@@ -705,7 +666,6 @@
     "IFMGAGuide": "IVBV Bergführer:in",
     "FullSkiGuide": "Berfühger:in",
     "SkiInstructor": "Skilehrer:in",
-    "ApprenticeGuide": "Apprentice Guide",
     "AvalancheProfessional": "Lawinenprofessionist",
     "AvalancheEducator": "Ausbildner Lawine",
     "Other": "Andere"
@@ -747,7 +707,6 @@
   },
   "terrainTrap": {
     "None": "Keine",
-    "Cliff": "Cliff",
     "Trees": "Bäume",
     "Gully": "Graben",
     "Depression": "Mulde",
