@@ -28,11 +28,9 @@
             }
             @if (!displayOnly() && !zodUtil.isFieldOptional(zodType)) {
               @if (zodUtil.isFieldValid(zodType, value()[key])) {
-                <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}"
-                  ><i class="ph ph-check"></i
-                ></span>
+                <span class="text-success" title="{{ 'zodForm.valid' | translate }}"><i class="ph ph-check"></i></span>
               } @else {
-                <span class="text-danger" title="{{ 'incidentReportUI.required' | translate }}"
+                <span class="text-danger" title="{{ 'zodForm.required' | translate }}"
                   ><i class="ph ph-warning"></i
                 ></span>
               }
@@ -267,7 +265,7 @@
           />
           @if (!displayOnly() && numInput.validity.badInput) {
             <div class="invalid-feedback d-block">
-              {{ "incidentReportUI.invalidNumber" | translate }}
+              {{ "zodForm.invalidNumber" | translate }}
             </div>
           }
         } @else if (inner.type === "date") {

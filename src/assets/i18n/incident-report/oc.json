@@ -1,0 +1,191 @@
+{
+  "incidentReportUI": {
+    "back": "Endarrere",
+    "incomplete": "Incomplèt",
+    "next": "Següent",
+    "publishIncident": "Publicar",
+    "displayMode": {
+      "edit": "Editar"
+    }
+  },
+  "incidentReport": {
+    "author": "Autor",
+    "dangerRating": "Grad de perilh",
+    "avalancheProblem": "Problèma de lauegi",
+    "dangerPattern": "Patron de perilh",
+    "location": "Localitat",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "avalancheSize": "Mida de lauet",
+    "avalancheLength": "Avalanche Lenght"
+  },
+  "incidentReportHelp": {
+    "author": "",
+    "authorAffiliation": "",
+    "dateTime": "",
+    "aspects": "",
+    "elevationLowerBound": "",
+    "elevationUpperBound": "",
+    "snowpackStability": "",
+    "frequency": "",
+    "publicExternalLinks": "",
+    "privateExternalLinks": "",
+    "country": "",
+    "region": "",
+    "municipality": "",
+    "typeOfControlledTerrain": "",
+    "incidentActivity": "",
+    "vehicleType": "",
+    "activities": "",
+    "terrainTypes": "",
+    "age": "",
+    "gender": "",
+    "shovel": "",
+    "probe": "",
+    "airbag": "",
+    "helmet": "",
+    "rescuedBy": "",
+    "natural": "",
+    "explosives": "",
+    "vehicle": "",
+    "accidentalControlled": "",
+    "startZoneElevationAccuracy": "",
+    "startZoneMoisture": "",
+    "depositMoisture": "",
+    "incidentLedePublic": "",
+    "incidentDescriptionPublic": "",
+    "weatherDescriptionPublic": "",
+    "avalancheDescriptionPublic": "",
+    "snowpackDescriptionPublic": "",
+    "takeAwaysPublic": "",
+    "mediaType": "",
+    "attachmentTags": "",
+    "altText": "",
+    "credit": "",
+    "caption": "",
+    "public": "",
+    "attachmentCategory": ""
+  },
+  "otherDamages": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "timeAccuracy": {
+    "exact": "exacte",
+    "PT15M": "± 15 min",
+    "PT30M": "± 30 min",
+    "PT1H": "± 1 h",
+    "PT2H": "± 2 h",
+    "PT4H": "± 4 h",
+    "PT6H": "± 6 h",
+    "PT12H": "± 12 h",
+    "P1D": "± 1 d",
+    "P2D": "± 2 d",
+    "P3D": "± 3 d",
+    "unknown": "desconeishut"
+  },
+  "reportStatus": {
+    "Incomplete": "Incomplèt"
+  },
+  "locationAccuracy": {
+    "exact": "exacte",
+    "within15m": "± 15 m",
+    "within30m": "± 30 m",
+    "within100m": "± 100 m",
+    "within250m": "± 250 m",
+    "within500m": "± 500 m",
+    "within1km": "± 1 km",
+    "within2km": "± 2 km",
+    "within5km": "± 5 km",
+    "within10km": "± 10 km",
+    "within20km": "± 20 km",
+    "within50km": "± 50 km",
+    "unknown": "desconeishut"
+  },
+  "avalancheGear": {
+    "All": "Toti",
+    "Some": "Quauques",
+    "None": "Cap"
+  },
+  "startZoneElevationAccuracy": {
+    "exact": "exacte",
+    "within50m": "± 50 m",
+    "within100m": "± 100 m",
+    "within200m": "± 200 m",
+    "unknown": "desconeishut"
+  },
+  "debrisType": {
+    "Hard": "Dura"
+  },
+  "startZoneMoisture": {
+    "Dry": "Shuta",
+    "Wet": "Umida"
+  },
+  "depositMoisture": {
+    "Dry": "Shuta",
+    "Wet": "Umida"
+  },
+  "bedSurfaceStepped": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "multipleAvalanches": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "remoteTriggering": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "age": {
+    "UpTo13": "≤ 13",
+    "From14To20": "14–20",
+    "From21To30": "21–30",
+    "From31To40": "31–40",
+    "From41To50": "41–50",
+    "From51To60": "51–60",
+    "From61To70": "61–70",
+    "From71": "≥ 71"
+  },
+  "country": {
+    "Austria": "Àustria",
+    "Germany": "Alemania",
+    "Italy": "Itàlia",
+    "Switzerland": "Soïssa"
+  },
+  "workingAtTime": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "leaderAtTime": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "avalancheTraining": {
+    "None": "Cap"
+  },
+  "shovel": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "probe": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "helmet": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "terrainTrap": {
+    "None": "Cap"
+  },
+  "respiratoryCavity": {
+    "Yes": "Òc",
+    "No": "Non"
+  },
+  "attachmentCategory": {
+    "Avalanche": "Lauet",
+    "Snowpack": "Celh de nhèu",
+    "Weather": "Temps atmosferic"
+  }
+}

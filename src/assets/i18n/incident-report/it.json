@@ -1,0 +1,370 @@
+{
+  "incidentsOverview": {
+    "button": {
+      "new": "Nuovo evento valanghivo",
+      "columns": "Colonne",
+      "download": "Scarica GeoJSON"
+    },
+    "tooltip": {
+      "edit": "Modifica evento valanghivo"
+    },
+    "empty": "Nessun incidente in questa meteo-nivo zona.",
+    "loading": "Caricamento eventi valanghivi...",
+    "error": "Il caricamento degli eventi valanghivi non è stato possibile",
+    "retry": "Riprova",
+    "filter": {
+      "anyStatus": "Qualsiasi status"
+    }
+  },
+  "incidentReportUI": {
+    "addAttachment": "Aggiungi allegato",
+    "addGroup": "Aggiungi gruppo",
+    "addVictim": "Aggiungi persona",
+    "back": "Indietro",
+    "clearLine": "Cancella linea",
+    "clearPoint": "Cancella punto",
+    "clearPolygon": "Cancella poligono",
+    "controls": "Regolazione geometria",
+    "deleteIncident": "Cancella evento valanghivo",
+    "deleteIncidentConfirm": "Vuoi cancellare questo evento valanghivo?",
+    "drawLine": "Disegna linea",
+    "drawLineInstructions": "Clicca sulla mappa per aggiungere punti alla linea.",
+    "drawPoint": "Disegna punto",
+    "drawPointInstructions": "Clicca in un punto qualsiasi della mappa per posizionare l'indicatore di posizione, quindi trascinalo per riposizionarlo.",
+    "drawPolygon": "Disegna poligono",
+    "drawPolygonInstructions": "Clicca sulla mappa per definire gli angoli/i vertici del poligono.",
+    "dropAttachment": "Rimuovere l'allegato {{fileName}}?",
+    "dropGroup": "Rimuovere il gruppo {{number}}?",
+    "dropVictim": "Rimuovere la persona {{number}}?",
+    "groupName": "Gruppo {{name}}",
+    "groupUnknown": "Gruppo sconosciuto",
+    "incomplete": "Incompleto",
+    "line": "Linea",
+    "locationMap": "Mappa di localizzazione",
+    "noGroups": "Non sono registrati dei gruppi. Clicca su \"Aggiungi gruppo\" per creare un gruppo.",
+    "next": "successivo",
+    "overview": "Panoramica",
+    "noVictims": "Nessuna persona registrata. Clicca su \"Aggiungi persona\" per creare una persona.",
+    "point": "Punto",
+    "polygon": "Poligono",
+    "publishIncident": "Pubblicare",
+    "publishIncidentConfirm": "Vuoi pubblicare questo evento valanghivo?",
+    "publishIncidentSuccess": "Il rapporto sull'evento valanghivo è stato pubblicato con successo.",
+    "republishIncident": "Pubblicare di nuovo",
+    "republishIncidentConfirm": "Vuoi ripubblicare questo evento valanghivo?",
+    "unpublishIncident": "Annullare la pubblicazione",
+    "unpublishIncidentConfirm": "Vuoi annullare la pubblicazione di questo evento valanghivo?",
+    "unpublishIncidentSuccess": "Il rapporto sull'evento valanghivo è stato annullato con successo.",
+    "removeAttachment": "Rimuovere allegato",
+    "removeGroup": "Rimuovere gruppo",
+    "removeVictim": "Rimuovere persona",
+    "displayMode": {
+      "edit": "Modifica",
+      "all": "Anteprima di tutto",
+      "public": "Anteprima solo pubblico",
+      "filledOut": "Anteprima solo compilato"
+    },
+    "victimName": "Persona {{name}}",
+    "saveStateIdle": "Tutte le modifiche salvate",
+    "saveStateSaving": "Salvataggio in corso",
+    "saveStateSaved": "Salvataggio con successo",
+    "saveStateError": "Salvataggio fallito"
+  },
+  "incidentReport": {
+    "incidentReport": "Rapporto sull'evento valanghivo",
+    "metaInformation": "Informazioni meta",
+    "generalInformation": "Informazioni generali",
+    "bulletinInformation": "Informazioni dal bollettino",
+    "locationInformation": "Informazioni sulla località",
+    "avalancheInformation": "Informazioni sulla valanga",
+    "groupInformation": "Informazioni sul gruppo",
+    "victimInformation": "Informazioni sulla persona",
+    "involvementsFatalitiesBurials": "Coinvolgimenti, morti e seppellimenti",
+    "incidentAnalysis": "Analisi dell'evento valanghivo",
+    "incidentAttachments": "Allegati e link",
+    "author": "Autore",
+    "authorAffiliation": "Organizzazione dell'autore",
+    "dateTime": "Data/ora",
+    "updatedAt": "Ultimo aggiornamento",
+    "publishedAt": "Pubblicato ",
+    "timeAccuracy": "Precisione di orario",
+    "sourceOfInformation": "Fonte di informazione",
+    "personInvolvement": "Coinvolgimento di persone",
+    "otherDamages": "Altri danni",
+    "damagedAssets": "Oggetti danneggiati",
+    "otherDamagesComment": "Commenti riguardo agli altri danni ",
+    "publicAvalancheWarningService": "Servizio Valanghe ufficiale",
+    "publicAvalancheWarningServiceOutside": "Al di fuori dell'area di previsione del Servizio valanghe",
+    "dangerRating": "Grado del pericolo",
+    "avalancheProblem": "Problema valanghivo",
+    "dangerPattern": "Situazione tipo",
+    "reportStatus": "Stato del bollettino",
+    "publicExternalLinks": "Link esterni pubblici",
+    "privateExternalLinks": "Link esterni privati",
+    "privateExternalDatabaseLinks": "Link a banche dati esterne",
+    "generalInformationComment": "Commento sulle informazioni generali",
+    "bulletinInformationComment": "Commento sulle informazioni del bollettino",
+    "location": "Località",
+    "country": "Stato",
+    "region": "Meteo-nivo zona",
+    "municipality": "Comune",
+    "avalancheRegion": "Meteo-nivo zona",
+    "latitude": "Latitudine",
+    "longitude": "Longitudine",
+    "locationAccuracy": "Precisione di localizzazione",
+    "lineCoordinatesText": "Coordinate della linea",
+    "polygonCoordinatesText": "Coordinate del poligono",
+    "locationInformationComment": "Commento sulle informazioni relative alla località",
+    "locationType": {
+      "Point": "Punto",
+      "Line": "Linea",
+      "Polygon": "Poligono"
+    },
+    "anonymousGroupIdentifier": "Identificatore di gruppo anonimo",
+    "groupType": "Tipo di gruppo",
+    "groupSize": "Dimensione del gruppo",
+    "groupSizeAccuracy": "Precisione della dimensione del gruppo",
+    "incidentTerrainType": "Tipo di terreno",
+    "typeOfControlledTerrain": "Tipo di terreno messo in sicurezza",
+    "incidentActivity": "Attività",
+    "travelDirection": "Direzione di movimento",
+    "avalancheSize": "Dimensione valanga",
+    "avalancheLength": "Avalanche Lenght",
+    "caption": "Legenda"
+  },
+  "incidentReportHelp": {
+    "author": "",
+    "authorAffiliation": "",
+    "dateTime": "",
+    "aspects": "",
+    "elevationLowerBound": "",
+    "elevationUpperBound": "",
+    "snowpackStability": "",
+    "frequency": "",
+    "publicExternalLinks": "",
+    "privateExternalLinks": "",
+    "country": "",
+    "region": "",
+    "municipality": "",
+    "typeOfControlledTerrain": "",
+    "incidentActivity": "",
+    "vehicleType": "",
+    "activities": "",
+    "terrainTypes": "",
+    "age": "",
+    "gender": "",
+    "shovel": "",
+    "probe": "",
+    "airbag": "",
+    "helmet": "",
+    "rescuedBy": "",
+    "natural": "",
+    "explosives": "",
+    "vehicle": "",
+    "accidentalControlled": "",
+    "startZoneElevationAccuracy": "",
+    "startZoneMoisture": "",
+    "depositMoisture": "",
+    "incidentLedePublic": "",
+    "incidentDescriptionPublic": "",
+    "weatherDescriptionPublic": "",
+    "avalancheDescriptionPublic": "",
+    "snowpackDescriptionPublic": "",
+    "takeAwaysPublic": "",
+    "mediaType": "",
+    "attachmentTags": "",
+    "altText": "",
+    "credit": "",
+    "caption": "",
+    "public": "",
+    "attachmentCategory": ""
+  },
+  "sourceOfInformation": {},
+  "otherDamages": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "damagedAssets": {},
+  "timeAccuracy": {
+    "exact": "esato",
+    "PT15M": "± 15 min",
+    "PT30M": "± 30 min",
+    "PT1H": "± 1 h",
+    "PT2H": "± 2 h",
+    "PT4H": "± 4 h",
+    "PT6H": "± 6 h",
+    "PT12H": "± 12 h",
+    "P1D": "± 1 d",
+    "P2D": "± 2 d",
+    "P3D": "± 3 d",
+    "unknown": "sconosciuto"
+  },
+  "reportStatus": {
+    "Incomplete": "Incompleto"
+  },
+  "locationAccuracy": {
+    "exact": "esato",
+    "within15m": "± 15 m",
+    "within30m": "± 30 m",
+    "within100m": "± 100 m",
+    "within250m": "± 250 m",
+    "within500m": "± 500 m",
+    "within1km": "± 1 km",
+    "within2km": "± 2 km",
+    "within5km": "± 5 km",
+    "within10km": "± 10 km",
+    "within20km": "± 20 km",
+    "within50km": "± 50 km",
+    "unknown": "sconosciuto"
+  },
+  "groupType": {
+    "Unknown": "Ignoto"
+  },
+  "groupSizeAccuracy": {
+    "Unknown": "Ignoto"
+  },
+  "incidentTerrainType": {
+    "Unknown": "Ignoto"
+  },
+  "typeOfControlledTerrain": {},
+  "incidentActivity": {
+    "Unknown": "Ignoto"
+  },
+  "travelDirection": {},
+  "vehicleType": {},
+  "avalancheGear": {
+    "All": "Tutti",
+    "Some": "poche",
+    "None": "nessuna",
+    "Unknown": "Ignoto"
+  },
+  "natural": {},
+  "person": {},
+  "explosives": {},
+  "vehicle": {},
+  "startZoneElevationAccuracy": {
+    "exact": "esato",
+    "unknown": "sconosciuto"
+  },
+  "startZoneTerrainType": {},
+  "weakLayerLocation": {},
+  "debrisType": {
+    "Hard": "dura"
+  },
+  "startZoneMoisture": {
+    "Dry": "Secca",
+    "Wet": "Bagnata",
+    "Unknown": "Ignoto"
+  },
+  "depositMoisture": {
+    "Dry": "Secca",
+    "Wet": "Bagnata"
+  },
+  "bedSurfaceStepped": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "multipleAvalanches": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "trigger": {
+    "unknown": "Ignoto"
+  },
+  "startZoneAspectAccuracy": {},
+  "remoteTriggering": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "additionalLoad": {},
+  "accidentalControlled": {},
+  "caught": {
+    "Unknown": "Ignoto"
+  },
+  "fatalInjured": {
+    "Unknown": "Ignoto"
+  },
+  "burialDegree": {
+    "Unknown": "Ignoto"
+  },
+  "age": {
+    "UpTo13": "≤ 13",
+    "From14To20": "14–20",
+    "From21To30": "21–30",
+    "From31To40": "31–40",
+    "From41To50": "41–50",
+    "From51To60": "51–60",
+    "From61To70": "61–70",
+    "From71": "≥ 71"
+  },
+  "gender": {},
+  "country": {
+    "Austria": "Austria",
+    "Germany": "Germania",
+    "Italy": "Italia",
+    "Switzerland": "Svizzera"
+  },
+  "workingAtTime": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "leaderAtTime": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "professionalCertification": {},
+  "avalancheTraining": {
+    "None": "nessuna"
+  },
+  "yearsActive": {},
+  "transceiver": {},
+  "shovel": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "probe": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "airbag": {},
+  "helmet": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "terrainTrap": {
+    "None": "nessuna"
+  },
+  "primaryLocationMethod": {},
+  "rescuedBy": {
+    "Unknown": "Ignoto"
+  },
+  "medicalIntervention": {},
+  "estimatedTimeOfDeath": {},
+  "causeOfDeath": {},
+  "respiratoryCavity": {
+    "Yes": "Sì",
+    "No": "No"
+  },
+  "injurySeverity": {
+    "Moderate": "Moderato"
+  },
+  "recentSlabAvalanches": {
+    "Unknown": "Ignoto"
+  },
+  "signsOfInstability": {
+    "Unknown": "Ignoto"
+  },
+  "recentLoading": {
+    "Unknown": "Ignoto"
+  },
+  "criticalWarming": {
+    "Unknown": "Ignoto"
+  },
+  "attachmentTags": {},
+  "attachmentCategory": {
+    "Incident": "Incidente",
+    "Avalanche": "valanga",
+    "Snowpack": "Manto nevoso",
+    "Weather": "Meteo"
+  }
+}

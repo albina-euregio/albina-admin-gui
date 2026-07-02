@@ -1,0 +1,233 @@
+{
+  "incidentsOverview": {
+    "button": {},
+    "tooltip": {},
+    "filter": {}
+  },
+  "incidentReportUI": {
+    "back": "Enrera",
+    "incomplete": "Incomplet",
+    "next": "Següent",
+    "publishIncident": "Publica",
+    "displayMode": {
+      "edit": "Editar"
+    }
+  },
+  "incidentReport": {
+    "author": "Autor",
+    "dangerRating": "Grau de perill",
+    "avalancheProblem": "Problema d'Allaus",
+    "dangerPattern": "Patró de perill",
+    "location": "Localitat",
+    "region": "Regió",
+    "latitude": "Laltitud",
+    "longitude": "Longitud",
+    "locationType": {},
+    "avalancheSize": "Mida d'allaus",
+    "avalancheLength": "Avalanche Lenght"
+  },
+  "incidentReportHelp": {
+    "author": "",
+    "authorAffiliation": "",
+    "dateTime": "",
+    "aspects": "",
+    "elevationLowerBound": "",
+    "elevationUpperBound": "",
+    "snowpackStability": "",
+    "frequency": "",
+    "publicExternalLinks": "",
+    "privateExternalLinks": "",
+    "country": "",
+    "region": "",
+    "municipality": "",
+    "typeOfControlledTerrain": "",
+    "incidentActivity": "",
+    "vehicleType": "",
+    "activities": "",
+    "terrainTypes": "",
+    "age": "",
+    "gender": "",
+    "shovel": "",
+    "probe": "",
+    "airbag": "",
+    "helmet": "",
+    "rescuedBy": "",
+    "natural": "",
+    "explosives": "",
+    "vehicle": "",
+    "accidentalControlled": "",
+    "startZoneElevationAccuracy": "",
+    "startZoneMoisture": "",
+    "depositMoisture": "",
+    "incidentLedePublic": "",
+    "incidentDescriptionPublic": "",
+    "weatherDescriptionPublic": "",
+    "avalancheDescriptionPublic": "",
+    "snowpackDescriptionPublic": "",
+    "takeAwaysPublic": "",
+    "mediaType": "",
+    "attachmentTags": "",
+    "altText": "",
+    "credit": "",
+    "caption": "",
+    "public": "",
+    "attachmentCategory": ""
+  },
+  "sourceOfInformation": {},
+  "otherDamages": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "damagedAssets": {},
+  "timeAccuracy": {
+    "exact": "exacte",
+    "PT15M": "± 15 min",
+    "PT30M": "± 30 min",
+    "PT1H": "± 1 h",
+    "PT2H": "± 2 h",
+    "PT4H": "± 4 h",
+    "PT6H": "± 6 h",
+    "PT12H": "± 12 h",
+    "P1D": "± 1 d",
+    "P2D": "± 2 d",
+    "P3D": "± 3 d",
+    "unknown": "desconegut"
+  },
+  "reportStatus": {
+    "Incomplete": "Incomplet"
+  },
+  "locationAccuracy": {
+    "exact": "exacte",
+    "within15m": "± 15 m",
+    "within30m": "± 30 m",
+    "within100m": "± 100 m",
+    "within250m": "± 250 m",
+    "within500m": "± 500 m",
+    "within1km": "± 1 km",
+    "within2km": "± 2 km",
+    "within5km": "± 5 km",
+    "within10km": "± 10 km",
+    "within20km": "± 20 km",
+    "within50km": "± 50 km",
+    "unknown": "desconegut"
+  },
+  "groupType": {},
+  "groupSizeAccuracy": {},
+  "incidentTerrainType": {},
+  "typeOfControlledTerrain": {},
+  "incidentActivity": {},
+  "travelDirection": {},
+  "vehicleType": {},
+  "avalancheGear": {
+    "All": "Tots",
+    "Some": "Algunes",
+    "None": "Cap"
+  },
+  "natural": {},
+  "person": {},
+  "explosives": {},
+  "vehicle": {},
+  "startZoneElevationAccuracy": {
+    "exact": "exacte",
+    "unknown": "desconegut"
+  },
+  "startZoneTerrainType": {},
+  "weakLayerLocation": {},
+  "debrisType": {
+    "Hard": "Dura"
+  },
+  "startZoneMoisture": {
+    "Dry": "Seca",
+    "Wet": "Humida"
+  },
+  "depositMoisture": {
+    "Dry": "Seca",
+    "Wet": "Humida"
+  },
+  "bedSurfaceStepped": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "multipleAvalanches": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "trigger": {},
+  "startZoneAspectAccuracy": {},
+  "remoteTriggering": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "additionalLoad": {},
+  "accidentalControlled": {},
+  "caught": {},
+  "fatalInjured": {},
+  "burialDegree": {},
+  "age": {
+    "UpTo13": "≤ 13",
+    "From14To20": "14–20",
+    "From21To30": "21–30",
+    "From31To40": "31–40",
+    "From41To50": "41–50",
+    "From51To60": "51–60",
+    "From61To70": "61–70",
+    "From71": "≥ 71"
+  },
+  "gender": {},
+  "country": {
+    "Austria": "Àustria",
+    "Germany": "Alemanya",
+    "Italy": "Itàlia",
+    "Switzerland": "Suïssa"
+  },
+  "workingAtTime": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "leaderAtTime": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "professionalCertification": {},
+  "avalancheTraining": {
+    "None": "Cap"
+  },
+  "yearsActive": {},
+  "transceiver": {},
+  "shovel": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "probe": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "airbag": {},
+  "helmet": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "terrainTrap": {
+    "None": "Cap"
+  },
+  "primaryLocationMethod": {},
+  "rescuedBy": {},
+  "medicalIntervention": {},
+  "estimatedTimeOfDeath": {},
+  "causeOfDeath": {},
+  "respiratoryCavity": {
+    "Yes": "Si",
+    "No": "No"
+  },
+  "injurySeverity": {},
+  "recentSlabAvalanches": {},
+  "signsOfInstability": {},
+  "recentLoading": {},
+  "criticalWarming": {},
+  "attachmentTags": {},
+  "attachmentCategory": {
+    "Avalanche": "Allau",
+    "Snowpack": "Mantell de neu",
+    "Weather": "Temps atmosfèric"
+  }
+}
