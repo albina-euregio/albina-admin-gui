@@ -170,7 +170,7 @@
               incidentReport().attachments.length
             }}</span>
           } @else if (safeParse.success) {
-            <span class="text-success" title="{{ 'incidentReportUI.valid' | translate }}">
+            <span class="text-success" title="{{ 'zodForm.valid' | translate }}">
               <i class="ph ph-check"></i>
             </span>
           } @else {
@@ -249,7 +249,7 @@
                 }
                 <h5 class="mb-0 h6 fw-semibold text-secondary ms-1">{{ attachment.fileName }}</h5>
                 @if (isAttachmentValid(attachment)) {
-                  <span class="text-success ms-2" title="{{ 'incidentReportUI.valid' | translate }}">
+                  <span class="text-success ms-2" title="{{ 'zodForm.valid' | translate }}">
                     <i class="ph ph-check"></i>
                   </span>
                 } @else {
