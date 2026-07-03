@@ -28,6 +28,7 @@ import { CanvasRenderer } from "echarts/renderers";
 import { provideEchartsCore } from "ngx-echarts";
 
 import { AppComponent } from "./app/app.component";
+import { provideAlbinaApiClient } from "./app/providers/albina-api.provider";
 import { httpHeaders } from "./app/providers/authentication-service/http-headers";
 import routes from "./app/routes";
 import { TranslatedTitleStrategy } from "./app/shared/translated-title-strategy";
@@ -100,6 +101,7 @@ function bootstrapApplication0() {
       DatePipe,
       provideEchartsCore({ echarts }),
       provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
+      provideAlbinaApiClient(),
     ],
   });
 }

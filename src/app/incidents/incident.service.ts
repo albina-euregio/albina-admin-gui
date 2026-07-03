@@ -6,7 +6,6 @@ import { Bulletin, Bulletins, BulletinsSchema } from "app/models/CAAMLv6";
 import { combineLatest, from, map, Observable } from "rxjs";
 
 import * as albinaApi from "../providers/albina-api";
-import { client } from "../providers/albina-api/client.gen";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import {
@@ -24,16 +23,6 @@ export class IncidentService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
   private route = inject(ActivatedRoute);
-
-  constructor() {
-    // Point the generated hey-api client at the configured API base URL and let
-    // it reuse Angular's HttpClient, so the `httpHeaders` interceptor keeps
-    // adding the bearer token and requests resolve outside injection contexts.
-    client.setConfig({
-      baseUrl: this.constantsService.getServerUrlGET("/"),
-      httpClient: this.http,
-    });
-  }
 
   /**
    * Date range filter for the overview, as a `[start, end]` tuple bound to the

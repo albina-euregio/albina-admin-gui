@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { from, Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
@@ -6,7 +5,6 @@ import { z } from "zod/v4";
 
 import { SourceDates } from "../models/SourceDates";
 import * as albinaApi from "../providers/albina-api";
-import { client } from "../providers/albina-api/client.gen";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { UndoRedoState } from "../providers/undo-redo-service/undo-redo.service";
@@ -30,7 +28,6 @@ interface AccordionChangeEvent {
 
 @Injectable({ providedIn: "root" })
 export class DangerSourcesService {
-  http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
@@ -48,16 +45,6 @@ export class DangerSourcesService {
     (bulletin) => bulletin,
     (json) => DangerSourceVariantModel.parse(json),
   );
-
-  constructor() {
-    // Point the generated hey-api client at the configured API base URL and let
-    // it reuse Angular's HttpClient, so the `httpHeaders` interceptor keeps
-    // adding the bearer token and requests resolve outside injection contexts.
-    client.setConfig({
-      baseUrl: this.constantsService.getServerUrlGET("/"),
-      httpClient: this.http,
-    });
-  }
 
   init({ days } = { days: 10 }) {
     this.isEditable = false;

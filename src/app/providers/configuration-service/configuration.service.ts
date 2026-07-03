@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { from, map, Observable } from "rxjs";
 
@@ -12,25 +11,11 @@ import {
   ServerVersionInfoSchema,
 } from "../../models/server-configuration.model";
 import * as albinaApi from "../albina-api";
-import { client } from "../albina-api/client.gen";
 import { AuthenticationService } from "../authentication-service/authentication.service";
-import { ConstantsService } from "../constants-service/constants.service";
 
 @Injectable()
 export class ConfigurationService {
-  http = inject(HttpClient);
-  private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
-
-  constructor() {
-    // Point the generated hey-api client at the configured API base URL and let
-    // it reuse Angular's HttpClient, so the `httpHeaders` interceptor keeps
-    // adding the bearer token and requests resolve outside injection contexts.
-    client.setConfig({
-      baseUrl: this.constantsService.getServerUrlGET("/"),
-      httpClient: this.http,
-    });
-  }
 
   public loadPublicLocalServerConfiguration(): Observable<ServerVersionInfo> {
     return from(albinaApi.getServerVersionInfo({ throwOnError: true })).pipe(
