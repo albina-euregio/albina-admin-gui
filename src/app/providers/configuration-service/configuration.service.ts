@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
+import { from, map, Observable } from "rxjs";
 
 import { RegionConfiguration } from "../../models/region-configuration.model";
 import {
@@ -11,6 +11,8 @@ import {
   ServerVersionInfo,
   ServerVersionInfoSchema,
 } from "../../models/server-configuration.model";
+import * as albinaApi from "../albina-api";
+import { client } from "../albina-api/client.gen";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 
@@ -20,40 +22,55 @@ export class ConfigurationService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
+  constructor() {
+    // Point the generated hey-api client at the configured API base URL and let
+    // it reuse Angular's HttpClient, so the `httpHeaders` interceptor keeps
+    // adding the bearer token and requests resolve outside injection contexts.
+    client.setConfig({
+      baseUrl: this.constantsService.getServerUrlGET("/"),
+      httpClient: this.http,
+    });
+  }
+
   public loadPublicLocalServerConfiguration(): Observable<ServerVersionInfo> {
-    const url = this.constantsService.getServerUrlGET("/server/info");
-    return this.http.get(url).pipe(map((json) => ServerVersionInfoSchema.parse(json)));
+    return from(albinaApi.getServerVersionInfo({ throwOnError: true })).pipe(
+      map((res) => ServerVersionInfoSchema.parse(res.data)),
+    );
   }
 
   public loadLocalServerConfiguration(): Observable<LocalServerConfiguration> {
-    const url = this.constantsService.getServerUrlGET("/server");
-    return this.http.get(url).pipe(map((json) => LocalServerConfigurationSchema.parse(json)));
+    return from(albinaApi.getLocalServerConfiguration({ throwOnError: true })).pipe(
+      map((res) => LocalServerConfigurationSchema.parse(res.data)),
+    );
   }
 
   public loadExternalServerConfigurations(): Observable<ServerConfiguration[]> {
-    const url = this.constantsService.getServerUrlGET("/server/external");
-    return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.array().parse(json)));
+    return from(albinaApi.getExternalServerConfigurations({ throwOnError: true })).pipe(
+      map((res) => ServerConfigurationSchema.array().parse(res.data)),
+    );
   }
 
   public postServerConfiguration(json: ServerConfiguration) {
-    const url = this.constantsService.getServerUrlGET("/server");
-    const body = JSON.stringify(json);
-    return this.http.post(url, body).pipe(map((json) => ServerConfigurationSchema.parse(json)));
+    return from(
+      albinaApi.saveServerConfiguration({ body: json as unknown as albinaApi.ServerInstance, throwOnError: true }),
+    ).pipe(map((res) => ServerConfigurationSchema.parse(res.data)));
   }
 
   public loadRegionConfiguration(region): Observable<RegionConfiguration> {
-    const url = this.constantsService.getServerUrlGET("/regions/region", { region: region });
-    return this.http.get<RegionConfiguration>(url);
+    return from(albinaApi.getRegion({ query: { region }, throwOnError: true })).pipe(
+      map((res) => res.data as unknown as RegionConfiguration),
+    );
   }
 
   public loadRegionConfigurations(): Observable<RegionConfiguration[]> {
-    const url = this.constantsService.getServerUrlGET("/regions");
-    return this.http.get<RegionConfiguration[]>(url);
+    return from(albinaApi.getRegions({ throwOnError: true })).pipe(
+      map((res) => res.data as unknown as RegionConfiguration[]),
+    );
   }
 
   public postRegionConfiguration(json) {
-    const url = this.constantsService.getServerUrlGET("/regions");
+    // Convert empty strings to null, matching the server's expectations.
     const body = JSON.stringify(json, (_, v) => (v === "" ? null : v));
-    return this.http.post(url, body);
+    return from(albinaApi.saveRegion({ body, throwOnError: true })).pipe(map((res) => res.data));
   }
 }
