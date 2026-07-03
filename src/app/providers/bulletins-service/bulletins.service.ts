@@ -1,4 +1,3 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinPhotoModel, BulletinPhotoSchema } from "app/models/bulletin-photo.model";
@@ -10,23 +9,21 @@ import {
   PublicationStatusSchema,
 } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
-import { BehaviorSubject, Observable, of, Subject } from "rxjs";
+import { BehaviorSubject, from, Observable, of, Subject } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
-import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import { Bulletin, Bulletins } from "../../models/CAAMLv6";
 import { SourceDates } from "../../models/SourceDates";
 import { AlbinaLanguage } from "../../models/text.model";
-import type { components } from "../openapi";
-
-export type PublicationStrategy = components["schemas"]["PublicationStrategy.Type"];
-
+import * as albinaApi from "../albina-api";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { UndoRedoState } from "../undo-redo-service/undo-redo.service";
 import { UserService } from "../user-service/user.service";
+
+export type PublicationStrategy = albinaApi.PublicationStrategyType;
 
 class TrainingModeError extends Error {}
 
@@ -52,7 +49,6 @@ interface AccordionChangeEvent {
 
 @Injectable({ providedIn: "root" })
 export class BulletinsService {
-  http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
   private translateService = inject(TranslateService);
@@ -206,13 +202,18 @@ export class BulletinsService {
   }
 
   getPreviewPdf(bulletins: BulletinModel[]): Observable<Blob> {
-    const body = JSON.stringify(bulletins.map((b) => b));
-    const url = this.constantsService.getServerUrlPOST("/bulletins/preview", {
-      region: this.authenticationService.getActiveRegionId(),
-      lang: this.translateService.getCurrentLang() as AlbinaLanguage,
-    });
-    const headers = new HttpHeaders({ Accept: "application/pdf" });
-    return this.http.post(url, body, { headers, responseType: "blob" });
+    return from(
+      albinaApi.getPreviewPdf({
+        query: {
+          region: this.authenticationService.getActiveRegionId(),
+          lang: this.translateService.getCurrentLang() as albinaApi.LanguageCode,
+        },
+        body: bulletins as unknown as albinaApi.AvalancheBulletin[],
+        headers: { Accept: "application/pdf" },
+        responseType: "blob",
+        throwOnError: true,
+      } as albinaApi.Options<albinaApi.GetPreviewPdfData, true>),
+    ).pipe(map((res) => res.data as Blob));
   }
 
   getStatus(
@@ -230,31 +231,38 @@ export class BulletinsService {
         }),
       );
     }
-    const url = this.constantsService.getServerUrlGET("/bulletins/status/internal", {
-      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate[0]),
-      endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate[0]),
-      region: region,
-    });
-    return this.http.get<{ date: string; status: keyof typeof Enums.BulletinStatus }[]>(url);
+    return from(
+      albinaApi.getInternalStatus({
+        query: {
+          startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate[0]),
+          endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate[0]),
+          region: region,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data as unknown as { date: string; status: keyof typeof Enums.BulletinStatus }[]));
   }
 
   getPublicationStatus(
     region: string,
     date: [Date, Date] = this.sourceDates.activeDate,
   ): Observable<PublicationStatusModel> {
-    const url = this.constantsService.getServerUrlGET("/bulletins/status/publication", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: region,
-    });
-    return this.http.get(url).pipe(map((data) => PublicationStatusSchema.parse(data)));
+    return from(
+      albinaApi.getPublicationStatus({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: region,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => PublicationStatusSchema.parse(res.data)));
   }
 
   getPublicationChecklists(date: string, region: string): Observable<PublicationChecklistModel[]> {
-    const url = this.getChecklistUrl(date, region);
-    return this.http.get(url).pipe(
-      map((data) => {
-        if (Array.isArray(data)) {
-          return PublicationChecklistSchema.array().parse(data);
+    return from(albinaApi.getChecklists({ query: { date, region }, throwOnError: true })).pipe(
+      map((res) => {
+        if (Array.isArray(res.data)) {
+          return PublicationChecklistSchema.array().parse(res.data);
         }
         return [];
       }),
@@ -266,26 +274,27 @@ export class BulletinsService {
     region: string,
     checklist: PublicationChecklistModel,
   ): Observable<PublicationChecklistModel> {
-    const url = this.getChecklistUrl(date, region);
-    const body = JSON.stringify(checklist);
-    return this.http.post(url, body).pipe(map((data) => PublicationChecklistSchema.parse(data)));
+    return from(
+      albinaApi.saveChecklist({
+        query: { date, region },
+        body: checklist as unknown as albinaApi.ChecklistServiceChecklist,
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => PublicationChecklistSchema.parse(res.data)));
   }
 
   loadBulletinsForDate(date: Temporal.PlainDate, regionCodes: string[], lang: AlbinaLanguage): Observable<Bulletin[]> {
-    const url = this.constantsService.getServerUrlGET("/bulletins/caaml/json", {
-      date: date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).toString(),
-      regions: regionCodes,
-      lang: lang,
-      version: "V6_JSON",
-    });
-    return this.http.get<Bulletins>(url).pipe(map((response) => response.bulletins));
-  }
-
-  private getChecklistUrl(date: string, region: string): string {
-    const url = new URL("./checklist", environment.apiBaseUrl);
-    url.searchParams.set("date", date);
-    url.searchParams.set("region", region);
-    return url.toString();
+    return from(
+      albinaApi.getPublishedCaamlJsonBulletins({
+        query: {
+          date: date.toZonedDateTime({ plainTime: "17:00:00", timeZone: "Europe/Vienna" }).toString(),
+          regions: regionCodes,
+          lang: lang as albinaApi.LanguageCode,
+          version: "V6_JSON",
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => (res.data as unknown as Bulletins).bulletins));
   }
 
   loadBulletins(
@@ -305,27 +314,38 @@ export class BulletinsService {
     regions: string[],
     etag?: string,
   ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
-    const url = this.constantsService.getServerUrlGET("/bulletins/edit", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      regions: regions,
-    });
-    const headers = etag ? new HttpHeaders({ "If-None-Match": etag }) : undefined;
-    return this.http
-      .get<BulletinModelAsJSON[]>(url, { headers, observe: "response" })
-      .pipe(map((response) => ({ bulletins: response.body, etag: response.headers.get("ETag") })));
+    return from(
+      albinaApi.getJsonBulletins({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          regions: regions,
+        },
+        headers: etag ? { "If-None-Match": etag } : undefined,
+        throwOnError: true,
+      }),
+    ).pipe(
+      map((res) => ({
+        bulletins: res.data as unknown as BulletinModelAsJSON[],
+        etag: res.response.headers.get("ETag"),
+      })),
+    );
   }
 
   getCaamlJsonBulletins(
     date: [Date, Date] = this.sourceDates.activeDate,
     regions: string[] = this.authenticationService.getInternalRegions(),
   ): Observable<Bulletins> {
-    const url = this.constantsService.getServerUrlGET("/bulletins/edit/caaml/json", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      regions: regions,
-      lang: this.translateService.getCurrentLang() as AlbinaLanguage,
-      version: "V6_JSON",
-    });
-    return this.http.get<Bulletins>(url);
+    return from(
+      albinaApi.getCaamlJsonBulletins({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          regions: regions,
+          lang: this.translateService.getCurrentLang() as albinaApi.LanguageCode,
+          version: "V6_JSON",
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data as unknown as Bulletins));
   }
 
   saveBulletins(
@@ -337,12 +357,16 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrlPOST("/bulletins", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: this.authenticationService.getActiveRegionId(),
-    });
-    const body = JSON.stringify(bulletins);
-    return this.http.post<BulletinModelAsJSON[]>(url, body);
+    return from(
+      albinaApi.createJsonBulletins({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: this.authenticationService.getActiveRegionId(),
+        },
+        body: bulletins as unknown as albinaApi.AvalancheBulletin[],
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data as unknown as BulletinModelAsJSON[]));
   }
 
   createBulletin(
@@ -356,12 +380,16 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrlPUT("/bulletins", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: this.authenticationService.getActiveRegionId(),
-    });
-    const body = JSON.stringify(bulletin);
-    return this.http.put<BulletinModelAsJSON[]>(url, body);
+    return from(
+      albinaApi.createJsonBulletin({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: this.authenticationService.getActiveRegionId(),
+        },
+        body: bulletin as unknown as albinaApi.AvalancheBulletin,
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data as unknown as BulletinModelAsJSON[]));
   }
 
   updateBulletin(
@@ -375,25 +403,27 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrlPOST(
-      `/bulletins/{bulletinId}`,
-      {
-        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-        region: this.authenticationService.getActiveRegionId(),
-      },
-      { bulletinId: bulletin.id },
-    );
-    const body = JSON.stringify(bulletin);
-    return this.http.post<BulletinModelAsJSON[]>(url, body);
+    return from(
+      albinaApi.updateJsonBulletin({
+        path: { bulletinId: bulletin.id! },
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: this.authenticationService.getActiveRegionId(),
+        },
+        body: bulletin as unknown as albinaApi.AvalancheBulletin,
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data as unknown as BulletinModelAsJSON[]));
   }
 
   uploadPhoto(file: File): Observable<BulletinPhotoModel> {
-    const formData = new FormData();
-    formData.append("file", file);
-    const url = this.constantsService.getServerUrlPOST("/bulletins/photo", {
-      region: this.authenticationService.getActiveRegionId(),
-    });
-    return this.http.post<BulletinPhotoModel>(url, formData).pipe(map((data) => BulletinPhotoSchema.parse(data)));
+    return from(
+      albinaApi.uploadBulletinPhoto({
+        query: { region: this.authenticationService.getActiveRegionId() },
+        body: { file },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => BulletinPhotoSchema.parse(res.data)));
   }
 
   deleteBulletin(
@@ -407,40 +437,48 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrlDELETE(
-      `/bulletins/{bulletinId}`,
-      {
-        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-        region: this.authenticationService.getActiveRegionId(),
-      },
-      { bulletinId: bulletin.id },
-    );
-    return this.http.delete<BulletinModelAsJSON[]>(url);
+    return from(
+      albinaApi.deleteJsonBulletin({
+        path: { bulletinId: bulletin.id! },
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: this.authenticationService.getActiveRegionId(),
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data as unknown as BulletinModelAsJSON[]));
   }
 
   submitBulletins(date: [Date, Date], region: string) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrlPOST("/bulletins/submit", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: region,
-    });
-    const body = JSON.stringify("");
-    return this.http.post<void>(url, body);
+    return from(
+      albinaApi.submitBulletins({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: region,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map(() => undefined));
   }
 
   publishBulletins(date: [Date, Date], region: string, strategy: PublicationStrategy): Observable<void> {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrlPOST("/bulletins/publish", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: region,
-      strategy: strategy,
-    });
-    const body = JSON.stringify("");
-    return this.http.post<void>(url, body).pipe(
+    return from(
+      albinaApi.publishBulletins({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: region,
+          strategy: strategy,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(
+      map(() => undefined),
       tap(() => {
         if (this.getActiveRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
           this.setActiveRegionStatus(date, Enums.BulletinStatus.republished);
@@ -455,12 +493,15 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrlPOST("/bulletins/publish/all", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      strategy: strategy,
-    });
-    const body = JSON.stringify("");
-    return this.http.post<void>(url, body);
+    return from(
+      albinaApi.publishAllBulletins({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          strategy: strategy,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map(() => undefined));
   }
 
   triggerPublicationChannel(date: [Date, Date], region: string, language: string, channel: Enums.PublicationChannel) {
@@ -470,24 +511,34 @@ export class BulletinsService {
     if (language == "all") {
       language = undefined;
     }
-    const url = this.constantsService.getServerUrlPOST(`/bulletins/publish/${channel}` as `/bulletins/publish/email`, {
+    const query = {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: region,
-      lang: language as AlbinaLanguage,
-    });
-    const body = JSON.stringify("");
-    return this.http.post(url, body);
+      lang: language as albinaApi.LanguageCode,
+    };
+    const trigger = (options: { query: typeof query; throwOnError: true }) => {
+      if (channel === Enums.PublicationChannel.Email) return albinaApi.sendEmail(options);
+      if (channel === Enums.PublicationChannel.Telegram) return albinaApi.triggerTelegramChannel(options);
+      if (channel === Enums.PublicationChannel.WhatsApp) return albinaApi.triggerWhatsAppChannel(options);
+      if (channel === Enums.PublicationChannel.Push) return albinaApi.triggerPushNotifications(options);
+      throw new Error(`Unsupported publication channel: ${channel}`);
+    };
+    return from(trigger({ query, throwOnError: true })).pipe(map((res) => res.data));
   }
 
   checkBulletins(date: [Date, Date], region: string) {
     if (this.localStorageService.isTrainingEnabled) {
       // TODO check bulletins from POST JSON
     }
-    const url = this.constantsService.getServerUrlGET("/bulletins/check", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: region,
-    });
-    return this.http.get<string[]>(url);
+    return from(
+      albinaApi.checkBulletins({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: region,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data as string[]));
   }
 
   getStressLevelColor(date: StressLevel["date"]) {
