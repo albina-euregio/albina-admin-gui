@@ -1,14 +1,12 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { from, map, Observable } from "rxjs";
 
-import { AlbinaLanguage } from "../../models/text.model";
+import * as albinaApi from "../albina-api";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 
 @Injectable()
 export class StatisticsService {
-  http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
@@ -19,25 +17,39 @@ export class StatisticsService {
     extended: boolean,
     duplicates: boolean,
   ): Observable<Blob> {
-    const url = this.constantsService.getServerUrlGET("/statistics", {
-      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
-      endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate),
-      regions: [this.authenticationService.getActiveRegionId()],
-      lang: lang as AlbinaLanguage,
-      extended: extended ?? false,
-      duplicate: duplicates ?? false,
-      obsoleteMatrix: false,
-    });
-    const headers = new HttpHeaders({ Accept: "text/csv" });
-    return this.http.get(url, { headers, responseType: "blob" });
+    return from(
+      albinaApi.getBulletinCsv({
+        query: {
+          startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
+          endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate),
+          regions: [this.authenticationService.getActiveRegionId()],
+          lang: lang as albinaApi.LanguageCode,
+          extended: extended ?? false,
+          duplicate: duplicates ?? false,
+          obsoleteMatrix: false,
+        },
+        headers: { Accept: "text/csv" },
+        // `responseType` is not part of the typed options, but Angular's HttpClient
+        // honours it so the CSV is returned as a Blob instead of parsed JSON.
+        responseType: "blob",
+        throwOnError: true,
+      } as albinaApi.Options<albinaApi.GetBulletinCsvData, true>),
+    ).pipe(map((res) => res.data as Blob));
   }
 
   getDangerSourceStatisticsCsv(startDate: Date, endDate: Date): Observable<Blob> {
-    const url = this.constantsService.getServerUrlGET("/statistics/danger-sources", {
-      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
-      endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate),
-    });
-    const headers = new HttpHeaders({ Accept: "text/csv" });
-    return this.http.get(url, { headers, responseType: "blob" });
+    return from(
+      albinaApi.getDangerSourceCsv({
+        query: {
+          startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
+          endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate),
+        },
+        headers: { Accept: "text/csv" },
+        // `responseType` is not part of the typed options, but Angular's HttpClient
+        // honours it so the CSV is returned as a Blob instead of parsed JSON.
+        responseType: "blob",
+        throwOnError: true,
+      } as albinaApi.Options<albinaApi.GetDangerSourceCsvData, true>),
+    ).pipe(map((res) => res.data as Blob));
   }
 }
