@@ -1,10 +1,9 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { PublicationChannel } from "app/enums/enums";
-import { map, Observable } from "rxjs";
+import { from, map, Observable } from "rxjs";
 
 import { AlbinaLanguage } from "../../models/text.model";
-import { ConstantsService } from "../constants-service/constants.service";
+import * as albinaApi from "../albina-api";
 
 export interface BlogItem {
   id: number;
@@ -21,23 +20,20 @@ export interface BlogData {
 
 @Injectable()
 export class BlogService {
-  http = inject(HttpClient);
-  private constantsService = inject(ConstantsService);
-
   sendLatestBlogPostToChannel(
     region: string,
     language: string,
     channel: Exclude<PublicationChannel, PublicationChannel.All>,
   ): Observable<Response> {
-    const url = this.constantsService.getServerUrlPOST(
-      `/blogs/publish/latest/${channel}` as `/blogs/publish/latest/email`,
-      {
-        region: region,
-        lang: language as AlbinaLanguage,
-      },
-    );
-    const body = JSON.stringify("");
-    return this.http.post<Response>(url, body);
+    const query = { region, lang: language as albinaApi.LanguageCode };
+    const send = (options: { query: typeof query; throwOnError: true }) => {
+      if (channel === PublicationChannel.Email) return albinaApi.sendLatestBlogPostEmail(options);
+      if (channel === PublicationChannel.Telegram) return albinaApi.sendLatestBlogPostTelegram(options);
+      if (channel === PublicationChannel.WhatsApp) return albinaApi.sendLatestBlogPostWhatsApp(options);
+      if (channel === PublicationChannel.Push) return albinaApi.sendLatestBlogPostPush(options);
+      return albinaApi.sendLatestBlogPost(options);
+    };
+    return from(send({ query, throwOnError: true })).pipe(map((res) => res.data as unknown as Response));
   }
 
   loadBlogsForRegion(
@@ -46,16 +42,18 @@ export class BlogService {
     startDate: string,
     endDate: string,
   ): Observable<BlogData> {
-    const url = this.constantsService.getServerUrlGET("/blogs/posts" as `/blogs/posts`, {
-      region: regionCode,
-      lang,
-      startDate,
-      endDate,
-      searchCategory: "",
-      searchText: "",
-    });
-    return this.http
-      .get<BlogItem[]>(url)
-      .pipe(map((response) => ({ regionCode, lang, blogItems: response as BlogItem[] }) as BlogData));
+    return from(
+      albinaApi.getBlogPosts({
+        query: {
+          region: regionCode,
+          lang: lang as albinaApi.LanguageCode,
+          startDate,
+          endDate,
+          searchCategory: "",
+          searchText: "",
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => ({ regionCode, lang, blogItems: res.data as unknown as BlogItem[] }) as BlogData));
   }
 }
