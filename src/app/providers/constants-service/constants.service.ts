@@ -5,7 +5,6 @@ import * as pkg from "../../../../package.json";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import type { ServerModel } from "../../models/server.model";
-import type { paths as OpenAPI } from "../openapi";
 
 @Injectable({ providedIn: "root" })
 export class ConstantsService {
@@ -132,56 +131,23 @@ export class ConstantsService {
     return this.colorDangerRatingBw[dangerRating] ?? this.colorDangerRatingBw[Enums.DangerRating.missing];
   }
 
-  getExternalServerUrlGET<T extends keyof OpenAPI>(
+  getExternalServerUrlGET(
     server: ServerModel,
-    endpoint: T & (OpenAPI[T] extends { get: unknown } ? T : never),
-    params?: OpenAPI[T] extends { get: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { get: { parameters: { path: infer Q } } } ? Q : never,
+    endpoint: string,
+    params?: Record<string, unknown>,
+    pathParams?: Record<string, unknown>,
   ) {
-    return this.getServerUrl(
-      endpoint,
-      params as Record<string, unknown>,
-      pathParams as Record<string, unknown>,
-      server.apiUrl,
-    );
+    return this.getServerUrl(endpoint, params, pathParams, server.apiUrl);
   }
 
-  getServerUrlGET<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { get: unknown } ? T : never),
-    params?: OpenAPI[T] extends { get: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { get: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
-  }
-
-  getServerUrlPOST<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { post: unknown } ? T : never),
-    params?: OpenAPI[T] extends { post: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { post: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
-  }
-
-  getServerUrlPUT<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { put: unknown } ? T : never),
-    params?: OpenAPI[T] extends { put: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { put: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
-  }
-
-  getServerUrlDELETE<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { delete: unknown } ? T : never),
-    params?: OpenAPI[T] extends { delete: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { delete: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
+  getServerUrlGET(endpoint: string, params?: Record<string, unknown>, pathParams?: Record<string, unknown>) {
+    return this.getServerUrl(endpoint, params, pathParams);
   }
 
   private getServerUrl(
     endpoint: string,
-    params: Record<string, unknown>,
-    pathParams: Record<string, unknown>,
+    params?: Record<string, unknown>,
+    pathParams?: Record<string, unknown>,
     base = environment.apiBaseUrl,
   ) {
     for (const [key, value] of Object.entries(pathParams ?? {})) {
