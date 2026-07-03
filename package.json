@@ -28,7 +28,7 @@
     "e2e": "ng e2e",
     "playwright": "NODE_OPTIONS=--disable-warning=DEP0205 playwright test",
     "prepare": "vp config",
-    "openapi": "pnpx openapi-typescript https://dev.avalanche.report/api/openapi.json -o ./src/app/providers/openapi.d.ts && vp format ./src/app/providers/openapi.d.ts",
+    "openapi": "pnpx openapi-typescript https://dev.avalanche.report/api/openapi.json -o ./src/app/providers/openapi.d.ts && vp format ./src/app/providers/openapi.d.ts && pnpm exec openapi-ts",
     "changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag",
     "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },
@@ -84,6 +84,7 @@
     "@angular/cli": "^22.0.3",
     "@angular/compiler-cli": "^22.0.2",
     "@eslint/js": "^10.0.1",
+    "@hey-api/openapi-ts": "^0.99.0",
     "@playwright/test": "^1.61.1",
     "@types/diff-match-patch": "^1.0.36",
     "@types/file-saver": "^2.0.5",
