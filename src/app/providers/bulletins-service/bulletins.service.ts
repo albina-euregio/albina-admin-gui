@@ -11,12 +11,11 @@ import {
 } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { BehaviorSubject, Observable, of, Subject } from "rxjs";
-import { map, switchMap, tap } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
-import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
-import { ServerModel } from "../../models/server.model";
+import { Bulletin, Bulletins } from "../../models/CAAMLv6";
 import { SourceDates } from "../../models/SourceDates";
 import { AlbinaLanguage } from "../../models/text.model";
 import type { components } from "../openapi";
@@ -314,32 +313,6 @@ export class BulletinsService {
     return this.http
       .get<BulletinModelAsJSON[]>(url, { headers, observe: "response" })
       .pipe(map((response) => ({ bulletins: response.body, etag: response.headers.get("ETag") })));
-  }
-
-  loadExternalBulletins([date0, date1]: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
-    if (this.localStorageService.isTrainingEnabled) {
-      return of([]);
-    }
-    const headers = new HttpHeaders({ Authorization: "Bearer " + server.accessToken });
-    if (server.apiUrl.includes("/api/bulletin-preview/caaml/")) {
-      const params = { activeAt: new Date(+date0 / 2 + +date1 / 2).toISOString() };
-      return this.http.get<Bulletins>(server.apiUrl, { headers, params }).pipe(map((data) => toAlbinaBulletins(data)));
-    }
-    return this.http
-      .get<{ date: string }>(this.constantsService.getExternalServerUrlGET(server, "/bulletins/latest"), { headers })
-      .pipe(
-        switchMap((latest) => {
-          const date = new Date(date0);
-          if (latest.date.endsWith("T22:00:00Z") || latest.date.endsWith("T23:00:00Z")) {
-            date.setHours(24, 0, 0);
-          }
-          const url = this.constantsService.getExternalServerUrlGET(server, "/bulletins/edit", {
-            date: this.constantsService.getISOStringWithTimezoneOffset(date),
-            regions: server.regions.filter((region) => !this.authenticationService.isInternalRegion(region)),
-          });
-          return this.http.get<BulletinModelAsJSON[]>(url, { headers });
-        }),
-      );
   }
 
   getCaamlJsonBulletins(

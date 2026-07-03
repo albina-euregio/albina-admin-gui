@@ -44,6 +44,7 @@ import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
 import * as CAAML from "../models/CAAMLv6";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService, PublicationStrategy } from "../providers/bulletins-service/bulletins.service";
+import { ExternalBulletinsService } from "../providers/bulletins-service/external-bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { MapService } from "../providers/map-service/map.service";
@@ -84,6 +85,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private activeRoute = inject(ActivatedRoute);
   bulletinsService = inject(BulletinsService);
+  private externalBulletinsService = inject(ExternalBulletinsService);
   dangerSourcesService = inject(DangerSourcesService);
   authenticationService = inject(AuthenticationService);
   translateService = inject(TranslateService);
@@ -458,7 +460,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       console.log("Load external bulletins");
       this.authenticationService.checkExternalServerLogin();
       this.authenticationService.getExternalServers().map((server) =>
-        this.bulletinsService.loadExternalBulletins(this.getActiveDate(), server).subscribe(
+        this.externalBulletinsService.loadExternalBulletins(this.getActiveDate(), server).subscribe(
           (data) => {
             this.loadExternalBulletinsError = false;
             this.addExternalBulletins(server, data);
