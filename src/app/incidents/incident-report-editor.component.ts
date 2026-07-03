@@ -7,6 +7,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
 import { firstValueFrom } from "rxjs";
 
 import { GeocodingService } from "../observations/geocoding.service";
+import { EawsBulletinsService } from "../providers/eaws-bulletins-service/eaws-bulletins.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
@@ -15,7 +16,6 @@ import { IncidentReportGeocodeService } from "./incident-report-geocode.service"
 import { IncidentReportMapService } from "./incident-report-map.service";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
-import { IncidentService } from "./incident.service";
 
 /** Ids of the tabs the editor renders; mirrors the parent's tab list. */
 export type IncidentReportTab =
@@ -45,7 +45,7 @@ export class IncidentReportEditorComponent implements OnInit {
   readonly mapService = inject(IncidentReportMapService);
   private geocodeService = inject(IncidentReportGeocodeService);
   private translateService = inject(TranslateService);
-  private incidentService = inject(IncidentService);
+  private eawsBulletinsService = inject(EawsBulletinsService);
   private datePipe = inject(DatePipe);
 
   readonly incidentReport = model.required<IncidentReport>();
@@ -268,7 +268,7 @@ export class IncidentReportEditorComponent implements OnInit {
   async fetchPublishedBulletin() {
     const incidentReport = this.incidentReport();
     const bulletin: Bulletin | undefined = await firstValueFrom(
-      this.incidentService.fetchPublishedBulletin(incidentReport),
+      this.eawsBulletinsService.fetchPublishedBulletin(incidentReport),
     ).catch((error) => {
       console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
       return undefined;
