@@ -1,29 +1,29 @@
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { from, map } from "rxjs";
 
-import { AlbinaLanguage } from "../../models/text.model";
+import * as albinaApi from "../albina-api";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 
 @Injectable()
 export class MediaFileService {
-  http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
   private translateService = inject(TranslateService);
   private authenticationService = inject(AuthenticationService);
 
   uploadFile(date: [Date, Date], file: File, text: string, important: boolean) {
-    const url = this.constantsService.getServerUrlPOST("/media", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[1]),
-      region: this.authenticationService.getActiveRegionId(),
-      lang: this.translateService.getCurrentLang() as AlbinaLanguage,
-      important: important,
-    });
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("text", text);
-
-    return this.http.post(url, formData, {});
+    return from(
+      albinaApi.saveMediaFile({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[1]),
+          region: this.authenticationService.getActiveRegionId(),
+          lang: this.translateService.getCurrentLang() as albinaApi.LanguageCode,
+          important: important,
+        },
+        body: { file, text },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data));
   }
 }
