@@ -99,23 +99,14 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly helpI18n = input<`${string}#${string}`>();
   /** Dynamic `<select>` options keyed by field name, for string fields whose choices are not in the schema. */
   readonly selectOptions = input<Record<string, { value: string; label: string }[]>>({});
-  readonly includeFields = input<string[]>();
-  readonly excludeFields = input<string[]>();
-  readonly fields = computed(() => {
-    const include = this.includeFields();
-    const exclude = this.excludeFields();
-    const entries = Object.entries(this.zodType().shape)
-      .filter(([key]) => (!include || include.includes(key)) && (!exclude || !exclude.includes(key)))
-      .map(([key, value]) => ({
-        key,
-        value: value as ShapeFields<SupportedSchema>,
-      }));
-    // When an explicit field list is given, render in that order rather than schema-definition order.
-    if (include) {
-      entries.sort((a, b) => include.indexOf(a.key) - include.indexOf(b.key));
-    }
-    return entries;
-  });
+  // Which fields render (and in what order) is chosen by the caller via the `zodType` schema:
+  // pass `Schema.pick({...})` / `Schema.omit({...})`. `.pick()` renders in the mask's key order.
+  readonly fields = computed(() =>
+    Object.entries(this.zodType().shape).map(([key, value]) => ({
+      key,
+      value: value as ShapeFields<SupportedSchema>,
+    })),
+  );
 
   castArray(x: unknown) {
     return x as unknown[];

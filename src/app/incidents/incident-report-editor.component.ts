@@ -53,6 +53,28 @@ export class IncidentReportEditorComponent implements OnInit {
   readonly labelI18n = "incidentReport.#";
   readonly helpI18n = "incidentReportHelp.#";
 
+  // The general-information form is split into two sections around the location map: the fields
+  // above (the location fields) and everything else below.
+  private static readonly LOCATION_FIELDS = {
+    sourceOfInformation: true,
+    dateTime: true,
+    timeAccuracy: true,
+    location: true,
+  } as const;
+  readonly GeneralInformationLocationSchema = IncidentModels.GeneralInformationSchema.pick(
+    IncidentReportEditorComponent.LOCATION_FIELDS,
+  );
+  readonly GeneralInformationRestSchema = IncidentModels.GeneralInformationSchema.omit(
+    IncidentReportEditorComponent.LOCATION_FIELDS,
+  );
+  readonly PersonInvolvementSchema = IncidentModels.IncidentReportSchema.pick({ personInvolvement: true });
+  readonly InvolvementsWithoutCommentSchema = IncidentModels.InvolvementsFatalitiesBurialsSchema.omit({
+    involvementsFatalitiesBurialsComment: true,
+  });
+  readonly InvolvementsCommentSchema = IncidentModels.InvolvementsFatalitiesBurialsSchema.pick({
+    involvementsFatalitiesBurialsComment: true,
+  });
+
   activeGroupSubTab: "overview" | "groups" | "victims" = "overview";
   activeGroupIndex = 0;
   activeVictimIndex = 0;

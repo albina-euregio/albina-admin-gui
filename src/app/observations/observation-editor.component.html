@@ -23,11 +23,10 @@
     }
 
     <app-zod-schema-form
-      [zodType]="GenericObservationSchema"
+      [zodType]="formSchemaBefore()"
       [value]="observation()"
       (valueChange)="onFormChange($event)"
       [disabled]="!observation().$allowEdit"
-      [includeFields]="formFieldsBefore()"
       [selectOptions]="dangerSourceOptions"
       [labelI18n]="'observations.#'"
     />
@@ -62,11 +61,10 @@
     </div>
 
     <app-zod-schema-form
-      [zodType]="GenericObservationSchema"
+      [zodType]="formSchemaAfter()"
       [value]="observation()"
       (valueChange)="onFormChange($event)"
       [disabled]="!observation().$allowEdit"
-      [includeFields]="formFieldsAfter()"
       [selectOptions]="dangerSourceOptions"
       [labelI18n]="'observations.#'"
     />
