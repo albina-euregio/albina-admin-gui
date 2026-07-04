@@ -6,12 +6,14 @@
     @let widget = widgetRegistry.get(inner);
     @if (widget?.widget !== "none") {
       @let valueI18n = widget?.valueI18n || `${key}.#`;
+      @let labelKey = widget?.labelI18n ?? (labelI18n() ? labelI18n().replace("#", key) : null);
+      @let helpKey = widget?.helpI18n ?? (helpI18n() ? helpI18n().replace("#", key) : null);
       <div
         [class.d-none]="!shouldShowField(key, zodType)"
         class="zod-form-field"
         [class]="widget?.class"
         [id]="key"
-        [title]="displayOnly() && helpI18n() ? (helpI18n().replace('#', key) | translate) : ''"
+        [title]="displayOnly() && helpKey ? (helpKey | translate) : ''"
         [attr.data-json]="JSON.stringify(Object.fromEntries([[key, value()[key] ?? null]]))"
       >
         @let changed = valueForCompare() && !isEqual(valueForCompare()[key], value()[key]);
@@ -21,8 +23,8 @@
               <span [class]="icon"></span>
             }
             @if (!displayOnly() && inner.type === "boolean" && widget?.widget !== "yes-no") {
-            } @else if (labelI18n()) {
-              <span>{{ labelI18n().replace("#", key) | translate }}</span>
+            } @else if (labelKey) {
+              <span>{{ labelKey | translate }}</span>
             } @else {
               <span>{{ zodType?.description || key }}</span>
             }
@@ -328,9 +330,9 @@
             <div>{{ JSON.stringify(zodType) }}</div>
           </div>
         }
-        @if (!displayOnly() && helpI18n()) {
+        @if (!displayOnly() && helpKey) {
           <div class="form-text">
-            {{ helpI18n().replace("#", key) | translate }}
+            {{ helpKey | translate }}
           </div>
         }
         @if (!displayOnly() && zodUtil.hasValue(value()[key])) {

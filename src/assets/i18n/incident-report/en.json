@@ -136,6 +136,7 @@
       "Polygon": "Polygon"
     },
     "anonymousGroupIdentifier": "Anonymous Group Identifier",
+    "groupAffiliation": "Group affiliation",
     "groupType": "Group Type",
     "groupSize": "Group Size",
     "groupSizeAccuracy": "Group Size Accuracy",
@@ -293,6 +294,7 @@
     "polygonCoordinatesText": "Provide coordinates (one latitude, longitude pair per line) for the avalanche outline.",
     "locationInformationComment": "Add any additional relevant details.",
     "anonymousGroupIdentifier": "This is used to identify the group throughout the report. For example, you might refer to Group 1, Group 2, etc when reporting on a incident. You could add specific details if it helps keep track of which group is which. If appropriate, you can use the same identifier when referencing this group in the Incident Description.",
+    "groupAffiliation": "Select the group the person belonged to.",
     "groupType": "Select the option that best describes the type of group.",
     "groupSize": "Provide the total number of individuals in the group.",
     "groupSizeAccuracy": "Indicate how accurately the group size is known.",

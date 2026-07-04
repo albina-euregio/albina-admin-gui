@@ -189,7 +189,14 @@ export type InvolvementsFatalitiesBurials = z.infer<typeof InvolvementsFatalitie
 
 export const VictimInformationSchema = z.object({
   anonymousVictimIdentifier: z.string().nullish(),
-  anonymousGroupIdentifier: z.string().register(widgetRegistry, { important: true }).nullish(),
+  anonymousGroupIdentifier: z
+    .string()
+    .register(widgetRegistry, {
+      important: true,
+      labelI18n: "incidentReport.groupAffiliation",
+      helpI18n: "incidentReportHelp.groupAffiliation",
+    })
+    .nullish(),
   age: z
     .enum(["UpTo13", "From14To20", "From21To30", "From31To40", "From41To50", "From51To60", "From61To70", "From71"])
     .register(widgetRegistry, { class: "col-6" })

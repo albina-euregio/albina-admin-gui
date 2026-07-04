@@ -166,6 +166,8 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   }
 
   fieldAriaLabel(key: string, zodValue: z.ZodType): string {
+    const override = this.widgetRegistry.get(zodUtil.unwrap(zodValue))?.labelI18n;
+    if (override) return this.translateService.instant(override);
     const labelI18n = this.labelI18n();
     if (labelI18n) return this.translateService.instant(labelI18n.replace("#", key));
     return (zodValue as z.ZodType & { description?: string })?.description || key;
