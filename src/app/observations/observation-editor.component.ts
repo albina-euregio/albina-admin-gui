@@ -130,14 +130,21 @@ export class ObservationEditorComponent implements OnInit {
     return this.observation()?.$type === ObservationType.DrySnowfallLevel;
   }
 
+  // Independent copy of the last value. The zod-schema-form binds `[(ngModel)]="value()[key]"`,
+  // which mutates the shared observation object in place before emitting a copy — so we cannot
+  // diff `next` against the live `observation()` (it already reflects the change). See onFormChange.
+  private lastObservation?: GenericObservation;
+
   ngOnInit() {
+    this.lastObservation = { ...this.observation() };
     this.loadDangerSources();
   }
 
   /** Writes the edited value back and runs the field-specific side effects. */
   onFormChange(next: GenericObservation) {
-    const prev = this.observation();
+    const prev = this.lastObservation;
     this.observation.set(next);
+    this.lastObservation = { ...next };
     if (next.eventDate !== prev?.eventDate) this.loadDangerSources();
     if (next.personInvolvement !== prev?.personInvolvement) this.setObservationType();
     if (next.latitude !== prev?.latitude || next.longitude !== prev?.longitude) this.fetchElevation();
