@@ -103,12 +103,17 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly fields = computed(() => {
     const include = this.includeFields();
     const exclude = this.excludeFields();
-    return Object.entries(this.zodType().shape)
+    const entries = Object.entries(this.zodType().shape)
       .filter(([key]) => (!include || include.includes(key)) && (!exclude || !exclude.includes(key)))
       .map(([key, value]) => ({
         key,
         value: value as ShapeFields<SupportedSchema>,
       }));
+    // When an explicit field list is given, render in that order rather than schema-definition order.
+    if (include) {
+      entries.sort((a, b) => include.indexOf(a.key) - include.indexOf(b.key));
+    }
+    return entries;
   });
 
   castArray(x: unknown) {
