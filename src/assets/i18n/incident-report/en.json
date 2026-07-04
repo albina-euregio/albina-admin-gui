@@ -551,7 +551,7 @@
   },
   "explosives": {
     "Artillery": "Artillery",
-    "CaseCharge": "Case (bag) charge placed on Hand-thrown",
+    "CaseCharge": "Case (bag) charge placed below slope",
     "CorniceControlledByExplosives": "Cornice controlled by explosives",
     "HelicopterDeployedGasExploder": "Helicopter deployed gas exploder (e.g., Daisybell)",
     "HandThrownOrPlaced": "Hand-thrown or hand-placed explosive charge",
