@@ -97,7 +97,6 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly zodType = input<T>();
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
-  readonly groupIdentifiers = input<string[]>([]);
   /** Dynamic `<select>` options keyed by field name, for string fields whose choices are not in the schema. */
   readonly selectOptions = input<Record<string, { value: string; label: string }[]>>({});
   readonly includeFields = input<string[]>();

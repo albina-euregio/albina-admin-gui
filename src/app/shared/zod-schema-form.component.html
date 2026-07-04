@@ -219,20 +219,6 @@
                 <option [value]="option.value">{{ option.label }}</option>
               }
             </select>
-          } @else if (key === "anonymousGroupIdentifier" && groupIdentifiers().length > 0) {
-            <select
-              [attr.aria-label]="fieldAriaLabel(key, zodType)"
-              [disabled]="disabled()"
-              class="form-select"
-              [class]="zodUtil.zodCssClass(zodType, value()[key])"
-              [(ngModel)]="value()[key]"
-              (ngModelChange)="onFieldChange()"
-            >
-              <option [value]="undefined" disabled selected hidden>Select a group...</option>
-              @for (groupId of groupIdentifiers(); track groupId) {
-                <option [value]="groupId">{{ groupId }}</option>
-              }
-            </select>
           } @else if (widget?.widget === "textarea") {
             <textarea
               [attr.aria-label]="fieldAriaLabel(key, zodType)"

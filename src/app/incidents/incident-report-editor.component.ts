@@ -188,8 +188,14 @@ export class IncidentReportEditorComponent implements OnInit {
     return isVisibleFieldsValid(IncidentModels.VictimInformationSchema, victim as Record<string, unknown>);
   }
 
-  get groupIdentifiers(): string[] {
-    return this.incidentReport().groupInformation?.map((g) => g.anonymousGroupIdentifier) ?? [];
+  get groupIdentifierOptions(): Record<string, { value: string; label: string }[]> {
+    const groups = this.incidentReport().groupInformation ?? [];
+    return {
+      anonymousGroupIdentifier: groups.map((g) => ({
+        value: g.anonymousGroupIdentifier,
+        label: g.anonymousGroupIdentifier,
+      })),
+    };
   }
 
   addAvalancheProblem() {
