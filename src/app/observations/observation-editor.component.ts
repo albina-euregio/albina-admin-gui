@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, formatDate } from "@angular/common";
 import {
   AfterViewInit,
   Component,
@@ -102,6 +102,19 @@ export class ObservationEditorComponent implements AfterViewInit {
   });
   zodCssClass = zodCssClass;
   ObservationSource = ObservationSource;
+
+  /** Danger-source `<select>` options for the zod-schema-form, keyed by field name. */
+  get dangerSourceOptions(): Record<string, { value: string; label: string }[]> {
+    const lang = this.translateService.getCurrentLang();
+    return {
+      dangerSource: this.dangerSources()
+        .filter((ds): ds is typeof ds & { id: string } => !!ds.id)
+        .map((ds) => ({
+          value: ds.id,
+          label: `${ds.creationDate ? formatDate(ds.creationDate, "mediumDate", lang) : ""} — ${ds.title ?? ""}`,
+        })),
+    };
+  }
   elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
   elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
   xor = xor;
