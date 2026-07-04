@@ -486,6 +486,11 @@ app-observation-editor app-avalanche-problem-icons img {
   width: 3rem;
 }
 
+app-observation-editor app-zod-schema-form .row {
+  --bs-gutter-x: 1rem;
+  --bs-gutter-y: 2rem;
+}
+
 // split.js
 .gutter {
   background-color: #eee;
