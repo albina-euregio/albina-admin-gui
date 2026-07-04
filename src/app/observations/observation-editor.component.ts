@@ -48,18 +48,6 @@ const FORM_FIELDS_AFTER = [
   "content",
 ];
 
-/** Fields that do not apply to the dry-snowfall-level observation type. */
-const DRY_SNOWFALL_HIDDEN_FIELDS = [
-  "personInvolvement",
-  "stability",
-  "elevationLowerBound",
-  "elevationUpperBound",
-  "reportDate",
-  "avalancheProblems",
-  "dangerPatterns",
-  "importantObservations",
-];
-
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, TypeaheadModule, TranslatePipe, AspectsComponent, ZodSchemaFormComponent],
@@ -85,17 +73,14 @@ export class ObservationEditorComponent implements OnInit {
   elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
 
   // Field lists for the two form sections around the custom location field. Each hides the
-  // danger-source field when no sources are loaded and the fields that do not apply to the
-  // dry-snowfall-level observation type.
+  // danger-source field when no sources are loaded; dry-snowfall-level fields are hidden via
+  // the schema's `withShowIf` rules (see generic-observation.model.ts).
   readonly formFieldsBefore = computed(() => this.visibleFields(FORM_FIELDS_BEFORE));
   readonly formFieldsAfter = computed(() => this.visibleFields(FORM_FIELDS_AFTER));
 
   private visibleFields(fields: string[]): string[] {
-    const drySnowfall = this.observation().$type === ObservationType.DrySnowfallLevel;
     const hasDangerSources = this.dangerSources().length > 0;
-    return fields.filter(
-      (f) => (f !== "dangerSource" || hasDangerSources) && (!drySnowfall || !DRY_SNOWFALL_HIDDEN_FIELDS.includes(f)),
-    );
+    return fields.filter((f) => f !== "dangerSource" || hasDangerSources);
   }
 
   /** Location-name typeahead suggestions from the geocoding service. */
