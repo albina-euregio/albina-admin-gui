@@ -53,6 +53,28 @@ export class IncidentReportEditorComponent implements OnInit {
   readonly labelI18n = "incidentReport.#";
   readonly helpI18n = "incidentReportHelp.#";
 
+  // The general-information form is split into two sections around the location map: the fields
+  // above (the location fields) and everything else below.
+  private static readonly LOCATION_FIELDS = {
+    sourceOfInformation: true,
+    dateTime: true,
+    timeAccuracy: true,
+    location: true,
+  } as const;
+  readonly GeneralInformationLocationSchema = IncidentModels.GeneralInformationSchema.pick(
+    IncidentReportEditorComponent.LOCATION_FIELDS,
+  );
+  readonly GeneralInformationRestSchema = IncidentModels.GeneralInformationSchema.omit(
+    IncidentReportEditorComponent.LOCATION_FIELDS,
+  );
+  readonly PersonInvolvementSchema = IncidentModels.IncidentReportSchema.pick({ personInvolvement: true });
+  readonly InvolvementsWithoutCommentSchema = IncidentModels.InvolvementsFatalitiesBurialsSchema.omit({
+    involvementsFatalitiesBurialsComment: true,
+  });
+  readonly InvolvementsCommentSchema = IncidentModels.InvolvementsFatalitiesBurialsSchema.pick({
+    involvementsFatalitiesBurialsComment: true,
+  });
+
   activeGroupSubTab: "overview" | "groups" | "victims" = "overview";
   activeGroupIndex = 0;
   activeVictimIndex = 0;
@@ -188,8 +210,14 @@ export class IncidentReportEditorComponent implements OnInit {
     return isVisibleFieldsValid(IncidentModels.VictimInformationSchema, victim as Record<string, unknown>);
   }
 
-  get groupIdentifiers(): string[] {
-    return this.incidentReport().groupInformation?.map((g) => g.anonymousGroupIdentifier) ?? [];
+  get groupIdentifierOptions(): Record<string, { value: string; label: string }[]> {
+    const groups = this.incidentReport().groupInformation ?? [];
+    return {
+      anonymousGroupIdentifier: groups
+        .map((g) => g.anonymousGroupIdentifier)
+        .filter((id): id is string => !!id)
+        .map((id) => ({ value: id, label: id })),
+    };
   }
 
   addAvalancheProblem() {
@@ -198,6 +226,12 @@ export class IncidentReportEditorComponent implements OnInit {
 
   removeAvalancheProblem(p: IncidentModels.AvalancheProblem) {
     this.incidentReport().avalancheProblems = this.incidentReport().avalancheProblems.filter((p0) => p0 !== p);
+  }
+
+  updateAvalancheProblem(p: IncidentModels.AvalancheProblem, changes: IncidentModels.AvalancheProblem) {
+    // The form updates immutably and emits a fresh object; fold those changes back into the array
+    // item so the edit is not lost. Mutating in place keeps its identity, matching add/remove above.
+    Object.assign(p, changes);
   }
 
   async fetchPublishedBulletin() {

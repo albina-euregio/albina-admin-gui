@@ -232,7 +232,7 @@ test("Create new observation", async ({ page }) => {
   await page.getByRole("option", { name: "Zischgeles, Sankt Sigmund im" }).click();
   await expect(page.getByRole("spinbutton", { name: "Latitude" })).toHaveValue("47.1315444");
   await expect(page.getByRole("spinbutton", { name: "Longitude" })).toHaveValue("11.0950077");
-  await expect(page.getByRole("spinbutton", { name: " Elevation", exact: true })).toHaveValue("3003");
+  await expect(page.getByRole("spinbutton", { name: "Elevation", exact: true })).toHaveValue("3003");
   await page.getByRole("button", { name: "S", exact: true }).click({ force: true });
   await page.getByRole("textbox", { name: "Author name" }).fill("Playwright");
   await page.locator('#reportDate input[type="date"]').fill("2024-12-11");
@@ -240,7 +240,7 @@ test("Create new observation", async ({ page }) => {
   await page.getByTitle("Wind slab").click();
   await page.getByLabel("Danger source").selectOption("60635f9e-63f8-456e-8202-740467eab952");
   await page.getByRole("button", { name: "Gliding snow" }).click();
-  await page.getByRole("button", { name: "dp2" }).click();
+  await page.getByRole("button", { name: "dp.2: gliding avalanches" }).click();
   await page.getByRole("button", { name: "For blog" }).click();
   await page.getByRole("textbox", { name: "Content" }).fill("Playwright test");
   await expect(page.getByRole("button", { name: "Save" })).toBeEnabled();

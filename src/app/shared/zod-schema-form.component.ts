@@ -97,19 +97,16 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   readonly zodType = input<T>();
   readonly labelI18n = input<`${string}#${string}`>();
   readonly helpI18n = input<`${string}#${string}`>();
-  readonly groupIdentifiers = input<string[]>([]);
-  readonly includeFields = input<string[]>();
-  readonly excludeFields = input<string[]>();
-  readonly fields = computed(() => {
-    const include = this.includeFields();
-    const exclude = this.excludeFields();
-    return Object.entries(this.zodType().shape)
-      .filter(([key]) => (!include || include.includes(key)) && (!exclude || !exclude.includes(key)))
-      .map(([key, value]) => ({
-        key,
-        value: value as ShapeFields<SupportedSchema>,
-      }));
-  });
+  /** Dynamic `<select>` options keyed by field name, for string fields whose choices are not in the schema. */
+  readonly selectOptions = input<Record<string, { value: string; label: string }[]>>({});
+  // Which fields render (and in what order) is chosen by the caller via the `zodType` schema:
+  // pass `Schema.pick({...})` / `Schema.omit({...})`. `.pick()` renders in the mask's key order.
+  readonly fields = computed(() =>
+    Object.entries(this.zodType().shape).map(([key, value]) => ({
+      key,
+      value: value as ShapeFields<SupportedSchema>,
+    })),
+  );
 
   castArray(x: unknown) {
     return x as unknown[];
@@ -149,11 +146,8 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   }
 
   onOutsideFieldChange(key: string, isOutside: boolean): void {
-    const val = this.value();
-    if (!val) return;
-    const text = isOutside ? (this.zodType()?.shape?.[key + "Outside"]?.description ?? "") : "";
-    Object.assign(val, { [key]: text });
-    this.onFieldChange();
+    this.setField(`${key}Outside`, isOutside);
+    this.setField(key, isOutside ? (this.zodType()?.shape?.[`${key}Outside`]?.description ?? "") : "");
   }
 
   shouldShowField(key: string, schema: z.ZodType): boolean {
@@ -177,16 +171,16 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return (zodValue as z.ZodType & { description?: string })?.description || key;
   }
 
-  onFieldChange() {
-    const val = this.value();
-    if (val) {
-      this.value.set({ ...val });
-    }
+  /**
+   * Immutably updates a single field: replaces the whole value object rather than mutating the
+   * bound one in place. Mutating in place would alias the caller's object (the form receives it by
+   * reference), so a parent diffing successive `valueChange`s could not see what changed.
+   */
+  setField(key: string, fieldValue: unknown): void {
+    this.value.update((val) => (val ? ({ ...val, [key]: fieldValue } as V) : val));
   }
 
   onCheckboxArrayChange(key: string, v: string): void {
-    const value = this.value();
-    Object.assign(value, { [key]: xor(this.castArray(value[key]) ?? [], [v]) });
-    this.onFieldChange();
+    this.setField(key, xor(this.castArray(this.value()?.[key]) ?? [], [v]));
   }
 }

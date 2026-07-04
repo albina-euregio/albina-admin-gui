@@ -12,9 +12,9 @@
       @for (config of externalServerConfigurations; track config) {
         <accordion-group class="my-3">
           <div accordion-heading class="clearfix">
-            <strong>{{ config.name }}</strong>
+            <strong>{{ server.localConfig()?.name }}</strong>
           </div>
-          <app-server-configuration [config]="config"></app-server-configuration>
+          <app-server-configuration #server [config]="config"></app-server-configuration>
         </accordion-group>
       }
     </accordion>

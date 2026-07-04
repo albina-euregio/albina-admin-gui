@@ -7,8 +7,7 @@
       [displayMode]="displayMode()"
       [value]="incidentReport()"
       (valueChange)="onLocationFormChange($event)"
-      [zodType]="IncidentModels.GeneralInformationSchema"
-      [includeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
+      [zodType]="GeneralInformationLocationSchema"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
     />
@@ -171,8 +170,7 @@
       [displayMode]="displayMode()"
       [value]="incidentReport()"
       (valueChange)="onLocationFormChange($event)"
-      [zodType]="IncidentModels.GeneralInformationSchema"
-      [excludeFields]="['sourceOfInformation', 'dateTime', 'timeAccuracy', 'location']"
+      [zodType]="GeneralInformationRestSchema"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
     />
@@ -225,6 +223,7 @@
           [disabled]="disabled()"
           [displayMode]="displayMode()"
           [value]="p"
+          (valueChange)="updateAvalancheProblem(p, $event)"
           [zodType]="IncidentModels.AvalancheProblemSchema"
           [labelI18n]="labelI18n"
           [helpI18n]="helpI18n"
@@ -313,8 +312,7 @@
         [disabled]="disabled()"
         [displayMode]="displayMode()"
         [(value)]="incidentReport"
-        [zodType]="IncidentModels.IncidentReportSchema"
-        [includeFields]="['personInvolvement']"
+        [zodType]="PersonInvolvementSchema"
         [labelI18n]="labelI18n"
         [helpI18n]="helpI18n"
       />
@@ -328,8 +326,7 @@
           <app-zod-schema-form
             [displayMode]="DisplayMode.All"
             [value]="involvementsFatalitiesBurials"
-            [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
-            [excludeFields]="['involvementsFatalitiesBurialsComment']"
+            [zodType]="InvolvementsWithoutCommentSchema"
             [labelI18n]="labelI18n"
             [helpI18n]="helpI18n"
           />
@@ -338,8 +335,7 @@
       <app-zod-schema-form
         [displayMode]="displayMode()"
         [value]="involvementsFatalitiesBurials"
-        [zodType]="IncidentModels.InvolvementsFatalitiesBurialsSchema"
-        [includeFields]="['involvementsFatalitiesBurialsComment']"
+        [zodType]="InvolvementsCommentSchema"
         [labelI18n]="labelI18n"
         [helpI18n]="helpI18n"
         (valueChange)="onInvolvementsCommentChange($event)"
@@ -465,7 +461,7 @@
                 [zodType]="IncidentModels.VictimInformationSchema"
                 [labelI18n]="labelI18n"
                 [helpI18n]="helpI18n"
-                [groupIdentifiers]="groupIdentifiers"
+                [selectOptions]="groupIdentifierOptions"
               />
             </div>
           </div>

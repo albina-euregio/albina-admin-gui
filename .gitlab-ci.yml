@@ -195,7 +195,7 @@ deploy:observations-api-dev:
 
 .playwright:
   stage: playwright
-  image: mcr.microsoft.com/playwright:v1.58.2
+  image: mcr.microsoft.com/playwright:v1.61.1
   interruptible: true
   cache:
     - *pnpm-cache

@@ -1404,6 +1404,8 @@
     "no": "No"
   },
   "observations": {
+    "$externalURL": "External URL (e.g. to photo database)",
+    "$type": "Observation type",
     "allowEdit": "Edit external observation",
     "allowEditTooltip": "This will prevent overwrites from {{ value }}",
     "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
@@ -1411,6 +1413,7 @@
     "authorName": "Author name",
     "avalancheLength": "Avalanche length",
     "avalancheProblem": "Avalanche problem",
+    "avalancheProblems": "Avalanche problem",
     "avalancheSize": "Avalanche size",
     "avalancheType": "Avalanche type",
     "avalancheWidth": "Avalanche width",
@@ -1463,6 +1466,7 @@
     },
     "comment": "Comment",
     "content": "Content",
+    "dangerPatterns": "Danger patterns",
     "dangerRating": "Danger rating",
     "dangerSource": "Danger source",
     "elevation": "Elevation",
@@ -1486,6 +1490,7 @@
     "fractureDepth": "Fracture depth",
     "hasCoordinates": "Has coordinates",
     "incline": "Incline",
+    "importantObservations": "Important observations",
     "latitude": "Latitude",
     "locationName": "Location",
     "longitude": "Longitude",
@@ -1493,6 +1498,7 @@
     "personInvolvement": "Person involvement",
     "reportDate": "Report date",
     "showTable": "Table",
+    "stability": "Snowpack Stability",
     "withoutCoordinates": "Observations without coordinates:",
     "sidebar": {
       "filter": {
