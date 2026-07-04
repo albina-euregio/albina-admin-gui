@@ -276,7 +276,7 @@ export const VictimInformationSchema = z.object({
     .register(widgetRegistry, { class: "bg-person-burial", important: true })
     .nullish(),
   burialDepth: z.number().register(widgetRegistry, { unit: "cm", class: "col-6 bg-person-burial" }).nullish(),
-  burialDuration: z.number().register(widgetRegistry, { class: "col-6 bg-person-burial" }).nullish(),
+  burialDuration: z.number().register(widgetRegistry, { class: "col-6 bg-person-burial", unit: "min" }).nullish(),
   respiratoryCavity: z.enum(["Yes", "No"]).register(widgetRegistry, { class: "bg-person-burial" }).nullish(),
   terrainTrap: enumWithOther(
     z.enum(["None", "Cliff", "Trees", "Gully", "Depression", "Bench", "Boulder", "CrevasseOrBergschrund"]),
