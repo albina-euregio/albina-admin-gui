@@ -1,107 +1,79 @@
 import { CommonModule, formatDate } from "@angular/common";
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  viewChild,
-  input,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { Component, OnInit, model, inject, signal, computed, ChangeDetectionStrategy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { ElevationService } from "app/providers/map-service/elevation.service";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
-import { zodCssClass } from "app/shared/zod-util";
-import { orderBy, xor } from "es-toolkit";
-import { Feature, Point } from "geojson";
+import { orderBy } from "es-toolkit";
 import { geocoders } from "leaflet-control-geocoder";
-import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
-import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
+import { Subscription } from "rxjs";
 
 import type {
   LolaRainBoundaryElevationTolerance,
   LolaRainBoundaryElevationPeriod,
 } from "../../../observations-api/src/fetch/observations/lola-kronos.model";
-import * as Enums from "../enums/enums";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { AspectsComponent } from "../shared/aspects.component";
-import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
-import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import {
   GenericObservation,
   genericObservationSchema,
-  ImportantObservation,
   ObservationSource,
   ObservationType,
   PersonInvolvement,
 } from "./models/generic-observation.model";
 
+/** Fields rendered by the zod-schema-form, in display order. */
+const FORM_FIELDS = [
+  "eventDate",
+  "$type",
+  "personInvolvement",
+  "stability",
+  "locationName",
+  "aspect",
+  "latitude",
+  "longitude",
+  "elevation",
+  "elevationLowerBound",
+  "elevationUpperBound",
+  "authorName",
+  "reportDate",
+  "avalancheProblems",
+  "dangerPatterns",
+  "importantObservations",
+  "dangerSource",
+  "$externalURL",
+  "content",
+];
+
 @Component({
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslatePipe,
-    TypeaheadModule,
-    AspectsComponent,
-    AvalancheProblemIconsComponent,
-    ZodSchemaFormComponent,
-  ],
+  imports: [CommonModule, FormsModule, TranslatePipe, ZodSchemaFormComponent],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [GeocodingService, CoordinateDataService, ElevationService],
+  providers: [CoordinateDataService, ElevationService],
 })
-export class ObservationEditorComponent implements AfterViewInit {
-  private geocodingService = inject(GeocodingService);
+export class ObservationEditorComponent implements OnInit {
   private coordinateDataService = inject(CoordinateDataService);
   private authenticationService = inject(AuthenticationService);
   private dangerSourcesService = inject(DangerSourcesService);
   readonly translateService = inject(TranslateService);
 
-  readonly observation = input<GenericObservation>(undefined);
-  readonly eventDateDate = viewChild<ElementRef<HTMLInputElement>>("eventDateDate");
-  readonly eventDateTime = viewChild<ElementRef<HTMLInputElement>>("eventDateTime");
-  readonly reportDateDate = viewChild<ElementRef<HTMLInputElement>>("reportDateDate");
-  readonly reportDateTime = viewChild<ElementRef<HTMLInputElement>>("reportDateTime");
+  readonly observation = model.required<GenericObservation>();
   readonly dangerSources = signal<DangerSourceModel[]>([]);
-  private pendingDangerSources: Subscription;
-  avalancheProblems: Enums.AvalancheProblem[] = this.authenticationService.getActiveRegionAvalancheProblems();
-  dangerPatterns = Object.values(Enums.DangerPattern);
-  importantObservations = Object.values(ImportantObservation);
-  snowpackStabilityValues = Object.values(Enums.SnowpackStability);
-  personInvolvementValues = Object.values(PersonInvolvement);
-  observationTypeValues = Object.values(ObservationType);
-  GenericObservationSchema = genericObservationSchema;
-  GenericObservationSchema0 = genericObservationSchema.pick({
-    eventDate: true,
-    $type: true,
-    personInvolvement: true,
-    stability: true,
-    locationName: true,
-    aspect: true,
-    latitude: true,
-    longitude: true,
-    elevation: true,
-    elevationLowerBound: true,
-    elevationUpperBound: true,
-    authorName: true,
-    reportDate: true,
-    avalancheProblems: true,
-    dangerPatterns: true,
-    importantObservations: true,
-    dangerSource: true,
-    $externalURL: true,
-    content: true,
-  });
-  zodCssClass = zodCssClass;
+  private pendingDangerSources?: Subscription;
+
+  readonly GenericObservationSchema = genericObservationSchema;
   ObservationSource = ObservationSource;
+  elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
+  elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
+
+  /** Field list for the form; hides the danger-source field when no sources are loaded. */
+  readonly formFields = computed(() =>
+    this.dangerSources().length ? FORM_FIELDS : FORM_FIELDS.filter((f) => f !== "dangerSource"),
+  );
 
   /** Danger-source `<select>` options for the zod-schema-form, keyed by field name. */
   get dangerSourceOptions(): Record<string, { value: string; label: string }[]> {
@@ -115,122 +87,61 @@ export class ObservationEditorComponent implements AfterViewInit {
         })),
     };
   }
-  elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
-  elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
-  xor = xor;
-  locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
-    observer.next(this.observation().locationName),
-  ).pipe(
-    switchMap(
-      (query: string): Observable<Feature<Point, GeocodingProperties>[]> =>
-        query ? this.geocodingService.searchLocation(query).pipe(map((collection) => collection.features)) : of([]),
-    ),
-  );
+
+  get isDrySnowFallLevel(): boolean {
+    return this.observation()?.$type === ObservationType.DrySnowfallLevel;
+  }
+
+  ngOnInit() {
+    this.loadDangerSources();
+  }
+
+  /** Writes the edited value back and runs the field-specific side effects. */
+  onFormChange(next: GenericObservation) {
+    const prev = this.observation();
+    this.observation.set(next);
+    if (next.eventDate !== prev?.eventDate) this.loadDangerSources();
+    if (next.personInvolvement !== prev?.personInvolvement) this.setObservationType();
+    if (next.latitude !== prev?.latitude || next.longitude !== prev?.longitude) this.fetchElevation();
+    if (next.content !== prev?.content) this.parseContent();
+  }
+
+  setAllowEdit(value: boolean) {
+    this.observation.update((o) => ({ ...o, $allowEdit: value }));
+  }
+
+  setElevationData(key: "elevationTolerance" | "elevationPeriod", value: string) {
+    this.observation.update((o) => ({ ...o, $data: { ...o.$data, [key]: value } }));
+  }
 
   fetchElevation() {
     const observation = this.observation();
     if (!(observation.latitude && observation.longitude)) {
       return;
     }
-    const floatLat = +observation.latitude;
-    const floatLng = +observation.longitude;
-    this.coordinateDataService.getCoordData(floatLat, floatLng).subscribe((data) => {
-      this.observation().elevation = data.height;
+    this.coordinateDataService.getCoordData(+observation.latitude, +observation.longitude).subscribe((data) => {
+      this.observation.update((o) => ({ ...o, elevation: data.height }));
     });
-  }
-
-  copyLatLng() {
-    navigator.clipboard.writeText(`${this.observation().latitude}, ${this.observation().longitude}`);
   }
 
   setObservationType() {
     const observation = this.observation();
-    if (observation.$source === ObservationSource.AvalancheWarningService) {
-      if (observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown) {
-        observation.$type = ObservationType.Avalanche;
-      } else {
-        observation.$type = ObservationType.SimpleObservation;
-      }
+    if (observation.$source !== ObservationSource.AvalancheWarningService) {
+      return;
     }
-  }
-
-  get isDrySnowFallLevel(): boolean {
-    return this.observation().$type === ObservationType.DrySnowfallLevel;
-  }
-
-  ngAfterViewInit() {
-    // Use ElementRef to achieve a one-way binding between observation.eventDate and the two input fields.
-    // To allow for modifying an existing observation, initially the observation.eventDate is written to the two input fields.
-    for (const { nativeElement } of [this.eventDateDate(), this.eventDateTime()]) {
-      nativeElement.valueAsDate = this.eventDate;
-      nativeElement.onchange = (e) => this.handleDateEvent(e, "eventDate");
-    }
-    for (const { nativeElement } of [this.reportDateDate(), this.reportDateTime()]) {
-      nativeElement.valueAsDate = this.reportDate;
-      nativeElement.onchange = (e) => this.handleDateEvent(e, "reportDate");
-    }
-    this.loadDangerSources();
+    const involved =
+      observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown;
+    const $type = involved ? ObservationType.Avalanche : ObservationType.SimpleObservation;
+    this.observation.update((o) => ({ ...o, $type }));
   }
 
   private loadDangerSources() {
-    const date = isFinite(+this.eventDate) ? this.eventDate : new Date();
+    const eventDate = this.observation()?.eventDate;
+    const date = eventDate && isFinite(+eventDate) ? eventDate : new Date();
     this.pendingDangerSources?.unsubscribe();
     this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources([date, date], this.authenticationService.getActiveRegionId())
       .subscribe((dangerSources) => this.dangerSources.set(orderBy(dangerSources, [(s) => s.creationDate], ["asc"])));
-  }
-
-  get eventDate(): Date {
-    const date = this.observation().eventDate;
-    return isFinite(+date) ? toUTC(date) : undefined;
-  }
-
-  get reportDate(): Date {
-    const date = this.observation().reportDate;
-    return isFinite(+date) ? toUTC(date) : undefined;
-  }
-
-  setDate(date: Date, key: "eventDate" | "reportDate") {
-    this[`${key}Date`]().nativeElement.valueAsDate = date;
-    this[`${key}Time`]().nativeElement.valueAsDate = date;
-    date = isFinite(+date) ? fromUTC(date) : undefined;
-    this.observation()[key] = date;
-    this.loadDangerSources();
-  }
-
-  handleDateEvent(event: Event, key: "eventDate" | "reportDate") {
-    const type = (event.target as HTMLInputElement).type;
-    let date = (event.target as HTMLInputElement).valueAsDate;
-    if (date === undefined || date === null) {
-      // date is null when clicking "clear" in Chrome's calendar
-      this.setDate(undefined, key);
-      return;
-    }
-    date = isFinite(+date) ? fromUTC(date) : undefined;
-    if (isFinite(+this.observation()[key]) && type === "date") {
-      this.observation()[key].setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    } else if (isFinite(+this.observation()[key]) && type === "time") {
-      this.observation()[key].setHours(date.getHours(), date.getMinutes(), date.getSeconds());
-    } else {
-      this.observation()[key] = date;
-    }
-    this.loadDangerSources();
-  }
-
-  selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
-    const feature = match.item;
-    setTimeout(() => {
-      // display_name	"Zischgeles, Gemeinde Sankt Sigmund im Sellrain, Bezirk Innsbruck-Land, Tirol, Österreich" -> "Zischgeles"
-      const observation = this.observation();
-      observation.locationName = feature.properties.display_name.replace(/,.*/, "");
-      const lat = feature.geometry.coordinates[1];
-      const lng = feature.geometry.coordinates[0];
-
-      observation.latitude = lat;
-      observation.longitude = lng;
-
-      this.fetchElevation();
-    }, 0);
   }
 
   parseContent(): void {
@@ -243,56 +154,35 @@ export class ObservationEditorComponent implements AfterViewInit {
     };
 
     setTimeout(() => {
-      const content = this.observation().content;
       const observation = this.observation();
+      const content = observation.content ?? "";
+      const patch: Partial<GenericObservation> = {};
       if (!observation.authorName && content.includes("Einsatzcode") && content.includes("beschickte Einsatzmittel")) {
-        observation.authorName = "Leitstelle Tirol";
+        patch.authorName = "Leitstelle Tirol";
       }
 
-      const match = content.match(/Einsatzcode:\s*(.*)\n/);
-      const code = match ? match[1] : "";
-      if (codes[code]) observation.personInvolvement = codes[code];
+      const codeMatch = content.match(/Einsatzcode:\s*(.*)\n/);
+      const code = codeMatch ? codeMatch[1] : "";
+      if (codes[code]) patch.personInvolvement = codes[code];
 
       if (!observation.locationName && content.includes("Einsatzort")) {
         const match = content.match(/Einsatzort:.*\n\s+.*\s+(.*)/);
-        if (match) {
-          observation.locationName = match[1];
-        }
+        if (match) patch.locationName = match[1];
       }
+
+      let fetchedLatLng = false;
       if (!observation.latitude && !observation.longitude && content.includes("Koordinaten: WGS84")) {
         const match = content.match(/Koordinaten: WGS84(.*)/);
         const latlng = match && match[1] ? geocoders.parseLatLng(match[1].trim()) : "";
         if (latlng) {
-          observation.latitude = latlng.lat;
-          observation.longitude = latlng.lng;
-
-          this.fetchElevation();
+          patch.latitude = latlng.lat;
+          patch.longitude = latlng.lng;
+          fetchedLatLng = true;
         }
       }
+
+      if (Object.keys(patch).length) this.observation.update((o) => ({ ...o, ...patch }));
+      if (fetchedLatLng) this.fetchElevation();
     });
   }
-}
-
-function toUTC(value: Date) {
-  return new Date(
-    Date.UTC(
-      value.getFullYear(),
-      value.getMonth(),
-      value.getDate(),
-      value.getHours(),
-      value.getMinutes(),
-      value.getSeconds(),
-    ),
-  );
-}
-
-function fromUTC(value: Date) {
-  return new Date(
-    value.getUTCFullYear(),
-    value.getUTCMonth(),
-    value.getUTCDate(),
-    value.getUTCHours(),
-    value.getUTCMinutes(),
-    value.getUTCSeconds(),
-  );
 }
