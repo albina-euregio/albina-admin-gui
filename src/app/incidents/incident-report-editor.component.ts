@@ -149,7 +149,10 @@ export class IncidentReportEditorComponent implements OnInit {
     const anonymousGroupIdentifier = this.translateService.instant("incidentReportUI.groupName", {
       name: Math.random(),
     });
-    const groupInformation = { anonymousGroupIdentifier: anonymousGroupIdentifier } as IncidentModels.GroupInformation;
+    const groupInformation = {
+      id: crypto.randomUUID(),
+      anonymousGroupIdentifier: anonymousGroupIdentifier,
+    } as IncidentModels.GroupInformation;
     const report = this.incidentReport();
     const groups = [...(report.groupInformation ?? []), groupInformation];
     this.incidentReport.set({ ...report, groupInformation: groups });
@@ -213,10 +216,9 @@ export class IncidentReportEditorComponent implements OnInit {
   get groupIdentifierOptions(): Record<string, { value: string; label: string }[]> {
     const groups = this.incidentReport().groupInformation ?? [];
     return {
-      anonymousGroupIdentifier: groups
-        .map((g) => g.anonymousGroupIdentifier)
-        .filter((id): id is string => !!id)
-        .map((id) => ({ value: id, label: id })),
+      groupId: groups
+        .filter((g): g is IncidentModels.GroupInformation & { id: string } => !!g.id)
+        .map((g) => ({ value: g.id, label: g.anonymousGroupIdentifier ?? g.id })),
     };
   }
 

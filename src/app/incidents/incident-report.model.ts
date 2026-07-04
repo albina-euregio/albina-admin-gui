@@ -130,6 +130,11 @@ const incidentActivity = enumWithOther(
   ]),
 );
 export const GroupInformationSchema = z.object({
+  // Stable identifier victims reference for their group affiliation.
+  id: z
+    .uuid()
+    .register(widgetRegistry, { widget: "none" })
+    .default(() => crypto.randomUUID()),
   anonymousGroupIdentifier: z.string().register(widgetRegistry, { important: true }).nullish(),
   groupType: enumWithOther(z.enum(["RecreationalFamilyFriends", "Club", "Commercial", "Industrial", "Solo", "Unknown"]))
     .register(widgetRegistry, { important: true })
@@ -189,8 +194,9 @@ export type InvolvementsFatalitiesBurials = z.infer<typeof InvolvementsFatalitie
 
 export const VictimInformationSchema = z.object({
   anonymousVictimIdentifier: z.string().nullish(),
-  anonymousGroupIdentifier: z
-    .string()
+  // References GroupInformation.id (a stable uuid), not the group's editable display name.
+  groupId: z
+    .uuid()
     .register(widgetRegistry, {
       important: true,
       labelI18n: "incidentReport.groupAffiliation",
