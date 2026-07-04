@@ -266,7 +266,7 @@
             [disabled]="disabled()"
             [value]="variant()"
             [valueForCompare]="comparedVariant()"
-            (valueChange)="updateVariantOnServer()"
+            (valueChange)="updateVariantOnServer($event)"
             [labelI18n]="'dangerSources.create.label.#'"
           />
         </accordion-group>
@@ -290,7 +290,7 @@
             [disabled]="disabled()"
             [value]="variant()"
             [valueForCompare]="comparedVariant()"
-            (valueChange)="updateVariantOnServer()"
+            (valueChange)="updateVariantOnServer($event)"
             [labelI18n]="'dangerSources.create.label.#'"
           />
         </accordion-group>
@@ -313,7 +313,7 @@
             [disabled]="disabled()"
             [value]="variant()"
             [valueForCompare]="comparedVariant()"
-            (valueChange)="updateVariantOnServer()"
+            (valueChange)="updateVariantOnServer($event)"
             [labelI18n]="'dangerSources.create.label.#'"
           />
         </accordion-group>
@@ -337,7 +337,7 @@
             [disabled]="disabled()"
             [value]="variant()"
             [valueForCompare]="comparedVariant()"
-            (valueChange)="updateVariantOnServer()"
+            (valueChange)="updateVariantOnServer($event)"
             [labelI18n]="'dangerSources.create.label.#'"
           />
         </accordion-group>
@@ -359,7 +359,7 @@
           [disabled]="disabled()"
           [value]="variant()"
           [valueForCompare]="comparedVariant()"
-          (valueChange)="updateVariantOnServer()"
+          (valueChange)="updateVariantOnServer($event)"
           [labelI18n]="'dangerSources.create.label.#'"
           [diminishValues]="{ terrainTypes: terrainTypeDiminish(), dangerSigns: dangerSignDiminish() }"
         />

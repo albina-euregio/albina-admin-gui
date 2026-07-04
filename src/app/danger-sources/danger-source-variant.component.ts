@@ -199,7 +199,10 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     this.glidingSnowActivityOptions = Object.assign({}, this.glidingSnowActivityOptions, { disabled: this.disabled() });
   }
 
-  updateVariantOnServer() {
+  updateVariantOnServer(changes?: Partial<DangerSourceVariantModel>) {
+    // The form updates immutably and emits a fresh object; fold those changes back into the
+    // variant we own, since the debounced server update reads from `variant()`.
+    if (changes) Object.assign(this.variant(), changes);
     this.updateVariantOnServerEventDebounce.next(this.variant());
   }
 
