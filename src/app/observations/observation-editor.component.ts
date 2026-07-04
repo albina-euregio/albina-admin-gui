@@ -27,27 +27,7 @@ import {
   ObservationSource,
   ObservationType,
   PersonInvolvement,
-  RawGenericObservation,
 } from "./models/generic-observation.model";
-
-// Fields rendered by the zod-schema-form, in display order. `locationName` sits between the two
-// groups as a custom typeahead field (name-based geocoding), so it is not part of either list.
-const FORM_FIELDS_BEFORE: (keyof RawGenericObservation)[] = ["eventDate", "$type", "personInvolvement", "stability"];
-const FORM_FIELDS_AFTER: (keyof RawGenericObservation)[] = [
-  "latitude",
-  "longitude",
-  "elevation",
-  "elevationLowerBound",
-  "elevationUpperBound",
-  "authorName",
-  "reportDate",
-  "avalancheProblems",
-  "dangerPatterns",
-  "importantObservations",
-  "dangerSource",
-  "$externalURL",
-  "content",
-];
 
 @Component({
   standalone: true,
@@ -72,17 +52,35 @@ export class ObservationEditorComponent implements OnInit {
   elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
   elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
 
-  // Picked schemas for the two form sections around the custom location field. Each hides the
-  // danger-source field when no sources are loaded; dry-snowfall-level fields are hidden via
-  // the schema's `withShowIf` rules (see generic-observation.model.ts).
-  readonly formSchemaBefore = computed(() => this.pickFields(FORM_FIELDS_BEFORE));
-  readonly formSchemaAfter = computed(() => this.pickFields(FORM_FIELDS_AFTER));
-
-  private pickFields(fields: (keyof RawGenericObservation)[]) {
-    const hasDangerSources = this.dangerSources().length > 0;
-    const visible = fields.filter((f) => f !== "dangerSource" || hasDangerSources);
-    return genericObservationSchema.pick(Object.fromEntries(visible.map((f) => [f, true])) as never);
-  }
+  // Picked schemas for the two form sections around the custom location field, in display order.
+  // `locationName` sits between them as a custom typeahead field (name-based geocoding), so it is
+  // in neither. The danger-source field is hidden when no sources are loaded; dry-snowfall-level
+  // fields are hidden via the schema's `withShowIf` rules (see generic-observation.model.ts).
+  readonly formSchemaBefore = computed(() =>
+    genericObservationSchema.pick({
+      eventDate: true,
+      $type: true,
+      personInvolvement: true,
+      stability: true,
+    }),
+  );
+  readonly formSchemaAfter = computed(() =>
+    genericObservationSchema.pick({
+      latitude: true,
+      longitude: true,
+      elevation: true,
+      elevationLowerBound: true,
+      elevationUpperBound: true,
+      authorName: true,
+      reportDate: true,
+      avalancheProblems: true,
+      dangerPatterns: true,
+      importantObservations: true,
+      ...(this.dangerSources().length ? { dangerSource: true } : {}),
+      $externalURL: true,
+      content: true,
+    }),
+  );
 
   /** Location-name typeahead suggestions from the geocoding service. */
   readonly locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
