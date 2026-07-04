@@ -94,6 +94,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     authorName: true,
     reportDate: true,
     avalancheProblems: true,
+    dangerPatterns: true,
     importantObservations: true,
     dangerSource: true,
     $externalURL: true,

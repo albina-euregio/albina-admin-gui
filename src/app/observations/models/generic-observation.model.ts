@@ -168,47 +168,101 @@ export const genericObservationSchema = z.object({
   $id: z.string().nullish().describe("External ID of this observations"),
   $allowEdit: z.boolean().default(false),
   $deleted: z.boolean().default(false),
-  $externalURL: z.string().nullish().describe("External URL to display as iframe"),
+  $externalURL: z
+    .string()
+    .register(widgetRegistry, { class: "col-12", icon: "ph ph-link" })
+    .nullish()
+    .describe("External URL to display as iframe"),
   $externalImgs: z.string().array().nullish().describe("External image to display as img"),
   stability: z
     .enum(SnowpackStability)
+    .register(widgetRegistry, { class: "col-md-3", widget: "select", valueI18n: "snowpackStability.#" })
     .nullish()
-    .register(widgetRegistry, { class: "col-3", widget: "select", valueI18n: "snowpackStability.#" })
     .describe("Snowpack stability that can be inferred from this observation"),
   $source: z.union([z.enum(ObservationSource), z.enum(ForecastSource)]).describe("Source of this observation"),
   $type: z
     .enum(ObservationType)
-    .register(widgetRegistry, { class: "col-3", widget: "select" })
+    .register(widgetRegistry, { class: "col-md-3", widget: "select", valueI18n: "observationType.#" })
     .describe("Type of this observation"),
-  aspect: z.enum(Aspect).nullish().describe("Aspect corresponding with this observation"),
-  authorName: z.string().nullish().describe("Name of the author"),
-  content: z.string().nullish().describe("Free-text content"),
-  elevation: z.number().nullish().describe("Elevation in meters"),
-  elevationLowerBound: z.number().nullish().describe("Lower bound of elevation in meters"),
-  elevationUpperBound: z.number().nullish().describe("Upper bound of elevation in meters"),
-  eventDate: z.coerce.date().register(widgetRegistry, { class: "col-3" }).describe("Date when the event occurred"),
-  locationName: z.string().nullish().describe("Location name"),
-  latitude: z.number().nullish().describe("Location latitude (WGS 84)"),
-  longitude: z.number().nullish().describe("Location longitude (WGS 84)"),
+  aspect: z
+    .enum(Aspect)
+    .register(widgetRegistry, { class: "col-md-3", widget: "aspect" })
+    .nullish()
+    .describe("Aspect corresponding with this observation"),
+  authorName: z
+    .string()
+    .register(widgetRegistry, { class: "col-md-6", icon: "ph ph-user" })
+    .nullish()
+    .describe("Name of the author"),
+  content: z
+    .string()
+    .register(widgetRegistry, { class: "col-12", widget: "textarea", icon: "ph ph-chat" })
+    .nullish()
+    .describe("Free-text content"),
+  elevation: z
+    .number()
+    .register(widgetRegistry, { class: "col-md-2", icon: "ph ph-arrows-out-line-vertical" })
+    .nullish()
+    .describe("Elevation in meters"),
+  elevationLowerBound: z
+    .number()
+    .register(widgetRegistry, { class: "col-md-2", icon: "ph ph-arrows-out-line-vertical" })
+    .nullish()
+    .describe("Lower bound of elevation in meters"),
+  elevationUpperBound: z
+    .number()
+    .register(widgetRegistry, { class: "col-md-2", icon: "ph ph-arrows-out-line-vertical" })
+    .nullish()
+    .describe("Upper bound of elevation in meters"),
+  eventDate: z.coerce
+    .date()
+    .register(widgetRegistry, { class: "col-md-3", icon: "ph ph-calendar" })
+    .describe("Date when the event occurred"),
+  locationName: z
+    .string()
+    .register(widgetRegistry, { class: "col-md-9", icon: "ph ph-globe" })
+    .nullish()
+    .describe("Location name"),
+  latitude: z
+    .number()
+    .register(widgetRegistry, { class: "col-md-3", icon: "ph ph-map-pin" })
+    .nullish()
+    .describe("Location latitude (WGS 84)"),
+  longitude: z
+    .number()
+    .register(widgetRegistry, { class: "col-md-3", icon: "ph ph-map-pin" })
+    .nullish()
+    .describe("Location longitude (WGS 84)"),
   region: z.string().nullish().describe("Micro-region code (computed from latitude/longitude)"),
-  reportDate: z.coerce.date().nullish().describe("Date when the observation has been reported"),
-  dangerSource: z.uuid().nullish().describe("Danger source UUID"),
+  reportDate: z.coerce
+    .date()
+    .register(widgetRegistry, { class: "col-md-6", icon: "ph ph-pencil" })
+    .nullish()
+    .describe("Date when the observation has been reported"),
+  dangerSource: z.uuid().register(widgetRegistry, { class: "col-md-6" }).nullish().describe("Danger source UUID"),
   avalancheProblems: z
     .enum(AvalancheProblem)
     .array()
+    .register(widgetRegistry, { class: "col-md-6", widget: "avalancheProblem", valueI18n: "avalancheProblem.#" })
     .nullish()
     .nullable()
     .describe("Avalanche problem corresponding with this observation"),
   dangerPatterns: z
     .enum(DangerPattern)
     .array()
+    .register(widgetRegistry, { class: "col-md-6", valueI18n: "dangerPattern.#" })
     .nullish()
     .nullable()
     .describe("Danger pattern corresponding with this observation"),
-  importantObservations: z.enum(ImportantObservation).array().nullish().describe("Important observations"),
+  importantObservations: z
+    .enum(ImportantObservation)
+    .array()
+    .register(widgetRegistry, { class: "col-md-6", valueI18n: "importantObservation.#" })
+    .nullish()
+    .describe("Important observations"),
   personInvolvement: z
     .enum(PersonInvolvement)
-    .register(widgetRegistry, { class: "col-3", widget: "select" })
+    .register(widgetRegistry, { class: "col-md-3", widget: "select" })
     .nullish()
     .describe("Person involvement"),
 });
