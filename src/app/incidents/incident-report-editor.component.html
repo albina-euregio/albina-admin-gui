@@ -223,6 +223,7 @@
           [disabled]="disabled()"
           [displayMode]="displayMode()"
           [value]="p"
+          (valueChange)="updateAvalancheProblem(p, $event)"
           [zodType]="IncidentModels.AvalancheProblemSchema"
           [labelI18n]="labelI18n"
           [helpI18n]="helpI18n"

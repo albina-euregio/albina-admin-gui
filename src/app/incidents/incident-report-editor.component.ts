@@ -228,6 +228,12 @@ export class IncidentReportEditorComponent implements OnInit {
     this.incidentReport().avalancheProblems = this.incidentReport().avalancheProblems.filter((p0) => p0 !== p);
   }
 
+  updateAvalancheProblem(p: IncidentModels.AvalancheProblem, changes: IncidentModels.AvalancheProblem) {
+    // The form updates immutably and emits a fresh object; fold those changes back into the array
+    // item so the edit is not lost. Mutating in place keeps its identity, matching add/remove above.
+    Object.assign(p, changes);
+  }
+
   async fetchPublishedBulletin() {
     const incidentReport = this.incidentReport();
     const bulletin: Bulletin | undefined = await firstValueFrom(
