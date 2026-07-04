@@ -120,7 +120,7 @@
 - Update to linea v8.7.4
 - Update to eaws-regions v8.2.0
 - Update to ngx-bootstrap 21.0.1
-- Update to playwright 1.58.2
+- Update to playwright 1.61.1
 - Update protomaps-leaflet
 - Update to angular 21.2.0
 - Update to eslint 9.39.3
