@@ -8,14 +8,17 @@ import { CoordinateDataService } from "app/providers/map-service/coordinate-data
 import { ElevationService } from "app/providers/map-service/elevation.service";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { orderBy } from "es-toolkit";
+import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
-import { Subscription } from "rxjs";
+import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
+import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
 
 import type {
   LolaRainBoundaryElevationTolerance,
   LolaRainBoundaryElevationPeriod,
 } from "../../../observations-api/src/fetch/observations/lola-kronos.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import {
   GenericObservation,
   genericObservationSchema,
@@ -24,13 +27,10 @@ import {
   PersonInvolvement,
 } from "./models/generic-observation.model";
 
-/** Fields rendered by the zod-schema-form, in display order. */
-const FORM_FIELDS = [
-  "eventDate",
-  "$type",
-  "personInvolvement",
-  "stability",
-  "locationName",
+// Fields rendered by the zod-schema-form, in display order. `locationName` sits between the two
+// groups as a custom typeahead field (name-based geocoding), so it is not part of either list.
+const FORM_FIELDS_BEFORE = ["eventDate", "$type", "personInvolvement", "stability"];
+const FORM_FIELDS_AFTER = [
   "aspect",
   "latitude",
   "longitude",
@@ -61,13 +61,14 @@ const DRY_SNOWFALL_HIDDEN_FIELDS = [
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, ZodSchemaFormComponent],
+  imports: [CommonModule, FormsModule, TypeaheadModule, TranslatePipe, ZodSchemaFormComponent],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [CoordinateDataService, ElevationService],
+  providers: [GeocodingService, CoordinateDataService, ElevationService],
 })
 export class ObservationEditorComponent implements OnInit {
+  private geocodingService = inject(GeocodingService);
   private coordinateDataService = inject(CoordinateDataService);
   private authenticationService = inject(AuthenticationService);
   private dangerSourcesService = inject(DangerSourcesService);
@@ -82,18 +83,46 @@ export class ObservationEditorComponent implements OnInit {
   elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
   elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
 
-  /**
-   * Field list for the form: hides the danger-source field when no sources are loaded and the
-   * fields that do not apply to the dry-snowfall-level observation type.
-   */
-  readonly formFields = computed(() => {
+  // Field lists for the two form sections around the custom location field. Each hides the
+  // danger-source field when no sources are loaded and the fields that do not apply to the
+  // dry-snowfall-level observation type.
+  readonly formFieldsBefore = computed(() => this.visibleFields(FORM_FIELDS_BEFORE));
+  readonly formFieldsAfter = computed(() => this.visibleFields(FORM_FIELDS_AFTER));
+
+  private visibleFields(fields: string[]): string[] {
     const drySnowfall = this.observation().$type === ObservationType.DrySnowfallLevel;
-    return FORM_FIELDS.filter(
-      (f) =>
-        (f !== "dangerSource" || this.dangerSources().length > 0) &&
-        (!drySnowfall || !DRY_SNOWFALL_HIDDEN_FIELDS.includes(f)),
+    const hasDangerSources = this.dangerSources().length > 0;
+    return fields.filter(
+      (f) => (f !== "dangerSource" || hasDangerSources) && (!drySnowfall || !DRY_SNOWFALL_HIDDEN_FIELDS.includes(f)),
     );
-  });
+  }
+
+  /** Location-name typeahead suggestions from the geocoding service. */
+  readonly locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
+    observer.next(this.observation().locationName),
+  ).pipe(
+    switchMap(
+      (query: string): Observable<Feature<Point, GeocodingProperties>[]> =>
+        query ? this.geocodingService.searchLocation(query).pipe(map((collection) => collection.features)) : of([]),
+    ),
+  );
+
+  setLocationName(locationName: string) {
+    this.observation.update((o) => ({ ...o, locationName }));
+  }
+
+  /** Applies a geocoded suggestion: fills the location name, coordinates and elevation. */
+  selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
+    const feature = match.item;
+    // Defer so this runs after the typeahead has written the raw display name back to ngModel.
+    setTimeout(() => {
+      // display_name "Zischgeles, Gemeinde Sankt Sigmund …" -> "Zischgeles"
+      const locationName = feature.properties.display_name.replace(/,.*/, "");
+      const [longitude, latitude] = feature.geometry.coordinates;
+      this.observation.update((o) => ({ ...o, locationName, latitude, longitude }));
+      this.fetchElevation();
+    }, 0);
+  }
 
   /** Danger-source `<select>` options for the zod-schema-form, keyed by field name. */
   get dangerSourceOptions(): Record<string, { value: string; label: string }[]> {

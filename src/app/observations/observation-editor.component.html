@@ -27,7 +27,35 @@
       [value]="observation()"
       (valueChange)="onFormChange($event)"
       [disabled]="!observation().$allowEdit"
-      [includeFields]="formFields()"
+      [includeFields]="formFieldsBefore()"
+      [selectOptions]="dangerSourceOptions"
+      [labelI18n]="'observations.#'"
+    />
+
+    <div class="col-12 col-md-9">
+      <label class="form-label" for="locationName">
+        <i class="ph ph-globe"></i> {{ "observations.locationName" | translate }}
+      </label>
+      <input
+        id="locationName"
+        type="text"
+        class="form-control"
+        [ngModel]="observation().locationName"
+        (ngModelChange)="setLocationName($event)"
+        [typeahead]="locationSuggestions$"
+        [typeaheadAsync]="true"
+        (typeaheadOnSelect)="selectLocation($event)"
+        typeaheadOptionField="properties.display_name"
+        [disabled]="!observation().$allowEdit"
+      />
+    </div>
+
+    <app-zod-schema-form
+      [zodType]="GenericObservationSchema"
+      [value]="observation()"
+      (valueChange)="onFormChange($event)"
+      [disabled]="!observation().$allowEdit"
+      [includeFields]="formFieldsAfter()"
       [selectOptions]="dangerSourceOptions"
       [labelI18n]="'observations.#'"
     />
