@@ -191,10 +191,10 @@ export class IncidentReportEditorComponent implements OnInit {
   get groupIdentifierOptions(): Record<string, { value: string; label: string }[]> {
     const groups = this.incidentReport().groupInformation ?? [];
     return {
-      anonymousGroupIdentifier: groups.map((g) => ({
-        value: g.anonymousGroupIdentifier,
-        label: g.anonymousGroupIdentifier,
-      })),
+      anonymousGroupIdentifier: groups
+        .map((g) => g.anonymousGroupIdentifier)
+        .filter((id): id is string => !!id)
+        .map((id) => ({ value: id, label: id })),
     };
   }
 
