@@ -82,11 +82,33 @@ export class IncidentService {
   }
 
   private safeIncidentReport(i: IncidentView) {
-    return PartialIncidentReportSchema.safeParse({ ...(i.data ?? i.publicData ?? {}), ...i });
+    return PartialIncidentReportSchema.safeParse(
+      this.migrateGroupAffiliation({ ...(i.data ?? i.publicData ?? {}), ...i }),
+    );
   }
 
   private toIncidentReport(i: IncidentView): IncidentReport {
-    return PartialIncidentReportSchema.parse({ ...(i.data ?? i.publicData ?? {}), ...i }) as IncidentReport;
+    return PartialIncidentReportSchema.parse(
+      this.migrateGroupAffiliation({ ...(i.data ?? i.publicData ?? {}), ...i }),
+    ) as IncidentReport;
+  }
+
+  /**
+   * Migrate legacy incidents where a victim's group affiliation was stored as the group's display
+   * name in `anonymousGroupIdentifier`. Groups now carry a stable `id` referenced by the victim's
+   * `groupId`, so backfill group ids and remap each victim by matching its old name to a group. Run
+   * before parsing, which then drops the legacy victim field. Newer reports are left unchanged.
+   */
+  private migrateGroupAffiliation(raw: Record<string, unknown>): Record<string, unknown> {
+    const groups = (raw.groupInformation as { id?: string; anonymousGroupIdentifier?: string }[] | undefined) ?? [];
+    groups.forEach((group) => (group.id ??= crypto.randomUUID()));
+    const victims = raw.victimInformation as { groupId?: string; anonymousGroupIdentifier?: string }[] | undefined;
+    victims?.forEach((victim) => {
+      if (victim.groupId == null && victim.anonymousGroupIdentifier != null) {
+        victim.groupId = groups.find((g) => g.anonymousGroupIdentifier === victim.anonymousGroupIdentifier)?.id;
+      }
+    });
+    return raw;
   }
 
   /** Get a single incident by id. */
