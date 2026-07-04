@@ -25,17 +25,25 @@ export interface ShowIf {
 }
 
 export interface WidgetType {
+  /** CSS classes applied to the field wrapper (e.g. Bootstrap grid `col-6`, background helpers). */
   class?: string;
+  /** Unit label shown in brackets after the field label (e.g. `m`, `cm`). */
   unit?: string;
+  /** i18n key template for enum option labels; `#` is replaced with each option value. */
   valueI18n?: `${string}#${string}`;
   /** Full i18n key overriding the derived `labelI18n` for this field (e.g. when the same field name needs a different label than in other schemas). */
   labelI18n?: string;
   /** Full i18n key overriding the derived `helpI18n` for this field. */
   helpI18n?: string;
+  /** Conditions controlling whether the field is shown; build via the `withShowIf` / `not` helpers. */
   showIf?: ShowIf[];
+  /** Phosphor icon class rendered before the field label. */
   icon?: `ph ph-${string}`;
+  /** Marks the field as most-relevant (intended for a "most relevant" edit/preview view). */
   important?: boolean;
+  /** Field is included in the public preview (`DisplayMode.Public`); others are hidden there. */
   public?: boolean;
+  /** Input control to render; `"none"` hides the field entirely. */
   widget?:
     | "slider"
     | "checkbox"
