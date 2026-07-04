@@ -50,6 +50,17 @@
       />
     </div>
 
+    <div class="col-12 col-md-3">
+      <div class="form-label">{{ "observations.aspect" | translate }}</div>
+      <app-aspects
+        [aspects]="[observation().aspect]"
+        (aspectsChange)="setAspect($event[0])"
+        [size]="100"
+        [singleton]="true"
+        [disabled]="!observation().$allowEdit"
+      />
+    </div>
+
     <app-zod-schema-form
       [zodType]="GenericObservationSchema"
       [value]="observation()"

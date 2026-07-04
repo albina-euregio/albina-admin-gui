@@ -17,7 +17,9 @@ import type {
   LolaRainBoundaryElevationTolerance,
   LolaRainBoundaryElevationPeriod,
 } from "../../../observations-api/src/fetch/observations/lola-kronos.model";
+import { Aspect } from "../enums/enums";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { AspectsComponent } from "../shared/aspects.component";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import {
   GenericObservation,
@@ -31,7 +33,6 @@ import {
 // groups as a custom typeahead field (name-based geocoding), so it is not part of either list.
 const FORM_FIELDS_BEFORE = ["eventDate", "$type", "personInvolvement", "stability"];
 const FORM_FIELDS_AFTER = [
-  "aspect",
   "latitude",
   "longitude",
   "elevation",
@@ -61,7 +62,7 @@ const DRY_SNOWFALL_HIDDEN_FIELDS = [
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, TypeaheadModule, TranslatePipe, ZodSchemaFormComponent],
+  imports: [CommonModule, FormsModule, TypeaheadModule, TranslatePipe, AspectsComponent, ZodSchemaFormComponent],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -109,6 +110,10 @@ export class ObservationEditorComponent implements OnInit {
 
   setLocationName(locationName: string) {
     this.observation.update((o) => ({ ...o, locationName }));
+  }
+
+  setAspect(aspect: Aspect | undefined) {
+    this.observation.update((o) => ({ ...o, aspect }));
   }
 
   /** Applies a geocoded suggestion: fills the location name, coordinates and elevation. */
