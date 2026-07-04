@@ -704,6 +704,7 @@
     "No": "No"
   },
   "professionalCertification": {
+    "None": "None",
     "IFMGAGuide": "IFMGA Guide",
     "FullSkiGuide": "Full Ski guide",
     "SkiInstructor": "Ski Instructor",
