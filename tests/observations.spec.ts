@@ -232,7 +232,7 @@ test("Create new observation", async ({ page }) => {
   await page.getByRole("option", { name: "Zischgeles, Sankt Sigmund im" }).click();
   await expect(page.getByRole("spinbutton", { name: "Latitude" })).toHaveValue("47.1315444");
   await expect(page.getByRole("spinbutton", { name: "Longitude" })).toHaveValue("11.0950077");
-  await expect(page.getByRole("spinbutton", { name: " Elevation", exact: true })).toHaveValue("3003");
+  await expect(page.getByRole("spinbutton", { name: "Elevation", exact: true })).toHaveValue("3003");
   await page.getByRole("button", { name: "S", exact: true }).click({ force: true });
   await page.getByRole("textbox", { name: "Author name" }).fill("Playwright");
   await page.locator('#reportDate input[type="date"]').fill("2024-12-11");
