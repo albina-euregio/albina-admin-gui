@@ -92,66 +92,6 @@ export class ObservationEditorComponent implements OnInit {
     ),
   );
 
-  setLocationName(locationName: string) {
-    this.observation.update((o) => ({ ...o, locationName }));
-  }
-
-  setAspect(aspect: Aspect | undefined) {
-    this.observation.update((o) => ({ ...o, aspect }));
-  }
-
-  /** Applies a geocoded suggestion: fills the location name, coordinates and elevation. */
-  selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
-    const feature = match.item;
-    // Defer so this runs after the typeahead has written the raw display name back to ngModel.
-    setTimeout(() => {
-      // display_name "Zischgeles, Gemeinde Sankt Sigmund …" -> "Zischgeles"
-      const locationName = feature.properties.display_name.replace(/,.*/, "");
-      const [longitude, latitude] = feature.geometry.coordinates;
-      this.observation.update((o) => ({ ...o, locationName, latitude, longitude }));
-      this.fetchElevation();
-    }, 0);
-  }
-
-  /** Danger-source `<select>` options for the zod-schema-form, keyed by field name. */
-  get dangerSourceOptions(): Record<string, { value: string; label: string }[]> {
-    const lang = this.translateService.getCurrentLang();
-    return {
-      dangerSource: this.dangerSources()
-        .filter((ds): ds is typeof ds & { id: string } => !!ds.id)
-        .map((ds) => ({
-          value: ds.id,
-          label: `${ds.creationDate ? formatDate(ds.creationDate, "mediumDate", lang) : ""} — ${ds.title ?? ""}`,
-        })),
-    };
-  }
-
-  get isDrySnowFallLevel(): boolean {
-    return this.observation()?.$type === ObservationType.DrySnowfallLevel;
-  }
-
-  ngOnInit() {
-    this.loadDangerSources();
-  }
-
-  /** Writes the edited value back and runs the field-specific side effects. */
-  onFormChange(next: GenericObservation) {
-    const prev = this.observation();
-    this.observation.set(next);
-    if (next.eventDate !== prev?.eventDate) this.loadDangerSources();
-    if (next.personInvolvement !== prev?.personInvolvement) this.setObservationType();
-    if (next.latitude !== prev?.latitude || next.longitude !== prev?.longitude) this.fetchElevation();
-    if (next.content !== prev?.content) this.parseContent();
-  }
-
-  setAllowEdit(value: boolean) {
-    this.observation.update((o) => ({ ...o, $allowEdit: value }));
-  }
-
-  setElevationData(key: "elevationTolerance" | "elevationPeriod", value: string) {
-    this.observation.update((o) => ({ ...o, $data: { ...o.$data, [key]: value } }));
-  }
-
   fetchElevation() {
     const observation = this.observation();
     if (!(observation.latitude && observation.longitude)) {
@@ -173,6 +113,14 @@ export class ObservationEditorComponent implements OnInit {
     this.observation.update((o) => ({ ...o, $type }));
   }
 
+  get isDrySnowFallLevel(): boolean {
+    return this.observation()?.$type === ObservationType.DrySnowfallLevel;
+  }
+
+  ngOnInit() {
+    this.loadDangerSources();
+  }
+
   private loadDangerSources() {
     const eventDate = this.observation()?.eventDate;
     const date = eventDate && isFinite(+eventDate) ? eventDate : new Date();
@@ -180,6 +128,19 @@ export class ObservationEditorComponent implements OnInit {
     this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources([date, date], this.authenticationService.getActiveRegionId())
       .subscribe((dangerSources) => this.dangerSources.set(orderBy(dangerSources, [(s) => s.creationDate], ["asc"])));
+  }
+
+  /** Applies a geocoded suggestion: fills the location name, coordinates and elevation. */
+  selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
+    const feature = match.item;
+    // Defer so this runs after the typeahead has written the raw display name back to ngModel.
+    setTimeout(() => {
+      // display_name "Zischgeles, Gemeinde Sankt Sigmund …" -> "Zischgeles"
+      const locationName = feature.properties.display_name.replace(/,.*/, "");
+      const [longitude, latitude] = feature.geometry.coordinates;
+      this.observation.update((o) => ({ ...o, locationName, latitude, longitude }));
+      this.fetchElevation();
+    }, 0);
   }
 
   parseContent(): void {
@@ -222,5 +183,44 @@ export class ObservationEditorComponent implements OnInit {
       if (Object.keys(patch).length) this.observation.update((o) => ({ ...o, ...patch }));
       if (fetchedLatLng) this.fetchElevation();
     });
+  }
+
+  /** Writes the edited value back and runs the field-specific side effects. */
+  onFormChange(next: GenericObservation) {
+    const prev = this.observation();
+    this.observation.set(next);
+    if (next.eventDate !== prev?.eventDate) this.loadDangerSources();
+    if (next.personInvolvement !== prev?.personInvolvement) this.setObservationType();
+    if (next.latitude !== prev?.latitude || next.longitude !== prev?.longitude) this.fetchElevation();
+    if (next.content !== prev?.content) this.parseContent();
+  }
+
+  setLocationName(locationName: string) {
+    this.observation.update((o) => ({ ...o, locationName }));
+  }
+
+  setAspect(aspect: Aspect | undefined) {
+    this.observation.update((o) => ({ ...o, aspect }));
+  }
+
+  setAllowEdit(value: boolean) {
+    this.observation.update((o) => ({ ...o, $allowEdit: value }));
+  }
+
+  setElevationData(key: "elevationTolerance" | "elevationPeriod", value: string) {
+    this.observation.update((o) => ({ ...o, $data: { ...o.$data, [key]: value } }));
+  }
+
+  /** Danger-source `<select>` options for the zod-schema-form, keyed by field name. */
+  get dangerSourceOptions(): Record<string, { value: string; label: string }[]> {
+    const lang = this.translateService.getCurrentLang();
+    return {
+      dangerSource: this.dangerSources()
+        .filter((ds): ds is typeof ds & { id: string } => !!ds.id)
+        .map((ds) => ({
+          value: ds.id,
+          label: `${ds.creationDate ? formatDate(ds.creationDate, "mediumDate", lang) : ""} — ${ds.title ?? ""}`,
+        })),
+    };
   }
 }
