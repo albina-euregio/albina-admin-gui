@@ -298,12 +298,9 @@ export class IncidentReportEditorComponent implements OnInit {
       message: this.translateService.instant("incidentReportUI.fetchPublishedBulletinSuccess", {
         count: this.incidentReport().avalancheProblems.length,
         region: region?.name ?? region?.regionID ?? incidentReport.avalancheRegion,
-        date: this.datePipe.transform(
-          bulletin.validTime?.startTime ?? bulletin.publicationTime,
-          "mediumDate",
-          undefined,
-          this.translateService.currentLang() ?? undefined,
-        ),
+        date: [bulletin.validTime?.startTime, bulletin.validTime?.endTime]
+          .map((d) => this.datePipe.transform(d, "medium", undefined, this.translateService.currentLang() ?? undefined))
+          .join(" – "),
       }),
     });
   }
