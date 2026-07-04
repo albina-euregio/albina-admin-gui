@@ -185,7 +185,10 @@ export class IncidentReportEditorComponent implements OnInit {
     const anonymousVictimIdentifier = this.translateService.instant("incidentReportUI.victimName", {
       name: Math.random(),
     });
-    const victimInformation = { anonymousVictimIdentifier } as IncidentModels.VictimInformation;
+    const victimInformation = {
+      id: crypto.randomUUID(),
+      anonymousVictimIdentifier,
+    } as IncidentModels.VictimInformation;
     const report = this.incidentReport();
     const victims = [...(report.victimInformation ?? []), victimInformation];
     this.incidentReport.set({ ...report, victimInformation: victims });

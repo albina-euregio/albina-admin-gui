@@ -193,6 +193,11 @@ export const InvolvementsFatalitiesBurialsSchema = z.object({
 export type InvolvementsFatalitiesBurials = z.infer<typeof InvolvementsFatalitiesBurialsSchema>;
 
 export const VictimInformationSchema = z.object({
+  // Stable identifier for the victim, defaulted on parse.
+  id: z
+    .uuid()
+    .register(widgetRegistry, { widget: "none" })
+    .default(() => crypto.randomUUID()),
   anonymousVictimIdentifier: z.string().nullish(),
   // References GroupInformation.id (a stable uuid), not the group's editable display name.
   groupId: z
