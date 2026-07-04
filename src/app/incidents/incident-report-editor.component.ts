@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit, signal } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AvalancheSize } from "app/enums/enums";
@@ -35,13 +36,14 @@ export type IncidentReportTab =
   standalone: true,
   imports: [TranslatePipe, ZodSchemaFormComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [GeocodingService, IncidentReportMapService, IncidentReportGeocodeService],
+  providers: [GeocodingService, IncidentReportMapService, IncidentReportGeocodeService, DatePipe],
 })
 export class IncidentReportEditorComponent implements OnInit {
   readonly mapService = inject(IncidentReportMapService);
   private geocodeService = inject(IncidentReportGeocodeService);
   private translateService = inject(TranslateService);
   private incidentService = inject(IncidentService);
+  private datePipe = inject(DatePipe);
 
   readonly incidentReport = model.required<IncidentReport>();
   readonly disabled = input<boolean>(false);
@@ -252,7 +254,12 @@ export class IncidentReportEditorComponent implements OnInit {
         type: "danger",
         message: this.translateService.instant("incidentReportUI.fetchPublishedBulletinError", {
           region: incidentReport.avalancheRegion,
-          date: incidentReport.dateTime?.toLocaleDateString(this.translateService.currentLang() ?? undefined),
+          date: this.datePipe.transform(
+            incidentReport.dateTime,
+            "mediumDate",
+            undefined,
+            this.translateService.currentLang() ?? undefined,
+          ),
         }),
       });
       return;
@@ -291,7 +298,10 @@ export class IncidentReportEditorComponent implements OnInit {
       message: this.translateService.instant("incidentReportUI.fetchPublishedBulletinSuccess", {
         count: this.incidentReport().avalancheProblems.length,
         region: region?.name ?? region?.regionID ?? incidentReport.avalancheRegion,
-        date: (bulletin.validTime?.startTime ?? bulletin.publicationTime).toLocaleDateString(
+        date: this.datePipe.transform(
+          bulletin.validTime?.startTime ?? bulletin.publicationTime,
+          "mediumDate",
+          undefined,
           this.translateService.currentLang() ?? undefined,
         ),
       }),
