@@ -47,6 +47,18 @@ const FORM_FIELDS = [
   "content",
 ];
 
+/** Fields that do not apply to the dry-snowfall-level observation type. */
+const DRY_SNOWFALL_HIDDEN_FIELDS = [
+  "personInvolvement",
+  "stability",
+  "elevationLowerBound",
+  "elevationUpperBound",
+  "reportDate",
+  "avalancheProblems",
+  "dangerPatterns",
+  "importantObservations",
+];
+
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, TranslatePipe, ZodSchemaFormComponent],
@@ -70,10 +82,18 @@ export class ObservationEditorComponent implements OnInit {
   elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
   elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
 
-  /** Field list for the form; hides the danger-source field when no sources are loaded. */
-  readonly formFields = computed(() =>
-    this.dangerSources().length ? FORM_FIELDS : FORM_FIELDS.filter((f) => f !== "dangerSource"),
-  );
+  /**
+   * Field list for the form: hides the danger-source field when no sources are loaded and the
+   * fields that do not apply to the dry-snowfall-level observation type.
+   */
+  readonly formFields = computed(() => {
+    const drySnowfall = this.observation().$type === ObservationType.DrySnowfallLevel;
+    return FORM_FIELDS.filter(
+      (f) =>
+        (f !== "dangerSource" || this.dangerSources().length > 0) &&
+        (!drySnowfall || !DRY_SNOWFALL_HIDDEN_FIELDS.includes(f)),
+    );
+  });
 
   /** Danger-source `<select>` options for the zod-schema-form, keyed by field name. */
   get dangerSourceOptions(): Record<string, { value: string; label: string }[]> {
