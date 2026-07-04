@@ -62,7 +62,7 @@
                     type="checkbox"
                     class="form-check-input outside-switch ms-0 mt-0 float-none"
                     [disabled]="disabled()"
-                    [(ngModel)]="value()[key + 'Outside']"
+                    [ngModel]="value()[key + 'Outside']"
                     (ngModelChange)="onOutsideFieldChange(key, $event)"
                     [id]="key + 'Outside-input'"
                   />
@@ -81,8 +81,8 @@
                     type="checkbox"
                     class="form-check-input public-switch ms-0 mt-0 float-none"
                     [disabled]="disabled()"
-                    [(ngModel)]="value()[key + 'Public']"
-                    (ngModelChange)="onFieldChange()"
+                    [ngModel]="value()[key + 'Public']"
+                    (ngModelChange)="setField(key + 'Public', $event)"
                     [id]="key + 'Public-input'"
                   />
                 </div>
@@ -107,8 +107,8 @@
               [disabled]="disabled()"
               [enumValues]="enumValues"
               [valueI18n]="valueI18n"
-              [(value)]="value()[key]"
-              (valueChange)="onFieldChange()"
+              [value]="value()[key]"
+              (valueChange)="setField(key, $event)"
             />
           } @else if (widget?.widget === "select") {
             <select
@@ -116,8 +116,8 @@
               [disabled]="disabled()"
               class="form-select"
               [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
-              [(ngModel)]="value()[key]"
-              (ngModelChange)="onFieldChange()"
+              [ngModel]="value()[key]"
+              (ngModelChange)="setField(key, $event)"
             >
               @for (v of enumValues; track v) {
                 <option [value]="v">
@@ -128,7 +128,7 @@
           } @else if (widget?.widget === "aspect") {
             <app-aspects
               [aspects]="[castAspect(value()[key])]"
-              (aspectsChange)="Object.assign(value(), Object.fromEntries([[key, $event[0]]])); onFieldChange()"
+              (aspectsChange)="setField(key, $event[0])"
               [disabled]="disabled()"
               [singleton]="true"
               [size]="120"
@@ -138,8 +138,8 @@
               [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
               [disabled]="disabled()"
               [enumValues]="enumValues"
-              [(value)]="value()[key]"
-              (valueChange)="onFieldChange()"
+              [value]="value()[key]"
+              (valueChange)="setField(key, $event)"
               [labelI18n]="valueI18n"
               [widget]="widget?.widget"
               [diminishValues]="diminishValues()[key]"
@@ -150,7 +150,7 @@
           @if (widget?.widget === "aspect") {
             <app-aspects
               [aspects]="$any(value()[key])"
-              (aspectsChange)="Object.assign(value(), Object.fromEntries([[key, $event]])); onFieldChange()"
+              (aspectsChange)="setField(key, $event)"
               [disabled]="disabled()"
               [size]="120"
             />
@@ -179,7 +179,7 @@
               [multiple]="true"
               [enumValues]="enumValues"
               [values]="castArray(value()[key])"
-              (valuesChange)="Object.assign(value(), Object.fromEntries([[key, $event]])); onFieldChange()"
+              (valuesChange)="setField(key, $event)"
               [labelI18n]="valueI18n"
               [widget]="widget?.widget"
               [diminishValues]="diminishValues()[key]"
@@ -192,8 +192,8 @@
             [enumValues]="zodUtil.enumWithOtherValues(inner.def.element)"
             [valueI18n]="valueI18n"
             [zodType]="zodType"
-            [(value)]="value()[key]"
-            (valueChange)="onFieldChange()"
+            [value]="value()[key]"
+            (valueChange)="setField(key, $event)"
           />
         } @else if (inner.type === "array" && inner.def.element.type === "string") {
           <input
@@ -201,7 +201,10 @@
             [class]="zodUtil.zodCssClass(zodType, value()[key])"
             [ngModel]="value()[key]"
             (ngModelChange)="
-              Object.assign(value(), Object.fromEntries([[key, $event.split(',').filter((s) => s)]])); onFieldChange()
+              setField(
+                key,
+                $event.split(',').filter((s) => s)
+              )
             "
           />
         } @else if (inner.type === "string") {
@@ -211,8 +214,8 @@
               [disabled]="disabled()"
               class="form-select"
               [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
-              [(ngModel)]="value()[key]"
-              (ngModelChange)="onFieldChange()"
+              [ngModel]="value()[key]"
+              (ngModelChange)="setField(key, $event)"
             >
               <option [ngValue]="undefined"></option>
               @for (option of options; track option.value) {
@@ -223,8 +226,8 @@
             <textarea
               [attr.aria-label]="fieldAriaLabel(key, zodType)"
               [class]="zodUtil.zodCssClass(zodType, value()[key])"
-              [(ngModel)]="value()[key]"
-              (ngModelChange)="onFieldChange()"
+              [ngModel]="value()[key]"
+              (ngModelChange)="setField(key, $event)"
               rows="5"
               [disabled]="disabled()"
             ></textarea>
@@ -233,16 +236,16 @@
               [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
               [styles]="{ height: '200px' }"
               [readOnly]="disabled()"
-              [(ngModel)]="value()[key]"
-              (ngModelChange)="onFieldChange()"
+              [ngModel]="value()[key]"
+              (ngModelChange)="setField(key, $event)"
             />
           } @else if (hasOutsideField(key)) {
             <input
               type="text"
               [attr.aria-label]="fieldAriaLabel(key, zodType)"
               [class]="zodUtil.zodCssClass(zodType, value()[key])"
-              [(ngModel)]="value()[key]"
-              (ngModelChange)="onFieldChange()"
+              [ngModel]="value()[key]"
+              (ngModelChange)="setField(key, $event)"
               [disabled]="disabled() || !!value()[key + 'Outside']"
             />
           } @else {
@@ -250,8 +253,8 @@
               type="text"
               [attr.aria-label]="fieldAriaLabel(key, zodType)"
               [class]="zodUtil.zodCssClass(zodType, value()[key])"
-              [(ngModel)]="value()[key]"
-              (ngModelChange)="onFieldChange()"
+              [ngModel]="value()[key]"
+              (ngModelChange)="setField(key, $event)"
               [disabled]="disabled()"
             />
           }
@@ -262,8 +265,8 @@
             [attr.aria-label]="fieldAriaLabel(key, zodType)"
             [class]="zodUtil.zodCssClass(zodType, value()[key])"
             [class.is-invalid]="numInput.validity.badInput"
-            [(ngModel)]="value()[key]"
-            (ngModelChange)="onFieldChange()"
+            [ngModel]="value()[key]"
+            (ngModelChange)="setField(key, $event)"
             [disabled]="disabled()"
           />
           @if (!displayOnly() && numInput.validity.badInput) {
@@ -276,16 +279,16 @@
             [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
             [disabled]="disabled()"
             [showTime]="widget?.widget !== 'date'"
-            [(value)]="value()[key]"
-            (valueChange)="onFieldChange()"
+            [value]="value()[key]"
+            (valueChange)="setField(key, $event)"
           />
         } @else if (inner.type === "boolean" && widget?.widget === "yes-no") {
           <app-toggle-btn-group
             [class]="zodUtil.zodCssClass(zodType, value()[key], '')"
             [disabled]="disabled()"
             [enumValues]="[true, false]"
-            [(value)]="value()[key]"
-            (valueChange)="onFieldChange()"
+            [value]="value()[key]"
+            (valueChange)="setField(key, $event)"
             [labelI18n]="'button.#'"
           />
         } @else if (inner.type === "boolean") {
@@ -295,8 +298,8 @@
                 type="checkbox"
                 class="form-check-input"
                 [disabled]="disabled()"
-                [(ngModel)]="value()[key]"
-                (ngModelChange)="onFieldChange()"
+                [ngModel]="value()[key]"
+                (ngModelChange)="setField(key, $event)"
                 [id]="key + '-input'"
               />
               {{ zodType?.description || key }}
@@ -304,8 +307,8 @@
           </div>
         } @else if (inner.type === "record" && widget?.widget === "rich-text-multilang") {
           <app-rich-text-multilang
-            [(value)]="$any(value()[x.key])"
-            (valueChange)="onFieldChange()"
+            [value]="$any(value()[x.key])"
+            (valueChange)="setField(key, $event)"
             [disabled]="disabled()"
           />
         } @else if (zodUtil.isEnumWithOther(inner)) {
@@ -314,8 +317,8 @@
             [enumValues]="zodUtil.enumWithOtherValues(inner)"
             [valueI18n]="valueI18n"
             [zodType]="zodType"
-            [(value)]="value()[key]"
-            (valueChange)="onFieldChange()"
+            [value]="value()[key]"
+            (valueChange)="setField(key, $event)"
           />
         } @else {
           <div class="alert alert-danger" role="alert">
