@@ -79,7 +79,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
   readonly stationById = new Map<string, Feature>();
-  private readonly defaultStationSrc = "https://api.avalanche.report/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
+  private readonly defaultStationSrc = "https://wiski.tirol.gv.at/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
   private isDestroyed = false;
 
   async ngAfterViewInit() {
