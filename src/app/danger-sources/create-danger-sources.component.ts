@@ -308,7 +308,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   changeDate(date: [Date, Date]) {
     this.deselectVariant();
     const formattedDate = this.constantsService.getISODateString(date[1]);
-    this.router.navigate([`/danger-sources/${formattedDate}/${this.dangerSourceVariantType}`], {
+    // Analysis only exists for published (past) dates; future dates like tomorrow only have a forecast.
+    const type =
+      this.dangerSourceVariantType === DangerSourceVariantType.analysis &&
+      !this.dangerSourcesService.sourceDates.hasBeenPublished5PM(date)
+        ? DangerSourceVariantType.forecast
+        : this.dangerSourceVariantType;
+    this.router.navigate([`/danger-sources/${formattedDate}/${type}`], {
       queryParams: { readOnly: this.dangerSourcesService.getIsReadOnly() },
     });
   }
