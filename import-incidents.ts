@@ -585,3 +585,14 @@ function main() {
 }
 
 main();
+
+/*
+delete
+from incidents
+where public_data is null;
+
+update incidents
+set created_at = replace(date_time, '.000Z', ''),
+    updated_at = replace(date_time, '.000Z', '')
+where created_at >= '2026-07-08';
+*/
