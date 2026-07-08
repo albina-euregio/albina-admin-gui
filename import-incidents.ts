@@ -7,12 +7,17 @@ import path from "path";
 import XLSX from "xlsx";
 
 import {
+  AvalancheProblem,
+  DangerRating,
+  IncidentAvalancheSize,
+  IncidentAvalancheType,
+} from "./observations-api/src/generic-observation";
+import {
   GroupInformation,
   IncidentReport,
-  PartialIncidentReport,
   PartialIncidentReportSchema,
   VictimInformation,
-} from "./src/app/incidents/models/incident-report.model";
+} from "./src/app/incidents/incident-report.model";
 
 // Default Configuration
 const EXCEL_FILE = "/tmp/incidents.xlsm";
@@ -36,7 +41,7 @@ function getRegionId(regionName: string) {
   return REGION_MAP[name] || "AT-07";
 }
 
-function parseExcelDate(serial: string | number | Date, timeStr: string) {
+function parseExcelDate(serial: string | number | Date, timeStr: string): Date {
   let date = null;
   if (typeof serial === "number") {
     const utc_days = Math.floor(serial - 25569);
@@ -65,52 +70,56 @@ function parseExcelDate(serial: string | number | Date, timeStr: string) {
   return date;
 }
 
-function mapDangerRating(val: string | null | undefined) {
-  if (val === undefined || val === null) return "no_rating";
+function mapDangerRating(val: string | null | undefined): IncidentReport["dangerRating"] {
+  if (val === undefined || val === null) return DangerRating.no_rating;
   const num = parseInt(val, 10);
   switch (num) {
     case 1:
-      return "low";
+      return DangerRating.low;
     case 2:
-      return "moderate";
+      return DangerRating.moderate;
     case 3:
-      return "considerable";
+      return DangerRating.considerable;
     case 4:
-      return "high";
+      return DangerRating.high;
     case 5:
-      return "very_high";
+      return DangerRating.very_high;
     default:
-      return "no_rating";
+      return DangerRating.no_rating;
   }
 }
 
-function getAvalancheProblems(row: Record<string, string>) {
-  const problems = [];
+function getAvalancheProblems(row: Record<string, string>): IncidentReport["avalancheProblems"] {
+  const problems: IncidentReport["avalancheProblems"] = [];
   const p1 = row["1. relevantes Lawinenproblem"];
   const p2 = row["2. relevantes Lawinenproblem"];
 
-  function mapProblem(prob: any) {
+  function mapProblem(prob: string): AvalancheProblem | undefined {
     if (!prob) return undefined;
     const val = String(prob).trim().toLowerCase();
-    if (val.includes("triebschnee") || val.includes("wind")) return "wind_slab";
-    if (val.includes("alt") || val.includes("persistent")) return "persistent_weak_layers";
-    if (val.includes("gleit")) return "gliding_snow";
-    if (val.includes("neu")) return "new_snow";
-    if (val.includes("nass")) return "wet_snow";
-    if (val.includes("wechte")) return "cornices";
-    return "no_distinct_avalanche_problem";
+    if (val.includes("triebschnee") || val.includes("wind")) return AvalancheProblem.wind_slab;
+    if (val.includes("alt") || val.includes("persistent")) return AvalancheProblem.persistent_weak_layers;
+    if (val.includes("gleit")) return AvalancheProblem.gliding_snow;
+    if (val.includes("neu")) return AvalancheProblem.new_snow;
+    if (val.includes("nass")) return AvalancheProblem.wet_snow;
+    if (val.includes("wechte")) return AvalancheProblem.cornices;
+    return AvalancheProblem.no_distinct_avalanche_problem;
   }
 
   const mp1 = mapProblem(p1);
-  if (mp1) problems.push(mp1);
+  if (mp1) {
+    problems.push({ problemType: mp1 });
+  }
   const mp2 = mapProblem(p2);
-  if (mp2 && !problems.includes(mp2)) problems.push(mp2);
+  if (mp2 && mp1 !== mp2) {
+    problems.push({ problemType: mp2 });
+  }
 
   return problems;
 }
 
-function getDangerPatterns(row: Record<string, string>) {
-  const patterns: string[] = [];
+function getDangerPatterns(row: Record<string, string>): IncidentReport["dangerPattern"] {
+  const patterns: IncidentReport["dangerPattern"] = [];
   const cols = ["1. relevantes gm", "2. relevantes gm", "3. relevantes gm"];
   cols.forEach((col) => {
     const val = row[col];
@@ -125,38 +134,38 @@ function getDangerPatterns(row: Record<string, string>) {
   return patterns;
 }
 
-function mapAvalancheSize(size: string | null | undefined) {
-  if (size === undefined || size === null) return "medium";
+function mapAvalancheSize(size: string | null | undefined): IncidentReport["avalancheSize"] {
+  if (size === undefined || size === null) return IncidentAvalancheSize.medium;
   const val = String(size).trim().toLowerCase();
-  if (val === "1" || val.includes("klein")) return "small";
-  if (val === "2" || val.includes("mittel")) return "medium";
-  if (val === "3" || val.includes("groß") || val.includes("gross")) return "large";
-  if (val === "4" || val.includes("sehr groß") || val.includes("sehr gross")) return "very_large";
-  if (val === "5" || val.includes("extrem")) return "extreme";
-  return "medium";
+  if (val === "1" || val.includes("klein")) return IncidentAvalancheSize.small;
+  if (val === "2" || val.includes("mittel")) return IncidentAvalancheSize.medium;
+  if (val === "3" || val.includes("groß") || val.includes("gross")) return IncidentAvalancheSize.large;
+  if (val === "4" || val.includes("sehr groß") || val.includes("sehr gross")) return IncidentAvalancheSize.very_large;
+  if (val === "5" || val.includes("extrem")) return IncidentAvalancheSize.extreme;
+  return IncidentAvalancheSize.medium;
 }
 
-function mapAvalancheType(type: string) {
-  if (!type) return "unknown";
+function mapAvalancheType(type: string): IncidentReport["avalancheType"] {
+  if (!type) return IncidentAvalancheType.unknown;
   const val = String(type).trim().toLowerCase();
-  if (val.includes("brett") || val.includes("kunstschnee")) return "slab";
-  if (val.includes("locker")) return "loose";
-  if (val.includes("gleit")) return "glide";
-  return "unknown";
+  if (val.includes("brett") || val.includes("kunstschnee")) return IncidentAvalancheType.slab;
+  if (val.includes("locker")) return IncidentAvalancheType.loose;
+  if (val.includes("gleit")) return IncidentAvalancheType.glide;
+  return IncidentAvalancheType.unknown;
 }
 
-function mapRelevantAvalancheProblem(prob: string) {
+function mapRelevantAvalancheProblem(prob: string): IncidentReport["relevantAvalancheProblem"] {
   if (!prob) return undefined;
   const val = String(prob).trim().toLowerCase();
-  if (val.includes("triebschnee")) return "wind_slab";
-  if (val.includes("alt")) return "persistent_weak_layers";
-  if (val.includes("gleit")) return "gliding_snow";
-  if (val.includes("neu")) return "new_snow";
-  if (val.includes("nass")) return "wet_snow";
+  if (val.includes("triebschnee")) return AvalancheProblem.wind_slab;
+  if (val.includes("alt")) return AvalancheProblem.persistent_weak_layers;
+  if (val.includes("gleit")) return AvalancheProblem.gliding_snow;
+  if (val.includes("neu")) return AvalancheProblem.new_snow;
+  if (val.includes("nass")) return AvalancheProblem.wet_snow;
   return undefined;
 }
 
-function mapTrigger(trigger: string) {
+function mapTrigger(trigger: string): IncidentReport["trigger"] {
   if (!trigger) return "unknown";
   const val = String(trigger).trim().toLowerCase();
   if (val.includes("spontan") || val === "wechte" || val.includes("wechtenbruch")) {
@@ -169,7 +178,7 @@ function mapTrigger(trigger: string) {
   return "unknown";
 }
 
-function mapNaturalTrigger(trigger: string) {
+function mapNaturalTrigger(trigger: string): IncidentReport["natural"] {
   if (!trigger) return undefined;
   const val = String(trigger).trim().toLowerCase();
   if (val.includes("wechte")) return "CorniceFall";
@@ -177,15 +186,15 @@ function mapNaturalTrigger(trigger: string) {
 }
 
 // Ensure trigger mappings fit schema
-function mapPersonTrigger(trigger: string) {
+function mapPersonTrigger(trigger: string): IncidentReport["person"] {
   return "PersonAccidental";
 }
 
-function mapExplosivesTrigger(trigger: string) {
+function mapExplosivesTrigger(trigger: string): IncidentReport["explosives"] {
   return "HandThrownOrPlaced";
 }
 
-function mapVehicleTrigger(trigger: string) {
+function mapVehicleTrigger(trigger: string): IncidentReport["vehicle"] {
   return "OverSnowVehicle";
 }
 
@@ -282,6 +291,7 @@ function getGroupInformation(row: Record<string, string>): GroupInformation[] {
 
   return [
     {
+      id: crypto.randomUUID(),
       anonymousGroupIdentifier: "group_1",
       groupType: row["gefuehrte Tour"] === "ja" ? "Club" : "RecreationalFamilyFriends",
       groupSize: typeof row["beteiligte Personen [N]"] === "number" ? row["beteiligte Personen [N]"] : undefined,
@@ -297,7 +307,7 @@ function getGroupInformation(row: Record<string, string>): GroupInformation[] {
   ];
 }
 
-function getVictimInformation(row: Record<string, string>) {
+function getVictimInformation(row: Record<string, string>, groupId: VictimInformation["groupId"]) {
   const victims = [];
   const fatalCount = parseInt(row["getoetete Personen"], 10) || 0;
   const injuredCount = parseInt(row["verletzte Personen"], 10) || 0;
@@ -309,10 +319,11 @@ function getVictimInformation(row: Record<string, string>) {
   let fullyBuriedLeft = parseInt(row["totalverschuettete Personen"], 10) || 0;
   let partlyBuriedLeft = parseInt(row["teilverschuettete Personen"], 10) || 0;
 
-  function createVictim(status: string): VictimInformation {
+  function createVictim(status: VictimInformation["fatalInjured"]): VictimInformation {
     return {
+      id: crypto.randomUUID(),
       anonymousVictimIdentifier: `victim_${victims.length + 1}`,
-      anonymousGroupIdentifier: "group_1",
+      groupId,
       caught: "Involved",
       fatalInjured: status,
       burialDegree: "Unknown",
@@ -380,7 +391,10 @@ function convertRowToIncidentJson(row: Record<string, string>) {
 
   const trigger = mapTrigger(row["Ausloesart"]);
 
-  const data: PartialIncidentReport = {
+  const groupInformation = getGroupInformation(row);
+  const victimInformation = getVictimInformation(row, groupInformation?.[0]?.id);
+
+  const data: IncidentReport = {
     author: "Excel Import",
     authorAffiliation: "Import",
     timestamp: new Date().toISOString(),
@@ -463,8 +477,8 @@ function convertRowToIncidentJson(row: Record<string, string>) {
     damagedAssets: [],
     otherDamagesComment: undefined,
 
-    groupInformation: getGroupInformation(row),
-    victimInformation: getVictimInformation(row),
+    groupInformation,
+    victimInformation,
 
     recentSlabAvalanches: undefined,
     signsOfInstability: undefined,
