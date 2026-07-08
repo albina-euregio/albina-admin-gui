@@ -51,7 +51,7 @@ function parseExcelDate(serial: string | number | Date, timeStr: string | number
     const match = serial.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
     if (match) {
       const [, day, month, year] = match;
-      date = new Date(Date.UTC(+year, +month - 1, +day));
+      date = new Date(+year, +month - 1, +day);
     }
   }
 
@@ -62,17 +62,17 @@ function parseExcelDate(serial: string | number | Date, timeStr: string | number
   if (typeof timeStr === "number") {
     date.setTime(date.getTime() + timeStr * 86400 * 1000);
   } else if (typeof timeStr === "string") {
-    date.setUTCHours(12, 0, 0, 0); // Default to noon
+    date.setHours(12, 0, 0, 0); // Default to noon
     const parts = timeStr.trim().split(":");
     if (parts.length >= 2) {
       const hours = parseInt(parts[0], 10);
       const minutes = parseInt(parts[1], 10);
       if (!isNaN(hours) && !isNaN(minutes)) {
-        date.setUTCHours(hours, minutes, 0, 0);
+        date.setHours(hours, minutes, 0, 0);
       }
     }
   } else {
-    date.setUTCHours(12, 0, 0, 0); // Default to noon
+    date.setHours(12, 0, 0, 0); // Default to noon
   }
   return date;
 }
