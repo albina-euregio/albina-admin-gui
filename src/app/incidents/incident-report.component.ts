@@ -355,6 +355,11 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!this.userCan("DELETE")) return;
     const message = this.translateService.instant("incidentReportUI.deleteIncidentConfirm");
     if (!confirm(message)) return;
+    // A report that never became valid was never saved to the server, so there is nothing to delete there.
+    if (!this.incidentReport().id) {
+      this.router.navigate(["/incidents"]);
+      return;
+    }
     this.incidentService.deleteIncident(this.incidentReport().id).subscribe({
       next: () => this.router.navigate(["/incidents"]),
       error: (error) => console.error("Incident could not be deleted!", error),

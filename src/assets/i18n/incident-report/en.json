@@ -63,7 +63,6 @@
     "removeAvalancheProblem": "Remove Avalanche Problem",
     "removeGroup": "Remove Group",
     "removeVictim": "Remove Person",
-    "requiredFieldsMissingTitle": "Required fields are missing",
     "requiredFieldsMissingHint": "The report cannot be saved and its status cannot be changed until all required fields (marked in the form) are filled in.",
     "displayMode": {
       "edit": "Edit",
