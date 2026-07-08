@@ -30,13 +30,13 @@ const REGION_MAP = {
   "val d’aran": "ES-CT-L",
 };
 
-function getRegionId(regionName) {
+function getRegionId(regionName: string) {
   if (!regionName) return "AT-07"; // Fallback default region
   const name = String(regionName).trim().toLowerCase();
   return REGION_MAP[name] || "AT-07";
 }
 
-function parseExcelDate(serial, timeStr) {
+function parseExcelDate(serial: string | number | Date, timeStr: string) {
   let date = null;
   if (typeof serial === "number") {
     const utc_days = Math.floor(serial - 25569);
@@ -65,7 +65,7 @@ function parseExcelDate(serial, timeStr) {
   return date;
 }
 
-function mapDangerRating(val) {
+function mapDangerRating(val: string | null | undefined) {
   if (val === undefined || val === null) return "no_rating";
   const num = parseInt(val, 10);
   switch (num) {
@@ -84,12 +84,12 @@ function mapDangerRating(val) {
   }
 }
 
-function getAvalancheProblems(row) {
+function getAvalancheProblems(row: Record<string, string>) {
   const problems = [];
   const p1 = row["1. relevantes Lawinenproblem"];
   const p2 = row["2. relevantes Lawinenproblem"];
 
-  function mapProblem(prob) {
+  function mapProblem(prob: any) {
     if (!prob) return undefined;
     const val = String(prob).trim().toLowerCase();
     if (val.includes("triebschnee") || val.includes("wind")) return "wind_slab";
@@ -109,8 +109,8 @@ function getAvalancheProblems(row) {
   return problems;
 }
 
-function getDangerPatterns(row) {
-  const patterns = [];
+function getDangerPatterns(row: Record<string, string>) {
+  const patterns: string[] = [];
   const cols = ["1. relevantes gm", "2. relevantes gm", "3. relevantes gm"];
   cols.forEach((col) => {
     const val = row[col];
@@ -125,7 +125,7 @@ function getDangerPatterns(row) {
   return patterns;
 }
 
-function mapAvalancheSize(size) {
+function mapAvalancheSize(size: string | null | undefined) {
   if (size === undefined || size === null) return "medium";
   const val = String(size).trim().toLowerCase();
   if (val === "1" || val.includes("klein")) return "small";
@@ -136,7 +136,7 @@ function mapAvalancheSize(size) {
   return "medium";
 }
 
-function mapAvalancheType(type) {
+function mapAvalancheType(type: string) {
   if (!type) return "unknown";
   const val = String(type).trim().toLowerCase();
   if (val.includes("brett") || val.includes("kunstschnee")) return "slab";
@@ -145,7 +145,7 @@ function mapAvalancheType(type) {
   return "unknown";
 }
 
-function mapRelevantAvalancheProblem(prob) {
+function mapRelevantAvalancheProblem(prob: string) {
   if (!prob) return undefined;
   const val = String(prob).trim().toLowerCase();
   if (val.includes("triebschnee")) return "wind_slab";
@@ -156,7 +156,7 @@ function mapRelevantAvalancheProblem(prob) {
   return undefined;
 }
 
-function mapTrigger(trigger) {
+function mapTrigger(trigger: string) {
   if (!trigger) return "unknown";
   const val = String(trigger).trim().toLowerCase();
   if (val.includes("spontan") || val === "wechte" || val.includes("wechtenbruch")) {
@@ -169,7 +169,7 @@ function mapTrigger(trigger) {
   return "unknown";
 }
 
-function mapNaturalTrigger(trigger) {
+function mapNaturalTrigger(trigger: string) {
   if (!trigger) return undefined;
   const val = String(trigger).trim().toLowerCase();
   if (val.includes("wechte")) return "CorniceFall";
@@ -177,19 +177,19 @@ function mapNaturalTrigger(trigger) {
 }
 
 // Ensure trigger mappings fit schema
-function mapPersonTrigger(trigger) {
+function mapPersonTrigger(trigger: string) {
   return "PersonAccidental";
 }
 
-function mapExplosivesTrigger(trigger) {
+function mapExplosivesTrigger(trigger: string) {
   return "HandThrownOrPlaced";
 }
 
-function mapVehicleTrigger(trigger) {
+function mapVehicleTrigger(trigger: string) {
   return "OverSnowVehicle";
 }
 
-function mapAspect(aspect) {
+function mapAspect(aspect: string) {
   if (!aspect) return undefined;
   const val = String(aspect).trim().toUpperCase();
   const map = {
@@ -208,7 +208,7 @@ function mapAspect(aspect) {
   return map[val] || undefined;
 }
 
-function mapMoisture(moisture) {
+function mapMoisture(moisture: string) {
   if (!moisture) return "Unknown";
   const val = String(moisture).trim().toLowerCase();
   if (val.includes("trocken") || val.includes("torcken")) return "Dry";
@@ -217,7 +217,7 @@ function mapMoisture(moisture) {
   return "Unknown";
 }
 
-function mapTerrainType(terrain) {
+function mapTerrainType(terrain: string) {
   if (!terrain) return "Unknown";
   const val = String(terrain).trim().toLowerCase();
   if (val.includes("frei") || val.includes("variant")) return "FreeTerrain";
@@ -233,7 +233,7 @@ function mapTerrainType(terrain) {
   return "Unknown";
 }
 
-function mapActivity(act) {
+function mapActivity(act: string) {
   if (!act) return "Unknown";
   const val = String(act).trim().toLowerCase();
   if (val.includes("tour")) return "Touring";
@@ -248,7 +248,7 @@ function mapActivity(act) {
   return "Unknown";
 }
 
-function mapTravelDirection(dir) {
+function mapTravelDirection(dir: string) {
   if (!dir) return undefined;
   const val = String(dir).trim().toLowerCase();
   if (val.includes("aufstieg") || val.includes("aufsteig")) return "Ascending";
@@ -257,7 +257,7 @@ function mapTravelDirection(dir) {
   return undefined;
 }
 
-function mapGear(gear) {
+function mapGear(gear: string) {
   if (!gear) return "Unknown";
   const val = String(gear).trim().toLowerCase();
   if (val === "ja") return "All";
@@ -266,7 +266,7 @@ function mapGear(gear) {
   return "Unknown";
 }
 
-function mapCountry(nat) {
+function mapCountry(nat: string) {
   if (!nat) return "Austria";
   const val = String(nat).trim().toLowerCase();
   if (val.includes("oesterreich") || val.includes("österreich") || val === "at") return "Austria";
@@ -309,7 +309,7 @@ function getVictimInformation(row: Record<string, string>) {
   let fullyBuriedLeft = parseInt(row["totalverschuettete Personen"], 10) || 0;
   let partlyBuriedLeft = parseInt(row["teilverschuettete Personen"], 10) || 0;
 
-  function createVictim(status): VictimInformation {
+  function createVictim(status: string): VictimInformation {
     return {
       anonymousVictimIdentifier: `victim_${victims.length + 1}`,
       anonymousGroupIdentifier: "group_1",
