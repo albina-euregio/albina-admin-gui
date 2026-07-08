@@ -41,32 +41,39 @@ function getRegionId(regionName: string) {
   return REGION_MAP[name] || "AT-07";
 }
 
-function parseExcelDate(serial: string | number | Date, timeStr: string): Date {
+function parseExcelDate(serial: string | number | Date, timeStr: string | number): Date {
   let date = null;
   if (typeof serial === "number") {
     const utc_days = Math.floor(serial - 25569);
-    const utc_value = utc_days * 86400;
-    date = new Date(utc_value * 1000);
+    date = new Date(utc_days * 86400 * 1000);
   } else if (typeof serial === "string") {
-    date = new Date(serial);
+    // parse DD.MM.YYYY
+    const match = serial.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+    if (match) {
+      const [, day, month, year] = match;
+      date = new Date(Date.UTC(+year, +month - 1, +day));
+    }
   }
 
   if (!date || isNaN(date.getTime())) {
-    date = new Date();
+    throw new Error(`Unsupported date ${serial}`);
   }
 
-  if (timeStr && typeof timeStr === "string") {
+  if (typeof timeStr === "number") {
+    date.setTime(date.getTime() + timeStr * 86400 * 1000);
+  } else if (typeof timeStr === "string") {
+    date.setUTCHours(12, 0, 0, 0); // Default to noon
     const parts = timeStr.trim().split(":");
     if (parts.length >= 2) {
       const hours = parseInt(parts[0], 10);
       const minutes = parseInt(parts[1], 10);
       if (!isNaN(hours) && !isNaN(minutes)) {
         date.setUTCHours(hours, minutes, 0, 0);
-        return date;
       }
     }
+  } else {
+    date.setUTCHours(12, 0, 0, 0); // Default to noon
   }
-  date.setHours(12, 0, 0, 0); // Default to noon
   return date;
 }
 
