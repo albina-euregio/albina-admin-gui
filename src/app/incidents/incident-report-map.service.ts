@@ -5,6 +5,8 @@ import {
   Icon,
   Layer,
   LayerGroup,
+  LayersControl,
+  LatLngBoundsLiteral,
   LeafletMouseEvent,
   Map as LeafletMap,
   Marker,
@@ -83,9 +85,34 @@ export class IncidentReportMapService implements OnDestroy {
     const map = new LeafletMap(elementId).setView([47.268, 11.404], 9);
     this.map = map;
 
-    new TileLayer("https://tile.opentopomap.org/{z}/{x}/{y}.png", {
+    const openTopoMap = new TileLayer("https://tile.opentopomap.org/{z}/{x}/{y}.png", {
       attribution: "map data: © OpenStreetMap contributors, SRTM | map style: © OpenTopoMap (CC-BY-SA)",
     }).addTo(map);
+
+    // Optional high-detail basemap for cleaner polygon tracing
+    const basemapAtTerrainOptions = {
+      maxZoom: 17,
+      attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
+      type: "grau",
+      format: "jpeg",
+      bounds: [
+        [46.35877, 8.782379],
+        [49.037872, 17.189532],
+      ] as LatLngBoundsLiteral,
+    };
+    const basemapAtTerrain = new TileLayer(
+      "https://mapsneu.wien.gv.at/basemap/bmapgelaende/{type}/google3857/{z}/{y}/{x}.{format}",
+      basemapAtTerrainOptions,
+    );
+
+    new LayersControl(
+      {
+        OpenTopoMap: openTopoMap,
+        "basemap.at Gelände": basemapAtTerrain,
+      },
+      undefined,
+      { position: "bottomright" },
+    ).addTo(map);
 
     map.on("click", (e: LeafletMouseEvent) => {
       if (config.disabled()) return;
