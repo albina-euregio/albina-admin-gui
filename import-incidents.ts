@@ -41,14 +41,11 @@ function getRegionId(regionName: string) {
   return REGION_MAP[name] || "AT-07";
 }
 
-function parseExcelDate(serial: string | number | Date, timeStr: string | number): Date {
+function parseExcelDate(serial: string | Date, timeStr: string): Date {
   let date = null;
-  if (typeof serial === "number") {
-    const utc_days = Math.floor(serial - 25569);
-    date = new Date(utc_days * 86400 * 1000);
-  } else if (typeof serial === "string") {
+  if (typeof serial === "string") {
     // parse DD.MM.YYYY
-    const match = serial.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+    const match = serial.trim().match(/^(\d{1,2})[/.](\d{1,2})[/.](\d{4})$/);
     if (match) {
       const [, day, month, year] = match;
       date = new Date(+year, +month - 1, +day);
@@ -59,9 +56,7 @@ function parseExcelDate(serial: string | number | Date, timeStr: string | number
     throw new Error(`Unsupported date ${serial}`);
   }
 
-  if (typeof timeStr === "number") {
-    date.setTime(date.getTime() + timeStr * 86400 * 1000);
-  } else if (typeof timeStr === "string") {
+  if (typeof timeStr === "string") {
     date.setHours(12, 0, 0, 0); // Default to noon
     const parts = timeStr.trim().split(":");
     if (parts.length >= 2) {
@@ -527,14 +522,14 @@ function main() {
     process.exit(1);
   }
 
-  const workbook = XLSX.readFile(EXCEL_FILE);
+  const workbook = XLSX.readFile(EXCEL_FILE, { dateNF: "dd.mm.yyyy" });
   const sheet = workbook.Sheets["++LE_Gesamtübersicht (seit 1992"];
   if (!sheet) {
     console.error("Error: Could not find sheet 'incidents' in workbook");
     process.exit(1);
   }
 
-  const rows = XLSX.utils.sheet_to_json(sheet);
+  const rows = XLSX.utils.sheet_to_json(sheet, { raw: false });
   console.log(`Parsed ${rows.length} rows from Excel sheet.`);
 
   const sqlStatements = [
