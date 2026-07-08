@@ -537,7 +537,7 @@ function main() {
   ];
 
   let successCount = 0;
-  rows.forEach((row, idx) => {
+  rows.forEach(async (row, idx) => {
     try {
       // Ignore rows that don't have a number
       if (!row["Nr."]) {
@@ -545,6 +545,22 @@ function main() {
       }
 
       const incident = convertRowToIncidentJson(row);
+
+      // createIncident via HTTP POST see openapi.d.ts
+      // HTTP POST
+      const request = await fetch("https://dev.avalanche.report/api/incidents?region=" + incident.region_id, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer ey...",
+          "Content-Type": "application/json",
+        },
+        body: incident.data,
+      });
+      console.log(incident.id, request);
+      if (!request.ok) {
+        fs.writeFileSync(`${incident.id}.json`, incident.data);
+        throw new Error(await request.text());
+      }
 
       // Escape single quotes for SQL insertion
       const escapedData = incident.data.replace(/'/g, "''");
