@@ -515,6 +515,7 @@ function convertRowToIncidentJson(row: Record<string, string>) {
     data: JSON.stringify(PartialIncidentReportSchema.parse(data))
       .replaceAll("\\t", "  ")
       .replaceAll("\\r", "")
+      .replaceAll('\\"', "'")
       .replaceAll("\\", "\\\\"),
   };
 }
