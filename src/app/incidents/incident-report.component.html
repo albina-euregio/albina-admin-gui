@@ -164,20 +164,22 @@
           (click)="activeTab = tab.id"
         >
           <span>{{ tab.label | translate }}</span>
-          @let safeParse = getTabValidationStatus(tab);
           @if (tab.id === "attachments") {
             <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
               incidentReport().attachments.length
             }}</span>
-          } @else if (safeParse.success) {
-            <span class="text-success" title="{{ 'zodForm.valid' | translate }}">
-              <i class="ph ph-check"></i>
-            </span>
           } @else {
-            @let error = prettifyError(safeParse.error);
-            <span class="text-danger" [title]="error">
-              <i class="ph ph-warning"></i>
-            </span>
+            @let iconStatus = getTabIconStatus(tab);
+            @if (iconStatus === "valid") {
+              <span class="text-success" title="{{ 'zodForm.valid' | translate }}">
+                <i class="ph ph-check"></i>
+              </span>
+            } @else if (iconStatus === "invalid") {
+              @let error = prettifyError(getTabValidationStatus(tab).error);
+              <span class="text-danger" [title]="error">
+                <i class="ph ph-warning"></i>
+              </span>
+            }
           }
         </button>
       </li>

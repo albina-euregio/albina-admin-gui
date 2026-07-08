@@ -163,6 +163,47 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return tab.schema.safeParse(this.incidentReport());
   }
 
+  /**
+   * Many tabs (e.g. Other Damages, Analysis) have no required fields, so they safe-parse
+   * successfully even when untouched. Use this to tell "validly filled in" apart from "still empty".
+   */
+  isTabEmpty(tab: (typeof this.allTabs)[number]): boolean {
+    const report = this.incidentReport();
+    if (tab.id === "group") {
+      return report.personInvolvement == null || report.personInvolvement === "Unknown";
+    }
+    if (!("schema" in tab)) {
+      return false;
+    }
+    return Object.keys(tab.schema.shape).every((key) => this.isValueEmpty(report[key]));
+  }
+
+  getTabIconStatus(tab: (typeof this.allTabs)[number]): "valid" | "invalid" | "empty" {
+    if (!this.getTabValidationStatus(tab).success) {
+      return "invalid";
+    }
+    return this.isTabEmpty(tab) ? "empty" : "valid";
+  }
+
+  private isValueEmpty(value: unknown): boolean {
+    if (value == null) {
+      return true;
+    }
+    if (typeof value === "string") {
+      return value.trim() === "";
+    }
+    if (Array.isArray(value)) {
+      return value.every((item) => this.isValueEmpty(item));
+    }
+    if (value instanceof Date) {
+      return false;
+    }
+    if (typeof value === "object") {
+      return Object.values(value).every((item) => this.isValueEmpty(item));
+    }
+    return false;
+  }
+
   getGroupValidationStatus(): z.ZodSafeParseResult<unknown> {
     const report = this.incidentReport();
     const personInvolvement = IncidentModels.IncidentReportSchema.shape.personInvolvement.safeParse(
@@ -181,7 +222,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     IncidentModels.IncidentReportSchema.partial().parse({
       author: this.authenticationService.getCurrentAuthor()?.email,
       authorAffiliation: this.authenticationService.getCurrentAuthor()?.organization,
-      publicAvalancheWarningService: this.authenticationService.getCurrentAuthor()?.organization,
       reportStatus: "Draft",
       personInvolvement: "Unknown",
       groupInformation: [
