@@ -564,7 +564,7 @@ function main() {
         },
         body: incident.data,
       });
-      console.log(incident.id, request);
+      console.log(incident.id, JSON.parse(incident.data)["dateTime"], request);
       if (!request.ok) {
         fs.writeFileSync(`${incident.id}.json`, incident.data);
         throw new Error(await request.text());
