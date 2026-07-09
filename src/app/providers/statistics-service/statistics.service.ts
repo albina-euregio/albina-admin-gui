@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { from, map, Observable } from "rxjs";
 
 import * as albinaApi from "../albina-api";
+import { repeatedArrayQuerySerializer } from "../albina-api.provider";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 
@@ -28,6 +29,7 @@ export class StatisticsService {
           duplicate: duplicates ?? false,
           obsoleteMatrix: false,
         },
+        querySerializer: repeatedArrayQuerySerializer,
         headers: { Accept: "text/csv" },
         // `responseType` is not part of the typed options, but Angular's HttpClient
         // honours it so the CSV is returned as a Blob instead of parsed JSON.

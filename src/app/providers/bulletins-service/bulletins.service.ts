@@ -17,6 +17,7 @@ import { Bulletin, Bulletins } from "../../models/CAAMLv6";
 import { SourceDates } from "../../models/SourceDates";
 import { AlbinaLanguage } from "../../models/text.model";
 import * as albinaApi from "../albina-api";
+import { repeatedArrayQuerySerializer } from "../albina-api.provider";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
@@ -292,6 +293,7 @@ export class BulletinsService {
           lang: lang as albinaApi.LanguageCode,
           version: "V6_JSON",
         },
+        querySerializer: repeatedArrayQuerySerializer,
         throwOnError: true,
       }),
     ).pipe(map((res) => (res.data as unknown as Bulletins).bulletins));
@@ -320,6 +322,7 @@ export class BulletinsService {
           date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
           regions: regions,
         },
+        querySerializer: repeatedArrayQuerySerializer,
         headers: etag ? { "If-None-Match": etag } : undefined,
         throwOnError: true,
       }),
@@ -343,6 +346,7 @@ export class BulletinsService {
           lang: this.translateService.getCurrentLang() as albinaApi.LanguageCode,
           version: "V6_JSON",
         },
+        querySerializer: repeatedArrayQuerySerializer,
         throwOnError: true,
       }),
     ).pipe(map((res) => res.data as unknown as Bulletins));

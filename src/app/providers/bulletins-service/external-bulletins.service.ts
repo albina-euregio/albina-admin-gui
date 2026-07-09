@@ -7,6 +7,7 @@ import { map, switchMap } from "rxjs/operators";
 import { Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
 import * as albinaApi from "../albina-api";
+import { repeatedArrayQuerySerializer } from "../albina-api.provider";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
@@ -48,8 +49,7 @@ export class ExternalBulletinsService {
               date: this.constantsService.getISOStringWithTimezoneOffset(date),
               regions: server.regions.filter((region) => !this.authenticationService.isInternalRegion(region)),
             },
-            // external servers expect regions as repeated params (regions=AT-05&regions=AT-06&…)
-            querySerializer: { array: { explode: true, style: "form" } },
+            querySerializer: repeatedArrayQuerySerializer,
             throwOnError: true,
           }),
         );
