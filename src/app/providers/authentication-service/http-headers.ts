@@ -1,5 +1,6 @@
 import { HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
+import { environment } from "environments/environment";
 
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "./authentication.service";
@@ -22,7 +23,7 @@ export const httpHeaders: HttpInterceptorFn = (req, next) => {
       setHeaders["Content-Type"] = "application/json";
     }
   }
-  if (authenticationService.isUserLoggedIn() && req.url.startsWith(constantsService.getServerUrlGET("/"))) {
+  if (authenticationService.isUserLoggedIn() && req.url.startsWith(environment.apiBaseUrl)) {
     setHeaders["Authorization"] = "Bearer " + authenticationService.accessToken;
     if (!window.location.origin.includes("localhost")) {
       setHeaders["X-Client-Version"] = constantsService.release;

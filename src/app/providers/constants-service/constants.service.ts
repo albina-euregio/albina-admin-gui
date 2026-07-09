@@ -4,7 +4,6 @@ import { Injectable } from "@angular/core";
 import * as pkg from "../../../../package.json";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
-import type { ServerModel } from "../../models/server.model";
 
 @Injectable({ providedIn: "root" })
 export class ConstantsService {
@@ -129,30 +128,6 @@ export class ConstantsService {
 
   getDangerRatingColorBw(dangerRating: Enums.DangerRating) {
     return this.colorDangerRatingBw[dangerRating] ?? this.colorDangerRatingBw[Enums.DangerRating.missing];
-  }
-
-  getServerUrlGET(endpoint: string, params?: Record<string, unknown>, pathParams?: Record<string, unknown>) {
-    return this.getServerUrl(endpoint, params, pathParams);
-  }
-
-  private getServerUrl(
-    endpoint: string,
-    params?: Record<string, unknown>,
-    pathParams?: Record<string, unknown>,
-    base = environment.apiBaseUrl,
-  ) {
-    for (const [key, value] of Object.entries(pathParams ?? {})) {
-      endpoint = endpoint.replace(`{${key}}`, String(value));
-    }
-    const url = new URL("." + endpoint, base);
-    for (const [key, value] of Object.entries(params ?? {})) {
-      if (Array.isArray(value)) {
-        value.forEach((v) => url.searchParams.append(key, v));
-      } else {
-        url.searchParams.append(key, String(value));
-      }
-    }
-    return url.toString();
   }
 
   getServerWsUrl(endpoint: `../${string}`) {
