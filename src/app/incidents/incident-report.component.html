@@ -6,60 +6,16 @@
       <h1 class="h5 mb-1 fw-bold">
         {{ "incidentReport.incidentReport" | translate }}
       </h1>
-      <p class="mb-1 text-secondary d-flex align-items-center gap-2" style="font-size: 13px">
-        @if (incidentReport().author) {
-          <span title="{{ incidentReport().authorAffiliation || '' }}">
-            {{ incidentReport().author }}
-          </span>
-          <span class="text-secondary-emphasis">·</span>
-        }
-        @if (incidentReport().updatedAt; as updatedAt) {
-          <span title="{{ 'incidentReport.updatedAt' | translate }}">
-            {{ updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
-          </span>
-          <span class="text-secondary-emphasis">·</span>
-        }
-        @switch (saveState) {
-          @case ("idle") {
-            <span title="{{ 'incidentReportUI.saveStateIdle' | translate }}"><i class="ph ph-cloud"></i></span>
-          }
-          @case ("saving") {
-            <span title="{{ 'incidentReportUI.saveStateSaving' | translate }}"
-              ><i class="ph ph-circle-notch ph-spin"></i
-            ></span>
-          }
-          @case ("saved") {
-            <span class="text-success" title="{{ 'incidentReportUI.saveStateSaved' | translate }}"
-              ><i class="ph ph-cloud-check"></i
-            ></span>
-          }
-          @case ("error") {
-            <span class="text-danger" title="{{ 'incidentReportUI.saveStateError' | translate }}"
-              ><i class="ph ph-cloud-slash"></i
-            ></span>
-          }
-          @case ("blocked") {
-            <span class="text-danger" title="{{ 'incidentReportUI.saveStateBlocked' | translate }}"
-              ><i class="ph ph-cloud-warning"></i
-            ></span>
-          }
-        }
-        @if (incidentReport().publishedAt; as publishedAt) {
-          <span class="text-secondary-emphasis">·</span>
-          <span title="{{ 'incidentReport.publishedAt' | translate }}">
-            {{ publishedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
-          </span>
-          <span class="text-secondary-emphasis">·</span>
-          <span class="text-success" title="{{ 'incidentReport.publishedAt' | translate }}">
-            <i class="ph ph-eye"></i>
-          </span>
-        }
-      </p>
+      @if (incidentReport().author) {
+        <p class="mb-1 text-secondary" style="font-size: 13px" title="{{ incidentReport().authorAffiliation || '' }}">
+          {{ incidentReport().author }}
+        </p>
+      }
     </div>
 
-    <div class="align-self-end align-self-md-auto">
+    <div class="align-self-end align-self-md-auto d-flex flex-column align-items-end gap-1">
       <!-- Report Status Dropdown -->
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2" [class.d-none]="readOnly">
         <select
           [disabled]="disabled() || !userCan('CHANGE_STATUS') || !isReportValid()"
           id="reportStatusSelect"
@@ -117,7 +73,7 @@
         @if (userCan("DELETE")) {
           <button
             type="button"
-            class="btn btn-sm btn-outline-danger btn-icon d-print-none"
+            class="btn btn-outline-danger btn-icon d-print-none"
             [disabled]="disabled()"
             (click)="deleteIncident()"
             title="{{ 'incidentReportUI.deleteIncident' | translate }}"
@@ -126,30 +82,62 @@
           </button>
         }
       </div>
+      <div class="d-flex align-items-center gap-1 text-secondary d-print-none" style="font-size: 12px">
+        @switch (saveState) {
+          @case ("saving") {
+            <i class="ph ph-circle-notch ph-spin"></i>
+            <span>{{ "incidentReportUI.saveStateSaving" | translate }}</span>
+          }
+          @case ("saved") {
+            <i class="ph ph-floppy-disk text-success"></i>
+            <span class="text-success">{{ "incidentReportUI.saveStateSaved" | translate }}</span>
+          }
+          @case ("error") {
+            <i class="ph ph-floppy-disk text-danger"></i>
+            <span class="text-danger">{{ "incidentReportUI.saveStateError" | translate }}</span>
+          }
+          @case ("blocked") {
+            <i class="ph ph-warning-circle text-danger"></i>
+            <span class="text-danger" title="{{ 'incidentReportUI.requiredFieldsMissingHint' | translate }}">
+              {{ "incidentReportUI.saveStateBlocked" | translate }}
+            </span>
+          }
+        }
+        @if (incidentReport().updatedAt; as updatedAt) {
+          @if (saveState !== "idle") {
+            <span class="text-secondary-emphasis">·</span>
+          }
+          <span title="{{ 'incidentReport.updatedAt' | translate }}">
+            <i class="ph ph-pencil-line"></i>
+            {{ updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
+          </span>
+        }
+        @if (incidentReport().publishedAt; as publishedAt) {
+          <span class="text-secondary-emphasis">·</span>
+          <span title="{{ 'incidentReport.publishedAt' | translate }}">
+            <i class="ph ph-eye"></i>
+
+            {{ publishedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
+          </span>
+        }
+      </div>
     </div>
   </div>
 
-  @if (!displayOnly && !isReportValid()) {
-    <div class="alert alert-danger d-flex align-items-start gap-2 d-print-none" role="alert">
-      <i class="ph ph-warning-circle fs-4 lh-1 mt-1"></i>
-      <div>
-        <strong class="d-block">{{ "incidentReportUI.requiredFieldsMissingTitle" | translate }}</strong>
-        <span>{{ "incidentReportUI.requiredFieldsMissingHint" | translate }}</span>
-      </div>
-    </div>
-  }
-
-  <div class="d-flex mb-2 d-print-none">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-2 d-print-none">
+    @if (!readOnly) {
+      <app-toggle-btn-group
+        [enumValues]="editDisplayModes"
+        [value]="displayMode"
+        (valueChange)="displayMode = $event ?? DisplayMode.Edit"
+        [labelI18n]="'incidentReportUI.displayMode.#'"
+      />
+    }
     <app-toggle-btn-group
-      [enumValues]="[
-        DisplayMode.Edit,
-        DisplayMode.EditMostRelevant,
-        DisplayMode.All,
-        DisplayMode.Public,
-        DisplayMode.FilledOut,
-      ]"
+      [class.ms-sm-auto]="!readOnly"
+      [enumValues]="previewDisplayModes"
       [value]="displayMode"
-      (valueChange)="displayMode = $event ?? DisplayMode.Edit"
+      (valueChange)="displayMode = $event ?? (readOnly ? DisplayMode.All : DisplayMode.Edit)"
       [labelI18n]="'incidentReportUI.displayMode.#'"
     />
   </div>
@@ -164,20 +152,22 @@
           (click)="activeTab = tab.id"
         >
           <span>{{ tab.label | translate }}</span>
-          @let safeParse = getTabValidationStatus(tab);
           @if (tab.id === "attachments") {
             <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{
               incidentReport().attachments.length
             }}</span>
-          } @else if (safeParse.success) {
-            <span class="text-success" title="{{ 'zodForm.valid' | translate }}">
-              <i class="ph ph-check"></i>
-            </span>
           } @else {
-            @let error = prettifyError(safeParse.error);
-            <span class="text-danger" [title]="error">
-              <i class="ph ph-warning"></i>
-            </span>
+            @let iconStatus = getTabIconStatus(tab);
+            @if (iconStatus === "valid") {
+              <span class="text-success" title="{{ 'zodForm.valid' | translate }}">
+                <i class="ph ph-check"></i>
+              </span>
+            } @else if (iconStatus === "invalid") {
+              @let error = prettifyError(getTabValidationStatus(tab).error);
+              <span class="text-danger" [title]="error">
+                <i class="ph ph-warning"></i>
+              </span>
+            }
           }
         </button>
       </li>
@@ -270,7 +260,7 @@
                   <input
                     type="checkbox"
                     class="form-check-input public-switch ms-0 mt-0 float-none"
-                    [disabled]="disabled()"
+                    [disabled]="disabled() || readOnly"
                     [(ngModel)]="attachment.public"
                     (ngModelChange)="incidentReport.set({ ...incidentReport() })"
                     [id]="'attachment-public-input-' + $index"

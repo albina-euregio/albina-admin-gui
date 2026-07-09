@@ -66,6 +66,29 @@
     width: 3rem;
   }
 
+  // Collapsed avalanche-problem accordion header: light title + compact preview
+  .incident-avalanche-problem__title {
+    @include font-m-medium;
+    color: $gray-700;
+    margin-bottom: 0;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .incident-avalanche-problem__preview {
+    flex-wrap: wrap;
+
+    app-avalanche-problem-icons img {
+      width: auto;
+      height: 1.5rem;
+    }
+  }
+
+  .incident-avalanche-problem__elevation {
+    @include font-s;
+    color: $gray-600;
+  }
+
   .nav-tabs {
     .nav-item {
       margin-bottom: 0;

@@ -72,7 +72,13 @@ export class IncidentsOverviewComponent implements OnInit {
     const filtered = this.incidentsResource
       .value()
       .filter((r) => !this.filterStatus || r.reportStatus === this.filterStatus);
-    return orderBy(filtered, [this.sortField], [this.sortDir]);
+    const field = this.sortField;
+    // Sort missing values to the end explicitly and compare dates by timestamp so both directions work consistently.
+    return orderBy(
+      filtered,
+      [(r) => r[field] == null, (r) => (r[field] instanceof Date ? r[field].getTime() : r[field])],
+      ["asc", this.sortDir],
+    );
   }
 
   sortBy(field: IncidentColumn) {
@@ -113,6 +119,10 @@ export class IncidentsOverviewComponent implements OnInit {
 
   openIncident(id: string) {
     this.router.navigate(["/incidents", id]);
+  }
+
+  viewIncident(id: string) {
+    this.router.navigate(["/incidents", id], { queryParams: { readOnly: true } });
   }
 
   newIncident() {
