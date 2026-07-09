@@ -274,6 +274,9 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.incidentService.getIncident(id).subscribe({
       next: (report) => {
         this.incidentReport.set(report);
+        // The report just loaded from the server is by definition already saved;
+        // Without this, autosave would immediately trigger a redundant save.
+        this.lastSavedData = this.serializeReport(report);
       },
       error: (error) => console.error("Failed to load incident", error),
     });
