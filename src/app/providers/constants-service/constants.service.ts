@@ -186,19 +186,4 @@ export class ConstantsService {
   private pad(number: number) {
     return number < 10 ? (`${0}${number}` as unknown as number) : number;
   }
-
-  private createSearchParams(params: [string, any][]): URLSearchParams {
-    const result = new URLSearchParams();
-    for (const i in params) {
-      const param = params[i];
-      if (Array.isArray(param[1])) {
-        for (const j in param[1]) {
-          result.append(param[0], param[1][j]);
-        }
-      } else {
-        result.append(param[0], param[1]);
-      }
-    }
-    return result;
-  }
 }
