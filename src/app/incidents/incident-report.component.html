@@ -73,7 +73,7 @@
         @if (userCan("DELETE")) {
           <button
             type="button"
-            class="btn btn-sm btn-outline-danger btn-icon d-print-none"
+            class="btn btn-outline-danger btn-icon d-print-none"
             [disabled]="disabled()"
             (click)="deleteIncident()"
             title="{{ 'incidentReportUI.deleteIncident' | translate }}"
