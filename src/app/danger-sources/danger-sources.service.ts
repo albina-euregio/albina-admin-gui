@@ -1,10 +1,10 @@
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { from, Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { z } from "zod/v4";
 
 import { SourceDates } from "../models/SourceDates";
+import * as albinaApi from "../providers/albina-api";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { UndoRedoState } from "../providers/undo-redo-service/undo-redo.service";
@@ -28,7 +28,6 @@ interface AccordionChangeEvent {
 
 @Injectable({ providedIn: "root" })
 export class DangerSourcesService {
-  http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
@@ -58,6 +57,11 @@ export class DangerSourcesService {
     const { startDate, endDate } = this.sourceDates.getLoadDate();
     this.forecastStatusMap = new Map<number, boolean>();
     this.analysisStatusMap = new Map<number, boolean>();
+    if (!startDate || !endDate) {
+      // sourceDates has not been initialized yet (danger-sources page never opened);
+      // nothing to load, and building the request would throw on startDate[0].
+      return;
+    }
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
         for (let i = data.length - 1; i >= 0; i--) {
@@ -95,12 +99,16 @@ export class DangerSourcesService {
         analysis: z.boolean(),
       })
       .array();
-    const url = this.constantsService.getServerUrlGET("/danger-sources/status", {
-      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate[0]),
-      endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate[0]),
-      region: region,
-    });
-    return this.http.get(url).pipe(map((o) => schema.parse(o)));
+    return from(
+      albinaApi.getInternalStatus1({
+        query: {
+          startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate[0]),
+          endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate[0]),
+          region: region,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => schema.parse(res.data)));
   }
 
   getIsEditable(): boolean {
@@ -120,23 +128,27 @@ export class DangerSourcesService {
   }
 
   loadDangerSources(date: [Date, Date], region: string): Observable<DangerSourceModel[]> {
-    const url = this.constantsService.getServerUrlGET("/danger-sources", {
-      date: date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : "",
-      region: region,
-    });
-    return this.http.get<unknown>(url).pipe(
-      map((ss) =>
+    return from(
+      albinaApi.getDangerSources({
+        query: {
+          date: date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : "",
+          region: region,
+        },
+        throwOnError: true,
+      }),
+    ).pipe(
+      map((res) =>
         DangerSourceSchema.array()
-          .parse(ss)
+          .parse(res.data)
           .map((s) => DangerSourceModel.parse(s)),
       ),
     );
   }
 
   saveDangerSource(dangerSource: DangerSourceModel) {
-    const url = this.constantsService.getServerUrlPOST("/danger-sources");
-    const body = JSON.stringify(dangerSource);
-    return this.http.post<unknown>(url, body).pipe(map((s) => DangerSourceModel.parse(s)));
+    return from(
+      albinaApi.saveDangerSource({ body: dangerSource as unknown as albinaApi.DangerSource, throwOnError: true }),
+    ).pipe(map((res) => DangerSourceModel.parse(res.data)));
   }
 
   loadDangerSourceVariants(
@@ -144,28 +156,21 @@ export class DangerSourcesService {
     region: string,
     dangerSourceId?: string,
   ): Observable<DangerSourceVariantModel[]> {
-    let url;
-    if (dangerSourceId && dangerSourceId !== "") {
-      url = this.constantsService.getServerUrlGET(
-        `/danger-sources/{dangerSourceId}/edit`,
-        {
-          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-          region: region,
-        },
-        {
-          dangerSourceId,
-        },
-      );
-    } else {
-      url = this.constantsService.getServerUrlGET("/danger-sources/edit", {
-        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-        region: region,
-      });
-    }
-    return this.http.get<unknown>(url).pipe(
-      map((vs) =>
+    const request =
+      dangerSourceId && dangerSourceId !== ""
+        ? albinaApi.getVariantsForDangerSource({
+            path: { dangerSourceId },
+            query: { date: this.constantsService.getISOStringWithTimezoneOffset(date[0]), region },
+            throwOnError: true,
+          })
+        : albinaApi.getVariants({
+            query: { date: this.constantsService.getISOStringWithTimezoneOffset(date[0]), region },
+            throwOnError: true,
+          });
+    return from(request).pipe(
+      map((res) =>
         DangerSourceVariantSchema.array()
-          .parse(vs)
+          .parse(res.data)
           .map((v) => DangerSourceVariantModel.parse(v)),
       ),
     );
@@ -175,34 +180,43 @@ export class DangerSourcesService {
     dangerSourceVariant: DangerSourceVariantModel,
     date: [Date, Date],
   ): Observable<DangerSourceVariantModel> {
-    const url = this.constantsService.getServerUrlPOST("/danger-sources/variants", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: this.authenticationService.getActiveRegionId(),
-    });
-    const body = JSON.stringify(dangerSourceVariant);
-    return this.http.post<unknown>(url, body).pipe(map((v) => DangerSourceVariantModel.parse(v)));
+    return from(
+      albinaApi.saveDangerSourceVariant({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: this.authenticationService.getActiveRegionId(),
+        },
+        body: dangerSourceVariant as unknown as albinaApi.DangerSourceVariant,
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => DangerSourceVariantModel.parse(res.data)));
   }
 
   deleteDangerSourceVariant(variant: DangerSourceVariantModel, date: [Date, Date]) {
     // check if variant has ID
-    const url = this.constantsService.getServerUrlDELETE(
-      `/danger-sources/variants/{variantId}`,
-      {
-        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-        region: this.authenticationService.getActiveRegionId(),
-      },
-      { variantId: variant.id },
-    );
-    return this.http.delete<unknown>(url);
+    return from(
+      albinaApi.deleteVariant({
+        path: { variantId: variant.id! },
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: this.authenticationService.getActiveRegionId(),
+        },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data));
   }
 
   replaceVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
-    const url = this.constantsService.getServerUrlPOST("/danger-sources/variants/replace", {
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: this.authenticationService.getActiveRegionId(),
-    });
-    const body = JSON.stringify(variants);
-    return this.http.post<unknown>(url, body);
+    return from(
+      albinaApi.replaceVariants({
+        query: {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: this.authenticationService.getActiveRegionId(),
+        },
+        body: variants as unknown as albinaApi.DangerSourceVariant[],
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => res.data));
   }
 
   emitAccordionChanged(event: AccordionChangeEvent) {

@@ -1,13 +1,11 @@
-import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
-import { Bulletin, Bulletins, BulletinsSchema } from "app/models/CAAMLv6";
-import { combineLatest, map, Observable } from "rxjs";
+import { combineLatest, from, map, Observable } from "rxjs";
 
+import * as albinaApi from "../providers/albina-api";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import type { components } from "../providers/openapi";
 import {
   IncidentAttachment,
   IncidentAttachmentSchema,
@@ -15,11 +13,10 @@ import {
   PartialIncidentReportSchema,
 } from "./incident-report.model";
 
-type IncidentView = components["schemas"]["Incident"];
+type IncidentView = albinaApi.Incident;
 
 @Injectable()
 export class IncidentService {
-  private http = inject(HttpClient);
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
   private route = inject(ActivatedRoute);
@@ -55,16 +52,22 @@ export class IncidentService {
         const [startDate, endDate] = this.dateRange();
         return { region, startDate, endDate };
       },
-      stream: ({ params: { region, startDate, endDate } }) => {
-        const url = this.constantsService.getServerUrlGET("/incidents", {
-          region,
-          seasonYear: startDate.getMonth() >= 9 ? startDate.getFullYear() : startDate.getFullYear() - 1,
-          startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
-          endDate: this.constantsService.getISOStringWithTimezoneOffset(
-            new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
-          ),
-        });
-        return this.http.get<IncidentView[]>(url).pipe(
+      stream: ({ params: { region, startDate, endDate } }) =>
+        from(
+          albinaApi.getIncidents({
+            query: {
+              region,
+              seasonYear: startDate.getMonth() >= 9 ? startDate.getFullYear() : startDate.getFullYear() - 1,
+              startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate),
+              endDate: this.constantsService.getISOStringWithTimezoneOffset(
+                new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999),
+              ),
+            },
+            throwOnError: true,
+          }),
+        ).pipe(
+          // The spec types the response as `string`, but it is deserialized to the incident list.
+          map(({ data }) => data as unknown as IncidentView[]),
           map((is) =>
             is.flatMap((i) => {
               const result = this.safeIncidentReport(i);
@@ -75,8 +78,7 @@ export class IncidentService {
               return [result.data as IncidentReport];
             }),
           ),
-        );
-      },
+        ),
       defaultValue: [] as IncidentReport[],
     });
   }
@@ -113,8 +115,10 @@ export class IncidentService {
 
   /** Get a single incident by id. */
   getIncident(id: string): Observable<IncidentReport> {
-    const url = this.constantsService.getServerUrlGET("/incidents/{id}", null as never, { id });
-    return this.http.get<IncidentView>(url).pipe(map((i) => this.toIncidentReport(i)));
+    return from(albinaApi.getIncident({ path: { id }, throwOnError: true })).pipe(
+      // The spec types the response as `string`, but it is deserialized to an incident.
+      map(({ data }) => this.toIncidentReport(data as unknown as IncidentView)),
+    );
   }
 
   /**
@@ -122,78 +126,64 @@ export class IncidentService {
    * server validates and stores it verbatim.
    */
   createIncident(region: string, data: string): Observable<IncidentReport> {
-    const url = this.constantsService.getServerUrlPOST("/incidents", { region });
-    return this.http.post<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
+    return from(albinaApi.createIncident({ query: { region }, body: data, throwOnError: true })).pipe(
+      map((res) => this.toIncidentReport(res.data)),
+    );
   }
 
   /** Publish an existing incident's report data. */
   publishIncident(id: string, data: string): Observable<IncidentReport> {
-    const url = this.constantsService.getServerUrlPOST("/incidents/{id}/publish", null as never, { id });
-    return this.http.post<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
+    return from(albinaApi.publishIncident({ path: { id }, body: data, throwOnError: true })).pipe(
+      map((res) => this.toIncidentReport(res.data)),
+    );
   }
 
   /** Unpublish an existing incident's report data. */
   unpublishIncident(id: string): Observable<void> {
-    const url = this.constantsService.getServerUrlDELETE("/incidents/{id}/publish", null as never, { id });
-    return this.http.delete<void>(url);
+    return from(albinaApi.unpublishIncident({ path: { id }, throwOnError: true })).pipe(map(() => undefined));
   }
 
   /** Update an existing incident's report data. */
   updateIncident(id: string, data: string): Observable<IncidentReport> {
-    const url = this.constantsService.getServerUrlPUT("/incidents/{id}", null as never, { id });
-    return this.http.put<IncidentView>(url, data).pipe(map((i) => this.toIncidentReport(i)));
+    return from(albinaApi.updateIncident({ path: { id }, body: data, throwOnError: true })).pipe(
+      map((res) => this.toIncidentReport(res.data)),
+    );
   }
 
   /** Delete an incident by id. */
   deleteIncident(id: string): Observable<void> {
-    const url = this.constantsService.getServerUrlDELETE("/incidents/{id}", null as never, { id });
-    return this.http.delete<void>(url);
+    return from(albinaApi.deleteIncident({ path: { id }, throwOnError: true })).pipe(map(() => undefined));
   }
 
   /** Upload an attachment for an incident. */
   uploadIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<IncidentAttachment> {
-    const url = this.constantsService.getServerUrlPOST("/incidents/{id}/attachment", null as never, { id });
-    const formData = new FormData();
-    formData.append("file", attachment.file);
-    return this.http
-      .post(url, formData)
-      .pipe(map((json) => IncidentAttachmentSchema.partial().parse(json) as IncidentAttachment));
+    return from(
+      albinaApi.uploadIncidentAttachment({
+        path: { id },
+        body: { file: attachment.file ?? undefined },
+        throwOnError: true,
+      }),
+    ).pipe(map((res) => IncidentAttachmentSchema.partial().parse(res.data) as IncidentAttachment));
   }
 
   /** Get a single attachment of an incident by id. */
   getIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<Blob> {
-    const url = this.constantsService.getServerUrlGET("/incidents/{id}/attachment/{attachmentId}", null as never, {
-      id,
-      attachmentId: attachment.id,
-    });
-    return this.http.get(url, {
-      headers: { Accept: "application/octet-stream" },
-      responseType: "blob",
-      observe: "body",
-    });
+    return from(
+      albinaApi.getIncidentAttachment({
+        path: { id, attachmentId: attachment.id! },
+        headers: { Accept: "application/octet-stream" },
+        // `responseType` is not part of the typed options, but Angular's HttpClient
+        // honours it so the binary attachment is returned as a Blob instead of parsed JSON.
+        responseType: "blob",
+        throwOnError: true,
+      } as albinaApi.Options<albinaApi.GetIncidentAttachmentData, true>),
+    ).pipe(map((res) => res.data as Blob));
   }
 
   /** Delete a single attachment of an incident by id. */
   deleteIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<void> {
-    const url = this.constantsService.getServerUrlDELETE("/incidents/{id}/attachment/{attachmentId}", null as never, {
-      id,
-      attachmentId: attachment.id,
-    });
-    return this.http.delete<void>(url);
-  }
-
-  fetchPublishedBulletin({
-    dateTime,
-    avalancheRegion,
-  }: Pick<IncidentReport, "dateTime" | "avalancheRegion">): Observable<Bulletin> {
-    const region = this.authenticationService.getActiveRegionId();
-    const date = this.constantsService.getISODateString(dateTime);
-    return this.http
-      .get<Bulletins>(`https://static.avalanche.report/eaws_bulletins/${date}/${date}-${region}.json`)
-      .pipe(
-        map((bulletins) =>
-          BulletinsSchema.parse(bulletins).bulletins.find((b) => b.regions.some((r) => r.regionID === avalancheRegion)),
-        ),
-      );
+    return from(
+      albinaApi.deleteIncidentAttachment({ path: { id, attachmentId: attachment.id! }, throwOnError: true }),
+    ).pipe(map(() => undefined));
   }
 }

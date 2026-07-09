@@ -4,8 +4,6 @@ import { Injectable } from "@angular/core";
 import * as pkg from "../../../../package.json";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
-import type { ServerModel } from "../../models/server.model";
-import type { paths as OpenAPI } from "../openapi";
 
 @Injectable({ providedIn: "root" })
 export class ConstantsService {
@@ -132,72 +130,6 @@ export class ConstantsService {
     return this.colorDangerRatingBw[dangerRating] ?? this.colorDangerRatingBw[Enums.DangerRating.missing];
   }
 
-  getExternalServerUrlGET<T extends keyof OpenAPI>(
-    server: ServerModel,
-    endpoint: T & (OpenAPI[T] extends { get: unknown } ? T : never),
-    params?: OpenAPI[T] extends { get: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { get: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(
-      endpoint,
-      params as Record<string, unknown>,
-      pathParams as Record<string, unknown>,
-      server.apiUrl,
-    );
-  }
-
-  getServerUrlGET<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { get: unknown } ? T : never),
-    params?: OpenAPI[T] extends { get: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { get: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
-  }
-
-  getServerUrlPOST<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { post: unknown } ? T : never),
-    params?: OpenAPI[T] extends { post: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { post: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
-  }
-
-  getServerUrlPUT<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { put: unknown } ? T : never),
-    params?: OpenAPI[T] extends { put: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { put: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
-  }
-
-  getServerUrlDELETE<T extends keyof OpenAPI>(
-    endpoint: T & (OpenAPI[T] extends { delete: unknown } ? T : never),
-    params?: OpenAPI[T] extends { delete: { parameters: { query: infer Q } } } ? Q : never,
-    pathParams?: OpenAPI[T] extends { delete: { parameters: { path: infer Q } } } ? Q : never,
-  ) {
-    return this.getServerUrl(endpoint, params as Record<string, unknown>, pathParams as Record<string, unknown>);
-  }
-
-  private getServerUrl(
-    endpoint: string,
-    params: Record<string, unknown>,
-    pathParams: Record<string, unknown>,
-    base = environment.apiBaseUrl,
-  ) {
-    for (const [key, value] of Object.entries(pathParams ?? {})) {
-      endpoint = endpoint.replace(`{${key}}`, String(value));
-    }
-    const url = new URL("." + endpoint, base);
-    for (const [key, value] of Object.entries(params ?? {})) {
-      if (Array.isArray(value)) {
-        value.forEach((v) => url.searchParams.append(key, v));
-      } else {
-        url.searchParams.append(key, String(value));
-      }
-    }
-    return url.toString();
-  }
-
   getServerWsUrl(endpoint: `../${string}`) {
     return new URL(endpoint, environment.apiBaseUrl.replace(/^http/, "ws"));
   }
@@ -219,20 +151,5 @@ export class ConstantsService {
 
   private pad(number: number) {
     return number < 10 ? (`${0}${number}` as unknown as number) : number;
-  }
-
-  private createSearchParams(params: [string, any][]): URLSearchParams {
-    const result = new URLSearchParams();
-    for (const i in params) {
-      const param = params[i];
-      if (Array.isArray(param[1])) {
-        for (const j in param[1]) {
-          result.append(param[0], param[1][j]);
-        }
-      } else {
-        result.append(param[0], param[1]);
-      }
-    }
-    return result;
   }
 }

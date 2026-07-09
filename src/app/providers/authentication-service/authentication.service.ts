@@ -3,7 +3,7 @@ import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { UserModel, UserSchema } from "app/models/user.model";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, from, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { z } from "zod/v4";
 
@@ -12,14 +12,13 @@ import { TextcatTextfield } from "../../enums/enums";
 import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
-import { ConstantsService } from "../constants-service/constants.service";
+import * as albinaApi from "../albina-api";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
   private localStorageService = inject(LocalStorageService);
   private http = inject(HttpClient);
-  private constantsService = inject(ConstantsService);
   private sanitizer = inject(DomSanitizer);
 
   private authentication: AuthenticationResponse;
@@ -56,11 +55,9 @@ export class AuthenticationService {
   }
 
   public login(username: string, password: string): Observable<boolean> {
-    const url = this.constantsService.getServerUrlPOST("/authentication");
-    const body = JSON.stringify({ username, password });
-    return this.http.post(url, body).pipe(
-      map((json) => {
-        const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(json, {
+    return from(albinaApi.login({ body: { username, password }, throwOnError: true })).pipe(
+      map((res) => {
+        const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(res.data, {
           reportInput: true,
         });
         if (!data.access_token) {
@@ -100,8 +97,9 @@ export class AuthenticationService {
   }
 
   private loadInternalRegions(): void {
-    const url = this.constantsService.getServerUrlGET("/regions");
-    this.http.get<RegionConfiguration[]>(url).subscribe((regions) => this.setInternalRegions(regions));
+    from(albinaApi.getRegions({ throwOnError: true })).subscribe((res) =>
+      this.setInternalRegions(res.data as unknown as RegionConfiguration[]),
+    );
   }
 
   private setInternalRegions(regions: RegionConfiguration[]) {
@@ -110,10 +108,9 @@ export class AuthenticationService {
   }
 
   private externalServerLogins() {
-    const url = this.constantsService.getServerUrlGET("/server/external");
-    this.http.get<ServerConfiguration[]>(url).subscribe(
-      (data) => {
-        for (const entry of data) {
+    from(albinaApi.getExternalServerConfigurations({ throwOnError: true })).subscribe(
+      (res) => {
+        for (const entry of res.data as unknown as ServerConfiguration[]) {
           this.externalServerLogin(entry).subscribe(
             (data) => {
               if (data === true) {
