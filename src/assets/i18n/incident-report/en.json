@@ -36,6 +36,7 @@
     "drawPolygon": "Draw Polygon",
     "drawPolygonInstructions": "Click on the map to define the corners/vertices of the polygon.",
     "dropAttachment": "Drop attachment {{fileName}}?",
+    "dropAvalancheProblem": "Drop avalanche problem {{number}}?",
     "dropGroup": "Drop group {{number}}?",
     "dropVictim": "Drop person {{number}}?",
     "fetchPublishedBulletin": "Fetch from published CAAML bulletin",

@@ -3,9 +3,12 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnIni
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AvalancheSize } from "app/enums/enums";
 import { Bulletin } from "app/models/CAAMLv6";
+import { AccordionModule } from "ngx-bootstrap/accordion";
 import { firstValueFrom } from "rxjs";
 
 import { GeocodingService } from "../observations/geocoding.service";
+import { AspectsComponent } from "../shared/aspects.component";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isVisibleFieldsValid } from "../shared/zod-util";
 import { IncidentReportGeocodeService } from "./incident-report-geocode.service";
@@ -34,7 +37,7 @@ export type IncidentReportTab =
   selector: "app-incident-report-editor",
   templateUrl: "incident-report-editor.component.html",
   standalone: true,
-  imports: [TranslatePipe, ZodSchemaFormComponent],
+  imports: [TranslatePipe, ZodSchemaFormComponent, AccordionModule, AvalancheProblemIconsComponent, AspectsComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [GeocodingService, IncidentReportMapService, IncidentReportGeocodeService, DatePipe],
 })
@@ -75,6 +78,12 @@ export class IncidentReportEditorComponent implements OnInit {
   });
   readonly InvolvementsCommentSchema = IncidentModels.InvolvementsFatalitiesBurialsSchema.pick({
     involvementsFatalitiesBurialsComment: true,
+  });
+  readonly BulletinInformationWithoutCommentSchema = IncidentModels.BulletinInformationSchema.omit({
+    bulletinInformationComment: true,
+  });
+  readonly BulletinInformationCommentSchema = IncidentModels.BulletinInformationSchema.pick({
+    bulletinInformationComment: true,
   });
 
   activeGroupSubTab: "overview" | "groups" | "victims" = "overview";
@@ -227,12 +236,27 @@ export class IncidentReportEditorComponent implements OnInit {
     };
   }
 
+  // Accordion open state per avalanche problem, keyed by object identity so it survives
+  // reordering/removal of other entries without needing a synthetic id on the model.
+  private readonly avalancheProblemOpenState = new Map<IncidentModels.AvalancheProblem, boolean>();
+
+  isAvalancheProblemOpen(p: IncidentModels.AvalancheProblem): boolean {
+    return this.avalancheProblemOpenState.get(p) ?? true;
+  }
+
+  setAvalancheProblemOpen(p: IncidentModels.AvalancheProblem, isOpen: boolean) {
+    this.avalancheProblemOpenState.set(p, isOpen);
+  }
+
   addAvalancheProblem() {
     this.incidentReport().avalancheProblems.push({});
   }
 
-  removeAvalancheProblem(p: IncidentModels.AvalancheProblem) {
+  removeAvalancheProblem(p: IncidentModels.AvalancheProblem, index: number) {
+    const message = this.translateService.instant("incidentReportUI.dropAvalancheProblem", { number: index + 1 });
+    if (!confirm(message)) return;
     this.incidentReport().avalancheProblems = this.incidentReport().avalancheProblems.filter((p0) => p0 !== p);
+    this.avalancheProblemOpenState.delete(p);
   }
 
   updateAvalancheProblem(p: IncidentModels.AvalancheProblem, changes: IncidentModels.AvalancheProblem) {

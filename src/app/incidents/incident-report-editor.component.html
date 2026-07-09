@@ -203,7 +203,7 @@
       [displayMode]="displayMode()"
       [value]="incidentReport()"
       (valueChange)="incidentReport.set($event)"
-      [zodType]="IncidentModels.BulletinInformationSchema"
+      [zodType]="BulletinInformationWithoutCommentSchema"
       [labelI18n]="labelI18n"
       [helpI18n]="helpI18n"
     />
@@ -213,32 +213,79 @@
       incidentReport().dangerRating !== "no_rating" &&
       incidentReport().dangerRating !== "no_snow"
     ) {
-      @for (p of incidentReport().avalancheProblems; track p) {
-        <hr />
-        <button class="btn btn-sm btn-outline-danger" [class.d-none]="displayOnly" (click)="removeAvalancheProblem(p)">
-          <i class="ph ph-trash"></i> {{ "incidentReportUI.removeAvalancheProblem" | translate }}
-        </button>
+      <accordion class="accordion mt-3">
+        @for (p of incidentReport().avalancheProblems; track p; let i = $index) {
+          <accordion-group
+            class="accordion-group"
+            [isOpen]="isAvalancheProblemOpen(p)"
+            (isOpenChange)="setAvalancheProblemOpen(p, $event)"
+          >
+            <div accordion-heading class="accordion-header accordion-header--with-buttons">
+              <div class="incident-avalanche-problem__title d-flex align-items-center gap-2">
+                <i class="accordion__arrow ph ph-caret-right"></i>
+                <span class="incident-avalanche-problem__label"
+                  >{{ "incidentReport.avalancheProblem" | translate }} {{ i + 1 }}</span
+                >
+                <span class="incident-avalanche-problem__preview d-flex align-items-center gap-2">
+                  @if (p.problemType) {
+                    <app-avalanche-problem-icons [value]="p.problemType" />
+                  }
+                  @if (p.aspects?.length) {
+                    <app-aspects [aspects]="p.aspects" [disabled]="true" [size]="20" />
+                  }
+                  @if (p.elevationLowerBound || p.elevationUpperBound) {
+                    <span class="incident-avalanche-problem__elevation d-inline-flex align-items-center gap-1">
+                      @if (p.elevationUpperBound) {
+                        <i class="ph ph-arrow-line-down-right"></i> {{ p.elevationUpperBound }}
+                      }
+                      @if (p.elevationLowerBound) {
+                        <i class="ph ph-arrow-line-up-right"></i> {{ p.elevationLowerBound }}
+                      }
+                    </span>
+                  }
+                </span>
+              </div>
+              <button
+                class="btn btn-sm btn-outline-danger flex-shrink-0"
+                [class.d-none]="displayOnly"
+                type="button"
+                (click)="removeAvalancheProblem(p, i); $event.stopPropagation()"
+              >
+                <i class="ph ph-trash"></i> {{ "incidentReportUI.removeAvalancheProblem" | translate }}
+              </button>
+            </div>
 
-        <app-zod-schema-form
-          [disabled]="disabled()"
-          [displayMode]="displayMode()"
-          [value]="p"
-          (valueChange)="updateAvalancheProblem(p, $event)"
-          [zodType]="IncidentModels.AvalancheProblemSchema"
-          [labelI18n]="labelI18n"
-          [helpI18n]="helpI18n"
-        />
-      }
+            <app-zod-schema-form
+              [disabled]="disabled()"
+              [displayMode]="displayMode()"
+              [value]="p"
+              (valueChange)="updateAvalancheProblem(p, $event)"
+              [zodType]="IncidentModels.AvalancheProblemSchema"
+              [labelI18n]="labelI18n"
+              [helpI18n]="helpI18n"
+            />
+          </accordion-group>
+        }
+      </accordion>
 
-      <hr />
       <button
-        class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+        class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0 mt-2"
         [class.d-none]="displayOnly"
-        (click)="incidentReport().avalancheProblems.push({})"
+        (click)="addAvalancheProblem()"
       >
         <i class="ph ph-plus"></i> {{ "incidentReportUI.addAvalancheProblem" | translate }}
       </button>
     }
+
+    <app-zod-schema-form
+      [disabled]="disabled()"
+      [displayMode]="displayMode()"
+      [value]="incidentReport()"
+      (valueChange)="incidentReport.set($event)"
+      [zodType]="BulletinInformationCommentSchema"
+      [labelI18n]="labelI18n"
+      [helpI18n]="helpI18n"
+    />
   </div>
 }
 
