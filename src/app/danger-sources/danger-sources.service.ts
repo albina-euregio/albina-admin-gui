@@ -57,6 +57,11 @@ export class DangerSourcesService {
     const { startDate, endDate } = this.sourceDates.getLoadDate();
     this.forecastStatusMap = new Map<number, boolean>();
     this.analysisStatusMap = new Map<number, boolean>();
+    if (!startDate || !endDate) {
+      // sourceDates has not been initialized yet (danger-sources page never opened);
+      // nothing to load, and building the request would throw on startDate[0].
+      return;
+    }
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
         for (let i = data.length - 1; i >= 0; i--) {
