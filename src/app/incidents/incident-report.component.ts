@@ -82,10 +82,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return !isEditableDisplayMode(this.displayMode);
   }
 
-  /** Display modes offered by the toggle.*/
-  get availableDisplayModes(): DisplayMode[] {
-    const previewModes = [DisplayMode.All, DisplayMode.Public, DisplayMode.FilledOut];
-    return this.readOnly ? previewModes : [DisplayMode.Edit, DisplayMode.EditMostRelevant, ...previewModes];
+  get editDisplayModes(): DisplayMode[] {
+    return this.readOnly ? [] : [DisplayMode.Edit, DisplayMode.EditMostRelevant];
+  }
+
+  get previewDisplayModes(): DisplayMode[] {
+    return [DisplayMode.All, DisplayMode.Public, DisplayMode.FilledOut];
   }
   /** Tabs visible to the current user; the analysis tab is forecaster-only. */
   get allTabs() {

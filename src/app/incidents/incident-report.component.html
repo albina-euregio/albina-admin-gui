@@ -124,9 +124,18 @@
     </div>
   </div>
 
-  <div class="d-flex mb-2 d-print-none">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-2 d-print-none">
+    @if (!readOnly) {
+      <app-toggle-btn-group
+        [enumValues]="editDisplayModes"
+        [value]="displayMode"
+        (valueChange)="displayMode = $event ?? DisplayMode.Edit"
+        [labelI18n]="'incidentReportUI.displayMode.#'"
+      />
+    }
     <app-toggle-btn-group
-      [enumValues]="availableDisplayModes"
+      [class.ms-sm-auto]="!readOnly"
+      [enumValues]="previewDisplayModes"
       [value]="displayMode"
       (valueChange)="displayMode = $event ?? (readOnly ? DisplayMode.All : DisplayMode.Edit)"
       [labelI18n]="'incidentReportUI.displayMode.#'"
