@@ -73,7 +73,6 @@
       "filledOut": "Preview filled out only"
     },
     "victimName": "Person {{name}}",
-    "saveStateIdle": "No unsaved changes",
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
     "saveStateError": "Save failed",

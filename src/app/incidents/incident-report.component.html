@@ -6,60 +6,16 @@
       <h1 class="h5 mb-1 fw-bold">
         {{ "incidentReport.incidentReport" | translate }}
       </h1>
-      <p class="mb-1 text-secondary d-flex align-items-center gap-2" style="font-size: 13px">
-        @if (incidentReport().author) {
-          <span title="{{ incidentReport().authorAffiliation || '' }}">
-            {{ incidentReport().author }}
-          </span>
-          <span class="text-secondary-emphasis">·</span>
-        }
-        @if (incidentReport().updatedAt; as updatedAt) {
-          <span title="{{ 'incidentReport.updatedAt' | translate }}">
-            {{ updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
-          </span>
-          <span class="text-secondary-emphasis">·</span>
-        }
-        @switch (saveState) {
-          @case ("idle") {
-            <span title="{{ 'incidentReportUI.saveStateIdle' | translate }}"><i class="ph ph-cloud"></i></span>
-          }
-          @case ("saving") {
-            <span title="{{ 'incidentReportUI.saveStateSaving' | translate }}"
-              ><i class="ph ph-circle-notch ph-spin"></i
-            ></span>
-          }
-          @case ("saved") {
-            <span class="text-success" title="{{ 'incidentReportUI.saveStateSaved' | translate }}"
-              ><i class="ph ph-cloud-check"></i
-            ></span>
-          }
-          @case ("error") {
-            <span class="text-danger" title="{{ 'incidentReportUI.saveStateError' | translate }}"
-              ><i class="ph ph-cloud-slash"></i
-            ></span>
-          }
-          @case ("blocked") {
-            <span class="text-danger" title="{{ 'incidentReportUI.saveStateBlocked' | translate }}"
-              ><i class="ph ph-cloud-warning"></i
-            ></span>
-          }
-        }
-        @if (incidentReport().publishedAt; as publishedAt) {
-          <span class="text-secondary-emphasis">·</span>
-          <span title="{{ 'incidentReport.publishedAt' | translate }}">
-            {{ publishedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
-          </span>
-          <span class="text-secondary-emphasis">·</span>
-          <span class="text-success" title="{{ 'incidentReport.publishedAt' | translate }}">
-            <i class="ph ph-eye"></i>
-          </span>
-        }
-      </p>
+      @if (incidentReport().author) {
+        <p class="mb-1 text-secondary" style="font-size: 13px" title="{{ incidentReport().authorAffiliation || '' }}">
+          {{ incidentReport().author }}
+        </p>
+      }
     </div>
 
-    <div class="align-self-end align-self-md-auto" [class.d-none]="readOnly">
+    <div class="align-self-end align-self-md-auto d-flex flex-column align-items-end gap-1">
       <!-- Report Status Dropdown -->
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2" [class.d-none]="readOnly">
         <select
           [disabled]="disabled() || !userCan('CHANGE_STATUS') || !isReportValid()"
           id="reportStatusSelect"
@@ -124,6 +80,43 @@
           >
             <i class="ph ph-trash"></i>
           </button>
+        }
+      </div>
+      <div class="d-flex align-items-center gap-1 text-secondary d-print-none" style="font-size: 12px">
+        @switch (saveState) {
+          @case ("saving") {
+            <i class="ph ph-circle-notch ph-spin"></i>
+            <span>{{ "incidentReportUI.saveStateSaving" | translate }}</span>
+          }
+          @case ("saved") {
+            <i class="ph ph-floppy-disk text-success"></i>
+            <span class="text-success">{{ "incidentReportUI.saveStateSaved" | translate }}</span>
+          }
+          @case ("error") {
+            <i class="ph ph-floppy-disk text-danger"></i>
+            <span class="text-danger">{{ "incidentReportUI.saveStateError" | translate }}</span>
+          }
+          @case ("blocked") {
+            <i class="ph ph-warning-circle text-danger"></i>
+            <span class="text-danger">{{ "incidentReportUI.saveStateBlocked" | translate }}</span>
+          }
+        }
+        @if (incidentReport().updatedAt; as updatedAt) {
+          @if (saveState !== "idle") {
+            <span class="text-secondary-emphasis">·</span>
+          }
+          <span title="{{ 'incidentReport.updatedAt' | translate }}">
+            <i class="ph ph-pencil-line"></i>
+            {{ updatedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
+          </span>
+        }
+        @if (incidentReport().publishedAt; as publishedAt) {
+          <span class="text-secondary-emphasis">·</span>
+          <span title="{{ 'incidentReport.publishedAt' | translate }}">
+            <i class="ph ph-eye"></i>
+
+            {{ publishedAt | date: "medium" : undefined : translateService.getCurrentLang() }}
+          </span>
         }
       </div>
     </div>
