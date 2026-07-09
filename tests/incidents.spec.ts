@@ -37,7 +37,7 @@ test("New incident report", async ({ page }) => {
   await page.goto("#/incidents/new");
   await test.step("Fill in required information", async () => {
     await page.locator('input[type="date"]').fill("2026-02-10");
-    await expect(page.getByRole("alert")).toContainText("Required fields are missing");
+    await expect(page.getByText("Required fields are missing")).toBeVisible();
     await page.getByRole("button", { name: "AWS Internal" }).click();
     await page.locator("#timeAccuracy").getByRole("button", { name: "exact" }).click();
     await page.getByRole("textbox", { name: "Location" }).fill("Computer");
@@ -56,7 +56,7 @@ test("New incident report", async ({ page }) => {
     const lastUpdated = page.getByTitle("last updated");
     await expect(lastUpdated).toContainText("Feb 10, 2026");
     await expect(lastUpdated).toContainText("11:00");
-    await expect(page.getByTitle("Saved successfully")).toBeVisible();
+    await expect(page.getByText("Saved successfully")).toBeVisible();
   });
 });
 
