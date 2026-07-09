@@ -48,6 +48,8 @@ export class ExternalBulletinsService {
               date: this.constantsService.getISOStringWithTimezoneOffset(date),
               regions: server.regions.filter((region) => !this.authenticationService.isInternalRegion(region)),
             },
+            // external servers expect regions as repeated params (regions=AT-05&regions=AT-06&…)
+            querySerializer: { array: { explode: true, style: "form" } },
             throwOnError: true,
           }),
         );
