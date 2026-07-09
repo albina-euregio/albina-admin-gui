@@ -131,15 +131,6 @@ export class ConstantsService {
     return this.colorDangerRatingBw[dangerRating] ?? this.colorDangerRatingBw[Enums.DangerRating.missing];
   }
 
-  getExternalServerUrlGET(
-    server: ServerModel,
-    endpoint: string,
-    params?: Record<string, unknown>,
-    pathParams?: Record<string, unknown>,
-  ) {
-    return this.getServerUrl(endpoint, params, pathParams, server.apiUrl);
-  }
-
   getServerUrlGET(endpoint: string, params?: Record<string, unknown>, pathParams?: Record<string, unknown>) {
     return this.getServerUrl(endpoint, params, pathParams);
   }
