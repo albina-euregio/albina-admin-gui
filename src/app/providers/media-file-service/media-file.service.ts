@@ -19,7 +19,9 @@ export class MediaFileService {
           date: this.constantsService.getISOStringWithTimezoneOffset(date[1]),
           region: this.authenticationService.getActiveRegionId(),
           lang: this.translateService.getCurrentLang() as albinaApi.LanguageCode,
-          important: important,
+          // `important` is a required query param; the hey-api serializer drops
+          // undefined values, so coerce the (possibly unset) toggle to a boolean.
+          important: important ?? false,
         },
         body: { file, text },
         throwOnError: true,
