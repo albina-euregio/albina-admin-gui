@@ -121,6 +121,10 @@ export class IncidentsOverviewComponent implements OnInit {
     this.router.navigate(["/incidents", id]);
   }
 
+  viewIncident(id: string) {
+    this.router.navigate(["/incidents", id], { queryParams: { readOnly: true } });
+  }
+
   newIncident() {
     this.router.navigate(["/incidents", "new"]);
   }

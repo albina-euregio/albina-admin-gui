@@ -75,9 +75,17 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   readonly DisplayMode = DisplayMode;
   displayMode = DisplayMode.Edit;
 
+  readOnly = false;
+
   /** True for any read-only preview mode; gates the print/preview layout in the template. */
   get displayOnly(): boolean {
     return !isEditableDisplayMode(this.displayMode);
+  }
+
+  /** Display modes offered by the toggle.*/
+  get availableDisplayModes(): DisplayMode[] {
+    const previewModes = [DisplayMode.All, DisplayMode.Public, DisplayMode.FilledOut];
+    return this.readOnly ? previewModes : [DisplayMode.Edit, DisplayMode.EditMostRelevant, ...previewModes];
   }
   /** Tabs visible to the current user; the analysis tab is forecaster-only. */
   get allTabs() {
@@ -254,6 +262,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get("id");
     if (id) {
       this.loadIncident(id);
+    }
+    this.readOnly = this.route.snapshot.queryParamMap.get("readOnly") === "true";
+    if (this.readOnly) {
+      this.displayMode = DisplayMode.All;
     }
     this.startAutoSave();
   }

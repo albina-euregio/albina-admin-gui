@@ -6,7 +6,8 @@
       "download": "Download GeoJSON"
     },
     "tooltip": {
-      "edit": "Edit incident"
+      "edit": "Edit incident",
+      "preview": "View incident"
     },
     "empty": "No incidents for this region.",
     "loading": "Loading incidents…",

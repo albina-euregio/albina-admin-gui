@@ -57,7 +57,7 @@
       </p>
     </div>
 
-    <div class="align-self-end align-self-md-auto">
+    <div class="align-self-end align-self-md-auto" [class.d-none]="readOnly">
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2">
         <select
@@ -141,15 +141,9 @@
 
   <div class="d-flex mb-2 d-print-none">
     <app-toggle-btn-group
-      [enumValues]="[
-        DisplayMode.Edit,
-        DisplayMode.EditMostRelevant,
-        DisplayMode.All,
-        DisplayMode.Public,
-        DisplayMode.FilledOut,
-      ]"
+      [enumValues]="availableDisplayModes"
       [value]="displayMode"
-      (valueChange)="displayMode = $event ?? DisplayMode.Edit"
+      (valueChange)="displayMode = $event ?? (readOnly ? DisplayMode.All : DisplayMode.Edit)"
       [labelI18n]="'incidentReportUI.displayMode.#'"
     />
   </div>
@@ -272,7 +266,7 @@
                   <input
                     type="checkbox"
                     class="form-check-input public-switch ms-0 mt-0 float-none"
-                    [disabled]="disabled()"
+                    [disabled]="disabled() || readOnly"
                     [(ngModel)]="attachment.public"
                     (ngModelChange)="incidentReport.set({ ...incidentReport() })"
                     [id]="'attachment-public-input-' + $index"
