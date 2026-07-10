@@ -10,11 +10,6 @@ export const zArtificialAvalancheReleaseProbability = z.enum(["one", "two", "thr
 
 export const zAspect = z.enum(["N", "NE", "E", "SE", "S", "SW", "W", "NW"]);
 
-/**
- * An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.
- */
-export const zAspect1 = z.enum(["E", "N", "NE", "NW", "N_A", "S", "SE", "SW", "W"]);
-
 export const zAuthenticationServiceCredentials = z.object({
   username: z.string(),
   password: z.string(),
@@ -27,30 +22,6 @@ export const zAuthenticationServiceUsername = z.object({
 export const zAvalancheBulletinValidity = z.object({
   from: z.iso.datetime().optional(),
   until: z.iso.datetime().optional(),
-});
-
-export const zAvalancheBulletinCustomDataBulletinPhoto = z.object({
-  url: z.string(),
-  copyright: z.string().optional(),
-  date: z.iso.date().optional(),
-  microRegionId: z.string().optional(),
-  locationName: z.string().optional(),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
-});
-
-export const zAvalancheBulletinCustomDataAlbina = z.object({
-  mainDate: z.string(),
-  bulletinPhotos: z.array(zAvalancheBulletinCustomDataBulletinPhoto),
-});
-
-export const zAvalancheBulletinCustomDataLwdTyrol = z.object({
-  dangerPatterns: z.array(z.string()),
-});
-
-export const zAvalancheBulletinCustomData = z.object({
-  ALBINA: zAvalancheBulletinCustomDataAlbina,
-  LWD_Tyrol: zAvalancheBulletinCustomDataLwdTyrol,
 });
 
 export const zAvalancheBulletinPhoto = zAbstractPersistentObject.and(
@@ -70,36 +41,6 @@ export const zAvalancheBulletinServiceLatestBulletin = z.object({
   date: z.iso.datetime(),
 });
 
-export const zAvalancheBulletinsCustomDataAlbina = z.object({
-  generalHeadline: z.string(),
-});
-
-export const zAvalancheBulletinsCustomData = z.object({
-  ALBINA: zAvalancheBulletinsCustomDataAlbina,
-});
-
-export const zAvalancheProblemCustomDataAlbina = z.object({
-  avalancheType: z.string(),
-});
-
-export const zAvalancheProblemCustomData = z.object({
-  ALBINA: zAvalancheProblemCustomDataAlbina,
-});
-
-/**
- * Expected avalanche problem, according to the EAWS avalanche problem definition.
- */
-export const zAvalancheProblemType = z.enum([
-  "CORNICES",
-  "FAVOURABLE_SITUATION",
-  "GLIDING_SNOW",
-  "NEW_SNOW",
-  "NO_DISTINCT_AVALANCHE_PROBLEM",
-  "PERSISTENT_WEAK_LAYERS",
-  "WET_SNOW",
-  "WIND_SLAB",
-]);
-
 export const zAvalancheProblem1 = z.enum([
   "new_snow",
   "wind_slab",
@@ -114,11 +55,6 @@ export const zAvalancheProblem1 = z.enum([
 export const zAvalancheSize = z.enum(["small", "medium", "large", "very_large", "extreme"]);
 
 export const zAvalancheType = z.enum(["slab", "loose", "glide"]);
-
-/**
- * Expected avalanche type.
- */
-export const zAvalancheTypeType = z.enum(["SLAB", "LOOSE", "GLIDE"]);
 
 export const zBlogItem = z.object({
   id: z.string(),
@@ -144,6 +80,302 @@ export const zAvalancheBulletinStatusServiceStatus = z.object({
   timestamp: z.iso.datetime(),
   status: zBulletinStatus,
   isBeingPublished: z.boolean(),
+});
+
+/**
+ * An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.
+ */
+export const zCaamlAspect = z.enum(["E", "N", "NE", "NW", "N_A", "S", "SE", "SW", "W"]);
+
+export const zCaamlAvalancheBulletinCustomDataBulletinPhoto = z.object({
+  url: z.string(),
+  copyright: z.string().optional(),
+  date: z.iso.date().optional(),
+  microRegionId: z.string().optional(),
+  locationName: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+});
+
+export const zCaamlAvalancheBulletinCustomDataAlbina = z.object({
+  mainDate: z.string(),
+  bulletinPhotos: z.array(zCaamlAvalancheBulletinCustomDataBulletinPhoto),
+});
+
+export const zCaamlAvalancheBulletinCustomDataLwdTyrol = z.object({
+  dangerPatterns: z.array(z.string()),
+});
+
+export const zCaamlAvalancheBulletinCustomData = z.object({
+  ALBINA: zCaamlAvalancheBulletinCustomDataAlbina,
+  LWD_Tyrol: zCaamlAvalancheBulletinCustomDataLwdTyrol,
+});
+
+export const zCaamlAvalancheBulletinsCustomDataAlbina = z.object({
+  generalHeadline: z.string(),
+});
+
+export const zCaamlAvalancheBulletinsCustomData = z.object({
+  ALBINA: zCaamlAvalancheBulletinsCustomDataAlbina,
+});
+
+export const zCaamlAvalancheProblemCustomDataAlbina = z.object({
+  avalancheType: z.string(),
+});
+
+export const zCaamlAvalancheProblemCustomData = z.object({
+  ALBINA: zCaamlAvalancheProblemCustomDataAlbina,
+});
+
+/**
+ * Expected avalanche problem, according to the EAWS avalanche problem definition.
+ */
+export const zCaamlAvalancheProblemType = z.enum([
+  "CORNICES",
+  "FAVOURABLE_SITUATION",
+  "GLIDING_SNOW",
+  "NEW_SNOW",
+  "NO_DISTINCT_AVALANCHE_PROBLEM",
+  "PERSISTENT_WEAK_LAYERS",
+  "WET_SNOW",
+  "WIND_SLAB",
+]);
+
+/**
+ * Expected avalanche type.
+ */
+export const zCaamlAvalancheTypeType = z.enum(["SLAB", "LOOSE", "GLIDE"]);
+
+/**
+ * Danger rating value, according to EAWS danger scale definition.
+ */
+export const zCaamlDangerRatingValue = z.enum([
+  "CONSIDERABLE",
+  "HIGH",
+  "LOW",
+  "MODERATE",
+  "NO_RATING",
+  "NO_SNOW",
+  "VERY_HIGH",
+]);
+
+/**
+ * Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.
+ */
+export const zCaamlElevationBoundaryOrBand = z.object({
+  lowerBound: z.string().optional(),
+  upperBound: z.string().optional(),
+});
+
+/**
+ * Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).
+ */
+export const zCaamlExpectedAvalancheFrequency = z.enum(["FEW", "MANY", "NONE", "SOME"]);
+
+/**
+ * Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).
+ */
+export const zCaamlExpectedSnowpackStability = z.enum(["FAIR", "GOOD", "POOR", "VERY_POOR"]);
+
+/**
+ * External file is used to link to external files like maps, thumbnails etc.
+ */
+export const zCaamlExternalFile = z.object({
+  description: z.string().optional(),
+  fileReferenceURI: z.string().optional(),
+  fileType: z.string().optional(),
+});
+
+/**
+ * Meta data for various uses. Can be used to link to external files like maps, thumbnails etc.
+ */
+export const zCaamlMetaData = z.object({
+  comment: z.string().optional(),
+  EXTFiles: z.array(zCaamlExternalFile).optional(),
+});
+
+/**
+ * Details on a person.
+ */
+export const zCaamlPerson = z.object({
+  customData: z.record(z.string(), z.unknown()).optional(),
+  metaData: zCaamlMetaData.optional(),
+  name: z.string().optional(),
+  website: z.string().optional(),
+});
+
+/**
+ * Information about the bulletin provider. Defines the name, website and/or contactPerson (which could be the author) of the issuing AWS.
+ */
+export const zCaamlAvalancheBulletinProvider = z.object({
+  contactPerson: zCaamlPerson.optional(),
+  customData: z.record(z.string(), z.unknown()).optional(),
+  metaData: zCaamlMetaData.optional(),
+  name: z.string().optional(),
+  website: z.string().optional(),
+});
+
+/**
+ * Details about the issuer/AWS of the bulletin. Information about the bulletin source. Either as in a person or with a provider element to specify details about the AWS.
+ */
+export const zCaamlAvalancheBulletinSource = z.object({
+  person: zCaamlPerson.optional(),
+  provider: zCaamlAvalancheBulletinProvider.optional(),
+});
+
+/**
+ * Region element describes a (micro) region. The regionID follows the EAWS schema. It is recommended to have the region shape's files with the same IDs in gitlab.com/eaws/eaws-regions. Additionally, the region name can be added.
+ */
+export const zCaamlRegion = z.object({
+  customData: z.record(z.string(), z.unknown()).optional(),
+  metaData: zCaamlMetaData.optional(),
+  name: z.string().optional(),
+  regionID: z.string().optional(),
+});
+
+export const zCaamlTendencyType = z.enum(["DECREASING", "INCREASING", "STEADY"]);
+
+/**
+ * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
+ * for a new line, (
+ *
+ * ,) and (
+ * * ,
+ * * ) for lists, (
+ *
+ * ,
+ * ===
+ *
+ * ) to (
+ * ======
+ *
+ * ###### ,
+ *
+ * ###### ) for
+ * headings and (**,**) for a bold text are allowed.
+ * Texts element with highlight and comment for details on the snowpack structure.
+ * Texts element with highlight and comment for travel advisory.
+ * Texts element with highlight and comment for weather forecast information.
+ * Texts element with highlight and comment for weather review information.
+ */
+export const zCaamlTexts = z.object({
+  comment: z.string().optional(),
+  highlights: z.string().optional(),
+});
+
+/**
+ * Valid time defines two ISO 8601 timestamps in UTC or with time zone information. Date and Time from and until this bulletin is valid. ISO 8601 Timestamp in UTC or with time zone information.
+ */
+export const zCaamlValidTime = z.object({
+  endTime: z.iso.datetime().optional(),
+  startTime: z.iso.datetime().optional(),
+});
+
+/**
+ * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
+ * for a new line, (
+ *
+ * ,) and (
+ * * ,
+ * * ) for lists, (
+ *
+ * ,
+ * ===
+ *
+ * ) to (
+ * ======
+ *
+ * ###### ,
+ *
+ * ###### ) for
+ * headings and (**,**) for a bold text are allowed.
+ * Texts element with highlight and comment for details on the snowpack structure.
+ * Texts element with highlight and comment for travel advisory.
+ * Texts element with highlight and comment for weather forecast information.
+ * Texts element with highlight and comment for weather review information.
+ * Describes the expected tendency of the development of the avalanche situation for a
+ * defined time period.
+ */
+export const zCaamlTendency = z.object({
+  comment: z.string().optional(),
+  highlights: z.string().optional(),
+  customData: z.record(z.string(), z.unknown()).optional(),
+  metaData: zCaamlMetaData.optional(),
+  tendencyType: zCaamlTendencyType.optional(),
+  validTime: zCaamlValidTime.optional(),
+});
+
+/**
+ * Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.
+ */
+export const zCaamlValidTimePeriod = z.enum(["ALL_DAY", "EARLIER", "LATER"]);
+
+/**
+ * Defines an avalanche problem, its time, aspect, and elevation constraints. A textual detail about the affected terrain can be given in the comment field. Also, details about the expected avalanche size, snowpack stability and its frequency can be defined. The implied danger rating value is optional.
+ */
+export const zCaamlAvalancheProblem = z.object({
+  aspects: z.array(zCaamlAspect).optional(),
+  avalancheSize: z
+    .int()
+    .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
+    .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
+    .optional(),
+  comment: z.string().optional(),
+  customData: zCaamlAvalancheProblemCustomData.optional(),
+  dangerRatingValue: zCaamlDangerRatingValue.optional(),
+  elevation: zCaamlElevationBoundaryOrBand.optional(),
+  frequency: zCaamlExpectedAvalancheFrequency.optional(),
+  metaData: zCaamlMetaData.optional(),
+  problemType: zCaamlAvalancheProblemType.optional(),
+  avalancheType: zCaamlAvalancheTypeType.optional(),
+  snowpackStability: zCaamlExpectedSnowpackStability.optional(),
+  validTimePeriod: zCaamlValidTimePeriod.optional(),
+});
+
+/**
+ * Defines a danger rating, its elevation constraints and the valid time period. If validTimePeriod or elevation are constrained for a rating, it is expected to define a dangerRating for all the other cases.
+ */
+export const zCaamlDangerRating = z.object({
+  aspects: z.array(zCaamlAspect).optional(),
+  customData: z.record(z.string(), z.unknown()).optional(),
+  elevation: zCaamlElevationBoundaryOrBand.optional(),
+  mainValue: zCaamlDangerRatingValue.optional(),
+  metaData: zCaamlMetaData.optional(),
+  validTimePeriod: zCaamlValidTimePeriod.optional(),
+});
+
+/**
+ * Avalanche Bulletin valid for a given set of regions.
+ */
+export const zCaamlAvalancheBulletin = z.object({
+  avalancheActivity: zCaamlTexts.optional(),
+  avalancheProblems: z.array(zCaamlAvalancheProblem).optional(),
+  bulletinID: z.string().optional(),
+  customData: zCaamlAvalancheBulletinCustomData.optional(),
+  dangerRatings: z.array(zCaamlDangerRating).optional(),
+  highlights: z.string().optional(),
+  lang: z.string().optional(),
+  metaData: zCaamlMetaData.optional(),
+  nextUpdate: z.iso.datetime().optional(),
+  publicationTime: z.iso.datetime().optional(),
+  regions: z.array(zCaamlRegion).optional(),
+  snowpackStructure: zCaamlTexts.optional(),
+  source: zCaamlAvalancheBulletinSource.optional(),
+  tendency: z.array(zCaamlTendency).optional(),
+  travelAdvisory: zCaamlTexts.optional(),
+  unscheduled: z.boolean().optional(),
+  validTime: zCaamlValidTime.optional(),
+  weatherForecast: zCaamlTexts.optional(),
+  weatherReview: zCaamlTexts.optional(),
+});
+
+/**
+ * JSON schema for EAWS avalanche bulletin collection following the CAAMLv6 schema
+ */
+export const zCaamlAvalancheBulletins = z.object({
+  bulletins: z.array(zCaamlAvalancheBulletin).optional(),
+  customData: zCaamlAvalancheBulletinsCustomData.optional(),
+  metaData: zCaamlMetaData.optional(),
 });
 
 /**
@@ -183,19 +415,6 @@ export const zAvalancheBulletinServiceHighest = z.object({
 
 export const zDangerRatingModificator = z.enum(["none", "minus", "equal", "plus"]);
 
-/**
- * Danger rating value, according to EAWS danger scale definition.
- */
-export const zDangerRatingValue = z.enum([
-  "CONSIDERABLE",
-  "HIGH",
-  "LOW",
-  "MODERATE",
-  "NO_RATING",
-  "NO_SNOW",
-  "VERY_HIGH",
-]);
-
 export const zDangerSign = z.enum(["shooting_cracks", "whumpfing", "fresh_avalanches", "glide_cracks"]);
 
 /**
@@ -233,33 +452,6 @@ export const zDaytime = z.enum([
 export const zDirection = z.enum(["up", "down"]);
 
 export const zDistribution = z.enum(["isolated", "specific", "widespread"]);
-
-/**
- * Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.
- */
-export const zElevationBoundaryOrBand = z.object({
-  lowerBound: z.string().optional(),
-  upperBound: z.string().optional(),
-});
-
-/**
- * Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).
- */
-export const zExpectedAvalancheFrequency = z.enum(["FEW", "MANY", "NONE", "SOME"]);
-
-/**
- * Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).
- */
-export const zExpectedSnowpackStability = z.enum(["FAIR", "GOOD", "POOR", "VERY_POOR"]);
-
-/**
- * External file is used to link to external files like maps, thumbnails etc.
- */
-export const zExternalFile = z.object({
-  description: z.string().optional(),
-  fileReferenceURI: z.string().optional(),
-  fileType: z.string().optional(),
-});
 
 export const zFrequency = z.enum(["none", "few", "some", "many"]);
 
@@ -429,14 +621,6 @@ export const zLocalServerInstance = z.object({
   mediaPath: z.string(),
 });
 
-/**
- * Meta data for various uses. Can be used to link to external files like maps, thumbnails etc.
- */
-export const zMetaData = z.object({
-  comment: z.string().optional(),
-  EXTFiles: z.array(zExternalFile).optional(),
-});
-
 export const zNaturalAvalancheReleaseProbability = z.enum(["one", "two", "three", "four"]);
 
 export const zMatrixInformation = z.object({
@@ -447,35 +631,6 @@ export const zMatrixInformation = z.object({
   naturalDangerRating: zDangerRating.optional(),
   naturalAvalancheReleaseProbability: zNaturalAvalancheReleaseProbability.optional(),
   naturalHazardSiteDistribution: zHazardSiteDistribution.optional(),
-});
-
-/**
- * Details on a person.
- */
-export const zPerson = z.object({
-  customData: z.record(z.string(), z.unknown()).optional(),
-  metaData: zMetaData.optional(),
-  name: z.string().optional(),
-  website: z.string().optional(),
-});
-
-/**
- * Information about the bulletin provider. Defines the name, website and/or contactPerson (which could be the author) of the issuing AWS.
- */
-export const zAvalancheBulletinProvider = z.object({
-  contactPerson: zPerson.optional(),
-  customData: z.record(z.string(), z.unknown()).optional(),
-  metaData: zMetaData.optional(),
-  name: z.string().optional(),
-  website: z.string().optional(),
-});
-
-/**
- * Details about the issuer/AWS of the bulletin. Information about the bulletin source. Either as in a person or with a provider element to specify details about the AWS.
- */
-export const zAvalancheBulletinSource = z.object({
-  person: zPerson.optional(),
-  provider: zAvalancheBulletinProvider.optional(),
 });
 
 export const zPosition = z.enum(["topleft", "topright", "bottomleft", "bottomright"]);
@@ -520,16 +675,6 @@ export const zPushSubscription = z.object({
 });
 
 export const zRecognizability = z.enum(["very_easy", "easy", "hard", "very_hard"]);
-
-/**
- * Region element describes a (micro) region. The regionID follows the EAWS schema. It is recommended to have the region shape's files with the same IDs in gitlab.com/eaws/eaws-regions. Additionally, the region name can be added.
- */
-export const zRegion = z.object({
-  customData: z.record(z.string(), z.unknown()).optional(),
-  metaData: zMetaData.optional(),
-  name: z.string().optional(),
-  regionID: z.string().optional(),
-});
 
 export const zRegionLanguageConfiguration = z.object({
   lang: zLanguageCode.optional(),
@@ -672,8 +817,6 @@ export const zSubscriptionServiceEmailSubscription = z.object({
 
 export const zTendency = z.enum(["decreasing", "steady", "increasing"]);
 
-export const zTendencyType = z.enum(["DECREASING", "INCREASING", "STEADY"]);
-
 export const zTerrainType = z.enum([
   "gullies_and_bowls",
   "adjacent_to_ridgelines",
@@ -716,7 +859,7 @@ export const zTextPart = z.enum([
 /**
  * This class holds all information about one region.
  */
-export const zRegion1 = z.object({
+export const zRegion = z.object({
   id: z.string().optional(),
   microRegions: z
     .int()
@@ -798,34 +941,6 @@ export const zRegion1 = z.object({
   awsomeUrl: z.string().optional(),
 });
 
-/**
- * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
- * for a new line, (
- *
- * ,) and (
- * * ,
- * * ) for lists, (
- *
- * ,
- * ===
- *
- * ) to (
- * ======
- *
- * ###### ,
- *
- * ###### ) for
- * headings and (**,**) for a bold text are allowed.
- * Texts element with highlight and comment for details on the snowpack structure.
- * Texts element with highlight and comment for travel advisory.
- * Texts element with highlight and comment for weather forecast information.
- * Texts element with highlight and comment for weather review information.
- */
-export const zTexts = z.object({
-  comment: z.string().optional(),
-  highlights: z.string().optional(),
-});
-
 export const zThickness = z.enum(["thick", "thin"]);
 
 export const zUser = z.object({
@@ -842,7 +957,7 @@ export const zUser = z.object({
 
 export const zAuthenticationServiceAuthenticationResponse = z.object({
   user: zUser,
-  regions: z.array(zRegion1),
+  regions: z.array(zRegion),
   access_token: z.string(),
 });
 
@@ -910,121 +1025,6 @@ export const zUserServiceCheckPassword = z.object({
 
 export const zUserServiceResetPassword = z.object({
   newPassword: z.string(),
-});
-
-/**
- * Valid time defines two ISO 8601 timestamps in UTC or with time zone information. Date and Time from and until this bulletin is valid. ISO 8601 Timestamp in UTC or with time zone information.
- */
-export const zValidTime = z.object({
-  endTime: z.iso.datetime().optional(),
-  startTime: z.iso.datetime().optional(),
-});
-
-/**
- * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
- * for a new line, (
- *
- * ,) and (
- * * ,
- * * ) for lists, (
- *
- * ,
- * ===
- *
- * ) to (
- * ======
- *
- * ###### ,
- *
- * ###### ) for
- * headings and (**,**) for a bold text are allowed.
- * Texts element with highlight and comment for details on the snowpack structure.
- * Texts element with highlight and comment for travel advisory.
- * Texts element with highlight and comment for weather forecast information.
- * Texts element with highlight and comment for weather review information.
- * Describes the expected tendency of the development of the avalanche situation for a
- * defined time period.
- */
-export const zTendency1 = z.object({
-  comment: z.string().optional(),
-  highlights: z.string().optional(),
-  customData: z.record(z.string(), z.unknown()).optional(),
-  metaData: zMetaData.optional(),
-  tendencyType: zTendencyType.optional(),
-  validTime: zValidTime.optional(),
-});
-
-/**
- * Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.
- */
-export const zValidTimePeriod = z.enum(["ALL_DAY", "EARLIER", "LATER"]);
-
-/**
- * Defines an avalanche problem, its time, aspect, and elevation constraints. A textual detail about the affected terrain can be given in the comment field. Also, details about the expected avalanche size, snowpack stability and its frequency can be defined. The implied danger rating value is optional.
- */
-export const zAvalancheProblem2 = z.object({
-  aspects: z.array(zAspect1).optional(),
-  avalancheSize: z
-    .int()
-    .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
-    .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-    .optional(),
-  comment: z.string().optional(),
-  customData: zAvalancheProblemCustomData.optional(),
-  dangerRatingValue: zDangerRatingValue.optional(),
-  elevation: zElevationBoundaryOrBand.optional(),
-  frequency: zExpectedAvalancheFrequency.optional(),
-  metaData: zMetaData.optional(),
-  problemType: zAvalancheProblemType.optional(),
-  avalancheType: zAvalancheTypeType.optional(),
-  snowpackStability: zExpectedSnowpackStability.optional(),
-  validTimePeriod: zValidTimePeriod.optional(),
-});
-
-/**
- * Defines a danger rating, its elevation constraints and the valid time period. If validTimePeriod or elevation are constrained for a rating, it is expected to define a dangerRating for all the other cases.
- */
-export const zDangerRating1 = z.object({
-  aspects: z.array(zAspect1).optional(),
-  customData: z.record(z.string(), z.unknown()).optional(),
-  elevation: zElevationBoundaryOrBand.optional(),
-  mainValue: zDangerRatingValue.optional(),
-  metaData: zMetaData.optional(),
-  validTimePeriod: zValidTimePeriod.optional(),
-});
-
-/**
- * Avalanche Bulletin valid for a given set of regions.
- */
-export const zAvalancheBulletin1 = z.object({
-  avalancheActivity: zTexts.optional(),
-  avalancheProblems: z.array(zAvalancheProblem2).optional(),
-  bulletinID: z.string().optional(),
-  customData: zAvalancheBulletinCustomData.optional(),
-  dangerRatings: z.array(zDangerRating1).optional(),
-  highlights: z.string().optional(),
-  lang: z.string().optional(),
-  metaData: zMetaData.optional(),
-  nextUpdate: z.iso.datetime().optional(),
-  publicationTime: z.iso.datetime().optional(),
-  regions: z.array(zRegion).optional(),
-  snowpackStructure: zTexts.optional(),
-  source: zAvalancheBulletinSource.optional(),
-  tendency: z.array(zTendency1).optional(),
-  travelAdvisory: zTexts.optional(),
-  unscheduled: z.boolean().optional(),
-  validTime: zValidTime.optional(),
-  weatherForecast: zTexts.optional(),
-  weatherReview: zTexts.optional(),
-});
-
-/**
- * JSON schema for EAWS avalanche bulletin collection following the CAAMLv6 schema
- */
-export const zAvalancheBulletins = z.object({
-  bulletins: z.array(zAvalancheBulletin1).optional(),
-  customData: zAvalancheBulletinsCustomData.optional(),
-  metaData: zMetaData.optional(),
 });
 
 export const zWetness = z.enum(["wet", "moist", "dry"]);
@@ -1259,7 +1259,7 @@ export const zGetPublishedCaamlBulletinsQuery = z.object({
 /**
  * CAAML XML bulletins
  */
-export const zGetPublishedCaamlBulletinsResponse = zAvalancheBulletins;
+export const zGetPublishedCaamlBulletinsResponse = zCaamlAvalancheBulletins;
 
 export const zGetPublishedCaamlJsonBulletinsQuery = z.object({
   date: z.string(),
@@ -1271,7 +1271,7 @@ export const zGetPublishedCaamlJsonBulletinsQuery = z.object({
 /**
  * CAAML JSON bulletins
  */
-export const zGetPublishedCaamlJsonBulletinsResponse = zAvalancheBulletins;
+export const zGetPublishedCaamlJsonBulletinsResponse = zCaamlAvalancheBulletins;
 
 export const zCheckBulletinsQuery = z.object({
   region: z.string(),
@@ -1303,7 +1303,7 @@ export const zGetCaamlJsonBulletinsQuery = z.object({
 /**
  * CAAML JSON bulletins
  */
-export const zGetCaamlJsonBulletinsResponse = zAvalancheBulletins;
+export const zGetCaamlJsonBulletinsResponse = zCaamlAvalancheBulletins;
 
 export const zGetHighestDangerRatingQuery = z.object({
   date: z.string(),
@@ -1356,7 +1356,7 @@ export const zUploadBulletinPhotoQuery = z.object({
 /**
  * uploadBulletinPhoto 200 response
  */
-export const zUploadBulletinPhotoResponse = zAvalancheBulletinCustomDataBulletinPhoto;
+export const zUploadBulletinPhotoResponse = zCaamlAvalancheBulletinCustomDataBulletinPhoto;
 
 export const zGetPreviewPdfBody = z.array(zAvalancheBulletin);
 
@@ -1771,14 +1771,14 @@ export const zUnsubscribeBody = zPushSubscription;
 /**
  * getRegions 200 response
  */
-export const zGetRegionsResponse = z.array(zRegion1);
+export const zGetRegionsResponse = z.array(zRegion);
 
 export const zSaveRegionBody = z.string();
 
 /**
  * saveRegion 200 response
  */
-export const zSaveRegionResponse = zRegion1;
+export const zSaveRegionResponse = zRegion;
 
 export const zGetRegionQuery = z.object({
   region: z.string(),
@@ -1787,7 +1787,7 @@ export const zGetRegionQuery = z.object({
 /**
  * getRegion 200 response
  */
-export const zGetRegionResponse = zRegion1;
+export const zGetRegionResponse = zRegion;
 
 /**
  * configuration
