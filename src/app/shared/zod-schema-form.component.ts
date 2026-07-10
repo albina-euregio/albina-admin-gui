@@ -158,11 +158,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     if (this.displayMode() === DisplayMode.FilledOut && !zodUtil.hasValue(this.value()?.[key])) return false;
     const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;
     if (!showIf) return true;
-    return showIf.every((cond) => {
-      const val = this.value()?.[cond.field];
-      const matches = (cond.values as unknown[]).includes(val);
-      return cond.negate ? !matches : matches;
-    });
+    return showIf(this.value() ?? {});
   }
 
   fieldAriaLabel(key: string, zodValue: z.ZodType): string {

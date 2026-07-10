@@ -319,10 +319,11 @@ export const DangerSourceVariantSchema = z.object({
 });
 
 withShowIf(DangerSourceVariantSchema, {
-  dangerIncreaseWithElevation: ["avalancheType", Enums.AvalancheType.slab],
-  dangerSpotRecognizability: ["avalancheType", Enums.AvalancheType.slab],
-  remoteTriggering: ["avalancheType", Enums.AvalancheType.slab],
-  penetrateDeepLayers: ["avalancheType", Enums.AvalancheType.slab, Enums.AvalancheType.loose],
+  dangerIncreaseWithElevation: (m) => m.avalancheType === Enums.AvalancheType.slab,
+  dangerSpotRecognizability: (m) => m.avalancheType === Enums.AvalancheType.slab,
+  remoteTriggering: (m) => m.avalancheType === Enums.AvalancheType.slab,
+  penetrateDeepLayers: (m) =>
+    m.avalancheType === Enums.AvalancheType.slab || m.avalancheType === Enums.AvalancheType.loose,
 });
 
 export class DangerSourceVariantModel extends ZSchema(DangerSourceVariantSchema) implements PolygonObject {
