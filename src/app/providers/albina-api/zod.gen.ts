@@ -85,10 +85,11 @@ export const zAvalancheBulletinStatusServiceStatus = z.object({
 /**
  * An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.
  */
-export const zCaamlAspect = z.enum(["E", "N", "NE", "NW", "N_A", "S", "SE", "SW", "W"]).register(z.globalRegistry, {
-  description:
+export const zCaamlAspect = z
+  .enum(["E", "N", "NE", "NW", "N_A", "S", "SE", "SW", "W"])
+  .describe(
     "An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.",
-});
+  );
 
 export const zCaamlAvalancheBulletinCustomDataBulletinPhoto = z.object({
   url: z.string(),
@@ -144,25 +145,19 @@ export const zCaamlAvalancheProblemType = z
     "WET_SNOW",
     "WIND_SLAB",
   ])
-  .register(z.globalRegistry, {
-    description: "Expected avalanche problem, according to the EAWS avalanche problem definition.",
-  });
+  .describe("Expected avalanche problem, according to the EAWS avalanche problem definition.");
 
 /**
  * Expected avalanche type.
  */
-export const zCaamlAvalancheTypeType = z.enum(["SLAB", "LOOSE", "GLIDE"]).register(z.globalRegistry, {
-  description: "Expected avalanche type.",
-});
+export const zCaamlAvalancheTypeType = z.enum(["SLAB", "LOOSE", "GLIDE"]).describe("Expected avalanche type.");
 
 /**
  * Danger rating value, according to EAWS danger scale definition.
  */
 export const zCaamlDangerRatingValue = z
   .enum(["CONSIDERABLE", "HIGH", "LOW", "MODERATE", "NO_RATING", "NO_SNOW", "VERY_HIGH"])
-  .register(z.globalRegistry, {
-    description: "Danger rating value, according to EAWS danger scale definition.",
-  });
+  .describe("Danger rating value, according to EAWS danger scale definition.");
 
 /**
  * Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.
@@ -172,28 +167,25 @@ export const zCaamlElevationBoundaryOrBand = z
     lowerBound: z.string().optional(),
     upperBound: z.string().optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.",
-  });
+  .describe(
+    "Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.",
+  );
 
 /**
  * Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).
  */
-export const zCaamlExpectedAvalancheFrequency = z.enum(["FEW", "MANY", "NONE", "SOME"]).register(z.globalRegistry, {
-  description:
+export const zCaamlExpectedAvalancheFrequency = z
+  .enum(["FEW", "MANY", "NONE", "SOME"])
+  .describe(
     "Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).",
-});
+  );
 
 /**
  * Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).
  */
 export const zCaamlExpectedSnowpackStability = z
   .enum(["FAIR", "GOOD", "POOR", "VERY_POOR"])
-  .register(z.globalRegistry, {
-    description:
-      "Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).",
-  });
+  .describe("Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).");
 
 /**
  * External file is used to link to external files like maps, thumbnails etc.
@@ -204,9 +196,7 @@ export const zCaamlExternalFile = z
     fileReferenceURI: z.string().optional(),
     fileType: z.string().optional(),
   })
-  .register(z.globalRegistry, {
-    description: "External file is used to link to external files like maps, thumbnails etc.",
-  });
+  .describe("External file is used to link to external files like maps, thumbnails etc.");
 
 /**
  * Meta data for various uses. Can be used to link to external files like maps, thumbnails etc.
@@ -216,9 +206,7 @@ export const zCaamlMetaData = z
     comment: z.string().optional(),
     EXTFiles: z.array(zCaamlExternalFile).optional(),
   })
-  .register(z.globalRegistry, {
-    description: "Meta data for various uses. Can be used to link to external files like maps, thumbnails etc.",
-  });
+  .describe("Meta data for various uses. Can be used to link to external files like maps, thumbnails etc.");
 
 /**
  * Details on a person.
@@ -230,9 +218,7 @@ export const zCaamlPerson = z
     name: z.string().optional(),
     website: z.string().optional(),
   })
-  .register(z.globalRegistry, {
-    description: "Details on a person.",
-  });
+  .describe("Details on a person.");
 
 /**
  * Information about the bulletin provider. Defines the name, website and/or contactPerson (which could be the author) of the issuing AWS.
@@ -245,10 +231,9 @@ export const zCaamlAvalancheBulletinProvider = z
     name: z.string().optional(),
     website: z.string().optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Information about the bulletin provider. Defines the name, website and/or contactPerson (which could be the author) of the issuing AWS.",
-  });
+  .describe(
+    "Information about the bulletin provider. Defines the name, website and/or contactPerson (which could be the author) of the issuing AWS.",
+  );
 
 /**
  * Details about the issuer/AWS of the bulletin. Information about the bulletin source. Either as in a person or with a provider element to specify details about the AWS.
@@ -258,10 +243,9 @@ export const zCaamlAvalancheBulletinSource = z
     person: zCaamlPerson.optional(),
     provider: zCaamlAvalancheBulletinProvider.optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Details about the issuer/AWS of the bulletin. Information about the bulletin source. Either as in a person or with a provider element to specify details about the AWS.",
-  });
+  .describe(
+    "Details about the issuer/AWS of the bulletin. Information about the bulletin source. Either as in a person or with a provider element to specify details about the AWS.",
+  );
 
 /**
  * Region element describes a (micro) region. The regionID follows the EAWS schema. It is recommended to have the region shape's files with the same IDs in gitlab.com/eaws/eaws-regions. Additionally, the region name can be added.
@@ -273,10 +257,9 @@ export const zCaamlRegion = z
     name: z.string().optional(),
     regionID: z.string().optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Region element describes a (micro) region. The regionID follows the EAWS schema. It is recommended to have the region shape's files with the same IDs in gitlab.com/eaws/eaws-regions. Additionally, the region name can be added.",
-  });
+  .describe(
+    "Region element describes a (micro) region. The regionID follows the EAWS schema. It is recommended to have the region shape's files with the same IDs in gitlab.com/eaws/eaws-regions. Additionally, the region name can be added.",
+  );
 
 export const zCaamlTendencyType = z.enum(["DECREASING", "INCREASING", "STEADY"]);
 
@@ -308,10 +291,9 @@ export const zCaamlTexts = z
     comment: z.string().optional(),
     highlights: z.string().optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags   \nfor a new line, (\n\n,) and (\n* ,\n* ) for lists, (\n\n  ,\n  ===\n\n  ) to (\n  ======\n\n  ###### ,\n\n  ###### ) for\n  headings and (**,**) for a bold text are allowed.\n  Texts element with highlight and comment for details on the snowpack structure.\n  Texts element with highlight and comment for travel advisory.\n  Texts element with highlight and comment for weather forecast information.\n  Texts element with highlight and comment for weather review information.",
-  });
+  .describe(
+    "Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags   \nfor a new line, (\n\n,) and (\n* ,\n* ) for lists, (\n\n  ,\n  ===\n\n  ) to (\n  ======\n\n  ###### ,\n\n  ###### ) for\n  headings and (**,**) for a bold text are allowed.\n  Texts element with highlight and comment for details on the snowpack structure.\n  Texts element with highlight and comment for travel advisory.\n  Texts element with highlight and comment for weather forecast information.\n  Texts element with highlight and comment for weather review information.",
+  );
 
 /**
  * Valid time defines two ISO 8601 timestamps in UTC or with time zone information. Date and Time from and until this bulletin is valid. ISO 8601 Timestamp in UTC or with time zone information.
@@ -321,10 +303,9 @@ export const zCaamlValidTime = z
     endTime: z.iso.datetime().optional(),
     startTime: z.iso.datetime().optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Valid time defines two ISO 8601 timestamps in UTC or with time zone information. Date and Time from and until this bulletin is valid. ISO 8601 Timestamp in UTC or with time zone information.",
-  });
+  .describe(
+    "Valid time defines two ISO 8601 timestamps in UTC or with time zone information. Date and Time from and until this bulletin is valid. ISO 8601 Timestamp in UTC or with time zone information.",
+  );
 
 /**
  * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
@@ -360,18 +341,18 @@ export const zCaamlTendency = z
     tendencyType: zCaamlTendencyType.optional(),
     validTime: zCaamlValidTime.optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags   \nfor a new line, (\n\n,) and (\n* ,\n* ) for lists, (\n\n  ,\n  ===\n\n  ) to (\n  ======\n\n  ###### ,\n\n  ###### ) for\n  headings and (**,**) for a bold text are allowed.\n  Texts element with highlight and comment for details on the snowpack structure.\n  Texts element with highlight and comment for travel advisory.\n  Texts element with highlight and comment for weather forecast information.\n  Texts element with highlight and comment for weather review information.\n  Describes the expected tendency of the development of the avalanche situation for a\n  defined time period.",
-  });
+  .describe(
+    "Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags   \nfor a new line, (\n\n,) and (\n* ,\n* ) for lists, (\n\n  ,\n  ===\n\n  ) to (\n  ======\n\n  ###### ,\n\n  ###### ) for\n  headings and (**,**) for a bold text are allowed.\n  Texts element with highlight and comment for details on the snowpack structure.\n  Texts element with highlight and comment for travel advisory.\n  Texts element with highlight and comment for weather forecast information.\n  Texts element with highlight and comment for weather review information.\n  Describes the expected tendency of the development of the avalanche situation for a\n  defined time period.",
+  );
 
 /**
  * Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.
  */
-export const zCaamlValidTimePeriod = z.enum(["ALL_DAY", "EARLIER", "LATER"]).register(z.globalRegistry, {
-  description:
+export const zCaamlValidTimePeriod = z
+  .enum(["ALL_DAY", "EARLIER", "LATER"])
+  .describe(
     "Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.",
-});
+  );
 
 /**
  * Defines an avalanche problem, its time, aspect, and elevation constraints. A textual detail about the affected terrain can be given in the comment field. Also, details about the expected avalanche size, snowpack stability and its frequency can be defined. The implied danger rating value is optional.
@@ -395,10 +376,9 @@ export const zCaamlAvalancheProblem = z
     snowpackStability: zCaamlExpectedSnowpackStability.optional(),
     validTimePeriod: zCaamlValidTimePeriod.optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Defines an avalanche problem, its time, aspect, and elevation constraints. A textual detail about the affected terrain can be given in the comment field. Also, details about the expected avalanche size, snowpack stability and its frequency can be defined. The implied danger rating value is optional.",
-  });
+  .describe(
+    "Defines an avalanche problem, its time, aspect, and elevation constraints. A textual detail about the affected terrain can be given in the comment field. Also, details about the expected avalanche size, snowpack stability and its frequency can be defined. The implied danger rating value is optional.",
+  );
 
 /**
  * Defines a danger rating, its elevation constraints and the valid time period. If validTimePeriod or elevation are constrained for a rating, it is expected to define a dangerRating for all the other cases.
@@ -412,10 +392,9 @@ export const zCaamlDangerRating = z
     metaData: zCaamlMetaData.optional(),
     validTimePeriod: zCaamlValidTimePeriod.optional(),
   })
-  .register(z.globalRegistry, {
-    description:
-      "Defines a danger rating, its elevation constraints and the valid time period. If validTimePeriod or elevation are constrained for a rating, it is expected to define a dangerRating for all the other cases.",
-  });
+  .describe(
+    "Defines a danger rating, its elevation constraints and the valid time period. If validTimePeriod or elevation are constrained for a rating, it is expected to define a dangerRating for all the other cases.",
+  );
 
 /**
  * Avalanche Bulletin valid for a given set of regions.
@@ -425,79 +404,51 @@ export const zCaamlAvalancheBulletin = z
     avalancheActivity: zCaamlTexts.optional(),
     avalancheProblems: z
       .array(zCaamlAvalancheProblem)
-      .register(z.globalRegistry, {
-        description: "Collection of Avalanche Problem elements for this bulletin.",
-      })
+      .describe("Collection of Avalanche Problem elements for this bulletin.")
       .optional(),
-    bulletinID: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Unique ID for the bulletin.",
-      })
-      .optional(),
+    bulletinID: z.string().describe("Unique ID for the bulletin.").optional(),
     customData: zCaamlAvalancheBulletinCustomData.optional(),
     dangerRatings: z
       .array(zCaamlDangerRating)
-      .register(z.globalRegistry, {
-        description: "Collection of Danger Rating elements for this bulletin.",
-      })
+      .describe("Collection of Danger Rating elements for this bulletin.")
       .optional(),
     highlights: z
       .string()
-      .register(z.globalRegistry, {
-        description: "Contains an optional short text to highlight an exceptionally dangerous situation.",
-      })
+      .describe("Contains an optional short text to highlight an exceptionally dangerous situation.")
       .optional(),
-    lang: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Two-letter language code (ISO 639-1).",
-      })
-      .optional(),
+    lang: z.string().describe("Two-letter language code (ISO 639-1).").optional(),
     metaData: zCaamlMetaData.optional(),
     nextUpdate: z.iso
       .datetime()
-      .register(z.globalRegistry, {
-        description:
-          "Time and date when the next bulletin will be published by the AWS to the Public. ISO 8601 timestamp in UTC or with time zone information.",
-      })
+      .describe(
+        "Time and date when the next bulletin will be published by the AWS to the Public. ISO 8601 timestamp in UTC or with time zone information.",
+      )
       .optional(),
     publicationTime: z.iso
       .datetime()
-      .register(z.globalRegistry, {
-        description:
-          "Time and date when the bulletin was issued by the AWS to the Public. ISO 8601 timestamp in UTC or with time zone information.",
-      })
+      .describe(
+        "Time and date when the bulletin was issued by the AWS to the Public. ISO 8601 timestamp in UTC or with time zone information.",
+      )
       .optional(),
     regions: z
       .array(zCaamlRegion)
-      .register(z.globalRegistry, {
-        description: "Collection of region elements for which this bulletin is valid.",
-      })
+      .describe("Collection of region elements for which this bulletin is valid.")
       .optional(),
     snowpackStructure: zCaamlTexts.optional(),
     source: zCaamlAvalancheBulletinSource.optional(),
     tendency: z
       .array(zCaamlTendency)
-      .register(z.globalRegistry, {
-        description:
-          "Tendency element for a detailed description of the expected avalanche situation tendency after the bulletin's period of validity.",
-      })
+      .describe(
+        "Tendency element for a detailed description of the expected avalanche situation tendency after the bulletin's period of validity.",
+      )
       .optional(),
     travelAdvisory: zCaamlTexts.optional(),
-    unscheduled: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Flag if bulletin is unscheduled or not.",
-      })
-      .optional(),
+    unscheduled: z.boolean().describe("Flag if bulletin is unscheduled or not.").optional(),
     validTime: zCaamlValidTime.optional(),
     weatherForecast: zCaamlTexts.optional(),
     weatherReview: zCaamlTexts.optional(),
   })
-  .register(z.globalRegistry, {
-    description: "Avalanche Bulletin valid for a given set of regions.",
-  });
+  .describe("Avalanche Bulletin valid for a given set of regions.");
 
 /**
  * JSON schema for EAWS avalanche bulletin collection following the CAAMLv6 schema
@@ -508,16 +459,14 @@ export const zCaamlAvalancheBulletins = z
     customData: zCaamlAvalancheBulletinsCustomData.optional(),
     metaData: zCaamlMetaData.optional(),
   })
-  .register(z.globalRegistry, {
-    description: "JSON schema for EAWS avalanche bulletin collection following the CAAMLv6 schema",
-  });
+  .describe("JSON schema for EAWS avalanche bulletin collection following the CAAMLv6 schema");
 
 /**
  * The version of CAAML (Canadian Avalanche Association Markup Language)
  */
-export const zCaamlVersion = z.enum(["V6", "V6_JSON"]).register(z.globalRegistry, {
-  description: "The version of CAAML (Canadian Avalanche Association Markup Language)",
-});
+export const zCaamlVersion = z
+  .enum(["V6", "V6_JSON"])
+  .describe("The version of CAAML (Canadian Avalanche Association Markup Language)");
 
 export const zCharacteristic = z.enum(["low", "medium", "high", "very_high"]);
 
@@ -616,152 +565,59 @@ export const zGenericObservationObservationType = z.enum([
 export const zGenericObservationPersonInvolvement = z.enum(["Dead", "Injured", "Uninjured", "No", "Unknown"]);
 
 export const zGenericObservation = z.object({
-  $source: z.string().register(z.globalRegistry, {
-    description: "Source of this observation",
-  }),
-  $id: z.string().register(z.globalRegistry, {
-    description: "External ID of this observation",
-  }),
+  $source: z.string().describe("Source of this observation"),
+  $id: z.string().describe("External ID of this observation"),
   $type: zGenericObservationObservationType,
-  $externalURL: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "External URL to display as iframe",
-    })
-    .optional(),
-  stability: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Snowpack stability that can be inferred from this observation",
-    })
-    .optional(),
-  aspects: z
-    .array(zAspect)
-    .register(z.globalRegistry, {
-      description: "Aspects corresponding with this observation",
-    })
-    .optional(),
-  authorName: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Name of the author",
-    })
-    .optional(),
-  content: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Free-text content",
-    })
-    .optional(),
+  $externalURL: z.string().describe("External URL to display as iframe").optional(),
+  stability: z.string().describe("Snowpack stability that can be inferred from this observation").optional(),
+  aspects: z.array(zAspect).describe("Aspects corresponding with this observation").optional(),
+  authorName: z.string().describe("Name of the author").optional(),
+  content: z.string().describe("Free-text content").optional(),
   $data: z
     .record(z.string(), z.unknown())
-    .register(z.globalRegistry, {
-      description: "Additional data (e.g. original data stored when fetching from external API)",
-    })
+    .describe("Additional data (e.g. original data stored when fetching from external API)")
     .optional(),
   elevation: z
     .int()
     .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
     .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-    .register(z.globalRegistry, {
-      description: "Elevation in meters",
-    })
+    .describe("Elevation in meters")
     .optional(),
   elevationLowerBound: z
     .int()
     .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
     .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-    .register(z.globalRegistry, {
-      description: "Lower bound of elevation in meters",
-    })
+    .describe("Lower bound of elevation in meters")
     .optional(),
   elevationUpperBound: z
     .int()
     .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
     .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-    .register(z.globalRegistry, {
-      description: "Upper bound of elevation in meters",
-    })
+    .describe("Upper bound of elevation in meters")
     .optional(),
-  eventDate: z.iso
-    .datetime()
-    .register(z.globalRegistry, {
-      description: "Date when the event occurred",
-    })
-    .optional(),
-  latitude: z
-    .number()
-    .register(z.globalRegistry, {
-      description: "Location latitude (WGS 84)",
-    })
-    .optional(),
-  locationName: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Location name",
-    })
-    .optional(),
-  longitude: z
-    .number()
-    .register(z.globalRegistry, {
-      description: "Location longitude (WGS 84)",
-    })
-    .optional(),
-  region: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Micro-region code (possibly computed from latitude/longitude)",
-    })
-    .optional(),
-  reportDate: z.iso
-    .datetime()
-    .register(z.globalRegistry, {
-      description: "Date when the observation has been reported",
-    })
-    .optional(),
+  eventDate: z.iso.datetime().describe("Date when the event occurred").optional(),
+  latitude: z.number().describe("Location latitude (WGS 84)").optional(),
+  locationName: z.string().describe("Location name").optional(),
+  longitude: z.number().describe("Location longitude (WGS 84)").optional(),
+  region: z.string().describe("Micro-region code (possibly computed from latitude/longitude)").optional(),
+  reportDate: z.iso.datetime().describe("Date when the observation has been reported").optional(),
   avalancheProblems: z
     .array(zAvalancheProblem1)
-    .register(z.globalRegistry, {
-      description: "Avalanche problems corresponding with this observation",
-    })
+    .describe("Avalanche problems corresponding with this observation")
     .optional(),
-  dangerPatterns: z
-    .array(zDangerPattern)
-    .register(z.globalRegistry, {
-      description: "Danger patterns corresponding with this observation",
-    })
-    .optional(),
-  importantObservation: z
-    .array(zGenericObservationImportantObservation)
-    .register(z.globalRegistry, {
-      description: "Important observations",
-    })
-    .optional(),
+  dangerPatterns: z.array(zDangerPattern).describe("Danger patterns corresponding with this observation").optional(),
+  importantObservation: z.array(zGenericObservationImportantObservation).describe("Important observations").optional(),
   extraDialogRows: z
     .record(z.string(), z.unknown())
-    .register(z.globalRegistry, {
-      description: "Additional information to display as table rows in the observation dialog",
-    })
+    .describe("Additional information to display as table rows in the observation dialog")
     .optional(),
   $externalImgs: z
     .string()
-    .register(z.globalRegistry, {
-      description: "External image to display. Multiple images are persisted using line separator.",
-    })
+    .describe("External image to display. Multiple images are persisted using line separator.")
     .optional(),
   personInvolvement: zGenericObservationPersonInvolvement.optional(),
-  $deleted: z
-    .boolean()
-    .register(z.globalRegistry, {
-      description: "Observations marked as deleted will no longer be returned in the list",
-    })
-    .optional(),
-  allowEdit: z
-    .boolean()
-    .register(z.globalRegistry, {
-      description: "Allows modifying observations fetched from external sources",
-    })
-    .optional(),
+  $deleted: z.boolean().describe("Observations marked as deleted will no longer be returned in the list").optional(),
+  allowEdit: z.boolean().describe("Allows modifying observations fetched from external sources").optional(),
   dangerSource: zDangerSource.nullish(),
 });
 
@@ -848,9 +704,9 @@ export const zIncidentAttachment = z.object({
 /**
  * The enum contains the ISO 639-1 codes for available languages.
  */
-export const zLanguageCode = z.enum(["de", "it", "en", "fr", "es", "ca", "oc"]).register(z.globalRegistry, {
-  description: "The enum contains the ISO 639-1 codes for available languages.",
-});
+export const zLanguageCode = z
+  .enum(["de", "it", "en", "fr", "es", "ca", "oc"])
+  .describe("The enum contains the ISO 639-1 codes for available languages.");
 
 export const zAvalancheBulletinText = z.object({
   languageCode: zLanguageCode,
@@ -924,36 +780,11 @@ export const zRecognizability = z.enum(["very_easy", "easy", "hard", "very_hard"
 
 export const zRegionLanguageConfiguration = z.object({
   lang: zLanguageCode.optional(),
-  websiteName: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Website name",
-    })
-    .optional(),
-  warningServiceName: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Warning service name",
-    })
-    .optional(),
-  warningServiceEmail: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Warning service email",
-    })
-    .optional(),
-  url: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Website URL",
-    })
-    .optional(),
-  urlWithDate: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Website URL for date given by %s",
-    })
-    .optional(),
+  websiteName: z.string().describe("Website name").optional(),
+  warningServiceName: z.string().describe("Warning service name").optional(),
+  warningServiceEmail: z.string().describe("Warning service email").optional(),
+  url: z.string().describe("Website URL").optional(),
+  urlWithDate: z.string().describe("Website URL for date given by %s").optional(),
 });
 
 export const zRole = z.enum(["SUPERADMIN", "ADMIN", "FORECASTER", "FOREMAN", "OBSERVER"]);
@@ -974,9 +805,7 @@ export const zServerInstance = z
     password: z.string().optional(),
     externalServer: z.boolean().optional(),
   })
-  .register(z.globalRegistry, {
-    description: "This class holds all information about a server instance.",
-  });
+  .describe("This class holds all information about a server instance.");
 
 export const zServerInstanceServiceServerVersionInfo = z.object({
   version: z.string(),
@@ -1136,378 +965,113 @@ export const zTextPart = z.enum([
  */
 export const zRegion = z
   .object({
-    id: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Region ID",
-      })
-      .optional(),
+    id: z.string().describe("Region ID").optional(),
     microRegions: z
       .int()
       .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
       .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-      .register(z.globalRegistry, {
-        description: "Number of micro regions",
-      })
+      .describe("Number of micro regions")
       .optional(),
-    subRegions: z
-      .array(z.string())
-      .register(z.globalRegistry, {
-        description: "ID of sub regions",
-      })
-      .optional(),
-    superRegions: z
-      .array(z.string())
-      .register(z.globalRegistry, {
-        description: "ID of super regions",
-      })
-      .optional(),
-    neighborRegions: z
-      .array(z.string())
-      .register(z.globalRegistry, {
-        description: "ID of neighbouring regions",
-      })
-      .optional(),
-    languageConfigurations: z
-      .array(zRegionLanguageConfiguration)
-      .register(z.globalRegistry, {
-        description: "Language configuration",
-      })
-      .optional(),
-    staticUrl: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "URL to static avalanche files",
-      })
-      .optional(),
-    enabledLanguages: z
-      .array(zLanguageCode)
-      .register(z.globalRegistry, {
-        description: "Enabled languages",
-      })
-      .optional(),
-    ttsLanguages: z
-      .array(zLanguageCode)
-      .register(z.globalRegistry, {
-        description: "Text-to-speech languages",
-      })
-      .optional(),
-    publishBulletins: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Publish avalanche forecast",
-      })
-      .optional(),
-    publishBlogs: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Publish blog posts",
-      })
-      .optional(),
-    createCaamlV6: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Create CAAML v6",
-      })
-      .optional(),
-    createJson: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Create JSON",
-      })
-      .optional(),
-    createMaps: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Create maps",
-      })
-      .optional(),
-    createPdf: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Create PDF",
-      })
-      .optional(),
-    createSimpleHtml: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Create simple HTML",
-      })
-      .optional(),
-    sendEmails: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Send emails",
-      })
-      .optional(),
-    sendTelegramMessages: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Send telegram messages",
-      })
-      .optional(),
-    sendWhatsAppMessages: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Send WhatsApp messages",
-      })
-      .optional(),
-    sendPushNotifications: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Send push notifications",
-      })
-      .optional(),
-    enableMediaFile: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable media file",
-      })
-      .optional(),
-    enableIcon: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable weather",
-      })
-      .optional(),
-    enableAvalancheProblemCornices: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable avalanche problem CORNICES",
-      })
-      .optional(),
+    subRegions: z.array(z.string()).describe("ID of sub regions").optional(),
+    superRegions: z.array(z.string()).describe("ID of super regions").optional(),
+    neighborRegions: z.array(z.string()).describe("ID of neighbouring regions").optional(),
+    languageConfigurations: z.array(zRegionLanguageConfiguration).describe("Language configuration").optional(),
+    staticUrl: z.string().describe("URL to static avalanche files").optional(),
+    enabledLanguages: z.array(zLanguageCode).describe("Enabled languages").optional(),
+    ttsLanguages: z.array(zLanguageCode).describe("Text-to-speech languages").optional(),
+    publishBulletins: z.boolean().describe("Publish avalanche forecast").optional(),
+    publishBlogs: z.boolean().describe("Publish blog posts").optional(),
+    createCaamlV6: z.boolean().describe("Create CAAML v6").optional(),
+    createJson: z.boolean().describe("Create JSON").optional(),
+    createMaps: z.boolean().describe("Create maps").optional(),
+    createPdf: z.boolean().describe("Create PDF").optional(),
+    createSimpleHtml: z.boolean().describe("Create simple HTML").optional(),
+    sendEmails: z.boolean().describe("Send emails").optional(),
+    sendTelegramMessages: z.boolean().describe("Send telegram messages").optional(),
+    sendWhatsAppMessages: z.boolean().describe("Send WhatsApp messages").optional(),
+    sendPushNotifications: z.boolean().describe("Send push notifications").optional(),
+    enableMediaFile: z.boolean().describe("Enable media file").optional(),
+    enableIcon: z.boolean().describe("Enable weather").optional(),
+    enableAvalancheProblemCornices: z.boolean().describe("Enable avalanche problem CORNICES").optional(),
     enableAvalancheProblemNoDistinctAvalancheProblem: z
       .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM",
-      })
+      .describe("Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM")
       .optional(),
-    showMatrix: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Show matrix",
-      })
-      .optional(),
-    enableStrategicMindset: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable strategic mindset",
-      })
-      .optional(),
-    enableStressLevel: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable stress level",
-      })
-      .optional(),
-    pdfColor: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "PDF color",
-      })
-      .optional(),
-    emailColor: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Email color",
-      })
-      .optional(),
+    showMatrix: z.boolean().describe("Show matrix").optional(),
+    enableStrategicMindset: z.boolean().describe("Enable strategic mindset").optional(),
+    enableStressLevel: z.boolean().describe("Enable stress level").optional(),
+    pdfColor: z.string().describe("PDF color").optional(),
+    emailColor: z.string().describe("Email color").optional(),
     pdfMapYAmPm: z
       .int()
       .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
       .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-      .register(z.globalRegistry, {
-        description: "Y for PDF map (am/pm)",
-      })
+      .describe("Y for PDF map (am/pm)")
       .optional(),
     pdfMapYFd: z
       .int()
       .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
       .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-      .register(z.globalRegistry, {
-        description: "Y for PDF map (fd)",
-      })
+      .describe("Y for PDF map (fd)")
       .optional(),
     pdfMapWidthAmPm: z
       .int()
       .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
       .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-      .register(z.globalRegistry, {
-        description: "Map width for PDF (am/pm)",
-      })
+      .describe("Map width for PDF (am/pm)")
       .optional(),
     pdfMapWidthFd: z
       .int()
       .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
       .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-      .register(z.globalRegistry, {
-        description: "Map width for PDF (fd)",
-      })
+      .describe("Map width for PDF (fd)")
       .optional(),
     pdfMapHeight: z
       .int()
       .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
       .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-      .register(z.globalRegistry, {
-        description: "Map height for PDF",
-      })
+      .describe("Map height for PDF")
       .optional(),
-    pdfFooterLogo: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Logo for PDF footer",
-      })
-      .optional(),
-    pdfFooterLogoColorPath: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Logo for PDF footer (color)",
-      })
-      .optional(),
-    pdfFooterLogoBwPath: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Logo for PDF footer (bw)",
-      })
-      .optional(),
-    geoDataDirectory: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Geodata directory",
-      })
-      .optional(),
+    pdfFooterLogo: z.boolean().describe("Logo for PDF footer").optional(),
+    pdfFooterLogoColorPath: z.string().describe("Logo for PDF footer (color)").optional(),
+    pdfFooterLogoBwPath: z.string().describe("Logo for PDF footer (bw)").optional(),
+    geoDataDirectory: z.string().describe("Geodata directory").optional(),
     mapLogoPosition: zPosition.optional(),
-    imageColorbarColorPath: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Colorbar (color)",
-      })
-      .optional(),
-    imageColorbarBwPath: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Colorbar (b/w)",
-      })
-      .optional(),
-    enableDangerSources: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable danger sources",
-      })
-      .optional(),
-    enableObservations: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable observations",
-      })
-      .optional(),
-    enableIncidents: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable incidents",
-      })
-      .optional(),
-    enableModelling: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable modelling",
-      })
-      .optional(),
+    imageColorbarColorPath: z.string().describe("Colorbar (color)").optional(),
+    imageColorbarBwPath: z.string().describe("Colorbar (b/w)").optional(),
+    enableDangerSources: z.boolean().describe("Enable danger sources").optional(),
+    enableObservations: z.boolean().describe("Enable observations").optional(),
+    enableIncidents: z.boolean().describe("Enable incidents").optional(),
+    enableModelling: z.boolean().describe("Enable modelling").optional(),
     enabledTextcatFields: z
       .array(zTextPart)
-      .register(z.globalRegistry, {
-        description: "Textfields for bulletins to be entered using textcat",
-      })
+      .describe("Textfields for bulletins to be entered using textcat")
       .optional(),
     enabledEditableFields: z
       .array(zTextPart)
-      .register(z.globalRegistry, {
-        description: "Editable textfields instead of textcat for bulletins",
-      })
+      .describe("Editable textfields instead of textcat for bulletins")
       .optional(),
-    enableLineaExport: z
-      .boolean()
-      .register(z.globalRegistry, {
-        description: "Enable LINEA export",
-      })
-      .optional(),
+    enableLineaExport: z.boolean().describe("Enable LINEA export").optional(),
     defaultLang: zLanguageCode.optional(),
-    logoPath: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Logo for PDF (color)",
-      })
-      .optional(),
-    logoBwPath: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Logo for PDF (bw)",
-      })
-      .optional(),
-    coatOfArms: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "Image URL for coat of arms",
-      })
-      .optional(),
-    serverImagesUrl: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "URL to server images",
-      })
-      .optional(),
-    educationUrl: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "URL to education content",
-      })
-      .optional(),
-    awsomeUrl: z
-      .string()
-      .register(z.globalRegistry, {
-        description: "URL to AWSOME modelling configuration",
-      })
-      .optional(),
+    logoPath: z.string().describe("Logo for PDF (color)").optional(),
+    logoBwPath: z.string().describe("Logo for PDF (bw)").optional(),
+    coatOfArms: z.string().describe("Image URL for coat of arms").optional(),
+    serverImagesUrl: z.string().describe("URL to server images").optional(),
+    educationUrl: z.string().describe("URL to education content").optional(),
+    awsomeUrl: z.string().describe("URL to AWSOME modelling configuration").optional(),
   })
-  .register(z.globalRegistry, {
-    description: "This class holds all information about one region.",
-  });
+  .describe("This class holds all information about one region.");
 
 export const zThickness = z.enum(["thick", "thin"]);
 
 export const zUser = z.object({
-  email: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Email address of the user",
-    })
-    .optional(),
-  password: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Password of the user",
-    })
-    .optional(),
-  name: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Name of the user",
-    })
-    .optional(),
+  email: z.string().describe("Email address of the user").optional(),
+  password: z.string().describe("Password of the user").optional(),
+  name: z.string().describe("Name of the user").optional(),
   roles: z.array(zRole).optional(),
   regions: z.array(z.string()).optional(),
-  image: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Image of the user",
-    })
-    .optional(),
-  organization: z
-    .string()
-    .register(z.globalRegistry, {
-      description: "Organization the user works for",
-    })
-    .optional(),
+  image: z.string().describe("Image of the user").optional(),
+  organization: z.string().describe("Organization the user works for").optional(),
   languageCode: zLanguageCode.optional(),
   deleted: z.boolean().optional(),
 });
@@ -1558,35 +1122,15 @@ export const zAvalancheBulletin = zAbstractPersistentObject.and(
     dangerPattern2: zDangerPattern.optional(),
     publicationDate: z.iso.datetime().optional(),
     validity: zAvalancheBulletinValidity.optional(),
-    suggestedRegions: z
-      .array(z.string())
-      .register(z.globalRegistry, {
-        description: "The recommended regions the avalanche bulletin is for.",
-      })
-      .optional(),
-    savedRegions: z
-      .array(z.string())
-      .register(z.globalRegistry, {
-        description: "The saved regions the avalanche bulletin is for.",
-      })
-      .optional(),
+    suggestedRegions: z.array(z.string()).describe("The recommended regions the avalanche bulletin is for.").optional(),
+    savedRegions: z.array(z.string()).describe("The saved regions the avalanche bulletin is for.").optional(),
     savedOrPublishedRegions: z.array(z.string()).optional(),
     regions: z.array(z.string()).optional(),
-    publishedRegions: z
-      .array(z.string())
-      .register(z.globalRegistry, {
-        description: "The published regions the avalanche bulletin is for.",
-      })
-      .optional(),
+    publishedRegions: z.array(z.string()).describe("The published regions the avalanche bulletin is for.").optional(),
     strategicMindset: zStrategicMindset.optional(),
     forenoon: zAvalancheBulletinDaytimeDescription.nullish(),
     afternoon: zAvalancheBulletinDaytimeDescription.nullish(),
-    photos: z
-      .array(zAvalancheBulletinPhoto)
-      .register(z.globalRegistry, {
-        description: "Collection containing all photos of a bulletin",
-      })
-      .optional(),
+    photos: z.array(zAvalancheBulletinPhoto).describe("Collection containing all photos of a bulletin").optional(),
     hasDaytimeDependency: z.boolean().optional(),
   }),
 );
@@ -1618,22 +1162,12 @@ export const zDangerSourceVariant = zAbstractPersistentObject.and(
     title: z.string().optional(),
     creationDate: z.iso.datetime().optional(),
     updateDate: z.iso.datetime().optional(),
-    validFrom: z.iso
-      .datetime()
-      .register(z.globalRegistry, {
-        description: "Validity of the danger source variant.",
-      })
-      .optional(),
+    validFrom: z.iso.datetime().describe("Validity of the danger source variant.").optional(),
     validUntil: z.iso.datetime().optional(),
     dangerSourceVariantStatus: zDangerSourceVariantStatus.optional(),
     dangerSourceVariantType: zDangerSourceVariantType.optional(),
     ownerRegion: z.string().optional(),
-    regions: z
-      .array(z.string())
-      .register(z.globalRegistry, {
-        description: "The regions where the danger source variant is present.",
-      })
-      .optional(),
+    regions: z.array(z.string()).describe("The regions where the danger source variant is present.").optional(),
     hasDaytimeDependency: z.boolean().optional(),
     avalancheType: zAvalancheType.optional(),
     aspects: z.array(zAspect).optional(),
@@ -1735,9 +1269,7 @@ export const zDangerSourceVariant = zAbstractPersistentObject.and(
 /**
  * index 200 response
  */
-export const zIndexResponse = z.string().register(z.globalRegistry, {
-  description: "index 200 response",
-});
+export const zIndexResponse = z.string().describe("index 200 response");
 
 export const zLoginBody = zAuthenticationServiceCredentials;
 
@@ -1774,9 +1306,7 @@ export const zGetBlogPostsQuery = z.object({
 /**
  * getBlogPosts 200 response
  */
-export const zGetBlogPostsResponse = z.array(zBlogItem).register(z.globalRegistry, {
-  description: "getBlogPosts 200 response",
-});
+export const zGetBlogPostsResponse = z.array(zBlogItem).describe("getBlogPosts 200 response");
 
 export const zSendLatestBlogPostQuery = z.object({
   region: z.string(),
@@ -1807,55 +1337,41 @@ export const zGetPublishedJsonBulletins0Query = z.object({
   version: zCaamlVersion.optional(),
   regions: z.array(z.string()),
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   lang: zLanguageCode,
 });
 
 /**
  * bulletins
  */
-export const zGetPublishedJsonBulletins0Response = z.array(zAvalancheBulletin).register(z.globalRegistry, {
-  description: "bulletins",
-});
+export const zGetPublishedJsonBulletins0Response = z.array(zAvalancheBulletin).describe("bulletins");
 
 export const zCreateJsonBulletinsBody = z.array(zAvalancheBulletin);
 
 export const zCreateJsonBulletinsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * createJSONBulletins 200 response
  */
-export const zCreateJsonBulletinsResponse = z.array(zAvalancheBulletin).register(z.globalRegistry, {
-  description: "createJSONBulletins 200 response",
-});
+export const zCreateJsonBulletinsResponse = z.array(zAvalancheBulletin).describe("createJSONBulletins 200 response");
 
 export const zCreateJsonBulletinBody = zAvalancheBulletin;
 
 export const zCreateJsonBulletinQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * createJSONBulletin 200 response
  */
-export const zCreateJsonBulletinResponse = z.array(zAvalancheBulletin).register(z.globalRegistry, {
-  description: "createJSONBulletin 200 response",
-});
+export const zCreateJsonBulletinResponse = z.array(zAvalancheBulletin).describe("createJSONBulletin 200 response");
 
 export const zGetPublishedCaamlBulletinsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   regions: z.array(z.string()),
   lang: zLanguageCode,
   version: zCaamlVersion.optional(),
@@ -1867,9 +1383,7 @@ export const zGetPublishedCaamlBulletinsQuery = z.object({
 export const zGetPublishedCaamlBulletinsResponse = zCaamlAvalancheBulletins;
 
 export const zGetPublishedCaamlJsonBulletinsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   regions: z.array(z.string()),
   lang: zLanguageCode,
   version: zCaamlVersion.optional(),
@@ -1882,36 +1396,26 @@ export const zGetPublishedCaamlJsonBulletinsResponse = zCaamlAvalancheBulletins;
 
 export const zCheckBulletinsQuery = z.object({
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * checkBulletins 200 response
  */
-export const zCheckBulletinsResponse = z.array(z.string()).register(z.globalRegistry, {
-  description: "checkBulletins 200 response",
-});
+export const zCheckBulletinsResponse = z.array(z.string()).describe("checkBulletins 200 response");
 
 export const zGetJsonBulletinsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   regions: z.array(z.string()),
 });
 
 /**
  * bulletins
  */
-export const zGetJsonBulletinsResponse = z.array(zAvalancheBulletin).register(z.globalRegistry, {
-  description: "bulletins",
-});
+export const zGetJsonBulletinsResponse = z.array(zAvalancheBulletin).describe("bulletins");
 
 export const zGetCaamlJsonBulletinsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   regions: z.array(z.string()),
   lang: zLanguageCode,
   version: zCaamlVersion.optional(),
@@ -1923,9 +1427,7 @@ export const zGetCaamlJsonBulletinsQuery = z.object({
 export const zGetCaamlJsonBulletinsResponse = zCaamlAvalancheBulletins;
 
 export const zGetHighestDangerRatingQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   regions: z.array(z.string()),
 });
 
@@ -1935,9 +1437,7 @@ export const zGetHighestDangerRatingQuery = z.object({
 export const zGetHighestDangerRatingResponse = zAvalancheBulletinServiceHighest;
 
 export const zGetPublishedJsonBulletinsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   regions: z.array(z.string()),
   lang: zLanguageCode,
 });
@@ -1945,9 +1445,7 @@ export const zGetPublishedJsonBulletinsQuery = z.object({
 /**
  * bulletins
  */
-export const zGetPublishedJsonBulletinsResponse = z.array(zAvalancheBulletin).register(z.globalRegistry, {
-  description: "bulletins",
-});
+export const zGetPublishedJsonBulletinsResponse = z.array(zAvalancheBulletin).describe("bulletins");
 
 /**
  * getLatest 200 response
@@ -1955,9 +1453,7 @@ export const zGetPublishedJsonBulletinsResponse = z.array(zAvalancheBulletin).re
 export const zGetLatestResponse = zAvalancheBulletinServiceLatestBulletin;
 
 export const zGetPublishedBulletinsAsPdfQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   bulletinId: z.string().nullish(),
   microRegionId: z.string().nullish(),
   region: z.string(),
@@ -1968,9 +1464,7 @@ export const zGetPublishedBulletinsAsPdfQuery = z.object({
 /**
  * getPublishedBulletinsAsPDF 200 response
  */
-export const zGetPublishedBulletinsAsPdfResponse = z.string().register(z.globalRegistry, {
-  description: "getPublishedBulletinsAsPDF 200 response",
-});
+export const zGetPublishedBulletinsAsPdfResponse = z.string().describe("getPublishedBulletinsAsPDF 200 response");
 
 export const zUploadBulletinPhotoBody = z.object({
   file: z.string().optional(),
@@ -1995,97 +1489,71 @@ export const zGetPreviewPdfQuery = z.object({
 /**
  * getPreviewPdf 200 response
  */
-export const zGetPreviewPdfResponse = z.string().register(z.globalRegistry, {
-  description: "getPreviewPdf 200 response",
-});
+export const zGetPreviewPdfResponse = z.string().describe("getPreviewPdf 200 response");
 
 export const zPublishBulletinsQuery = z.object({
   region: z.string(),
   strategy: zPublicationStrategyType.optional(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 export const zPublishAllBulletinsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   strategy: zPublicationStrategyType.optional(),
 });
 
 export const zSendEmailQuery = z.object({
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   lang: zLanguageCode.nullish(),
 });
 
 export const zTriggerPushNotificationsQuery = z.object({
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   lang: zLanguageCode.nullish(),
 });
 
 export const zTriggerTelegramChannelQuery = z.object({
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   lang: zLanguageCode.nullish(),
 });
 
 export const zTriggerWhatsAppChannelQuery = z.object({
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   lang: zLanguageCode.nullish(),
 });
 
 export const zGetStatusQuery = z.object({
   region: z.string(),
   timezone: z.string(),
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * getStatus 200 response
  */
-export const zGetStatusResponse = z.array(zAvalancheBulletinStatusServiceStatus).register(z.globalRegistry, {
-  description: "getStatus 200 response",
-});
+export const zGetStatusResponse = z.array(zAvalancheBulletinStatusServiceStatus).describe("getStatus 200 response");
 
 export const zGetInternalStatusQuery = z.object({
   region: z.string(),
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * getInternalStatus 200 response
  */
-export const zGetInternalStatusResponse = z.array(zAvalancheBulletinStatusServiceStatus).register(z.globalRegistry, {
-  description: "getInternalStatus 200 response",
-});
+export const zGetInternalStatusResponse = z
+  .array(zAvalancheBulletinStatusServiceStatus)
+  .describe("getInternalStatus 200 response");
 
 export const zGetPublicationStatusQuery = z.object({
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
@@ -2095,9 +1563,7 @@ export const zGetPublicationStatusResponse = zAvalancheBulletinStatusServiceStat
 
 export const zSubmitBulletinsQuery = z.object({
   region: z.string(),
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 export const zDeleteJsonBulletinPath = z.object({
@@ -2105,18 +1571,14 @@ export const zDeleteJsonBulletinPath = z.object({
 });
 
 export const zDeleteJsonBulletinQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * deleteJSONBulletin 200 response
  */
-export const zDeleteJsonBulletinResponse = z.array(zAvalancheBulletin).register(z.globalRegistry, {
-  description: "deleteJSONBulletin 200 response",
-});
+export const zDeleteJsonBulletinResponse = z.array(zAvalancheBulletin).describe("deleteJSONBulletin 200 response");
 
 export const zGetJsonBulletinPath = z.object({
   bulletinId: z.string(),
@@ -2134,39 +1596,29 @@ export const zUpdateJsonBulletinPath = z.object({
 });
 
 export const zUpdateJsonBulletinQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * updateJSONBulletin 200 response
  */
-export const zUpdateJsonBulletinResponse = z.array(zAvalancheBulletin).register(z.globalRegistry, {
-  description: "updateJSONBulletin 200 response",
-});
+export const zUpdateJsonBulletinResponse = z.array(zAvalancheBulletin).describe("updateJSONBulletin 200 response");
 
 export const zGetChecklistsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * getChecklists 200 response
  */
-export const zGetChecklistsResponse = z.array(zChecklistServiceChecklist).register(z.globalRegistry, {
-  description: "getChecklists 200 response",
-});
+export const zGetChecklistsResponse = z.array(zChecklistServiceChecklist).describe("getChecklists 200 response");
 
 export const zSaveChecklistBody = zChecklistServiceChecklist;
 
 export const zSaveChecklistQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
@@ -2176,18 +1628,14 @@ export const zSaveChecklistQuery = z.object({
 export const zSaveChecklistResponse = zChecklistServiceChecklist;
 
 export const zGetDangerSourcesQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * danger-sources
  */
-export const zGetDangerSourcesResponse = z.array(zDangerSource).register(z.globalRegistry, {
-  description: "danger-sources",
-});
+export const zGetDangerSourcesResponse = z.array(zDangerSource).describe("danger-sources");
 
 export const zSaveDangerSourceBody = zDangerSource;
 
@@ -2197,42 +1645,32 @@ export const zSaveDangerSourceBody = zDangerSource;
 export const zSaveDangerSourceResponse = zDangerSource;
 
 export const zGetVariantsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * danger-sources
  */
-export const zGetVariantsResponse = z.array(zDangerSourceVariant).register(z.globalRegistry, {
-  description: "danger-sources",
-});
+export const zGetVariantsResponse = z.array(zDangerSourceVariant).describe("danger-sources");
 
 export const zGetInternalStatus1Query = z.object({
   region: z.string(),
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * getInternalStatus_1 200 response
  */
-export const zGetInternalStatus1Response = z.array(zDangerSourceVariantsStatus).register(z.globalRegistry, {
-  description: "getInternalStatus_1 200 response",
-});
+export const zGetInternalStatus1Response = z
+  .array(zDangerSourceVariantsStatus)
+  .describe("getInternalStatus_1 200 response");
 
 export const zSaveDangerSourceVariantBody = zDangerSourceVariant;
 
 export const zSaveDangerSourceVariantQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
@@ -2244,36 +1682,28 @@ export const zSaveDangerSourceVariantResponse = zDangerSourceVariant;
 export const zReplaceVariantsBody = z.array(zDangerSourceVariant);
 
 export const zReplaceVariantsQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * replaceVariants 200 response
  */
-export const zReplaceVariantsResponse = z.array(zDangerSourceVariant).register(z.globalRegistry, {
-  description: "replaceVariants 200 response",
-});
+export const zReplaceVariantsResponse = z.array(zDangerSourceVariant).describe("replaceVariants 200 response");
 
 export const zDeleteVariantPath = z.object({
   variantId: z.string(),
 });
 
 export const zDeleteVariantQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * deleteVariant 200 response
  */
-export const zDeleteVariantResponse = z.array(zDangerSourceVariant).register(z.globalRegistry, {
-  description: "deleteVariant 200 response",
-});
+export const zDeleteVariantResponse = z.array(zDangerSourceVariant).describe("deleteVariant 200 response");
 
 export const zGetVariantByIdPath = z.object({
   variantId: z.string(),
@@ -2289,18 +1719,14 @@ export const zGetVariantsForDangerSourcePath = z.object({
 });
 
 export const zGetVariantsForDangerSourceQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
 });
 
 /**
  * danger-sources
  */
-export const zGetVariantsForDangerSourceResponse = z.array(zDangerSourceVariant).register(z.globalRegistry, {
-  description: "danger-sources",
-});
+export const zGetVariantsForDangerSourceResponse = z.array(zDangerSourceVariant).describe("danger-sources");
 
 export const zAddSubscriberBody = zSubscriptionServiceEmailSubscription;
 
@@ -2310,9 +1736,7 @@ export const zGetIncidentsQuery = z.object({
     .int()
     .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
     .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
-    .register(z.globalRegistry, {
-      description: "Season year, expanded to yyyy-10-01 until (yyyy+1)-10-01",
-    }),
+    .describe("Season year, expanded to yyyy-10-01 until (yyyy+1)-10-01"),
   startDate: z.string().nullish(),
   endDate: z.string().nullish(),
 });
@@ -2320,9 +1744,7 @@ export const zGetIncidentsQuery = z.object({
 /**
  * getIncidents 200 response
  */
-export const zGetIncidentsResponse = z.string().register(z.globalRegistry, {
-  description: "getIncidents 200 response",
-});
+export const zGetIncidentsResponse = z.string().describe("getIncidents 200 response");
 
 export const zCreateIncidentBody = z.string();
 
@@ -2346,9 +1768,7 @@ export const zGetIncidentPath = z.object({
 /**
  * getIncident 200 response
  */
-export const zGetIncidentResponse = z.string().register(z.globalRegistry, {
-  description: "getIncident 200 response",
-});
+export const zGetIncidentResponse = z.string().describe("getIncident 200 response");
 
 export const zUpdateIncidentBody = z.string();
 
@@ -2387,9 +1807,7 @@ export const zGetIncidentAttachmentPath = z.object({
 /**
  * getIncidentAttachment 200 response
  */
-export const zGetIncidentAttachmentResponse = z.string().register(z.globalRegistry, {
-  description: "getIncidentAttachment 200 response",
-});
+export const zGetIncidentAttachmentResponse = z.string().describe("getIncidentAttachment 200 response");
 
 export const zUnpublishIncidentPath = z.object({
   id: z.uuid(),
@@ -2417,9 +1835,7 @@ export const zSaveMediaFileBody = z.object({
 });
 
 export const zSaveMediaFileQuery = z.object({
-  date: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   region: z.string(),
   lang: zLanguageCode,
   important: z.boolean(),
@@ -2433,27 +1849,21 @@ export const zGetRssFeedQuery = z.object({
 /**
  * getRssFeed 200 response
  */
-export const zGetRssFeedResponse = z.string().register(z.globalRegistry, {
-  description: "getRssFeed 200 response",
-});
+export const zGetRssFeedResponse = z.string().describe("getRssFeed 200 response");
 
 export const zDeleteGenericObservationBody = zGenericObservation;
 
 export const zGetGenericObservationsQuery = z.object({
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * getGenericObservations 200 response
  */
-export const zGetGenericObservationsResponse = z.array(zGenericObservation).register(z.globalRegistry, {
-  description: "getGenericObservations 200 response",
-});
+export const zGetGenericObservationsResponse = z
+  .array(zGenericObservation)
+  .describe("getGenericObservations 200 response");
 
 export const zSaveOrUpdateGenericObservationBody = zGenericObservation;
 
@@ -2470,23 +1880,17 @@ export const zGetGenericObservationResponse = zGenericObservation;
 /**
  * getOpenApiJson 200 response
  */
-export const zGetOpenApiJsonResponse = z.record(z.string(), z.unknown()).register(z.globalRegistry, {
-  description: "getOpenApiJson 200 response",
-});
+export const zGetOpenApiJsonResponse = z.record(z.string(), z.unknown()).describe("getOpenApiJson 200 response");
 
 /**
  * getOpenApi 200 response
  */
-export const zGetOpenApiResponse = z.string().register(z.globalRegistry, {
-  description: "getOpenApi 200 response",
-});
+export const zGetOpenApiResponse = z.string().describe("getOpenApi 200 response");
 
 /**
  * key 200 response
  */
-export const zKeyResponse = z.record(z.string(), z.unknown()).register(z.globalRegistry, {
-  description: "key 200 response",
-});
+export const zKeyResponse = z.record(z.string(), z.unknown()).describe("key 200 response");
 
 export const zSubscribeBody = zPushSubscription;
 
@@ -2495,9 +1899,7 @@ export const zUnsubscribeBody = zPushSubscription;
 /**
  * getRegions 200 response
  */
-export const zGetRegionsResponse = z.array(zRegion).register(z.globalRegistry, {
-  description: "getRegions 200 response",
-});
+export const zGetRegionsResponse = z.array(zRegion).describe("getRegions 200 response");
 
 export const zSaveRegionBody = z.string();
 
@@ -2530,9 +1932,7 @@ export const zSaveServerConfigurationResponse = zServerInstance;
 /**
  * configuration
  */
-export const zGetExternalServerConfigurationsResponse = z.array(zServerInstance).register(z.globalRegistry, {
-  description: "configuration",
-});
+export const zGetExternalServerConfigurationsResponse = z.array(zServerInstance).describe("configuration");
 
 /**
  * server version info
@@ -2540,12 +1940,8 @@ export const zGetExternalServerConfigurationsResponse = z.array(zServerInstance)
 export const zGetServerVersionInfoResponse = zServerInstanceServiceServerVersionInfo;
 
 export const zGetBulletinCsvQuery = z.object({
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   lang: zLanguageCode,
   extended: z.boolean().optional().default(false),
   duplicate: z.boolean().optional().default(false),
@@ -2556,48 +1952,34 @@ export const zGetBulletinCsvQuery = z.object({
 /**
  * getBulletinCsv 200 response
  */
-export const zGetBulletinCsvResponse = z.string().register(z.globalRegistry, {
-  description: "getBulletinCsv 200 response",
-});
+export const zGetBulletinCsvResponse = z.string().describe("getBulletinCsv 200 response");
 
 export const zGetDangerSourceCsvQuery = z.object({
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * getDangerSourceCsv 200 response
  */
-export const zGetDangerSourceCsvResponse = z.string().register(z.globalRegistry, {
-  description: "getDangerSourceCsv 200 response",
-});
+export const zGetDangerSourceCsvResponse = z.string().describe("getDangerSourceCsv 200 response");
 
 export const zSaveVirtualRealityStatisticsBody = z.string();
 
 /**
  * getStatus_1 200 response
  */
-export const zGetStatus1Response = z.array(zStatusInformation).register(z.globalRegistry, {
-  description: "getStatus_1 200 response",
-});
+export const zGetStatus1Response = z.array(zStatusInformation).describe("getStatus_1 200 response");
 
 /**
  * triggerStatusChecks 200 response
  */
-export const zTriggerStatusChecksResponse = z.array(zStatusInformation).register(z.globalRegistry, {
-  description: "triggerStatusChecks 200 response",
-});
+export const zTriggerStatusChecksResponse = z.array(zStatusInformation).describe("triggerStatusChecks 200 response");
 
 /**
  * getUsers 200 response
  */
-export const zGetUsersResponse = z.array(zUser).register(z.globalRegistry, {
-  description: "getUsers 200 response",
-});
+export const zGetUsersResponse = z.array(zUser).describe("getUsers 200 response");
 
 export const zSaveUserBody = zUser;
 
@@ -2613,9 +1995,7 @@ export const zCheckPasswordBody = zUserServiceCheckPassword;
 /**
  * getRegions_1 200 response
  */
-export const zGetRegions1Response = z.array(z.string()).register(z.globalRegistry, {
-  description: "getRegions_1 200 response",
-});
+export const zGetRegions1Response = z.array(z.string()).describe("getRegions_1 200 response");
 
 /**
  * getRoles 200 response
@@ -2623,20 +2003,14 @@ export const zGetRegions1Response = z.array(z.string()).register(z.globalRegistr
 export const zGetRolesResponse = zRole;
 
 export const zGetStressLevelsQuery = z.object({
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * getStressLevels 200 response
  */
-export const zGetStressLevelsResponse = z.array(zStressLevel).register(z.globalRegistry, {
-  description: "getStressLevels 200 response",
-});
+export const zGetStressLevelsResponse = z.array(zStressLevel).describe("getStressLevels 200 response");
 
 export const zPostStressLevelBody = zStressLevel;
 
@@ -2647,20 +2021,16 @@ export const zPostStressLevelResponse = zStressLevel;
 
 export const zGetTeamStressLevelsQuery = z.object({
   region: z.string(),
-  startDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
-  endDate: z.string().register(z.globalRegistry, {
-    description: "Date in the format yyyy-MM-dd'T'HH:mm:ssZZ",
-  }),
+  startDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  endDate: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
  * getTeamStressLevels 200 response
  */
-export const zGetTeamStressLevelsResponse = z.record(z.string(), z.array(zStressLevel)).register(z.globalRegistry, {
-  description: "getTeamStressLevels 200 response",
-});
+export const zGetTeamStressLevelsResponse = z
+  .record(z.string(), z.array(zStressLevel))
+  .describe("getTeamStressLevels 200 response");
 
 export const zDeleteUserPath = z.object({
   id: z.string(),
