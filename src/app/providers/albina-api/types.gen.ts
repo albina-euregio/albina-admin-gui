@@ -12,9 +12,14 @@ export type ArtificialAvalancheReleaseProbability = "one" | "two" | "three" | "f
 
 export type Aspect = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
 
+/**
+ * An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.
+ */
+export type Aspect1 = "E" | "N" | "NE" | "NW" | "N_A" | "S" | "SE" | "SW" | "W";
+
 export type AuthenticationServiceAuthenticationResponse = {
   user: User;
-  regions: Array<Region>;
+  regions: Array<Region1>;
   access_token: string;
 };
 
@@ -103,6 +108,16 @@ export type AvalancheBulletinValidity = {
   until?: string;
 };
 
+export type AvalancheBulletinCustomData = {
+  ALBINA: AvalancheBulletinCustomDataAlbina;
+  LWD_Tyrol: AvalancheBulletinCustomDataLwdTyrol;
+};
+
+export type AvalancheBulletinCustomDataAlbina = {
+  mainDate: string;
+  bulletinPhotos: Array<AvalancheBulletinCustomDataBulletinPhoto>;
+};
+
 export type AvalancheBulletinCustomDataBulletinPhoto = {
   url: string;
   copyright?: string;
@@ -111,6 +126,10 @@ export type AvalancheBulletinCustomDataBulletinPhoto = {
   locationName?: string;
   latitude?: number;
   longitude?: number;
+};
+
+export type AvalancheBulletinCustomDataLwdTyrol = {
+  dangerPatterns: Array<string>;
 };
 
 export type AvalancheBulletinDaytimeDescription = AbstractPersistentObject & {
@@ -140,6 +159,19 @@ export type AvalancheBulletinPhoto = AbstractPersistentObject & {
   longitude?: number;
 };
 
+/**
+ * Information about the bulletin provider. Defines the name, website and/or contactPerson (which could be the author) of the issuing AWS.
+ */
+export type AvalancheBulletinProvider = {
+  contactPerson?: Person;
+  customData?: {
+    [key: string]: unknown;
+  };
+  metaData?: MetaData;
+  name?: string;
+  website?: string;
+};
+
 export type AvalancheBulletinServiceHighest = {
   dangerRating: DangerRating;
 };
@@ -148,11 +180,112 @@ export type AvalancheBulletinServiceLatestBulletin = {
   date: string;
 };
 
+/**
+ * Details about the issuer/AWS of the bulletin. Information about the bulletin source. Either as in a person or with a provider element to specify details about the AWS.
+ */
+export type AvalancheBulletinSource = {
+  person?: Person;
+  provider?: AvalancheBulletinProvider;
+};
+
 export type AvalancheBulletinStatusServiceStatus = {
   date: string;
   timestamp: string;
   status: BulletinStatus;
   isBeingPublished: boolean;
+};
+
+/**
+ * Avalanche Bulletin valid for a given set of regions.
+ */
+export type AvalancheBulletin1 = {
+  /**
+   * Texts element with highlight and comment for the avalanche activity.
+   */
+  avalancheActivity?: Texts;
+  /**
+   * Collection of Avalanche Problem elements for this bulletin.
+   */
+  avalancheProblems?: Array<AvalancheProblem2>;
+  /**
+   * Unique ID for the bulletin.
+   */
+  bulletinID?: string;
+  customData?: AvalancheBulletinCustomData;
+  /**
+   * Collection of Danger Rating elements for this bulletin.
+   */
+  dangerRatings?: Array<DangerRating1>;
+  /**
+   * Contains an optional short text to highlight an exceptionally dangerous situation.
+   */
+  highlights?: string;
+  /**
+   * Two-letter language code (ISO 639-1).
+   */
+  lang?: string;
+  metaData?: MetaData;
+  /**
+   * Time and date when the next bulletin will be published by the AWS to the Public. ISO 8601 timestamp in UTC or with time zone information.
+   */
+  nextUpdate?: string;
+  /**
+   * Time and date when the bulletin was issued by the AWS to the Public. ISO 8601 timestamp in UTC or with time zone information.
+   */
+  publicationTime?: string;
+  /**
+   * Collection of region elements for which this bulletin is valid.
+   */
+  regions?: Array<Region>;
+  /**
+   * Texts element with highlight and comment for details on the snowpack structure.
+   */
+  snowpackStructure?: Texts;
+  /**
+   * Details about the issuer/AWS of the bulletin.
+   */
+  source?: AvalancheBulletinSource;
+  /**
+   * Tendency element for a detailed description of the expected avalanche situation tendency after the bulletin's period of validity.
+   */
+  tendency?: Array<Tendency1>;
+  /**
+   * Texts element with highlight and comment for travel advisory.
+   */
+  travelAdvisory?: Texts;
+  /**
+   * Flag if bulletin is unscheduled or not.
+   */
+  unscheduled?: boolean;
+  /**
+   * Date and Time from and until this bulletin is valid. ISO 8601 Timestamp in UTC or with time zone information.
+   */
+  validTime?: ValidTime;
+  /**
+   * Texts element with highlight and comment for weather forecast information.
+   */
+  weatherForecast?: Texts;
+  /**
+   * Texts element with highlight and comment for weather review information.
+   */
+  weatherReview?: Texts;
+};
+
+/**
+ * JSON schema for EAWS avalanche bulletin collection following the CAAMLv6 schema
+ */
+export type AvalancheBulletins = {
+  bulletins?: Array<AvalancheBulletin1>;
+  customData?: AvalancheBulletinsCustomData;
+  metaData?: MetaData;
+};
+
+export type AvalancheBulletinsCustomData = {
+  ALBINA: AvalancheBulletinsCustomDataAlbina;
+};
+
+export type AvalancheBulletinsCustomDataAlbina = {
+  generalHeadline: string;
 };
 
 export type AvalancheProblem = AbstractPersistentObject & {
@@ -175,6 +308,27 @@ export type AvalancheProblem = AbstractPersistentObject & {
   eawsMatrixInformation?: EawsMatrixInformation;
 };
 
+export type AvalancheProblemCustomData = {
+  ALBINA: AvalancheProblemCustomDataAlbina;
+};
+
+export type AvalancheProblemCustomDataAlbina = {
+  avalancheType: string;
+};
+
+/**
+ * Expected avalanche problem, according to the EAWS avalanche problem definition.
+ */
+export type AvalancheProblemType =
+  | "CORNICES"
+  | "FAVOURABLE_SITUATION"
+  | "GLIDING_SNOW"
+  | "NEW_SNOW"
+  | "NO_DISTINCT_AVALANCHE_PROBLEM"
+  | "PERSISTENT_WEAK_LAYERS"
+  | "WET_SNOW"
+  | "WIND_SLAB";
+
 export type AvalancheProblem1 =
   | "new_snow"
   | "wind_slab"
@@ -185,9 +339,32 @@ export type AvalancheProblem1 =
   | "cornices"
   | "no_distinct_avalanche_problem";
 
+/**
+ * Defines an avalanche problem, its time, aspect, and elevation constraints. A textual detail about the affected terrain can be given in the comment field. Also, details about the expected avalanche size, snowpack stability and its frequency can be defined. The implied danger rating value is optional.
+ */
+export type AvalancheProblem2 = {
+  aspects?: Array<Aspect1>;
+  avalancheSize?: number;
+  comment?: string;
+  customData?: AvalancheProblemCustomData;
+  dangerRatingValue?: DangerRatingValue;
+  elevation?: ElevationBoundaryOrBand;
+  frequency?: ExpectedAvalancheFrequency;
+  metaData?: MetaData;
+  problemType?: AvalancheProblemType;
+  avalancheType?: AvalancheTypeType;
+  snowpackStability?: ExpectedSnowpackStability;
+  validTimePeriod?: ValidTimePeriod;
+};
+
 export type AvalancheSize = "small" | "medium" | "large" | "very_large" | "extreme";
 
 export type AvalancheType = "slab" | "loose" | "glide";
+
+/**
+ * Expected avalanche type.
+ */
+export type AvalancheTypeType = "SLAB" | "LOOSE" | "GLIDE";
 
 export type BlogItem = {
   id: string;
@@ -244,6 +421,25 @@ export type DangerRating =
   | "very_high";
 
 export type DangerRatingModificator = "none" | "minus" | "equal" | "plus";
+
+/**
+ * Danger rating value, according to EAWS danger scale definition.
+ */
+export type DangerRatingValue = "CONSIDERABLE" | "HIGH" | "LOW" | "MODERATE" | "NO_RATING" | "NO_SNOW" | "VERY_HIGH";
+
+/**
+ * Defines a danger rating, its elevation constraints and the valid time period. If validTimePeriod or elevation are constrained for a rating, it is expected to define a dangerRating for all the other cases.
+ */
+export type DangerRating1 = {
+  aspects?: Array<Aspect1>;
+  customData?: {
+    [key: string]: unknown;
+  };
+  elevation?: ElevationBoundaryOrBand;
+  mainValue?: DangerRatingValue;
+  metaData?: MetaData;
+  validTimePeriod?: ValidTimePeriod;
+};
 
 export type DangerSign = "shooting_cracks" | "whumpfing" | "fresh_avalanches" | "glide_cracks";
 
@@ -375,6 +571,33 @@ export type EawsMatrixInformation = {
   avalancheSizeValue?: number;
   snowpackStabilityValue?: number;
   frequencyValue?: number;
+};
+
+/**
+ * Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.
+ */
+export type ElevationBoundaryOrBand = {
+  lowerBound?: string;
+  upperBound?: string;
+};
+
+/**
+ * Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).
+ */
+export type ExpectedAvalancheFrequency = "FEW" | "MANY" | "NONE" | "SOME";
+
+/**
+ * Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).
+ */
+export type ExpectedSnowpackStability = "FAIR" | "GOOD" | "POOR" | "VERY_POOR";
+
+/**
+ * External file is used to link to external files like maps, thumbnails etc.
+ */
+export type ExternalFile = {
+  description?: string;
+  fileReferenceURI?: string;
+  fileType?: string;
 };
 
 export type Frequency = "none" | "few" | "some" | "many";
@@ -622,7 +845,27 @@ export type MatrixInformation = {
   naturalHazardSiteDistribution?: HazardSiteDistribution;
 };
 
+/**
+ * Meta data for various uses. Can be used to link to external files like maps, thumbnails etc.
+ */
+export type MetaData = {
+  comment?: string;
+  EXTFiles?: Array<ExternalFile>;
+};
+
 export type NaturalAvalancheReleaseProbability = "one" | "two" | "three" | "four";
+
+/**
+ * Details on a person.
+ */
+export type Person = {
+  customData?: {
+    [key: string]: unknown;
+  };
+  metaData?: MetaData;
+  name?: string;
+  website?: string;
+};
 
 export type Position = "topleft" | "topright" | "bottomleft" | "bottomright";
 
@@ -651,73 +894,268 @@ export type PushSubscription = {
 export type Recognizability = "very_easy" | "easy" | "hard" | "very_hard";
 
 /**
- * This class holds all information about one region.
+ * Region element describes a (micro) region. The regionID follows the EAWS schema. It is recommended to have the region shape's files with the same IDs in gitlab.com/eaws/eaws-regions. Additionally, the region name can be added.
  */
 export type Region = {
-  id?: string;
-  microRegions?: number;
-  subRegions?: Array<string>;
-  superRegions?: Array<string>;
-  neighborRegions?: Array<string>;
-  languageConfigurations?: Array<RegionLanguageConfiguration>;
-  staticUrl?: string;
-  enabledLanguages?: Array<LanguageCode>;
-  ttsLanguages?: Array<LanguageCode>;
-  publishBulletins?: boolean;
-  publishBlogs?: boolean;
-  createCaamlV6?: boolean;
-  createJson?: boolean;
-  createMaps?: boolean;
-  createPdf?: boolean;
-  createSimpleHtml?: boolean;
-  sendEmails?: boolean;
-  sendTelegramMessages?: boolean;
-  sendWhatsAppMessages?: boolean;
-  sendPushNotifications?: boolean;
-  enableMediaFile?: boolean;
-  enableIcon?: boolean;
-  enableAvalancheProblemCornices?: boolean;
-  enableAvalancheProblemNoDistinctAvalancheProblem?: boolean;
-  showMatrix?: boolean;
-  enableStrategicMindset?: boolean;
-  enableStressLevel?: boolean;
-  pdfColor?: string;
-  emailColor?: string;
-  pdfMapYAmPm?: number;
-  pdfMapYFd?: number;
-  pdfMapWidthAmPm?: number;
-  pdfMapWidthFd?: number;
-  pdfMapHeight?: number;
-  pdfFooterLogo?: boolean;
-  pdfFooterLogoColorPath?: string;
-  pdfFooterLogoBwPath?: string;
-  geoDataDirectory?: string;
-  mapLogoPosition?: Position;
-  imageColorbarColorPath?: string;
-  imageColorbarBwPath?: string;
-  enableDangerSources?: boolean;
-  enableObservations?: boolean;
-  enableIncidents?: boolean;
-  enableModelling?: boolean;
-  enabledTextcatFields?: Array<TextPart>;
-  enabledEditableFields?: Array<TextPart>;
-  enableLineaExport?: boolean;
-  defaultLang?: LanguageCode;
-  logoPath?: string;
-  logoBwPath?: string;
-  coatOfArms?: string;
-  serverImagesUrl?: string;
-  educationUrl?: string;
-  awsomeUrl?: string;
+  customData?: {
+    [key: string]: unknown;
+  };
+  metaData?: MetaData;
+  name?: string;
+  regionID?: string;
 };
 
 export type RegionLanguageConfiguration = {
+  /**
+   * Language code
+   */
   lang?: LanguageCode;
+  /**
+   * Website name
+   */
   websiteName?: string;
+  /**
+   * Warning service name
+   */
   warningServiceName?: string;
+  /**
+   * Warning service email
+   */
   warningServiceEmail?: string;
+  /**
+   * Website URL
+   */
   url?: string;
+  /**
+   * Website URL for date given by %s
+   */
   urlWithDate?: string;
+};
+
+/**
+ * This class holds all information about one region.
+ */
+export type Region1 = {
+  /**
+   * Region ID
+   */
+  id?: string;
+  /**
+   * Number of micro regions
+   */
+  microRegions?: number;
+  /**
+   * ID of sub regions
+   */
+  subRegions?: Array<string>;
+  /**
+   * ID of super regions
+   */
+  superRegions?: Array<string>;
+  /**
+   * ID of neighbouring regions
+   */
+  neighborRegions?: Array<string>;
+  /**
+   * Language configuration
+   */
+  languageConfigurations?: Array<RegionLanguageConfiguration>;
+  /**
+   * URL to static avalanche files
+   */
+  staticUrl?: string;
+  /**
+   * Enabled languages
+   */
+  enabledLanguages?: Array<LanguageCode>;
+  /**
+   * Text-to-speech languages
+   */
+  ttsLanguages?: Array<LanguageCode>;
+  /**
+   * Publish avalanche forecast
+   */
+  publishBulletins?: boolean;
+  /**
+   * Publish blog posts
+   */
+  publishBlogs?: boolean;
+  /**
+   * Create CAAML v6
+   */
+  createCaamlV6?: boolean;
+  /**
+   * Create JSON
+   */
+  createJson?: boolean;
+  /**
+   * Create maps
+   */
+  createMaps?: boolean;
+  /**
+   * Create PDF
+   */
+  createPdf?: boolean;
+  /**
+   * Create simple HTML
+   */
+  createSimpleHtml?: boolean;
+  /**
+   * Send emails
+   */
+  sendEmails?: boolean;
+  /**
+   * Send telegram messages
+   */
+  sendTelegramMessages?: boolean;
+  /**
+   * Send WhatsApp messages
+   */
+  sendWhatsAppMessages?: boolean;
+  /**
+   * Send push notifications
+   */
+  sendPushNotifications?: boolean;
+  /**
+   * Enable media file
+   */
+  enableMediaFile?: boolean;
+  /**
+   * Enable weather
+   */
+  enableIcon?: boolean;
+  /**
+   * Enable avalanche problem CORNICES
+   */
+  enableAvalancheProblemCornices?: boolean;
+  /**
+   * Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM
+   */
+  enableAvalancheProblemNoDistinctAvalancheProblem?: boolean;
+  /**
+   * Show matrix
+   */
+  showMatrix?: boolean;
+  /**
+   * Enable strategic mindset
+   */
+  enableStrategicMindset?: boolean;
+  /**
+   * Enable stress level
+   */
+  enableStressLevel?: boolean;
+  /**
+   * PDF color
+   */
+  pdfColor?: string;
+  /**
+   * Email color
+   */
+  emailColor?: string;
+  /**
+   * Y for PDF map (am/pm)
+   */
+  pdfMapYAmPm?: number;
+  /**
+   * Y for PDF map (fd)
+   */
+  pdfMapYFd?: number;
+  /**
+   * Map width for PDF (am/pm)
+   */
+  pdfMapWidthAmPm?: number;
+  /**
+   * Map width for PDF (fd)
+   */
+  pdfMapWidthFd?: number;
+  /**
+   * Map height for PDF
+   */
+  pdfMapHeight?: number;
+  /**
+   * Logo for PDF footer
+   */
+  pdfFooterLogo?: boolean;
+  /**
+   * Logo for PDF footer (color)
+   */
+  pdfFooterLogoColorPath?: string;
+  /**
+   * Logo for PDF footer (bw)
+   */
+  pdfFooterLogoBwPath?: string;
+  /**
+   * Geodata directory
+   */
+  geoDataDirectory?: string;
+  /**
+   * Logo position for map
+   */
+  mapLogoPosition?: Position;
+  /**
+   * Colorbar (color)
+   */
+  imageColorbarColorPath?: string;
+  /**
+   * Colorbar (b/w)
+   */
+  imageColorbarBwPath?: string;
+  /**
+   * Enable danger sources
+   */
+  enableDangerSources?: boolean;
+  /**
+   * Enable observations
+   */
+  enableObservations?: boolean;
+  /**
+   * Enable incidents
+   */
+  enableIncidents?: boolean;
+  /**
+   * Enable modelling
+   */
+  enableModelling?: boolean;
+  /**
+   * Textfields for bulletins to be entered using textcat
+   */
+  enabledTextcatFields?: Array<TextPart>;
+  /**
+   * Editable textfields instead of textcat for bulletins
+   */
+  enabledEditableFields?: Array<TextPart>;
+  /**
+   * Enable LINEA export
+   */
+  enableLineaExport?: boolean;
+  /**
+   * Default language for language dependent configuration
+   */
+  defaultLang?: LanguageCode;
+  /**
+   * Logo for PDF (color)
+   */
+  logoPath?: string;
+  /**
+   * Logo for PDF (bw)
+   */
+  logoBwPath?: string;
+  /**
+   * Image URL for coat of arms
+   */
+  coatOfArms?: string;
+  /**
+   * URL to server images
+   */
+  serverImagesUrl?: string;
+  /**
+   * URL to education content
+   */
+  educationUrl?: string;
+  /**
+   * URL to AWSOME modelling configuration
+   */
+  awsomeUrl?: string;
 };
 
 export type Role = "SUPERADMIN" | "ADMIN" | "FORECASTER" | "FOREMAN" | "OBSERVER";
@@ -774,6 +1212,44 @@ export type SubscriptionServiceEmailSubscription = {
 
 export type Tendency = "decreasing" | "steady" | "increasing";
 
+export type TendencyType = "DECREASING" | "INCREASING" | "STEADY";
+
+/**
+ * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
+ * for a new line, (
+ *
+ * ,) and (
+ * * ,
+ * * ) for lists, (
+ *
+ * ,
+ * ===
+ *
+ * ) to (
+ * ======
+ *
+ * ###### ,
+ *
+ * ###### ) for
+ * headings and (**,**) for a bold text are allowed.
+ * Texts element with highlight and comment for details on the snowpack structure.
+ * Texts element with highlight and comment for travel advisory.
+ * Texts element with highlight and comment for weather forecast information.
+ * Texts element with highlight and comment for weather review information.
+ * Describes the expected tendency of the development of the avalanche situation for a
+ * defined time period.
+ */
+export type Tendency1 = {
+  comment?: string;
+  highlights?: string;
+  customData?: {
+    [key: string]: unknown;
+  };
+  metaData?: MetaData;
+  tendencyType?: TendencyType;
+  validTime?: ValidTime;
+};
+
 export type TerrainType =
   | "gullies_and_bowls"
   | "adjacent_to_ridgelines"
@@ -810,6 +1286,34 @@ export type TextPart =
   | "tendencyComment"
   | "travelAdvisoryHighlights"
   | "travelAdvisoryComment";
+
+/**
+ * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
+ * for a new line, (
+ *
+ * ,) and (
+ * * ,
+ * * ) for lists, (
+ *
+ * ,
+ * ===
+ *
+ * ) to (
+ * ======
+ *
+ * ###### ,
+ *
+ * ###### ) for
+ * headings and (**,**) for a bold text are allowed.
+ * Texts element with highlight and comment for details on the snowpack structure.
+ * Texts element with highlight and comment for travel advisory.
+ * Texts element with highlight and comment for weather forecast information.
+ * Texts element with highlight and comment for weather review information.
+ */
+export type Texts = {
+  comment?: string;
+  highlights?: string;
+};
 
 export type Thickness = "thick" | "thin";
 
@@ -855,6 +1359,19 @@ export type UserServiceCheckPassword = {
 export type UserServiceResetPassword = {
   newPassword: string;
 };
+
+/**
+ * Valid time defines two ISO 8601 timestamps in UTC or with time zone information. Date and Time from and until this bulletin is valid. ISO 8601 Timestamp in UTC or with time zone information.
+ */
+export type ValidTime = {
+  endTime?: string;
+  startTime?: string;
+};
+
+/**
+ * Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.
+ */
+export type ValidTimePeriod = "ALL_DAY" | "EARLIER" | "LATER";
 
 export type Wetness = "wet" | "moist" | "dry";
 
@@ -1121,9 +1638,9 @@ export type GetPublishedCaamlBulletinsData = {
 
 export type GetPublishedCaamlBulletinsResponses = {
   /**
-   * getPublishedCaamlBulletins 200 response
+   * CAAML XML bulletins
    */
-  200: Blob | File;
+  200: AvalancheBulletins;
 };
 
 export type GetPublishedCaamlBulletinsResponse =
@@ -1146,9 +1663,9 @@ export type GetPublishedCaamlJsonBulletinsData = {
 
 export type GetPublishedCaamlJsonBulletinsResponses = {
   /**
-   * getPublishedCaamlJsonBulletins 200 response
+   * CAAML JSON bulletins
    */
-  200: string;
+  200: AvalancheBulletins;
 };
 
 export type GetPublishedCaamlJsonBulletinsResponse =
@@ -1215,9 +1732,9 @@ export type GetCaamlJsonBulletinsData = {
 
 export type GetCaamlJsonBulletinsResponses = {
   /**
-   * getCaamlJsonBulletins 200 response
+   * CAAML JSON bulletins
    */
-  200: string;
+  200: AvalancheBulletins;
 };
 
 export type GetCaamlJsonBulletinsResponse = GetCaamlJsonBulletinsResponses[keyof GetCaamlJsonBulletinsResponses];
@@ -2291,7 +2808,7 @@ export type GetRegionsResponses = {
   /**
    * getRegions 200 response
    */
-  200: Array<Region>;
+  200: Array<Region1>;
 };
 
 export type GetRegionsResponse = GetRegionsResponses[keyof GetRegionsResponses];
@@ -2307,7 +2824,7 @@ export type SaveRegionResponses = {
   /**
    * saveRegion 200 response
    */
-  200: Region;
+  200: Region1;
 };
 
 export type SaveRegionResponse = SaveRegionResponses[keyof SaveRegionResponses];
@@ -2325,7 +2842,7 @@ export type GetRegionResponses = {
   /**
    * getRegion 200 response
    */
-  200: Region;
+  200: Region1;
 };
 
 export type GetRegionResponse = GetRegionResponses[keyof GetRegionResponses];
