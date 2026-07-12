@@ -1,53 +1,19 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import type { WritableSignal } from "@angular/core";
 import type { Feature, FeatureCollection } from "geojson";
-import maplibregl, {
-  IControl,
-  LngLatBounds,
-  Map as MlMap,
-  MapMouseEvent,
-  Marker,
-  StyleSpecification,
-} from "maplibre-gl";
+import maplibregl, { IControl, LngLatBounds, Map as MlMap, MapMouseEvent, Marker } from "maplibre-gl";
 
+import { basemapAtTerrainLayer, composeStyle, MapBaseLayer, opentopoLayer } from "../map/base-map";
 import { createMap } from "../map/create-map";
 import { IncidentReport } from "./incident-report.model";
 
 const SOURCE_ID = "incident-geometry";
 
-const OPENTOPO_URL = "https://tile.opentopomap.org/{z}/{x}/{y}.png";
-const OPENTOPO_ATTRIBUTION = "map data: © OpenStreetMap contributors, SRTM | map style: © OpenTopoMap (CC-BY-SA)";
-// basemap.at uses a z/row/col scheme, i.e. {z}/{y}/{x}
-const BASEMAP_AT_URL = "https://mapsneu.wien.gv.at/basemap/bmapgelaende/grau/google3857/{z}/{y}/{x}.jpeg";
-const BASEMAP_AT_ATTRIBUTION = 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>';
-
-/** Base style for the incident location map: OpenTopoMap + optional basemap.at terrain. */
-function buildIncidentStyle(): StyleSpecification {
-  return {
-    version: 8,
-    sources: {
-      opentopo: { type: "raster", tiles: [OPENTOPO_URL], tileSize: 256, attribution: OPENTOPO_ATTRIBUTION },
-      basemapat: {
-        type: "raster",
-        tiles: [BASEMAP_AT_URL],
-        tileSize: 256,
-        maxzoom: 17,
-        bounds: [8.782379, 46.35877, 17.189532, 49.037872],
-        attribution: BASEMAP_AT_ATTRIBUTION,
-      },
-    },
-    layers: [
-      { id: "opentopo", type: "raster", source: "opentopo" },
-      { id: "basemapat", type: "raster", source: "basemapat", layout: { visibility: "none" } },
-    ],
-  };
-}
-
 /** Minimal radio-style base-layer switcher (MapLibre has no built-in LayersControl). */
 class BaseLayerControl implements IControl {
   private container?: HTMLElement;
 
-  constructor(private readonly layers: { id: string; label: string }[]) {}
+  constructor(private readonly layers: MapBaseLayer[]) {}
 
   onAdd(map: MlMap): HTMLElement {
     const container = document.createElement("div");
@@ -66,7 +32,7 @@ class BaseLayerControl implements IControl {
           map.setLayoutProperty(other.id, "visibility", other.id === layer.id ? "visible" : "none");
         }
       });
-      label.append(input, ` ${layer.label}`);
+      label.append(input, ` ${layer.name}`);
       container.append(label);
     });
     this.container = container;
@@ -133,23 +99,20 @@ export class IncidentReportMapService implements OnDestroy {
 
     this.destroy();
 
+    // OpenTopoMap by default, basemap.at terrain as an alternative for cleaner tracing
+    const baseLayers = [opentopoLayer(), basemapAtTerrainLayer({ visible: false })];
+
     // Default center on Tyrol/Innsbruck region
     const map = createMap({
       container: elementId,
-      style: buildIncidentStyle(),
+      style: composeStyle(baseLayers),
       navigationControl: true,
       maxZoom: 17,
     });
     map.jumpTo({ center: [11.404, 47.268], zoom: 9 });
     this.map = map;
 
-    map.addControl(
-      new BaseLayerControl([
-        { id: "opentopo", label: "OpenTopoMap" },
-        { id: "basemapat", label: "basemap.at Gelände" },
-      ]),
-      "bottom-right",
-    );
+    map.addControl(new BaseLayerControl(baseLayers), "bottom-right");
 
     map.on("click", (e: MapMouseEvent) => {
       if (config.disabled()) return;
