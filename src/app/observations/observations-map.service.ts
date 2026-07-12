@@ -34,7 +34,7 @@ export class ObservationsMapService implements OnDestroy {
     const style = composeStyle([albinaBasemapLayer({ maxzoom: 13 }), opentopoLayer({ minzoom: 13 })]);
     const map = createMap({ container: el, style, navigationControl: true });
     this.map = map;
-    map.addControl(this.regionName, "bottom-left");
+    map.addControl(this.regionName, "top-right");
     await new Promise<void>((resolve) => (map.loaded() ? resolve() : map.once("load", () => resolve())));
 
     const regions = await this.regionsService.getInternalServerRegionsAsync();
