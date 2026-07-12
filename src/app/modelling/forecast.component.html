@@ -138,7 +138,7 @@
                     (change)="
                       selectedSources[source.label]
                         ? source.addImageOverlay(mapService.map)
-                        : mapService.map.removeLayer(source.imageOverlay)
+                        : source.removeImageOverlay(mapService.map)
                     "
                   />
                   {{ source.label }}

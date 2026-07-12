@@ -22,11 +22,11 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { lastValueFrom } from "rxjs";
 
+import { RegionMapService } from "../map/region-map.service";
 import { StationPoint } from "../map/station-layer";
 import { AlbinaObservationsService } from "../observations/observations.service";
 import { BlogService } from "../providers/blog-service/blog.service";
 import { GraphicsService } from "./graphics.service";
-import { RegionMapService } from "./region-map.service";
 import { StationMapService } from "./station-map.service";
 
 const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id);

@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { ImageOverlay, type LayerGroup, type Map } from "leaflet";
+import { ImageSource, Map as MlMap } from "maplibre-gl";
 
 function legend(label: string, color: string) {
   return `<i style="color:${color}">■</i> ${label}`;
@@ -169,25 +169,23 @@ class MapLink {
   dateOffsetHour?: number;
   dateStepHour?: number;
   attribution?: string;
-  imageOverlay: ImageOverlay;
   selected: boolean;
+
+  private static seq = 0;
+  readonly imageId = `zamg-meteo-${MapLink.seq++}`;
+  private map?: MlMap;
+  // image corners (TL, TR, BR, BL) in [lng, lat]
+  private static readonly coordinates: [[number, number], [number, number], [number, number], [number, number]] = [
+    [9.4, 47.8167],
+    [13.0333, 47.8167],
+    [13.0333, 45.6167],
+    [9.4, 45.6167],
+  ];
 
   constructor(data: Partial<MapLink>) {
     Object.assign(this, data);
     this.href = data.href!;
     this.label = data.label!;
-    this.imageOverlay = new ImageOverlay(
-      this.href,
-      [
-        [45.6167, 9.4],
-        [47.8167, 13.0333],
-      ],
-      {
-        attribution: this.attribution,
-        pane: "tilePane",
-        className: "mix-blend-mode-multiply",
-      },
-    );
   }
 
   change(change: 1 | -1 | Temporal.Instant) {
@@ -195,7 +193,7 @@ class MapLink {
       return this;
     }
     this.date = change instanceof Temporal.Instant ? change : this.date.add({ hours: change * this.dateStepHour });
-    this.imageOverlay.setUrl(this.linkHref);
+    this.updateImage();
   }
 
   async fetchDate(): Promise<void> {
@@ -218,7 +216,7 @@ class MapLink {
     if (typeof this.dateMax === "number") {
       this.dateMax = parsedDate.add({ hours: this.dateMax });
     }
-    this.imageOverlay.setUrl(this.linkHref);
+    this.updateImage();
   }
 
   get epochMilliseconds(): number {
@@ -233,8 +231,26 @@ class MapLink {
       .replace("{{year}}", isoString.slice(0, "2006".length));
   }
 
-  async addImageOverlay(map: Map | LayerGroup) {
+  private updateImage(): void {
+    const source = this.map?.getSource(this.imageId) as ImageSource | undefined;
+    source?.updateImage({ url: this.linkHref });
+  }
+
+  async addImageOverlay(map: MlMap): Promise<void> {
+    this.map = map;
     await this.fetchDate();
-    this.imageOverlay.addTo(map);
+    if (map.getSource(this.imageId)) {
+      this.updateImage();
+      return;
+    }
+    map.addSource(this.imageId, { type: "image", url: this.linkHref, coordinates: MapLink.coordinates });
+    // TODO(maplibre-migration): legend attribution + multiply blend not yet ported
+    map.addLayer({ id: this.imageId, type: "raster", source: this.imageId });
+  }
+
+  removeImageOverlay(map: MlMap): void {
+    if (map.getLayer(this.imageId)) map.removeLayer(this.imageId);
+    if (map.getSource(this.imageId)) map.removeSource(this.imageId);
+    if (this.map === map) this.map = undefined;
   }
 }

@@ -15,13 +15,13 @@ import { ActivatedRoute } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
 import { RegionProperties, RegionsService } from "app/providers/regions-service/regions.service";
-import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
 import { BsModalService } from "ngx-bootstrap/modal";
 import type { Observable } from "rxjs";
 
+import { RegionMapService } from "../map/region-map.service";
+import { addStationLayer, StationLayerHandle, StationPoint } from "../map/station-layer";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 import "bootstrap";
@@ -41,7 +41,7 @@ export interface MultiselectDropdownData {
   standalone: true,
   imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslatePipe, NgxMousetrapDirective],
   providers: [
-    BaseMapService,
+    RegionMapService,
     MeteogramSourceService,
     MultimodelSourceService,
     ZamgMeteoSourceService,
@@ -56,7 +56,7 @@ export interface MultiselectDropdownData {
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   private route = inject(ActivatedRoute);
   regionsService = inject(RegionsService);
-  mapService = inject(BaseMapService);
+  mapService = inject(RegionMapService);
   authenticationService = inject(AuthenticationService);
   private multimodelSource = inject(MultimodelSourceService);
   private meteogramSource = inject(MeteogramSourceService);
@@ -66,7 +66,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   translateService = inject(TranslateService);
   modalService = inject(BsModalService);
 
-  readonly mapLayer = new LayerGroup();
+  private pointsLayer?: StationLayerHandle;
+  private renderedPoints: GenericObservation[] = [];
   layout = "map" as const;
   selectedModelPoint: GenericObservation;
   selectedModelType: ForecastSource;
@@ -146,28 +147,17 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   applyFilter() {
-    this.mapLayer.clearLayers();
-
     const filtered = this.modelPoints.filter((el) => {
       const correctRegion = !Object.values(this.selectedRegions).some((v) => v) || this.selectedRegions[el.region];
       const correctSource = !Object.values(this.selectedSources).some((v) => v) || this.selectedSources[el.$source];
       return correctRegion && correctSource;
     });
-
-    filtered.forEach((point) => {
-      this.drawMarker(point);
-    });
+    this.renderedPoints = filtered;
+    this.pointsLayer?.setStations(filtered.map((point, i) => this.toStationPoint(point, String(i))));
   }
 
-  drawMarker(point: GenericObservation) {
+  private toStationPoint(point: GenericObservation, id: string): StationPoint {
     const { $source, region, locationName, latitude, longitude, eventDate } = point;
-    const click = () => {
-      if ($source === "qfa") this.setQfa(this.qfaService.files[locationName][0], 0);
-      this.selectedModelPoint = $source === "qfa" ? undefined : point;
-      this.selectedModelType = $source as ForecastSource;
-      this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
-    };
-
     const tooltip = [
       `<i class="ph ph-calendar"></i> ${
         eventDate instanceof Date ? formatDate(eventDate, "yyyy-MM-dd HH:mm", "en-US") : undefined
@@ -179,11 +169,29 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     ]
       .filter((s) => !/undefined/.test(s))
       .join("<br>");
+    return {
+      id,
+      lng: longitude,
+      lat: latitude,
+      radius: 8,
+      fillColor: this.getPointColor($source as ForecastSource),
+      strokeColor: "black",
+      tooltip,
+    };
+  }
 
-    new CircleMarker({ lat: latitude, lng: longitude }, this.getModelPointOptions($source as ForecastSource))
-      .addTo(this.mapLayer)
-      .on({ click })
-      .bindTooltip(tooltip);
+  private getPointColor(type: ForecastSource): string {
+    return this.allSources.find((s) => s.id === type)?.fillColor ?? "black";
+  }
+
+  private onModelPointClick(id: string) {
+    const point = this.renderedPoints[Number(id)];
+    if (!point) return;
+    const { $source, locationName } = point;
+    if ($source === "qfa") this.setQfa(this.qfaService.files[locationName][0], 0);
+    this.selectedModelPoint = $source === "qfa" ? undefined : point;
+    this.selectedModelType = $source as ForecastSource;
+    this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
   }
 
   async loadAll() {
@@ -193,14 +201,14 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
-          augmentRegion(point);
           try {
-            this.drawMarker(point);
+            augmentRegion(point);
             this.modelPoints.push(point);
           } catch (e) {
             console.error(e);
           }
         });
+        this.applyFilter();
       });
     });
   }
@@ -208,7 +216,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   async loadQfa() {
     await this.qfaService.loadDustParams();
     for (const [cityName, coords] of Object.entries(this.qfaService.coords)) {
-      const ll = coords as LatLngLiteral;
+      const ll = coords as { lat: number; lng: number };
       const point = {
         $source: "qfa",
         latitude: ll.lat,
@@ -216,46 +224,25 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
         locationName: cityName,
       } as GenericObservation;
       augmentRegion(point);
-      this.drawMarker(point);
       this.modelPoints.push(point);
     }
+    this.applyFilter();
     await this.qfaService.getFiles();
   }
 
   async initMaps() {
-    const map = await this.mapService.initMaps(this.observationsMap().nativeElement);
-    map.on({
-      click: () => {
-        this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
-        this.applyFilter();
-      },
+    const map = await this.mapService.initMap(this.observationsMap().nativeElement);
+    this.pointsLayer = addStationLayer(map, { id: "forecast-points" });
+    this.pointsLayer.onStationClick((id) => this.onModelPointClick(id));
+    this.mapService.onSelectionChange(() => {
+      this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+      this.applyFilter();
     });
-
-    // Watch zoom changes
-    this.mapService.map.on("zoomend", () => {
-      this.updateBaseLayer();
-    });
-
-    this.mapLayer.addTo(map);
   }
-
-  private updateBaseLayer(): void {}
 
   ngOnDestroy() {
-    this.mapLayer.clearLayers();
+    this.pointsLayer?.remove();
     this.mapService.removeMaps();
-  }
-
-  getModelPointOptions(type: ForecastSource): CircleMarkerOptions {
-    return {
-      pane: "markerPane",
-      radius: 8,
-      fillColor: this.allSources.find((s) => s.id === type)?.fillColor,
-      color: "black",
-      weight: 1,
-      opacity: 1,
-      fillOpacity: 1,
-    };
   }
 
   get observationPopupIframe() {
