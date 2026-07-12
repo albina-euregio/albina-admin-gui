@@ -724,9 +724,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.tooltipPopup.remove();
       this.highlightInHazardChart(undefined);
     });
-    el.addEventListener("click", (e) => this.onObservationClick(observation, e));
+    el.addEventListener("click", (e) => {
+      // stop the click from also reaching the region layer underneath the marker
+      e.stopPropagation();
+      this.onObservationClick(observation, e);
+    });
     el.addEventListener("contextmenu", (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.onObservationRightClick(observation);
     });
   }

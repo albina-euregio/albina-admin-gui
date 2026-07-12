@@ -160,7 +160,11 @@ class ObservationData {
       if (!marker) return;
       const el = marker.getElement() as ObsMarkerElement;
       el.style.cursor = "pointer";
-      el.addEventListener("click", () => this.onObservationClick(observation));
+      el.addEventListener("click", (e) => {
+        // stop the click from also reaching the region layer underneath the marker
+        e.stopPropagation();
+        this.onObservationClick(observation);
+      });
       el.addEventListener("mouseenter", () => {
         if (!this.map || !this.popup) return;
         this.popup
