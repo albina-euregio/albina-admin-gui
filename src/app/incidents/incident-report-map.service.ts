@@ -1,30 +1,85 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import type { WritableSignal } from "@angular/core";
-import {
-  CircleMarker,
-  Icon,
-  Layer,
-  LayerGroup,
-  LayersControl,
-  LatLngBoundsLiteral,
-  LeafletMouseEvent,
-  Map as LeafletMap,
+import type { Feature, FeatureCollection } from "geojson";
+import maplibregl, {
+  IControl,
+  LngLatBounds,
+  Map as MlMap,
+  MapMouseEvent,
   Marker,
-  Polygon,
-  Polyline,
-  TileLayer,
-} from "leaflet";
+  StyleSpecification,
+} from "maplibre-gl";
 
+import { createMap } from "../map/create-map";
 import { IncidentReport } from "./incident-report.model";
 
-const defaultMarkerIcon = new Icon({
-  iconUrl: "assets/markers/marker-icon-2x-blue.png",
-  shadowUrl: "assets/markers/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  shadowSize: [41, 41],
-  shadowAnchor: [13, 41],
-});
+const SOURCE_ID = "incident-geometry";
+
+const OPENTOPO_URL = "https://tile.opentopomap.org/{z}/{x}/{y}.png";
+const OPENTOPO_ATTRIBUTION = "map data: © OpenStreetMap contributors, SRTM | map style: © OpenTopoMap (CC-BY-SA)";
+// basemap.at uses a z/row/col scheme, i.e. {z}/{y}/{x}
+const BASEMAP_AT_URL = "https://mapsneu.wien.gv.at/basemap/bmapgelaende/grau/google3857/{z}/{y}/{x}.jpeg";
+const BASEMAP_AT_ATTRIBUTION = 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>';
+
+/** Base style for the incident location map: OpenTopoMap + optional basemap.at terrain. */
+function buildIncidentStyle(): StyleSpecification {
+  return {
+    version: 8,
+    sources: {
+      opentopo: { type: "raster", tiles: [OPENTOPO_URL], tileSize: 256, attribution: OPENTOPO_ATTRIBUTION },
+      basemapat: {
+        type: "raster",
+        tiles: [BASEMAP_AT_URL],
+        tileSize: 256,
+        maxzoom: 17,
+        bounds: [8.782379, 46.35877, 17.189532, 49.037872],
+        attribution: BASEMAP_AT_ATTRIBUTION,
+      },
+    },
+    layers: [
+      { id: "opentopo", type: "raster", source: "opentopo" },
+      { id: "basemapat", type: "raster", source: "basemapat", layout: { visibility: "none" } },
+    ],
+  };
+}
+
+/** Minimal radio-style base-layer switcher (MapLibre has no built-in LayersControl). */
+class BaseLayerControl implements IControl {
+  private container?: HTMLElement;
+
+  constructor(private readonly layers: { id: string; label: string }[]) {}
+
+  onAdd(map: MlMap): HTMLElement {
+    const container = document.createElement("div");
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group";
+    container.style.padding = "4px 6px";
+    this.layers.forEach((layer, i) => {
+      const label = document.createElement("label");
+      label.style.display = "block";
+      label.style.cursor = "pointer";
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "incident-base-layer";
+      input.checked = i === 0;
+      input.addEventListener("change", () => {
+        for (const other of this.layers) {
+          map.setLayoutProperty(other.id, "visibility", other.id === layer.id ? "visible" : "none");
+        }
+      });
+      label.append(input, ` ${layer.label}`);
+      container.append(label);
+    });
+    this.container = container;
+    return container;
+  }
+
+  onRemove(): void {
+    this.container?.remove();
+    this.container = undefined;
+  }
+}
+
+const EMPTY_COLLECTION: FeatureCollection = { type: "FeatureCollection", features: [] };
 
 export interface IncidentReportMapConfig {
   /** Writable report signal the map reads from and writes drawing changes to. */
@@ -38,13 +93,13 @@ export interface IncidentReportMapConfig {
 }
 
 /**
- * Owns the Leaflet map instance used on the incident report location tab,
+ * Owns the MapLibre map instance used on the incident report location tab,
  * including point/line/polygon drawing and rendering of the report geometry.
  */
 @Injectable()
 export class IncidentReportMapService implements OnDestroy {
-  private map?: LeafletMap;
-  private mapLayer?: Layer;
+  private map?: MlMap;
+  private marker?: Marker;
   private config?: IncidentReportMapConfig;
 
   activeDrawingMode: "Point" | "Line" | "Polygon" = "Point";
@@ -58,10 +113,11 @@ export class IncidentReportMapService implements OnDestroy {
   }
 
   destroy() {
+    this.marker?.remove();
+    this.marker = undefined;
     if (this.map) {
       this.map.remove();
       this.map = undefined;
-      this.mapLayer = undefined;
     }
   }
 
@@ -75,60 +131,74 @@ export class IncidentReportMapService implements OnDestroy {
       return;
     }
 
-    if (this.map) {
-      this.map.remove();
-      this.map = undefined;
-      this.mapLayer = undefined;
-    }
+    this.destroy();
 
     // Default center on Tyrol/Innsbruck region
-    const map = new LeafletMap(elementId).setView([47.268, 11.404], 9);
+    const map = createMap({
+      container: elementId,
+      style: buildIncidentStyle(),
+      navigationControl: true,
+      maxZoom: 17,
+    });
+    map.jumpTo({ center: [11.404, 47.268], zoom: 9 });
     this.map = map;
 
-    const openTopoMap = new TileLayer("https://tile.opentopomap.org/{z}/{x}/{y}.png", {
-      attribution: "map data: © OpenStreetMap contributors, SRTM | map style: © OpenTopoMap (CC-BY-SA)",
-    }).addTo(map);
-
-    // Optional high-detail basemap for cleaner polygon tracing
-    const basemapAtTerrainOptions = {
-      maxZoom: 17,
-      attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
-      type: "grau",
-      format: "jpeg",
-      bounds: [
-        [46.35877, 8.782379],
-        [49.037872, 17.189532],
-      ] as LatLngBoundsLiteral,
-    };
-    const basemapAtTerrain = new TileLayer(
-      "https://mapsneu.wien.gv.at/basemap/bmapgelaende/{type}/google3857/{z}/{y}/{x}.{format}",
-      basemapAtTerrainOptions,
+    map.addControl(
+      new BaseLayerControl([
+        { id: "opentopo", label: "OpenTopoMap" },
+        { id: "basemapat", label: "basemap.at Gelände" },
+      ]),
+      "bottom-right",
     );
 
-    new LayersControl(
-      {
-        OpenTopoMap: openTopoMap,
-        "basemap.at Gelände": basemapAtTerrain,
-      },
-      undefined,
-      { position: "bottomright" },
-    ).addTo(map);
-
-    map.on("click", (e: LeafletMouseEvent) => {
+    map.on("click", (e: MapMouseEvent) => {
       if (config.disabled()) return;
-      this.handleMapClick(e.latlng.lat, e.latlng.lng);
+      this.handleMapClick(e.lngLat.lat, e.lngLat.lng);
     });
 
     this.activeDrawingMode = this.activeDrawingMode || "Point";
 
-    // Invalidate size immediately and again after transition delay to ensure map dimensions are correct
-    map.invalidateSize();
-    setTimeout(() => {
-      map.invalidateSize();
+    map.on("load", () => {
+      map.addSource(SOURCE_ID, { type: "geojson", data: EMPTY_COLLECTION });
+      map.addLayer({
+        id: "incident-polygon-fill",
+        type: "fill",
+        source: SOURCE_ID,
+        filter: ["==", ["geometry-type"], "Polygon"],
+        paint: { "fill-color": "green", "fill-opacity": 0.3 },
+      });
+      map.addLayer({
+        id: "incident-polygon-outline",
+        type: "line",
+        source: SOURCE_ID,
+        filter: ["==", ["geometry-type"], "Polygon"],
+        paint: { "line-color": "green", "line-width": 2 },
+      });
+      map.addLayer({
+        id: "incident-line",
+        type: "line",
+        source: SOURCE_ID,
+        filter: ["==", ["geometry-type"], "LineString"],
+        paint: { "line-color": "blue", "line-width": 4 },
+      });
+      map.addLayer({
+        id: "incident-vertices",
+        type: "circle",
+        source: SOURCE_ID,
+        filter: ["==", ["geometry-type"], "Point"],
+        paint: {
+          "circle-radius": 5,
+          "circle-color": "#fff",
+          "circle-stroke-color": ["get", "color"],
+          "circle-stroke-width": 2,
+        },
+      });
+      map.resize();
       this.drawOnMap(true);
-    }, 150);
+    });
 
-    this.drawOnMap(true);
+    // Ensure correct dimensions once the tab transition has settled
+    setTimeout(() => map.resize(), 150);
   }
 
   handleMapClick(lat: number, lng: number) {
@@ -223,69 +293,79 @@ export class IncidentReportMapService implements OnDestroy {
     const report = this.config?.incidentReport();
     if (!report) return;
 
-    map.invalidateSize();
+    // Geometry layers are added on the "load" event; until then, defer.
+    const source = map.getSource(SOURCE_ID) as maplibregl.GeoJSONSource | undefined;
+    if (!source) return;
 
-    if (this.mapLayer) {
-      map.removeLayer(this.mapLayer);
-      this.mapLayer = undefined;
-    }
+    const features: Feature[] = [];
+    const allPoints: [number, number][] = []; // [lng, lat]
 
-    const allPoints: [number, number][] = [];
-    const layers: Layer[] = [];
-
-    // 1. Point
-    if (report.latitude != null && report.longitude != null) {
-      const lat = Number(report.latitude);
-      const lng = Number(report.longitude);
-      if (!isNaN(lat) && !isNaN(lng)) {
-        const draggable = !this.config?.disabled();
-        const marker = new Marker([lat, lng], { icon: defaultMarkerIcon, draggable });
-        if (draggable) {
-          marker.on("dragend", () => {
-            const { lat: newLat, lng: newLng } = marker.getLatLng();
-            this.movePoint(newLat, newLng);
-          });
-        }
-        layers.push(marker);
-        allPoints.push([lat, lng]);
+    // 1. Point (draggable marker, not part of the GeoJSON source)
+    const lat = report.latitude != null ? Number(report.latitude) : NaN;
+    const lng = report.longitude != null ? Number(report.longitude) : NaN;
+    if (!isNaN(lat) && !isNaN(lng)) {
+      const draggable = !this.config?.disabled();
+      if (!this.marker) {
+        this.marker = new maplibregl.Marker({ draggable, color: "#2a81cb" });
+        this.marker.on("dragend", () => {
+          const { lat: newLat, lng: newLng } = this.marker!.getLngLat();
+          this.movePoint(newLat, newLng);
+        });
+        // lngLat must be set before addTo(), otherwise Marker._update() throws
+        this.marker.setLngLat([lng, lat]).addTo(map);
+      } else {
+        this.marker.setLngLat([lng, lat]);
       }
+      this.marker.setDraggable(draggable);
+      allPoints.push([lng, lat]);
+    } else if (this.marker) {
+      this.marker.remove();
+      this.marker = undefined;
     }
 
     // 2. Line
     const linePoints = this.parseCoordinatesText(report.lineCoordinatesText || "");
     if (linePoints.length > 0) {
-      const lineShape = new Polyline(linePoints, { color: "blue", weight: 4 });
-      layers.push(lineShape);
-      for (const p of linePoints) {
-        const vertex = new CircleMarker(p, { radius: 5, color: "blue", fillColor: "#fff", fillOpacity: 1 });
-        layers.push(vertex);
-        allPoints.push(p);
+      const coords = linePoints.map(([la, lo]) => [lo, la]);
+      features.push({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: coords } });
+      for (const [la, lo] of linePoints) {
+        features.push({
+          type: "Feature",
+          properties: { color: "blue" },
+          geometry: { type: "Point", coordinates: [lo, la] },
+        });
+        allPoints.push([lo, la]);
       }
     }
 
     // 3. Polygon
     const polygonPoints = this.parseCoordinatesText(report.polygonCoordinatesText || "");
     if (polygonPoints.length > 0) {
-      const polygonShape = new Polygon(polygonPoints, { color: "green", fillColor: "green", fillOpacity: 0.3 });
-      layers.push(polygonShape);
-      for (const p of polygonPoints) {
-        const vertex = new CircleMarker(p, { radius: 5, color: "green", fillColor: "#fff", fillOpacity: 1 });
-        layers.push(vertex);
-        allPoints.push(p);
+      const ring = polygonPoints.map(([la, lo]) => [lo, la]);
+      // Close the linear ring as required by GeoJSON
+      const first = ring[0];
+      const last = ring[ring.length - 1];
+      if (first[0] !== last[0] || first[1] !== last[1]) ring.push([...first]);
+      features.push({ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [ring] } });
+      for (const [la, lo] of polygonPoints) {
+        features.push({
+          type: "Feature",
+          properties: { color: "green" },
+          geometry: { type: "Point", coordinates: [lo, la] },
+        });
+        allPoints.push([lo, la]);
       }
     }
 
-    if (layers.length > 0) {
-      const group = new LayerGroup(layers);
-      this.mapLayer = group.addTo(map);
+    source.setData({ type: "FeatureCollection", features });
 
-      // Auto zoom/pan to show all elements
-      if (autoFit) {
-        if (allPoints.length === 1) {
-          map.setView(allPoints[0], 15);
-        } else if (allPoints.length > 1) {
-          map.fitBounds(new Polyline(allPoints).getBounds(), { maxZoom: 15 });
-        }
+    if (autoFit) {
+      if (allPoints.length === 1) {
+        map.jumpTo({ center: allPoints[0], zoom: 15 });
+      } else if (allPoints.length > 1) {
+        const bounds = new LngLatBounds();
+        for (const p of allPoints) bounds.extend(p);
+        map.fitBounds(bounds, { maxZoom: 15, animate: false });
       }
     }
   }
