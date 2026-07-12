@@ -140,6 +140,9 @@ export function addRegionLayer(
     hoverCb?.(null);
   };
   const onClick = (e: MapLayerMouseEvent) => {
+    // ignore clicks where another layer (markers/stations/polygons) is rendered on top
+    const top = map.queryRenderedFeatures(e.point)[0];
+    if (top && top.layer.id !== fillId && top.layer.id !== lineId) return;
     const f = e.features?.[0];
     if (!f) return;
     clickCb?.(featureId(f), e.originalEvent);
