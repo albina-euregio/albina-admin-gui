@@ -67,13 +67,3 @@ export function composeStyle(layers: MapBaseLayer[]): StyleSpecification {
     layers: layers.map((l) => l.layer),
   };
 }
-
-/**
- * Builds the standard region base style: Albina PMTiles raster below `crossoverZoom`,
- * OpenTopoMap raster at/above it. The crossover is declarative via layer min/maxzoom,
- * replacing the manual add/remove-on-zoomend swap of the Leaflet `MapService`.
- */
-export function buildBaseStyle(opts: { crossoverZoom?: number } = {}): StyleSpecification {
-  const crossover = opts.crossoverZoom ?? 13;
-  return composeStyle([albinaBasemapLayer({ maxzoom: crossover }), opentopoLayer({ minzoom: crossover })]);
-}
