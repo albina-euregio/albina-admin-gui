@@ -15,20 +15,7 @@ export interface MapBaseLayer {
   layer: RasterLayerSpecification;
 }
 
-/** Options common to base-layer builders. `minZoom`/`maxZoom` bound layer visibility. */
-export interface BaseLayerOptions {
-  id?: string;
-  minZoom?: number;
-  maxZoom?: number;
-  /** default true; set false to start hidden (e.g. an alternative base layer) */
-  visible?: boolean;
-}
-
-function applyLayerOptions(layer: RasterLayerSpecification, opts: BaseLayerOptions): void {
-  if (opts.minZoom !== undefined) layer.minzoom = opts.minZoom;
-  if (opts.maxZoom !== undefined) layer.maxzoom = opts.maxZoom;
-  if (opts.visible === false) layer.layout = { visibility: "none" };
-}
+export type BaseLayerOptions = Partial<RasterLayerSpecification>;
 
 /** Albina PMTiles base map. */
 export function albinaBasemapLayer(opts: BaseLayerOptions = {}): MapBaseLayer {
@@ -40,8 +27,7 @@ export function albinaBasemapLayer(opts: BaseLayerOptions = {}): MapBaseLayer {
     attribution:
       "© <a href='https://sonny.4lima.de/'>Sonny</a>, CC BY 4.0 | © <a href='https://www.eea.europa.eu/en/datahub/datahubitem-view/d08852bc-7b5f-4835-a776-08362e2fbf4b'>EU-DEM</a>, CC BY 4.0 | © avalanche.report, CC BY 4.0",
   };
-  const layer: RasterLayerSpecification = { id, type: "raster", source: id };
-  applyLayerOptions(layer, opts);
+  const layer: RasterLayerSpecification = { id, type: "raster", source: id, ...opts };
   return { id, name: "Albina", source, layer };
 }
 
@@ -54,8 +40,7 @@ export function opentopoLayer(opts: BaseLayerOptions = {}): MapBaseLayer {
     tileSize: 256,
     attribution: "map data: © OpenStreetMap contributors, SRTM | map style: © OpenTopoMap (CC-BY-SA)",
   };
-  const layer: RasterLayerSpecification = { id, type: "raster", source: id };
-  applyLayerOptions(layer, opts);
+  const layer: RasterLayerSpecification = { id, type: "raster", source: id, ...opts };
   return { id, name: "OpenTopoMap", source, layer };
 }
 
@@ -70,8 +55,7 @@ export function basemapAtTerrainLayer(opts: BaseLayerOptions = {}): MapBaseLayer
     bounds: [8.782379, 46.35877, 17.189532, 49.037872],
     attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
   };
-  const layer: RasterLayerSpecification = { id, type: "raster", source: id };
-  applyLayerOptions(layer, opts);
+  const layer: RasterLayerSpecification = { id, type: "raster", source: id, ...opts };
   return { id, name: "basemap.at Gelände", source, layer };
 }
 
@@ -91,5 +75,5 @@ export function composeStyle(layers: MapBaseLayer[]): StyleSpecification {
  */
 export function buildBaseStyle(opts: { crossoverZoom?: number } = {}): StyleSpecification {
   const crossover = opts.crossoverZoom ?? 13;
-  return composeStyle([albinaBasemapLayer({ maxZoom: crossover }), opentopoLayer({ minZoom: crossover })]);
+  return composeStyle([albinaBasemapLayer({ maxzoom: crossover }), opentopoLayer({ minzoom: crossover })]);
 }

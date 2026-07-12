@@ -100,7 +100,7 @@ export class IncidentReportMapService implements OnDestroy {
     this.destroy();
 
     // OpenTopoMap by default, basemap.at terrain as an alternative for cleaner tracing
-    const baseLayers = [opentopoLayer(), basemapAtTerrainLayer({ visible: false })];
+    const baseLayers = [opentopoLayer(), basemapAtTerrainLayer({ layout: { visibility: "none" } })];
 
     // Default center on Tyrol/Innsbruck region
     const map = createMap({
