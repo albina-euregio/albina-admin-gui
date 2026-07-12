@@ -13,17 +13,17 @@ import {
   ChangeDetectionStrategy,
 } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
-import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
+import { StationPoint } from "../map/station-layer";
 import { BlogService } from "../providers/blog-service/blog.service";
-import { LineaMapService } from "../providers/map-service/linea-map.service";
 import { GraphicsService } from "./graphics.service";
+import { StationMapService } from "./station-map.service";
 
 @Component({
   selector: "app-linea-export",
   standalone: true,
   imports: [CommonModule, TranslatePipe],
-  providers: [GraphicsService, BlogService, LineaMapService],
+  providers: [GraphicsService, BlogService, StationMapService],
   templateUrl: "./lineaexport.component.html",
   styleUrls: ["./lineaexport.component.css"],
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -33,7 +33,7 @@ export class LineaExportComponent implements AfterViewInit {
   // Initially selected station
   selectedIds: string[] = [];
 
-  private mapService = inject(LineaMapService);
+  private mapService = inject(StationMapService);
   private graphicsService = inject(GraphicsService);
 
   private searchTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -45,33 +45,35 @@ export class LineaExportComponent implements AfterViewInit {
   showDropdown = false;
   activeIndex = -1;
 
-  readonly markers: Record<string, CircleMarker> = {};
-
   async ngAfterViewInit() {
-    await this.mapService.initMaps(this.stationsMap().nativeElement);
+    await this.mapService.initMap(this.stationsMap().nativeElement);
+    this.mapService.onStationClick((id) => this.toggleStation(id));
     await this.load();
   }
 
   async load() {
     const stations = await this.graphicsService.loadLineaStations();
-    for (const station of stations) {
-      const id = station.id;
-      const marker = new CircleMarker(
-        {
-          lat: station.geometry.coordinates[1],
-          lng: station.geometry.coordinates[0],
-        },
-        this.getModelPointOptions(false),
-      ).addTo(this.mapService.stationLayer);
-      marker.bindTooltip(`${station.properties.shortName ?? ""} ${station.properties.name}`);
-      this.mapService.showStationName(marker);
+    this.stations.push(...stations);
+    this.renderStations();
+  }
 
-      marker.bindTooltip(`${station.properties.name || station.id}`);
-      marker.on("click", () => void this.toggleStation(id));
-      this.markers[id] = marker;
-
-      this.stations.push(station);
-    }
+  private renderStations() {
+    const style = getComputedStyle(document.documentElement);
+    const success = style.getPropertyValue("--bs-success");
+    const subtle = style.getPropertyValue("--bs-primary-bg-subtle");
+    this.mapService.setStations(
+      this.stations.map(
+        (s): StationPoint => ({
+          id: s.id,
+          lng: s.geometry.coordinates[0],
+          lat: s.geometry.coordinates[1],
+          radius: 8,
+          fillColor: this.selectedIds.includes(s.id) ? success : subtle,
+          strokeColor: "black",
+          tooltip: s.properties.name || s.id,
+        }),
+      ),
+    );
   }
 
   onSearchFieldEnter(): void {
@@ -173,7 +175,7 @@ export class LineaExportComponent implements AfterViewInit {
   addStation(id: string): void {
     if (!this.selectedIds.includes(id)) {
       this.selectedIds.push(id);
-      this.markers[id].setStyle(this.getModelPointOptions(true)); // selected style
+      this.renderStations();
     }
   }
 
@@ -185,7 +187,7 @@ export class LineaExportComponent implements AfterViewInit {
   // Remove a station
   removeStation(id: string): void {
     this.selectedIds = this.selectedIds.filter((s) => s !== id);
-    this.markers[id].setStyle(this.getModelPointOptions(false)); // unselected style
+    this.renderStations();
   }
 
   get selectedStations() {
@@ -201,20 +203,5 @@ export class LineaExportComponent implements AfterViewInit {
     return JSON.stringify(
       this.selectedStations.map((s) => `${s.geometry.coordinates[1]},${s.geometry.coordinates[0]}`),
     );
-  }
-
-  // Marker style
-  getModelPointOptions(selected: boolean): CircleMarkerOptions {
-    return {
-      pane: "markerPane",
-      radius: 8,
-      fillColor: selected
-        ? getComputedStyle(document.documentElement).getPropertyValue("--bs-success")
-        : getComputedStyle(document.documentElement).getPropertyValue("--bs-primary-bg-subtle"),
-      color: "black",
-      weight: 1,
-      opacity: 1,
-      fillOpacity: 1,
-    };
   }
 }
