@@ -88,17 +88,21 @@ export function addRegionLayer(
     source: sourceId,
     paint: {
       "line-color": s.lineColor,
+      // NB: a "zoom" expression may only be a top-level input to step/interpolate,
+      // so the hover override lives in each step output rather than wrapping the step.
       "line-opacity": [
-        "case",
-        ["boolean", ["feature-state", "hover"], false],
-        1,
-        ["step", ["zoom"], s.lineOpacity, s.strongZoom, s.lineOpacityStrong],
+        "step",
+        ["zoom"],
+        ["case", ["boolean", ["feature-state", "hover"], false], 1, s.lineOpacity],
+        s.strongZoom,
+        ["case", ["boolean", ["feature-state", "hover"], false], 1, s.lineOpacityStrong],
       ],
       "line-width": [
-        "case",
-        ["boolean", ["feature-state", "hover"], false],
-        s.hoverWeight,
-        ["step", ["zoom"], s.lineWeight, s.strongZoom, s.lineWeightStrong],
+        "step",
+        ["zoom"],
+        ["case", ["boolean", ["feature-state", "hover"], false], s.hoverWeight, s.lineWeight],
+        s.strongZoom,
+        ["case", ["boolean", ["feature-state", "hover"], false], s.hoverWeight, s.lineWeightStrong],
       ],
     },
   });
