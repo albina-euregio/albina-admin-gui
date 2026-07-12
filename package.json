@@ -61,6 +61,7 @@
     "leaflet": "https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b",
     "leaflet-control-geocoder": "^3.3.0",
     "leaflet.sync": "^0.2.4",
+    "maplibre-gl": "^5.24.0",
     "mousetrap": "^1.6.5",
     "ngx-bootstrap": "^21.2.1",
     "ngx-echarts": "^22.0.0",
