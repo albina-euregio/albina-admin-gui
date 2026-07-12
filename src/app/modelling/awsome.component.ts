@@ -104,6 +104,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private map?: MlMap;
   private pointMarkers: MlMarker[] = [];
   private highlightMarker?: MlMarker;
+  // a hovered circle marker takes tooltip priority over the polygon layer underneath it
+  private markerHovered = false;
   private imageOverlays: { id: string; name: string }[] = [];
   private overlayControl?: LayerToggleControl;
   private readonly polygonSource = "awsome-polygons";
@@ -687,13 +689,17 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const obsAt = (e: MapLayerMouseEvent): FeatureProperties | undefined =>
       this.localObservations[e.features?.[0]?.properties?.["index"] as number];
     map.on("mouseenter", fillId, (e) => {
+      if (this.markerHovered) return; // prefer the circle marker's tooltip
       map.getCanvas().style.cursor = "pointer";
       const o = obsAt(e);
       if (!o) return;
       this.tooltipPopup.setLngLat(e.lngLat).setHTML(this.markerService.tooltipHtml(o)).addTo(map);
       this.highlightInHazardChart(o);
     });
-    map.on("mousemove", fillId, (e) => this.tooltipPopup.setLngLat(e.lngLat));
+    map.on("mousemove", fillId, (e) => {
+      if (this.markerHovered) return;
+      this.tooltipPopup.setLngLat(e.lngLat);
+    });
     map.on("mouseleave", fillId, () => {
       map.getCanvas().style.cursor = "";
       this.tooltipPopup.remove();
@@ -714,6 +720,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     el.style.cursor = "pointer";
     el.addEventListener("mouseenter", () => {
       if (!this.map) return;
+      this.markerHovered = true;
       this.tooltipPopup
         .setLngLat(marker.getLngLat())
         .setHTML(el.tooltipHtml ?? "")
@@ -721,6 +728,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.highlightInHazardChart(observation);
     });
     el.addEventListener("mouseleave", () => {
+      this.markerHovered = false;
       this.tooltipPopup.remove();
       this.highlightInHazardChart(undefined);
     });
