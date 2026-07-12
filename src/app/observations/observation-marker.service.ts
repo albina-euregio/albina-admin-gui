@@ -2,6 +2,7 @@ import { formatDate } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { castArray, get as _get } from "es-toolkit/compat";
 import { Icon, LatLng, Map, Marker, MarkerOptions, Polygon, PolylineOptions, Rectangle, GeoJSON } from "leaflet";
+import maplibregl, { Marker as MlMarker } from "maplibre-gl";
 
 import { SnowpackStability } from "../enums/enums";
 import type { AwsomeSource } from "../modelling/awsome.config";
@@ -15,6 +16,21 @@ const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.poor]: 10,
   [SnowpackStability.very_poor]: 20,
 };
+
+/** Marker element carrying its tooltip HTML, read by the observations view on hover. */
+export interface ObsMarkerElement extends HTMLImageElement {
+  tooltipHtml?: string;
+}
+
+/** Builds a MapLibre marker `<img>` element from a Leaflet `Icon` (reusing its SVG blob URL). */
+function iconElement(icon: Icon): ObsMarkerElement {
+  const img = document.createElement("img") as ObsMarkerElement;
+  img.src = icon.options.iconUrl;
+  const [w, h] = icon.options.iconSize as [number, number];
+  img.style.width = `${w}px`;
+  img.style.height = `${h}px`;
+  return img;
+}
 
 @Injectable()
 export class ObservationMarkerService<T extends Partial<GenericObservation>> {
@@ -132,6 +148,52 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       className: "obs-tooltip",
     });
     return marker;
+  }
+
+  // --- MapLibre marker path (parallel to the Leaflet one above; awsome still uses the Leaflet path) ---
+
+  createMaplibreMarker(observation: T, isHighlighted = false): MlMarker | undefined {
+    try {
+      const filterSelectionValue = isHighlighted
+        ? this.highlighted
+        : this.markerClassify?.findForObservation(observation);
+      // NB: per-zoom radius resizing (radiusByZoom) is not yet ported to MapLibre
+      const icon = makeIcon(
+        castArray(observation.aspect)[0],
+        "#898989",
+        filterSelectionValue?.radius ?? 40,
+        filterSelectionValue?.color ?? "white",
+        filterSelectionValue?.borderColor ?? "#000",
+        filterSelectionValue?.borderWidth ?? 2,
+        filterSelectionValue?.borderDashArray ?? "",
+        filterSelectionValue?.labelColor ?? "#000",
+        filterSelectionValue?.labelFontSize ?? 12,
+        this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,
+        this.getLabel(observation),
+      );
+      return this.createMaplibreMarkerForIcon(observation, icon, filterSelectionValue);
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+
+  createMaplibreMarkerForIcon(
+    observation: T,
+    icon: Icon,
+    filterSelectionValue: FilterSelectionValue | undefined,
+  ): MlMarker | undefined {
+    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) {
+      return;
+    }
+    const el = iconElement(icon);
+    el.style.opacity = String(filterSelectionValue?.opacity ?? 1);
+    el.style.zIndex = String(filterSelectionValue?.zIndexOffset ?? zIndex[observation.stability ?? "unknown"] ?? 0);
+    el.tooltipHtml = this.createTooltipText(observation);
+    return new maplibregl.Marker({ element: el, anchor: "center" }).setLngLat([
+      observation.longitude,
+      observation.latitude,
+    ]);
   }
 
   private createTooltipText(observation: T & { $sourceObject?: AwsomeSource }): string {
