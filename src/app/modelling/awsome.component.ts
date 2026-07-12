@@ -26,8 +26,8 @@ import type {
   YAXisOption,
 } from "echarts/types/dist/shared";
 import { throttle } from "es-toolkit";
-import { FeatureCollection, MultiPolygon } from "geojson";
-import { ImageOverlay, LatLngBoundsLiteral, LayerGroup, LayersControl, MarkerOptions } from "leaflet";
+import { Feature, FeatureCollection, MultiPolygon } from "geojson";
+import maplibregl, { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, type Subscription } from "rxjs";
@@ -36,12 +36,13 @@ import Split from "split.js";
 import * as z from "zod/v4";
 
 import { environment } from "../../environments/environment";
+import { LayerToggleControl } from "../map/controls/layer-toggle-control";
+import { RegionMapService } from "../map/region-map.service";
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
 import { ObservationFilterService } from "../observations/observation-filter.service";
-import { ObservationMarkerService } from "../observations/observation-marker.service";
-import { BaseMapService } from "../providers/map-service/base-map.service";
+import { ObsMarkerElement, ObservationMarkerService } from "../observations/observation-marker.service";
 import { RegionProperties } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AwsomeConfigSchema } from "./awsome.config";
@@ -75,12 +76,12 @@ type DetailsTabLabel = string;
   ],
   templateUrl: "awsome.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [BaseMapService, ObservationFilterService, ObservationMarkerService],
+  providers: [RegionMapService, ObservationFilterService, ObservationMarkerService],
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
   private route = inject(ActivatedRoute);
   filterService = inject<ObservationFilterService<FeatureProperties>>(ObservationFilterService);
-  mapService = inject(BaseMapService);
+  mapService = inject(RegionMapService);
   markerService = inject<ObservationMarkerService<FeatureProperties>>(ObservationMarkerService);
   private sanitizer = inject(DomSanitizer);
   private httpClient = inject(HttpClient);
@@ -100,9 +101,17 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
-  private mapLayerControl = new LayersControl();
-  private mapLayer = new LayerGroup();
-  private mapLayerHighlight = new LayerGroup();
+  private map?: MlMap;
+  private pointMarkers: MlMarker[] = [];
+  private highlightMarker?: MlMarker;
+  private imageOverlays: { id: string; name: string }[] = [];
+  private overlayControl?: LayerToggleControl;
+  private readonly polygonSource = "awsome-polygons";
+  private readonly tooltipPopup = new maplibregl.Popup({
+    closeButton: false,
+    closeOnClick: false,
+    className: "obs-tooltip",
+  }) as Popup;
   hazardChart: EChartsOption | undefined;
   timeseriesChart: EChartsOption | undefined;
   timeseriesChart$loading: Subscription;
@@ -156,8 +165,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async loadSources() {
-    this.mapLayerControl.remove();
-    this.mapLayerControl = new LayersControl();
+    this.removeImageOverlays();
     this.observations.length = 0;
     this.applyLocalFilter();
 
@@ -184,8 +192,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.loadingState = undefined;
     }
 
-    if (this.activeSources.some((s) => s.imageOverlays?.length)) {
-      this.mapLayerControl.addTo(this.mapService.map);
+    if (this.imageOverlays.length && this.map) {
+      this.overlayControl = new LayerToggleControl(this.imageOverlays);
+      this.map.addControl(this.overlayControl, "bottom-right");
     }
 
     this.filterService.filterSelectionData.forEach((filter) =>
@@ -258,10 +267,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
 
-    source.imageOverlays?.forEach((overlay) => {
-      const layer = new ImageOverlay(overlay.imageUrl, overlay.imageBounds as LatLngBoundsLiteral, overlay);
-      this.mapLayerControl.addOverlay(layer, overlay.name);
-    });
+    source.imageOverlays?.forEach((overlay) => this.addImageOverlay(overlay));
 
     source.$loading?.unsubscribe();
     return new Promise((next, error) => {
@@ -312,26 +318,20 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       );
     }
 
-    await this.mapService.initMaps(this.mapDiv().nativeElement, {
-      regions: regions,
-      internalRegions: regions,
-      clickMode: "awsome",
-    });
+    const map = await this.mapService.initMap(this.mapDiv().nativeElement, { clickMode: "awsome", regions });
+    this.map = map;
 
     const [lat, lon, zoom] = this.config.mapCenter;
-    this.mapService.map.setView([lat, lon], zoom);
+    map.jumpTo({ center: [lon, lat], zoom });
 
-    this.mapLayer.addTo(this.mapService.map);
-    this.mapLayerHighlight.addTo(this.mapService.map);
-    this.mapService.map.on({
-      click: () => {
-        this.filterService.regions = new Set(this.mapService.getSelectedRegions());
-        this.applyLocalFilter();
-      },
+    this.setupPolygonLayer(map);
+    this.mapService.onSelectionChange(() => {
+      this.filterService.regions = new Set(this.mapService.getSelectedRegions());
+      this.applyLocalFilter();
     });
 
     if (window.matchMedia("(min-width: 769px)").matches) {
-      Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
+      Split([".layout-left", ".layout-right"], { onDragEnd: () => map.resize() });
       Split([".toolset-1", ".toolset-2"], { sizes: [33, 66], direction: "vertical" });
     }
   }
@@ -349,26 +349,35 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   applyLocalFilter() {
-    this.mapLayer.clearLayers();
+    this.pointMarkers.forEach((m) => m.remove());
+    this.pointMarkers = [];
     const stabilityIndex = this.stabilityIndex;
     this.observations.forEach((o) => (o.$stabilityIndex = stabilityIndex?.type));
     this.localObservations = this.observations.filter(
       (observation) => this.filterService.isHighlighted(observation) || this.filterService.isSelected(observation),
     );
-    this.localObservations.forEach((observation) => {
+
+    const polygonFeatures: Feature[] = [];
+    this.localObservations.forEach((observation, index) => {
       const isHighlighted = this.filterService.isHighlighted(observation);
-      const marker =
-        observation.$geometry.type === "Polygon" || observation.$geometry.type === "MultiPolygon"
-          ? this.markerService.createPolygonMarker(observation, isHighlighted, observation.$geometry)
-          : this.markerService.createMarker(observation, isHighlighted);
-      marker
-        ?.on({
-          tooltipopen: () => this.highlightInHazardChart(observation),
-          tooltipclose: () => this.highlightInHazardChart(undefined),
-          click: ($event) => this.onObservationClick(observation, $event.originalEvent),
-          contextmenu: () => this.onObservationRightClick(observation),
-        })
-        ?.addTo(this.mapLayer);
+      if (observation.$geometry.type === "Polygon" || observation.$geometry.type === "MultiPolygon") {
+        polygonFeatures.push({
+          type: "Feature",
+          properties: { index, ...this.markerService.maplibrePolygonPaint(observation, isHighlighted) },
+          geometry: observation.$geometry,
+        });
+      } else {
+        const marker = this.markerService.createMaplibreMarker(observation, isHighlighted);
+        if (marker && this.map) {
+          this.wirePointMarker(marker, observation);
+          marker.addTo(this.map);
+          this.pointMarkers.push(marker);
+        }
+      }
+    });
+    (this.map?.getSource(this.polygonSource) as GeoJSONSource | undefined)?.setData({
+      type: "FeatureCollection",
+      features: polygonFeatures,
     });
 
     this.filterService.filterSelectionData.forEach((filter) =>
@@ -636,17 +645,122 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   chartMouseOver($event: ECElementEvent) {
-    this.mapLayerHighlight.clearLayers();
+    this.clearHighlight();
     const observation = $event.data[2] as FeatureProperties;
-    if (!observation) return;
-    const marker = this.markerService.createMarker(observation, true);
-    (marker.options as MarkerOptions).zIndexOffset = 42_000;
-    marker.addTo(this.mapLayerHighlight);
-    marker.toggleTooltip();
+    if (!observation || !this.map) return;
+    const marker = this.markerService.createMaplibreMarker(observation, true);
+    if (!marker) return;
+    marker.getElement().style.zIndex = "42000";
+    marker.addTo(this.map);
+    this.highlightMarker = marker;
+    this.tooltipPopup
+      .setLngLat(marker.getLngLat())
+      .setHTML((marker.getElement() as ObsMarkerElement).tooltipHtml ?? "")
+      .addTo(this.map);
   }
 
   chartMouseOut() {
-    this.mapLayerHighlight.clearLayers();
+    this.clearHighlight();
+  }
+
+  private clearHighlight() {
+    this.highlightMarker?.remove();
+    this.highlightMarker = undefined;
+    this.tooltipPopup.remove();
+  }
+
+  private setupPolygonLayer(map: MlMap) {
+    map.addSource(this.polygonSource, { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer({
+      id: `${this.polygonSource}-fill`,
+      type: "fill",
+      source: this.polygonSource,
+      paint: { "fill-color": ["get", "fillColor"], "fill-opacity": ["get", "fillOpacity"] },
+    });
+    map.addLayer({
+      id: `${this.polygonSource}-line`,
+      type: "line",
+      source: this.polygonSource,
+      paint: { "line-color": ["get", "color"], "line-width": ["get", "weight"], "line-opacity": ["get", "opacity"] },
+    });
+    const fillId = `${this.polygonSource}-fill`;
+    const obsAt = (e: MapLayerMouseEvent): FeatureProperties | undefined =>
+      this.localObservations[e.features?.[0]?.properties?.["index"] as number];
+    map.on("mouseenter", fillId, (e) => {
+      map.getCanvas().style.cursor = "pointer";
+      const o = obsAt(e);
+      if (!o) return;
+      this.tooltipPopup.setLngLat(e.lngLat).setHTML(this.markerService.tooltipHtml(o)).addTo(map);
+      this.highlightInHazardChart(o);
+    });
+    map.on("mousemove", fillId, (e) => this.tooltipPopup.setLngLat(e.lngLat));
+    map.on("mouseleave", fillId, () => {
+      map.getCanvas().style.cursor = "";
+      this.tooltipPopup.remove();
+      this.highlightInHazardChart(undefined);
+    });
+    map.on("click", fillId, (e) => {
+      const o = obsAt(e);
+      if (o) this.onObservationClick(o, e.originalEvent);
+    });
+    map.on("contextmenu", fillId, (e) => {
+      const o = obsAt(e);
+      if (o) this.onObservationRightClick(o);
+    });
+  }
+
+  private wirePointMarker(marker: MlMarker, observation: FeatureProperties) {
+    const el = marker.getElement() as ObsMarkerElement;
+    el.style.cursor = "pointer";
+    el.addEventListener("mouseenter", () => {
+      if (!this.map) return;
+      this.tooltipPopup
+        .setLngLat(marker.getLngLat())
+        .setHTML(el.tooltipHtml ?? "")
+        .addTo(this.map);
+      this.highlightInHazardChart(observation);
+    });
+    el.addEventListener("mouseleave", () => {
+      this.tooltipPopup.remove();
+      this.highlightInHazardChart(undefined);
+    });
+    el.addEventListener("click", (e) => this.onObservationClick(observation, e));
+    el.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      this.onObservationRightClick(observation);
+    });
+  }
+
+  private addImageOverlay(overlay: { imageUrl?: string; imageBounds: number[][]; name: string }) {
+    const map = this.map;
+    if (!map || !overlay.imageUrl) return;
+    const id = `awsome-overlay-${this.imageOverlays.length}`;
+    const [[south, west], [north, east]] = overlay.imageBounds as [[number, number], [number, number]];
+    map.addSource(id, {
+      type: "image",
+      url: overlay.imageUrl,
+      coordinates: [
+        [west, north],
+        [east, north],
+        [east, south],
+        [west, south],
+      ],
+    });
+    map.addLayer({ id, type: "raster", source: id, layout: { visibility: "none" } });
+    this.imageOverlays.push({ id, name: overlay.name });
+  }
+
+  private removeImageOverlays() {
+    const map = this.map;
+    if (this.overlayControl && map) {
+      map.removeControl(this.overlayControl);
+    }
+    this.overlayControl = undefined;
+    for (const o of this.imageOverlays) {
+      if (map?.getLayer(o.id)) map.removeLayer(o.id);
+      if (map?.getSource(o.id)) map.removeSource(o.id);
+    }
+    this.imageOverlays = [];
   }
 
   /**
@@ -654,16 +768,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
    */
   private onObservationClick(observation: FeatureProperties, e: MouseEvent) {
     const id = observation.region_id;
-    const editSelection = this.mapService.overlayMaps.editSelection;
 
     if (e.shiftKey) {
-      editSelection.toggleSelectedRegions([id]);
-    } else if (editSelection.isRegionSelected(id)) {
-      editSelection.clearSelectedRegions();
+      this.mapService.toggleSelectedRegions([id]);
+    } else if (this.mapService.isRegionSelected(id)) {
+      this.mapService.clearSelectedRegions();
     } else {
-      editSelection.setSelectedRegions([id]);
+      this.mapService.setSelectedRegions([id]);
     }
-    editSelection.updateEditSelection();
+    this.filterService.regions = new Set(this.mapService.getSelectedRegions());
+    this.applyLocalFilter();
 
     if (this.isMobile) {
       this.layout = "details";

@@ -1,7 +1,8 @@
 import { inject, Injectable, OnDestroy } from "@angular/core";
+import { FeatureCollection, MultiPolygon } from "geojson";
 import { Map as MlMap } from "maplibre-gl";
 
-import { RegionsService } from "../providers/regions-service/regions.service";
+import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
 import { albinaBasemapLayer, composeStyle, opentopoLayer } from "./base-map";
 import { fitFeatureCollection } from "./bounds";
 import { RegionNameControl } from "./controls/region-name-control";
@@ -25,7 +26,10 @@ export class RegionMapService implements OnDestroy {
   private selectionChangeCb?: () => void;
   private clickMode: RegionClickMode = "normal";
 
-  async initMap(el: HTMLElement, opts: { clickMode?: RegionClickMode } = {}): Promise<MlMap> {
+  async initMap(
+    el: HTMLElement,
+    opts: { clickMode?: RegionClickMode; regions?: FeatureCollection<MultiPolygon, RegionProperties> } = {},
+  ): Promise<MlMap> {
     this.clickMode = opts.clickMode ?? "normal";
     const style = composeStyle([albinaBasemapLayer({ maxzoom: 13 }), opentopoLayer({ minzoom: 13 })]);
     const map = createMap({ container: el, style, navigationControl: true });
@@ -33,7 +37,7 @@ export class RegionMapService implements OnDestroy {
     map.addControl(this.regionName, "top-right");
     await new Promise<void>((resolve) => (map.loaded() ? resolve() : map.once("load", () => resolve())));
 
-    const regions = await this.regionsService.getInternalServerRegionsAsync();
+    const regions = opts.regions ?? (await this.regionsService.getInternalServerRegionsAsync());
     this.regions = addRegionLayer(map, regions, { interactive: true });
     this.regions.onRegionHover((name) => this.regionName.update(name ?? ""));
     this.regions.onRegionClick((id, ev) => {

@@ -196,6 +196,26 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     ]);
   }
 
+  /** Public tooltip HTML, for callers rendering their own MapLibre popups (e.g. polygon layers). */
+  tooltipHtml(observation: T): string {
+    return this.createTooltipText(observation);
+  }
+
+  /** Fill/stroke paint for a MapLibre polygon layer, mirroring the Leaflet `createPolygonMarker` style. */
+  maplibrePolygonPaint(
+    observation: T,
+    isHighlighted = false,
+  ): { fillColor: string; fillOpacity: number; color: string; opacity: number; weight: number } {
+    const fsv = isHighlighted ? this.highlighted : this.markerClassify?.findForObservation(observation);
+    return {
+      fillColor: fsv?.color ?? "rgba(0, 0, 0, 0)",
+      fillOpacity: fsv?.fillOpacity ?? 0,
+      color: fsv?.borderColor ?? "#000",
+      opacity: fsv?.opacity ?? 1,
+      weight: fsv?.weight ?? 0,
+    };
+  }
+
   private createTooltipText(observation: T & { $sourceObject?: AwsomeSource }): string {
     if (observation.$sourceObject?.tooltipTemplate) {
       return this.formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
