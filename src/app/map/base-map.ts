@@ -77,11 +77,9 @@ export function basemapAtTerrainLayer(opts: BaseLayerOptions = {}): MapBaseLayer
 
 /** Composes an ordered list of base layers into a MapLibre style. */
 export function composeStyle(layers: MapBaseLayer[]): StyleSpecification {
-  const sources: StyleSpecification["sources"] = {};
-  for (const l of layers) sources[l.id] = l.source;
   return {
     version: 8,
-    sources,
+    sources: Object.fromEntries(layers.map((l) => [l.id, l.source])),
     layers: layers.map((l) => l.layer),
   };
 }
