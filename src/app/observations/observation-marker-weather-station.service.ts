@@ -1,6 +1,5 @@
 import { ParameterTypeSchema, type Feature } from "@albina-euregio/linea/listing";
 import { inject, Injectable } from "@angular/core";
-import { Marker } from "leaflet";
 import { Marker as MlMarker } from "maplibre-gl";
 import z from "zod";
 
@@ -205,16 +204,6 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
       this.getLabel(observation),
     );
     return { icon, filterSelectionValue };
-  }
-
-  createMarker(observation: T, isHighlighted = false): Marker | undefined {
-    try {
-      const { icon, filterSelectionValue } = this.makeIcon(observation, isHighlighted);
-      return this.observationMarkerService.createMarkerForIcon(observation, icon, filterSelectionValue);
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
   }
 
   createMaplibreMarker(observation: T, isHighlighted = false): MlMarker | undefined {

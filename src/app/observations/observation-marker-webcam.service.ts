@@ -1,5 +1,4 @@
 import { Injectable, inject } from "@angular/core";
-import { Marker } from "leaflet";
 import { Marker as MlMarker } from "maplibre-gl";
 
 import { makeIcon } from "./make-icon";
@@ -26,16 +25,6 @@ export class ObservationMarkerWebcamService<T extends Partial<GenericObservation
       this.observationMarkerService.getLabel(observation),
     );
     return { icon, filterSelectionValue };
-  }
-
-  createMarker(observation: T, isHighlighted = false): Marker | undefined {
-    try {
-      const { icon, filterSelectionValue } = this.makeIcon(observation, isHighlighted);
-      return this.observationMarkerService.createMarkerForIcon(observation, icon, filterSelectionValue);
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
   }
 
   createMaplibreMarker(observation: T, isHighlighted = false): MlMarker | undefined {
