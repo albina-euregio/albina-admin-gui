@@ -39,6 +39,7 @@ import { forkJoin, map, Observable, of, Subscription, tap, timer } from "rxjs";
 
 import { DangerSourcesService } from "../danger-sources/danger-sources.service";
 import * as Enums from "../enums/enums";
+import { AmPmRegionMapService } from "../map/ampm-region-map.service";
 // models
 import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
 import * as CAAML from "../models/CAAMLv6";
@@ -47,7 +48,6 @@ import { BulletinsService, PublicationStrategy } from "../providers/bulletins-se
 import { ExternalBulletinsService } from "../providers/bulletins-service/external-bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
-import { MapService } from "../providers/map-service/map.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
@@ -78,7 +78,7 @@ import { ModalMediaFileComponent } from "./modal-media-file.component";
     PublicationInProgressComponent,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [MapService],
+  providers: [AmPmRegionMapService],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
   private router = inject(Router);
@@ -93,7 +93,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   protected constantsService = inject(ConstantsService);
   regionsService = inject(RegionsService);
   copyService = inject(CopyService);
-  private mapService = inject(MapService);
+  private mapService = inject(AmPmRegionMapService);
   private modalService = inject(BsModalService);
   private destroyRef = inject(DestroyRef);
 
@@ -982,12 +982,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private async initMaps() {
     await this.mapService.initAmPmMap();
-    this.mapService.map.on({
-      click: (event) => this.onMapClick(event.originalEvent),
-    });
-    this.mapService.afternoonMap.on({
-      click: (event) => this.onMapClick(event.originalEvent),
-    });
+    this.mapService.onClick((event) => this.onMapClick(event));
   }
 
   private onMapClick(event: MouseEvent) {
