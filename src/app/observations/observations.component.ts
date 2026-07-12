@@ -167,6 +167,9 @@ class ObservationData {
           .setLngLat(marker.getLngLat())
           .setHTML(el.tooltipHtml ?? "")
           .addTo(this.map);
+        // markers carry an explicit z-index (stability ordering); keep the tooltip above them
+        const popupEl = this.popup.getElement();
+        if (popupEl) popupEl.style.zIndex = "10000";
       });
       el.addEventListener("mouseleave", () => this.popup?.remove());
       this.markers.push(marker);
