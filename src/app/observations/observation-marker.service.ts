@@ -1,13 +1,12 @@
 import { formatDate } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { castArray, get as _get } from "es-toolkit/compat";
-import { Icon } from "leaflet";
 import maplibregl, { Marker as MlMarker } from "maplibre-gl";
 
 import { SnowpackStability } from "../enums/enums";
 import type { AwsomeSource } from "../modelling/awsome.config";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
-import { makeIcon } from "./make-icon";
+import { makeIcon, MarkerIcon } from "./make-icon";
 import { GenericObservation } from "./models/generic-observation.model";
 
 const zIndex: Record<SnowpackStability, number> = {
@@ -22,13 +21,12 @@ export interface ObsMarkerElement extends HTMLImageElement {
   tooltipHtml?: string;
 }
 
-/** Builds a MapLibre marker `<img>` element from a Leaflet `Icon` (reusing its SVG blob URL). */
-function iconElement(icon: Icon): ObsMarkerElement {
+/** Builds a MapLibre marker `<img>` element from a rendered SVG icon. */
+function iconElement(icon: MarkerIcon): ObsMarkerElement {
   const img = document.createElement("img") as ObsMarkerElement;
-  img.src = icon.options.iconUrl;
-  const [w, h] = icon.options.iconSize as [number, number];
-  img.style.width = `${w}px`;
-  img.style.height = `${h}px`;
+  img.src = icon.url;
+  img.style.width = `${icon.size}px`;
+  img.style.height = `${icon.size}px`;
   return img;
 }
 
@@ -70,7 +68,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
 
   createMaplibreMarkerForIcon(
     observation: T,
-    icon: Icon,
+    icon: MarkerIcon,
     filterSelectionValue: FilterSelectionValue | undefined,
   ): MlMarker | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) {

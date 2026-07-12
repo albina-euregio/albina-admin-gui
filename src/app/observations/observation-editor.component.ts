@@ -9,7 +9,6 @@ import { ElevationService } from "app/providers/map-service/elevation.service";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { orderBy } from "es-toolkit";
 import { Feature, Point } from "geojson";
-import { geocoders } from "leaflet-control-geocoder";
 import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
 import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
 
@@ -28,6 +27,15 @@ import {
   ObservationType,
   PersonInvolvement,
 } from "./models/generic-observation.model";
+
+/** Parses a decimal "lat, lng" (or "lat lng") string, e.g. from a WGS84 coordinate line. */
+function parseLatLng(text: string): { lat: number; lng: number } | undefined {
+  const m = text.match(/(-?\d+(?:\.\d+)?)\s*[,;\s]\s*(-?\d+(?:\.\d+)?)/);
+  if (!m) return undefined;
+  const lat = parseFloat(m[1]);
+  const lng = parseFloat(m[2]);
+  return isFinite(lat) && isFinite(lng) ? { lat, lng } : undefined;
+}
 
 @Component({
   standalone: true,
@@ -172,7 +180,7 @@ export class ObservationEditorComponent implements OnInit {
       let fetchedLatLng = false;
       if (!observation.latitude && !observation.longitude && content.includes("Koordinaten: WGS84")) {
         const match = content.match(/Koordinaten: WGS84(.*)/);
-        const latlng = match && match[1] ? geocoders.parseLatLng(match[1].trim()) : "";
+        const latlng = match && match[1] ? parseLatLng(match[1].trim()) : undefined;
         if (latlng) {
           patch.latitude = latlng.lat;
           patch.longitude = latlng.lng;
