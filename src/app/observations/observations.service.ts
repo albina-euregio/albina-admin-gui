@@ -1,6 +1,7 @@
 import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { RegionsService } from "app/providers/regions-service/regions.service";
 import { firstValueFrom, Observable } from "rxjs";
 import { map, mergeAll, toArray } from "rxjs/operators";
 
@@ -15,6 +16,7 @@ interface DateRangeParams {
 @Injectable()
 export class AlbinaObservationsService {
   private http = inject(HttpClient);
+  private region = inject(RegionsService);
 
   getGenericObservations(dateRangeParams: DateRangeParams): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/observations";
@@ -47,11 +49,20 @@ export class AlbinaObservationsService {
   private getGenericObservations0(url: string, params = {}): Observable<GenericObservation> {
     return this.http.get<GenericObservation[]>(url, { params }).pipe(
       mergeAll(),
-      map((o) => ({
-        ...o,
-        eventDate: o.eventDate ? new Date(o.eventDate) : undefined,
-        reportDate: o.reportDate ? new Date(o.reportDate) : undefined,
-      })),
+      map((o) => {
+        if (!o.region) {
+          this.region.findRegionForCoordinates(o.latitude, o.longitude).subscribe((region) => {
+            if (!region) return;
+            console.info(o.$id, region, "//", o.locationName);
+            Object.assign(o, { region } satisfies Partial<GenericObservation>);
+          });
+        }
+        return {
+          ...o,
+          eventDate: o.eventDate ? new Date(o.eventDate) : undefined,
+          reportDate: o.reportDate ? new Date(o.reportDate) : undefined,
+        };
+      }),
     );
   }
 
