@@ -21,11 +21,11 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Subscription } from "rxjs";
 
 import * as Enums from "../enums/enums";
+import { AmPmRegionMapService } from "../map/ampm-region-map.service";
 // models
 import { MatrixInformationSchema } from "../models/matrix-information.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { MapService } from "../providers/map-service/map.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { AspectsComponent } from "../shared/aspects.component";
@@ -60,7 +60,7 @@ import { DangerSourceModel } from "./models/danger-source.model";
     AspectsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [MapService],
+  providers: [AmPmRegionMapService],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private router = inject(Router);
@@ -72,7 +72,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private localStorageService = inject(LocalStorageService);
   constantsService = inject(ConstantsService);
   regionsService = inject(RegionsService);
-  private mapService = inject(MapService);
+  private mapService = inject(AmPmRegionMapService);
   private modalService = inject(BsModalService);
 
   public dangerSourceVariantType: DangerSourceVariantType;
@@ -321,10 +321,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private async initMaps() {
     await this.mapService.initAmPmMap();
-    this.mapService.map.on({ click: (event) => this.onMapClick(event.originalEvent) });
-    this.mapService.afternoonMap.on({
-      click: (event) => this.onMapClick(event.originalEvent),
-    });
+    this.mapService.onClick((event) => this.onMapClick(event));
   }
 
   private onMapClick(event: MouseEvent) {

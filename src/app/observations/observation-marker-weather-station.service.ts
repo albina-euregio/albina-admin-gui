@@ -1,6 +1,6 @@
 import { ParameterTypeSchema, type Feature } from "@albina-euregio/linea/listing";
 import { inject, Injectable } from "@angular/core";
-import { Marker } from "leaflet";
+import { Marker as MlMarker } from "maplibre-gl";
 import z from "zod";
 
 import { Aspect } from "../enums/enums";
@@ -188,23 +188,28 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
   readonly allParameters: WeatherStationParameter[] = Object.values(WeatherStationParameter);
 
-  createMarker(observation: T, isHighlighted = false): Marker | undefined {
+  private makeIcon(observation: T, isHighlighted: boolean) {
+    const filterSelectionValue = isHighlighted ? this.observationMarkerService.highlighted : undefined;
+    const icon = makeIcon(
+      observation.aspect,
+      "#898989",
+      filterSelectionValue?.radius ?? 30,
+      filterSelectionValue?.color ?? this.toMarkerColor(observation),
+      filterSelectionValue?.borderColor ?? "#555555",
+      filterSelectionValue?.borderWidth ?? 2,
+      filterSelectionValue?.borderDashArray ?? "",
+      filterSelectionValue?.labelColor ?? "#000",
+      filterSelectionValue?.labelFontSize ?? 10,
+      undefined,
+      this.getLabel(observation),
+    );
+    return { icon, filterSelectionValue };
+  }
+
+  createMaplibreMarker(observation: T, isHighlighted = false): MlMarker | undefined {
     try {
-      const filterSelectionValue = isHighlighted ? this.observationMarkerService.highlighted : undefined;
-      const icon = makeIcon(
-        observation.aspect,
-        "#898989",
-        filterSelectionValue?.radius ?? 30,
-        filterSelectionValue?.color ?? this.toMarkerColor(observation),
-        filterSelectionValue?.borderColor ?? "#555555",
-        filterSelectionValue?.borderWidth ?? 2,
-        filterSelectionValue?.borderDashArray ?? "",
-        filterSelectionValue?.labelColor ?? "#000",
-        filterSelectionValue?.labelFontSize ?? 10,
-        undefined,
-        this.getLabel(observation),
-      );
-      return this.observationMarkerService.createMarkerForIcon(observation, icon, filterSelectionValue);
+      const { icon, filterSelectionValue } = this.makeIcon(observation, isHighlighted);
+      return this.observationMarkerService.createMaplibreMarkerForIcon(observation, icon, filterSelectionValue);
     } catch (e) {
       console.error(e);
       throw e;

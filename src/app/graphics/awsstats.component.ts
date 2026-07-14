@@ -19,15 +19,15 @@ import {
 import { FormsModule } from "@angular/forms";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { CircleMarker, CircleMarkerOptions } from "leaflet";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { lastValueFrom } from "rxjs";
 
+import { RegionMapService } from "../map/region-map.service";
+import { StationPoint } from "../map/station-layer";
 import { AlbinaObservationsService } from "../observations/observations.service";
 import { BlogService } from "../providers/blog-service/blog.service";
-import { BaseMapService } from "../providers/map-service/base-map.service";
-import { LineaMapService } from "../providers/map-service/linea-map.service";
 import { GraphicsService } from "./graphics.service";
+import { StationMapService } from "./station-map.service";
 
 const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id);
 
@@ -35,7 +35,7 @@ const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id
   selector: "app-awsstats",
   standalone: true,
   imports: [CommonModule, FormsModule, TranslatePipe, TooltipModule],
-  providers: [GraphicsService, BlogService, BaseMapService, LineaMapService, AlbinaObservationsService],
+  providers: [GraphicsService, BlogService, RegionMapService, StationMapService, AlbinaObservationsService],
   templateUrl: "./awsstats.component.html",
   styleUrls: ["./awsstats.component.scss"],
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -44,8 +44,8 @@ const AVAILABLE_AWSSTATS_CHART_TYPES = CONFIGURED_PLOTS.awsstats.map((c) => c.id
 export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private observationsService = inject(AlbinaObservationsService);
   private graphicsService = inject(GraphicsService);
-  protected mapService = inject(BaseMapService);
-  protected stationsMapService = inject(LineaMapService);
+  protected mapService = inject(RegionMapService);
+  protected stationsMapService = inject(StationMapService);
   protected authentificationService = inject(AuthenticationService);
   private translateService = inject(TranslateService);
 
@@ -77,7 +77,6 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     this.chartConfigs.map((c) => [c.id, c.id === "aws-observations"]),
   );
 
-  private readonly stationMarkers: Record<string, CircleMarker> = {};
   readonly stationById = new Map<string, Feature>();
   private readonly defaultStationSrc = "https://wiski.tirol.gv.at/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
   private isDestroyed = false;
@@ -121,8 +120,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   protected clearSelectedRegions() {
     this.selectedMicroRegions = [];
-    this.mapService.overlayMaps?.editSelection?.clearSelectedRegions();
-    this.mapService.overlayMaps?.editSelection?.updateEditSelection();
+    this.mapService.clearSelectedRegions();
     if (this.showWrapper) {
       this.mountWrapper();
     }
@@ -130,10 +128,8 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   protected clearSelectedStation() {
     if (!this.selectedStationId) return;
-    const prev = this.stationMarkers[this.selectedStationId];
-    const station = this.stationById.get(this.selectedStationId);
-    prev?.setStyle(this.getStationMarkerOptions(false, this.hasPsum(station)));
     this.selectedStationId = "";
+    this.renderStations();
     if (this.showWrapper) {
       this.mountWrapper();
     }
@@ -150,19 +146,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   protected togglePrecipitationFilter() {
     this.showPrecipitationOnly = !this.showPrecipitationOnly;
-    this.applyStationVisibilityFilter();
-  }
-
-  private applyStationVisibilityFilter() {
-    for (const [id, marker] of Object.entries(this.stationMarkers)) {
-      const station = this.stationById.get(id);
-      const shouldShow = !this.showPrecipitationOnly || this.hasPsum(station);
-      if (shouldShow && !this.stationsMapService.stationLayer.hasLayer(marker)) {
-        marker.addTo(this.stationsMapService.stationLayer);
-      } else if (!shouldShow && this.stationsMapService.stationLayer.hasLayer(marker)) {
-        this.stationsMapService.stationLayer.removeLayer(marker);
-      }
-    }
+    this.renderStations();
   }
 
   protected get selectedStationLabel(): string {
@@ -421,11 +405,10 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     try {
       const host = this.regionMapHost.nativeElement;
       this.mapService.removeMaps();
-      const map = await this.mapService.initMaps(host);
-      this.mapService.overlayMaps?.editSelection?.setSelectedRegions(this.selectedMicroRegions);
-      this.mapService.overlayMaps?.editSelection?.updateEditSelection();
-      this.scheduleMapInvalidate(map, () => this.mapService.map === map);
-      map.on("click", () => {
+      const map = await this.mapService.initMap(host);
+      this.mapService.setSelectedRegions(this.selectedMicroRegions);
+      this.scheduleResize(this.mapService, () => this.mapService.map === map);
+      this.mapService.onSelectionChange(() => {
         this.selectedMicroRegions = this.normalizeSelectedMicroRegions(this.mapService.getSelectedRegions());
         if (this.showWrapper) {
           this.mountWrapper();
@@ -441,60 +424,56 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     try {
       const host = this.stationMapHost.nativeElement;
       this.stationsMapService.removeMaps();
-      const map = await this.stationsMapService.initMaps(host);
-      await this.loadStationMarkers();
-      this.scheduleMapInvalidate(map, () => this.stationsMapService.map === map);
+      const map = await this.stationsMapService.initMap(host);
+      this.stationsMapService.onStationClick((id) => this.selectStation(id));
+      await this.loadStations();
+      this.scheduleResize(this.stationsMapService, () => this.stationsMapService.map === map);
     } catch (error) {
       console.error("Failed to initialize station map:", error);
     }
   }
 
-  private scheduleMapInvalidate(map: { invalidateSize: (animate?: boolean) => void }, isActive: () => boolean) {
-    const safeInvalidate = () => {
+  private scheduleResize(service: { resize: () => void }, isActive: () => boolean) {
+    requestAnimationFrame(() => {
       if (this.isDestroyed || !isActive()) return;
       try {
-        map.invalidateSize(true);
+        service.resize();
       } catch {
         console.debug("Map already removed");
       }
-    };
-    requestAnimationFrame(safeInvalidate);
+    });
   }
 
-  private async loadStationMarkers() {
-    this.stationsMapService.stationLayer.clearLayers();
+  private async loadStations() {
     this.stationById.clear();
-    for (const k of Object.keys(this.stationMarkers)) {
-      delete this.stationMarkers[k];
-    }
-
     const stations = await this.graphicsService.loadLineaStations();
-
     for (const station of stations) {
       this.stationById.set(station.id, station);
-
-      const marker = new CircleMarker(
-        {
-          lat: station.geometry.coordinates[1],
-          lng: station.geometry.coordinates[0],
-        },
-        this.getStationMarkerOptions(false, this.hasPsum(station)),
-      ).addTo(this.stationsMapService.stationLayer);
-
-      marker.bindTooltip(`${station.properties.name || station.id}`);
-      marker.on("click", () => this.selectStation(station.id));
-      this.stationMarkers[station.id] = marker;
     }
+    this.renderStations();
+  }
+
+  private renderStations() {
+    const points: StationPoint[] = [];
+    for (const [id, station] of this.stationById) {
+      if (this.showPrecipitationOnly && !this.hasPsum(station)) continue;
+      points.push({
+        id,
+        lng: station.geometry.coordinates[0],
+        lat: station.geometry.coordinates[1],
+        radius: 7,
+        fillColor: this.selectedStationId === id ? "#d62828" : "#1d4ed8",
+        strokeColor: this.hasPsum(station) ? "#f59e0b" : "black",
+        tooltip: station.properties.name || station.id,
+      });
+    }
+    this.stationsMapService.setStations(points);
   }
 
   private selectStation(id: string) {
     if (this.selectedStationId === id) return;
-    const prev = this.stationMarkers[this.selectedStationId];
-    const prevStation = this.stationById.get(this.selectedStationId);
-    prev?.setStyle(this.getStationMarkerOptions(false, this.hasPsum(prevStation)));
     this.selectedStationId = id;
-    const newStation = this.stationById.get(id);
-    this.stationMarkers[id]?.setStyle(this.getStationMarkerOptions(true, this.hasPsum(newStation)));
+    this.renderStations();
     if (this.showWrapper) {
       this.mountWrapper();
     }
@@ -502,18 +481,6 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
   hasPsum(feature: Feature): boolean {
     return isFinite(feature?.properties?.PSUM_6?.value) ?? false;
-  }
-
-  private getStationMarkerOptions(selected: boolean, psum: boolean): CircleMarkerOptions {
-    return {
-      pane: "markerPane",
-      radius: 7,
-      fillColor: selected ? "#d62828" : "#1d4ed8",
-      color: psum ? "#f59e0b" : "black",
-      weight: 1,
-      opacity: 1,
-      fillOpacity: 1,
-    };
   }
 
   protected getSelectedStationSrc(): string {

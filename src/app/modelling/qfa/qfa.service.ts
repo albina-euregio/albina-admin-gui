@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import type { LatLngExpression } from "leaflet";
 import { firstValueFrom, map } from "rxjs";
 import { z } from "zod/v4";
 
@@ -56,7 +55,7 @@ export class QfaService {
       lng: 12.8,
       lat: 46.83,
     },
-  } satisfies Record<City, LatLngExpression>;
+  } satisfies Record<City, { lat: number; lng: number }>;
   allFiles = {
     innsbruck: [] as QfaItem[],
     bozen: [] as QfaItem[],

@@ -1,8 +1,13 @@
 import { escape } from "es-toolkit";
 import { memoize } from "es-toolkit/compat";
-import { Icon } from "leaflet";
 
 import { Aspect } from "../enums/enums";
+
+/** A rendered marker icon: an SVG blob URL and its square pixel size. */
+export interface MarkerIcon {
+  url: string;
+  size: number;
+}
 
 export const makeIcon = memoize(icon0, (...args) => args.join("-"));
 
@@ -27,7 +32,7 @@ function icon0(
   labelFontSize: number,
   labelFont: "snowsymbolsiacs" | string,
   label: number | string,
-): Icon {
+): MarkerIcon {
   // 700533 - drawImage() fails silently when drawing an SVG image without @width or @height
   // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
   label = escape(String(label));
@@ -61,10 +66,6 @@ function icon0(
 </svg>
     `;
   const blob = new Blob([svg], { type: "image/svg+xml" });
-  const iconUrl = URL.createObjectURL(blob);
-  return new Icon({
-    iconUrl,
-    iconSize: [iconSize, iconSize],
-    iconAnchor: [iconSize / 2, iconSize / 2],
-  });
+  const url = URL.createObjectURL(blob);
+  return { url, size: iconSize } satisfies MarkerIcon;
 }

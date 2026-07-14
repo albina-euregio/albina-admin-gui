@@ -1,6 +1,5 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { Map as LeafletMap } from "leaflet";
 import { filter, fromEventPattern, map, Observable } from "rxjs";
 import { z } from "zod/v4";
 
@@ -159,11 +158,8 @@ export class LocalStorageService {
     return this.get("mapCenter");
   }
 
-  setMapCenter(mapCenter: LeafletMap | MapCenter) {
-    this.set(
-      "mapCenter",
-      mapCenter instanceof LeafletMap ? { ...mapCenter.getCenter(), zoom: mapCenter.getZoom() } : mapCenter,
-    );
+  setMapCenter(mapCenter: MapCenter) {
+    this.set("mapCenter", mapCenter);
   }
 
   observeMapCenter(): Observable<MapCenter> {

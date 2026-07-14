@@ -24,7 +24,7 @@ import { DangerSourcesService } from "app/danger-sources/danger-sources.service"
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { orderBy } from "es-toolkit";
 import { saveAs } from "file-saver";
-import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
+import { Map as MlMap, Marker as MlMarker, Popup } from "maplibre-gl";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -33,7 +33,6 @@ import Split from "split.js";
 import "@albina-euregio/linea";
 
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
-import { BaseMapService } from "../providers/map-service/base-map.service";
 import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
 import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
@@ -49,10 +48,10 @@ import {
   toCSV,
   partialGenericObservationSchema,
 } from "./models/generic-observation.model";
+import { ObservationChartComponent } from "./observation-chart.component";
 
 import "bootstrap";
 
-import { ObservationChartComponent } from "./observation-chart.component";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationGalleryComponent } from "./observation-gallery.component";
@@ -62,8 +61,9 @@ import {
   WeatherStationParameter,
 } from "./observation-marker-weather-station.service";
 import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
-import { ObservationMarkerService } from "./observation-marker.service";
+import { ObsMarkerElement, ObservationMarkerService } from "./observation-marker.service";
 import { ObservationTableComponent } from "./observation-table.component";
+import { ObservationsMapService } from "./observations-map.service";
 import { AlbinaObservationsService } from "./observations.service";
 
 export interface MultiselectDropdownData {
@@ -76,40 +76,51 @@ class ObservationData {
   show = false;
   all = [] as GenericObservation[];
   filtered = [] as GenericObservation[];
-  layer = new LayerGroup();
+  private markers: MlMarker[] = [];
+  private map: MlMap | undefined = undefined;
+  private popup: Popup | undefined = undefined;
 
   constructor(
     private onObservationClick: (observation: GenericObservation, doShow?: boolean) => void,
     private filter: ObservationFilterService<GenericObservation> | undefined,
     private markerService: {
-      createMarker(observation: GenericObservation, isHighlighted?: boolean): Marker | undefined;
+      createMaplibreMarker(observation: GenericObservation, isHighlighted?: boolean): MlMarker | undefined;
     },
     private forEachObservation0: (observation: GenericObservation) => void = () => {},
     private applyLocalFilter0: () => void = () => {},
   ) {}
+
+  setMap(map: MlMap, popup: Popup) {
+    this.map = map;
+    this.popup = popup;
+  }
 
   clear() {
     this.loading?.unsubscribe();
     this.loading = undefined;
     this.all = [];
     this.filtered = [];
-    this.layer.clearLayers();
-    this.layer.remove();
+    this.removeMarkers();
   }
 
-  toggle(map: LeafletMap) {
+  private removeMarkers() {
+    this.markers.forEach((m) => m.remove());
+    this.markers = [];
+  }
+
+  toggle() {
+    this.show = !this.show;
+    if (!this.map) return;
     if (this.show) {
-      this.show = false;
-      map.removeLayer(this.layer);
+      this.markers.forEach((m) => m.addTo(this.map));
     } else {
-      this.show = true;
-      map.addLayer(this.layer);
+      this.markers.forEach((m) => m.remove());
     }
   }
 
   async loadFrom(observable: Observable<GenericObservation>, observationSearch: string) {
     await initAugmentRegion();
-    this.layer.clearLayers();
+    this.removeMarkers();
     this.all = [];
     this.loading?.unsubscribe();
     await new Promise<undefined>((resolve) => {
@@ -134,7 +145,7 @@ class ObservationData {
   }
 
   applyLocalFilter(observationSearch: string) {
-    this.layer.clearLayers();
+    this.removeMarkers();
     this.filtered = this.all
       .filter((o) => !this.filter || this.filter.isHighlighted(o) || this.filter.isSelected(o))
       .filter(
@@ -145,10 +156,28 @@ class ObservationData {
           ),
       );
     this.filtered.forEach((observation) => {
-      this.markerService
-        .createMarker(observation, this.filter?.isHighlighted(observation))
-        ?.on({ click: () => this.onObservationClick(observation) })
-        ?.addTo(this.layer);
+      const marker = this.markerService.createMaplibreMarker(observation, this.filter?.isHighlighted(observation));
+      if (!marker) return;
+      const el = marker.getElement() as ObsMarkerElement;
+      el.style.cursor = "pointer";
+      el.addEventListener("click", (e) => {
+        // stop the click from also reaching the region layer underneath the marker
+        e.stopPropagation();
+        this.onObservationClick(observation);
+      });
+      el.addEventListener("mouseenter", () => {
+        if (!this.map || !this.popup) return;
+        this.popup
+          .setLngLat(marker.getLngLat())
+          .setHTML(el.tooltipHtml ?? "")
+          .addTo(this.map);
+        // markers carry an explicit z-index (stability ordering); keep the tooltip above them
+        const popupEl = this.popup.getElement();
+        if (popupEl) popupEl.style.zIndex = "10000";
+      });
+      el.addEventListener("mouseleave", () => this.popup?.remove());
+      this.markers.push(marker);
+      if (this.show && this.map) marker.addTo(this.map);
     });
     this.applyLocalFilter0();
   }
@@ -173,7 +202,7 @@ class ObservationData {
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     AlbinaObservationsService,
-    BaseMapService,
+    ObservationsMapService,
     ObservationFilterService,
     ObservationMarkerService,
     ObservationMarkerObserverService,
@@ -198,7 +227,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   regionsService = inject(RegionsService);
   private dangerSourcesService = inject(DangerSourcesService);
   authenticationService = inject(AuthenticationService);
-  mapService = inject(BaseMapService);
+  mapService = inject(ObservationsMapService);
   modalService = inject(BsModalService);
   private destroyRef = inject(DestroyRef);
 
@@ -335,12 +364,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private async initMap() {
-    const map = await this.mapService.initMaps(this.mapDiv().nativeElement, {
-      regions: await this.regionsService.getInternalServerRegionsAsync(),
-      internalRegions: await this.regionsService.getInternalServerRegionsAsync(),
-    });
+    const map = await this.mapService.initMap(this.mapDiv().nativeElement);
+    Object.values(this.data).forEach((d) => d.setMap(map, this.mapService.tooltipPopup));
 
-    this.data.observations.toggle(this.mapService.map);
+    this.data.observations.toggle();
     this.loadObservationsAndWeatherStations();
     this.data.observers.loadFrom(
       this.observationsService.getObservers().pipe(takeUntilDestroyed(this.destroyRef)),
@@ -351,17 +378,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.observationSearch,
     );
 
-    map.on({
-      click: () => {
-        this.filter.regions = new Set(this.mapService.getSelectedRegions());
-        this.applyLocalFilter();
-      },
+    this.mapService.onSelectionChange(() => {
+      this.filter.regions = new Set(this.mapService.getSelectedRegions());
+      this.applyLocalFilter();
     });
   }
 
   ngOnDestroy() {
     Object.values(this.data).forEach((d) => d.clear());
-    this.mapService.resetAll();
     this.mapService.removeMaps();
   }
 

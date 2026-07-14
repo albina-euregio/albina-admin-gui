@@ -19,9 +19,7 @@ test("check all links in navbar", async ({ page }) => {
     await expect(page).toHaveURL(/observations/);
     await expect(page.locator("#observationsMap")).toBeVisible();
     await expect(page.locator(".toolset")).toBeVisible();
-    await expect
-      .poll(() => page.locator(".leaflet-marker-pane").getByRole("button").count(), { timeout: 9000 })
-      .toBeGreaterThan(0);
+    await expect.poll(() => page.locator(".observation-marker").count(), { timeout: 9000 }).toBeGreaterThan(0);
   });
   await test.step("GeoSphere", async () => {
     await page.getByRole("link", { name: "GeoSphere", exact: true }).click();

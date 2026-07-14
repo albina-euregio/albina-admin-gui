@@ -1,4 +1,72 @@
 import { expect, Page } from "@playwright/test";
+import type { Feature, FeatureCollection, Position } from "geojson";
+import type { GeoJSONSource, Map as MlMap } from "maplibre-gl";
+
+/**
+ * Clicks a micro-region on the canvas-rendered bulletin map (#map).
+ *
+ * MapLibre draws regions on a WebGL canvas, so there are no per-region DOM nodes to click
+ * (as with Leaflet's `path.leaflet-interactive`). Instead we project the region geometry to a
+ * canvas pixel and click there. Requires the AM map exposed on the `#map` element as
+ * `_albinaMap` and the edit-selection layer visible (i.e. region-editing mode is active).
+ *
+ * Pass a region by `name` (e.g. "Brandenberg Alps") or id.
+ */
+export async function clickRegion(page: Page, region: string) {
+  const pos = await page.evaluate((target) => {
+    const el = document.getElementById("map") as (HTMLElement & { _albinaMap?: MlMap }) | null;
+    const map = el?._albinaMap;
+    if (!map) throw new Error("#map is not initialised (its _albinaMap is not exposed)");
+    const canvas = map.getCanvas();
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const margin = 8; // keep clicks off the canvas edge
+    const source = map.getSource("edit-selection") as GeoJSONSource;
+    const fc = source.serialize().data as FeatureCollection;
+
+    const matches = (f: Feature) => f.properties?.name === target || f.properties?.id === target;
+
+    // Interior candidates: centroid, then midpoints from centroid to each vertex
+    // (avoids region borders, which project to ambiguous/edge pixels).
+    const interiorPixel = (feature: Feature): { x: number; y: number } | null => {
+      if (!("coordinates" in feature.geometry)) return null;
+      const pts: Position[] = [];
+      const walk = (c: unknown[]): void => {
+        if (Array.isArray(c[0])) {
+          for (const inner of c) walk(inner as unknown[]);
+        } else {
+          pts.push(c as Position);
+        }
+      };
+      walk(feature.geometry.coordinates as unknown[]);
+      const cx = pts.reduce((s, c) => s + c[0], 0) / pts.length;
+      const cy = pts.reduce((s, c) => s + c[1], 0) / pts.length;
+      const candidates: Position[] = [[cx, cy], ...pts.map((v) => [(cx + v[0]) / 2, (cy + v[1]) / 2])];
+      for (const ll of candidates) {
+        const p = map.project(ll as [number, number]);
+        if (p.x < margin || p.y < margin || p.x > w - margin || p.y > h - margin) continue;
+        const hit = map
+          .queryRenderedFeatures(p, { layers: ["edit-selection-fill"] })
+          .some((f) => f.properties?.id === feature.properties?.id);
+        if (hit) return { x: Math.round(p.x), y: Math.round(p.y) };
+      }
+      return null;
+    };
+
+    for (const feature of fc.features) {
+      if (!matches(feature)) continue;
+      const pixel = interiorPixel(feature);
+      if (pixel) return pixel;
+    }
+    return null;
+  }, region);
+
+  if (!pos) throw new Error(`clickRegion: could not find a clickable interior point for ${JSON.stringify(region)}`);
+  // Click via absolute page coords (canvas maps: bypasses element-relative hit-testing).
+  const box = await page.locator("#map canvas.maplibregl-canvas").boundingBox();
+  if (!box) throw new Error("clickRegion: #map canvas not found");
+  await page.mouse.click(box.x + pos.x, box.y + pos.y);
+}
 
 /**
  * Logs into the app using credentials from env vars
