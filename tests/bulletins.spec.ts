@@ -3,7 +3,7 @@ import path from "path";
 
 import { test, expect } from "@playwright/test";
 
-import { changeRegion, clearWarningRegions, loginForecaster, setFixedTime, waitForGetEdit } from "./utils";
+import { changeRegion, clearWarningRegions, clickRegion, loginForecaster, setFixedTime, waitForGetEdit } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
@@ -204,8 +204,7 @@ test("Edit bulletin", async ({ page }) => {
   const regionProblem = page.locator(".region-thumb").first();
   await test.step("Create new region", async () => {
     await page.getByRole("button", { name: "" }).click();
-    const region = page.locator("path.leaflet-interactive").nth(100);
-    await region.click({ force: true });
+    await clickRegion(page, "Brandenberg Alps");
     await page.getByRole("button", { name: "Create region" }).click();
     await expect(regionProblem).toContainText("Brandenberg Alps");
   });
@@ -255,7 +254,7 @@ test("Edit bulletin", async ({ page }) => {
   await test.step("edit microregions", async () => {
     await page.getByTitle("Edit micro regions").click();
     await expect(page.getByText("Select regions on the map.")).toBeVisible();
-    await page.locator("path.leaflet-interactive").nth(93).click({ force: true });
+    await clickRegion(page, { notName: "Brandenberg Alps" });
     await page.getByRole("button", { name: "Save changes" }).click();
     await expect(regionProblem).toContainText("Brandenberg Alps + 1");
   });
@@ -287,8 +286,8 @@ test("Copy foreign region", async ({ page }) => {
   await expect(page.getByText("Copy warning region to another bulletin")).toBeHidden();
   await expect(page.getByText("Select regions on the map")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Saturday, January 11," })).toBeVisible();
-  await page.locator("path.leaflet-interactive").nth(93).click({ force: true });
-  await page.locator("path.leaflet-interactive").nth(100).click({ force: true });
+  await clickRegion(page, { notName: "Brandenberg Alps" });
+  await clickRegion(page, "Brandenberg Alps");
   const responsePromise = page.waitForResponse(
     (response) =>
       response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
@@ -434,8 +433,7 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
     );
     await test.step("Create new region", async () => {
       await page.getByRole("button", { name: "" }).click();
-      const region = page.locator("path.leaflet-interactive").nth(100);
-      await region.click({ force: true });
+      await clickRegion(page, "Brandenberg Alps");
       await page.getByRole("button", { name: "Create region" }).click();
     });
     // Wait for POST and verify validity in request body
@@ -463,8 +461,7 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
     );
     await test.step("Create new region", async () => {
       await page.getByRole("button", { name: "" }).click();
-      const region = page.locator("path.leaflet-interactive").nth(100);
-      await region.click({ force: true });
+      await clickRegion(page, "Brandenberg Alps");
       await page.getByRole("button", { name: "Create region" }).click();
     });
     // Wait for POST and verify validity in request body

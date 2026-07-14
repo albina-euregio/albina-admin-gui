@@ -302,9 +302,7 @@ test("Weather stations", async ({ page, baseURL }) => {
   await expect(page.locator(".keydata")).toHaveText("830 / 830", { timeout: 7000 });
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
-  await expect
-    .poll(() => page.locator(".leaflet-marker-pane").getByRole("button").count(), { timeout: 7000 })
-    .toBeGreaterThan(200);
+  await expect.poll(() => page.locator(".observation-marker").count(), { timeout: 7000 }).toBeGreaterThan(200);
   await test.step("Surface Hoar", async () => {
     await page.getByTitle("Potential surface hoar formation", { exact: true }).click();
     await expect(page.getByRole("button", { name: "AvalancheWarningService-PROS1" })).toHaveScreenshot(

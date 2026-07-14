@@ -1,6 +1,55 @@
 import { expect, Page } from "@playwright/test";
 
 /**
+ * Clicks a micro-region on the canvas-rendered bulletin map (#map).
+ *
+ * MapLibre draws regions on a WebGL canvas, so there are no per-region DOM nodes to click
+ * (as with Leaflet's `path.leaflet-interactive`). Instead we project the region geometry to a
+ * canvas pixel and click there. Requires the AM map exposed as `window.__albinaMap` (dev/e2e
+ * builds) and the edit-selection layer visible (i.e. region-editing mode is active).
+ *
+ * Pass a region by `name` (e.g. "Brandenberg Alps") or id; or pass `{ notName }` to click the
+ * first in-view region other than the given one (for "+1" second-region cases).
+ */
+export async function clickRegion(page: Page, region: string | { notName: string }) {
+  const pos = await page.evaluate((target) => {
+    const map = (window as unknown as { __albinaMap?: any }).__albinaMap;
+    if (!map) throw new Error("window.__albinaMap is not exposed (non-production build only)");
+    const fc = (map.getSource("edit-selection") as any).serialize().data;
+
+    const matches = (f: any) =>
+      typeof target === "string" ? f.properties.name === target || f.properties.id === target : true;
+    const excluded = (f: any) =>
+      typeof target === "object" && (f.properties.name === target.notName || f.properties.id === target.notName);
+
+    const interiorPixel = (feature: any): { x: number; y: number } | null => {
+      const pts: number[][] = [];
+      const walk = (c: any) => (Array.isArray(c[0]) ? c.forEach(walk) : pts.push(c));
+      walk(feature.geometry.coordinates);
+      const avg = [pts.reduce((s, c) => s + c[0], 0) / pts.length, pts.reduce((s, c) => s + c[1], 0) / pts.length];
+      for (const ll of [avg, ...pts]) {
+        const p = map.project(ll as [number, number]);
+        const hit = map
+          .queryRenderedFeatures(p, { layers: ["edit-selection-fill"] })
+          .some((h: any) => h.properties.id === feature.properties.id);
+        if (hit) return { x: Math.round(p.x), y: Math.round(p.y) };
+      }
+      return null;
+    };
+
+    for (const feature of fc.features) {
+      if (!matches(feature) || excluded(feature)) continue;
+      const pixel = interiorPixel(feature);
+      if (pixel) return pixel;
+    }
+    return null;
+  }, region);
+
+  if (!pos) throw new Error(`clickRegion: could not project region ${JSON.stringify(region)} into view`);
+  await page.locator("#map canvas.maplibregl-canvas").click({ position: pos });
+}
+
+/**
  * Logs into the app using credentials from env vars
  */
 export async function loginForecaster(page: Page) {

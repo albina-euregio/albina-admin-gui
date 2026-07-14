@@ -24,6 +24,7 @@ export interface ObsMarkerElement extends HTMLImageElement {
 /** Builds a MapLibre marker `<img>` element from a rendered SVG icon. */
 function iconElement(icon: MarkerIcon): ObsMarkerElement {
   const img = document.createElement("img") as ObsMarkerElement;
+  img.className = "observation-marker";
   img.src = icon.url;
   img.style.width = `${icon.size}px`;
   img.style.height = `${icon.size}px`;
