@@ -7,15 +7,16 @@ import type { GeoJSONSource, Map as MlMap } from "maplibre-gl";
  *
  * MapLibre draws regions on a WebGL canvas, so there are no per-region DOM nodes to click
  * (as with Leaflet's `path.leaflet-interactive`). Instead we project the region geometry to a
- * canvas pixel and click there. Requires the AM map exposed as `window.__albinaMap` (dev/e2e
- * builds) and the edit-selection layer visible (i.e. region-editing mode is active).
+ * canvas pixel and click there. Requires the AM map exposed on the `#map` element as
+ * `_albinaMap` and the edit-selection layer visible (i.e. region-editing mode is active).
  *
  * Pass a region by `name` (e.g. "Brandenberg Alps") or id.
  */
 export async function clickRegion(page: Page, region: string) {
   const pos = await page.evaluate((target) => {
-    const map = (window as unknown as { __albinaMap?: MlMap }).__albinaMap;
-    if (!map) throw new Error("window.__albinaMap is not exposed (non-production build only)");
+    const el = document.getElementById("map") as (HTMLElement & { _albinaMap?: MlMap }) | null;
+    const map = el?._albinaMap;
+    if (!map) throw new Error("#map is not initialised (its _albinaMap is not exposed)");
     const canvas = map.getCanvas();
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;

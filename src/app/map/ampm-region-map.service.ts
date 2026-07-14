@@ -100,8 +100,9 @@ export class AmPmRegionMapService {
     this.unsync = syncMaps(amMap, pmMap);
     fitFeatureCollection(amMap, activeRegions);
 
-    // expose the AM map for e2e tests (regions are canvas-rendered, so tests project + click)
-    (window as unknown as { __albinaMap?: MlMap }).__albinaMap = amMap;
+    // expose the AM map on its container element for e2e tests (regions are canvas-rendered,
+    // so tests project region geometry to a pixel and click); scoped to #map, not a window global
+    (amMap.getContainer() as unknown as { _albinaMap?: MlMap })._albinaMap = amMap;
   }
 
   private baseStyle() {
