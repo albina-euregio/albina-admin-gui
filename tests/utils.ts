@@ -8,10 +8,9 @@ import { expect, Page } from "@playwright/test";
  * canvas pixel and click there. Requires the AM map exposed as `window.__albinaMap` (dev/e2e
  * builds) and the edit-selection layer visible (i.e. region-editing mode is active).
  *
- * Pass a region by `name` (e.g. "Brandenberg Alps") or id; or pass `{ notName }` to click the
- * first in-view region other than the given one (for "+1" second-region cases).
+ * Pass a region by `name` (e.g. "Brandenberg Alps") or id.
  */
-export async function clickRegion(page: Page, region: string | { notName: string }) {
+export async function clickRegion(page: Page, region: string) {
   const pos = await page.evaluate((target) => {
     const map = (window as unknown as { __albinaMap?: any }).__albinaMap;
     if (!map) throw new Error("window.__albinaMap is not exposed (non-production build only)");
@@ -23,8 +22,6 @@ export async function clickRegion(page: Page, region: string | { notName: string
 
     const matches = (f: any) =>
       typeof target === "string" ? f.properties.name === target || f.properties.id === target : true;
-    const excluded = (f: any) =>
-      typeof target === "object" && (f.properties.name === target.notName || f.properties.id === target.notName);
 
     // Interior candidates: centroid, then midpoints from centroid to each vertex
     // (avoids region borders, which project to ambiguous/edge pixels).
@@ -47,7 +44,7 @@ export async function clickRegion(page: Page, region: string | { notName: string
     };
 
     for (const feature of fc.features) {
-      if (!matches(feature) || excluded(feature)) continue;
+      if (!matches(feature)) continue;
       const pixel = interiorPixel(feature);
       if (pixel) return pixel;
     }

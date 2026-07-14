@@ -254,7 +254,7 @@ test("Edit bulletin", async ({ page }) => {
   await test.step("edit microregions", async () => {
     await page.getByTitle("Edit micro regions").click();
     await expect(page.getByText("Select regions on the map.")).toBeVisible();
-    await clickRegion(page, { notName: "Brandenberg Alps" });
+    await clickRegion(page, "Karwendel Mountains East");
     await page.getByRole("button", { name: "Save changes" }).click();
     await expect(regionProblem).toContainText("Brandenberg Alps + 1");
   });
@@ -286,7 +286,7 @@ test("Copy foreign region", async ({ page }) => {
   await expect(page.getByText("Copy warning region to another bulletin")).toBeHidden();
   await expect(page.getByText("Select regions on the map")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Saturday, January 11," })).toBeVisible();
-  await clickRegion(page, { notName: "Brandenberg Alps" });
+  await clickRegion(page, "Karwendel Mountains East");
   await clickRegion(page, "Brandenberg Alps");
   const responsePromise = page.waitForResponse(
     (response) =>
