@@ -1,4 +1,6 @@
 import { expect, Page } from "@playwright/test";
+import type { Feature, FeatureCollection, Position } from "geojson";
+import type { GeoJSONSource, Map as MlMap } from "maplibre-gl";
 
 /**
  * Clicks a micro-region on the canvas-rendered bulletin map (#map).
@@ -12,32 +14,39 @@ import { expect, Page } from "@playwright/test";
  */
 export async function clickRegion(page: Page, region: string) {
   const pos = await page.evaluate((target) => {
-    const map = (window as unknown as { __albinaMap?: any }).__albinaMap;
+    const map = (window as unknown as { __albinaMap?: MlMap }).__albinaMap;
     if (!map) throw new Error("window.__albinaMap is not exposed (non-production build only)");
-    const canvas = map.getCanvas() as HTMLCanvasElement;
+    const canvas = map.getCanvas();
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
     const margin = 8; // keep clicks off the canvas edge
-    const fc = (map.getSource("edit-selection") as any).serialize().data;
+    const source = map.getSource("edit-selection") as GeoJSONSource;
+    const fc = source.serialize().data as FeatureCollection;
 
-    const matches = (f: any) =>
-      typeof target === "string" ? f.properties.name === target || f.properties.id === target : true;
+    const matches = (f: Feature) => f.properties?.name === target || f.properties?.id === target;
 
     // Interior candidates: centroid, then midpoints from centroid to each vertex
     // (avoids region borders, which project to ambiguous/edge pixels).
-    const interiorPixel = (feature: any): { x: number; y: number } | null => {
-      const pts: number[][] = [];
-      const walk = (c: any) => (Array.isArray(c[0]) ? c.forEach(walk) : pts.push(c));
-      walk(feature.geometry.coordinates);
+    const interiorPixel = (feature: Feature): { x: number; y: number } | null => {
+      if (!("coordinates" in feature.geometry)) return null;
+      const pts: Position[] = [];
+      const walk = (c: unknown[]): void => {
+        if (Array.isArray(c[0])) {
+          for (const inner of c) walk(inner as unknown[]);
+        } else {
+          pts.push(c as Position);
+        }
+      };
+      walk(feature.geometry.coordinates as unknown[]);
       const cx = pts.reduce((s, c) => s + c[0], 0) / pts.length;
       const cy = pts.reduce((s, c) => s + c[1], 0) / pts.length;
-      const candidates = [[cx, cy], ...pts.map((v) => [(cx + v[0]) / 2, (cy + v[1]) / 2])];
+      const candidates: Position[] = [[cx, cy], ...pts.map((v) => [(cx + v[0]) / 2, (cy + v[1]) / 2])];
       for (const ll of candidates) {
         const p = map.project(ll as [number, number]);
         if (p.x < margin || p.y < margin || p.x > w - margin || p.y > h - margin) continue;
         const hit = map
           .queryRenderedFeatures(p, { layers: ["edit-selection-fill"] })
-          .some((h: any) => h.properties.id === feature.properties.id);
+          .some((f) => f.properties?.id === feature.properties?.id);
         if (hit) return { x: Math.round(p.x), y: Math.round(p.y) };
       }
       return null;
