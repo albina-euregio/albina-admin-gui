@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
-import type { ShowIf, ShowIfValue } from "./zod-schema-form.widget-registry";
+import type { ShowIf } from "./zod-schema-form.widget-registry";
 
 // https://github.com/colinhacks/zod/issues/38#issuecomment-1938821172
 export interface ZSchemaInterface<T extends z.ZodRawShape, TObject = z.ZodObject<T>> {
@@ -65,49 +65,20 @@ export function isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | 
   return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
 }
 
-type ShowIfValues<V, K extends keyof V> = (NonNullable<V[K]> & ShowIfValue)[];
-export interface NegatedRule<K> {
-  not: K;
-  values: ShowIfValue[];
-}
-// One condition keyed by its trigger field: `[triggerField, ...values]` is satisfied
-// when the trigger equals one of the values; `not(triggerField, ...values)` when it
-// equals none of them.
-// Note: single conditions get full value-type checking; AND-array conditions only check
-// field names (TypeScript can't check the distributed union across multiple elements).
-type ShowIfCond<V> =
-  | { [K in keyof V]: [field: K, ...values: ShowIfValues<V, K>] }[keyof V]
-  | { [K in keyof V]: NegatedRule<K> }[keyof V];
-// A field's rule: a single condition, or an array of conditions that must ALL hold (AND).
-type ShowIfRule<V> = ShowIfCond<V> | ShowIfCond<V>[];
-
-// Negates a showIf condition — see `withShowIf`. Trigger field is type-checked against
-// the schema (via the `rules` map this is assigned into); values accept any ShowIfValue.
-export function not<K extends PropertyKey>(field: K, ...values: ShowIfValue[]): NegatedRule<K> {
-  return { not: field, values };
-}
-
-// `[field, ...values]` tuples have a string head; an AND-array's head is a nested
-// condition (tuple or `not()` object). That's how we tell a lone condition from a list.
-function toConditions(rule: object): ShowIf[] {
-  const list = Array.isArray(rule) && typeof rule[0] !== "string" ? (rule as object[]) : [rule];
-  return list.map((c) =>
-    Array.isArray(c)
-      ? { field: c[0] as string, values: c.slice(1) as ShowIfValue[] }
-      : { field: (c as NegatedRule<string>).not, values: (c as NegatedRule<string>).values, negate: true },
-  );
-}
-
-// Attaches showIf visibility rules after the schema definition so the rules can
-// reference sibling fields with full type-checking: field names, trigger fields,
-// and trigger values are all validated against the schema's inferred type.
+// Attaches showIf visibility predicates after the schema definition so the rules can
+// reference sibling fields with full type-checking: each predicate receives the parsed
+// model (typed from the schema) and returns a truthy value when the field should be shown.
 export function withShowIf<T extends z.ZodObject>(
   schema: T,
-  rules: { [F in keyof z.output<T>]?: ShowIfRule<z.output<T>> },
+  rules: { [F in keyof z.output<T>]?: (model: z.output<T>) => unknown },
 ): T {
   for (const field in rules) {
     const inner = unwrap(schema.shape[field]);
-    widgetRegistry.add(inner, { ...widgetRegistry.get(inner), showIf: toConditions(rules[field]!) });
+    // Predicates are authored against the schema's `z.output<T>`; the registry stores the
+    // structural `ShowIf`, so coerce the truthy result and re-type the model on the way in.
+    const predicate = rules[field]!;
+    const showIf: ShowIf = (model) => Boolean(predicate(model as z.output<T>));
+    widgetRegistry.add(inner, { ...widgetRegistry.get(inner), showIf });
   }
   return schema;
 }
@@ -145,13 +116,7 @@ export function safeParseVisibleFields(schema: z.ZodObject, value: Record<string
   const hidden: Record<string, true> = {};
   for (const [key, fieldType] of Object.entries(schema.shape)) {
     const showIf = widgetRegistry.get(unwrap(fieldType as z.ZodType))?.showIf;
-    if (
-      showIf &&
-      !showIf.every((cond) => {
-        const matches = (cond.values as unknown[]).includes(value[cond.field]);
-        return cond.negate ? !matches : matches;
-      })
-    ) {
+    if (showIf && !showIf(value)) {
       hidden[key] = true;
     }
   }

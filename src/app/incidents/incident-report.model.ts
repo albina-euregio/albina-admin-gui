@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import * as Enums from "../enums/enums";
 import { LangTextsSchema } from "../models/text.model";
 import { widgetRegistry } from "../shared/zod-schema-form.widget-registry";
-import { enumWithOther, not, pickPublicFields, withShowIf } from "../shared/zod-util";
+import { enumWithOther, pickPublicFields, withShowIf } from "../shared/zod-util";
 
 export const MetaInformationSchema = z.object({
   id: z.uuid().register(widgetRegistry, { widget: "none" }).nullish(),
@@ -102,15 +102,15 @@ export const BulletinInformationSchema = z.object({
   bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(BulletinInformationSchema, {
-  dangerRating: not("publicAvalancheWarningServiceOutside", true),
-  avalancheProblems: [
-    not("publicAvalancheWarningServiceOutside", true),
-    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
-  ],
-  dangerPattern: [
-    not("publicAvalancheWarningServiceOutside", true),
-    not("dangerRating", Enums.DangerRating.no_rating, Enums.DangerRating.no_snow),
-  ],
+  dangerRating: (m) => m.publicAvalancheWarningServiceOutside !== true,
+  avalancheProblems: (m) =>
+    m.publicAvalancheWarningServiceOutside !== true &&
+    m.dangerRating !== Enums.DangerRating.no_rating &&
+    m.dangerRating !== Enums.DangerRating.no_snow,
+  dangerPattern: (m) =>
+    m.publicAvalancheWarningServiceOutside !== true &&
+    m.dangerRating !== Enums.DangerRating.no_rating &&
+    m.dangerRating !== Enums.DangerRating.no_snow,
 });
 
 const incidentTerrainType = z.enum(["FreeTerrain", "ControlledTerrainOpen", "ControlledTerrainClosed", "Unknown"]);
@@ -171,11 +171,13 @@ export const GroupInformationSchema = z.object({
   groupInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(GroupInformationSchema, {
-  groupSize: not("groupSizeAccuracy", "Unknown"),
-  typeOfControlledTerrain: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"],
-  incidentActivity: not("typeOfControlledTerrain", "IndoorInsideBuilding"),
-  vehicleType: ["incidentActivity", "InsideVehicle"],
-  travelDirection: [not("typeOfControlledTerrain", "IndoorInsideBuilding"), not("incidentActivity", "InsideVehicle")],
+  groupSize: (m) => m.groupSizeAccuracy !== "Unknown",
+  typeOfControlledTerrain: (m) =>
+    m.incidentTerrainType === "ControlledTerrainOpen" || m.incidentTerrainType === "ControlledTerrainClosed",
+  incidentActivity: (m) => m.typeOfControlledTerrain !== "IndoorInsideBuilding",
+  vehicleType: (m) => m.incidentActivity === "InsideVehicle",
+  travelDirection: (m) =>
+    m.typeOfControlledTerrain !== "IndoorInsideBuilding" && m.incidentActivity !== "InsideVehicle",
 });
 export type GroupInformation = z.infer<typeof GroupInformationSchema>;
 
@@ -311,18 +313,18 @@ export const VictimInformationSchema = z.object({
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(VictimInformationSchema, {
-  fatalInjured: ["caught", "Involved", "Unknown"],
-  terrainTrap: ["caught", "Involved"],
-  burialDegree: ["caught", "Involved"],
-  primaryLocationMethod: ["caught", "Involved"],
-  rescuedBy: ["caught", "Involved"],
-  medicalIntervention: ["caught", "Involved"],
-  burialDepth: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
-  burialDuration: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
-  estimatedTimeOfDeath: ["fatalInjured", "Fatal"],
-  causeOfDeath: ["fatalInjured", "Fatal"],
-  respiratoryCavity: ["burialDegree", "PartlyBuriedHeadCovered", "FullyBuried"],
-  injurySeverity: ["fatalInjured", "Injured"],
+  fatalInjured: (m) => m.caught === "Involved" || m.caught === "Unknown",
+  terrainTrap: (m) => m.caught === "Involved",
+  burialDegree: (m) => m.caught === "Involved",
+  primaryLocationMethod: (m) => m.caught === "Involved",
+  rescuedBy: (m) => m.caught === "Involved",
+  medicalIntervention: (m) => m.caught === "Involved",
+  burialDepth: (m) => m.burialDegree === "PartlyBuriedHeadCovered" || m.burialDegree === "FullyBuried",
+  burialDuration: (m) => m.burialDegree === "PartlyBuriedHeadCovered" || m.burialDegree === "FullyBuried",
+  estimatedTimeOfDeath: (m) => m.fatalInjured === "Fatal",
+  causeOfDeath: (m) => m.fatalInjured === "Fatal",
+  respiratoryCavity: (m) => m.burialDegree === "PartlyBuriedHeadCovered" || m.burialDegree === "FullyBuried",
+  injurySeverity: (m) => m.fatalInjured === "Injured",
 });
 export type VictimInformation = z.infer<typeof VictimInformationSchema>;
 
@@ -513,19 +515,22 @@ export const AvalancheInformationSchema = z.object({
   depositWidth: z.number().register(widgetRegistry, { class: "col-6 bg-avalanche-deposit", unit: "m" }).nullish(),
   avalancheDetailsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
-const slabGlide = [Enums.IncidentAvalancheType.slab, Enums.IncidentAvalancheType.glide] as const;
 withShowIf(AvalancheInformationSchema, {
-  natural: ["trigger", "natural"],
-  person: ["trigger", "person"],
-  additionalLoad: ["trigger", "person"],
-  explosives: ["trigger", "explosives"],
-  vehicle: ["trigger", "vehicle"],
-  accidentalControlled: ["trigger", "vehicle"],
-  remoteTriggering: ["avalancheType", Enums.IncidentAvalancheType.slab],
-  slabWidth: ["avalancheType", ...slabGlide],
-  crownDepthAvg: ["avalancheType", ...slabGlide],
-  crownDepthMin: ["avalancheType", ...slabGlide],
-  crownDepthMax: ["avalancheType", ...slabGlide],
+  natural: (m) => m.trigger === "natural",
+  person: (m) => m.trigger === "person",
+  additionalLoad: (m) => m.trigger === "person",
+  explosives: (m) => m.trigger === "explosives",
+  vehicle: (m) => m.trigger === "vehicle",
+  accidentalControlled: (m) => m.trigger === "vehicle",
+  remoteTriggering: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  slabWidth: (m) =>
+    m.avalancheType === Enums.IncidentAvalancheType.slab || m.avalancheType === Enums.IncidentAvalancheType.glide,
+  crownDepthAvg: (m) =>
+    m.avalancheType === Enums.IncidentAvalancheType.slab || m.avalancheType === Enums.IncidentAvalancheType.glide,
+  crownDepthMin: (m) =>
+    m.avalancheType === Enums.IncidentAvalancheType.slab || m.avalancheType === Enums.IncidentAvalancheType.glide,
+  crownDepthMax: (m) =>
+    m.avalancheType === Enums.IncidentAvalancheType.slab || m.avalancheType === Enums.IncidentAvalancheType.glide,
 });
 
 export const OtherDamagesSchema = z.object({
@@ -541,8 +546,8 @@ export const OtherDamagesSchema = z.object({
   otherDamagesComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(OtherDamagesSchema, {
-  damagedAssets: ["otherDamages", "Yes"],
-  otherDamagesComment: ["otherDamages", "Yes"],
+  damagedAssets: (m) => m.otherDamages === "Yes",
+  otherDamagesComment: (m) => m.otherDamages === "Yes",
 });
 
 export const IncidentAnalysisSchema = z.object({

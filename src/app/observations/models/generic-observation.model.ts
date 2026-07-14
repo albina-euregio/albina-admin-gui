@@ -1,5 +1,5 @@
 import { widgetRegistry } from "app/shared/zod-schema-form.widget-registry";
-import { not, withShowIf } from "app/shared/zod-util";
+import { withShowIf } from "app/shared/zod-util";
 import { orderBy } from "es-toolkit";
 import { z } from "zod/v4";
 
@@ -271,14 +271,14 @@ export const genericObservationSchema = z.object({
 // These fields do not apply to the dry-snowfall-level observation type, so hide them
 // (and skip validating them) whenever `$type` is DrySnowfallLevel.
 withShowIf(genericObservationSchema, {
-  personInvolvement: not("$type", ObservationType.DrySnowfallLevel),
-  stability: not("$type", ObservationType.DrySnowfallLevel),
-  elevationLowerBound: not("$type", ObservationType.DrySnowfallLevel),
-  elevationUpperBound: not("$type", ObservationType.DrySnowfallLevel),
-  reportDate: not("$type", ObservationType.DrySnowfallLevel),
-  avalancheProblems: not("$type", ObservationType.DrySnowfallLevel),
-  dangerPatterns: not("$type", ObservationType.DrySnowfallLevel),
-  importantObservations: not("$type", ObservationType.DrySnowfallLevel),
+  personInvolvement: (m) => m.$type !== ObservationType.DrySnowfallLevel,
+  stability: (m) => m.$type !== ObservationType.DrySnowfallLevel,
+  elevationLowerBound: (m) => m.$type !== ObservationType.DrySnowfallLevel,
+  elevationUpperBound: (m) => m.$type !== ObservationType.DrySnowfallLevel,
+  reportDate: (m) => m.$type !== ObservationType.DrySnowfallLevel,
+  avalancheProblems: (m) => m.$type !== ObservationType.DrySnowfallLevel,
+  dangerPatterns: (m) => m.$type !== ObservationType.DrySnowfallLevel,
+  importantObservations: (m) => m.$type !== ObservationType.DrySnowfallLevel,
 });
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });

@@ -1,28 +1,9 @@
 import { z } from "zod/v4";
 
-export type ShowIfValue = string | number | boolean;
-
-/** Build via the `withShowIf` / `not` helpers rather than by hand.
-Examples: 
-withShowIf(GroupInformationSchema, {
-  // single condition — show if trigger == one of the values
-  typeOfControlledTerrain: ["incidentTerrainType", "ControlledTerrainOpen", "ControlledTerrainClosed"],
-
-  // negated — show if trigger != the value
-  incidentActivity: not("typeOfControlledTerrain", "IndoorInsideBuilding"),
-
-  // AND — show only if every condition holds (mix plain + not() freely)
-  vehicleType: [
-    ["incidentActivity", "InsideVehicle"],
-    not("typeOfControlledTerrain", "IndoorInsideBuilding"),
-  ],
-});
-**/
-export interface ShowIf {
-  field: string;
-  values: ShowIfValue[];
-  negate?: boolean;
-}
+/** A field-visibility predicate: receives the sibling field values (the parsed model)
+and returns whether the field should be shown. Authored per-schema (and type-checked
+against that schema's inferred type) via the `withShowIf` helper. */
+export type ShowIf = (model: Record<string, unknown>) => boolean;
 
 export interface WidgetType {
   /** CSS classes applied to the field wrapper (e.g. Bootstrap grid `col-6`, background helpers). */
@@ -35,8 +16,8 @@ export interface WidgetType {
   labelI18n?: string;
   /** Full i18n key overriding the derived `helpI18n` for this field. */
   helpI18n?: string;
-  /** Conditions controlling whether the field is shown; build via the `withShowIf` / `not` helpers. */
-  showIf?: ShowIf[];
+  /** Predicate controlling whether the field is shown; build via the `withShowIf` helper. */
+  showIf?: ShowIf;
   /** Phosphor icon class rendered before the field label. */
   icon?: `ph ph-${string}`;
   /** Marks the field as most-relevant (intended for a "most relevant" edit/preview view). */
