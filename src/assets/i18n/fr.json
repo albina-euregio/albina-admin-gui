@@ -1005,8 +1005,8 @@
   },
   "settings": {
     "title": "Paramètres",
-    "effectiveRole": "Effective role",
-    "effectiveRoleDefault": "All roles",
+    "effectiveRole": "Rôle effectif",
+    "effectiveRoleDefault": "Tous les rôles",
     "changePassword": {
       "title": "Modifier le mot de passe",
       "oldPassword": {
@@ -1404,6 +1404,8 @@
     "no": "Non"
   },
   "observations": {
+    "$externalURL": "URL externe (p. ex. banque d'images)",
+    "$type": "Type d'observation",
     "allowEdit": "Éditer observations externes",
     "allowEditTooltip": "Cela évitera l'écrasement par {{ value }}",
     "editIconTooltip": "Observation éditée - sans mise à jour par {{ value }}",
@@ -1411,6 +1413,7 @@
     "authorName": "Nom de l'auteur",
     "avalancheLength": "Longueur d'avalanche",
     "avalancheProblem": "Situation avalancheuse typique",
+    "avalancheProblems": "Situation avalancheuse typique",
     "avalancheSize": "Taille d'avalanche",
     "avalancheType": "Type d'avalanche",
     "avalancheWidth": "Largeur d'avalanche",
@@ -1463,6 +1466,7 @@
     },
     "comment": "Commentaire",
     "content": "Contenu",
+    "dangerPatterns": "Modèle de risques",
     "dangerRating": "Indice de risques",
     "dangerSource": "Source de danger",
     "elevation": "Altitude",
@@ -1486,6 +1490,7 @@
     "fractureDepth": "Épaisseur de la cassure",
     "hasCoordinates": "Coordonnées disponibles",
     "incline": "Inclinaison de pente",
+    "importantObservations": "Observations importantes",
     "latitude": "Latitude",
     "locationName": "Localisation",
     "longitude": "Longitude",
@@ -1493,6 +1498,7 @@
     "personInvolvement": "Implication de personnes",
     "reportDate": "Date du rapport",
     "showTable": "Tableau",
+    "stability": "Stabilité du manteau neigeux",
     "withoutCoordinates": "Observations sans coordonnées :",
     "sidebar": {
       "filter": {
@@ -1653,8 +1659,8 @@
     }
   },
   "zodForm": {
-    "valid": "Valid",
-    "required": "Required",
-    "invalidNumber": "Please enter a valid number."
+    "valid": "Valide",
+    "required": "Champ obligatoire",
+    "invalidNumber": "Veuillez saisir un numéro valide."
   }
 }

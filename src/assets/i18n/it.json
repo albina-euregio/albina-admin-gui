@@ -363,8 +363,8 @@
         "checkInternetDescriptionPrefix": "Com'è la connessione a Internet sul tuo dispositivo? Apri",
         "checkInternetDescriptionSuffix": "in una finestra separata. Il bollettino di ieri viene visualizzato correttamente?",
         "republishHint": "Esegui questo step solo se l'operazione “Verifica connessione Internet” è risultata positiva e sono trascorsi almeno 5 minuti dall'ultimo tentativo di pubblicazione.",
-        "publishMinimalTitle": "Pubblicazione massima",
-        "publishMinimalHint": "Utilizzi questa opzione solo come soluzione alternativa qualora la pubblicazione completa non andasse a buon fine. Pubblica solo dati CAAML — nessuna mappa, text-to-speech o messaggi push. ⚠️ Influisce anche altre regioni su questo server, non solo la vostra. Tutte le pubblicazioni verranno ripubblicate in modalità minima.",
+        "publishMinimalTitle": "Pubblicazione minima",
+        "publishMinimalHint": "Utilizza questa opzione solo come soluzione alternativa qualora la pubblicazione completa non andasse a buon fine. Pubblica solo dati CAAML — nessuna mappa, text-to-speech o messaggi push. ⚠️ Influisce anche altre regioni su questo server, non solo la vostra. Tutte le pubblicazioni verranno ripubblicate in modalità minima.",
         "editAndResendTitle": "Modifica e invia nuovamente:",
         "openBulletin": "Apri il bollettino",
         "clickEdit": "Clicca su \"Modifica\"",
@@ -391,13 +391,13 @@
         "fallback": {
           "title": "Usa un’istanza di fallback:",
           "step1": "Vai all'instanza di fallback dell'Admin-GUI e pubblica lì il bollettino.",
-          "step2": "Inviare manualmente messaggi ai canali sottoscritti. Utilizzare il testo seguente:",
-          "step3": "Informare il pubblico creando post sui social media con un collegamento all'URL del sito web di fallback.",
-          "step4": "Informare l'ufficio relazioni pubbliche (PR) della situazione."
+          "step2": "Invia manualmente messaggi ai canali sottoscritti. Utilizza il testo seguente:",
+          "step3": "Informa il pubblico creando post sui social media con un collegamento all'URL del sito web di fallback.",
+          "step4": "Informa l'ufficio relazioni pubbliche (PR) della situazione."
         },
         "hide": "Nascondi versione stampabile",
-        "hint": "Inserire di seguito i recapiti del servizio di hosting e gli URL del sito web di fallback, quindi fare clic su \"Stampa\".",
-        "hostingDescription": "Chiedere informazioni sullo stato del server. Se necessario, richiedere il riavvio del server.",
+        "hint": "Inserisci di seguito i recapiti del servizio di hosting e gli URL del sito web di fallback, quindi fare clic su \"Stampa\".",
+        "hostingDescription": "Chiedi informazioni sullo stato del server. Se necessario, richiedi il riavvio del server.",
         "hostingTitle": "Contatta il servizio di hosting:",
         "print": "Stampa",
         "toggle": "Versione stampabile"
@@ -479,7 +479,7 @@
       "mapSelectRegion": "Seleziona micro-zone sulla mappa",
       "statusHeader": "Stato del bollettino",
       "suggestions": "Proposte",
-      "noBulletinsForSelectedDay": "Nessun micro-zona definita per questa data.",
+      "noBulletinsForSelectedDay": "Nessuna meteo-nivo zona definita per questa data.",
       "autosave": "Salvato automaticamente",
       "regionEditable": "Questa meteo-nivo zona può essere modificata.",
       "regionNotEditable": "Questa meteo-nivo zona non può essere modificata.",
@@ -531,7 +531,7 @@
       "photos": {
         "url": "URL Foto",
         "locationName": "Località",
-        "microregion": "Meteo-nivo zona",
+        "microregion": "micro zona",
         "copyright": "Copyright",
         "date": "Data"
       },
@@ -552,7 +552,7 @@
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "Almeno una micro zona deve appartenere la tua Provincia.",
+        "message": "Almeno una micro zona deve appartenere alla tua Provincia.",
         "accept": "Ok"
       },
       "loadDialog": {
@@ -611,14 +611,14 @@
       },
       "strategicMindsetDialog": {
         "title": "Strategic Mindsets",
-        "introduction": "Gli “Strategic Mindsets” sono intesi come espressione del nostro atteggiamento mentale nei confronti della situazione valanghiva e del suo sviluppo nella regione corrispondente. Non dovrebbero derivare direttamente dalla valutazione del pericolo, ma piuttosto essere compresi e utilizzati come un'impressione intuitiva della situazione generale. I “Strategic Mindsets” sono quindi principalmente uno strumento di comunicazione. Utilizzando i mindset e le definizioni associate, noi previsori possiamo scambiare in modo rapido ed efficiente informazioni sullo sviluppo della situazione di pericolo e trovare un linguaggio comune per la comunicazione.",
+        "introduction": "Gli “Strategic Mindsets” sono intesi come espressione del nostro atteggiamento mentale nei confronti della situazione valanghiva e del suo sviluppo nella meteo-nivo zona corrispondente. Non dovrebbero derivare direttamente dalla valutazione del pericolo, ma piuttosto essere compresi e utilizzati come un'impressione intuitiva della situazione generale. I “Strategic Mindsets” sono quindi principalmente uno strumento di comunicazione. Utilizzando i mindset e le definizioni associate, noi previsori possiamo scambiare in modo rapido ed efficiente informazioni sullo sviluppo della situazione di pericolo e trovare un linguaggio comune per la comunicazione.",
         "description": {
           "title": "Descrizione:",
           "text": {
-            "assessment": "C'è una <b>grande incertezza</b> nella valutazione del pericolo a causa delle<b>informazioni insufficienti</b> osservati sul terreno.",
-            "stepping_out": "<b>Tendenza alla diminuzione</b> della situazione di pericolo (anche all'interno di un grado di pericolo).",
+            "assessment": "C'è una <b>grande incertezza</b> nella valutazione del pericolo a causa delle<b>informazioni insufficienti</b> raccolte sul terreno.",
+            "stepping_out": "<b>Tendenza alla diminuzione</b> della situazione di pericolo (anche all'interno dello stesso grado di pericolo).",
             "status_quo": "Stessa situazione di pericolo.<b>Nessun cambiamento significativo</b> rispetto al giorno precedente.",
-            "stepping_back": "<b>Tendenza all'aumento</b> della situazione di pericolo (anche all'interno di un livello di pericolo).",
+            "stepping_back": "<b>Tendenza all'aumento</b> della situazione di pericolo (anche all'interno dello stesso grado di pericolo).",
             "entrenchment": "<b>Situazione di pericolo quasi costante e tesa.</b> Il pericolo principale deriva da (a) <b>uno strato debole persistente</b>(s) suscettibile al distacco.",
             "free_ride": "<b>Debole pericolo di valanghe</b> con un manto nevoso generalmente stabile. Sono possibili solo valanghe di dimensioni piccole nei terreni estremamente ripidi. ",
             "high_alert": "Situazione eccezionale con <b>pericolo di valanghe forte o molto forte</b>. Sono possibili valanghe spontanee di <b>dimensioni molto grandi o estreme </b>",
@@ -1228,7 +1228,7 @@
     "radiation_recrystallization": "radiazione",
     "diurnal_recrystallization": "diurno",
     "melt_layer_recrystallization": "crosta da fusione",
-    "surface_hoar_formation": "Brina di superficie"
+    "surface_hoar_formation": "brina di superficie"
   },
   "recognizability": {
     "very_easy": "molto facile",
@@ -1404,6 +1404,8 @@
     "no": "No"
   },
   "observations": {
+    "$externalURL": "URL esterna (es. al database delle foto)",
+    "$type": "Tipo di osservazione",
     "allowEdit": "Modifica osservazione esterna",
     "allowEditTooltip": "Questo impedisce la sovrascrittura di {{ value }}",
     "editIconTooltip": "Osservazione modificata - non viene aggiornato {{ value }}",
@@ -1411,6 +1413,7 @@
     "authorName": "Nome dell'autore",
     "avalancheLength": "Lunghezza della valanga",
     "avalancheProblem": "Problema valanghivo",
+    "avalancheProblems": "Problema valanghivo",
     "avalancheSize": "Dimensione della valanga",
     "avalancheType": "Tipologia della valanga",
     "avalancheWidth": "Larghezza della valanga",
@@ -1463,6 +1466,7 @@
     },
     "comment": "Commento",
     "content": "Contenuto",
+    "dangerPatterns": "Situazioni tipo",
     "dangerRating": "Grado pericolo valanghe",
     "dangerSource": "Origini di pericolo",
     "elevation": "Quota",
@@ -1486,6 +1490,7 @@
     "fractureDepth": "Spessore del lastrone",
     "hasCoordinates": "Contiene coordinate",
     "incline": "Pendenza",
+    "importantObservations": "Osservazioni importanti",
     "latitude": "Latitudine",
     "locationName": "Località",
     "longitude": "Longitudine",
@@ -1493,6 +1498,7 @@
     "personInvolvement": "Coinvolgimento di persone",
     "reportDate": "Data del report",
     "showTable": "Tabella",
+    "stability": "Stabilità del manto nevoso",
     "withoutCoordinates": "Osservazioni senza coordinate:",
     "sidebar": {
       "filter": {
@@ -1653,8 +1659,8 @@
     }
   },
   "zodForm": {
-    "valid": "Valid",
-    "required": "Required",
-    "invalidNumber": "Please enter a valid number."
+    "valid": "Valido",
+    "required": "Campi obbligatori",
+    "invalidNumber": "Inserire numero valido"
   }
 }

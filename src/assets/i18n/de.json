@@ -1005,8 +1005,8 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "effectiveRole": "Effective role",
-    "effectiveRoleDefault": "All roles",
+    "effectiveRole": "Effektive Rolle",
+    "effectiveRoleDefault": "Alle Rollen",
     "changePassword": {
       "title": "Passwort ändern",
       "oldPassword": {
@@ -1404,6 +1404,8 @@
     "no": "Nein"
   },
   "observations": {
+    "$externalURL": "Externe URL (z.B. in Bilder-Datenbank)",
+    "$type": "Beobachtungstyp",
     "allowEdit": "Externe Beobachtung bearbeiten",
     "allowEditTooltip": "Dies verhindert das Überschreiben von {{ value }}",
     "editIconTooltip": "Exercise",
@@ -1411,6 +1413,7 @@
     "authorName": "Autor Name",
     "avalancheLength": "Lawinenlänge",
     "avalancheProblem": "Lawinenproblem",
+    "avalancheProblems": "Lawinenproblem",
     "avalancheSize": "Lawinengröße",
     "avalancheType": "Lawinenart",
     "avalancheWidth": "Lawinenbreite",
@@ -1463,6 +1466,7 @@
     },
     "comment": "Kommentar",
     "content": "Inhalt",
+    "dangerPatterns": "Gefahrenmuster",
     "dangerRating": "Gefahrenstufe",
     "dangerSource": "Gefahrenquellen",
     "elevation": "Seehöhe",
@@ -1486,6 +1490,7 @@
     "fractureDepth": "Anrisshöhe",
     "hasCoordinates": "Koordinaten vorhanden",
     "incline": "Hangneigung",
+    "importantObservations": "Wichtige Beobachtungen",
     "latitude": "Breitengrad",
     "locationName": "Ort",
     "longitude": "Längengrad",
@@ -1493,6 +1498,7 @@
     "personInvolvement": "Personenbeteiligung",
     "reportDate": "Meldedatum",
     "showTable": "Tabelle",
+    "stability": "Schneedeckenstabilität",
     "withoutCoordinates": "Beobachtungen ohne Koordinaten:",
     "sidebar": {
       "filter": {
@@ -1653,8 +1659,8 @@
     }
   },
   "zodForm": {
-    "valid": "Valid",
-    "required": "Required",
-    "invalidNumber": "Please enter a valid number."
+    "valid": "Gültig",
+    "required": "Pflichtfelder",
+    "invalidNumber": "Bitte gültige Zahl eingeben."
   }
 }
