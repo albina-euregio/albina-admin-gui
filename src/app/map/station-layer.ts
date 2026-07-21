@@ -96,6 +96,8 @@ export function addStationLayer(map: MlMap, opts: { id?: string; tooltip?: boole
       map.off("mouseleave", layerId, onLeave);
       map.off("click", layerId, onClick);
       popup?.remove();
+      // the map may already have been torn down (e.g. RegionMapService.ngOnDestroy racing with this component's own ngOnDestroy)
+      if (!map.style) return;
       if (map.getLayer(layerId)) map.removeLayer(layerId);
       if (map.getSource(sourceId)) map.removeSource(sourceId);
     },
