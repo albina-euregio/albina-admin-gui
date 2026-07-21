@@ -4,7 +4,6 @@ ENV TZ="Europe/Vienna"
 
 WORKDIR /home/
 
-COPY package.json pnpm-lock.yaml playwright.config.ts .env ./
-COPY local-types ./local-types
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml playwright.config.ts .env .npmrc ./
 
 RUN corepack enable && pnpm install

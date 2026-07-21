@@ -268,7 +268,7 @@ test("Webcams and Observers", async ({ page }) => {
     await page.getByText("Map", { exact: true }).click();
     await page.getByTitle("Observations").click();
     await page.getByTitle("Observers").click();
-    await page.getByRole("button", { name: "Observer-undefined" }).click();
+    await page.getByRole("button", { name: "Map marker" }).click();
     await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
       "src",
       "https://wiski.tirol.gv.at/lawine/grafiken/800/beobachter/Nordkette.png",
@@ -280,12 +280,12 @@ test("Webcams and Observers", async ({ page }) => {
     await page.getByTitle("Webcams").click();
     // select region with unique webcam
     await page.getByRole("button", { name: "Region", exact: true }).click();
-    await page.getByRole("checkbox", { name: "Lechtal Alps West" }).check();
+    await page.getByRole("checkbox", { name: "Serles Ridge" }).check();
     await page.getByRole("checkbox", { name: "Karwendel Mountains West" }).uncheck();
     await page.getByRole("button", { name: "Region", exact: true }).click();
     await expect(page.locator("#observationsMap")).toHaveScreenshot("webcamMap.png", { maxDiffPixelRatio: 0.1 });
-    await page.getByRole("button", { name: "FotoWebcamsEU-undefined" }).click();
-    await expect(page.locator("iframe")).toHaveAttribute("src", "https://www.foto-webcam.eu/webcam/st-anton/");
+    await page.getByRole("button", { name: "Map marker" }).click();
+    await expect(page.locator("iframe")).toHaveAttribute("src", "https://www.foto-webcam.eu/webcam/trins/");
   });
 });
 
