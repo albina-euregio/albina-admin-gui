@@ -109,3 +109,13 @@ To simulate the CI conditions these settings could be helpful:
 ```
 docker run -it  --cpus=1 --memory=2g --network="host" -v ./:/home/  albina-playwright
 ```
+
+## Functional Development & Contact
+
+The domain development and key decisions for this project are established by the ALBINA Consortium, based on the standards and recommendations of the European Avalanche Warning Services (EAWS)
+
+For technical or domain-related questions and discussions, please contact: [lawine@tirol.gv.at](mailto:lawine@tirol.gv.at)
+
+## License
+
+This project is licensed under AGPL-3.0 (see `LICENSE`).
