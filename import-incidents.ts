@@ -23,6 +23,9 @@ import {
 const EXCEL_FILE = "/tmp/incidents.xlsm";
 const OUTPUT_SQL = "import_incidents.sql";
 
+// Fallback geolocation for entries without coordinates
+const INNSBRUCK = { latitude: 47.2692, longitude: 11.4041 };
+
 // Mappings Configuration
 const REGION_MAP = {
   tirol: "AT-07",
@@ -396,6 +399,8 @@ function convertRowToIncidentJson(row: Record<string, string>) {
   const groupInformation = getGroupInformation(row);
   const victimInformation = getVictimInformation(row, groupInformation?.[0]?.id);
 
+  const hasCoordinates = typeof row["Latitude"] === "number" && typeof row["Longitude"] === "number";
+
   const data: IncidentReport = {
     author: "Excel Import",
     authorAffiliation: "Import",
@@ -407,16 +412,16 @@ function convertRowToIncidentJson(row: Record<string, string>) {
     dangerRating: mapDangerRating(row["regionale Gefahrenstufe"]),
     avalancheProblem: getAvalancheProblems(row),
     dangerPattern: getDangerPatterns(row),
-    reportStatus: "Verified",
+    reportStatus: hasCoordinates ? "Verified" : "InReview",
     publicExternalLinks: undefined,
     privateExternalLinks: undefined,
     privateExternalDatabaseLinks: undefined,
     generalInformationComment: row["Allgemeine Bemerkungen"] || "",
 
     location: row["Ereignisort"] || "Unknown",
-    latitude: typeof row["Latitude"] === "number" ? row["Latitude"] : undefined,
-    longitude: typeof row["Longitude"] === "number" ? row["Longitude"] : undefined,
-    locationAccuracy: row["Koord. Verifiziiert"] === "ja" ? "exact" : "unknown",
+    latitude: hasCoordinates ? (row["Latitude"] as unknown as number) : INNSBRUCK.latitude,
+    longitude: hasCoordinates ? (row["Longitude"] as unknown as number) : INNSBRUCK.longitude,
+    locationAccuracy: hasCoordinates ? (row["Koord. Verifiziiert"] === "ja" ? "exact" : "unknown") : "within50km",
     lineCoordinatesText: undefined,
     polygonCoordinatesText: undefined,
     country: undefined,
