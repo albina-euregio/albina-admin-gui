@@ -391,7 +391,6 @@ function convertRowToIncidentJson(row: Record<string, string>) {
   const parsedDate = parseExcelDate(serialDate, timeStr);
 
   const regionName = row["Region"];
-  const regionId = getRegionId(regionName);
 
   const trigger = mapTrigger(row["Ausloesart"]);
 
@@ -506,15 +505,7 @@ function convertRowToIncidentJson(row: Record<string, string>) {
     attachments: [],
   };
 
-  return {
-    id: crypto.randomUUID(),
-    region_id: regionId,
-    data: JSON.stringify(PartialIncidentReportSchema.parse(data))
-      .replaceAll("\\t", "  ")
-      .replaceAll("\\r", "")
-      .replaceAll('\\"', "'")
-      .replaceAll("\\", "\\\\"),
-  };
+  return data;
 }
 
 function main() {
@@ -542,20 +533,23 @@ function main() {
       }
 
       const incident = convertRowToIncidentJson(row);
+      const regionId = getRegionId(row["Region"]);
+      const data = JSON.stringify(PartialIncidentReportSchema.parse(incident));
 
       // createIncident via HTTP POST see openapi.d.ts
       // HTTP POST
-      const request = await fetch("https://dev.avalanche.report/api/incidents?region=" + incident.region_id, {
+      const request = await fetch("https://dev.avalanche.report/api/incidents?region=" + regionId, {
         method: "POST",
         headers: {
           Authorization: "Bearer ey...",
           "Content-Type": "application/json",
         },
-        body: incident.data,
+        body: data,
       });
-      console.log(incident.id, JSON.parse(incident.data)["dateTime"], request);
+      console.log(JSON.parse(data)["dateTime"], request);
       if (!request.ok) {
-        fs.writeFileSync(`${incident.id}.json`, incident.data);
+        const id = crypto.randomUUID();
+        fs.writeFileSync(`${id}.json`, data);
         throw new Error(await request.text());
       }
     } catch (e) {
