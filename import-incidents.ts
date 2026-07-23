@@ -21,6 +21,11 @@ import {
 
 // Default Configuration
 const EXCEL_FILE = "/tmp/incidents.xlsm";
+const API_BASE = "https://dev.avalanche.report/api";
+const HEADERS = {
+  Authorization: "Bearer ey...",
+  "Content-Type": "application/json",
+};
 
 // Fallback geolocation for entries without coordinates
 const INNSBRUCK = { latitude: 47.2692, longitude: 11.4041 };
@@ -527,23 +532,14 @@ function main() {
 
   rows.forEach(async (row, idx) => {
     try {
-      // Ignore rows that don't have a number
-      if (!row["Nr."]) {
-        return;
-      }
-
       const incident = convertRowToIncidentJson(row);
       const regionId = getRegionId(row["Region"]);
       const data = JSON.stringify(PartialIncidentReportSchema.parse(incident));
 
       // createIncident via HTTP POST see openapi.d.ts
-      // HTTP POST
-      const request = await fetch("https://dev.avalanche.report/api/incidents?region=" + regionId, {
+      const request = await fetch(`${API_BASE}/incidents?region=${regionId}`, {
         method: "POST",
-        headers: {
-          Authorization: "Bearer ey...",
-          "Content-Type": "application/json",
-        },
+        headers: HEADERS,
         body: data,
       });
       console.log(JSON.parse(data)["dateTime"], request);
@@ -551,6 +547,20 @@ function main() {
         const id = crypto.randomUUID();
         fs.writeFileSync(`${id}.json`, data);
         throw new Error(await request.text());
+      }
+
+      const created = (await request.json()) as { id?: string };
+      if (incident.reportStatus === "Verified" && created.id) {
+        // publishIncident via HTTP POST see openapi.d.ts
+        const publishRequest = await fetch(`${API_BASE}/incidents/${created.id}/publish`, {
+          method: "POST",
+          headers: HEADERS,
+          body: data,
+        });
+        console.log(JSON.parse(data)["dateTime"], "published", created.id, publishRequest);
+        if (!publishRequest.ok) {
+          throw new Error(await publishRequest.text());
+        }
       }
     } catch (e) {
       console.error(`Error processing row ${idx + 2}:`, e.message);
