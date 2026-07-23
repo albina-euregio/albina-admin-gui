@@ -308,9 +308,16 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       ...IncidentModels.computeInvolvementsFatalitiesBurials(report),
       involvementsFatalitiesBurialsComment: report.involvementsFatalitiesBurials?.involvementsFatalitiesBurialsComment,
     };
-    return JSON.stringify(
-      { ...report, involvementsFatalitiesBurials, id: undefined, updatedAt: undefined },
-      (key, value) => (key === "file" || key === "$previewUrl" ? undefined : value),
+    return this.serializeReportData({ ...report, involvementsFatalitiesBurials });
+  }
+
+  /**
+   * Unlike {@link serializeReport} this does NOT recompute
+   * `involvementsFatalitiesBurials` from the group/victim arrays.
+   */
+  private serializeReportData(report: Partial<IncidentReport>): string {
+    return JSON.stringify({ ...report, id: undefined, updatedAt: undefined }, (key, value) =>
+      key === "file" || key === "$previewUrl" ? undefined : value,
     );
   }
 
@@ -428,7 +435,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!confirm(this.translateService.instant(confirmMessageKey))) return;
     const publicReport = IncidentModels.toPublicIncidentReport(this.incidentReport());
     console.info("Publishing report", publicReport);
-    const data = this.serializeReport(publicReport);
+    // Serialize verbatim: toPublicIncidentReport has already computed the
+    // involvement counts from the full data and emptied the group/victim arrays.
+    // Recomputing here would zero the counts.
+    const data = this.serializeReportData(publicReport);
     const report = await this.incidentService.publishIncident(this.incidentReport().id, data).toPromise();
     this.incidentReport.set(report);
     alert(this.translateService.instant("incidentReportUI.publishIncidentSuccess"));
