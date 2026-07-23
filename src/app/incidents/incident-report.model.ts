@@ -631,5 +631,14 @@ export function toPublicIncidentReport(report: IncidentReport) {
   publicReport.victimInformation = [];
   publicReport.groupInformation = [];
   publicReport.attachments = (report.attachments ?? []).filter((a) => a.public);
-  return { ...publicReport, involvementsFatalitiesBurials };
+  return {
+    ...publicReport,
+    involvementsFatalitiesBurials,
+    ...(report.incidentLedePublic && { incidentLede: report.incidentLede }),
+    ...(report.incidentDescriptionPublic && { incidentDescription: report.incidentDescription }),
+    ...(report.weatherDescriptionPublic && { weatherDescription: report.weatherDescription }),
+    ...(report.avalancheDescriptionPublic && { avalancheDescription: report.avalancheDescription }),
+    ...(report.snowpackDescriptionPublic && { snowpackDescription: report.snowpackDescription }),
+    ...(report.takeAwaysPublic && { takeAways: report.takeAways }),
+  };
 }
