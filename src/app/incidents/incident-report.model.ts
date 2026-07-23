@@ -340,10 +340,15 @@ export function computeInvolvementsFatalitiesBurials(report: {
   const fullyBuried = victims.filter((v) => v.burialDegree === "FullyBuried").length;
   const partlyBuriedHeadCovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadCovered").length;
   const partlyBuriedHeadUncovered = victims.filter((v) => v.burialDegree === "PartlyBuriedHeadUncovered").length;
-  const partlyBuried = victims.filter((v) => v.burialDegree === "PartlyBuried").length;
+  const partlyBuried = victims.filter(
+    (v) =>
+      v.burialDegree === "PartlyBuriedHeadCovered" ||
+      v.burialDegree === "PartlyBuriedHeadUncovered" ||
+      v.burialDegree === "PartlyBuried",
+  ).length;
   return InvolvementsFatalitiesBurialsSchema.parse({
     numberOfGroups: groups.length,
-    numberInvolved: caughtOnly + fullyBuried + partlyBuriedHeadCovered + partlyBuriedHeadUncovered + partlyBuried,
+    numberInvolved: caughtOnly + fullyBuried + partlyBuried,
     incidentActivity: uniq(groups.map((g) => g.incidentActivity).filter((x) => x != null)),
     incidentTerrainType: uniq(groups.map((g) => g.incidentTerrainType).filter((x) => x != null)),
     fatalities: victims.filter((v) => v.fatalInjured === "Fatal").length,
