@@ -576,7 +576,7 @@ export const IncidentAnalysisSchema = z.object({
 });
 
 export const IncidentLinksSchema = z.object({
-  publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  publicExternalLinks: z.string().register(widgetRegistry, { widget: "textarea", public: true }).nullish(),
   privateExternalLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
   privateExternalDatabaseLinks: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
