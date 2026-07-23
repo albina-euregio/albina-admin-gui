@@ -401,13 +401,13 @@ function convertRowToIncidentJson(row: Record<string, string>) {
   const hasCoordinates = typeof row["Latitude"] === "number" && typeof row["Longitude"] === "number";
 
   const data: IncidentReport = {
-    author: "Excel Import",
-    authorAffiliation: "Import",
+    author: "LE_Gesamtübersicht__seit_1992_",
+    authorAffiliation: "LWD Tirol",
     timestamp: new Date().toISOString(),
     dateTime: parsedDate.toISOString() as unknown as Date,
     timeAccuracy: timeStr ? "exact" : "P1D",
     sourceOfInformation: ["AWSInternal"],
-    publicAvalancheWarningService: "AWS",
+    publicAvalancheWarningService: "LWD Tirol",
     dangerRating: mapDangerRating(row["regionale Gefahrenstufe"]),
     avalancheProblem: getAvalancheProblems(row),
     dangerPattern: getDangerPatterns(row),
