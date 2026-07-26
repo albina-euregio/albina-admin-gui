@@ -2,6 +2,111 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [9.0.0] - 2026-07-26
+
+### 🚀 Features
+
+- **Avalanche Incident Database**
+- **Migrate all maps from Leaflet to MapLibre GL**
+- Use PMTiles raster basemap
+- Set document title based on route
+- Use hostname as document title suffix
+- _(api)_ Enable zod plugin for hey-api client
+- _(api)_ Generate typed Albina API client with hey-api
+- _(publication-checklist)_ Minimal publication button
+- _(region-config)_ Add per-region awsomeUrl for modelling config
+- _(settings)_ Let users pick an effective role to restrict their permissions
+
+### 🐛 Bug Fixes
+
+- _(awsome)_ Prefer circle marker tooltip over polygon underneath
+- _(bulletins)_ Serialize external regions as repeated query params
+- _(bulletins)_ Serialize internal regions as repeated query params
+- _(danger-rating)_ Wrap img tag in conditional check
+- _(danger-sources)_ Open forecast when jumping to unpublished date
+- _(env)_ Make start-local explicitly target the localhost:8080 backend
+- _(i18n)_ Strip seconds from all time formats and comma from date-time
+- _(i18n)_ Use the real Occitan locale instead of English
+- _(map)_ Keep zoom as top-level step input in region line paint
+- _(map)_ Region click ignores points/polygons rendered on top
+- _(map)_ Teardown race throwing errors for map.getLayer
+- _(media)_ Always send boolean important query param on upload
+- _(observation-editor)_ Diff form changes against an independent snapshot
+- _(observation-editor)_ Render danger source as select
+- _(observations)_ Stop marker click from reaching region layer
+- _(observations)_ Keep marker tooltip above markers
+- _(observations)_ Place region-name control top-right and style it
+- _(qfa)_ Fix location for dust lookup
+- _(qfa)_ Guard QFA UI against missing file
+- _(qfa)_ Iterate dust forecast steps up to 210 hours
+- _(qfa)_ Parse metadata header in both spacing layouts
+
+### 🚜 Refactor
+
+- _(constants)_ Drop unused createSearchParams helper
+- _(danger-source)_ Use zod-schema-form
+- _(danger-sources)_ Do not fetch in constructor; require explicit init()
+- _(env)_ Move env.<name>.js snippets next to environment.ts
+- _(env)_ Use runtime env.js as single source of truth for URLs
+- _(hey-api)_ Use generated hey-api client in AuthenticationService
+- _(hey-api)_ Use generated hey-api client in BlogService
+- _(hey-api)_ Use generated hey-api client in BulletinsService
+- _(hey-api)_ Use generated hey-api client in ConfigurationService
+- _(hey-api)_ Use generated hey-api client in IncidentService
+- _(hey-api)_ Use generated hey-api client in MediaFileService
+- _(hey-api)_ Use generated hey-api client in StatisticsService
+- _(hey-api)_ Use generated hey-api client in StatusService
+- _(hey-api)_ Use generated hey-api client in UserService
+- _(hey-api)_ Use hey-api client with external base URL in ExternalBulletinsService
+- _(observation-editor)_ Use zod-schema-form
+- _(publication-checklist)_ Minimal publication as own section
+- _(region-configuration)_ Use zod-schema-form
+- _(server-configuration)_ Use zod-schema-form
+- _(angular)_ ChangeDetectionStrategy.Eager for angular 22 compatibility
+- _(angular)_ Collapse identical local build config into development
+- _(angular)_ Drop redundant TranslateService provider entry
+- _(angular)_ Move AlbinaObservationsService to component providers
+- _(angular)_ Move BlogService to component providers
+- _(angular)_ Move ConfigurationService to component providers
+- _(angular)_ Move ElevationService/GeocodingService to component providers
+- _(angular)_ Move IncidentService to component providers
+- _(angular)_ Move map services to component providers
+- _(angular)_ Move MediaFileService to component providers
+- _(angular)_ Move observation marker services to component providers
+- _(angular)_ Move ObservationFilterService to component providers
+- _(angular)_ Move QFA services to forecast component providers
+- _(angular)_ Move StatisticsService to component providers
+- _(angular)_ Move StatusService to component providers
+- _(angular)_ Move toggle-btn-group
+- _(angular)_ Remove unused+deprecated @angular/animations
+- _(angular)_ Use providedIn root for remaining global services
+- _(angular)_ Use publication strategies
+- _(angular)_ Use withHashLocation() router feature for hash URLs
+
+### 🧪 Testing
+
+- Add QFA file parsing test
+- Adapt playwright tests to maplibre canvas rendering
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to ngx-echarts 22.0.0
+- Upgrade to ngx-translate 18.0.0
+- Update to ngx-quill 31.0.0
+- Use albina-basemap.pmtiles
+- _(eaws-regions)_ Update to v8.4.0
+- Update temporal-polyfill to 1.0.1
+- Cache pnpm store and Angular build cache
+- _(env)_ Type-check env.<name>.js against the Environment interface
+- _(incident)_ Improve alert message and deletion of invalid reports
+- _(incident)_ Do not show empty tabs with green checkmark
+- _(incident)_ Remove alert box for required fields missing
+- _(incident)_ Separate edit and preview buttons
+- _(incident)_ Increase trash-button size
+- _(api)_ Drop openapi-typescript in favour of hey-api
+- _(eslint)_ Update ignore path for generated albina-api client
+- _(readme)_ Add sections functional development & contact and license
+
 ## [8.4.2] - 2026-06-03
 
 ### 🚀 Features
