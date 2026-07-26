@@ -147,7 +147,8 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
 
   onOutsideFieldChange(key: string, isOutside: boolean): void {
     this.setField(`${key}Outside`, isOutside);
-    this.setField(key, isOutside ? (this.zodType()?.shape?.[`${key}Outside`]?.description ?? "") : "");
+    const outsideField = this.zodType()?.shape?.[`${key}Outside`];
+    this.setField(key, isOutside ? ((outsideField && zodUtil.description(outsideField)) ?? "") : "");
   }
 
   shouldShowField(key: string, schema: z.ZodType): boolean {
@@ -166,7 +167,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     if (override) return this.translateService.instant(override);
     const labelI18n = this.labelI18n();
     if (labelI18n) return this.translateService.instant(labelI18n.replace("#", key));
-    return (zodValue as z.ZodType & { description?: string })?.description || key;
+    return (zodValue && zodUtil.description(zodValue)) || key;
   }
 
   /**

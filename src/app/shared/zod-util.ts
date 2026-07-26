@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import { widgetRegistry } from "./zod-schema-form.widget-registry";
-import type { ShowIf } from "./zod-schema-form.widget-registry";
+import type { ShowIf, WidgetType } from "./zod-schema-form.widget-registry";
 
 // https://github.com/colinhacks/zod/issues/38#issuecomment-1938821172
 export interface ZSchemaInterface<T extends z.ZodRawShape, TObject = z.ZodObject<T>> {
@@ -65,6 +65,17 @@ export function isFieldOptional(zodType: z.ZodType): zodType is z.ZodOptional | 
   return zodType.type === "optional" || zodType.type === "nullable" || zodType.type === "default";
 }
 
+// The description sits on whichever type `.describe()` was called on, and zod does not look
+// through optional/nullable/default wrappers: the hand-written schemas describe the wrapper
+// (`z.string().nullish().describe("…")`), the generated API schemas the inner type
+// (`z.string().describe("…").optional()`). Walk outwards-in so both yield a label.
+export function description(zodType: z.ZodType): string | undefined {
+  for (let t = zodType; t; t = t.unwrap() as z.ZodType) {
+    if (t.description) return t.description;
+    if (!isFieldOptional(t)) return undefined;
+  }
+}
+
 // Attaches showIf visibility predicates after the schema definition so the rules can
 // reference sibling fields with full type-checking: each predicate receives the parsed
 // model (typed from the schema) and returns a truthy value when the field should be shown.
@@ -81,6 +92,15 @@ export function withShowIf<T extends z.ZodObject>(
     widgetRegistry.add(inner, { ...widgetRegistry.get(inner), showIf });
   }
   return schema;
+}
+
+// Sets the i18n key template for a field's enum option labels, defaulting `#` to each option
+// value. Registers on the field's inner type, which is where the schema form looks the metadata
+// up, so it works for the generated schemas too (their fields come wrapped in `.optional()`).
+export function withValueI18n<T extends z.ZodType>(field: T, valueI18n: WidgetType["valueI18n"]): T {
+  const inner = unwrap(field as z.ZodType);
+  widgetRegistry.add(inner, { ...widgetRegistry.get(inner), valueI18n });
+  return field;
 }
 
 // An enum that additionally allows free-form text via an "Other" option in the UI.

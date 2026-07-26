@@ -2,9 +2,12 @@ import { Component, input, inject, ChangeDetectionStrategy, linkedSignal } from 
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { zRegion } from "app/providers/albina-api/zod.gen";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
+import * as zodUtil from "app/shared/zod-util";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { TabsModule } from "ngx-bootstrap/tabs";
+import z from "zod/v4";
 
 import * as RegionModels from "../models/region-configuration.model";
 import {
@@ -39,6 +42,7 @@ export class RegionConfigurationComponent {
   configurationService = inject(ConfigurationService);
   authenticationService = inject(AuthenticationService);
 
+  readonly zodUtil = zodUtil;
   readonly RegionModels = RegionModels;
   readonly RegionConfigurationSchema = RegionConfigurationSchema;
   readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
@@ -57,7 +61,7 @@ export class RegionConfigurationComponent {
 
   public alerts: Alert[] = [];
 
-  toggleLanguage(language: string, checked: boolean) {
+  toggleLanguage(language: z.infer<typeof zRegion>["enabledLanguages"][number], checked: boolean) {
     this.localConfig().enabledLanguages ??= [];
     if (checked) {
       this.localConfig().enabledLanguages.push(language);
@@ -66,7 +70,7 @@ export class RegionConfigurationComponent {
     }
   }
 
-  toggleTTSLanguage(language: string, checked: boolean) {
+  toggleTTSLanguage(language: z.infer<typeof zRegion>["ttsLanguages"][number], checked: boolean) {
     this.localConfig().ttsLanguages ??= [];
     if (checked) {
       this.localConfig().ttsLanguages.push(language);

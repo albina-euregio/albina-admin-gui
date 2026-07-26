@@ -42,7 +42,7 @@
             <tr>
               <td>
                 <label class="col-form-label text-nowrap">{{
-                  RegionConfigurationSchema.shape.defaultLang.description
+                  zodUtil.description(RegionConfigurationSchema.shape.defaultLang)
                 }}</label>
               </td>
               <td>
@@ -56,7 +56,7 @@
             <tr class="table-active">
               <td>
                 <label class="col-form-label text-nowrap">{{
-                  LanguageConfigurationSchema.shape.lang.description
+                  zodUtil.description(LanguageConfigurationSchema.shape.lang)
                 }}</label>
                 <button
                   (click)="localConfig().languageConfigurations.splice(0, 0, {})"
@@ -86,7 +86,7 @@
               <tr>
                 <td>
                   <label class="col-form-label text-nowrap">
-                    {{ LanguageConfigurationSchema.shape[key].description }}
+                    {{ zodUtil.description(LanguageConfigurationSchema.shape[key]) }}
                   </label>
                 </td>
                 @for (languageConfiguration of localConfig().languageConfigurations; track languageConfiguration.lang) {
