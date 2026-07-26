@@ -599,7 +599,7 @@ function convertRowToIncidentJson(row: Record<string, string>) {
     incidentLedePublic: true,
     incidentLede: undefined,
     incidentDescriptionPublic: true,
-    incidentDescription: { de: row["Detailbericht"] || row["LPD Bericht"] || "" },
+    incidentDescription: { de: row["Detailbericht"] || "" },
     weatherDescriptionPublic: true,
     weatherDescription: undefined,
     avalancheDescriptionPublic: true,
