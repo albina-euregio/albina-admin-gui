@@ -146,6 +146,12 @@ function getRegionId(regionName: string) {
 
 function parseExcelDate(serial: string | Date, timeStr: string): Date {
   let date = null;
+  if (typeof serial === "string" && /^\d{5}$/.test(serial)) {
+    // Excel serial date (1900 date system, incl. the fictitious 1900-02-29) → epoch 1899-12-30
+    const d = new Date(Date.UTC(1899, 11, 30) + +serial * 86400000);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    serial = `${pad(d.getUTCDate())}.${pad(d.getUTCMonth() + 1)}.${d.getUTCFullYear()}`;
+  }
   if (typeof serial === "string") {
     // parse DD.MM.YYYY
     const match = serial.trim().match(/^(\d{1,2})[/.](\d{1,2})[/.](\d{4})$/);
@@ -156,7 +162,7 @@ function parseExcelDate(serial: string | Date, timeStr: string): Date {
   }
 
   if (!date || isNaN(date.getTime())) {
-    throw new Error(`Unsupported date ${serial}`);
+    throw new Error(`Unsupported date ${JSON.stringify(serial)}`);
   }
 
   if (typeof timeStr === "string") {
