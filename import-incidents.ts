@@ -646,8 +646,6 @@ function main() {
       });
       console.log(JSON.parse(data)["dateTime"], request);
       if (!request.ok) {
-        const id = crypto.randomUUID();
-        fs.writeFileSync(`${id}.json`, data);
         throw new Error(await request.text());
       }
 
@@ -667,6 +665,8 @@ function main() {
       }
     } catch (e) {
       console.error(`Error processing row ${idx + 2}:`, e.message);
+      const id = crypto.randomUUID();
+      fs.writeFileSync(`${id}.json`, JSON.stringify({ ...row, error: e.message }));
     }
   });
 }
