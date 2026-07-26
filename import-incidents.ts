@@ -16,6 +16,7 @@ import {
   GroupInformation,
   IncidentReport,
   PartialIncidentReportSchema,
+  toPublicIncidentReport,
   VictimInformation,
 } from "./src/app/incidents/incident-report.model";
 
@@ -551,11 +552,12 @@ function main() {
 
       const created = (await request.json()) as { id?: string };
       if (incident.reportStatus === "Verified" && created.id) {
+        const publicIncident = JSON.stringify(toPublicIncidentReport(incident));
         // publishIncident via HTTP POST see openapi.d.ts
         const publishRequest = await fetch(`${API_BASE}/incidents/${created.id}/publish`, {
           method: "POST",
           headers: HEADERS,
-          body: data,
+          body: publicIncident,
         });
         console.log(JSON.parse(data)["dateTime"], "published", created.id, publishRequest);
         if (!publishRequest.ok) {
