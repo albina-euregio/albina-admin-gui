@@ -204,7 +204,7 @@ export type BulletinStatus =
 /**
  * An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.
  */
-export type CaamlAspect = "E" | "N" | "NE" | "NW" | "N_A" | "S" | "SE" | "SW" | "W";
+export type CaamlAspect = "E" | "N" | "NE" | "NW" | "n/a" | "S" | "SE" | "SW" | "W";
 
 /**
  * Avalanche Bulletin valid for a given set of regions.
@@ -374,19 +374,19 @@ export type CaamlAvalancheProblemCustomDataAlbina = {
  * Expected avalanche problem, according to the EAWS avalanche problem definition.
  */
 export type CaamlAvalancheProblemType =
-  | "CORNICES"
-  | "FAVOURABLE_SITUATION"
-  | "GLIDING_SNOW"
-  | "NEW_SNOW"
-  | "NO_DISTINCT_AVALANCHE_PROBLEM"
-  | "PERSISTENT_WEAK_LAYERS"
-  | "WET_SNOW"
-  | "WIND_SLAB";
+  | "cornices"
+  | "favourable_situation"
+  | "gliding_snow"
+  | "new_snow"
+  | "no_distinct_avalanche_problem"
+  | "persistent_weak_layers"
+  | "wet_snow"
+  | "wind_slab";
 
 /**
  * Expected avalanche type.
  */
-export type CaamlAvalancheTypeType = "SLAB" | "LOOSE" | "GLIDE";
+export type CaamlAvalancheTypeType = "slab" | "loose" | "glide";
 
 /**
  * Defines a danger rating, its elevation constraints and the valid time period. If validTimePeriod or elevation are constrained for a rating, it is expected to define a dangerRating for all the other cases.
@@ -406,13 +406,13 @@ export type CaamlDangerRating = {
  * Danger rating value, according to EAWS danger scale definition.
  */
 export type CaamlDangerRatingValue =
-  | "CONSIDERABLE"
-  | "HIGH"
-  | "LOW"
-  | "MODERATE"
-  | "NO_RATING"
-  | "NO_SNOW"
-  | "VERY_HIGH";
+  | "considerable"
+  | "high"
+  | "low"
+  | "moderate"
+  | "no_rating"
+  | "no_snow"
+  | "very_high";
 
 /**
  * Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.
@@ -425,12 +425,12 @@ export type CaamlElevationBoundaryOrBand = {
 /**
  * Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).
  */
-export type CaamlExpectedAvalancheFrequency = "FEW" | "MANY" | "NONE" | "SOME";
+export type CaamlExpectedAvalancheFrequency = "few" | "many" | "none" | "some";
 
 /**
  * Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).
  */
-export type CaamlExpectedSnowpackStability = "FAIR" | "GOOD" | "POOR" | "VERY_POOR";
+export type CaamlExpectedSnowpackStability = "fair" | "good" | "poor" | "very_poor";
 
 /**
  * External file is used to link to external files like maps, thumbnails etc.
@@ -509,7 +509,7 @@ export type CaamlTendency = {
   validTime?: CaamlValidTime;
 };
 
-export type CaamlTendencyType = "DECREASING" | "INCREASING" | "STEADY";
+export type CaamlTendencyType = "decreasing" | "increasing" | "steady";
 
 /**
  * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
@@ -550,7 +550,7 @@ export type CaamlValidTime = {
 /**
  * Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.
  */
-export type CaamlValidTimePeriod = "ALL_DAY" | "EARLIER" | "LATER";
+export type CaamlValidTimePeriod = "all_day" | "earlier" | "later";
 
 /**
  * The version of CAAML (Canadian Avalanche Association Markup Language)
@@ -941,6 +941,355 @@ export type IncidentAttachment = {
   attachmentCategory: string;
   attachmentTags: Array<string>;
 };
+
+export type IncidentsAccidentalControlled = "Accidental" | "Controlled";
+
+export type IncidentsAdditionalLoad = "High" | "Low";
+
+export type IncidentsAge =
+  | "From14To20"
+  | "From21To30"
+  | "From31To40"
+  | "From41To50"
+  | "From51To60"
+  | "From61To70"
+  | "From71"
+  | "UpTo13";
+
+export type IncidentsAirbag = "AirbagDeployed" | "AirbagUndeployed" | "NoAirbag";
+
+export type IncidentsAttachment = {
+  altText: string;
+  attachmentCategory: IncidentsAttachmentCategory;
+  attachmentTags: Array<string>;
+  caption: string;
+  credit: string;
+  dateAdded: string;
+  dateCreated: string;
+  fileName: string;
+  id: string;
+  mediaType: string;
+  public: boolean;
+};
+
+export type IncidentsAttachmentCategory = "Avalanche" | "Group" | "Incident" | "Person" | "Snowpack" | "Weather";
+
+export type IncidentsAvalancheGear = "All" | "None" | "Some" | "Unknown";
+
+export type IncidentsAvalancheProblem = {
+  aspects: IncidentsStartZoneAspect;
+  avalancheSize: IncidentsAvalancheProblemAvalancheSize;
+  elevationLowerBound: string;
+  elevationUpperBound: string;
+  frequency: IncidentsFrequency;
+  problemType: IncidentsProblemType;
+  snowpackStability: IncidentsSnowpackStability;
+};
+
+export type IncidentsAvalancheProblemAvalancheSize = "extreme" | "large" | "medium" | "small" | "very_large";
+
+export type IncidentsAvalancheType = "cornice" | "glide" | "loose" | "slab" | "unknown";
+
+export type IncidentsBedSurfaceStepped = "No" | "Yes";
+
+export type IncidentsBurialDegree =
+  | "FullyBuried"
+  | "NotBuried"
+  | "PartlyBuried"
+  | "PartlyBuriedHeadCovered"
+  | "PartlyBuriedHeadUncovered"
+  | "Unknown";
+
+export type IncidentsCaught = "Involved" | "NotInvolved" | "Unknown";
+
+export type IncidentsCriticalWarming = "Absent" | "Present" | "Unknown";
+
+export type IncidentsDangerPattern = "dp1" | "dp10" | "dp2" | "dp3" | "dp4" | "dp5" | "dp6" | "dp7" | "dp8" | "dp9";
+
+export type IncidentsDangerRating =
+  | "considerable"
+  | "high"
+  | "low"
+  | "moderate"
+  | "no_rating"
+  | "no_snow"
+  | "very_high";
+
+export type IncidentsDepositMoisture = "Dry" | "Moist" | "Wet";
+
+export type IncidentsEstimatedTimeOfDeath =
+  | "DuringBurial"
+  | "DuringTheAvalanche"
+  | "DuringTransport"
+  | "InHospital"
+  | "OnSiteAfterExtrication";
+
+export type IncidentsFatalInjured = "Fatal" | "Injured" | "Uninjured" | "Unknown";
+
+export type IncidentsFrequency = "few" | "many" | "none" | "some";
+
+export type IncidentsGender = "Female" | "Male" | "Other";
+
+export type IncidentsGroupInformation = {
+  anonymousGroupIdentifier: string;
+  avalancheGear: IncidentsAvalancheGear;
+  groupInformationComment: string;
+  groupSize: number;
+  groupSizeAccuracy: IncidentsGroupSizeAccuracy;
+  groupType: string;
+  id: string;
+  incidentActivity: string;
+  incidentTerrainType: IncidentsIncidentTerrainType;
+  travelDirection: string;
+  typeOfControlledTerrain: string;
+  vehicleType: string;
+};
+
+export type IncidentsGroupSizeAccuracy = "Approximately" | "AtLeast" | "Exact" | "Unknown";
+
+export type IncidentsIncidentSchema = {
+  accidentalControlled: IncidentsAccidentalControlled;
+  additionalLoad: IncidentsAdditionalLoad;
+  attachments: Array<IncidentsAttachment>;
+  author: string;
+  authorAffiliation: string;
+  avalancheDescription: {
+    [key: string]: string;
+  };
+  avalancheDescriptionPublic: boolean;
+  avalancheDetailsComment: string;
+  avalancheLength: number;
+  avalancheProblems: Array<IncidentsAvalancheProblem>;
+  avalancheRegion: string;
+  avalancheSize: IncidentsIncidentSchemaAvalancheSize;
+  avalancheType: IncidentsAvalancheType;
+  bedSurfaceStepped: IncidentsBedSurfaceStepped;
+  bulletinInformationComment: string;
+  country: string;
+  criticalWarming: IncidentsCriticalWarming;
+  crownDepthAvg: number;
+  crownDepthMax: number;
+  crownDepthMin: number;
+  damagedAssets: Array<string>;
+  dangerPattern: IncidentsDangerPattern;
+  dangerRating: IncidentsDangerRating;
+  dateTime: string;
+  debrisDensity: number;
+  debrisType: Array<string>;
+  depositElevation: number;
+  depositHeight: number;
+  depositMoisture: IncidentsDepositMoisture;
+  depositWidth: number;
+  explosives: string;
+  generalInformationComment: string;
+  groupInformation: Array<IncidentsGroupInformation>;
+  id: string;
+  incidentAnalysisComment: string;
+  incidentDescription: {
+    [key: string]: string;
+  };
+  incidentDescriptionPublic: boolean;
+  incidentLede: {
+    [key: string]: string;
+  };
+  incidentLedePublic: boolean;
+  involvementsFatalitiesBurials: IncidentsInvolvementsFatalitiesBurials;
+  latitude: number;
+  lineCoordinatesText: string;
+  location: string;
+  locationAccuracy: IncidentsLocationAccuracy;
+  longitude: number;
+  multipleAvalanches: IncidentsBedSurfaceStepped;
+  municipality: string;
+  natural: IncidentsNatural;
+  otherDamages: IncidentsBedSurfaceStepped;
+  otherDamagesComment: string;
+  person: IncidentsPerson;
+  personInvolvement: IncidentsPersonInvolvement;
+  polygonCoordinatesText: string;
+  privateExternalDatabaseLinks: string;
+  privateExternalLinks: string;
+  publicAvalancheWarningService: string;
+  publicAvalancheWarningServiceOutside: boolean;
+  publicExternalLinks: string;
+  publishedAt: string;
+  recentLoading: IncidentsCriticalWarming;
+  recentSlabAvalanches: IncidentsCriticalWarming;
+  region: string;
+  relevantAvalancheProblem: IncidentsProblemType;
+  remoteTriggering: IncidentsBedSurfaceStepped;
+  reportStatus: IncidentsReportStatus;
+  signsOfInstability: IncidentsCriticalWarming;
+  slabWidth: number;
+  snowpackDescription: {
+    [key: string]: string;
+  };
+  snowpackDescriptionPublic: boolean;
+  sourceOfInformation: Array<string>;
+  startZoneAspect: IncidentsStartZoneAspect;
+  startZoneAspectAccuracy: IncidentsStartZoneAspectAccuracy;
+  startZoneElevation: number;
+  startZoneElevationAccuracy: IncidentsStartZoneElevationAccuracy;
+  startZoneIncline: number;
+  startZoneMoisture: IncidentsStartZoneMoisture;
+  startZoneTerrainType: Array<string>;
+  takeAways: {
+    [key: string]: string;
+  };
+  takeAwaysPublic: boolean;
+  timeAccuracy: IncidentsTimeAccuracy;
+  trigger: string;
+  updatedAt: string;
+  vehicle: string;
+  victimInformation: Array<IncidentsVictimInformation>;
+  weakLayerGrainSize1: number;
+  weakLayerGrainSize2: number;
+  weakLayerGrainType1: IncidentsWeakLayerGrainType;
+  weakLayerGrainType2: IncidentsWeakLayerGrainType;
+  weakLayerLocation: IncidentsWeakLayerLocation;
+  weakLayerName: string;
+  weatherDescription: {
+    [key: string]: string;
+  };
+  weatherDescriptionPublic: boolean;
+};
+
+export type IncidentsIncidentSchemaAvalancheSize =
+  | "extreme"
+  | "large"
+  | "large_very_large"
+  | "medium"
+  | "medium_large"
+  | "small"
+  | "small_medium"
+  | "unknown"
+  | "very_large"
+  | "very_large_extreme";
+
+export type IncidentsIncidentTerrainType =
+  | "ControlledTerrainClosed"
+  | "ControlledTerrainOpen"
+  | "FreeTerrain"
+  | "Unknown";
+
+export type IncidentsInjurySeverity = "Major" | "Minor" | "Moderate";
+
+export type IncidentsInvolvementsFatalitiesBurials = {
+  caughtOnly: number;
+  fatalities: number;
+  fullyBuried: number;
+  incidentActivity: Array<string>;
+  incidentTerrainType: IncidentsIncidentTerrainType;
+  injuredSurvivors: number;
+  involvementsFatalitiesBurialsComment: string;
+  numberInvolved: number;
+  numberOfGroups: number;
+  partlyBuried: number;
+  partlyBuriedHeadCovered: number;
+  partlyBuriedHeadUncovered: number;
+  uninjuredSurvivors: number;
+};
+
+export type IncidentsLocationAccuracy =
+  | "exact"
+  | "unknown"
+  | "within100m"
+  | "within10km"
+  | "within15m"
+  | "within1km"
+  | "within20km"
+  | "within250m"
+  | "within2km"
+  | "within30m"
+  | "within500m"
+  | "within50km"
+  | "within5km";
+
+export type IncidentsNatural = "CorniceFall" | "Earthquake" | "IceFall" | "Natural" | "RockFall";
+
+export type IncidentsPerson = "PersonAccidental" | "PersonControlled";
+
+export type IncidentsPersonInvolvement = "No" | "Unknown" | "Yes";
+
+export type IncidentsProblemType =
+  | "cornices"
+  | "gliding_snow"
+  | "new_snow"
+  | "no_distinct_avalanche_problem"
+  | "persistent_weak_layers"
+  | "wet_snow"
+  | "wind_slab";
+
+export type IncidentsReportStatus = "Draft" | "InReview" | "Incomplete" | "Verified";
+
+export type IncidentsSnowpackStability = "fair" | "good" | "poor" | "very_poor";
+
+export type IncidentsStartZoneAspect = "E" | "N" | "NE" | "NW" | "S" | "SE" | "SW" | "W";
+
+export type IncidentsStartZoneAspectAccuracy = "Accurate" | "Uncertain";
+
+export type IncidentsStartZoneElevationAccuracy = "exact" | "unknown" | "within100m" | "within200m" | "within50m";
+
+export type IncidentsStartZoneMoisture = "Dry" | "Moist" | "Unknown" | "Wet";
+
+export type IncidentsTimeAccuracy =
+  | "P1D"
+  | "P2D"
+  | "P3D"
+  | "PT12H"
+  | "PT15M"
+  | "PT1H"
+  | "PT2H"
+  | "PT30M"
+  | "PT4H"
+  | "PT6H"
+  | "exact"
+  | "unknown";
+
+export type IncidentsTransceiver = "NoTransceiver" | "TransceiverOff" | "TransceiverOn";
+
+export type IncidentsVictimInformation = {
+  age: IncidentsAge;
+  airbag: IncidentsAirbag;
+  anonymousVictimIdentifier: string;
+  avalancheTraining: string;
+  burialDegree: IncidentsBurialDegree;
+  burialDepth: number;
+  burialDuration: number;
+  caught: IncidentsCaught;
+  causeOfDeath: string;
+  country: string;
+  estimatedTimeOfDeath: IncidentsEstimatedTimeOfDeath;
+  fatalInjured: IncidentsFatalInjured;
+  gender: IncidentsGender;
+  groupID: string;
+  helmet: IncidentsBedSurfaceStepped;
+  id: string;
+  injurySeverity: IncidentsInjurySeverity;
+  leaderAtTime: IncidentsBedSurfaceStepped;
+  medicalIntervention: string;
+  primaryLocationMethod: string;
+  probe: IncidentsBedSurfaceStepped;
+  professionalCertification: string;
+  rescuedBy: string;
+  respiratoryCavity: IncidentsBedSurfaceStepped;
+  shovel: IncidentsBedSurfaceStepped;
+  terrainTrap: string;
+  transceiver: IncidentsTransceiver;
+  victimInformationComment: string;
+  workingAtTime: IncidentsBedSurfaceStepped;
+  yearsActive: IncidentsYearsActive;
+};
+
+export type IncidentsWeakLayerGrainType = "DF" | "DH" | "FC" | "FCxr" | "MF" | "MM" | "PP" | "PPgp" | "RG" | "SH";
+
+export type IncidentsWeakLayerLocation =
+  | "AtInterfaceWithOldSnow"
+  | "NearTheGround"
+  | "WithinNewSnow"
+  | "WithinOldSnowpack";
+
+export type IncidentsYearsActive = "From10Years" | "From3To9Years" | "UpTo2Years";
 
 /**
  * The enum contains the ISO 639-1 codes for available languages.
@@ -2442,9 +2791,9 @@ export type GetIncidentsData = {
 
 export type GetIncidentsResponses = {
   /**
-   * getIncidents 200 response
+   * OK response
    */
-  200: string;
+  200: Array<IncidentsIncidentSchema>;
 };
 
 export type GetIncidentsResponse = GetIncidentsResponses[keyof GetIncidentsResponses];
@@ -2494,9 +2843,9 @@ export type GetIncidentData = {
 
 export type GetIncidentResponses = {
   /**
-   * getIncident 200 response
+   * OK response
    */
-  200: string;
+  200: IncidentsIncidentSchema;
 };
 
 export type GetIncidentResponse = GetIncidentResponses[keyof GetIncidentResponses];

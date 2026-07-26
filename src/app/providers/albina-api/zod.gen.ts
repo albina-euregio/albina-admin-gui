@@ -86,7 +86,7 @@ export const zAvalancheBulletinStatusServiceStatus = z.object({
  * An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.
  */
 export const zCaamlAspect = z
-  .enum(["E", "N", "NE", "NW", "N_A", "S", "SE", "SW", "W"])
+  .enum(["E", "N", "NE", "NW", "n/a", "S", "SE", "SW", "W"])
   .describe(
     "An aspect can be defined as a set of aspects. The aspects are the expositions as in a eight part (45°) segments. The allowed aspects are the four main cardinal directions and the four intercardinal directions.",
   );
@@ -136,27 +136,27 @@ export const zCaamlAvalancheProblemCustomData = z.object({
  */
 export const zCaamlAvalancheProblemType = z
   .enum([
-    "CORNICES",
-    "FAVOURABLE_SITUATION",
-    "GLIDING_SNOW",
-    "NEW_SNOW",
-    "NO_DISTINCT_AVALANCHE_PROBLEM",
-    "PERSISTENT_WEAK_LAYERS",
-    "WET_SNOW",
-    "WIND_SLAB",
+    "cornices",
+    "favourable_situation",
+    "gliding_snow",
+    "new_snow",
+    "no_distinct_avalanche_problem",
+    "persistent_weak_layers",
+    "wet_snow",
+    "wind_slab",
   ])
   .describe("Expected avalanche problem, according to the EAWS avalanche problem definition.");
 
 /**
  * Expected avalanche type.
  */
-export const zCaamlAvalancheTypeType = z.enum(["SLAB", "LOOSE", "GLIDE"]).describe("Expected avalanche type.");
+export const zCaamlAvalancheTypeType = z.enum(["slab", "loose", "glide"]).describe("Expected avalanche type.");
 
 /**
  * Danger rating value, according to EAWS danger scale definition.
  */
 export const zCaamlDangerRatingValue = z
-  .enum(["CONSIDERABLE", "HIGH", "LOW", "MODERATE", "NO_RATING", "NO_SNOW", "VERY_HIGH"])
+  .enum(["considerable", "high", "low", "moderate", "no_rating", "no_snow", "very_high"])
   .describe("Danger rating value, according to EAWS danger scale definition.");
 
 /**
@@ -175,7 +175,7 @@ export const zCaamlElevationBoundaryOrBand = z
  * Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).
  */
 export const zCaamlExpectedAvalancheFrequency = z
-  .enum(["FEW", "MANY", "NONE", "SOME"])
+  .enum(["few", "many", "none", "some"])
   .describe(
     "Expected frequency of lowest snowpack stability, according to the EAWS definition. Three stage scale (few, some, many).",
   );
@@ -184,7 +184,7 @@ export const zCaamlExpectedAvalancheFrequency = z
  * Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).
  */
 export const zCaamlExpectedSnowpackStability = z
-  .enum(["FAIR", "GOOD", "POOR", "VERY_POOR"])
+  .enum(["fair", "good", "poor", "very_poor"])
   .describe("Snowpack stability, according to the EAWS definition. Four stage scale (very poor, poor, fair, good).");
 
 /**
@@ -261,7 +261,7 @@ export const zCaamlRegion = z
     "Region element describes a (micro) region. The regionID follows the EAWS schema. It is recommended to have the region shape's files with the same IDs in gitlab.com/eaws/eaws-regions. Additionally, the region name can be added.",
   );
 
-export const zCaamlTendencyType = z.enum(["DECREASING", "INCREASING", "STEADY"]);
+export const zCaamlTendencyType = z.enum(["decreasing", "increasing", "steady"]);
 
 /**
  * Texts element with highlight and comment for the avalanche activity. Texts contains a highlight and a comment string, where highlights could also be described as a kind of headline for the longer comment. For text-formatting the HTML-Tags
@@ -349,7 +349,7 @@ export const zCaamlTendency = z
  * Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.
  */
 export const zCaamlValidTimePeriod = z
-  .enum(["ALL_DAY", "EARLIER", "LATER"])
+  .enum(["all_day", "earlier", "later"])
   .describe(
     "Valid time period can be used to limit the validity of an element to an earlier or later period. It can be used to distinguish danger ratings or avalanche problems.",
   );
@@ -699,6 +699,359 @@ export const zIncidentAttachment = z.object({
   public: z.boolean(),
   attachmentCategory: z.string(),
   attachmentTags: z.array(z.string()),
+});
+
+export const zIncidentsAccidentalControlled = z.enum(["Accidental", "Controlled"]);
+
+export const zIncidentsAdditionalLoad = z.enum(["High", "Low"]);
+
+export const zIncidentsAge = z.enum([
+  "From14To20",
+  "From21To30",
+  "From31To40",
+  "From41To50",
+  "From51To60",
+  "From61To70",
+  "From71",
+  "UpTo13",
+]);
+
+export const zIncidentsAirbag = z.enum(["AirbagDeployed", "AirbagUndeployed", "NoAirbag"]);
+
+export const zIncidentsAttachmentCategory = z.enum(["Avalanche", "Group", "Incident", "Person", "Snowpack", "Weather"]);
+
+export const zIncidentsAttachment = z.object({
+  altText: z.string(),
+  attachmentCategory: zIncidentsAttachmentCategory,
+  attachmentTags: z.array(z.string()),
+  caption: z.string(),
+  credit: z.string(),
+  dateAdded: z.iso.datetime(),
+  dateCreated: z.iso.datetime(),
+  fileName: z.string(),
+  id: z.uuid(),
+  mediaType: z.string(),
+  public: z.boolean(),
+});
+
+export const zIncidentsAvalancheGear = z.enum(["All", "None", "Some", "Unknown"]);
+
+export const zIncidentsAvalancheProblemAvalancheSize = z.enum(["extreme", "large", "medium", "small", "very_large"]);
+
+export const zIncidentsAvalancheType = z.enum(["cornice", "glide", "loose", "slab", "unknown"]);
+
+export const zIncidentsBedSurfaceStepped = z.enum(["No", "Yes"]);
+
+export const zIncidentsBurialDegree = z.enum([
+  "FullyBuried",
+  "NotBuried",
+  "PartlyBuried",
+  "PartlyBuriedHeadCovered",
+  "PartlyBuriedHeadUncovered",
+  "Unknown",
+]);
+
+export const zIncidentsCaught = z.enum(["Involved", "NotInvolved", "Unknown"]);
+
+export const zIncidentsCriticalWarming = z.enum(["Absent", "Present", "Unknown"]);
+
+export const zIncidentsDangerPattern = z.enum(["dp1", "dp10", "dp2", "dp3", "dp4", "dp5", "dp6", "dp7", "dp8", "dp9"]);
+
+export const zIncidentsDangerRating = z.enum([
+  "considerable",
+  "high",
+  "low",
+  "moderate",
+  "no_rating",
+  "no_snow",
+  "very_high",
+]);
+
+export const zIncidentsDepositMoisture = z.enum(["Dry", "Moist", "Wet"]);
+
+export const zIncidentsEstimatedTimeOfDeath = z.enum([
+  "DuringBurial",
+  "DuringTheAvalanche",
+  "DuringTransport",
+  "InHospital",
+  "OnSiteAfterExtrication",
+]);
+
+export const zIncidentsFatalInjured = z.enum(["Fatal", "Injured", "Uninjured", "Unknown"]);
+
+export const zIncidentsFrequency = z.enum(["few", "many", "none", "some"]);
+
+export const zIncidentsGender = z.enum(["Female", "Male", "Other"]);
+
+export const zIncidentsGroupSizeAccuracy = z.enum(["Approximately", "AtLeast", "Exact", "Unknown"]);
+
+export const zIncidentsIncidentSchemaAvalancheSize = z.enum([
+  "extreme",
+  "large",
+  "large_very_large",
+  "medium",
+  "medium_large",
+  "small",
+  "small_medium",
+  "unknown",
+  "very_large",
+  "very_large_extreme",
+]);
+
+export const zIncidentsIncidentTerrainType = z.enum([
+  "ControlledTerrainClosed",
+  "ControlledTerrainOpen",
+  "FreeTerrain",
+  "Unknown",
+]);
+
+export const zIncidentsGroupInformation = z.object({
+  anonymousGroupIdentifier: z.string(),
+  avalancheGear: zIncidentsAvalancheGear,
+  groupInformationComment: z.string(),
+  groupSize: z.number(),
+  groupSizeAccuracy: zIncidentsGroupSizeAccuracy,
+  groupType: z.string(),
+  id: z.uuid(),
+  incidentActivity: z.string(),
+  incidentTerrainType: zIncidentsIncidentTerrainType,
+  travelDirection: z.string(),
+  typeOfControlledTerrain: z.string(),
+  vehicleType: z.string(),
+});
+
+export const zIncidentsInjurySeverity = z.enum(["Major", "Minor", "Moderate"]);
+
+export const zIncidentsInvolvementsFatalitiesBurials = z.object({
+  caughtOnly: z.number(),
+  fatalities: z.number(),
+  fullyBuried: z.number(),
+  incidentActivity: z.array(z.string()),
+  incidentTerrainType: zIncidentsIncidentTerrainType,
+  injuredSurvivors: z.number(),
+  involvementsFatalitiesBurialsComment: z.string(),
+  numberInvolved: z.number(),
+  numberOfGroups: z.number(),
+  partlyBuried: z.number(),
+  partlyBuriedHeadCovered: z.number(),
+  partlyBuriedHeadUncovered: z.number(),
+  uninjuredSurvivors: z.number(),
+});
+
+export const zIncidentsLocationAccuracy = z.enum([
+  "exact",
+  "unknown",
+  "within100m",
+  "within10km",
+  "within15m",
+  "within1km",
+  "within20km",
+  "within250m",
+  "within2km",
+  "within30m",
+  "within500m",
+  "within50km",
+  "within5km",
+]);
+
+export const zIncidentsNatural = z.enum(["CorniceFall", "Earthquake", "IceFall", "Natural", "RockFall"]);
+
+export const zIncidentsPerson = z.enum(["PersonAccidental", "PersonControlled"]);
+
+export const zIncidentsPersonInvolvement = z.enum(["No", "Unknown", "Yes"]);
+
+export const zIncidentsProblemType = z.enum([
+  "cornices",
+  "gliding_snow",
+  "new_snow",
+  "no_distinct_avalanche_problem",
+  "persistent_weak_layers",
+  "wet_snow",
+  "wind_slab",
+]);
+
+export const zIncidentsReportStatus = z.enum(["Draft", "InReview", "Incomplete", "Verified"]);
+
+export const zIncidentsSnowpackStability = z.enum(["fair", "good", "poor", "very_poor"]);
+
+export const zIncidentsStartZoneAspect = z.enum(["E", "N", "NE", "NW", "S", "SE", "SW", "W"]);
+
+export const zIncidentsAvalancheProblem = z.object({
+  aspects: zIncidentsStartZoneAspect,
+  avalancheSize: zIncidentsAvalancheProblemAvalancheSize,
+  elevationLowerBound: z.string(),
+  elevationUpperBound: z.string(),
+  frequency: zIncidentsFrequency,
+  problemType: zIncidentsProblemType,
+  snowpackStability: zIncidentsSnowpackStability,
+});
+
+export const zIncidentsStartZoneAspectAccuracy = z.enum(["Accurate", "Uncertain"]);
+
+export const zIncidentsStartZoneElevationAccuracy = z.enum([
+  "exact",
+  "unknown",
+  "within100m",
+  "within200m",
+  "within50m",
+]);
+
+export const zIncidentsStartZoneMoisture = z.enum(["Dry", "Moist", "Unknown", "Wet"]);
+
+export const zIncidentsTimeAccuracy = z.enum([
+  "P1D",
+  "P2D",
+  "P3D",
+  "PT12H",
+  "PT15M",
+  "PT1H",
+  "PT2H",
+  "PT30M",
+  "PT4H",
+  "PT6H",
+  "exact",
+  "unknown",
+]);
+
+export const zIncidentsTransceiver = z.enum(["NoTransceiver", "TransceiverOff", "TransceiverOn"]);
+
+export const zIncidentsWeakLayerGrainType = z.enum(["DF", "DH", "FC", "FCxr", "MF", "MM", "PP", "PPgp", "RG", "SH"]);
+
+export const zIncidentsWeakLayerLocation = z.enum([
+  "AtInterfaceWithOldSnow",
+  "NearTheGround",
+  "WithinNewSnow",
+  "WithinOldSnowpack",
+]);
+
+export const zIncidentsYearsActive = z.enum(["From10Years", "From3To9Years", "UpTo2Years"]);
+
+export const zIncidentsVictimInformation = z.object({
+  age: zIncidentsAge,
+  airbag: zIncidentsAirbag,
+  anonymousVictimIdentifier: z.string(),
+  avalancheTraining: z.string(),
+  burialDegree: zIncidentsBurialDegree,
+  burialDepth: z.number(),
+  burialDuration: z.number(),
+  caught: zIncidentsCaught,
+  causeOfDeath: z.string(),
+  country: z.string(),
+  estimatedTimeOfDeath: zIncidentsEstimatedTimeOfDeath,
+  fatalInjured: zIncidentsFatalInjured,
+  gender: zIncidentsGender,
+  groupID: z.uuid(),
+  helmet: zIncidentsBedSurfaceStepped,
+  id: z.uuid(),
+  injurySeverity: zIncidentsInjurySeverity,
+  leaderAtTime: zIncidentsBedSurfaceStepped,
+  medicalIntervention: z.string(),
+  primaryLocationMethod: z.string(),
+  probe: zIncidentsBedSurfaceStepped,
+  professionalCertification: z.string(),
+  rescuedBy: z.string(),
+  respiratoryCavity: zIncidentsBedSurfaceStepped,
+  shovel: zIncidentsBedSurfaceStepped,
+  terrainTrap: z.string(),
+  transceiver: zIncidentsTransceiver,
+  victimInformationComment: z.string(),
+  workingAtTime: zIncidentsBedSurfaceStepped,
+  yearsActive: zIncidentsYearsActive,
+});
+
+export const zIncidentsIncidentSchema = z.object({
+  accidentalControlled: zIncidentsAccidentalControlled,
+  additionalLoad: zIncidentsAdditionalLoad,
+  attachments: z.array(zIncidentsAttachment),
+  author: z.string(),
+  authorAffiliation: z.string(),
+  avalancheDescription: z.record(z.string(), z.string()),
+  avalancheDescriptionPublic: z.boolean(),
+  avalancheDetailsComment: z.string(),
+  avalancheLength: z.number(),
+  avalancheProblems: z.array(zIncidentsAvalancheProblem),
+  avalancheRegion: z.string(),
+  avalancheSize: zIncidentsIncidentSchemaAvalancheSize,
+  avalancheType: zIncidentsAvalancheType,
+  bedSurfaceStepped: zIncidentsBedSurfaceStepped,
+  bulletinInformationComment: z.string(),
+  country: z.string(),
+  criticalWarming: zIncidentsCriticalWarming,
+  crownDepthAvg: z.number(),
+  crownDepthMax: z.number(),
+  crownDepthMin: z.number(),
+  damagedAssets: z.array(z.string()),
+  dangerPattern: zIncidentsDangerPattern,
+  dangerRating: zIncidentsDangerRating,
+  dateTime: z.iso.datetime(),
+  debrisDensity: z.number(),
+  debrisType: z.array(z.string()),
+  depositElevation: z.number(),
+  depositHeight: z.number(),
+  depositMoisture: zIncidentsDepositMoisture,
+  depositWidth: z.number(),
+  explosives: z.string(),
+  generalInformationComment: z.string(),
+  groupInformation: z.array(zIncidentsGroupInformation),
+  id: z.uuid(),
+  incidentAnalysisComment: z.string(),
+  incidentDescription: z.record(z.string(), z.string()),
+  incidentDescriptionPublic: z.boolean(),
+  incidentLede: z.record(z.string(), z.string()),
+  incidentLedePublic: z.boolean(),
+  involvementsFatalitiesBurials: zIncidentsInvolvementsFatalitiesBurials,
+  latitude: z.number(),
+  lineCoordinatesText: z.string(),
+  location: z.string(),
+  locationAccuracy: zIncidentsLocationAccuracy,
+  longitude: z.number(),
+  multipleAvalanches: zIncidentsBedSurfaceStepped,
+  municipality: z.string(),
+  natural: zIncidentsNatural,
+  otherDamages: zIncidentsBedSurfaceStepped,
+  otherDamagesComment: z.string(),
+  person: zIncidentsPerson,
+  personInvolvement: zIncidentsPersonInvolvement,
+  polygonCoordinatesText: z.string(),
+  privateExternalDatabaseLinks: z.string(),
+  privateExternalLinks: z.string(),
+  publicAvalancheWarningService: z.string(),
+  publicAvalancheWarningServiceOutside: z.boolean(),
+  publicExternalLinks: z.string(),
+  publishedAt: z.iso.datetime(),
+  recentLoading: zIncidentsCriticalWarming,
+  recentSlabAvalanches: zIncidentsCriticalWarming,
+  region: z.string(),
+  relevantAvalancheProblem: zIncidentsProblemType,
+  remoteTriggering: zIncidentsBedSurfaceStepped,
+  reportStatus: zIncidentsReportStatus,
+  signsOfInstability: zIncidentsCriticalWarming,
+  slabWidth: z.number(),
+  snowpackDescription: z.record(z.string(), z.string()),
+  snowpackDescriptionPublic: z.boolean(),
+  sourceOfInformation: z.array(z.string()),
+  startZoneAspect: zIncidentsStartZoneAspect,
+  startZoneAspectAccuracy: zIncidentsStartZoneAspectAccuracy,
+  startZoneElevation: z.number(),
+  startZoneElevationAccuracy: zIncidentsStartZoneElevationAccuracy,
+  startZoneIncline: z.number(),
+  startZoneMoisture: zIncidentsStartZoneMoisture,
+  startZoneTerrainType: z.array(z.string()),
+  takeAways: z.record(z.string(), z.string()),
+  takeAwaysPublic: z.boolean(),
+  timeAccuracy: zIncidentsTimeAccuracy,
+  trigger: z.string(),
+  updatedAt: z.iso.datetime(),
+  vehicle: z.string(),
+  victimInformation: z.array(zIncidentsVictimInformation),
+  weakLayerGrainSize1: z.number(),
+  weakLayerGrainSize2: z.number(),
+  weakLayerGrainType1: zIncidentsWeakLayerGrainType,
+  weakLayerGrainType2: zIncidentsWeakLayerGrainType,
+  weakLayerLocation: zIncidentsWeakLayerLocation,
+  weakLayerName: z.string(),
+  weatherDescription: z.record(z.string(), z.string()),
+  weatherDescriptionPublic: z.boolean(),
 });
 
 /**
@@ -1742,9 +2095,9 @@ export const zGetIncidentsQuery = z.object({
 });
 
 /**
- * getIncidents 200 response
+ * OK response
  */
-export const zGetIncidentsResponse = z.string().describe("getIncidents 200 response");
+export const zGetIncidentsResponse = z.array(zIncidentsIncidentSchema).describe("OK response");
 
 export const zCreateIncidentBody = z.string();
 
@@ -1766,9 +2119,9 @@ export const zGetIncidentPath = z.object({
 });
 
 /**
- * getIncident 200 response
+ * OK response
  */
-export const zGetIncidentResponse = z.string().describe("getIncident 200 response");
+export const zGetIncidentResponse = zIncidentsIncidentSchema;
 
 export const zUpdateIncidentBody = z.string();
 
