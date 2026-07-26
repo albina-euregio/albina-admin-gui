@@ -403,7 +403,12 @@ function convertRowToIncidentJson(row: Record<string, string>) {
   const groupInformation = getGroupInformation(row);
   const victimInformation = getVictimInformation(row, groupInformation?.[0]?.id);
 
-  const hasCoordinates = typeof row["Latitude"] === "number" && typeof row["Longitude"] === "number";
+  function number(value: string | number): number | undefined {
+    const n = +value;
+    return isFinite(n) ? n : undefined;
+  }
+
+  const hasCoordinates = number(row["Latitude"]) && number(row["Longitude"]);
 
   const data: IncidentReport = {
     author: "LE_Gesamtübersicht__seit_1992_",
@@ -423,8 +428,8 @@ function convertRowToIncidentJson(row: Record<string, string>) {
     generalInformationComment: row["Allgemeine Bemerkungen"] || "",
 
     location: row["Ereignisort"] || "Unknown",
-    latitude: hasCoordinates ? (row["Latitude"] as unknown as number) : INNSBRUCK.latitude,
-    longitude: hasCoordinates ? (row["Longitude"] as unknown as number) : INNSBRUCK.longitude,
+    latitude: number(row["Latitude"]) || INNSBRUCK.latitude,
+    longitude: number(row["Longitude"]) || INNSBRUCK.longitude,
     locationAccuracy: hasCoordinates ? (row["Koord. Verifiziiert"] === "ja" ? "exact" : "unknown") : "within50km",
     lineCoordinatesText: undefined,
     polygonCoordinatesText: undefined,
@@ -448,20 +453,15 @@ function convertRowToIncidentJson(row: Record<string, string>) {
     remoteTriggering: row["Fernausloesung"] === "ja" ? "Yes" : "No",
     startZoneAspect: mapAspect(row["Exposition des Anrissgebiets"]),
     startZoneAspectAccuracy: row["Exposition des Anrissgebiets"] ? "Accurate" : "Uncertain",
-    startZoneElevation:
-      typeof row["Seehoehe des Anrisses [m]"] === "number" ? row["Seehoehe des Anrisses [m]"] : undefined,
+    startZoneElevation: number(row["Seehoehe des Anrisses [m]"]),
     startZoneElevationAccuracy: "unknown",
-    startZoneIncline:
-      typeof row["max. Neigung des Anrissgebiets"] === "number" ? row["max. Neigung des Anrissgebiets"] : undefined,
+    startZoneIncline: number(row["max. Neigung des Anrissgebiets"]),
     startZoneTerrainType: undefined,
-    slabWidth:
-      typeof row["Breite des Anrissgebiets [m]"] === "number" ? row["Breite des Anrissgebiets [m]"] : undefined,
-    crownDepthAvg:
-      typeof row["Anrisshoehe Durchschnitt [cm]"] === "number" ? row["Anrisshoehe Durchschnitt [cm]"] : undefined,
-    crownDepthMin: typeof row["Anrisshoehe Minimum [cm]"] === "number" ? row["Anrisshoehe Minimum [cm]"] : undefined,
-    crownDepthMax: typeof row["Anrisshoehe Maximum [cm]"] === "number" ? row["Anrisshoehe Maximum [cm]"] : undefined,
-    avalancheLength:
-      typeof row["Laenge der Lawinenbahn [m]"] === "number" ? row["Laenge der Lawinenbahn [m]"] : undefined,
+    slabWidth: number(row["Breite des Anrissgebiets [m]"]),
+    crownDepthAvg: number(row["Anrisshoehe Durchschnitt [cm]"]),
+    crownDepthMin: number(row["Anrisshoehe Minimum [cm]"]),
+    crownDepthMax: number(row["Anrisshoehe Maximum [cm]"]),
+    avalancheLength: number(row["Laenge der Lawinenbahn [m]"]),
     weakLayerName: undefined,
     weakLayerGrainType1: undefined,
     weakLayerGrainSize1: undefined,
