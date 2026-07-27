@@ -422,6 +422,11 @@
     "MountainRescue": "Mountain Rescue",
     "Other": "Other"
   },
+  "personInvolvement": {
+    "Yes": "Event involving persons",
+    "No": "Event not involving persons",
+    "Unknown": "Event (unknown)"
+  },
   "otherDamages": {
     "Yes": "Yes",
     "No": "No"
@@ -629,6 +634,25 @@
   "multipleAvalanches": {
     "Yes": "Yes",
     "No": "No"
+  },
+  "avalancheType": {
+    "slab": "slab",
+    "loose": "loose",
+    "glide": "glide",
+    "cornice": "cornice",
+    "unknown": "unknown"
+  },
+  "avalancheSize": {
+    "small": "small",
+    "small_medium": "small–medium",
+    "medium": "medium",
+    "medium_large": "medium–large",
+    "large": "large",
+    "large_very_large": "large–very large",
+    "very_large": "very large",
+    "very_large_extreme": "very large–extreme",
+    "extreme": "extreme",
+    "unknown": "unknown"
   },
   "trigger": {
     "natural": "Natural",

@@ -33,14 +33,25 @@ export class AppComponent {
 
   constructor() {
     // lang
+    // The incident-report resource is layered on top of the main resource with
+    // shouldMerge=true so ngx-translate deep-merges them: shared categories
+    // (e.g. avalancheType) keep the main resource's extra nested keys like
+    // .title/.label/.tooltip instead of being clobbered by a shallow spread.
     this.translateService.addLangs(["de", "it", "en", "fr", "es", "ca", "oc"]);
-    this.translateService.setTranslation("de", { ...de, ...incidentReportDe });
-    this.translateService.setTranslation("it", { ...it, ...incidentReportIt });
-    this.translateService.setTranslation("en", { ...en, ...incidentReportEn });
-    this.translateService.setTranslation("fr", { ...fr, ...incidentReportFr });
-    this.translateService.setTranslation("es", { ...es, ...incidentReportEs });
-    this.translateService.setTranslation("ca", { ...ca, ...incidentReportCa });
-    this.translateService.setTranslation("oc", { ...oc, ...incidentReportOc });
+    this.translateService.setTranslation("de", de);
+    this.translateService.setTranslation("de", incidentReportDe, true);
+    this.translateService.setTranslation("it", it);
+    this.translateService.setTranslation("it", incidentReportIt, true);
+    this.translateService.setTranslation("en", en);
+    this.translateService.setTranslation("en", incidentReportEn, true);
+    this.translateService.setTranslation("fr", fr);
+    this.translateService.setTranslation("fr", incidentReportFr, true);
+    this.translateService.setTranslation("es", es);
+    this.translateService.setTranslation("es", incidentReportEs, true);
+    this.translateService.setTranslation("ca", ca);
+    this.translateService.setTranslation("ca", incidentReportCa, true);
+    this.translateService.setTranslation("oc", oc);
+    this.translateService.setTranslation("oc", incidentReportOc, true);
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translateService.setFallbackLang("en");
     // the lang to use, if the lang isn't available, it will use the current loader to get them
