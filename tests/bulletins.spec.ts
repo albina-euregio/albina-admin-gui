@@ -372,6 +372,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   await page.getByRole("row", { name: "Friday, December 20, 2024" }).getByTitle("edit bulletin").click();
   await waitForGetEdit(page);
   const statusBadge = await page.locator(".badge").first();
+  await expect(statusBadge).not.toContainText("missing");
   if (!(await statusBadge.textContent()).match(/draft|updated/)) {
     await page.getByRole("button", { name: "Edit" }).click();
   }
