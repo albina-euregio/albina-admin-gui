@@ -484,7 +484,7 @@
       "regionEditable": "Questa meteo-nivo zona può essere modificata.",
       "regionNotEditable": "Questa meteo-nivo zona non può essere modificata.",
       "regionLocked": "Questa meteo-nivo zona è bloccata.",
-      "changeDangerRatingElevation": "Estendi il pericolo valanghe",
+      "changeDangerRatingElevation": "Estendi il grado di pericolo valanghe",
       "mapTop": "Mappa in alto",
       "mapLeft": "Mappa a lato",
       "showExternalRegions": "Mostra meteo-nivo zone esterne",
@@ -1178,15 +1178,10 @@
   },
   "avalancheSize": {
     "small": "piccola",
-    "small_medium": "piccolo-medio",
     "medium": "media",
-    "medium_large": "medio - grande",
     "large": "grande",
-    "large_very_large": "grande - molto grande",
     "very_large": "molto grande",
-    "very_large_extreme": "molto grande - estremamente grand",
-    "extreme": "estremamente grande",
-    "unknown": "sconosciuto"
+    "extreme": "estremamente grande"
   },
   "complexity": {
     "easy": "Facile",

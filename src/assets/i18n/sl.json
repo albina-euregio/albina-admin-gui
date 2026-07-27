@@ -1178,15 +1178,10 @@
   },
   "avalancheSize": {
     "small": "majhni",
-    "small_medium": "small–medium",
     "medium": "srednji",
-    "medium_large": "medium–large",
     "large": "veliki",
-    "large_very_large": "large–very large",
     "very_large": "zelo veliki",
-    "very_large_extreme": "very large–extreme",
-    "extreme": "izjemno veliki",
-    "unknown": "neznano"
+    "extreme": "izjemno veliki"
   },
   "complexity": {
     "easy": " Easy",
@@ -1404,6 +1399,8 @@
     "no": "Ne"
   },
   "observations": {
+    "$externalURL": "External URL (e.g. to photo database)",
+    "$type": "Observation type",
     "allowEdit": "Uredi zunanje opazovanje",
     "allowEditTooltip": "This will prevent overwrites from {{ value }}",
     "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
@@ -1411,6 +1408,7 @@
     "authorName": "Ime avtorja",
     "avalancheLength": "Dolžina plazu",
     "avalancheProblem": "Plazovni problem",
+    "avalancheProblems": "Avalanche problem",
     "avalancheSize": "Velikost plazov",
     "avalancheType": "Vrsta plazu",
     "avalancheWidth": "Širina plazu",
@@ -1463,6 +1461,7 @@
     },
     "comment": "Komentar",
     "content": "Vsebina",
+    "dangerPatterns": "Danger patterns",
     "dangerRating": "Stopnja nevarnosti",
     "dangerSource": "Danger source",
     "elevation": "Nadmorska višina",
@@ -1486,6 +1485,7 @@
     "fractureDepth": "Fracture depth",
     "hasCoordinates": "Ima koordinate",
     "incline": "Incline",
+    "importantObservations": "Important observations",
     "latitude": "Geografska širina",
     "locationName": "Lokacija",
     "longitude": "Geografska višina",
@@ -1493,6 +1493,7 @@
     "personInvolvement": "Person involvement",
     "reportDate": "Datum poročila",
     "showTable": "Tabela",
+    "stability": "Snowpack Stability",
     "withoutCoordinates": "Opazovanje brez koordinat:",
     "sidebar": {
       "filter": {

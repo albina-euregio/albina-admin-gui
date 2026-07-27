@@ -1178,15 +1178,10 @@
   },
   "avalancheSize": {
     "small": "klein",
-    "small_medium": "klein–mittel",
     "medium": "mittel",
-    "medium_large": "mittel–groß",
     "large": "groß",
-    "large_very_large": "groß–sehr groß",
     "very_large": "sehr groß",
-    "very_large_extreme": "sehr groß–extrem",
-    "extreme": "extrem",
-    "unknown": "unbekannt"
+    "extreme": "extrem"
   },
   "complexity": {
     "easy": "Einfach",
