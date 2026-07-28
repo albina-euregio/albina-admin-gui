@@ -86,7 +86,7 @@ export const BulletinInformationSchema = z.object({
   dangerRating: z
     .enum(Enums.DangerRating)
     .exclude([Enums.DangerRating.missing])
-    .register(widgetRegistry, { widget: "dangerRating" })
+    .register(widgetRegistry, { widget: "dangerRating", public: true })
     .nullish(),
 
   avalancheProblems: AvalancheProblemSchema.array()
