@@ -391,48 +391,65 @@
 
     <!-- Groups sub-tab -->
     @if (activeGroupSubTab === "groups" || displayOnly) {
-      <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
-        <div class="d-flex flex-wrap gap-1 flex-grow-1">
-          @for (group of incidentReport().groupInformation; track $index; let i = $index) {
-            <button
-              class="btn btn-sm d-flex align-items-center gap-1"
-              [class.d-none]="displayOnly"
-              [class.btn-dark]="activeGroupIndex === i"
-              [class.btn-outline-dark]="activeGroupIndex !== i"
-              (click)="activeGroupIndex = i"
-            >
-              {{ group.anonymousGroupIdentifier }}
-              @if (isGroupValid(group)) {
-                <i class="ph ph-check text-success" title="{{ 'zodForm.valid' | translate }}"></i>
-              } @else {
-                <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
-              }
-            </button>
-          }
-        </div>
-        <button
-          class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
-          [class.d-none]="displayOnly"
-          (click)="newGroupInformation()"
-        >
-          <i class="ph ph-plus"></i> {{ "incidentReportUI.addGroup" | translate }}
-        </button>
-      </div>
-
       @if (!incidentReport().groupInformation?.length) {
         <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
+      } @else if (displayOnly) {
+        <!-- Preview: show every group in accordions -->
+        <accordion class="accordion">
+          @for (group of incidentReport().groupInformation; track group.id; let i = $index) {
+            <accordion-group class="accordion-group" [isOpen]="true">
+              <div accordion-heading class="accordion-header">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="accordion__arrow ph ph-caret-right"></i>
+                  <span class="fw-semibold text-secondary">{{ group.anonymousGroupIdentifier }}</span>
+                </div>
+              </div>
+              <app-zod-schema-form
+                [disabled]="disabled()"
+                [displayMode]="displayMode()"
+                [value]="group"
+                (valueChange)="updateGroupInformation(i, $event)"
+                [zodType]="IncidentModels.GroupInformationSchema"
+                [labelI18n]="labelI18n"
+                [helpI18n]="helpI18n"
+              />
+            </accordion-group>
+          }
+        </accordion>
       } @else {
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <div class="d-flex flex-wrap gap-1 flex-grow-1">
+            @for (group of incidentReport().groupInformation; track $index; let i = $index) {
+              <button
+                class="btn btn-sm d-flex align-items-center gap-1"
+                [class.btn-dark]="activeGroupIndex === i"
+                [class.btn-outline-dark]="activeGroupIndex !== i"
+                (click)="activeGroupIndex = i"
+              >
+                {{ group.anonymousGroupIdentifier }}
+                @if (isGroupValid(group)) {
+                  <i class="ph ph-check text-success" title="{{ 'zodForm.valid' | translate }}"></i>
+                } @else {
+                  <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
+                }
+              </button>
+            }
+          </div>
+          <button
+            class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+            (click)="newGroupInformation()"
+          >
+            <i class="ph ph-plus"></i> {{ "incidentReportUI.addGroup" | translate }}
+          </button>
+        </div>
+
         @let activeGroup = incidentReport().groupInformation![activeGroupIndex];
         @if (activeGroup) {
           <div class="card shadow-sm border">
             <div class="card-header d-flex justify-content-between align-items-center bg-light">
               <span class="fw-semibold text-secondary h6 mb-0">{{ activeGroup.anonymousGroupIdentifier }}</span>
               @if (activeGroupIndex > 0) {
-                <button
-                  class="btn btn-sm btn-outline-danger"
-                  [class.d-none]="displayOnly"
-                  (click)="removeGroupInformation(activeGroupIndex)"
-                >
+                <button class="btn btn-sm btn-outline-danger" (click)="removeGroupInformation(activeGroupIndex)">
                   <i class="ph ph-trash"></i> {{ "incidentReportUI.removeGroup" | translate }}
                 </button>
               }
@@ -455,47 +472,65 @@
 
     <!-- Victims sub-tab -->
     @if (activeGroupSubTab === "victims" || displayOnly) {
-      <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
-        <div class="d-flex flex-wrap gap-1 flex-grow-1">
-          @for (victim of incidentReport().victimInformation; track $index; let i = $index) {
-            <button
-              class="btn btn-sm d-flex align-items-center gap-1"
-              [class.d-none]="displayOnly"
-              [class.btn-dark]="activeVictimIndex === i"
-              [class.btn-outline-dark]="activeVictimIndex !== i"
-              (click)="activeVictimIndex = i"
-            >
-              {{ victim.anonymousVictimIdentifier }}
-              @if (isVictimValid(victim)) {
-                <i class="ph ph-check text-success" title="{{ 'zodForm.valid' | translate }}"></i>
-              } @else {
-                <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
-              }
-            </button>
-          }
-        </div>
-        <button
-          class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
-          [class.d-none]="displayOnly"
-          (click)="newVictimInformation()"
-        >
-          <i class="ph ph-plus"></i> {{ "incidentReportUI.addVictim" | translate }}
-        </button>
-      </div>
-
       @if (!incidentReport().victimInformation?.length) {
         <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
+      } @else if (displayOnly) {
+        <!-- Preview: show every victim in accordions -->
+        <accordion class="accordion">
+          @for (victim of incidentReport().victimInformation; track victim.id; let i = $index) {
+            <accordion-group class="accordion-group" [isOpen]="true">
+              <div accordion-heading class="accordion-header">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="accordion__arrow ph ph-caret-right"></i>
+                  <span class="fw-semibold text-secondary">{{ victim.anonymousVictimIdentifier }}</span>
+                </div>
+              </div>
+              <app-zod-schema-form
+                [disabled]="disabled()"
+                [displayMode]="displayMode()"
+                [value]="victim"
+                (valueChange)="updateVictimInformation(i, $event)"
+                [zodType]="IncidentModels.VictimInformationSchema"
+                [labelI18n]="labelI18n"
+                [helpI18n]="helpI18n"
+                [selectOptions]="groupIdentifierOptions"
+              />
+            </accordion-group>
+          }
+        </accordion>
       } @else {
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <div class="d-flex flex-wrap gap-1 flex-grow-1">
+            @for (victim of incidentReport().victimInformation; track $index; let i = $index) {
+              <button
+                class="btn btn-sm d-flex align-items-center gap-1"
+                [class.btn-dark]="activeVictimIndex === i"
+                [class.btn-outline-dark]="activeVictimIndex !== i"
+                (click)="activeVictimIndex = i"
+              >
+                {{ victim.anonymousVictimIdentifier }}
+                @if (isVictimValid(victim)) {
+                  <i class="ph ph-check text-success" title="{{ 'zodForm.valid' | translate }}"></i>
+                } @else {
+                  <i class="ph ph-warning text-danger" title="{{ 'incidentReportUI.incomplete' | translate }}"></i>
+                }
+              </button>
+            }
+          </div>
+          <button
+            class="btn btn-sm btn-success d-flex align-items-center gap-1 flex-shrink-0"
+            (click)="newVictimInformation()"
+          >
+            <i class="ph ph-plus"></i> {{ "incidentReportUI.addVictim" | translate }}
+          </button>
+        </div>
+
         @let activeVictim = incidentReport().victimInformation![activeVictimIndex];
         @if (activeVictim) {
           <div class="card shadow-sm border">
             <div class="card-header d-flex justify-content-between align-items-center bg-light">
               <span class="fw-semibold text-secondary h6 mb-0">{{ activeVictim.anonymousVictimIdentifier }}</span>
-              <button
-                class="btn btn-sm btn-outline-danger"
-                [class.d-none]="displayOnly"
-                (click)="removeVictimInformation(activeVictimIndex)"
-              >
+              <button class="btn btn-sm btn-outline-danger" (click)="removeVictimInformation(activeVictimIndex)">
                 <i class="ph ph-trash"></i> {{ "incidentReportUI.removeVictim" | translate }}
               </button>
             </div>
