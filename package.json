@@ -107,7 +107,7 @@
       "onFail": "download"
     }
   },
-  "packageManager": "pnpm@11.9.0",
+  "packageManager": "pnpm@11.17.0",
   "angular-cli": {},
   "copyright": "Copyright 2017 Norbert Lanzanasto",
   "url": "https://avalanche.report/"
