@@ -2,7 +2,7 @@ import { uniq } from "es-toolkit";
 import { z } from "zod/v4";
 
 import * as Enums from "../enums/enums";
-import { LangTextsSchema } from "../models/text.model";
+import { LangTextsSchema, normalizeLangTextsNbsp } from "../models/text.model";
 import { widgetRegistry } from "../shared/zod-schema-form.widget-registry";
 import { enumWithOther, pickPublicFields, withShowIf } from "../shared/zod-util";
 
@@ -639,11 +639,19 @@ export function toPublicIncidentReport(report: IncidentReport) {
   return {
     ...publicReport,
     involvementsFatalitiesBurials,
-    ...(report.incidentLedePublic && { incidentLede: report.incidentLede }),
-    ...(report.incidentDescriptionPublic && { incidentDescription: report.incidentDescription }),
-    ...(report.weatherDescriptionPublic && { weatherDescription: report.weatherDescription }),
-    ...(report.avalancheDescriptionPublic && { avalancheDescription: report.avalancheDescription }),
-    ...(report.snowpackDescriptionPublic && { snowpackDescription: report.snowpackDescription }),
-    ...(report.takeAwaysPublic && { takeAways: report.takeAways }),
+    // Rich text is often pasted from external sources; strip paste-artifact
+    // non-breaking spaces so the website can wrap lines between words.
+    ...(report.incidentLedePublic && { incidentLede: normalizeLangTextsNbsp(report.incidentLede) }),
+    ...(report.incidentDescriptionPublic && {
+      incidentDescription: normalizeLangTextsNbsp(report.incidentDescription),
+    }),
+    ...(report.weatherDescriptionPublic && { weatherDescription: normalizeLangTextsNbsp(report.weatherDescription) }),
+    ...(report.avalancheDescriptionPublic && {
+      avalancheDescription: normalizeLangTextsNbsp(report.avalancheDescription),
+    }),
+    ...(report.snowpackDescriptionPublic && {
+      snowpackDescription: normalizeLangTextsNbsp(report.snowpackDescription),
+    }),
+    ...(report.takeAwaysPublic && { takeAways: normalizeLangTextsNbsp(report.takeAways) }),
   };
 }

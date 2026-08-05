@@ -35,3 +35,32 @@ export function convertLangTextsToJSON(t: LangTexts): TextModel[] {
 export function emptyLangTexts(): LangTexts {
   return toLangTexts(LANGUAGES.map((l) => ({ languageCode: l, text: "" })));
 }
+
+const NBSP = /&nbsp;| /g;
+
+/**
+ * Replace paste-artifact non-breaking spaces in a rich-text (HTML) string with
+ * ordinary spaces.
+ *
+ * If non-breaking spaces are the *majority* of the whitespace they are
+ * almost certainly a paste artifact and should become ordinary spaces; if
+ * ordinary spaces dominate the text is left untouched.
+ */
+export function normalizeCopiedNbsp<T extends string | null | undefined>(html: T): T {
+  if (!html) return html;
+  // Count whitespace on the visible text only, so tag names and attribute
+  // values (e.g. `style="..."`) don't skew the ratio.
+  const text = html.replace(/<[^>]*>/g, "");
+  const nbspCount = (text.match(NBSP) || []).length;
+  if (nbspCount === 0) return html;
+  const spaceCount = (text.match(/ /g) || []).length;
+  // Ordinary spaces dominate -> treat remaining nbsp as intentional, keep as-is.
+  if (nbspCount <= spaceCount) return html;
+  return html.replace(NBSP, " ") as T;
+}
+
+/** Apply {@link normalizeCopiedNbsp} to every language of a rich-text field. */
+export function normalizeLangTextsNbsp<T extends LangTexts | null | undefined>(texts: T): T {
+  if (!texts) return texts;
+  return Object.fromEntries(Object.entries(texts).map(([lang, text]) => [lang, normalizeCopiedNbsp(text)])) as T;
+}
