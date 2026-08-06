@@ -24,7 +24,7 @@
     - text: URL to server images
     - textbox "URL to server images": https://admin.avalanche.report/images/
     - text: URL to education content
-    - textbox "URL to education content": https://avalanche.report/admin/education/
+    - textbox "URL to education content": https://extra.avalanche.report/admin-education/
     - text: Number of micro regions
     - spinbutton "Number of micro regions"
     - text: ID of sub regions
@@ -32,5 +32,5 @@
     - text: ID of super regions
     - textbox: EUREGIO
     - text: ID of neighbouring regions
-    - textbox: /IT-\d+-BZ,AT-\d+/
+    - textbox: IT-32-BZ,AT-02
   - button " Save"
