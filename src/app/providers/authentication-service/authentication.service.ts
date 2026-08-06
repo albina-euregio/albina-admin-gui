@@ -143,22 +143,19 @@ export class AuthenticationService {
     const body = JSON.stringify({ username: server.userName, password: server.password });
     return this.http.post(url, body).pipe(
       map((json) => {
-        const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(json);
+        const data = ExternalServerLoginSchema.parse(json);
         return this.addExternalServer(server, data);
       }),
     );
   }
 
-  private addExternalServer(
-    server0: ServerConfiguration,
-    json: AuthenticationResponse | { access_token: string },
-  ): boolean {
+  private addExternalServer(server0: ServerConfiguration, json: ExternalServerLogin): boolean {
     if (!json.access_token) {
       return false;
     }
     const server = ServerSchema.parse({
       ...server0,
-      regions: (json as AuthenticationResponse).regions?.map((r) => r.id),
+      regions: json.regions?.map((r) => r.id),
       accessToken: json.access_token,
     });
     this.externalServers.push(server);
@@ -322,6 +319,17 @@ export const AuthenticationResponseSchema = z.object({
   api_url: z.string().nullish(),
 });
 export type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;
+
+/**
+ * External instances (GeoSphere, …) run their own ALBINA version, whose user and region
+ * configuration need not validate against ours (different languages, unset fields sent as
+ * `null`, …). We only ever store the token and the region IDs, so parse just those.
+ */
+export const ExternalServerLoginSchema = z.object({
+  access_token: z.string(),
+  regions: z.object({ id: z.string() }).array().nullish(),
+});
+export type ExternalServerLogin = z.infer<typeof ExternalServerLoginSchema>;
 
 /**
  * @deprecated
