@@ -36,7 +36,7 @@ export function emptyLangTexts(): LangTexts {
   return toLangTexts(LANGUAGES.map((l) => ({ languageCode: l, text: "" })));
 }
 
-const NBSP = /&nbsp;| /g;
+const NBSP = /&nbsp;|\u00a0/g;
 
 /**
  * Replace paste-artifact non-breaking spaces in a rich-text (HTML) string with
