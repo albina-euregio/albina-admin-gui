@@ -168,7 +168,7 @@
         "loadVariants": "Carica le varianti del giorno precedente",
         "loadVariantsFromForecast": "Carica le varianti dalla previsione",
         "showVariantsOnMap": "Mostrare varianti sulla mappa",
-        "edit": "Modifica le micro-zone",
+        "edit": "Modifica le micro zone",
         "copy": "Copia variante",
         "delete": "elimina la variante",
         "compare": "paragona le varianti",
@@ -252,7 +252,7 @@
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "Almeno una micro-area deve appartenere alla tua Provincia.",
+        "message": "Almeno una micro zona deve appartenere alla tua Provincia.",
         "accept": "Ok"
       },
       "discardDialog": {
@@ -330,7 +330,7 @@
     "publicationChecklist": {
       "title": "Lista di controllo per la pubblicazione",
       "description": {
-        "website": "La mappa sul sito web mostra i gradi di pericolo con i relativi colori. Cliccando su una regione vengono visualizzati i problemi valanghivi e i relativi testi.",
+        "website": "La mappa sul sito web mostra i gradi di pericolo con i relativi colori. Cliccando su una meteo-nivo zona vengono visualizzati i problemi valanghivi e i relativi testi.",
         "email": "È stata inviata un'e-mail che contiene il bollettino.",
         "telegram": "È stato pubblicato un messaggio che contiene un link al sito web.",
         "whatsapp": "È stato pubblicato un messaggio che contiene un link al sito web."
@@ -383,6 +383,7 @@
       "savedInfo": "Salvato da {{user}}, {{time}}",
       "print": {
         "contact": {
+          "title": "Emergency contact",
           "emailLabel": "E-mail:",
           "nameLabel": "Nome:",
           "phoneLabel": "Telefono:"
@@ -418,7 +419,7 @@
     },
     "create": {
       "tooltip": {
-        "edit": "Modifica le micro-zone",
+        "edit": "Modifica le micro zone",
         "copy": "Copia meteo-nivo zona",
         "delete": "Elimina  meteo-nivo zona",
         "deleteProblem": "Cancella problema valanghivo",
@@ -531,7 +532,7 @@
       "photos": {
         "url": "URL Foto",
         "locationName": "Località",
-        "microregion": "micro zona",
+        "microregion": "Micro zona",
         "copyright": "Copyright",
         "date": "Data"
       },
@@ -556,7 +557,7 @@
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Vuoi caricare i bollettini del giorno precedente?<br><strong>Questa scelta eliminerà tutte le valutazioni esistenti!</strong>",
+        "message": "Vuoi caricare i bollettini del giorno precedente?<br><strong>Questa scelta eliminerà tutte le meteo-nivo zone esistenti!</strong>",
         "accept": "Sí",
         "reject": "No"
       },
@@ -566,7 +567,7 @@
         "reject": "No"
       },
       "loadSuggestionsFromDangerSourcesDialog": {
-        "message": "Vuoi caricare i risultati provenienti dalla origini di pericolo?<br><strong>Questa scelta eliminerà tutte le valutazioni esistenti!</strong>",
+        "message": "Vuoi caricare i risultati provenienti dalla origini di pericolo?<br><strong>Questa scelta eliminerà tutte le meteo-nivo zone esistenti!</strong>",
         "accept": "Sì",
         "reject": "No"
       },
@@ -728,7 +729,7 @@
           "error": "Non è stato possibile inviare le notifiche push!"
         },
         "accept": "Ok",
-        "confirm": "Voi inviare al canale {{channel}} ({{language}})?"
+        "confirm": "Voi inviare al {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "File media",
@@ -750,7 +751,7 @@
         "accept": "Ok"
       },
       "submitBulletinsDuplicateRegionDialog": {
-        "message": "Micro-aree valutate più volte! Non è possibile inviare il bollettino valanghe.",
+        "message": "Meteo-nivo zone valutate più volte! Non è possibile inviare il bollettino valanghe.",
         "accept": "Ok"
       },
       "checkBulletinsErrorDialog": {
@@ -772,12 +773,12 @@
       "bulletinCheck": {
         "missingDangerRating": "Grado di pericolo non definito",
         "missingDangerRatingModificator": "Modificatore del grado di pericolo non selezionato",
-        "missingRegion": "  Meteo-nivo zone non valutate",
+        "missingRegion": "Meteo-nivo zone non valutate",
         "duplicateRegion": "Meteo-nivo zone valutate più volte",
         "missingAvActivityHighlights": "Manca titolo situazione di pericolo",
         "missingAvActivityComment": "Manca valutazione pericolo valanghe",
-        "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
-        "missingSnowpackStructureComment": "Manca la descrizione del manto nevoso",
+        "missingSnowpackStructureHighlights": "Manca il titolo della descrizione della struttura del manto nevoso",
+        "missingSnowpackStructureComment": "Manca la descrizione della struttura del manto nevoso",
         "pendingSuggestions": "Proposta non confermata",
         "incompleteTranslation": "Traduzione incompleta"
       }
@@ -790,7 +791,7 @@
   "admin": {
     "loadingStatistics": "Creazione CSV ...",
     "server-configuration": {
-      "title": "dServer",
+      "title": "Server",
       "button": {
         "create": "Crea server",
         "save": "Salva"
@@ -800,7 +801,7 @@
         "userName": "Nome utente",
         "password": "Password",
         "publishAt5PM": "Pubblica alle 17:00",
-        "publishAt8AM": "Publica alle 08:00",
+        "publishAt8AM": "Pubblica alle 08:00",
         "pdfDirectory": "Cartella per PDF",
         "htmlDirectory": "Cartella per HTML",
         "serverImagesUrl": "Path alle immagini sul server",
@@ -814,9 +815,9 @@
       "error": "Non é stato possibile salvare le configurazione"
     },
     "region-configuration": {
-      "title": "Regione",
+      "title": "Meteo-nivo zona",
       "button": {
-        "create": "Crea regione",
+        "create": "Crea meteo-nivo zona",
         "save": "Salva"
       },
       "table": {
@@ -871,7 +872,7 @@
       },
       "updateUser": {
         "success": "Utente salvato con successo",
-        "error": " Non è stato possibile salvare l’utente"
+        "error": "Non è stato possibile salvare l’utente"
       }
     },
     "createUser": {
@@ -883,7 +884,7 @@
         "password": "Password",
         "password2": "Ripeti la password",
         "roles": "Ruoli",
-        "regions": "Regioni"
+        "regions": "Meteo-nivo zone"
       },
       "error": {
         "name": {
@@ -925,7 +926,7 @@
       },
       "selectRegion": {
         "placeholder": "Meteo-nivo zona",
-        "selectionLabel": "{0} meteo-nivo zona/e selezionata/e"
+        "selectionLabel": "{0} meteo-nivo zone selezionate"
       },
       "selectSources": {
         "placeholder": "origine dati",
@@ -937,7 +938,7 @@
         "reload": "Ricarica",
         "classify": "Classifica",
         "label": "Denominazione",
-        "invert": "Invert",
+        "invert": "Inversione",
         "reset": "Reset",
         "aspect": {
           "caption": "Esposizione"
@@ -977,14 +978,14 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Invia le Email, Telegram, WhatsApp e Push",
+        "tooltip": "Invia email, Telegram, WhatsApp e Push",
         "success": "Email, Telegram, WhatsApp e Push inviati con successo!",
-        "error": "Non è stato possibile inviare le Email, Telegram, WhatApp e Push!"
+        "error": "Non è stato possibile inviare le email, Telegram, WhatApp e Push!"
       },
       "email": {
         "tooltip": "Invia email",
         "success": "Email inviati con successo!",
-        "error": "Non è stato possibile inviare Email!"
+        "error": "Non è stato possibile inviare email!"
       },
       "telegram": {
         "tooltip": "Pubblicazione via canale Telegram",
@@ -1006,7 +1007,7 @@
   "settings": {
     "title": "Impostazioni",
     "effectiveRole": "Ruolo effettivo",
-    "effectiveRoleDefault": "tutti i ruoli",
+    "effectiveRoleDefault": "Tutti i ruoli",
     "changePassword": {
       "title": "Cambia password",
       "oldPassword": {
@@ -1056,7 +1057,7 @@
       "duplicates": "Doppioni"
     },
     "error": {
-      "downloadFailed": " L'esportazione delle statistiche non è stata scaricata correttamente. Riprova."
+      "downloadFailed": "L'esportazione delle statistiche non è stata scaricata correttamente. Riprova."
     }
   },
   "dangerRating": {
@@ -1101,12 +1102,12 @@
     "dp10": "st.10: situazione primaverile"
   },
   "strategicMindset": {
-    "title": "Mondset strategico",
+    "title": "Mindset strategico",
     "assessment": "Elevata incertezza",
     "stepping_out": "Miglioramento",
     "status_quo": "Status quo",
-    "stepping_back": "Decelerazione",
-    "entrenchment": "Persistente instabile",
+    "stepping_back": "In peggioramento",
+    "entrenchment": "Instabile persistente",
     "free_ride": "Favorevole",
     "high_alert": "Massima allerta",
     "spring_diurnal": "Situazione primaverile"
@@ -1114,11 +1115,11 @@
   "observationType": {
     "DrySnowfallLevel": "Limite nevicate asciutte ",
     "TimeSeries": "Serie cronologica",
-    "Incident": "Incidente",
+    "Incident": "Evento valanghivo",
     "Profile": "Profilo stratigrafico",
     "Closure": "Chiusura",
     "Blasting": "Brillamento",
-    "Avalanche": "valanga",
+    "Avalanche": "Valanga",
     "Evaluation": "Valutazione",
     "SimpleObservation": "Osservazione semplice",
     "Webcam": "Webcam"
@@ -1132,13 +1133,13 @@
     "VeryLightNewSnow": "Neve fresca leggerissima"
   },
   "elevationTolerance": {
-    "exact": "esato",
+    "exact": "esatto",
     "50m": "±50m",
     "100m": "±100m",
     "200": "±200m"
   },
   "elevationPeriod": {
-    "duringPrecipitationEvent": "Limite delle nevicate asciutte per l'intero periodo di precipitazione",
+    "duringPrecipitationEvent": "Limite delle nevicate asciutte per l’intero evento precipitativo",
     "observationPeriod": "Limite delle nevicate asciutte durante il momento di osservazione"
   },
   "aspect": {
@@ -1264,7 +1265,7 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "al di sotto più morbido",
+    "decreasing": "in basso più morbido",
     "steady": "uniforme",
     "increasing": "al di sopra più morbido"
   },
@@ -1274,8 +1275,8 @@
     "distant_from_ridgelines": "zone lontano dalle creste",
     "in_the_vicinity_of_peaks": " in prossimità delle cime",
     "pass_areas": "zone ai passi",
-    "shady_slopes": "Pendii ombreggiati",
-    "sunny_slopes": "Pendii soleggiati",
+    "shady_slopes": "pendii ombreggiati",
+    "sunny_slopes": "pendii soleggiati",
     "grassy_slopes": "pendii erbosi",
     "cut_slopes": "scarpate",
     "wind_loaded_slopes": "pendii carichi di neve ventata",
@@ -1284,13 +1285,13 @@
     "transitions_into_gullies_and_bowls": "passaggi che conducono a conche e canaloni",
     "areas_where_the_snow_cover_is_rather_shallow": "zone scarsamente innevate",
     "transitions_from_a_shallow_to_a_deep_snowpack": "zone di passaggio da poca a molta neve",
-    "highly_frequented_off_piste_terrain": "zone escursionistiche molto frequentate",
-    "little_used_backcountry_terrain": "zone escursionistiche poco frequentate",
+    "highly_frequented_off_piste_terrain": "zone fuori pista molto frequentate",
+    "little_used_backcountry_terrain": "zone fuori pista poco frequentate",
     "places_that_are_protected_from_the_wind": "zone riparate dal vento",
     "regions_exposed_to_the_foehn_wind": " aree esposte al Föhn",
     "regions_with_a_lot_of_snow": "aree con tanta neve",
-    "regions_exposed_to_precipitation": "areee colpite dalle precipitazioni",
-    "regions_exposed_to_heavier_precipitation": " aree più colpite dalle precipitazioni"
+    "regions_exposed_to_precipitation": "aree esposte a precipitazioni",
+    "regions_exposed_to_heavier_precipitation": " aree più esposte a precipitazioni"
   },
   "dangerSign": {
     "shooting_cracks": "crepe",
@@ -1428,7 +1429,7 @@
         "globalRadiation": "Radiazione globale",
         "newSnow": "Neve fresca",
         "snowLine": "Limite delle nevicate",
-        "snowHeight": "altezza neve",
+        "snowHeight": "Altezza neve",
         "snowDifference": "Differenza altezza neve",
         "airTemperature": "Temperatura dell'aria",
         "airTemperatureMax": "Temperatura dell'aria max.",
@@ -1472,7 +1473,7 @@
     "eventType": "Tipologia dell'evento",
     "eventTypes": {
       "IMPORTANT": "Evento importante",
-      "NEIGHBOR_REGION": "Regione confinante",
+      "NEIGHBOR_REGION": "Meteo-nivo zona confinante",
       "NORMAL": "Evento normale",
       "PERSON_DEAD": "Evento con persone coinvolte (vittime)",
       "PERSON_INJURED": "Evento con persone coinvolte (feriti)",
@@ -1500,13 +1501,13 @@
         "title": "Filtro"
       },
       "legend": {
-        "title": "Leggenda"
+        "title": "Didascalia"
       },
       "sources": {
         "title": "Fonti dei dati"
       },
       "views": {
-        "title": "Views"
+        "title": "visualizzazioni"
       }
     }
   },
@@ -1514,7 +1515,7 @@
     "Dead": "Evento con persone coinvolte (vittime)",
     "Injured": "Evento con persone coinvolte (feriti)",
     "Yes": "Evento con coinvolgimento di persone",
-    "No": "Evento senza coinvolgimento persone",
+    "No": "Evento senza coinvolgimento di persone",
     "Uninjured": "Evento con coinvolgimento di persone (non ferite)",
     "Unknown": "Evento (sconosciuto)"
   },
@@ -1533,7 +1534,7 @@
       "Nh": "nuvolosità alta in /8",
       "Nm": "nuvolosità media in /8",
       "Nl": "nuvolosità bassa in /8",
-      "N-CU": "copertura con nubi cumuliforme in /8",
+      "N-CU": "copertura con nubi cumuliformi in /8",
       "AUSL.T": "temperatura trigger",
       "SHW-IX": "Indice Showalter",
       "WX -CUF": "tempo significativo: NIL (nulla), RASH (pioggia), TS (temporale)",
@@ -1552,7 +1553,7 @@
       "T GND": "temperatura al suolo",
       "Max-ADI": "temperatura massima di miscelazione [°C]",
       "Min Max": "temperatura min./max. nelle ultime 24h",
-      "FROST": "limite degli zero gradi [m]",
+      "FROST": "limite dello zero termico [m]",
       "W cm": "500 hPa eq. vento verticale [cm/s]",
       "W --": "700 hPa eq. vento verticale [cm/s]",
       "W s": "{{value}} hPa eq. vento verticale [cm/s]",
@@ -1561,11 +1562,11 @@
     }
   },
   "awsome": {
-    "Aggregation band": "Fascia di altitudine per profili aggregati",
+    "Aggregation band": "Fascia altitudinale per profili aggregati",
     "Date": "Data",
     "Datetag": "Tag data",
     "Depth": "Profondità",
-    "Dry instability": "Instabilità asciuta",
+    "Dry instability": "Instabilità asciutta",
     "fair (<0.77)": "discreta (<0.77)",
     "fair (<1.05)": "discreta (>1.05)",
     "Grain type": "Tipologia grano",
@@ -1574,7 +1575,7 @@
     "poor (<=3)": "scarso (<=3)",
     "poor (<0.95)": "scarso (<0.95)",
     "poor (>=0.77)": "scarso (>=0.77)",
-    "Punstable": "Punstable",
+    "Punstable": "P(unstable)",
     "rather stable (<0.7)": "piuttosto stabile (<0.7)",
     "rather stable (<1)": "piuttosto stabile (<1)",
     "rather stable (>1.05)": "piuttosto stabile (>1.05)",
@@ -1601,7 +1602,7 @@
       "selectWeatherStation": "Seleziona stazione meteorologica",
       "selectMicroRegions": "Seleziona micro-zone",
       "clearselection": "Cancella selezione",
-      "noMicroRegionsSelected": "pochissimi",
+      "noMicroRegionsSelected": "nessuno/a",
       "last7days": "Ultimi sette giorni",
       "last30days": "Ultimi 30 giorni",
       "last90days": "Ultimi 90 giorni",
@@ -1612,11 +1613,11 @@
       "aws-observations": "Osservazione servizi valanghe",
       "aws-danger-rating": "Grado pericolo valanghe",
       "aws-danger-rating-altitude": "Grado di pericolo a base di quota",
-      "aws-avalanche-activity-index": "Indice attività valanghe",
+      "aws-avalanche-activity-index": "Indice attività valanghiva",
       "aws-danger-rating-danger-source-variants": "Variazioni dell'origine di pericolo",
       "aws-danger-source-variants-matrix-parameter-stability": "Stabilità delle variazioni dell'origine di pericolo",
       "aws-danger-source-variants-matrix-parameter-frequency": "Frequenza delle variazioni dell'origine di pericolo",
-      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Dimensione valanga delle variazioni dell'origine di pericolo"
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Dimensioni delle valanghe associate alle varianti delle fonti di pericolo"
     },
     "error": {
       "startDateBeforeEndDate": "La data di inizio deve essere precedente o uguale alla data di fine.",

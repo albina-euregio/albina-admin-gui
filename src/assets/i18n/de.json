@@ -383,6 +383,7 @@
       "savedInfo": "Gespeichert von {{user}}, {{time}}",
       "print": {
         "contact": {
+          "title": "Notfallkontakt",
           "emailLabel": "E-Mail:",
           "nameLabel": "Name:",
           "phoneLabel": "Telefon:"
@@ -1138,8 +1139,8 @@
     "200": "±200m"
   },
   "elevationPeriod": {
-    "duringPrecipitationEvent": "Höhengrenze des trockene Schneefall während des gesamten Niederschlagsereignisses",
-    "observationPeriod": "Höhengrenze des trockene Schneefall zum Beobachtungszeitpunkt"
+    "duringPrecipitationEvent": "Höhengrenze des trockenen Schneefalls während des gesamten Niederschlagsereignisses",
+    "observationPeriod": "Höhengrenze des trockenen Schneefalls zum Beobachtungszeitpunkt"
   },
   "aspect": {
     "N": "N",
@@ -1582,7 +1583,7 @@
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
     "very poor (<=0.5)": "sehr schlecht (<=0.5)",
     "very poor (>3)": "sehr schlecht (>3)",
-    "Wet instability": "Instabilität trockene Schneedecke"
+    "Wet instability": "Instabilität nassen Schneedecke"
   },
   "channelStatus": {
     "loading": "Informationen über Publikationsstati werden geladen...",

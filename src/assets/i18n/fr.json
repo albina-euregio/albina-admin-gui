@@ -383,6 +383,7 @@
       "savedInfo": "Enregistré par {{user}}, {{time}}",
       "print": {
         "contact": {
+          "title": "Emergency contact",
           "emailLabel": "E-mail :",
           "nameLabel": "Nom :",
           "phoneLabel": "Téléphone :"
