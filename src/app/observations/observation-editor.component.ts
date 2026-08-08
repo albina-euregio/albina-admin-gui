@@ -6,6 +6,7 @@ import { DangerSourcesService } from "app/danger-sources/danger-sources.service"
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { ElevationService } from "app/providers/map-service/elevation.service";
+import { parseLeitstelleTirol } from "app/shared/leitstelle-tirol";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
 import { orderBy } from "es-toolkit";
 import { Feature, Point } from "geojson";
@@ -27,15 +28,6 @@ import {
   ObservationType,
   PersonInvolvement,
 } from "./models/generic-observation.model";
-
-/** Parses a decimal "lat, lng" (or "lat lng") string, e.g. from a WGS84 coordinate line. */
-function parseLatLng(text: string): { lat: number; lng: number } | undefined {
-  const m = text.match(/(-?\d+(?:\.\d+)?)\s*[,;\s]\s*(-?\d+(?:\.\d+)?)/);
-  if (!m) return undefined;
-  const lat = parseFloat(m[1]);
-  const lng = parseFloat(m[2]);
-  return isFinite(lat) && isFinite(lng) ? { lat, lng } : undefined;
-}
 
 @Component({
   standalone: true,
@@ -162,30 +154,23 @@ export class ObservationEditorComponent implements OnInit {
 
     setTimeout(() => {
       const observation = this.observation();
-      const content = observation.content ?? "";
+      const parsed = parseLeitstelleTirol(observation.content ?? "");
       const patch: Partial<GenericObservation> = {};
-      if (!observation.authorName && content.includes("Einsatzcode") && content.includes("beschickte Einsatzmittel")) {
+      if (!observation.authorName && parsed.isDispatchReport) {
         patch.authorName = "Leitstelle Tirol";
       }
 
-      const codeMatch = content.match(/Einsatzcode:\s*(.*)\n/);
-      const code = codeMatch ? codeMatch[1] : "";
-      if (codes[code]) patch.personInvolvement = codes[code];
+      if (codes[parsed.code]) patch.personInvolvement = codes[parsed.code];
 
-      if (!observation.locationName && content.includes("Einsatzort")) {
-        const match = content.match(/Einsatzort:.*\n\s+.*\s+(.*)/);
-        if (match) patch.locationName = match[1];
+      if (!observation.locationName && parsed.locationName) {
+        patch.locationName = parsed.locationName;
       }
 
       let fetchedLatLng = false;
-      if (!observation.latitude && !observation.longitude && content.includes("Koordinaten: WGS84")) {
-        const match = content.match(/Koordinaten: WGS84(.*)/);
-        const latlng = match && match[1] ? parseLatLng(match[1].trim()) : undefined;
-        if (latlng) {
-          patch.latitude = latlng.lat;
-          patch.longitude = latlng.lng;
-          fetchedLatLng = true;
-        }
+      if (!observation.latitude && !observation.longitude && parsed.latLng) {
+        patch.latitude = parsed.latLng.lat;
+        patch.longitude = parsed.latLng.lng;
+        fetchedLatLng = true;
       }
 
       if (Object.keys(patch).length) this.observation.update((o) => ({ ...o, ...patch }));
