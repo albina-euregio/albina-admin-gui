@@ -10,12 +10,22 @@ import { GeocodingService } from "../observations/geocoding.service";
 import { EawsBulletinsService } from "../providers/eaws-bulletins-service/eaws-bulletins.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { parseLeitstelleTirol } from "../shared/leitstelle-tirol";
 import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../shared/zod-schema-form.component";
 import { isVisibleFieldsValid } from "../shared/zod-util";
 import { IncidentReportGeocodeService } from "./incident-report-geocode.service";
 import { IncidentReportMapService } from "./incident-report-map.service";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
+
+/** `Einsatzcode` of a "Leitstelle Tirol" dispatch report → person involvement. */
+const PERSON_INVOLVEMENT_BY_EINSATZCODE: Record<string, IncidentReport["personInvolvement"]> = {
+  "ALP-LAW-NEG": "No",
+  "ALP-LAW-UNKL": "Yes",
+  "ALP-LAW-KLEIN": "Yes",
+  "ALP-LAW-GROSS": "Yes",
+  "ALP-LAW-FREI": "Yes",
+};
 
 /** Ids of the tabs the editor renders; mirrors the parent's tab list. */
 export type IncidentReportTab =
@@ -132,9 +142,45 @@ export class IncidentReportEditorComponent implements OnInit {
   }
 
   onLocationFormChange(updatedReport: IncidentReport) {
+    const prev = this.incidentReport();
     this.incidentReport.set({ ...updatedReport });
     this.mapService.drawOnMap();
     this.geocodeService.reverseGeocodeIfChanged(updatedReport.latitude, updatedReport.longitude);
+    if (updatedReport.generalInformationComment !== prev.generalInformationComment) {
+      this.parseGeneralInformationComment();
+    }
+  }
+
+  /**
+   * Pre-fills empty fields from a "Leitstelle Tirol" dispatch report pasted into the
+   * general-information comment (same extraction as the observation editor).
+   */
+  private parseGeneralInformationComment() {
+    const report = this.incidentReport();
+    const parsed = parseLeitstelleTirol(report.generalInformationComment ?? "");
+    const patch: Partial<IncidentReport> = {};
+
+    const sources = report.sourceOfInformation ?? [];
+    if (parsed.isDispatchReport && !sources.includes("DispatchCentre")) {
+      patch.sourceOfInformation = [...sources, "DispatchCentre"];
+    }
+
+    const personInvolvement = PERSON_INVOLVEMENT_BY_EINSATZCODE[parsed.code];
+    if (personInvolvement) patch.personInvolvement = personInvolvement;
+
+    if (!report.location && parsed.locationName) patch.location = parsed.locationName;
+
+    if (report.latitude == null && report.longitude == null && parsed.latLng) {
+      patch.latitude = parsed.latLng.lat;
+      patch.longitude = parsed.latLng.lng;
+    }
+
+    if (!Object.keys(patch).length) return;
+    this.incidentReport.update((r) => ({ ...r, ...patch }));
+    if (patch.latitude != null && patch.longitude != null) {
+      this.mapService.drawOnMap();
+      this.geocodeService.reverseGeocodeIfChanged(patch.latitude, patch.longitude);
+    }
   }
 
   get involvementsFatalitiesBurials() {
