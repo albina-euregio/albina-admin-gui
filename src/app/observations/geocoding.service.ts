@@ -33,6 +33,10 @@ export class GeocodingService {
       format: "geojson",
       lat: String(lat),
       lon: String(lng),
+      // Resolve the administrative area *containing* the point (municipality level) rather than
+      // the nearest addressable object. At the default zoom (18) a point near a national border
+      // can snap to the closest building across the border, returning the wrong country/state.
+      zoom: "12",
     };
     return this.http
       .get<FeatureCollection<Point, GeocodingProperties>>(this.osmNominatimReverse, { params })
