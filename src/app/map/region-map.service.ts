@@ -2,11 +2,13 @@ import { inject, Injectable, OnDestroy } from "@angular/core";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import { Map as MlMap } from "maplibre-gl";
 
+import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
 import { albinaBasemapLayer, composeStyle, opentopoLayer } from "./base-map";
 import { fitFeatureCollection } from "./bounds";
 import { RegionNameControl } from "./controls/region-name-control";
 import { createMap } from "./create-map";
+import { bindMapCenterPersistence } from "./map-center";
 import { addRegionLayer, RegionLayerHandle } from "./region-layer";
 
 export type RegionClickMode = "normal" | "awsome";
@@ -19,9 +21,11 @@ export type RegionClickMode = "normal" | "awsome";
 @Injectable()
 export class RegionMapService implements OnDestroy {
   private regionsService = inject(RegionsService);
+  private localStorageService = inject(LocalStorageService);
 
   map?: MlMap;
   private regions?: RegionLayerHandle;
+  private disposeMapCenter?: () => void;
   private regionName = new RegionNameControl();
   private selectionChangeCb?: () => void;
   private clickMode: RegionClickMode = "normal";
@@ -46,7 +50,11 @@ export class RegionMapService implements OnDestroy {
     });
 
     const active = await this.regionsService.getActiveServerRegionsAsync();
-    fitFeatureCollection(map, active);
+    // Restore the last viewed center/zoom if stored; otherwise frame the active regions.
+    if (!this.localStorageService.getMapCenter()) {
+      fitFeatureCollection(map, active);
+    }
+    this.disposeMapCenter = bindMapCenterPersistence(map, this.localStorageService);
     return map;
   }
 
@@ -105,6 +113,8 @@ export class RegionMapService implements OnDestroy {
   }
 
   removeMaps(): void {
+    this.disposeMapCenter?.();
+    this.disposeMapCenter = undefined;
     this.regions?.remove();
     this.regions = undefined;
     if (this.map) {
