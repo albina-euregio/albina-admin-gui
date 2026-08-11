@@ -391,7 +391,7 @@
 
     <!-- Groups sub-tab -->
     @if (activeGroupSubTab === "groups" || displayOnly) {
-      @if (!incidentReport().groupInformation?.length) {
+      @if (!incidentReport().groupInformation?.length && displayOnly) {
         <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
       } @else if (displayOnly) {
         <!-- Preview: show every group in accordions -->
@@ -443,7 +443,11 @@
           </button>
         </div>
 
-        @let activeGroup = incidentReport().groupInformation![activeGroupIndex];
+        @if (!incidentReport().groupInformation?.length) {
+          <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
+        }
+
+        @let activeGroup = incidentReport().groupInformation?.[activeGroupIndex];
         @if (activeGroup) {
           <div class="card shadow-sm border">
             <div class="card-header d-flex justify-content-between align-items-center bg-light">
@@ -472,7 +476,7 @@
 
     <!-- Victims sub-tab -->
     @if (activeGroupSubTab === "victims" || displayOnly) {
-      @if (!incidentReport().victimInformation?.length) {
+      @if (!incidentReport().victimInformation?.length && displayOnly) {
         <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
       } @else if (displayOnly) {
         <!-- Preview: show every victim in accordions -->
@@ -525,7 +529,11 @@
           </button>
         </div>
 
-        @let activeVictim = incidentReport().victimInformation![activeVictimIndex];
+        @if (!incidentReport().victimInformation?.length) {
+          <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
+        }
+
+        @let activeVictim = incidentReport().victimInformation?.[activeVictimIndex];
         @if (activeVictim) {
           <div class="card shadow-sm border">
             <div class="card-header d-flex justify-content-between align-items-center bg-light">
