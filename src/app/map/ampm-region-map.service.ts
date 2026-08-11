@@ -7,6 +7,7 @@ import * as Enums from "../enums/enums";
 import { BulletinModel } from "../models/bulletin.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { addAggregatedRegionLayer, AggregatedRegionHandle, AggregatedRegionStyle } from "./aggregated-region-layer";
 import { albinaBasemapLayer, composeStyle, opentopoLayer } from "./base-map";
@@ -14,6 +15,7 @@ import { fitFeatureCollection } from "./bounds";
 import { AmPmControl } from "./controls/am-pm-control";
 import { RegionNameControl } from "./controls/region-name-control";
 import { createMap } from "./create-map";
+import { bindMapCenterPersistence } from "./map-center";
 import { addRegionLayer, RegionLayerHandle } from "./region-layer";
 import { syncMaps } from "./sync-maps";
 
@@ -43,9 +45,11 @@ export class AmPmRegionMapService {
   private translateService = inject(TranslateService);
   private authenticationService = inject(AuthenticationService);
   private constantsService = inject(ConstantsService);
+  private localStorageService = inject(LocalStorageService);
 
   private am?: MapSide;
   private pm?: MapSide;
+  private disposeMapCenter?: () => void;
   private regionName = new RegionNameControl();
   private amControl?: AmPmControl;
   private pmControl?: AmPmControl;
@@ -98,7 +102,12 @@ export class AmPmRegionMapService {
     }
 
     this.unsync = syncMaps(amMap, pmMap);
-    fitFeatureCollection(amMap, activeRegions);
+    // Restore the last viewed center/zoom if stored; otherwise frame the active regions.
+    // Only the AM map is bound — the PM map follows via syncMaps.
+    if (!this.localStorageService.getMapCenter()) {
+      fitFeatureCollection(amMap, activeRegions);
+    }
+    this.disposeMapCenter = bindMapCenterPersistence(amMap, this.localStorageService);
 
     // expose the AM map on its container element for e2e tests (regions are canvas-rendered,
     // so tests project region geometry to a pixel and click); scoped to #map, not a window global
@@ -321,6 +330,8 @@ export class AmPmRegionMapService {
   }
 
   removeMaps(): void {
+    this.disposeMapCenter?.();
+    this.disposeMapCenter = undefined;
     this.unsync?.();
     this.unsync = undefined;
     this.am?.aggregated.remove();
