@@ -542,7 +542,14 @@ export const OtherDamagesSchema = z.object({
   otherDamages: z.enum(["Yes", "No"]).register(widgetRegistry, { public: true, important: true }).nullish(),
 
   damagedAssets: enumWithOther(
-    z.enum(["Vehicle", "Forest", "Agriculture", "Livestock", "UtilitiesTechnicalInfrastructure"]),
+    z.enum([
+      "Vehicle",
+      "Forest",
+      "Agriculture",
+      "Livestock",
+      "UtilitiesTechnicalInfrastructure",
+      "ResidentialBuilding",
+    ]),
   )
     .array()
     .register(widgetRegistry, { important: true })

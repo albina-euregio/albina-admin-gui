@@ -437,6 +437,7 @@
     "Agriculture": "Landwirtschaft",
     "Livestock": "Vieh",
     "UtilitiesTechnicalInfrastructure": "Technische Infrastruktur und Versorgungseinrichtungen",
+    "ResidentialBuilding": "Wohngebäude",
     "Other": "Andere"
   },
   "timeAccuracy": {
