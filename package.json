@@ -70,7 +70,6 @@
     "split.js": "^1.6.5",
     "temporal-polyfill": "^1.0.1",
     "which-polygon": "^2.2.1",
-    "xlsx": "^0.18.5",
     "zod": "^4.4.3",
     "zone.js": "~0.16.1"
   },
