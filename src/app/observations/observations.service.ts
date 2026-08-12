@@ -1,6 +1,7 @@
 import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { rxResource } from "@angular/core/rxjs-interop";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { firstValueFrom, Observable } from "rxjs";
 import { map, mergeAll, toArray } from "rxjs/operators";
@@ -8,7 +9,7 @@ import { map, mergeAll, toArray } from "rxjs/operators";
 import { environment } from "../../environments/environment";
 import { GenericObservation, toGeoJSON } from "./models/generic-observation.model";
 
-interface DateRangeParams {
+export interface DateRangeParams {
   startDate: string;
   endDate: string;
 }
@@ -18,31 +19,46 @@ export class AlbinaObservationsService {
   private http = inject(HttpClient);
   private region = inject(RegionsService);
 
-  getGenericObservations(dateRangeParams: DateRangeParams): Observable<GenericObservation> {
-    const url = environment.apiBaseUrl + "../api_ext/observations";
-    return this.getGenericObservations0(url, dateRangeParams);
+  /**
+   * Observations for the given date range, reloading automatically whenever
+   * `dateRangeParams` changes (idle while it is `undefined`).
+   *
+   * Call from an injection context (e.g. a component field initializer); the
+   * returned resource is tied to that context's lifecycle.
+   */
+  genericObservationsResource(dateRangeParams: () => DateRangeParams | undefined) {
+    return this.observationsResource(environment.apiBaseUrl + "../api_ext/observations", dateRangeParams);
+  }
+
+  /** Weather stations for the given date range, see {@link genericObservationsResource}. */
+  weatherStationsResource(dateRangeParams: () => DateRangeParams | undefined) {
+    return this.observationsResource(environment.apiBaseUrl + "../api_ext/weather-stations", dateRangeParams);
+  }
+
+  /** Observers, loaded once. See {@link genericObservationsResource}. */
+  observersResource() {
+    return this.observationsResource(environment.apiBaseUrl + "../api_ext/observers", () => ({}));
+  }
+
+  /** Webcams, loaded once. See {@link genericObservationsResource}. */
+  genericWebcamsResource() {
+    return this.observationsResource(environment.apiBaseUrl + "../api_ext/webcams", () => ({}));
+  }
+
+  private observationsResource(url: string, params: () => DateRangeParams | Record<string, never> | undefined) {
+    return rxResource({
+      params,
+      stream: ({ params }) => this.getGenericObservations0(url, params).pipe(toArray()),
+      defaultValue: [] as GenericObservation[],
+    });
   }
 
   getGenericObservationsGeoJSON(dateRangeParams: DateRangeParams): Observable<GeoJSON.FeatureCollection> {
-    return this.getGenericObservations(dateRangeParams).pipe(
+    const url = environment.apiBaseUrl + "../api_ext/observations";
+    return this.getGenericObservations0(url, dateRangeParams).pipe(
       toArray(),
       map((observations) => toGeoJSON(observations)),
     );
-  }
-
-  getObservers(): Observable<GenericObservation> {
-    const url = environment.apiBaseUrl + "../api_ext/observers";
-    return this.getGenericObservations0(url);
-  }
-
-  getWeatherStations(dateRangeParams: DateRangeParams): Observable<GenericObservation> {
-    const url = environment.apiBaseUrl + "../api_ext/weather-stations";
-    return this.getGenericObservations0(url, dateRangeParams);
-  }
-
-  getGenericWebcams(): Observable<GenericObservation> {
-    const url = environment.apiBaseUrl + "../api_ext/webcams";
-    return this.getGenericObservations0(url);
   }
 
   private getGenericObservations0(url: string, params = {}): Observable<GenericObservation> {

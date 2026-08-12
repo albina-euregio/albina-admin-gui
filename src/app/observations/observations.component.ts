@@ -5,6 +5,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Component,
+  effect,
   ElementRef,
   OnDestroy,
   TemplateRef,
@@ -12,7 +13,6 @@ import {
   inject,
   ViewChild,
   HostListener,
-  DestroyRef,
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
 } from "@angular/core";
@@ -28,7 +28,7 @@ import { Map as MlMap, Marker as MlMarker, Popup } from "maplibre-gl";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { firstValueFrom, type Observable, type Subscription } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import Split from "split.js";
 import "@albina-euregio/linea";
 
@@ -72,7 +72,6 @@ export interface MultiselectDropdownData {
 }
 
 class ObservationData {
-  loading: Subscription | undefined = undefined;
   show = false;
   all = [] as GenericObservation[];
   filtered = [] as GenericObservation[];
@@ -96,8 +95,6 @@ class ObservationData {
   }
 
   clear() {
-    this.loading?.unsubscribe();
-    this.loading = undefined;
     this.all = [];
     this.filtered = [];
     this.removeMarkers();
@@ -118,21 +115,13 @@ class ObservationData {
     }
   }
 
-  async loadFrom(observable: Observable<GenericObservation>, observationSearch: string) {
+  async setAll(observations: GenericObservation[], observationSearch: string) {
     await initAugmentRegion();
     this.removeMarkers();
     this.all = [];
-    this.loading?.unsubscribe();
-    await new Promise<undefined>((resolve) => {
-      this.loading = observable.subscribe({
-        next: (observation) => this.forEachObservation(observation),
-        complete: () => resolve(undefined),
-        error: (e) => console.error(e),
-      });
-    });
+    observations.forEach((observation) => this.forEachObservation(observation));
     this.applyLocalFilter(observationSearch);
     orderBy(this.all, [(o) => +o.eventDate], ["desc"]);
-    this.loading = undefined;
   }
 
   forEachObservation(observation: GenericObservation) {
@@ -229,7 +218,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   authenticationService = inject(AuthenticationService);
   mapService = inject(ObservationsMapService);
   modalService = inject(BsModalService);
-  private destroyRef = inject(DestroyRef);
 
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
@@ -272,6 +260,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     webcams: new ObservationData(this.onObservationClick.bind(this), this.filter, this.markerWebcamService),
   };
 
+  readonly observationsResource = this.observationsService.genericObservationsResource(this.filter.dateRangeParams);
+  readonly weatherStationsResource = this.observationsService.weatherStationsResource(this.filter.dateRangeParams);
+  readonly observersResource = this.observationsService.observersResource();
+  readonly webcamsResource = this.observationsService.genericWebcamsResource();
+
   public observationPopup: {
     observation: GenericObservation;
     table: ObservationTableRow[];
@@ -298,8 +291,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     if (!this.filter.startDate || !this.filter.endDate) {
       this.filter.days = 7;
     }
+    // seeds the eventDate filter and normalizes the URL before the resources fetch
+    this.filter.updateDateInURL();
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
     this.loadDangerSources();
+    // feed each resource's value into its ObservationData as soon as it arrives
+    effect(() => this.data.observations.setAll(this.observationsResource.value(), this.observationSearch));
+    effect(() => this.data.weatherStations.setAll(this.weatherStationsResource.value(), this.observationSearch));
+    effect(() => this.data.observers.setAll(this.observersResource.value(), this.observationSearch));
+    effect(() => this.data.webcams.setAll(this.webcamsResource.value(), this.observationSearch));
   }
 
   private loadDangerSources() {
@@ -347,36 +347,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  async loadObservationsAndWeatherStations() {
+  loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
-    this.data.observations.loadFrom(
-      this.observationsService
-        .getGenericObservations(this.filter.dateRangeParams)
-        .pipe(takeUntilDestroyed(this.destroyRef)),
-      this.observationSearch,
-    );
-    this.data.weatherStations.loadFrom(
-      this.observationsService
-        .getWeatherStations(this.filter.dateRangeParams)
-        .pipe(takeUntilDestroyed(this.destroyRef)),
-      this.observationSearch,
-    );
+    this.observationsResource.reload();
+    this.weatherStationsResource.reload();
   }
 
   private async initMap() {
     const map = await this.mapService.initMap(this.mapDiv().nativeElement);
     Object.values(this.data).forEach((d) => d.setMap(map, this.mapService.tooltipPopup));
 
+    // adds markers that the resources may already have produced before the map existed
     this.data.observations.toggle();
-    this.loadObservationsAndWeatherStations();
-    this.data.observers.loadFrom(
-      this.observationsService.getObservers().pipe(takeUntilDestroyed(this.destroyRef)),
-      this.observationSearch,
-    );
-    this.data.webcams.loadFrom(
-      this.observationsService.getGenericWebcams().pipe(takeUntilDestroyed(this.destroyRef)),
-      this.observationSearch,
-    );
 
     this.mapService.onSelectionChange(() => {
       this.filter.regions = new Set(this.mapService.getSelectedRegions());
@@ -455,7 +437,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   setDateRange(days: number) {
     this.filter.days = days;
-    this.loadObservationsAndWeatherStations();
+    // the resources reload on their own since the date range params changed
+    this.filter.updateDateInURL();
   }
 
   toggleSearchInput() {

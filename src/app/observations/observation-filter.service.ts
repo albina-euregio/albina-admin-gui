@@ -1,4 +1,4 @@
-import { Injectable, inject } from "@angular/core";
+import { computed, Injectable, inject, signal } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { LngLatBounds } from "maplibre-gl";
 
@@ -7,6 +7,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import type { FilterSelectionData } from "./filter-selection-data";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
+import type { DateRangeParams } from "./observations.service";
 
 @Injectable()
 export class ObservationFilterService<
@@ -17,7 +18,8 @@ export class ObservationFilterService<
   private constantsService = inject(ConstantsService);
   private localStorageService = inject(LocalStorageService);
 
-  public dateRange: Date[] = [];
+  /** `[start, end]` tuple bound to the date range picker; drives the observation resources. */
+  public readonly dateRange = signal<Date[]>([]);
   public regions: Set<string> = new Set<string>();
   public observationSources = {} as Record<ObservationSource, boolean>;
   public filterSelectionData: FilterSelectionData<T>[] = [];
@@ -32,7 +34,7 @@ export class ObservationFilterService<
     newStartDate.setDate(newStartDate.getDate() - (days - 1));
     newStartDate.setHours(0, 0, 0, 0);
     if (!isTrainingEnabled) newEndDate.setHours(23, 59, 59, 0);
-    this.dateRange = [newStartDate, newEndDate];
+    this.dateRange.set([newStartDate, newEndDate]);
   }
 
   updateDateInURL() {
@@ -41,15 +43,17 @@ export class ObservationFilterService<
     }
     // bsDaterangepicker overwrites the time for endDate with the time from startDate when selecting a new date range.
     // To keep the time from the previous selection, we extract it from the query params.
-    const oldStartDate = this.parseQueryParams(this.activatedRoute.snapshot.queryParams)[0];
-    const oldEndDate = this.parseQueryParams(this.activatedRoute.snapshot.queryParams)[1];
+    const [oldStartDate, oldEndDate] = this.parseQueryParams(this.activatedRoute.snapshot.queryParams);
     if (
       (oldEndDate &&
         this.constantsService.getISODateString(oldEndDate) !== this.constantsService.getISODateString(this.endDate)) ||
       (oldStartDate &&
         this.constantsService.getISODateString(oldStartDate) !== this.constantsService.getISODateString(this.startDate))
     ) {
-      this.endDate.setHours(oldEndDate.getHours(), oldEndDate.getMinutes(), oldEndDate.getSeconds());
+      const [startDate, endDate] = this.dateRange();
+      const newEndDate = new Date(endDate);
+      newEndDate.setHours(oldEndDate.getHours(), oldEndDate.getMinutes(), oldEndDate.getSeconds());
+      this.dateRange.set([startDate, newEndDate]);
     }
 
     this.filterSelectionData.find((filter) => filter.key === "eventDate").setDateRange(this.startDate, this.endDate);
@@ -69,7 +73,7 @@ export class ObservationFilterService<
   }
 
   parseActivatedRoute() {
-    this.activatedRoute.queryParams.subscribe((params) => (this.dateRange = this.parseQueryParams(params)));
+    this.activatedRoute.queryParams.subscribe((params) => this.dateRange.set(this.parseQueryParams(params)));
   }
 
   private parseQueryParams({ startDate, endDate }: Params): Date[] {
@@ -88,11 +92,11 @@ export class ObservationFilterService<
   }
 
   get startDate(): Date {
-    return this.dateRange[0];
+    return this.dateRange()[0];
   }
 
   get endDate(): Date {
-    const endDate = this.dateRange[1];
+    const endDate = this.dateRange()[1];
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
     if (isTrainingEnabled && endDate > new Date(trainingTimestamp)) {
       return new Date(trainingTimestamp);
@@ -100,12 +104,19 @@ export class ObservationFilterService<
     return endDate;
   }
 
-  get dateRangeParams() {
-    return {
-      startDate: this.startDate.toISOString(),
-      endDate: this.endDate.toISOString(),
-    };
-  }
+  /**
+   * The current date range as request parameters, or `undefined` while no range is selected.
+   * Compared by value so that a round-trip through the query params does not reload the
+   * observation resources.
+   */
+  readonly dateRangeParams = computed<DateRangeParams | undefined>(
+    () => {
+      const [startDate, endDate] = [this.startDate, this.endDate];
+      if (!startDate || !endDate) return undefined;
+      return { startDate: startDate.toISOString(), endDate: endDate.toISOString() };
+    },
+    { equal: (a, b) => a?.startDate === b?.startDate && a?.endDate === b?.endDate },
+  );
 
   public isSelected(observation: T) {
     return (
