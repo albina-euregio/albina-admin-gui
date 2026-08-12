@@ -5,6 +5,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Component,
+  computed,
   effect,
   ElementRef,
   OnDestroy,
@@ -33,6 +34,9 @@ import Split from "split.js";
 import "@albina-euregio/linea";
 
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { incidentToGenericObservation } from "../incidents/incident-observation";
+import { IncidentService } from "../incidents/incident.service";
+import type { AlbinaLanguage } from "../models/text.model";
 import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
 import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
@@ -191,6 +195,7 @@ class ObservationData {
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     AlbinaObservationsService,
+    IncidentService,
     ObservationsMapService,
     ObservationFilterService,
     ObservationMarkerService,
@@ -212,6 +217,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   );
   translateService = inject(TranslateService);
   protected observationsService = inject(AlbinaObservationsService);
+  private incidentService = inject(IncidentService);
   private sanitizer = inject(DomSanitizer);
   regionsService = inject(RegionsService);
   private dangerSourcesService = inject(DangerSourcesService);
@@ -264,6 +270,17 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   readonly weatherStationsResource = this.observationsService.weatherStationsResource(this.filter.dateRangeParams);
   readonly observersResource = this.observationsService.observersResource();
   readonly webcamsResource = this.observationsService.genericWebcamsResource();
+  readonly incidentsResource = this.incidentService.incidentsForActiveRegion();
+  /** Incidents of the active region, shown on the map alongside the observations. */
+  private readonly incidentObservations = computed(() =>
+    this.incidentsResource
+      .value()
+      .map((incident) =>
+        incidentToGenericObservation(incident, this.translateService.getCurrentLang() as AlbinaLanguage, (key) =>
+          this.translateService.instant(key),
+        ),
+      ),
+  );
 
   public observationPopup: {
     observation: GenericObservation;
@@ -295,8 +312,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.filter.updateDateInURL();
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
     this.loadDangerSources();
+    // the incidents resource has its own date range, keep it on the one selected here
+    effect(() => {
+      const dateRange = this.filter.dateRange();
+      if (dateRange.length === 2) this.incidentService.dateRange.set(dateRange);
+    });
     // feed each resource's value into its ObservationData as soon as it arrives
-    effect(() => this.data.observations.setAll(this.observationsResource.value(), this.observationSearch));
+    effect(() =>
+      this.data.observations.setAll(
+        [...this.observationsResource.value(), ...this.incidentObservations()],
+        this.observationSearch,
+      ),
+    );
     effect(() => this.data.weatherStations.setAll(this.weatherStationsResource.value(), this.observationSearch));
     effect(() => this.data.observers.setAll(this.observersResource.value(), this.observationSearch));
     effect(() => this.data.webcams.setAll(this.webcamsResource.value(), this.observationSearch));
