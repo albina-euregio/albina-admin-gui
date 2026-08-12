@@ -6,6 +6,7 @@ import {
   imageCountString,
   ImportantObservation,
   ObservationSource,
+  type ObservationTableRow,
   ObservationType,
   SnowpackStability as Stability,
 } from "../../generic-observation";
@@ -159,6 +160,10 @@ export interface GpsPoint {
   alt?: null;
   accuracy?: null;
   markerLabel?: null;
+  districtName?: string;
+  districtIso?: number;
+  mountainGroup?: string;
+  mountainGroupEN?: string;
 }
 
 export interface AvalancheReportRegions {
@@ -1156,17 +1161,19 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
   ];
 }
 
+export type LolaObservation =
+  | LolaSimpleObservation
+  | LolaAvalancheEvent
+  | LolaSnowProfile
+  | LolaEvaluation
+  | LolaRainBoundary
+  | LolaSnowStabilityTest
+  | LolaEarlyObservation
+  | LaDokSimpleObservation
+  | LaDokObservation;
+
 export function convertLoLaToGeneric(
-  obs:
-    | LolaSimpleObservation
-    | LolaAvalancheEvent
-    | LolaSnowProfile
-    | LolaEvaluation
-    | LolaRainBoundary
-    | LolaSnowStabilityTest
-    | LolaEarlyObservation
-    | LaDokSimpleObservation
-    | LaDokObservation,
+  obs: LolaObservation,
   $type: ObservationType,
   urlPrefix: string,
   snowLine?: "snowLine" | "elevation",
@@ -1174,6 +1181,8 @@ export function convertLoLaToGeneric(
   return {
     $id: obs.uuId,
     $data: obs,
+    $extraDialogRows: getExtraDialogRows(obs),
+    $externalImgs: getExternalImgs(obs, urlPrefix),
     $externalURL: urlPrefix.includes("lolaFiles/pdf/serve")
       ? `${urlPrefix}${
           (
@@ -1251,6 +1260,112 @@ export function convertLoLaToGeneric(
       (obs as LolaSnowProfile).snowStabilityTest?.length > 0 ? ImportantObservation.StabilityTest : undefined,
     ].filter((o) => !!o),
   } as GenericObservation;
+}
+
+/** The images of the observation, resolved against the LoLa Kronos image endpoint. */
+export function getExternalImgs(obs: LolaObservation, urlPrefix: string): string[] | undefined {
+  const images = (obs as LolaSimpleObservation).images;
+  if (!images?.length) return undefined;
+  const base = new URL("/api/lolaImages/image/servePDF/", urlPrefix);
+  return images.map((image) => new URL(image.fileName, base).toString());
+}
+
+/** German labels for the LoLa Kronos vocabularies; unknown values fall back to the raw value. */
+const DANGER_SIGNS: Record<string, string> = {
+  whumpfing: "Setzungsgeräusche",
+  shootingCracks: "Rissbildung",
+  freshAvalanches: "Frische Lawinen",
+  glideCracks: "Gleitschneerisse",
+};
+
+const SNOW_SURFACE: Record<string, string> = {
+  surfaceHoar: "Oberflächenreif",
+  graupel: "Graupel",
+  iceFormation: "Eisbildung",
+  veryLightNewSnow: "Sehr leichter Neuschnee",
+};
+
+const SNOW_STABILITY: Record<string, string> = {
+  [SnowStability.VeryWeak]: "sehr schlecht",
+  [SnowStability.Weak]: "schlecht",
+  [SnowStability.Moderate]: "mittel",
+  [SnowStability.Neutral]: "mittel",
+  [SnowStability.Stable]: "gut",
+};
+
+/**
+ * The observation fields that the standard dialog rows (date, author, location, elevation,
+ * aspect, comment) do not show, as German-labelled rows — so that the observation dialog
+ * conveys the whole observation without having to embed the LoLa Kronos page in an iframe.
+ */
+export function getExtraDialogRows(obs: LolaObservation): ObservationTableRow[] {
+  const o = obs as LolaSimpleObservation & LolaAvalancheEvent & LolaSnowProfile & LolaRainBoundary;
+  const rows: ObservationTableRow[] = [
+    { label: "Gefahrenzeichen", value: translateAll(o.dangerSigns, DANGER_SIGNS) },
+    { label: "Schneeoberfläche", value: translateAll(o.snowSurface, SNOW_SURFACE) },
+    { label: "Schwächste Schneedeckenstabilität", value: SNOW_STABILITY[o.weakestSnowStability] },
+    { label: "Schneefallgrenze", number: o.snowLine },
+    { label: "Toleranz Schneefallgrenze", value: o.elevationTolerance },
+    { label: "Zeitraum Schneefallgrenze", value: o.elevationPeriod },
+    { label: "Expositionen", value: o.aspects?.join(", ") },
+    {
+      label: "Stabilitätstests",
+      value: formatTests([...(o.snowStabilityTest ?? []), ...((o.snowStabilityTests ?? []) as Test[])]),
+    },
+    { label: "Lawinenart", value: o.avalancheType },
+    { label: "Lawinengröße", value: o.avalancheSize },
+    { label: "Auslösung", value: o.avalancheRelease },
+    { label: "Feuchte im Anrissgebiet", value: o.wetnessInStartingArea },
+    { label: "Lawinenzeitpunkt", value: o.avalancheEventTime },
+    { label: "Schäden", value: [o.damages?.join(", "), o.damageComment].filter(Boolean).join(" – ") },
+    { label: "Maßnahmen", value: o.measures },
+    { label: "Lawinenstrich", value: o.infraAvalancheName },
+    {
+      label: "Straßenabschnitt",
+      value: [o.infraRouteSectionFrom, o.infraRouteSectionTo].filter(Boolean).join(" – "),
+    },
+    { label: "Kommission", value: o.commissionName },
+    { label: "Gebirgsgruppe", value: o.position?.mountainGroup },
+    { label: "Bezirk", value: o.position?.districtName },
+    {
+      label: "Region",
+      value: [o.position?.adsRegion?.loc_name, o.position?.adsRegion?.loc_ref].filter(Boolean).join(" "),
+    },
+    {
+      label: "Koordinaten",
+      value: o.position?.lat && o.position?.lng ? `${o.position.lat.toFixed(5)}, ${o.position.lng.toFixed(5)}` : "",
+    },
+    { label: "Organisation", value: obs.entities?.map((e) => e.entityName).join(", ") },
+    { label: "Anwendung", value: o.lolaApplication },
+    { label: "Fotos", number: o.images?.length || undefined },
+    {
+      label: "Fotokommentare",
+      value: o.images
+        ?.map((i) => [i.comment, i.copyRight].filter(Boolean).join(" © "))
+        .filter(Boolean)
+        .join("; "),
+    },
+  ];
+  return rows.filter((row) => (row.value ?? "") !== "" || typeof row.number === "number");
+}
+
+function translateAll(values: string[] | undefined, labels: Record<string, string>): string {
+  return (values ?? []).map((value) => labels[value] ?? value).join(", ");
+}
+
+function formatTests(tests: Test[]): string {
+  return tests
+    .map((t) =>
+      [
+        t.testCategory,
+        isFinite(t.number) && isFinite(t.position) ? `${t.number}@${t.position}cm` : t.testResult,
+        SNOW_STABILITY[t.snowStability],
+        t.comment,
+      ]
+        .filter(Boolean)
+        .join(" "),
+    )
+    .join("; ");
 }
 
 function getAvalancheProblems(data: LolaEvaluation | LolaAvalancheEvent): AvalancheProblem[] {

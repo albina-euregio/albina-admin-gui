@@ -21,12 +21,12 @@ export const POST = async (request: Bun.BunRequest) => {
     new Date(),
     process.env.ALBINA_SNOBS_API_TOKEN,
   )) {
-    if (observation.$externalURL?.includes("detail-by-token")) {
-      observation.$externalURL += "/" + process.env.ALBINA_SNOBS_API_TOKEN;
-    }
     if (observation.$source === ObservationSource.LoLaObserver || observation.$source === ObservationSource.Snobs) {
       observations.push(observation);
     }
+    // the dialog rows carry the whole observation, so neither the LoLa Kronos page
+    // (which would need the API token appended) nor the raw payload have to be shipped
+    observation.$externalURL = undefined;
     observation.$data = undefined;
   }
   const file = process.env.ALBINA_SNOBS_OUTPUT ?? "snobs.json";
