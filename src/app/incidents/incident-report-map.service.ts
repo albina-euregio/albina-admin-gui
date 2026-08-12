@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import type { WritableSignal } from "@angular/core";
 import type { Feature, FeatureCollection } from "geojson";
-import maplibregl, { IControl, LngLatBounds, Map as MlMap, MapMouseEvent, Marker } from "maplibre-gl";
+import { GeoJSONSource, IControl, LngLatBounds, Map as MlMap, MapMouseEvent, Marker } from "maplibre-gl";
 
 import { basemapAtTerrainLayer, composeStyle, MapBaseLayer, opentopoLayer } from "../map/base-map";
 import { createMap } from "../map/create-map";
@@ -257,7 +257,7 @@ export class IncidentReportMapService implements OnDestroy {
     if (!report) return;
 
     // Geometry layers are added on the "load" event; until then, defer.
-    const source = map.getSource(SOURCE_ID) as maplibregl.GeoJSONSource | undefined;
+    const source = map.getSource(SOURCE_ID) as GeoJSONSource | undefined;
     if (!source) return;
 
     const features: Feature[] = [];
@@ -269,7 +269,7 @@ export class IncidentReportMapService implements OnDestroy {
     if (!isNaN(lat) && !isNaN(lng)) {
       const draggable = !this.config?.disabled();
       if (!this.marker) {
-        this.marker = new maplibregl.Marker({ draggable, color: "#2a81cb" });
+        this.marker = new Marker({ draggable, color: "#2a81cb" });
         this.marker.on("dragend", () => {
           const { lat: newLat, lng: newLng } = this.marker!.getLngLat();
           this.movePoint(newLat, newLng);

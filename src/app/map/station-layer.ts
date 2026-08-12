@@ -1,5 +1,5 @@
 import type { Feature, FeatureCollection, Point } from "geojson";
-import maplibregl, { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Popup } from "maplibre-gl";
+import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Popup } from "maplibre-gl";
 
 export interface StationPoint {
   id: string;
@@ -44,7 +44,7 @@ export function addStationLayer(map: MlMap, opts: { id?: string; tooltip?: boole
     },
   });
 
-  const popup = withTooltip ? (new maplibregl.Popup({ closeButton: false, closeOnClick: false }) as Popup) : undefined;
+  const popup = withTooltip ? new Popup({ closeButton: false, closeOnClick: false }) : undefined;
   let clickCb: ((id: string) => void) | undefined;
 
   const onEnter = (e: MapLayerMouseEvent) => {

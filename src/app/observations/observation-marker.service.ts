@@ -1,7 +1,7 @@
 import { formatDate } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { castArray, get as _get } from "es-toolkit/compat";
-import maplibregl, { Marker as MlMarker } from "maplibre-gl";
+import { Marker as MlMarker } from "maplibre-gl";
 
 import { SnowpackStability } from "../enums/enums";
 import type { AwsomeSource } from "../modelling/awsome.config";
@@ -79,10 +79,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     el.style.opacity = String(filterSelectionValue?.opacity ?? 1);
     el.style.zIndex = String(filterSelectionValue?.zIndexOffset ?? zIndex[observation.stability ?? "unknown"] ?? 0);
     el.tooltipHtml = this.createTooltipText(observation);
-    return new maplibregl.Marker({ element: el, anchor: "center" }).setLngLat([
-      observation.longitude,
-      observation.latitude,
-    ]);
+    return new MlMarker({ element: el, anchor: "center" }).setLngLat([observation.longitude, observation.latitude]);
   }
 
   /** Public tooltip HTML, for callers rendering their own MapLibre popups (e.g. polygon layers). */

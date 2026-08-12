@@ -27,7 +27,7 @@ import type {
 } from "echarts/types/dist/shared";
 import { throttle } from "es-toolkit";
 import { Feature, FeatureCollection, MultiPolygon } from "geojson";
-import maplibregl, { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
+import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, type Subscription } from "rxjs";
@@ -109,7 +109,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private imageOverlays: { id: string; name: string }[] = [];
   private overlayControl?: LayerToggleControl;
   private readonly polygonSource = "awsome-polygons";
-  private readonly tooltipPopup = new maplibregl.Popup({
+  private readonly tooltipPopup = new Popup({
     closeButton: false,
     closeOnClick: false,
     className: "obs-tooltip",

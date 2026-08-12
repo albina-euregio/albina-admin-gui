@@ -1,5 +1,5 @@
 import { inject, Injectable, OnDestroy } from "@angular/core";
-import maplibregl, { Map as MlMap, Popup } from "maplibre-gl";
+import { Map as MlMap, Popup } from "maplibre-gl";
 
 import { albinaBasemapLayer, composeStyle, opentopoLayer } from "../map/base-map";
 import { fitFeatureCollection } from "../map/bounds";
@@ -19,7 +19,7 @@ export class ObservationsMapService implements OnDestroy {
 
   map?: MlMap;
   /** Shared tooltip popup, reused by all observation markers on hover. */
-  readonly tooltipPopup = new maplibregl.Popup({
+  readonly tooltipPopup = new Popup({
     closeButton: false,
     closeOnClick: false,
     className: "obs-tooltip",

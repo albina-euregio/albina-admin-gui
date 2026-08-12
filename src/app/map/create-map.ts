@@ -1,6 +1,10 @@
-import maplibregl, { Map as MlMap, StyleSpecification } from "maplibre-gl";
+import { Map as MlMap, NavigationControl, setWorkerUrl, StyleSpecification } from "maplibre-gl";
 
 import { registerPmtilesProtocol } from "./pmtiles";
+
+// Since v6 maplibre-gl loads its worker as a separate ES module. Bundlers cannot resolve
+// that URL from `import.meta.url`, so point it at the copy in `assets/` (see angular.json).
+setWorkerUrl(new URL("assets/maplibre-gl-worker.mjs", document.baseURI).href);
 
 export interface CreateMapOptions {
   container: HTMLElement | string;
@@ -24,7 +28,7 @@ export interface CreateMapOptions {
  */
 export function createMap(opts: CreateMapOptions): MlMap {
   registerPmtilesProtocol();
-  const map = new maplibregl.Map({
+  const map = new MlMap({
     container: opts.container,
     style: opts.style,
     interactive: opts.interactive ?? true,
@@ -33,7 +37,7 @@ export function createMap(opts: CreateMapOptions): MlMap {
     attributionControl: opts.attribution === false ? false : undefined,
   });
   if (opts.navigationControl) {
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
+    map.addControl(new NavigationControl({ showCompass: false }), "top-left");
   }
   return map;
 }
