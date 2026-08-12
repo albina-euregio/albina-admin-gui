@@ -1,3 +1,5 @@
+import de from "../../../../src/assets/i18n/de.json";
+import incidentReportDe from "../../../../src/assets/i18n/incident-report/de.json";
 import {
   type GenericObservation,
   Aspect,
@@ -1270,27 +1272,20 @@ export function getExternalImgs(obs: LolaObservation, urlPrefix: string): string
   return images.map((image) => new URL(image.fileName, base).toString());
 }
 
-/** German labels for the LoLa Kronos vocabularies; unknown values fall back to the raw value. */
-const DANGER_SIGNS: Record<string, string> = {
-  whumpfing: "Setzungsgeräusche",
-  shootingCracks: "Rissbildung",
-  freshAvalanches: "Frische Lawinen",
-  glideCracks: "Gleitschneerisse",
+/** The LoLa Kronos danger signs, as keys of the `dangerSign` translations. */
+const DANGER_SIGNS: Record<string, keyof typeof de.dangerSign> = {
+  whumpfing: "whumpfing",
+  shootingCracks: "shooting_cracks",
+  freshAvalanches: "fresh_avalanches",
+  glideCracks: "glide_cracks",
 };
 
-const SNOW_SURFACE: Record<string, string> = {
-  surfaceHoar: "Oberflächenreif",
+/** The LoLa Kronos snow surfaces, as keys of the `importantObservation` translations. */
+const SNOW_SURFACE: Record<string, keyof typeof de.importantObservation> = {
+  surfaceHoar: "SurfaceHoar",
   graupel: "Graupel",
-  iceFormation: "Eisbildung",
-  veryLightNewSnow: "Sehr leichter Neuschnee",
-};
-
-const SNOW_STABILITY: Record<string, string> = {
-  [SnowStability.VeryWeak]: "sehr schlecht",
-  [SnowStability.Weak]: "schlecht",
-  [SnowStability.Moderate]: "mittel",
-  [SnowStability.Neutral]: "mittel",
-  [SnowStability.Stable]: "gut",
+  iceFormation: "IceFormation",
+  veryLightNewSnow: "VeryLightNewSnow",
 };
 
 /**
@@ -1301,23 +1296,29 @@ const SNOW_STABILITY: Record<string, string> = {
 export function getExtraDialogRows(obs: LolaObservation): ObservationTableRow[] {
   const o = obs as LolaSimpleObservation & LolaAvalancheEvent & LolaSnowProfile & LolaRainBoundary;
   const rows: ObservationTableRow[] = [
-    { label: "Gefahrenzeichen", value: translateAll(o.dangerSigns, DANGER_SIGNS) },
-    { label: "Schneeoberfläche", value: translateAll(o.snowSurface, SNOW_SURFACE) },
-    { label: "Schwächste Schneedeckenstabilität", value: SNOW_STABILITY[o.weakestSnowStability] },
-    { label: "Schneefallgrenze", number: o.snowLine },
-    { label: "Toleranz Schneefallgrenze", value: o.elevationTolerance },
-    { label: "Zeitraum Schneefallgrenze", value: o.elevationPeriod },
-    { label: "Expositionen", value: o.aspects?.join(", ") },
     {
-      label: "Stabilitätstests",
+      label: de.dangerSources.create.label.dangerSigns,
+      value: translateAll(o.dangerSigns, DANGER_SIGNS, de.dangerSign),
+    },
+    { label: "Schneeoberfläche", value: translateAll(o.snowSurface, SNOW_SURFACE, de.importantObservation) },
+    { label: de.observations.stability, value: getSnowStabilityText(o.weakestSnowStability) },
+    { label: de.observations.weatherStations.tooltips.snowLine, number: o.snowLine },
+    { label: de.observations.elevationTolerance, value: o.elevationTolerance },
+    { label: de.observations.elevationPeriod, value: o.elevationPeriod },
+    { label: de.dangerSources.create.label.aspects, value: o.aspects?.join(", ") },
+    {
+      label: de.importantObservation.StabilityTest,
       value: formatTests([...(o.snowStabilityTest ?? []), ...((o.snowStabilityTests ?? []) as Test[])]),
     },
-    { label: "Lawinenart", value: o.avalancheType },
-    { label: "Lawinengröße", value: o.avalancheSize },
-    { label: "Auslösung", value: o.avalancheRelease },
-    { label: "Feuchte im Anrissgebiet", value: o.wetnessInStartingArea },
-    { label: "Lawinenzeitpunkt", value: o.avalancheEventTime },
-    { label: "Schäden", value: [o.damages?.join(", "), o.damageComment].filter(Boolean).join(" – ") },
+    { label: de.observations.avalancheType, value: o.avalancheType },
+    { label: de.observations.avalancheSize, value: o.avalancheSize },
+    { label: incidentReportDe.incidentReport.trigger, value: o.avalancheRelease },
+    { label: incidentReportDe.incidentReport.startZoneMoisture, value: o.wetnessInStartingArea },
+    { label: incidentReportDe.incidentReport.dateTime, value: o.avalancheEventTime },
+    {
+      label: incidentReportDe.incidentReport.damagedAssets,
+      value: [o.damages?.join(", "), o.damageComment].filter(Boolean).join(" – "),
+    },
     { label: "Maßnahmen", value: o.measures },
     { label: "Lawinenstrich", value: o.infraAvalancheName },
     {
@@ -1328,13 +1329,11 @@ export function getExtraDialogRows(obs: LolaObservation): ObservationTableRow[] 
     { label: "Gebirgsgruppe", value: o.position?.mountainGroup },
     { label: "Bezirk", value: o.position?.districtName },
     {
-      label: "Region",
+      label: incidentReportDe.incidentReport.avalancheRegion,
       value: [o.position?.adsRegion?.loc_name, o.position?.adsRegion?.loc_ref].filter(Boolean).join(" "),
     },
-    {
-      label: "Koordinaten",
-      value: o.position?.lat && o.position?.lng ? `${o.position.lat.toFixed(5)}, ${o.position.lng.toFixed(5)}` : "",
-    },
+    { label: de.observations.latitude, number: o.position?.lat },
+    { label: de.observations.longitude, number: o.position?.lng },
     { label: "Organisation", value: obs.entities?.map((e) => e.entityName).join(", ") },
     { label: "Anwendung", value: o.lolaApplication },
     { label: "Fotos", number: o.images?.length || undefined },
@@ -1349,8 +1348,12 @@ export function getExtraDialogRows(obs: LolaObservation): ObservationTableRow[] 
   return rows.filter((row) => (row.value ?? "") !== "" || typeof row.number === "number");
 }
 
-function translateAll(values: string[] | undefined, labels: Record<string, string>): string {
-  return (values ?? []).map((value) => labels[value] ?? value).join(", ");
+function translateAll(values: string[] | undefined, keys: Record<string, string>, texts: Record<string, string>) {
+  return (values ?? []).map((value) => texts[keys[value]] ?? value).join(", ");
+}
+
+function getSnowStabilityText(s: SnowStability | string): string | undefined {
+  return de.snowpackStability[getStability(s as SnowStability)];
 }
 
 function formatTests(tests: Test[]): string {
@@ -1359,7 +1362,7 @@ function formatTests(tests: Test[]): string {
       [
         t.testCategory,
         isFinite(t.number) && isFinite(t.position) ? `${t.number}@${t.position}cm` : t.testResult,
-        SNOW_STABILITY[t.snowStability],
+        getSnowStabilityText(t.snowStability),
         t.comment,
       ]
         .filter(Boolean)
