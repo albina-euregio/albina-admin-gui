@@ -24,8 +24,7 @@ export class AlbinaObservationsService {
   }
 
   getGenericObservationsGeoJSON(dateRangeParams: DateRangeParams): Observable<GeoJSON.FeatureCollection> {
-    const url = environment.apiBaseUrl + "../api_ext/observations";
-    return this.getGenericObservations0(url, dateRangeParams).pipe(
+    return this.getGenericObservations(dateRangeParams).pipe(
       toArray(),
       map((observations) => toGeoJSON(observations)),
     );
