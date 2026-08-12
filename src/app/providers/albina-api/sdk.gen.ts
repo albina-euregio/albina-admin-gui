@@ -106,6 +106,28 @@ import type {
   GetRssFeedResponses,
   GetServerVersionInfoData,
   GetServerVersionInfoResponses,
+  GetStaticArchiveData,
+  GetStaticArchiveResponses,
+  GetStaticCaamlJsonData,
+  GetStaticCaamlJsonForPublicationData,
+  GetStaticCaamlJsonForPublicationResponses,
+  GetStaticCaamlJsonResponses,
+  GetStaticCaamlXmlData,
+  GetStaticCaamlXmlResponses,
+  GetStaticEawsProblemsData,
+  GetStaticEawsProblemsResponses,
+  GetStaticEawsRatingsData,
+  GetStaticEawsRatingsResponses,
+  GetStaticMapData,
+  GetStaticMapResponses,
+  GetStaticMp3Data,
+  GetStaticMp3Responses,
+  GetStaticSimpleHtmlData,
+  GetStaticSimpleHtmlResponses,
+  GetStaticWeatherStationsData,
+  GetStaticWeatherStationsForDateTimeData,
+  GetStaticWeatherStationsForDateTimeResponses,
+  GetStaticWeatherStationsResponses,
   GetStatus1Data,
   GetStatus1Responses,
   GetStatusData,
@@ -114,6 +136,8 @@ import type {
   GetStressLevelsResponses,
   GetTeamStressLevelsData,
   GetTeamStressLevelsResponses,
+  GetTendencyData,
+  GetTendencyResponses,
   GetUsersData,
   GetUsersResponses,
   GetVariantByIdData,
@@ -122,6 +146,7 @@ import type {
   GetVariantsForDangerSourceData,
   GetVariantsForDangerSourceResponses,
   GetVariantsResponses,
+  GetWeatherStationsData,
   IndexData,
   IndexResponses,
   KeyData,
@@ -581,6 +606,17 @@ export const submitBulletins = <ThrowOnError extends boolean = false>(
   (options.client ?? client).post<SubmitBulletinsResponses, unknown, ThrowOnError>({
     security: [{ scheme: "bearer", type: "http" }],
     url: "/bulletins/submit",
+    ...options,
+  });
+
+/**
+ * Get tendency for region
+ */
+export const getTendency = <ThrowOnError extends boolean = false>(
+  options: Options<GetTendencyData, ThrowOnError>,
+): RequestResult<GetTendencyResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetTendencyResponses, unknown, ThrowOnError>({
+    url: "/bulletins/tendency",
     ...options,
   });
 
@@ -1334,4 +1370,132 @@ export const resetPassword = <ThrowOnError extends boolean = false>(
       "Content-Type": "application/json",
       ...options.headers,
     },
+  });
+
+export const getWeatherStations = <ThrowOnError extends boolean = false>(
+  options?: Options<GetWeatherStationsData, ThrowOnError>,
+): RequestResult<unknown, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<unknown, unknown, ThrowOnError>({ url: "/weather-stations", ...options });
+
+/**
+ * Browse the archive of published bulletins
+ */
+export const getStaticArchive = <ThrowOnError extends boolean = false>(
+  options?: Options<GetStaticArchiveData, ThrowOnError>,
+): RequestResult<GetStaticArchiveResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetStaticArchiveResponses, unknown, ThrowOnError>({
+    url: "/bulletins/archive/",
+    ...options,
+  });
+
+/**
+ * Get published bulletins as CAAML JSON
+ */
+export const getStaticCaamlJson = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticCaamlJsonData, ThrowOnError>,
+): RequestResult<GetStaticCaamlJsonResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticCaamlJsonResponses, unknown, ThrowOnError>({
+    url: "/bulletins/{date}/{date}_{region}{lang}_CAAMLv6.json",
+    ...options,
+  });
+
+/**
+ * Get published bulletins as CAAML XML
+ */
+export const getStaticCaamlXml = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticCaamlXmlData, ThrowOnError>,
+): RequestResult<GetStaticCaamlXmlResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticCaamlXmlResponses, unknown, ThrowOnError>({
+    url: "/bulletins/{date}/{date}_{region}{lang}_CAAMLv6.xml",
+    ...options,
+  });
+
+/**
+ * Get bulletins of a specific publication as CAAML JSON
+ */
+export const getStaticCaamlJsonForPublication = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticCaamlJsonForPublicationData, ThrowOnError>,
+): RequestResult<GetStaticCaamlJsonForPublicationResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticCaamlJsonForPublicationResponses, unknown, ThrowOnError>({
+    url: "/bulletins/{date}/{publication}/{date}_{region}{lang}_CAAMLv6.json",
+    ...options,
+  });
+
+/**
+ * Get a published danger map
+ */
+export const getStaticMap = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticMapData, ThrowOnError>,
+): RequestResult<GetStaticMapResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticMapResponses, unknown, ThrowOnError>({
+    url: "/bulletins/{date}/{publication}/{file}.webp",
+    ...options,
+  });
+
+/**
+ * Get the synthesized audio version of the published bulletins
+ */
+export const getStaticMp3 = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticMp3Data, ThrowOnError>,
+): RequestResult<GetStaticMp3Responses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticMp3Responses, unknown, ThrowOnError>({
+    url: "/bulletins/{date}/{region}_{lang}.mp3",
+    ...options,
+  });
+
+/**
+ * Get published avalanche problems per micro-region (EAWS format)
+ */
+export const getStaticEawsProblems = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticEawsProblemsData, ThrowOnError>,
+): RequestResult<GetStaticEawsProblemsResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticEawsProblemsResponses, unknown, ThrowOnError>({
+    url: "/eaws_bulletins/{date}/{date}.problems.json",
+    ...options,
+  });
+
+/**
+ * Get published danger ratings per micro-region (EAWS format)
+ */
+export const getStaticEawsRatings = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticEawsRatingsData, ThrowOnError>,
+): RequestResult<GetStaticEawsRatingsResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticEawsRatingsResponses, unknown, ThrowOnError>({
+    url: "/eaws_bulletins/{date}/{date}{region}.ratings.json",
+    ...options,
+  });
+
+/**
+ * Get the latest weather station measurements
+ *
+ * The endpoint `GET /weather-stations` redirects here.
+ */
+export const getStaticWeatherStations = <ThrowOnError extends boolean = false>(
+  options?: Options<GetStaticWeatherStationsData, ThrowOnError>,
+): RequestResult<GetStaticWeatherStationsResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetStaticWeatherStationsResponses, unknown, ThrowOnError>({
+    url: "/eaws_weather_stations/linea.geojson",
+    ...options,
+  });
+
+/**
+ * Get an hourly snapshot of the weather station measurements
+ */
+export const getStaticWeatherStationsForDateTime = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticWeatherStationsForDateTimeData, ThrowOnError>,
+): RequestResult<GetStaticWeatherStationsForDateTimeResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticWeatherStationsForDateTimeResponses, unknown, ThrowOnError>({
+    url: "/eaws_weather_stations/{date}/{dateTime}_linea.geojson",
+    ...options,
+  });
+
+/**
+ * Get published bulletins as simple HTML
+ */
+export const getStaticSimpleHtml = <ThrowOnError extends boolean = false>(
+  options: Options<GetStaticSimpleHtmlData, ThrowOnError>,
+): RequestResult<GetStaticSimpleHtmlResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetStaticSimpleHtmlResponses, unknown, ThrowOnError>({
+    url: "/simple/{date}/{region}_{lang}.html",
+    ...options,
   });

@@ -63,6 +63,15 @@ export const zBlogItem = z.object({
   published: z.iso.datetime(),
   categories: z.array(z.string()),
   attachmentUrl: z.string(),
+  translations: z.object({
+    de: z.string().optional(),
+    it: z.string().optional(),
+    en: z.string().optional(),
+    fr: z.string().optional(),
+    es: z.string().optional(),
+    ca: z.string().optional(),
+    oc: z.string().optional(),
+  }),
 });
 
 export const zBulletinStatus = z.enum([
@@ -498,6 +507,14 @@ export const zAvalancheBulletinServiceHighest = z.object({
   dangerRating: zDangerRating,
 });
 
+export const zAvalancheBulletinServiceTendencyResult = z.object({
+  dates: z.array(z.iso.datetime()).describe("Start dates of the bulletins of the preceding days").optional(),
+  dangerRatings: z
+    .record(z.string(), z.array(zDangerRating))
+    .describe("Highest danger rating of each of these days, per micro region")
+    .optional(),
+});
+
 export const zDangerRatingModificator = z.enum(["none", "minus", "equal", "plus"]);
 
 export const zDangerSign = z.enum(["shooting_cracks", "whumpfing", "fresh_avalanches", "glide_cracks"]);
@@ -827,7 +844,7 @@ export const zIncidentsInvolvementsFatalitiesBurials = z.object({
   fatalities: z.number(),
   fullyBuried: z.number(),
   incidentActivity: z.array(z.string()),
-  incidentTerrainType: zIncidentsIncidentTerrainType,
+  incidentTerrainType: z.array(zIncidentsIncidentTerrainType),
   injuredSurvivors: z.number(),
   involvementsFatalitiesBurialsComment: z.string(),
   numberInvolved: z.number(),
@@ -877,7 +894,7 @@ export const zIncidentsSnowpackStability = z.enum(["fair", "good", "poor", "very
 export const zIncidentsStartZoneAspect = z.enum(["E", "N", "NE", "NW", "S", "SE", "SW", "W"]);
 
 export const zIncidentsAvalancheProblem = z.object({
-  aspects: zIncidentsStartZoneAspect,
+  aspects: z.array(zIncidentsStartZoneAspect),
   avalancheSize: zIncidentsAvalancheProblemAvalancheSize,
   elevationLowerBound: z.string(),
   elevationUpperBound: z.string(),
@@ -981,7 +998,7 @@ export const zIncidentsIncidentSchema = z.object({
   crownDepthMax: z.number(),
   crownDepthMin: z.number(),
   damagedAssets: z.array(z.string()),
-  dangerPattern: zIncidentsDangerPattern,
+  dangerPattern: z.array(zIncidentsDangerPattern),
   dangerRating: zIncidentsDangerRating,
   dateTime: z.iso.datetime(),
   debrisDensity: z.number(),
@@ -1501,6 +1518,115 @@ export const zUserServiceResetPassword = z.object({
   newPassword: z.string(),
 });
 
+export const zWeatherStationsFeatureType = z.enum(["Feature"]);
+
+export const zWeatherStationsFeatureCollectionType = z.enum(["FeatureCollection"]);
+
+export const zWeatherStationsGeometryType = z.enum(["Point"]);
+
+export const zWeatherStationsGeometry = z.object({
+  coordinates: z.array(z.number()).describe("Longitude, latitude and (optionally) altitude").optional(),
+  type: zWeatherStationsGeometryType,
+});
+
+export const zWeatherStationsStatistics = z.object({
+  average: z.number(),
+  count: z.number(),
+  delta: z.number(),
+  max: z.number(),
+  median: z.number(),
+  min: z.number(),
+  sum: z.number(),
+  unit: z
+    .enum(["K", "℃", "m", "cm", "mm", "1", "%", "°", "m/s", "km/h", "hPa", "Pa", "W/m²"])
+    .describe("Unit of the measured values")
+    .optional(),
+});
+
+/**
+ * The properties of a weather station including measured values
+ */
+export const zWeatherStationsProperties = z
+  .object({
+    altitude: z
+      .number()
+      .describe("Altitude above sea level (alternatively specify 3rd component in coordinates)")
+      .optional(),
+    dataProviderID: z.string(),
+    dataURLs: z
+      .array(z.string())
+      .describe(
+        "Data URLs for this station (typically SMET format is used, and three URLs are provided, short term, winter season, all winter seasons)",
+      )
+      .optional(),
+    date: z.iso.datetime().describe("ISO 8601 timestamp").optional(),
+    DW: z.number().describe("Wind direction (optionally average over the last 3h) in °").optional(),
+    HS: z.number().describe("Snow height in m").optional(),
+    HSD_24: z.number().describe("Difference in snow height over the last 24h in m").optional(),
+    HSD_48: z.number().describe("Difference in snow height over the last 48h in m").optional(),
+    HSD_6: z.number().describe("Difference in snow height over the last 6h in m").optional(),
+    HSD_72: z.number().describe("Difference in snow height over the last 72h in m").optional(),
+    ILWR: z.number().describe("Incoming Long Wave Radiation in W/m²").optional(),
+    ISWR: z.number().describe("Incoming Short Wave Radiation in W/m²").optional(),
+    microRegionID: z.string().describe("EAWS micro region ID, see https://gitlab.com/eaws/eaws-regions").optional(),
+    name: z.string().describe("Station name").optional(),
+    OLWR: z.number().describe("Outgoing Long Wave Radiation in W/m²").optional(),
+    operator: z.string().describe("Station operator").optional(),
+    operatorLicense: z.string().describe("License under which data is provided").optional(),
+    operatorLicenseLink: z.url().describe("Link to license").optional(),
+    operatorLink: z.url().describe("Link to website of station operator").optional(),
+    P: z.number().describe("Air pressure in Pa").optional(),
+    plot: z.string().describe("For legacy PNG plots: name of plot which includes this station").optional(),
+    PSUM_24: z.number().describe("Precipitation summed over the last 24h in mm").optional(),
+    PSUM_48: z.number().describe("Precipitation summed over the last 48h in mm").optional(),
+    PSUM_6: z.number().describe("Precipitation summed over the last 6h in mm").optional(),
+    PSUM_72: z.number().describe("Precipitation summed over the last 72h in mm").optional(),
+    RH: z.number().describe("Relative humidity between 0 and 1").optional(),
+    RSWR: z.number().describe("Reflected Short Wave Radiation in W/m²").optional(),
+    shortName: z
+      .string()
+      .regex(/^[A-Za-z0-9]+$/)
+      .describe("Station short name (such as ISEE2) consisting of [A-Za-z0-9] only")
+      .optional(),
+    startYear: z.string().describe("Observation start year").optional(),
+    stationCharacteristics: z
+      .string()
+      .describe("A few sentences describing the station characteristics/locality/history/...")
+      .optional(),
+    statistics: z.record(z.string(), zWeatherStationsStatistics),
+    TA: z.number().describe("Air temperature in Kelvin").optional(),
+    TA_MAX: z.number().describe("Max. air temperature over the last 24h in Kelvin").optional(),
+    TA_MIN: z.number().describe("Min. air temperature over the last 24h in Kelvin").optional(),
+    TD: z.number().describe("Dew point temperature in Kelvin").optional(),
+    TSS: z.number().describe("Temperature Snow Surface in Kelvin").optional(),
+    VW: z.number().describe("Wind velocity (optionally as average over the last 3h) in m/s").optional(),
+    VW_MAX: z.number().describe("Max. wind velocity (optionally max over the last 3h) in m/s").optional(),
+  })
+  .describe("The properties of a weather station including measured values");
+
+/**
+ * A GeoJSON Feature corresponding to one weather station
+ */
+export const zWeatherStationsFeature = z
+  .object({
+    geometry: zWeatherStationsGeometry,
+    id: z.string().describe("The ID/UUID of the station").optional(),
+    properties: zWeatherStationsProperties,
+    type: zWeatherStationsFeatureType,
+  })
+  .describe("A GeoJSON Feature corresponding to one weather station");
+
+/**
+ * A GeoJSON FeatureCollection of weather stations
+ */
+export const zWeatherStationsFeatureCollection = z
+  .object({
+    features: z.array(zWeatherStationsFeature),
+    properties: z.record(z.string(), z.unknown()),
+    type: zWeatherStationsFeatureCollectionType,
+  })
+  .describe("A GeoJSON FeatureCollection of weather stations");
+
 export const zWetness = z.enum(["wet", "moist", "dry"]);
 
 /**
@@ -1618,6 +1744,28 @@ export const zDangerSourceVariant = zAbstractPersistentObject.and(
     looseSnowMoisture: zWetness.optional(),
   }),
 );
+
+/**
+ * Date of validity in the format yyyy-MM-dd
+ */
+export const zStaticDate = z.iso.date().describe("Date of validity in the format yyyy-MM-dd");
+
+/**
+ * Timestamp of the hourly snapshot in the format yyyy-MM-dd_HH-mm
+ */
+export const zStaticDateTime = z.string().describe("Timestamp of the hourly snapshot in the format yyyy-MM-dd_HH-mm");
+
+/**
+ * Publication timestamp in the format yyyy-MM-dd_HH-mm-ss
+ */
+export const zStaticPublication = z.string().describe("Publication timestamp in the format yyyy-MM-dd_HH-mm-ss");
+
+/**
+ * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+ */
+export const zStaticRegion = z.string().describe("Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`");
+
+export const zStaticLang = zLanguageCode;
 
 /**
  * index 200 response
@@ -1918,6 +2066,16 @@ export const zSubmitBulletinsQuery = z.object({
   region: z.string(),
   date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
+
+export const zGetTendencyQuery = z.object({
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
+  region: z.string().nullish(),
+});
+
+/**
+ * tendency of each micro region with published bulletins
+ */
+export const zGetTendencyResponse = zAvalancheBulletinServiceTendencyResult;
 
 export const zDeleteJsonBulletinPath = z.object({
   bulletinId: z.string(),
@@ -2394,3 +2552,117 @@ export const zResetPasswordBody = zUserServiceResetPassword;
 export const zResetPasswordPath = z.object({
   id: z.string(),
 });
+
+/**
+ * Directory listing of the bulletin archive
+ */
+export const zGetStaticArchiveResponse = z.string().describe("Directory listing of the bulletin archive");
+
+export const zGetStaticCaamlJsonPath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  region: z.string().describe("Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`"),
+  lang: zLanguageCode,
+});
+
+/**
+ * CAAML v6 JSON bulletins
+ */
+export const zGetStaticCaamlJsonResponse = zCaamlAvalancheBulletins;
+
+export const zGetStaticCaamlXmlPath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  region: z.string().describe("Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`"),
+  lang: zLanguageCode,
+});
+
+/**
+ * CAAML v6 XML bulletins
+ */
+export const zGetStaticCaamlXmlResponse = z.string().describe("CAAML v6 XML bulletins");
+
+export const zGetStaticCaamlJsonForPublicationPath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  publication: z.string().describe("Publication timestamp in the format yyyy-MM-dd_HH-mm-ss"),
+  region: z.string().describe("Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`"),
+  lang: zLanguageCode,
+});
+
+/**
+ * CAAML v6 JSON bulletins
+ */
+export const zGetStaticCaamlJsonForPublicationResponse = zCaamlAvalancheBulletins;
+
+export const zGetStaticMapPath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  publication: z.string().describe("Publication timestamp in the format yyyy-MM-dd_HH-mm-ss"),
+  file: z
+    .string()
+    .describe(
+      "Map file name, either `{daytime}_{region}_{mapLevel}[_bw]` for overview maps or `{region}_{bulletinId}[_PM][_bw]` for bulletin-specific maps",
+    ),
+});
+
+/**
+ * Danger map
+ */
+export const zGetStaticMapResponse = z.string().describe("Danger map");
+
+export const zGetStaticMp3Path = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  region: z.string().describe("Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`"),
+  lang: zLanguageCode,
+});
+
+/**
+ * Audio bulletin
+ */
+export const zGetStaticMp3Response = z.string().describe("Audio bulletin");
+
+export const zGetStaticEawsProblemsPath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+});
+
+/**
+ * Avalanche problems keyed by micro-region ID
+ */
+export const zGetStaticEawsProblemsResponse = z
+  .record(z.string(), z.unknown())
+  .describe("Avalanche problems keyed by micro-region ID");
+
+export const zGetStaticEawsRatingsPath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  region: z.string().describe("Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`"),
+});
+
+/**
+ * Danger ratings keyed by micro-region ID
+ */
+export const zGetStaticEawsRatingsResponse = z
+  .record(z.string(), z.unknown())
+  .describe("Danger ratings keyed by micro-region ID");
+
+/**
+ * Weather stations as GeoJSON
+ */
+export const zGetStaticWeatherStationsResponse = zWeatherStationsFeatureCollection;
+
+export const zGetStaticWeatherStationsForDateTimePath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  dateTime: z.string().describe("Timestamp of the hourly snapshot in the format yyyy-MM-dd_HH-mm"),
+});
+
+/**
+ * Weather stations as GeoJSON
+ */
+export const zGetStaticWeatherStationsForDateTimeResponse = zWeatherStationsFeatureCollection;
+
+export const zGetStaticSimpleHtmlPath = z.object({
+  date: z.iso.date().describe("Date of validity in the format yyyy-MM-dd"),
+  region: z.string().describe("Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`"),
+  lang: zLanguageCode,
+});
+
+/**
+ * Simple HTML rendering of the bulletins
+ */
+export const zGetStaticSimpleHtmlResponse = z.string().describe("Simple HTML rendering of the bulletins");

@@ -5,6 +5,17 @@ export type ClientOptions = {
     | `${string}://${string}/albina/api`
     | "https://avalanche.report/api/"
     | "https://dev.avalanche.report/api/"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
+    | "https://static.avalanche.report"
     | (string & {});
 };
 
@@ -142,6 +153,19 @@ export type AvalancheBulletinServiceLatestBulletin = {
   date: string;
 };
 
+export type AvalancheBulletinServiceTendencyResult = {
+  /**
+   * Start dates of the bulletins of the preceding days
+   */
+  dates?: Array<string>;
+  /**
+   * Highest danger rating of each of these days, per micro region
+   */
+  dangerRatings?: {
+    [key: string]: Array<DangerRating>;
+  };
+};
+
 export type AvalancheBulletinStatusServiceStatus = {
   date: string;
   timestamp: string;
@@ -190,6 +214,15 @@ export type BlogItem = {
   published: string;
   categories: Array<string>;
   attachmentUrl: string;
+  translations: {
+    de?: string;
+    it?: string;
+    en?: string;
+    fr?: string;
+    es?: string;
+    ca?: string;
+    oc?: string;
+  };
 };
 
 export type BulletinStatus =
@@ -977,7 +1010,7 @@ export type IncidentsAttachmentCategory = "Avalanche" | "Group" | "Incident" | "
 export type IncidentsAvalancheGear = "All" | "None" | "Some" | "Unknown";
 
 export type IncidentsAvalancheProblem = {
-  aspects: IncidentsStartZoneAspect;
+  aspects: Array<IncidentsStartZoneAspect>;
   avalancheSize: IncidentsAvalancheProblemAvalancheSize;
   elevationLowerBound: string;
   elevationUpperBound: string;
@@ -1071,7 +1104,7 @@ export type IncidentsIncidentSchema = {
   crownDepthMax: number;
   crownDepthMin: number;
   damagedAssets: Array<string>;
-  dangerPattern: IncidentsDangerPattern;
+  dangerPattern: Array<IncidentsDangerPattern>;
   dangerRating: IncidentsDangerRating;
   dateTime: string;
   debrisDensity: number;
@@ -1179,7 +1212,7 @@ export type IncidentsInvolvementsFatalitiesBurials = {
   fatalities: number;
   fullyBuried: number;
   incidentActivity: Array<string>;
-  incidentTerrainType: IncidentsIncidentTerrainType;
+  incidentTerrainType: Array<IncidentsIncidentTerrainType>;
   injuredSurvivors: number;
   involvementsFatalitiesBurialsComment: string;
   numberInvolved: number;
@@ -1733,7 +1766,235 @@ export type UserServiceResetPassword = {
   newPassword: string;
 };
 
+/**
+ * A GeoJSON Feature corresponding to one weather station
+ */
+export type WeatherStationsFeature = {
+  geometry: WeatherStationsGeometry;
+  /**
+   * The ID/UUID of the station
+   */
+  id?: string;
+  properties: WeatherStationsProperties;
+  type: WeatherStationsFeatureType;
+};
+
+export type WeatherStationsFeatureType = "Feature";
+
+/**
+ * A GeoJSON FeatureCollection of weather stations
+ */
+export type WeatherStationsFeatureCollection = {
+  features: Array<WeatherStationsFeature>;
+  properties: {
+    [key: string]: unknown;
+  };
+  type: WeatherStationsFeatureCollectionType;
+};
+
+export type WeatherStationsFeatureCollectionType = "FeatureCollection";
+
+export type WeatherStationsGeometry = {
+  /**
+   * Longitude, latitude and (optionally) altitude
+   */
+  coordinates?: Array<number>;
+  type: WeatherStationsGeometryType;
+};
+
+export type WeatherStationsGeometryType = "Point";
+
+/**
+ * The properties of a weather station including measured values
+ */
+export type WeatherStationsProperties = {
+  /**
+   * Altitude above sea level (alternatively specify 3rd component in coordinates)
+   */
+  altitude?: number;
+  dataProviderID: string;
+  /**
+   * Data URLs for this station (typically SMET format is used, and three URLs are provided, short term, winter season, all winter seasons)
+   */
+  dataURLs?: Array<string>;
+  /**
+   * ISO 8601 timestamp
+   */
+  date?: string;
+  /**
+   * Wind direction (optionally average over the last 3h) in °
+   */
+  DW?: number;
+  /**
+   * Snow height in m
+   */
+  HS?: number;
+  /**
+   * Difference in snow height over the last 24h in m
+   */
+  HSD_24?: number;
+  /**
+   * Difference in snow height over the last 48h in m
+   */
+  HSD_48?: number;
+  /**
+   * Difference in snow height over the last 6h in m
+   */
+  HSD_6?: number;
+  /**
+   * Difference in snow height over the last 72h in m
+   */
+  HSD_72?: number;
+  /**
+   * Incoming Long Wave Radiation in W/m²
+   */
+  ILWR?: number;
+  /**
+   * Incoming Short Wave Radiation in W/m²
+   */
+  ISWR?: number;
+  /**
+   * EAWS micro region ID, see https://gitlab.com/eaws/eaws-regions
+   */
+  microRegionID?: string;
+  /**
+   * Station name
+   */
+  name?: string;
+  /**
+   * Outgoing Long Wave Radiation in W/m²
+   */
+  OLWR?: number;
+  /**
+   * Station operator
+   */
+  operator?: string;
+  /**
+   * License under which data is provided
+   */
+  operatorLicense?: string;
+  /**
+   * Link to license
+   */
+  operatorLicenseLink?: string;
+  /**
+   * Link to website of station operator
+   */
+  operatorLink?: string;
+  /**
+   * Air pressure in Pa
+   */
+  P?: number;
+  /**
+   * For legacy PNG plots: name of plot which includes this station
+   */
+  plot?: string;
+  /**
+   * Precipitation summed over the last 24h in mm
+   */
+  PSUM_24?: number;
+  /**
+   * Precipitation summed over the last 48h in mm
+   */
+  PSUM_48?: number;
+  /**
+   * Precipitation summed over the last 6h in mm
+   */
+  PSUM_6?: number;
+  /**
+   * Precipitation summed over the last 72h in mm
+   */
+  PSUM_72?: number;
+  /**
+   * Relative humidity between 0 and 1
+   */
+  RH?: number;
+  /**
+   * Reflected Short Wave Radiation in W/m²
+   */
+  RSWR?: number;
+  /**
+   * Station short name (such as ISEE2) consisting of [A-Za-z0-9] only
+   */
+  shortName?: string;
+  /**
+   * Observation start year
+   */
+  startYear?: string;
+  /**
+   * A few sentences describing the station characteristics/locality/history/...
+   */
+  stationCharacteristics?: string;
+  statistics: {
+    [key: string]: WeatherStationsStatistics;
+  };
+  /**
+   * Air temperature in Kelvin
+   */
+  TA?: number;
+  /**
+   * Max. air temperature over the last 24h in Kelvin
+   */
+  TA_MAX?: number;
+  /**
+   * Min. air temperature over the last 24h in Kelvin
+   */
+  TA_MIN?: number;
+  /**
+   * Dew point temperature in Kelvin
+   */
+  TD?: number;
+  /**
+   * Temperature Snow Surface in Kelvin
+   */
+  TSS?: number;
+  /**
+   * Wind velocity (optionally as average over the last 3h) in m/s
+   */
+  VW?: number;
+  /**
+   * Max. wind velocity (optionally max over the last 3h) in m/s
+   */
+  VW_MAX?: number;
+};
+
+export type WeatherStationsStatistics = {
+  average: number;
+  count: number;
+  delta: number;
+  max: number;
+  median: number;
+  min: number;
+  sum: number;
+  /**
+   * Unit of the measured values
+   */
+  unit?: "K" | "℃" | "m" | "cm" | "mm" | "1" | "%" | "°" | "m/s" | "km/h" | "hPa" | "Pa" | "W/m²";
+};
+
 export type Wetness = "wet" | "moist" | "dry";
+
+/**
+ * Date of validity in the format yyyy-MM-dd
+ */
+export type StaticDate = string;
+
+/**
+ * Timestamp of the hourly snapshot in the format yyyy-MM-dd_HH-mm
+ */
+export type StaticDateTime = string;
+
+/**
+ * Publication timestamp in the format yyyy-MM-dd_HH-mm-ss
+ */
+export type StaticPublication = string;
+
+/**
+ * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+ */
+export type StaticRegion = string;
+
+export type StaticLang = LanguageCode;
 
 export type IndexData = {
   body?: never;
@@ -2446,6 +2707,31 @@ export type SubmitBulletinsResponses = {
    */
   200: unknown;
 };
+
+export type GetTendencyData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Date in the format yyyy-MM-dd'T'HH:mm:ssZZ
+     */
+    date: string;
+    /**
+     * Region ID, e.g. AT-07 or EUREGIO, or empty for all regions
+     */
+    region?: string | null;
+  };
+  url: "/bulletins/tendency";
+};
+
+export type GetTendencyResponses = {
+  /**
+   * tendency of each micro region with published bulletins
+   */
+  200: AvalancheBulletinServiceTendencyResult;
+};
+
+export type GetTendencyResponse = GetTendencyResponses[keyof GetTendencyResponses];
 
 export type DeleteJsonBulletinData = {
   body?: never;
@@ -3566,3 +3852,283 @@ export type ResetPasswordResponses = {
    */
   200: unknown;
 };
+
+export type GetWeatherStationsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/weather-stations";
+};
+
+export type GetStaticArchiveData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/bulletins/archive/";
+};
+
+export type GetStaticArchiveResponses = {
+  /**
+   * Directory listing of the bulletin archive
+   */
+  200: string;
+};
+
+export type GetStaticArchiveResponse = GetStaticArchiveResponses[keyof GetStaticArchiveResponses];
+
+export type GetStaticCaamlJsonData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+     */
+    region: string;
+    lang: LanguageCode;
+  };
+  query?: never;
+  url: "/bulletins/{date}/{date}_{region}{lang}_CAAMLv6.json";
+};
+
+export type GetStaticCaamlJsonResponses = {
+  /**
+   * CAAML v6 JSON bulletins
+   */
+  200: CaamlAvalancheBulletins;
+};
+
+export type GetStaticCaamlJsonResponse = GetStaticCaamlJsonResponses[keyof GetStaticCaamlJsonResponses];
+
+export type GetStaticCaamlXmlData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+     */
+    region: string;
+    lang: LanguageCode;
+  };
+  query?: never;
+  url: "/bulletins/{date}/{date}_{region}{lang}_CAAMLv6.xml";
+};
+
+export type GetStaticCaamlXmlResponses = {
+  /**
+   * CAAML v6 XML bulletins
+   */
+  200: Blob | File;
+};
+
+export type GetStaticCaamlXmlResponse = GetStaticCaamlXmlResponses[keyof GetStaticCaamlXmlResponses];
+
+export type GetStaticCaamlJsonForPublicationData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Publication timestamp in the format yyyy-MM-dd_HH-mm-ss
+     */
+    publication: string;
+    /**
+     * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+     */
+    region: string;
+    lang: LanguageCode;
+  };
+  query?: never;
+  url: "/bulletins/{date}/{publication}/{date}_{region}{lang}_CAAMLv6.json";
+};
+
+export type GetStaticCaamlJsonForPublicationResponses = {
+  /**
+   * CAAML v6 JSON bulletins
+   */
+  200: CaamlAvalancheBulletins;
+};
+
+export type GetStaticCaamlJsonForPublicationResponse =
+  GetStaticCaamlJsonForPublicationResponses[keyof GetStaticCaamlJsonForPublicationResponses];
+
+export type GetStaticMapData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Publication timestamp in the format yyyy-MM-dd_HH-mm-ss
+     */
+    publication: string;
+    /**
+     * Map file name, either `{daytime}_{region}_{mapLevel}[_bw]` for overview maps or `{region}_{bulletinId}[_PM][_bw]` for bulletin-specific maps
+     */
+    file: string;
+  };
+  query?: never;
+  url: "/bulletins/{date}/{publication}/{file}.webp";
+};
+
+export type GetStaticMapResponses = {
+  /**
+   * Danger map
+   */
+  200: Blob | File;
+};
+
+export type GetStaticMapResponse = GetStaticMapResponses[keyof GetStaticMapResponses];
+
+export type GetStaticMp3Data = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+     */
+    region: string;
+    lang: LanguageCode;
+  };
+  query?: never;
+  url: "/bulletins/{date}/{region}_{lang}.mp3";
+};
+
+export type GetStaticMp3Responses = {
+  /**
+   * Audio bulletin
+   */
+  200: Blob | File;
+};
+
+export type GetStaticMp3Response = GetStaticMp3Responses[keyof GetStaticMp3Responses];
+
+export type GetStaticEawsProblemsData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+  };
+  query?: never;
+  url: "/eaws_bulletins/{date}/{date}.problems.json";
+};
+
+export type GetStaticEawsProblemsResponses = {
+  /**
+   * Avalanche problems keyed by micro-region ID
+   */
+  200: {
+    [key: string]: unknown;
+  };
+};
+
+export type GetStaticEawsProblemsResponse = GetStaticEawsProblemsResponses[keyof GetStaticEawsProblemsResponses];
+
+export type GetStaticEawsRatingsData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+     */
+    region: string;
+  };
+  query?: never;
+  url: "/eaws_bulletins/{date}/{date}{region}.ratings.json";
+};
+
+export type GetStaticEawsRatingsResponses = {
+  /**
+   * Danger ratings keyed by micro-region ID
+   */
+  200: {
+    [key: string]: unknown;
+  };
+};
+
+export type GetStaticEawsRatingsResponse = GetStaticEawsRatingsResponses[keyof GetStaticEawsRatingsResponses];
+
+export type GetStaticWeatherStationsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/eaws_weather_stations/linea.geojson";
+};
+
+export type GetStaticWeatherStationsResponses = {
+  /**
+   * Weather stations as GeoJSON
+   */
+  200: WeatherStationsFeatureCollection;
+};
+
+export type GetStaticWeatherStationsResponse =
+  GetStaticWeatherStationsResponses[keyof GetStaticWeatherStationsResponses];
+
+export type GetStaticWeatherStationsForDateTimeData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Timestamp of the hourly snapshot in the format yyyy-MM-dd_HH-mm
+     */
+    dateTime: string;
+  };
+  query?: never;
+  url: "/eaws_weather_stations/{date}/{dateTime}_linea.geojson";
+};
+
+export type GetStaticWeatherStationsForDateTimeResponses = {
+  /**
+   * Weather stations as GeoJSON
+   */
+  200: WeatherStationsFeatureCollection;
+};
+
+export type GetStaticWeatherStationsForDateTimeResponse =
+  GetStaticWeatherStationsForDateTimeResponses[keyof GetStaticWeatherStationsForDateTimeResponses];
+
+export type GetStaticSimpleHtmlData = {
+  body?: never;
+  path: {
+    /**
+     * Date of validity in the format yyyy-MM-dd
+     */
+    date: string;
+    /**
+     * Region ID, e.g. `EUREGIO`, `AT-07`, `IT-32-BZ`, `IT-32-TN`
+     */
+    region: string;
+    lang: LanguageCode;
+  };
+  query?: never;
+  url: "/simple/{date}/{region}_{lang}.html";
+};
+
+export type GetStaticSimpleHtmlResponses = {
+  /**
+   * Simple HTML rendering of the bulletins
+   */
+  200: string;
+};
+
+export type GetStaticSimpleHtmlResponse = GetStaticSimpleHtmlResponses[keyof GetStaticSimpleHtmlResponses];
