@@ -16,10 +16,10 @@ export async function getAwsWeatherStations(
     await import("temporal-polyfill/global");
   }
 
-  let url = "https://static.avalanche.report/eaws_weather_stations/linea.geojson";
+  let url = "https://avalanche.report/eaws_weather_stations/linea.geojson";
   if (endDate instanceof Date) {
     const date = getISODateString(endDate);
-    url = `https://static.avalanche.report/eaws_weather_stations/${date}/${date}_00-00_linea.geojson`;
+    url = `https://avalanche.report/eaws_weather_stations/${date}/${date}_00-00_linea.geojson`;
   }
 
   const json: unknown = await fetchJSON(url);
