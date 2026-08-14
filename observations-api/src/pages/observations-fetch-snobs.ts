@@ -37,6 +37,7 @@ export const POST = async (request: Bun.BunRequest) => {
     observation.$data = undefined;
   }
   const file = process.env.ALBINA_SNOBS_OUTPUT ?? "snobs.json";
+  console.log(`Writing ${observations.length} observations to ${file}`);
   await writeFile(file, JSON.stringify(observations), { encoding: "utf8" });
   return new Response("", { status: 204, statusText: "No Content" });
 };
