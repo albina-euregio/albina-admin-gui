@@ -2,6 +2,7 @@ import { writeFile } from "node:fs/promises";
 
 import { ObservationSource } from "../../../src/app/observations/models/generic-observation.model";
 import { fetchLolaKronos } from "../fetch/observations/lola-kronos";
+import { newDate } from "../util/newDate";
 
 export const POST = async (request: Bun.BunRequest) => {
   if (
@@ -15,12 +16,18 @@ export const POST = async (request: Bun.BunRequest) => {
     return new Response("", { status: 403, statusText: "Forbidden" });
   }
 
+  const url = new URL(request.url);
+  const startDate =
+    typeof url.searchParams.get("startDate") === "string"
+      ? new Date(url.searchParams.get("startDate"))
+      : newDate({ days: -7 });
+  const endDate =
+    typeof url.searchParams.get("endDate") === "string"
+      ? new Date(url.searchParams.get("endDate"))
+      : newDate({ days: 0 });
+
   const observations = [];
-  for await (const observation of fetchLolaKronos(
-    new Date(Date.now() - 7 * 24 * 3600e3),
-    new Date(),
-    process.env.ALBINA_SNOBS_API_TOKEN,
-  )) {
+  for await (const observation of fetchLolaKronos(startDate, endDate, process.env.ALBINA_SNOBS_API_TOKEN)) {
     if (observation.$source === ObservationSource.LoLaObserver || observation.$source === ObservationSource.Snobs) {
       observations.push(observation);
     }
