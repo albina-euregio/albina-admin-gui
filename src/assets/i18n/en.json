@@ -15,6 +15,9 @@
     "placeholder": {
       "username": "Please enter your username",
       "password": "Please enter your password"
+    },
+    "passkey": {
+      "button": "Sign in with a passkey"
     }
   },
   "sidebar": {
@@ -1042,6 +1045,20 @@
         "showCaaml": "Show CAAML",
         "showJson": "Show JSON"
       }
+    },
+    "passkeys": {
+      "title": "Passkeys",
+      "unsupported": "Your browser does not support passkeys.",
+      "empty": "No passkeys registered yet.",
+      "unnamed": "Passkey",
+      "lastUsed": "Last used",
+      "neverUsed": "Never used",
+      "namePlaceholder": "e.g. iPhone, YubiKey",
+      "add": "Add passkey",
+      "delete": "Delete",
+      "added": "Passkey added",
+      "addError": "Could not add passkey",
+      "deleteError": "Could not delete passkey"
     }
   },
   "statistics": {

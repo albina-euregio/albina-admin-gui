@@ -3,8 +3,14 @@ import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { UserModel, UserSchema } from "app/models/user.model";
+import {
+  fromAuthenticationCredential,
+  fromRegistrationCredential,
+  toCreationOptions,
+  toRequestOptions,
+} from "app/shared/webauthn-util";
 import { BehaviorSubject, from, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
@@ -60,21 +66,92 @@ export class AuthenticationService {
         const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(res.data, {
           reportInput: true,
         });
-        if (!data.access_token) {
-          return false;
-        }
-        this.authentication = data;
-        this.localStorageService.setCurrentAuthor(data);
-        const authorRegions = this.getCurrentAuthorRegions();
-        const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
-        this.setActiveRegion(
-          authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
-        );
-        this.loadInternalRegions();
-        this.externalServerLogins();
-        return true;
+        return this.applyAuthenticationResponse(data);
       }),
     );
+  }
+
+  /**
+   * Signs in with a previously registered passkey. Prompts the browser's WebAuthn UI, unless
+   * `mediation: "conditional"` is given, in which case it waits silently for the user to pick a
+   * passkey from the username field's autofill dropdown (see login.component.ts).
+   */
+  public loginWithPasskey(
+    username?: string,
+    options?: { signal?: AbortSignal; mediation?: CredentialMediationRequirement },
+  ): Observable<boolean> {
+    return from(albinaApi.beginLogin({ body: { username }, throwOnError: true })).pipe(
+      switchMap((res) => {
+        const challenge = res.data;
+        return from(
+          navigator.credentials.get(toRequestOptions(challenge.publicKey, options?.signal, options?.mediation)),
+        ).pipe(
+          switchMap((credential) => {
+            if (!credential) {
+              throw new Error("Passkey login was cancelled");
+            }
+            return albinaApi.finishLogin({
+              body: {
+                state: challenge.state,
+                credential: fromAuthenticationCredential(credential as PublicKeyCredential),
+              },
+              throwOnError: true,
+            });
+          }),
+        );
+      }),
+      map((res) => {
+        const data = AuthenticationResponseSchema.parse(res.data, { reportInput: true });
+        return this.applyAuthenticationResponse(data);
+      }),
+    );
+  }
+
+  private applyAuthenticationResponse(data: AuthenticationResponse): boolean {
+    if (!data.access_token) {
+      return false;
+    }
+    this.authentication = data;
+    this.localStorageService.setCurrentAuthor(data);
+    const authorRegions = this.getCurrentAuthorRegions();
+    const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
+    this.setActiveRegion(authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0]);
+    this.loadInternalRegions();
+    this.externalServerLogins();
+    return true;
+  }
+
+  /** Registers a new passkey for the current (already-authenticated) user. Prompts the browser's WebAuthn UI. */
+  public registerPasskey(name?: string): Observable<albinaApi.PasskeyServicePasskeyInfo> {
+    return from(albinaApi.beginRegistration({ throwOnError: true })).pipe(
+      switchMap((res) => {
+        const challenge = res.data;
+        return from(navigator.credentials.create(toCreationOptions(challenge.publicKey))).pipe(
+          switchMap((credential) => {
+            if (!credential) {
+              throw new Error("Passkey registration was cancelled");
+            }
+            return albinaApi.finishRegistration({
+              body: {
+                state: challenge.state,
+                credential: fromRegistrationCredential(credential as PublicKeyCredential),
+                name,
+              },
+              throwOnError: true,
+            });
+          }),
+        );
+      }),
+      map((res) => res.data),
+    );
+  }
+
+  public listPasskeys(): Observable<albinaApi.PasskeyServicePasskeyInfo[]> {
+    return from(albinaApi.listPasskeys({ throwOnError: true })).pipe(map((res) => res.data));
+  }
+
+  public deletePasskey(id: string): Observable<void> {
+    return from(albinaApi.deletePasskey({ path: { id }, throwOnError: true })).pipe(map(() => undefined));
   }
 
   get accessToken(): string {

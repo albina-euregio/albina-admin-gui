@@ -14,7 +14,7 @@
                   <input
                     [disabled]="loading"
                     type="email"
-                    autocomplete="username"
+                    autocomplete="username webauthn"
                     class="form-control"
                     name="username"
                     autofocus
@@ -41,6 +41,13 @@
                         {{ "login.button" | translate }}
                       </button>
                     </div>
+                    @if (passkeySupported) {
+                      <div class="col-6">
+                        <button type="button" class="btn btn-outline-primary" (click)="loginWithPasskey()">
+                          <i class="ph-bold ph-fingerprint me-1"></i>{{ "login.passkey.button" | translate }}
+                        </button>
+                      </div>
+                    }
                   }
                   @if (loading) {
                     <div class="col-6">

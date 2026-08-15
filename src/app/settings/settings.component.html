@@ -146,6 +146,61 @@
       </div>
     </div>
     <!--/.col-->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header d-flex align-items-center">
+          <i class="ph-bold ph-fingerprint me-2"></i>{{ "settings.passkeys.title" | translate }}
+        </div>
+        <div class="card-body">
+          @if (!passkeySupported) {
+            <p class="text-body-secondary">{{ "settings.passkeys.unsupported" | translate }}</p>
+          } @else {
+            @if (passkeys.length === 0) {
+              <p class="text-body-secondary">{{ "settings.passkeys.empty" | translate }}</p>
+            }
+            @for (passkey of passkeys; track passkey.id) {
+              <div class="form-group row align-items-center">
+                <div class="col-sm-6">
+                  {{ passkey.name || ("settings.passkeys.unnamed" | translate) }}
+                  <br />
+                  <small class="text-body-secondary">
+                    {{ "settings.passkeys.lastUsed" | translate }}:
+                    {{
+                      passkey.lastUsedAt
+                        ? (passkey.lastUsedAt | date: "short")
+                        : ("settings.passkeys.neverUsed" | translate)
+                    }}
+                  </small>
+                </div>
+                <div class="col-sm-6 text-sm-end">
+                  <button type="button" class="btn btn-sm btn-danger" (click)="deletePasskey(passkey)">
+                    {{ "settings.passkeys.delete" | translate }}
+                  </button>
+                </div>
+              </div>
+            }
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="newPasskeyName"
+                  placeholder="{{ 'settings.passkeys.namePlaceholder' | translate }}"
+                  [disabled]="passkeyBusy"
+                  [(ngModel)]="newPasskeyName"
+                />
+              </div>
+              <div class="col-sm-6">
+                <button type="button" class="btn btn-sm btn-primary" [disabled]="passkeyBusy" (click)="addPasskey()">
+                  {{ "settings.passkeys.add" | translate }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
   </div>
   <!--/.row-->
 </div>
