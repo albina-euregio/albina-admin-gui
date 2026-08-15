@@ -3,9 +3,13 @@ import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
+import {
+  browserSupportsWebAuthn,
+  browserSupportsWebAuthnAutofill,
+  WebAuthnAbortService,
+} from "@simplewebauthn/browser";
 import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { isWebAuthnSupported } from "app/shared/webauthn-util";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 
 import { environment } from "../../environments/environment";
@@ -32,8 +36,7 @@ export class LoginComponent implements OnInit {
   public password: string;
   public returnUrl: string;
   public loading = false;
-  public passkeySupported = isWebAuthnSupported();
-  private conditionalPasskeyAbortController?: AbortController;
+  public passkeySupported = browserSupportsWebAuthn();
 
   public errorModalRef: BsModalRef;
   readonly errorTemplate = viewChild<TemplateRef<unknown>>("errorTemplate");
@@ -68,22 +71,19 @@ export class LoginComponent implements OnInit {
    * https://developer.mozilla.org/en-US/docs/Web/Security/Authentication/Passkeys#offering_autofill_for_passkeys
    */
   private async tryConditionalPasskeyLogin() {
-    if (!this.passkeySupported || !(await PublicKeyCredential.isConditionalMediationAvailable?.())) {
+    if (!this.passkeySupported || !(await browserSupportsWebAuthnAutofill())) {
       return;
     }
-    this.conditionalPasskeyAbortController = new AbortController();
-    this.destroyRef.onDestroy(() => this.conditionalPasskeyAbortController?.abort());
-    this.authenticationService
-      .loginWithPasskey(undefined, { signal: this.conditionalPasskeyAbortController.signal, mediation: "conditional" })
-      .subscribe({
-        next: (ok) => {
-          if (ok) {
-            this.router.navigate([this.returnUrl]);
-          }
-        },
-        // the user dismissed the autofill prompt, or the component was destroyed: nothing to show
-        error: () => undefined,
-      });
+    this.destroyRef.onDestroy(() => WebAuthnAbortService.cancelCeremony());
+    this.authenticationService.loginWithPasskey(undefined, { useBrowserAutofill: true }).subscribe({
+      next: (ok) => {
+        if (ok) {
+          this.router.navigate([this.returnUrl]);
+        }
+      },
+      // the user dismissed the autofill prompt, or the ceremony was cancelled: nothing to show
+      error: () => undefined,
+    });
   }
 
   getStyle() {
@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit {
 
   loginWithPasskey() {
     // an explicit login and the background conditional one can't run concurrently
-    this.conditionalPasskeyAbortController?.abort();
+    WebAuthnAbortService.cancelCeremony();
     this.loading = true;
 
     this.authenticationService.loginWithPasskey(this.username || undefined).subscribe({

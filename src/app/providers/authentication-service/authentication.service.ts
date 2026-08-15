@@ -2,13 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { UserModel, UserSchema } from "app/models/user.model";
 import {
-  fromAuthenticationCredential,
-  fromRegistrationCredential,
-  toCreationOptions,
-  toRequestOptions,
-} from "app/shared/webauthn-util";
+  startAuthentication,
+  startRegistration,
+  type PublicKeyCredentialCreationOptionsJSON,
+  type PublicKeyCredentialRequestOptionsJSON,
+} from "@simplewebauthn/browser";
+import { UserModel, UserSchema } from "app/models/user.model";
 import { BehaviorSubject, from, Observable } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { z } from "zod/v4";
@@ -73,31 +73,39 @@ export class AuthenticationService {
 
   /**
    * Signs in with a previously registered passkey. Prompts the browser's WebAuthn UI, unless
-   * `mediation: "conditional"` is given, in which case it waits silently for the user to pick a
-   * passkey from the username field's autofill dropdown (see login.component.ts).
+   * `useBrowserAutofill` is given, in which case it waits silently for the user to pick a passkey
+   * from the username field's autofill dropdown (see login.component.ts).
    */
-  public loginWithPasskey(
-    username?: string,
-    options?: { signal?: AbortSignal; mediation?: CredentialMediationRequirement },
-  ): Observable<boolean> {
+  public loginWithPasskey(username?: string, options?: { useBrowserAutofill?: boolean }): Observable<boolean> {
     return from(albinaApi.beginLogin({ body: { username }, throwOnError: true })).pipe(
       switchMap((res) => {
         const challenge = res.data;
+        // the server's `type` fields are plain `string` (they come from an OpenAPI schema), but
+        // @simplewebauthn/browser wants the literal "public-key" — always what the server sends
         return from(
-          navigator.credentials.get(toRequestOptions(challenge.publicKey, options?.signal, options?.mediation)),
+          startAuthentication({
+            optionsJSON: challenge.publicKey as unknown as PublicKeyCredentialRequestOptionsJSON,
+            useBrowserAutofill: options?.useBrowserAutofill,
+          }),
         ).pipe(
-          switchMap((credential) => {
-            if (!credential) {
-              throw new Error("Passkey login was cancelled");
-            }
-            return albinaApi.finishLogin({
+          switchMap((credential) =>
+            albinaApi.finishLogin({
               body: {
                 state: challenge.state,
-                credential: fromAuthenticationCredential(credential as PublicKeyCredential),
+                credential: {
+                  id: credential.id,
+                  type: credential.type,
+                  response: {
+                    clientDataJSON: credential.response.clientDataJSON,
+                    authenticatorData: credential.response.authenticatorData,
+                    signature: credential.response.signature,
+                    userHandle: credential.response.userHandle,
+                  },
+                },
               },
               throwOnError: true,
-            });
-          }),
+            }),
+          ),
         );
       }),
       map((res) => {
@@ -126,20 +134,26 @@ export class AuthenticationService {
     return from(albinaApi.beginRegistration({ throwOnError: true })).pipe(
       switchMap((res) => {
         const challenge = res.data;
-        return from(navigator.credentials.create(toCreationOptions(challenge.publicKey))).pipe(
-          switchMap((credential) => {
-            if (!credential) {
-              throw new Error("Passkey registration was cancelled");
-            }
-            return albinaApi.finishRegistration({
+        return from(
+          startRegistration({ optionsJSON: challenge.publicKey as unknown as PublicKeyCredentialCreationOptionsJSON }),
+        ).pipe(
+          switchMap((credential) =>
+            albinaApi.finishRegistration({
               body: {
                 state: challenge.state,
-                credential: fromRegistrationCredential(credential as PublicKeyCredential),
                 name,
+                credential: {
+                  id: credential.id,
+                  type: credential.type,
+                  response: {
+                    clientDataJSON: credential.response.clientDataJSON,
+                    attestationObject: credential.response.attestationObject,
+                  },
+                },
               },
               throwOnError: true,
-            });
-          }),
+            }),
+          ),
         );
       }),
       map((res) => res.data),

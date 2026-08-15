@@ -2,11 +2,11 @@ import { DatePipe } from "@angular/common";
 import { Component, inject, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
+import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
 import { UpdateUserComponent } from "app/admin/update-user.component";
 import { UserModel, UserSchema } from "app/models/user.model";
 import { PasskeyServicePasskeyInfo } from "app/providers/albina-api";
-import { isWebAuthnSupported } from "app/shared/webauthn-util";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalService } from "ngx-bootstrap/modal";
 
@@ -30,7 +30,7 @@ export class SettingsComponent implements OnInit {
 
   public alerts: Alert[] = [];
 
-  public passkeySupported = isWebAuthnSupported();
+  public passkeySupported = browserSupportsWebAuthn();
   public passkeys: PasskeyServicePasskeyInfo[] = [];
   public newPasskeyName = "";
   public passkeyBusy = false;
