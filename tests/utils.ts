@@ -84,7 +84,7 @@ export async function login(page: Page, username: string, password: string) {
   await page.goto("");
   await page.getByRole("textbox", { name: /username/ }).fill(username);
   await page.getByRole("textbox", { name: /password/ }).fill(password);
-  await page.getByRole("button", { name: /login/i }).click();
+  await page.getByRole("button", { name: "Login", exact: true }).click();
   const authResponsePromise = page.waitForResponse(
     (response) =>
       response.url().match(/\/api\/authentication/) &&
