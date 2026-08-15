@@ -62,7 +62,7 @@
   </div>
 
   <div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap">
+    <table class="table table-sm table-bordered table-hover text-nowrap">
       <thead class="bulletins-table__header">
         <tr>
           @for (col of columns; track col) {
@@ -79,7 +79,7 @@
           <th></th>
         </tr>
       </thead>
-      <tbody class="bulletins-table__body">
+      <tbody>
         @for (incident of displayedIncidents; track incident.id) {
           <tr class="align-middle">
             @for (col of columns; track col) {
