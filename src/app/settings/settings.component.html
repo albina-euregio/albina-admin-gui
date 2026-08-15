@@ -155,6 +155,24 @@
           @if (!passkeySupported) {
             <p class="text-body-secondary">{{ "settings.passkeys.unsupported" | translate }}</p>
           } @else {
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="newPasskeyName"
+                  placeholder="{{ 'settings.passkeys.namePlaceholder' | translate }}"
+                  [disabled]="passkeyBusy"
+                  [(ngModel)]="newPasskeyName"
+                />
+              </div>
+              <div class="col-sm-6">
+                <button type="button" class="btn btn-sm btn-primary" [disabled]="passkeyBusy" (click)="addPasskey()">
+                  {{ "settings.passkeys.add" | translate }}
+                </button>
+              </div>
+            </div>
+            <hr class="bg-secondary" />
             @if (passkeys.length === 0) {
               <p class="text-body-secondary">{{ "settings.passkeys.empty" | translate }}</p>
             }
@@ -179,23 +197,6 @@
                 </div>
               </div>
             }
-            <div class="form-group row">
-              <div class="col-sm-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  name="newPasskeyName"
-                  placeholder="{{ 'settings.passkeys.namePlaceholder' | translate }}"
-                  [disabled]="passkeyBusy"
-                  [(ngModel)]="newPasskeyName"
-                />
-              </div>
-              <div class="col-sm-6">
-                <button type="button" class="btn btn-sm btn-primary" [disabled]="passkeyBusy" (click)="addPasskey()">
-                  {{ "settings.passkeys.add" | translate }}
-                </button>
-              </div>
-            </div>
           }
         </div>
       </div>
