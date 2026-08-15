@@ -12,6 +12,10 @@ import { client } from "./client.gen";
 import type {
   AddSubscriberData,
   AddSubscriberResponses,
+  BeginLoginData,
+  BeginLoginResponses,
+  BeginRegistrationData,
+  BeginRegistrationResponses,
   ChangePasswordData,
   ChangePasswordResponses,
   CheckBulletinsData,
@@ -32,10 +36,16 @@ import type {
   DeleteIncidentResponses,
   DeleteJsonBulletinData,
   DeleteJsonBulletinResponses,
+  DeletePasskeyData,
+  DeletePasskeyResponses,
   DeleteUserData,
   DeleteUserResponses,
   DeleteVariantData,
   DeleteVariantResponses,
+  FinishLoginData,
+  FinishLoginResponses,
+  FinishRegistrationData,
+  FinishRegistrationResponses,
   GetBlogPostData,
   GetBlogPostResponses,
   GetBlogPostsData,
@@ -151,6 +161,8 @@ import type {
   IndexResponses,
   KeyData,
   KeyResponses,
+  ListPasskeysData,
+  ListPasskeysResponses,
   LoginData,
   LoginResponses,
   PostStressLevelData,
@@ -259,6 +271,88 @@ export const login = <ThrowOnError extends boolean = false>(
       "Content-Type": "application/json",
       ...options.headers,
     },
+  });
+
+/**
+ * List the current user's passkeys
+ */
+export const listPasskeys = <ThrowOnError extends boolean = false>(
+  options?: Options<ListPasskeysData, ThrowOnError>,
+): RequestResult<ListPasskeysResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<ListPasskeysResponses, unknown, ThrowOnError>({
+    security: [{ scheme: "bearer", type: "http" }],
+    url: "/authentication/passkey",
+    ...options,
+  });
+
+/**
+ * Finish a passkey login
+ */
+export const finishLogin = <ThrowOnError extends boolean = false>(
+  options: Options<FinishLoginData, ThrowOnError>,
+): RequestResult<FinishLoginResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).post<FinishLoginResponses, unknown, ThrowOnError>({
+    url: "/authentication/passkey/login",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+
+/**
+ * Begin a passkey login
+ */
+export const beginLogin = <ThrowOnError extends boolean = false>(
+  options?: Options<BeginLoginData, ThrowOnError>,
+): RequestResult<BeginLoginResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).post<BeginLoginResponses, unknown, ThrowOnError>({
+    url: "/authentication/passkey/login/options",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  });
+
+/**
+ * Finish registering a new passkey for the current user
+ */
+export const finishRegistration = <ThrowOnError extends boolean = false>(
+  options: Options<FinishRegistrationData, ThrowOnError>,
+): RequestResult<FinishRegistrationResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).post<FinishRegistrationResponses, unknown, ThrowOnError>({
+    security: [{ scheme: "bearer", type: "http" }],
+    url: "/authentication/passkey/register",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+
+/**
+ * Begin registering a new passkey for the current user
+ */
+export const beginRegistration = <ThrowOnError extends boolean = false>(
+  options?: Options<BeginRegistrationData, ThrowOnError>,
+): RequestResult<BeginRegistrationResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).post<BeginRegistrationResponses, unknown, ThrowOnError>({
+    security: [{ scheme: "bearer", type: "http" }],
+    url: "/authentication/passkey/register/options",
+    ...options,
+  });
+
+/**
+ * Delete one of the current user's passkeys
+ */
+export const deletePasskey = <ThrowOnError extends boolean = false>(
+  options: Options<DeletePasskeyData, ThrowOnError>,
+): RequestResult<DeletePasskeyResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).delete<DeletePasskeyResponses, unknown, ThrowOnError>({
+    security: [{ scheme: "bearer", type: "http" }],
+    url: "/authentication/passkey/{id}",
+    ...options,
   });
 
 /**

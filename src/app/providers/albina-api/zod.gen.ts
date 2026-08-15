@@ -1105,6 +1105,22 @@ export const zMatrixInformation = z.object({
   naturalHazardSiteDistribution: zHazardSiteDistribution.optional(),
 });
 
+export const zPasskeyServiceLoginBeginRequest = z.object({
+  username: z.string().nullish(),
+});
+
+/**
+ * What a passkey management UI needs to show --- never the credential ID or public key.
+ */
+export const zPasskeyServicePasskeyInfo = z
+  .object({
+    id: z.string(),
+    name: z.string().nullish(),
+    createdAt: z.iso.datetime(),
+    lastUsedAt: z.iso.datetime().nullish(),
+  })
+  .describe("What a passkey management UI needs to show --- never the credential ID or public key.");
+
 export const zPosition = z.enum(["topleft", "topright", "bottomleft", "bottomright"]);
 
 export const zProbability = z.enum(["likely", "possible", "unlikely"]);
@@ -1627,6 +1643,105 @@ export const zWeatherStationsFeatureCollection = z
   })
   .describe("A GeoJSON FeatureCollection of weather stations");
 
+export const zWebAuthnServiceAssertionResponse = z.object({
+  clientDataJSON: z.string(),
+  authenticatorData: z.string(),
+  signature: z.string(),
+  userHandle: z.string().nullish(),
+});
+
+export const zWebAuthnServiceAttestationResponse = z.object({
+  clientDataJSON: z.string(),
+  attestationObject: z.string(),
+});
+
+export const zWebAuthnServiceAuthenticationCredential = z.object({
+  id: z.string(),
+  type: z.string(),
+  response: zWebAuthnServiceAssertionResponse,
+});
+
+export const zPasskeyServiceLoginFinishRequest = z.object({
+  state: z.string(),
+  credential: zWebAuthnServiceAuthenticationCredential,
+});
+
+export const zWebAuthnServiceAuthenticatorSelection = z.object({
+  residentKey: z.string(),
+  userVerification: z.string(),
+});
+
+export const zWebAuthnServiceCredentialDescriptor = z.object({
+  type: z.string(),
+  id: z.string(),
+});
+
+export const zWebAuthnServicePubKeyCredParam = z.object({
+  type: z.string(),
+  alg: z.coerce
+    .bigint()
+    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" }),
+});
+
+export const zWebAuthnServicePublicKeyCredentialRequestOptions = z.object({
+  challenge: z.string(),
+  rpId: z.string(),
+  allowCredentials: z.array(zWebAuthnServiceCredentialDescriptor),
+  userVerification: z.string(),
+  timeout: z.coerce
+    .bigint()
+    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" }),
+});
+
+export const zWebAuthnServiceLoginChallenge = z.object({
+  state: z.string(),
+  publicKey: zWebAuthnServicePublicKeyCredentialRequestOptions,
+});
+
+export const zWebAuthnServiceRegistrationCredential = z.object({
+  id: z.string(),
+  type: z.string(),
+  response: zWebAuthnServiceAttestationResponse,
+});
+
+export const zPasskeyServiceRegisterFinishRequest = z.object({
+  state: z.string(),
+  credential: zWebAuthnServiceRegistrationCredential,
+  name: z.string().nullish(),
+});
+
+export const zWebAuthnServiceRelyingParty = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export const zWebAuthnServiceUserEntity = z.object({
+  id: z.string(),
+  name: z.string(),
+  displayName: z.string(),
+});
+
+export const zWebAuthnServicePublicKeyCredentialCreationOptions = z.object({
+  challenge: z.string(),
+  rp: zWebAuthnServiceRelyingParty,
+  user: zWebAuthnServiceUserEntity,
+  pubKeyCredParams: z.array(zWebAuthnServicePubKeyCredParam),
+  authenticatorSelection: zWebAuthnServiceAuthenticatorSelection,
+  attestation: z.string(),
+  excludeCredentials: z.array(zWebAuthnServiceCredentialDescriptor),
+  timeout: z.coerce
+    .bigint()
+    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" }),
+});
+
+export const zWebAuthnServiceRegistrationChallenge = z.object({
+  state: z.string(),
+  publicKey: zWebAuthnServicePublicKeyCredentialCreationOptions,
+});
+
 export const zWetness = z.enum(["wet", "moist", "dry"]);
 
 /**
@@ -1778,6 +1893,41 @@ export const zLoginBody = zAuthenticationServiceCredentials;
  * login 200 response
  */
 export const zLoginResponse = zAuthenticationServiceAuthenticationResponse;
+
+/**
+ * listPasskeys 200 response
+ */
+export const zListPasskeysResponse = z.array(zPasskeyServicePasskeyInfo).describe("listPasskeys 200 response");
+
+export const zFinishLoginBody = zPasskeyServiceLoginFinishRequest;
+
+/**
+ * finishLogin 200 response
+ */
+export const zFinishLoginResponse = zAuthenticationServiceAuthenticationResponse;
+
+export const zBeginLoginBody = zPasskeyServiceLoginBeginRequest;
+
+/**
+ * beginLogin 200 response
+ */
+export const zBeginLoginResponse = zWebAuthnServiceLoginChallenge;
+
+export const zFinishRegistrationBody = zPasskeyServiceRegisterFinishRequest;
+
+/**
+ * finishRegistration 200 response
+ */
+export const zFinishRegistrationResponse = zPasskeyServicePasskeyInfo;
+
+/**
+ * beginRegistration 200 response
+ */
+export const zBeginRegistrationResponse = zWebAuthnServiceRegistrationChallenge;
+
+export const zDeletePasskeyPath = z.object({
+  id: z.string(),
+});
 
 /**
  * testAuth 200 response
