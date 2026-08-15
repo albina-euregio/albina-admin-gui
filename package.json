@@ -50,6 +50,7 @@
     "@ngx-translate/core": "^18.0.0",
     "@phosphor-icons/web": "^2.1.2",
     "@popperjs/core": "^2.11.8",
+    "@simplewebauthn/browser": "^13.3.0",
     "air-datepicker": "^3.6.0",
     "bootstrap": "^5.3.7",
     "diff-match-patch": "^1.0.5",

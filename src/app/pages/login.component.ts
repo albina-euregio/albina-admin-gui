@@ -1,8 +1,13 @@
-import { Component, OnInit, TemplateRef, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnInit, TemplateRef, viewChild, inject, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
+import {
+  browserSupportsWebAuthn,
+  browserSupportsWebAuthnAutofill,
+  WebAuthnAbortService,
+} from "@simplewebauthn/browser";
 import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -21,6 +26,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 export class LoginComponent implements OnInit {
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
+  private destroyRef = inject(DestroyRef);
   constantsService = inject(ConstantsService);
   configurationService = inject(ConfigurationService);
   private modalService = inject(BsModalService);
@@ -30,6 +36,7 @@ export class LoginComponent implements OnInit {
   public password: string;
   public returnUrl: string;
   public loading = false;
+  public passkeySupported = browserSupportsWebAuthn();
 
   public errorModalRef: BsModalRef;
   readonly errorTemplate = viewChild<TemplateRef<unknown>>("errorTemplate");
@@ -53,6 +60,29 @@ export class LoginComponent implements OnInit {
     this.configurationService.loadPublicLocalServerConfiguration().subscribe((info) => {
       // document.title = info.name;
       this.serverInfo = info;
+    });
+
+    this.tryConditionalPasskeyLogin();
+  }
+
+  /**
+   * Offers passkeys through the browser's native autofill UI (triggered by focusing the username
+   * field, thanks to `autocomplete="username webauthn"`) rather than a separate button — see
+   * https://developer.mozilla.org/en-US/docs/Web/Security/Authentication/Passkeys#offering_autofill_for_passkeys
+   */
+  private async tryConditionalPasskeyLogin() {
+    if (!this.passkeySupported || !(await browserSupportsWebAuthnAutofill())) {
+      return;
+    }
+    this.destroyRef.onDestroy(() => WebAuthnAbortService.cancelCeremony());
+    this.authenticationService.loginWithPasskey(undefined, { useBrowserAutofill: true }).subscribe({
+      next: (ok) => {
+        if (ok) {
+          this.router.navigate([this.returnUrl]);
+        }
+      },
+      // the user dismissed the autofill prompt, or the ceremony was cancelled: nothing to show
+      error: () => undefined,
     });
   }
 
@@ -81,6 +111,28 @@ export class LoginComponent implements OnInit {
         this.openErrorModal(this.errorTemplate());
       },
     );
+  }
+
+  loginWithPasskey() {
+    // an explicit login and the background conditional one can't run concurrently
+    WebAuthnAbortService.cancelCeremony();
+    this.loading = true;
+
+    this.authenticationService.loginWithPasskey(this.username || undefined).subscribe({
+      next: (ok) => {
+        this.loading = false;
+        if (ok) {
+          this.router.navigate([this.returnUrl]);
+        } else {
+          this.openErrorModal(this.errorTemplate());
+        }
+      },
+      error: (error) => {
+        console.error("Passkey login failed", error);
+        this.loading = false;
+        this.openErrorModal(this.errorTemplate());
+      },
+    });
   }
 
   openErrorModal(template: TemplateRef<unknown>) {

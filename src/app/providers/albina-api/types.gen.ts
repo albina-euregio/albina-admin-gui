@@ -1351,6 +1351,110 @@ export type MatrixInformation = {
 
 export type NaturalAvalancheReleaseProbability = "one" | "two" | "three" | "four";
 
+export type PasskeyServiceAssertionResponse = {
+  clientDataJSON: string;
+  authenticatorData: string;
+  signature: string;
+  userHandle?: string | null;
+};
+
+export type PasskeyServiceAttestationResponse = {
+  clientDataJSON: string;
+  attestationObject: string;
+};
+
+export type PasskeyServiceAuthenticationCredential = {
+  id: string;
+  type: string;
+  response: PasskeyServiceAssertionResponse;
+};
+
+export type PasskeyServiceAuthenticatorSelection = {
+  residentKey: string;
+  userVerification: string;
+};
+
+export type PasskeyServiceCredentialDescriptor = {
+  type: string;
+  id: string;
+};
+
+export type PasskeyServiceLoginBeginRequest = {
+  username?: string | null;
+};
+
+export type PasskeyServiceLoginChallenge = {
+  state: string;
+  publicKey: PasskeyServicePublicKeyCredentialRequestOptions;
+};
+
+export type PasskeyServiceLoginFinishRequest = {
+  state: string;
+  credential: PasskeyServiceAuthenticationCredential;
+};
+
+/**
+ * What a passkey management UI needs to show --- never the credential ID or public key.
+ */
+export type PasskeyServicePasskeyInfo = {
+  id: string;
+  name?: string | null;
+  createdAt: string;
+  lastUsedAt?: string | null;
+};
+
+export type PasskeyServicePubKeyCredParam = {
+  type: string;
+  alg: number;
+};
+
+export type PasskeyServicePublicKeyCredentialCreationOptions = {
+  challenge: string;
+  rp: PasskeyServiceRelyingParty;
+  user: PasskeyServiceUserEntity;
+  pubKeyCredParams: Array<PasskeyServicePubKeyCredParam>;
+  authenticatorSelection: PasskeyServiceAuthenticatorSelection;
+  attestation: string;
+  excludeCredentials: Array<PasskeyServiceCredentialDescriptor>;
+  timeout: number;
+};
+
+export type PasskeyServicePublicKeyCredentialRequestOptions = {
+  challenge: string;
+  rpId: string;
+  allowCredentials: Array<PasskeyServiceCredentialDescriptor>;
+  userVerification: string;
+  timeout: number;
+};
+
+export type PasskeyServiceRegisterFinishRequest = {
+  state: string;
+  credential: PasskeyServiceRegistrationCredential;
+  name?: string | null;
+};
+
+export type PasskeyServiceRegistrationChallenge = {
+  state: string;
+  publicKey: PasskeyServicePublicKeyCredentialCreationOptions;
+};
+
+export type PasskeyServiceRegistrationCredential = {
+  id: string;
+  type: string;
+  response: PasskeyServiceAttestationResponse;
+};
+
+export type PasskeyServiceRelyingParty = {
+  id: string;
+  name: string;
+};
+
+export type PasskeyServiceUserEntity = {
+  id: string;
+  name: string;
+  displayName: string;
+};
+
 export type Position = "topleft" | "topright" | "bottomleft" | "bottomright";
 
 export type Probability = "likely" | "possible" | "unlikely";
@@ -1751,6 +1855,10 @@ export type User = {
    */
   languageCode?: LanguageCode;
   deleted?: boolean;
+  /**
+   * When the user last logged in, whether by password or passkey
+   */
+  lastUsedAt?: string;
 };
 
 export type UserServiceChangePassword = {
@@ -2027,6 +2135,102 @@ export type LoginResponses = {
 };
 
 export type LoginResponse = LoginResponses[keyof LoginResponses];
+
+export type ListPasskeysData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/authentication/passkey";
+};
+
+export type ListPasskeysResponses = {
+  /**
+   * listPasskeys 200 response
+   */
+  200: Array<PasskeyServicePasskeyInfo>;
+};
+
+export type ListPasskeysResponse = ListPasskeysResponses[keyof ListPasskeysResponses];
+
+export type FinishLoginData = {
+  body: PasskeyServiceLoginFinishRequest;
+  path?: never;
+  query?: never;
+  url: "/authentication/passkey/login";
+};
+
+export type FinishLoginResponses = {
+  /**
+   * finishLogin 200 response
+   */
+  200: AuthenticationServiceAuthenticationResponse;
+};
+
+export type FinishLoginResponse = FinishLoginResponses[keyof FinishLoginResponses];
+
+export type BeginLoginData = {
+  body?: PasskeyServiceLoginBeginRequest;
+  path?: never;
+  query?: never;
+  url: "/authentication/passkey/login/options";
+};
+
+export type BeginLoginResponses = {
+  /**
+   * beginLogin 200 response
+   */
+  200: PasskeyServiceLoginChallenge;
+};
+
+export type BeginLoginResponse = BeginLoginResponses[keyof BeginLoginResponses];
+
+export type FinishRegistrationData = {
+  body: PasskeyServiceRegisterFinishRequest;
+  path?: never;
+  query?: never;
+  url: "/authentication/passkey/register";
+};
+
+export type FinishRegistrationResponses = {
+  /**
+   * finishRegistration 200 response
+   */
+  200: PasskeyServicePasskeyInfo;
+};
+
+export type FinishRegistrationResponse = FinishRegistrationResponses[keyof FinishRegistrationResponses];
+
+export type BeginRegistrationData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/authentication/passkey/register/options";
+};
+
+export type BeginRegistrationResponses = {
+  /**
+   * beginRegistration 200 response
+   */
+  200: PasskeyServiceRegistrationChallenge;
+};
+
+export type BeginRegistrationResponse = BeginRegistrationResponses[keyof BeginRegistrationResponses];
+
+export type DeletePasskeyData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: "/authentication/passkey/{id}";
+};
+
+export type DeletePasskeyResponses = {
+  /**
+   * deletePasskey 200 response
+   */
+  200: unknown;
+};
 
 export type TestAuthData = {
   body?: never;

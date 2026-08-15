@@ -2,9 +2,15 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import {
+  startAuthentication,
+  startRegistration,
+  type PublicKeyCredentialCreationOptionsJSON,
+  type PublicKeyCredentialRequestOptionsJSON,
+} from "@simplewebauthn/browser";
 import { UserModel, UserSchema } from "app/models/user.model";
 import { BehaviorSubject, from, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
@@ -60,21 +66,106 @@ export class AuthenticationService {
         const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(res.data, {
           reportInput: true,
         });
-        if (!data.access_token) {
-          return false;
-        }
-        this.authentication = data;
-        this.localStorageService.setCurrentAuthor(data);
-        const authorRegions = this.getCurrentAuthorRegions();
-        const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
-        this.setActiveRegion(
-          authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
-        );
-        this.loadInternalRegions();
-        this.externalServerLogins();
-        return true;
+        return this.applyAuthenticationResponse(data);
       }),
     );
+  }
+
+  /**
+   * Signs in with a previously registered passkey. Prompts the browser's WebAuthn UI, unless
+   * `useBrowserAutofill` is given, in which case it waits silently for the user to pick a passkey
+   * from the username field's autofill dropdown (see login.component.ts).
+   */
+  public loginWithPasskey(username?: string, options?: { useBrowserAutofill?: boolean }): Observable<boolean> {
+    return from(albinaApi.beginLogin({ body: { username }, throwOnError: true })).pipe(
+      switchMap((res) => {
+        const challenge = res.data;
+        // the server's `type` fields are plain `string` (they come from an OpenAPI schema), but
+        // @simplewebauthn/browser wants the literal "public-key" — always what the server sends
+        return from(
+          startAuthentication({
+            optionsJSON: challenge.publicKey as unknown as PublicKeyCredentialRequestOptionsJSON,
+            useBrowserAutofill: options?.useBrowserAutofill,
+          }),
+        ).pipe(
+          switchMap((credential) =>
+            albinaApi.finishLogin({
+              body: {
+                state: challenge.state,
+                credential: {
+                  id: credential.id,
+                  type: credential.type,
+                  response: {
+                    clientDataJSON: credential.response.clientDataJSON,
+                    authenticatorData: credential.response.authenticatorData,
+                    signature: credential.response.signature,
+                    userHandle: credential.response.userHandle,
+                  },
+                },
+              },
+              throwOnError: true,
+            }),
+          ),
+        );
+      }),
+      map((res) => {
+        const data = AuthenticationResponseSchema.parse(res.data, { reportInput: true });
+        return this.applyAuthenticationResponse(data);
+      }),
+    );
+  }
+
+  private applyAuthenticationResponse(data: AuthenticationResponse): boolean {
+    if (!data.access_token) {
+      return false;
+    }
+    this.authentication = data;
+    this.localStorageService.setCurrentAuthor(data);
+    const authorRegions = this.getCurrentAuthorRegions();
+    const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
+    this.setActiveRegion(authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0]);
+    this.loadInternalRegions();
+    this.externalServerLogins();
+    return true;
+  }
+
+  /** Registers a new passkey for the current (already-authenticated) user. Prompts the browser's WebAuthn UI. */
+  public registerPasskey(name?: string): Observable<albinaApi.PasskeyServicePasskeyInfo> {
+    return from(albinaApi.beginRegistration({ throwOnError: true })).pipe(
+      switchMap((res) => {
+        const challenge = res.data;
+        return from(
+          startRegistration({ optionsJSON: challenge.publicKey as unknown as PublicKeyCredentialCreationOptionsJSON }),
+        ).pipe(
+          switchMap((credential) =>
+            albinaApi.finishRegistration({
+              body: {
+                state: challenge.state,
+                name,
+                credential: {
+                  id: credential.id,
+                  type: credential.type,
+                  response: {
+                    clientDataJSON: credential.response.clientDataJSON,
+                    attestationObject: credential.response.attestationObject,
+                  },
+                },
+              },
+              throwOnError: true,
+            }),
+          ),
+        );
+      }),
+      map((res) => res.data),
+    );
+  }
+
+  public listPasskeys(): Observable<albinaApi.PasskeyServicePasskeyInfo[]> {
+    return from(albinaApi.listPasskeys({ throwOnError: true })).pipe(map((res) => res.data));
+  }
+
+  public deletePasskey(id: string): Observable<void> {
+    return from(albinaApi.deletePasskey({ path: { id }, throwOnError: true })).pipe(map(() => undefined));
   }
 
   get accessToken(): string {

@@ -1105,6 +1105,121 @@ export const zMatrixInformation = z.object({
   naturalHazardSiteDistribution: zHazardSiteDistribution.optional(),
 });
 
+export const zPasskeyServiceAssertionResponse = z.object({
+  clientDataJSON: z.string(),
+  authenticatorData: z.string(),
+  signature: z.string(),
+  userHandle: z.string().nullish(),
+});
+
+export const zPasskeyServiceAttestationResponse = z.object({
+  clientDataJSON: z.string(),
+  attestationObject: z.string(),
+});
+
+export const zPasskeyServiceAuthenticationCredential = z.object({
+  id: z.string(),
+  type: z.string(),
+  response: zPasskeyServiceAssertionResponse,
+});
+
+export const zPasskeyServiceAuthenticatorSelection = z.object({
+  residentKey: z.string(),
+  userVerification: z.string(),
+});
+
+export const zPasskeyServiceCredentialDescriptor = z.object({
+  type: z.string(),
+  id: z.string(),
+});
+
+export const zPasskeyServiceLoginBeginRequest = z.object({
+  username: z.string().nullish(),
+});
+
+export const zPasskeyServiceLoginFinishRequest = z.object({
+  state: z.string(),
+  credential: zPasskeyServiceAuthenticationCredential,
+});
+
+/**
+ * What a passkey management UI needs to show --- never the credential ID or public key.
+ */
+export const zPasskeyServicePasskeyInfo = z
+  .object({
+    id: z.string(),
+    name: z.string().nullish(),
+    createdAt: z.iso.datetime(),
+    lastUsedAt: z.iso.datetime().nullish(),
+  })
+  .describe("What a passkey management UI needs to show --- never the credential ID or public key.");
+
+export const zPasskeyServicePubKeyCredParam = z.object({
+  type: z.string(),
+  alg: z.coerce
+    .bigint()
+    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" }),
+});
+
+export const zPasskeyServicePublicKeyCredentialRequestOptions = z.object({
+  challenge: z.string(),
+  rpId: z.string(),
+  allowCredentials: z.array(zPasskeyServiceCredentialDescriptor),
+  userVerification: z.string(),
+  timeout: z.coerce
+    .bigint()
+    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" }),
+});
+
+export const zPasskeyServiceLoginChallenge = z.object({
+  state: z.string(),
+  publicKey: zPasskeyServicePublicKeyCredentialRequestOptions,
+});
+
+export const zPasskeyServiceRegistrationCredential = z.object({
+  id: z.string(),
+  type: z.string(),
+  response: zPasskeyServiceAttestationResponse,
+});
+
+export const zPasskeyServiceRegisterFinishRequest = z.object({
+  state: z.string(),
+  credential: zPasskeyServiceRegistrationCredential,
+  name: z.string().nullish(),
+});
+
+export const zPasskeyServiceRelyingParty = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export const zPasskeyServiceUserEntity = z.object({
+  id: z.string(),
+  name: z.string(),
+  displayName: z.string(),
+});
+
+export const zPasskeyServicePublicKeyCredentialCreationOptions = z.object({
+  challenge: z.string(),
+  rp: zPasskeyServiceRelyingParty,
+  user: zPasskeyServiceUserEntity,
+  pubKeyCredParams: z.array(zPasskeyServicePubKeyCredParam),
+  authenticatorSelection: zPasskeyServiceAuthenticatorSelection,
+  attestation: z.string(),
+  excludeCredentials: z.array(zPasskeyServiceCredentialDescriptor),
+  timeout: z.coerce
+    .bigint()
+    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" }),
+});
+
+export const zPasskeyServiceRegistrationChallenge = z.object({
+  state: z.string(),
+  publicKey: zPasskeyServicePublicKeyCredentialCreationOptions,
+});
+
 export const zPosition = z.enum(["topleft", "topright", "bottomleft", "bottomright"]);
 
 export const zProbability = z.enum(["likely", "possible", "unlikely"]);
@@ -1444,6 +1559,7 @@ export const zUser = z.object({
   organization: z.string().describe("Organization the user works for").optional(),
   languageCode: zLanguageCode.optional(),
   deleted: z.boolean().optional(),
+  lastUsedAt: z.iso.datetime().describe("When the user last logged in, whether by password or passkey").optional(),
 });
 
 export const zAuthenticationServiceAuthenticationResponse = z.object({
@@ -1778,6 +1894,41 @@ export const zLoginBody = zAuthenticationServiceCredentials;
  * login 200 response
  */
 export const zLoginResponse = zAuthenticationServiceAuthenticationResponse;
+
+/**
+ * listPasskeys 200 response
+ */
+export const zListPasskeysResponse = z.array(zPasskeyServicePasskeyInfo).describe("listPasskeys 200 response");
+
+export const zFinishLoginBody = zPasskeyServiceLoginFinishRequest;
+
+/**
+ * finishLogin 200 response
+ */
+export const zFinishLoginResponse = zAuthenticationServiceAuthenticationResponse;
+
+export const zBeginLoginBody = zPasskeyServiceLoginBeginRequest;
+
+/**
+ * beginLogin 200 response
+ */
+export const zBeginLoginResponse = zPasskeyServiceLoginChallenge;
+
+export const zFinishRegistrationBody = zPasskeyServiceRegisterFinishRequest;
+
+/**
+ * finishRegistration 200 response
+ */
+export const zFinishRegistrationResponse = zPasskeyServicePasskeyInfo;
+
+/**
+ * beginRegistration 200 response
+ */
+export const zBeginRegistrationResponse = zPasskeyServiceRegistrationChallenge;
+
+export const zDeletePasskeyPath = z.object({
+  id: z.string(),
+});
 
 /**
  * testAuth 200 response
