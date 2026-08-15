@@ -5,7 +5,7 @@
   },
   "login": {
     "title": "Login",
-    "text": "Sign In to your account",
+    "text": "Login to your account",
     "button": "Login",
     "stressLevel": "Stress Level",
     "errorDialog": {
@@ -17,7 +17,7 @@
       "password": "Please enter your password"
     },
     "passkey": {
-      "button": "Sign in with a passkey"
+      "button": "Login with a passkey"
     }
   },
   "sidebar": {
