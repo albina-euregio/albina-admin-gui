@@ -1351,13 +1351,46 @@ export type MatrixInformation = {
 
 export type NaturalAvalancheReleaseProbability = "one" | "two" | "three" | "four";
 
+export type PasskeyServiceAssertionResponse = {
+  clientDataJSON: string;
+  authenticatorData: string;
+  signature: string;
+  userHandle?: string | null;
+};
+
+export type PasskeyServiceAttestationResponse = {
+  clientDataJSON: string;
+  attestationObject: string;
+};
+
+export type PasskeyServiceAuthenticationCredential = {
+  id: string;
+  type: string;
+  response: PasskeyServiceAssertionResponse;
+};
+
+export type PasskeyServiceAuthenticatorSelection = {
+  residentKey: string;
+  userVerification: string;
+};
+
+export type PasskeyServiceCredentialDescriptor = {
+  type: string;
+  id: string;
+};
+
 export type PasskeyServiceLoginBeginRequest = {
   username?: string | null;
 };
 
+export type PasskeyServiceLoginChallenge = {
+  state: string;
+  publicKey: PasskeyServicePublicKeyCredentialRequestOptions;
+};
+
 export type PasskeyServiceLoginFinishRequest = {
   state: string;
-  credential: WebAuthnServiceAuthenticationCredential;
+  credential: PasskeyServiceAuthenticationCredential;
 };
 
 /**
@@ -1370,10 +1403,56 @@ export type PasskeyServicePasskeyInfo = {
   lastUsedAt?: string | null;
 };
 
+export type PasskeyServicePubKeyCredParam = {
+  type: string;
+  alg: number;
+};
+
+export type PasskeyServicePublicKeyCredentialCreationOptions = {
+  challenge: string;
+  rp: PasskeyServiceRelyingParty;
+  user: PasskeyServiceUserEntity;
+  pubKeyCredParams: Array<PasskeyServicePubKeyCredParam>;
+  authenticatorSelection: PasskeyServiceAuthenticatorSelection;
+  attestation: string;
+  excludeCredentials: Array<PasskeyServiceCredentialDescriptor>;
+  timeout: number;
+};
+
+export type PasskeyServicePublicKeyCredentialRequestOptions = {
+  challenge: string;
+  rpId: string;
+  allowCredentials: Array<PasskeyServiceCredentialDescriptor>;
+  userVerification: string;
+  timeout: number;
+};
+
 export type PasskeyServiceRegisterFinishRequest = {
   state: string;
-  credential: WebAuthnServiceRegistrationCredential;
+  credential: PasskeyServiceRegistrationCredential;
   name?: string | null;
+};
+
+export type PasskeyServiceRegistrationChallenge = {
+  state: string;
+  publicKey: PasskeyServicePublicKeyCredentialCreationOptions;
+};
+
+export type PasskeyServiceRegistrationCredential = {
+  id: string;
+  type: string;
+  response: PasskeyServiceAttestationResponse;
+};
+
+export type PasskeyServiceRelyingParty = {
+  id: string;
+  name: string;
+};
+
+export type PasskeyServiceUserEntity = {
+  id: string;
+  name: string;
+  displayName: string;
 };
 
 export type Position = "topleft" | "topright" | "bottomleft" | "bottomright";
@@ -1776,6 +1855,10 @@ export type User = {
    */
   languageCode?: LanguageCode;
   deleted?: boolean;
+  /**
+   * When the user last logged in, whether by password or passkey
+   */
+  lastUsedAt?: string;
 };
 
 export type UserServiceChangePassword = {
@@ -1997,85 +2080,6 @@ export type WeatherStationsStatistics = {
   unit?: "K" | "℃" | "m" | "cm" | "mm" | "1" | "%" | "°" | "m/s" | "km/h" | "hPa" | "Pa" | "W/m²";
 };
 
-export type WebAuthnServiceAssertionResponse = {
-  clientDataJSON: string;
-  authenticatorData: string;
-  signature: string;
-  userHandle?: string | null;
-};
-
-export type WebAuthnServiceAttestationResponse = {
-  clientDataJSON: string;
-  attestationObject: string;
-};
-
-export type WebAuthnServiceAuthenticationCredential = {
-  id: string;
-  type: string;
-  response: WebAuthnServiceAssertionResponse;
-};
-
-export type WebAuthnServiceAuthenticatorSelection = {
-  residentKey: string;
-  userVerification: string;
-};
-
-export type WebAuthnServiceCredentialDescriptor = {
-  type: string;
-  id: string;
-};
-
-export type WebAuthnServiceLoginChallenge = {
-  state: string;
-  publicKey: WebAuthnServicePublicKeyCredentialRequestOptions;
-};
-
-export type WebAuthnServicePubKeyCredParam = {
-  type: string;
-  alg: number;
-};
-
-export type WebAuthnServicePublicKeyCredentialCreationOptions = {
-  challenge: string;
-  rp: WebAuthnServiceRelyingParty;
-  user: WebAuthnServiceUserEntity;
-  pubKeyCredParams: Array<WebAuthnServicePubKeyCredParam>;
-  authenticatorSelection: WebAuthnServiceAuthenticatorSelection;
-  attestation: string;
-  excludeCredentials: Array<WebAuthnServiceCredentialDescriptor>;
-  timeout: number;
-};
-
-export type WebAuthnServicePublicKeyCredentialRequestOptions = {
-  challenge: string;
-  rpId: string;
-  allowCredentials: Array<WebAuthnServiceCredentialDescriptor>;
-  userVerification: string;
-  timeout: number;
-};
-
-export type WebAuthnServiceRegistrationChallenge = {
-  state: string;
-  publicKey: WebAuthnServicePublicKeyCredentialCreationOptions;
-};
-
-export type WebAuthnServiceRegistrationCredential = {
-  id: string;
-  type: string;
-  response: WebAuthnServiceAttestationResponse;
-};
-
-export type WebAuthnServiceRelyingParty = {
-  id: string;
-  name: string;
-};
-
-export type WebAuthnServiceUserEntity = {
-  id: string;
-  name: string;
-  displayName: string;
-};
-
 export type Wetness = "wet" | "moist" | "dry";
 
 /**
@@ -2175,7 +2179,7 @@ export type BeginLoginResponses = {
   /**
    * beginLogin 200 response
    */
-  200: WebAuthnServiceLoginChallenge;
+  200: PasskeyServiceLoginChallenge;
 };
 
 export type BeginLoginResponse = BeginLoginResponses[keyof BeginLoginResponses];
@@ -2207,7 +2211,7 @@ export type BeginRegistrationResponses = {
   /**
    * beginRegistration 200 response
    */
-  200: WebAuthnServiceRegistrationChallenge;
+  200: PasskeyServiceRegistrationChallenge;
 };
 
 export type BeginRegistrationResponse = BeginRegistrationResponses[keyof BeginRegistrationResponses];
