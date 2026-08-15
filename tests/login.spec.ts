@@ -21,6 +21,6 @@ test("login", async ({ page }) => {
     await page.getByRole("button", { name: "Playwright" }).click();
     await page.getByRole("link", { name: "Logout" }).click();
     await expect(page).toHaveURL("#/pages/login");
-    await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Login", exact: true })).toBeVisible();
   });
 });
