@@ -15,6 +15,9 @@
     "placeholder": {
       "username": "Bitte Benutzernamen eingeben",
       "password": "Bitte Passwort eingeben"
+    },
+    "passkey": {
+      "button": "Login mit Passkey"
     }
   },
   "sidebar": {
@@ -41,7 +44,7 @@
     "icon": "Wetter"
   },
   "weather": {
-    "loading": "Laden der Parameter und Bilder ...",
+    "loading": "Parameter und Bilder werden geladen ...",
     "noPng": "Bild nicht gefunden.",
     "error": {
       "noParameters": "Keine Vorhersage-Parameter verfügbar.",
@@ -1042,6 +1045,20 @@
         "showCaaml": "CAAML anzeigen",
         "showJson": "JSON anzeigen"
       }
+    },
+    "passkeys": {
+      "title": "Passkeys",
+      "unsupported": "Dein Browser unterstützt keine Passkeys.",
+      "empty": "Keine Passkeys hinzugefügt.",
+      "unnamed": "Passkey",
+      "lastUsed": "Zuletzt verwendet",
+      "neverUsed": "Nie verwendet",
+      "namePlaceholder": "z.B. iPhone, YubiKey",
+      "add": "Passkey hinzufügen",
+      "delete": "Löschen",
+      "added": "Passkey hinzugefügt",
+      "addError": "Passkey konnte nicht hinzugefügt werden",
+      "deleteError": "Passkey konnte nicht gelöscht werden"
     }
   },
   "statistics": {
