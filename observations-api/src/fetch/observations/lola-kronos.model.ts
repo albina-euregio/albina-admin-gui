@@ -1314,7 +1314,6 @@ export function getExtraDialogRows(obs: LolaObservation): ObservationTableRow[] 
     { label: de.observations.avalancheSize, value: o.avalancheSize },
     { label: incidentReportDe.incidentReport.trigger, value: o.avalancheRelease },
     { label: incidentReportDe.incidentReport.startZoneMoisture, value: o.wetnessInStartingArea },
-    { label: incidentReportDe.incidentReport.dateTime, value: o.avalancheEventTime },
     {
       label: incidentReportDe.incidentReport.damagedAssets,
       value: [o.damages?.join(", "), o.damageComment].filter(Boolean).join(" – "),
@@ -1326,23 +1325,9 @@ export function getExtraDialogRows(obs: LolaObservation): ObservationTableRow[] 
       value: [o.infraRouteSectionFrom, o.infraRouteSectionTo].filter(Boolean).join(" – "),
     },
     { label: "Kommission", value: o.commissionName },
-    { label: "Gebirgsgruppe", value: o.position?.mountainGroup },
-    { label: "Bezirk", value: o.position?.districtName },
     {
       label: incidentReportDe.incidentReport.avalancheRegion,
       value: [o.position?.adsRegion?.loc_name, o.position?.adsRegion?.loc_ref].filter(Boolean).join(" "),
-    },
-    { label: de.observations.latitude, number: o.position?.lat },
-    { label: de.observations.longitude, number: o.position?.lng },
-    { label: "Organisation", value: obs.entities?.map((e) => e.entityName).join(", ") },
-    { label: "Anwendung", value: o.lolaApplication },
-    { label: "Fotos", number: o.images?.length || undefined },
-    {
-      label: "Fotokommentare",
-      value: o.images
-        ?.map((i) => [i.comment, i.copyRight].filter(Boolean).join(" © "))
-        .filter(Boolean)
-        .join("; "),
     },
   ];
   return rows.filter((row) => (row.value ?? "") !== "" || typeof row.number === "number");
