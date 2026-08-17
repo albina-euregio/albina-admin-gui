@@ -3,11 +3,13 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnIni
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AvalancheSize } from "app/enums/enums";
 import { Bulletin } from "app/models/CAAMLv6";
+import { AlbinaLanguage } from "app/models/text.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { firstValueFrom } from "rxjs";
 
 import { GeocodingService } from "../observations/geocoding.service";
-import { EawsBulletinsService } from "../providers/eaws-bulletins-service/eaws-bulletins.service";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { parseLeitstelleTirol } from "../shared/leitstelle-tirol";
@@ -55,7 +57,8 @@ export class IncidentReportEditorComponent implements OnInit {
   readonly mapService = inject(IncidentReportMapService);
   private geocodeService = inject(IncidentReportGeocodeService);
   private translateService = inject(TranslateService);
-  private eawsBulletinsService = inject(EawsBulletinsService);
+  private authenticationService = inject(AuthenticationService);
+  private bulletinsService = inject(BulletinsService);
   private datePipe = inject(DatePipe);
 
   readonly incidentReport = model.required<IncidentReport>();
@@ -313,12 +316,21 @@ export class IncidentReportEditorComponent implements OnInit {
 
   async fetchPublishedBulletin() {
     const incidentReport = this.incidentReport();
+    const activeRegion = this.authenticationService.getActiveRegionId();
+    const plainDate = new Temporal.PlainDate(
+      incidentReport.dateTime.getFullYear(),
+      incidentReport.dateTime.getMonth() + 1,
+      incidentReport.dateTime.getDate(),
+    );
+    const lang = this.translateService.currentLang() as AlbinaLanguage;
     const bulletin: Bulletin | undefined = await firstValueFrom(
-      this.eawsBulletinsService.fetchPublishedBulletin(incidentReport),
-    ).catch((error) => {
-      console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
-      return undefined;
-    });
+      this.bulletinsService.loadBulletinsForDate(plainDate, [activeRegion], lang),
+    )
+      .then((bulletins) => bulletins.find((b) => b.regions?.some((r) => r.regionID === incidentReport.avalancheRegion)))
+      .catch((error) => {
+        console.warn("Failed to fetch published bulletin for incident", { error, incidentReport });
+        return undefined;
+      });
     if (!bulletin) {
       this.fetchBulletinResult.set({
         type: "danger",
