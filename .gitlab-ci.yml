@@ -33,7 +33,7 @@ variables:
       paths:
         - .angular/cache/
   before_script:
-    - command -v pnpm || npm install --global pnpm@12.0.0-rc.3
+    - command -v pnpm || npm install --global pnpm@12.0.0-rc.6
     - pnpm config set store-dir "$PNPM_STORE_DIR"
     - pnpm install --frozen-lockfile
     - npm --no-git-tag-version version $(git describe --tags)
@@ -207,7 +207,7 @@ deploy:observations-api-dev:
     reports:
       junit: test-results/junit-results.xml
   before_script:
-    - command -v pnpm || npm install --global pnpm@12.0.0-rc.3
+    - command -v pnpm || npm install --global pnpm@12.0.0-rc.6
     - pnpm config set store-dir "$PNPM_STORE_DIR"
     - pnpm install --frozen-lockfile
     - export TZ="Europe/Vienna"
