@@ -668,9 +668,7 @@
       },
       "decisionTree": {
         "filepath": "./assets/img/decision_tree-en.svg",
-        "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
         "decisionTree": "Decision tree",
-        "feedback": "Feedback",
         "save": "Save",
         "discard": "Discard"
       }
