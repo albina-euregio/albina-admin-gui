@@ -364,12 +364,12 @@ export function computeInvolvementsFatalitiesBurials(report: {
 
 export const AvalancheInformationSchema = z.object({
   multipleAvalanches: z.enum(["Yes", "No"]).nullish(),
-  avalancheSize: z
-    .enum(Enums.IncidentAvalancheSize)
-    .register(widgetRegistry, { public: true, important: true })
-    .nullish(),
   avalancheType: z
     .enum(Enums.IncidentAvalancheType)
+    .register(widgetRegistry, { public: true, important: true })
+    .nullish(),
+  avalancheSize: z
+    .enum(Enums.IncidentAvalancheSize)
     .register(widgetRegistry, { public: true, important: true })
     .nullish(),
   relevantAvalancheProblem: z
