@@ -539,7 +539,7 @@ withShowIf(AvalancheInformationSchema, {
 });
 
 export const OtherDamagesSchema = z.object({
-  otherDamages: z.enum(["Yes", "No"]).register(widgetRegistry, { public: true, important: true }).nullish(),
+  otherDamages: z.enum(["Yes", "No"]).register(widgetRegistry, { important: true }).nullish(),
 
   damagedAssets: enumWithOther(
     z.enum([
