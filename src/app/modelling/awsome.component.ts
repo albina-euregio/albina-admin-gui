@@ -331,7 +331,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.filterService.regions = new Set(this.mapService.getSelectedRegions());
       this.applyLocalFilter();
     });
-    // draw observations that finished loading before the map existed
     this.applyLocalFilter();
 
     if (window.matchMedia("(min-width: 769px)").matches) {
