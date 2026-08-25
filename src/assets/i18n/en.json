@@ -1075,47 +1075,6 @@
       "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
-  "dangerRating": {
-    "missing": "missing",
-    "noRating": "no rating",
-    "no_rating": "no rating",
-    "no_snow": "no snow",
-    "low": "low",
-    "moderate": "moderate",
-    "considerable": "considerable",
-    "high": "high",
-    "very_high": "very high",
-    "veryHigh": "very high"
-  },
-  "avalancheProblem": {
-    "newSnow": "New snow",
-    "new_snow": "New snow",
-    "windSlab": "Wind slab",
-    "wind_slab": "Wind slab",
-    "persistentWeakLayers": "Persistent weak layers",
-    "persistent_weak_layers": "Persistent weak layers",
-    "wetSnow": "Wet snow",
-    "wet_snow": "Wet snow",
-    "glidingSnow": "Gliding snow",
-    "gliding_snow": "Gliding snow",
-    "cornices": "Cornices",
-    "noDistinctAvalancheProblem": "No distinct avalanche problem",
-    "no_distinct_avalanche_problem": "No distinct avalanche problem",
-    "favourableSituation": "Favourable situation",
-    "favourable_situation": "Favourable situation"
-  },
-  "dangerPattern": {
-    "dp1": "dp.1: deep persistent weak layer",
-    "dp2": "dp.2: gliding avalanches",
-    "dp3": "dp.3: rain",
-    "dp4": "dp.4: cold following warm / warm following cold",
-    "dp5": "dp.5: snowfall after a long period of cold",
-    "dp6": "dp.6: cold, loose snow and wind",
-    "dp7": "dp.7: shallow snow next to deep snow",
-    "dp8": "dp.8: buried surface hoar",
-    "dp9": "dp.9: buried graupel",
-    "dp10": "dp.10: springtime scenario"
-  },
   "strategicMindset": {
     "title": "Strategic Mindset",
     "assessment": "High Uncertainty",
@@ -1178,26 +1137,6 @@
     "decreasing": " Avalanche danger decreases",
     "steady": " Avalanche danger stays the same",
     "increasing": " Avalanche danger increases"
-  },
-  "snowpackStability": {
-    "unknown": "unknown",
-    "good": "good",
-    "fair": "fair",
-    "poor": "poor",
-    "very_poor": "very poor"
-  },
-  "frequency": {
-    "none": "(nearly) none",
-    "few": "a few",
-    "some": "some",
-    "many": "many"
-  },
-  "avalancheSize": {
-    "small": "small",
-    "medium": "medium",
-    "large": "large",
-    "very_large": "very large",
-    "extreme": "extreme"
   },
   "complexity": {
     "easy": " Easy",

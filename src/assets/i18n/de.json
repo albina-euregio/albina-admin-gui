@@ -1077,47 +1077,6 @@
       "downloadFailed": "Download des Statistik Exports nicht erfolgreich. Bitte erneut versuchen."
     }
   },
-  "dangerRating": {
-    "missing": "fehlt",
-    "noRating": "keine Beurteilung",
-    "no_rating": "keine Beurteilung",
-    "no_snow": "kein Schnee",
-    "low": "gering",
-    "moderate": "mäßig",
-    "considerable": "erheblich",
-    "high": "groß",
-    "very_high": "sehr groß",
-    "veryHigh": "sehr groß"
-  },
-  "avalancheProblem": {
-    "newSnow": "Neuschnee",
-    "new_snow": "New snow",
-    "windSlab": "Triebschnee",
-    "wind_slab": "Triebschnee",
-    "persistentWeakLayers": "Altschnee",
-    "persistent_weak_layers": "Altschnee",
-    "wetSnow": "Nassschnee",
-    "wet_snow": "Nassschneeproblem",
-    "glidingSnow": "Gleitschnee",
-    "gliding_snow": "Gleitschneeproblem",
-    "cornices": "Wechten",
-    "noDistinctAvalancheProblem": " Kein ausgeprägtes Lawinenproblem",
-    "no_distinct_avalanche_problem": " Kein ausgeprägtes Lawinenproblem",
-    "favourableSituation": "Günstige Situation",
-    "favourable_situation": "Günstige Situation"
-  },
-  "dangerPattern": {
-    "dp1": "gm.1: bodennahe schwachschicht",
-    "dp2": "gm.2: gleitschnee",
-    "dp3": "gm.3: regen",
-    "dp4": "gm.4: kalt auf warm / warm auf kalt",
-    "dp5": "gm.5: schnee nach langer kälteperiode",
-    "dp6": "gm.6: lockerer schnee und wind",
-    "dp7": "gm.7: schneearm neben schneereich",
-    "dp8": "gm.8: eingeschneiter oberflächenreif",
-    "dp9": "gm.9: eingeschneiter graupel",
-    "dp10": "gm.10: frühjahrssituation"
-  },
   "strategicMindset": {
     "title": "Strategisches Mindset",
     "assessment": "Große Unsicherheit",
@@ -1180,26 +1139,6 @@
     "decreasing": " Lawinengefahr sinkt",
     "steady": " Lawinengefahr bleibt gleich",
     "increasing": " Lawinengefahr steigt"
-  },
-  "snowpackStability": {
-    "unknown": "unbekannt",
-    "good": "gut",
-    "fair": "mittel",
-    "poor": "schlecht",
-    "very_poor": "sehr schlecht"
-  },
-  "frequency": {
-    "none": "(fast) keine",
-    "few": "wenige",
-    "some": "einige",
-    "many": "viele"
-  },
-  "avalancheSize": {
-    "small": "klein",
-    "medium": "mittel",
-    "large": "groß",
-    "very_large": "sehr groß",
-    "extreme": "extrem"
   },
   "complexity": {
     "easy": "Einfach",

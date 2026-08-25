@@ -1060,47 +1060,6 @@
       "downloadFailed": "L'esportazione delle statistiche non è stata scaricata correttamente. Riprova."
     }
   },
-  "dangerRating": {
-    "missing": "manca",
-    "noRating": "senza valutazione",
-    "no_rating": "senza valutazione",
-    "no_snow": "assenza di neve",
-    "low": "debole",
-    "moderate": "moderato",
-    "considerable": "marcato",
-    "high": "forte",
-    "very_high": "molto forte",
-    "veryHigh": "molto forte"
-  },
-  "avalancheProblem": {
-    "newSnow": "Neve fresca",
-    "new_snow": "Neve fresca",
-    "windSlab": "Lastroni da vento",
-    "wind_slab": "Lastroni da vento",
-    "persistentWeakLayers": "Strati deboli persistenti",
-    "persistent_weak_layers": "Strati deboli persistenti",
-    "wetSnow": "Neve bagnata",
-    "wet_snow": "Neve bagnata",
-    "glidingSnow": "Valanghe di slittamento",
-    "gliding_snow": "Valanghe di slittamento",
-    "cornices": "Cornici",
-    "noDistinctAvalancheProblem": "Nessun problema valanghivo evidente",
-    "no_distinct_avalanche_problem": "Nessun problema valanghivo evidente",
-    "favourableSituation": "Situazione favorevole",
-    "favourable_situation": "Situazione favorevole"
-  },
-  "dangerPattern": {
-    "dp1": "st.1: strato debole persistente basale",
-    "dp2": "st.2: neve di slittamento",
-    "dp3": "st.3: pioggia su neve",
-    "dp4": "st.4: freddo su caldo / caldo su freddo",
-    "dp5": "st.5: neve dopo un lungo periodo di freddo",
-    "dp6": "st.6: neve a debole coesione e vento",
-    "dp7": "st.7: passaggio da poca a molta neve",
-    "dp8": "st.8: brina di superficie sepolta",
-    "dp9": "st.9: neve pallottolare sepolta",
-    "dp10": "st.10: situazione primaverile"
-  },
   "strategicMindset": {
     "title": "Mindset strategico",
     "assessment": "Elevata incertezza",
@@ -1163,26 +1122,6 @@
     "decreasing": " Pericolo valanghe in diminuizione",
     "steady": " Pericolo valanghe stabile",
     "increasing": " Pericolo valanghe in aumento"
-  },
-  "snowpackStability": {
-    "unknown": "sconosciuto",
-    "good": "buona",
-    "fair": "discreta",
-    "poor": "scarsa",
-    "very_poor": "molto scarsa"
-  },
-  "frequency": {
-    "none": "pochissimi",
-    "few": "pochi",
-    "some": "alcuni",
-    "many": "molti"
-  },
-  "avalancheSize": {
-    "small": "piccola",
-    "medium": "media",
-    "large": "grande",
-    "very_large": "molto grande",
-    "extreme": "estremamente grande"
   },
   "complexity": {
     "easy": "Facile",
