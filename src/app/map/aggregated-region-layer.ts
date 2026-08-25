@@ -1,16 +1,16 @@
 import { ExpressionSpecification, Map as MlMap } from "maplibre-gl";
 
 const DEFAULT_PMTILES_URL = "./assets/eaws-regions.pmtiles";
-const SOURCE_LAYER = "micro-regions_elevation";
+const SOURCE_LAYER = "micro-regions";
 
-/** Per-region danger-rating fill, split by elevation band. Colors are precomputed by the caller. */
+/** Per-region danger-rating fill. Color/opacity are precomputed by the caller. */
 export interface AggregatedRegionStyle {
-  colorAbove: string;
-  opacityAbove: number;
-  colorBelow: string;
-  opacityBelow: number;
-  /** bulletin elevation (m) for the high-vs-threshold check; -Infinity disables the flip */
-  bulletinElevation: number;
+  color: string;
+  opacity: number;
+}
+
+interface RegionState extends AggregatedRegionStyle {
+  hasStyle: boolean;
 }
 
 export interface AggregatedRegionHandle {
@@ -27,42 +27,12 @@ export interface AggregatedRegionHandle {
   remove(): void;
 }
 
-interface RegionState {
-  hs: boolean;
-  ca: string;
-  cb: string;
-  oa: number;
-  ob: number;
-  be: number;
-}
-
-/** Whether a feature's elevation band counts as "above" (mirrors MapService.updateAggregatedRegionLayer). */
-const IS_ABOVE: ExpressionSpecification = [
-  "case",
-  ["match", ["get", "elevation"], ["high", "low_high"], true, false],
-  [
-    "case",
-    [
-      "all",
-      ["==", ["get", "elevation"], "high"],
-      [
-        ">",
-        ["coalesce", ["feature-state", "be" as keyof RegionState], -1e9],
-        ["coalesce", ["to-number", ["get", "threshold"]], 1e9],
-      ],
-    ],
-    false,
-    true,
-  ],
-  false,
-];
-
-const HAS_STYLE: ExpressionSpecification = ["==", ["feature-state", "hs" as keyof RegionState], true];
+const HAS_STYLE: ExpressionSpecification = ["==", ["feature-state", "hasStyle" as keyof RegionState], true];
 
 /**
  * Adds the aggregated-region vector layer (PMTiles) with danger-rating styling driven by
- * feature-state. The caller precomputes above/below colors per region (the domain logic lives
- * in the map service). Replaces the Leaflet `PmLeafletLayer` canvas symbolizer.
+ * feature-state. The caller precomputes the danger-rating color per region (the domain logic
+ * lives in the map service). Replaces the Leaflet `PmLeafletLayer` canvas symbolizer.
  *
  * Port notes: plain alpha compositing (no `multiply` blend); the `filterFeature` start/end-date
  * validity check becomes a layer filter. Must be called after the map style has loaded.
@@ -95,18 +65,8 @@ export function addAggregatedRegionLayer(
       ["any", ["!", ["has", "end_date"]], [">", ["get", "end_date"], today]],
     ],
     paint: {
-      "fill-color": [
-        "case",
-        HAS_STYLE,
-        ["case", IS_ABOVE, ["feature-state", "ca" as keyof RegionState], ["feature-state", "cb" as keyof RegionState]],
-        "rgba(0, 0, 0, 0)",
-      ],
-      "fill-opacity": [
-        "case",
-        HAS_STYLE,
-        ["case", IS_ABOVE, ["feature-state", "oa" as keyof RegionState], ["feature-state", "ob" as keyof RegionState]],
-        0,
-      ],
+      "fill-color": ["case", HAS_STYLE, ["feature-state", "color" as keyof RegionState], "rgba(0, 0, 0, 0)"],
+      "fill-opacity": ["case", HAS_STYLE, ["feature-state", "opacity" as keyof RegionState], 0],
     },
   });
 
@@ -118,23 +78,16 @@ export function addAggregatedRegionLayer(
     fillLayerId,
     setRegionStyle(region, style) {
       styled.add(region);
-      setState(region, {
-        hs: true,
-        ca: style.colorAbove,
-        oa: style.opacityAbove,
-        cb: style.colorBelow,
-        ob: style.opacityBelow,
-        be: style.bulletinElevation,
-      });
+      setState(region, { hasStyle: true, color: style.color, opacity: style.opacity });
     },
     resetRegions(regions) {
       for (const region of regions) {
         styled.delete(region);
-        setState(region, { hs: false });
+        setState(region, { hasStyle: false });
       }
     },
     resetAll() {
-      for (const region of styled) setState(region, { hs: false });
+      for (const region of styled) setState(region, { hasStyle: false });
       styled.clear();
     },
     styledRegions: () => [...styled],

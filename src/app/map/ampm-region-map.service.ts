@@ -4,7 +4,6 @@ import { Map as MlMap } from "maplibre-gl";
 
 import { PolygonObject } from "../danger-sources/models/polygon-object.model";
 import * as Enums from "../enums/enums";
-import { BulletinModel } from "../models/bulletin.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
@@ -232,12 +231,7 @@ export class AmPmRegionMapService {
   ): AggregatedRegionStyle {
     const aboveRating = isAm ? mapObject.getForenoonDangerRatingAbove() : mapObject.getAfternoonDangerRatingAbove();
     const belowRating = isAm ? mapObject.getForenoonDangerRatingBelow() : mapObject.getAfternoonDangerRatingBelow();
-
-    let bulletinElevation = -Infinity;
-    if (mapObject instanceof BulletinModel) {
-      const elevation = isAm ? mapObject.getForenoonElevation() : mapObject.getAfternoonElevation();
-      if (isFinite(elevation)) bulletinElevation = elevation;
-    }
+    const rating = Enums.WarnLevel[aboveRating] > Enums.WarnLevel[belowRating] ? aboveRating : belowRating;
 
     const styleFn =
       mode === "active" && mapObject === this.activeMapObject
@@ -246,15 +240,8 @@ export class AmPmRegionMapService {
           ? (r: string, d: Enums.DangerRating) => this.comparedSelectionStyle(r, d, status)
           : (r: string, d: Enums.DangerRating) => this.dangerRatingStyle(r, d, status);
 
-    const above = styleFn(region, aboveRating);
-    const below = styleFn(region, belowRating);
-    return {
-      colorAbove: above.fillColor,
-      opacityAbove: above.fillOpacity,
-      colorBelow: below.fillColor,
-      opacityBelow: below.fillOpacity,
-      bulletinElevation,
-    };
+    const { fillColor, fillOpacity } = styleFn(region, rating);
+    return { color: fillColor, opacity: fillOpacity };
   }
 
   resetAggregatedRegions(): void {
