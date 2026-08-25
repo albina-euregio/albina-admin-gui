@@ -27,6 +27,15 @@ export interface AggregatedRegionHandle {
   remove(): void;
 }
 
+interface RegionState {
+  hs: boolean;
+  ca: string;
+  cb: string;
+  oa: number;
+  ob: number;
+  be: number;
+}
+
 /** Whether a feature's elevation band counts as "above" (mirrors MapService.updateAggregatedRegionLayer). */
 const IS_ABOVE: ExpressionSpecification = [
   "case",
@@ -36,7 +45,11 @@ const IS_ABOVE: ExpressionSpecification = [
     [
       "all",
       ["==", ["get", "elevation"], "high"],
-      [">", ["coalesce", ["feature-state", "be"], -1e9], ["coalesce", ["to-number", ["get", "threshold"]], 1e9]],
+      [
+        ">",
+        ["coalesce", ["feature-state", "be" as keyof RegionState], -1e9],
+        ["coalesce", ["to-number", ["get", "threshold"]], 1e9],
+      ],
     ],
     false,
     true,
@@ -44,7 +57,7 @@ const IS_ABOVE: ExpressionSpecification = [
   false,
 ];
 
-const HAS_STYLE: ExpressionSpecification = ["==", ["feature-state", "hs"], true];
+const HAS_STYLE: ExpressionSpecification = ["==", ["feature-state", "hs" as keyof RegionState], true];
 
 /**
  * Adds the aggregated-region vector layer (PMTiles) with danger-rating styling driven by
@@ -85,14 +98,19 @@ export function addAggregatedRegionLayer(
       "fill-color": [
         "case",
         HAS_STYLE,
-        ["case", IS_ABOVE, ["feature-state", "ca"], ["feature-state", "cb"]],
+        ["case", IS_ABOVE, ["feature-state", "ca" as keyof RegionState], ["feature-state", "cb" as keyof RegionState]],
         "rgba(0, 0, 0, 0)",
       ],
-      "fill-opacity": ["case", HAS_STYLE, ["case", IS_ABOVE, ["feature-state", "oa"], ["feature-state", "ob"]], 0],
+      "fill-opacity": [
+        "case",
+        HAS_STYLE,
+        ["case", IS_ABOVE, ["feature-state", "oa" as keyof RegionState], ["feature-state", "ob" as keyof RegionState]],
+        0,
+      ],
     },
   });
 
-  const setState = (region: string, state: Record<string, unknown>) =>
+  const setState = (region: string, state: Partial<RegionState>) =>
     map.setFeatureState({ source: sourceId, sourceLayer: SOURCE_LAYER, id: region }, state);
 
   return {
