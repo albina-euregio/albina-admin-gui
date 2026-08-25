@@ -43,8 +43,8 @@ export class BulletinDaytimeDescriptionModel extends ZSchema(BulletinDaytimeDesc
   }
 
   getDangerRating(avalancheProblem: AvalancheProblemModel, up: boolean): Enums.DangerRating {
-    let boundaryAvalancheProblem;
-    let boundaryBulletin;
+    let boundaryAvalancheProblem: number;
+    let boundaryBulletin: number;
 
     if (avalancheProblem) {
       if (up) {
@@ -167,6 +167,14 @@ export class BulletinDaytimeDescriptionModel extends ZSchema(BulletinDaytimeDesc
       this.hasElevationDependency = false;
       this.dangerRatingAbove = Enums.DangerRating.low;
       this.dangerRatingBelow = Enums.DangerRating.low;
+    }
+
+    const warnLevelAbove = Enums.WarnLevel[this.dangerRatingAbove];
+    const warnLevelBelow = Enums.WarnLevel[this.dangerRatingBelow];
+    if (warnLevelBelow < warnLevelAbove) {
+      this.dangerRatingBelow = Enums.OutsideCoreZone[this.dangerRatingAbove];
+    } else if (warnLevelAbove < warnLevelBelow) {
+      this.dangerRatingAbove = Enums.OutsideCoreZone[this.dangerRatingBelow];
     }
   }
 }

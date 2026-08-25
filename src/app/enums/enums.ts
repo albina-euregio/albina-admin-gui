@@ -20,6 +20,22 @@ export const WarnLevel = {
   [DangerRating.very_high]: 5,
 };
 
+/**
+ * Core Zones
+ * The published danger level always applies to the core zone (marked in blue) — the area where avalanche danger is highest. The core zone includes the elevation range (in meters above sea level) and the aspect (the slope's orientation, e.g., north aspect: a slope facing north).
+ * Elevation ranges and/or aspects outside the core zone are marked in white. In these areas, the avalanche warning service estimates the avalanche danger to be approximately one danger level lower than in the core zone.
+ */
+export const OutsideCoreZone = {
+  [DangerRating.missing]: DangerRating.missing,
+  [DangerRating.no_snow]: DangerRating.no_snow,
+  [DangerRating.no_rating]: DangerRating.no_rating,
+  [DangerRating.low]: DangerRating.low,
+  [DangerRating.moderate]: DangerRating.low,
+  [DangerRating.considerable]: DangerRating.moderate,
+  [DangerRating.high]: DangerRating.considerable,
+  [DangerRating.very_high]: DangerRating.high,
+};
+
 export enum DangerRatingModificator {
   none = "none",
   minus = "minus",
