@@ -9,6 +9,7 @@ import { BlogData, BlogService } from "app/providers/blog-service/blog.service";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { UserService } from "app/providers/user-service/user.service";
 import { lastValueFrom } from "rxjs";
+import * as v from "valibot";
 
 @Injectable()
 export class GraphicsService {
@@ -23,7 +24,7 @@ export class GraphicsService {
     const stationById = new Map<string, Feature>();
     const response = await fetch("https://static.avalanche.report/eaws_weather_stations/linea.geojson");
     const json = await response.json();
-    const collection = FeatureCollectionSchema.parse(json, { reportInput: true });
+    const collection = v.parse(FeatureCollectionSchema, json);
 
     for (const feature of collection.features) {
       const id = feature.id;
