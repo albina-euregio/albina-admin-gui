@@ -518,13 +518,23 @@ export const AvalancheInformationSchema = z.object({
   avalancheDetailsComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
 withShowIf(AvalancheInformationSchema, {
-  natural: (m) => m.trigger === "natural",
-  person: (m) => m.trigger === "person",
-  additionalLoad: (m) => m.trigger === "person",
-  explosives: (m) => m.trigger === "explosives",
-  vehicle: (m) => m.trigger === "vehicle",
-  accidentalControlled: (m) => m.trigger === "vehicle",
+  // Trigger is not applicable to glide avalanches.
+  trigger: (m) => m.avalancheType !== Enums.IncidentAvalancheType.glide,
+  natural: (m) => m.avalancheType !== Enums.IncidentAvalancheType.glide && m.trigger === "natural",
+  person: (m) => m.avalancheType !== Enums.IncidentAvalancheType.glide && m.trigger === "person",
+  additionalLoad: (m) => m.avalancheType !== Enums.IncidentAvalancheType.glide && m.trigger === "person",
+  explosives: (m) => m.avalancheType !== Enums.IncidentAvalancheType.glide && m.trigger === "explosives",
+  vehicle: (m) => m.avalancheType !== Enums.IncidentAvalancheType.glide && m.trigger === "vehicle",
+  accidentalControlled: (m) => m.avalancheType !== Enums.IncidentAvalancheType.glide && m.trigger === "vehicle",
   remoteTriggering: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  // Weak layer information only applies to slab avalanches.
+  weakLayerName: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  weakLayerGrainType1: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  weakLayerGrainSize1: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  weakLayerGrainType2: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  weakLayerGrainSize2: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  weakLayerLocation: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
+  bedSurfaceStepped: (m) => m.avalancheType === Enums.IncidentAvalancheType.slab,
   slabWidth: (m) =>
     m.avalancheType === Enums.IncidentAvalancheType.slab || m.avalancheType === Enums.IncidentAvalancheType.glide,
   crownDepthAvg: (m) =>
