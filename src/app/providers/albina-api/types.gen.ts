@@ -153,19 +153,6 @@ export type AvalancheBulletinServiceLatestBulletin = {
   date: string;
 };
 
-export type AvalancheBulletinServiceTendencyResult = {
-  /**
-   * Start dates of the bulletins of the preceding days
-   */
-  dates?: Array<string>;
-  /**
-   * Highest danger rating of each of these days, per micro region
-   */
-  dangerRatings?: {
-    [key: string]: Array<DangerRating>;
-  };
-};
-
 export type AvalancheBulletinStatusServiceStatus = {
   date: string;
   timestamp: string;
@@ -322,21 +309,29 @@ export type CaamlAvalancheBulletinCustomData = {
 
 export type CaamlAvalancheBulletinCustomDataAlbina = {
   mainDate: string;
-  bulletinPhotos: Array<CaamlAvalancheBulletinCustomDataBulletinPhoto>;
+  tendencyProgression?: CaamlAvalancheBulletinCustomDataTendencyProgression | null;
+  bulletinPhotos?: Array<CaamlAvalancheBulletinCustomDataBulletinPhoto> | null;
 };
 
 export type CaamlAvalancheBulletinCustomDataBulletinPhoto = {
   url: string;
-  copyright?: string;
-  date?: string;
-  microRegionId?: string;
-  locationName?: string;
-  latitude?: number;
-  longitude?: number;
+  copyright?: string | null;
+  date?: string | null;
+  microRegionId?: string | null;
+  locationName?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 export type CaamlAvalancheBulletinCustomDataLwdTyrol = {
-  dangerPatterns: Array<string>;
+  dangerPatterns?: Array<string> | null;
+};
+
+export type CaamlAvalancheBulletinCustomDataTendencyProgression = {
+  dates: Array<string>;
+  dangerRatings: {
+    [key: string]: Array<CaamlDangerRatingValue>;
+  };
 };
 
 /**
@@ -1788,6 +1783,19 @@ export type SubscriptionServiceEmailSubscription = {
 
 export type Tendency = "decreasing" | "steady" | "increasing";
 
+export type TendencyProgression = {
+  /**
+   * Start dates of the bulletins of the preceding days
+   */
+  dates?: Array<string>;
+  /**
+   * Highest danger rating of each of these days, per micro region
+   */
+  dangerRatings?: {
+    [key: string]: Array<DangerRating>;
+  };
+};
+
 export type TerrainType =
   | "gullies_and_bowls"
   | "adjacent_to_ridgelines"
@@ -2383,11 +2391,11 @@ export type GetPublishedJsonBulletins0Data = {
     version?: CaamlVersion;
     regions: Array<string>;
     region: string;
+    lang: LanguageCode;
     /**
      * Date in the format yyyy-MM-dd'T'HH:mm:ssZZ
      */
     date: string;
-    lang: LanguageCode;
   };
   url: "/bulletins";
 };
@@ -2455,7 +2463,7 @@ export type GetPublishedCaamlBulletinsData = {
      */
     date: string;
     regions: Array<string>;
-    lang: LanguageCode;
+    lang?: LanguageCode;
     version?: CaamlVersion;
   };
   url: "/bulletins/caaml";
@@ -2932,7 +2940,7 @@ export type GetTendencyResponses = {
   /**
    * tendency of each micro region with published bulletins
    */
-  200: AvalancheBulletinServiceTendencyResult;
+  200: TendencyProgression;
 };
 
 export type GetTendencyResponse = GetTendencyResponses[keyof GetTendencyResponses];

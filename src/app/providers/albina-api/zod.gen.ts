@@ -102,26 +102,16 @@ export const zCaamlAspect = z
 
 export const zCaamlAvalancheBulletinCustomDataBulletinPhoto = z.object({
   url: z.string(),
-  copyright: z.string().optional(),
-  date: z.iso.date().optional(),
-  microRegionId: z.string().optional(),
-  locationName: z.string().optional(),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
-});
-
-export const zCaamlAvalancheBulletinCustomDataAlbina = z.object({
-  mainDate: z.string(),
-  bulletinPhotos: z.array(zCaamlAvalancheBulletinCustomDataBulletinPhoto),
+  copyright: z.string().nullish(),
+  date: z.iso.date().nullish(),
+  microRegionId: z.string().nullish(),
+  locationName: z.string().nullish(),
+  latitude: z.number().nullish(),
+  longitude: z.number().nullish(),
 });
 
 export const zCaamlAvalancheBulletinCustomDataLwdTyrol = z.object({
-  dangerPatterns: z.array(z.string()),
-});
-
-export const zCaamlAvalancheBulletinCustomData = z.object({
-  ALBINA: zCaamlAvalancheBulletinCustomDataAlbina,
-  LWD_Tyrol: zCaamlAvalancheBulletinCustomDataLwdTyrol,
+  dangerPatterns: z.array(z.string()).nullish(),
 });
 
 export const zCaamlAvalancheBulletinsCustomDataAlbina = z.object({
@@ -167,6 +157,22 @@ export const zCaamlAvalancheTypeType = z.enum(["slab", "loose", "glide"]).descri
 export const zCaamlDangerRatingValue = z
   .enum(["considerable", "high", "low", "moderate", "no_rating", "no_snow", "very_high"])
   .describe("Danger rating value, according to EAWS danger scale definition.");
+
+export const zCaamlAvalancheBulletinCustomDataTendencyProgression = z.object({
+  dates: z.array(z.iso.date()),
+  dangerRatings: z.record(z.string(), z.array(zCaamlDangerRatingValue)),
+});
+
+export const zCaamlAvalancheBulletinCustomDataAlbina = z.object({
+  mainDate: z.string(),
+  tendencyProgression: zCaamlAvalancheBulletinCustomDataTendencyProgression.nullish(),
+  bulletinPhotos: z.array(zCaamlAvalancheBulletinCustomDataBulletinPhoto).nullish(),
+});
+
+export const zCaamlAvalancheBulletinCustomData = z.object({
+  ALBINA: zCaamlAvalancheBulletinCustomDataAlbina,
+  LWD_Tyrol: zCaamlAvalancheBulletinCustomDataLwdTyrol,
+});
 
 /**
  * Elevation describes either an elevation range below a certain bound (only upperBound is set to a value) or above a certain bound (only lowerBound is set to a value). If both values are set to a value, an elevation band is defined by this property. The value uses a numeric value, not more detailed than 100m resolution. Additionally to the numeric values also 'treeline' is allowed.
@@ -505,14 +511,6 @@ export const zDangerRating = z.enum([
 
 export const zAvalancheBulletinServiceHighest = z.object({
   dangerRating: zDangerRating,
-});
-
-export const zAvalancheBulletinServiceTendencyResult = z.object({
-  dates: z.array(z.iso.datetime()).describe("Start dates of the bulletins of the preceding days").optional(),
-  dangerRatings: z
-    .record(z.string(), z.array(zDangerRating))
-    .describe("Highest danger rating of each of these days, per micro region")
-    .optional(),
 });
 
 export const zDangerRatingModificator = z.enum(["none", "minus", "equal", "plus"]);
@@ -1406,6 +1404,14 @@ export const zSubscriptionServiceEmailSubscription = z.object({
 
 export const zTendency = z.enum(["decreasing", "steady", "increasing"]);
 
+export const zTendencyProgression = z.object({
+  dates: z.array(z.iso.datetime()).describe("Start dates of the bulletins of the preceding days").optional(),
+  dangerRatings: z
+    .record(z.string(), z.array(zDangerRating))
+    .describe("Highest danger rating of each of these days, per micro region")
+    .optional(),
+});
+
 export const zTerrainType = z.enum([
   "gullies_and_bowls",
   "adjacent_to_ridgelines",
@@ -1989,8 +1995,8 @@ export const zGetPublishedJsonBulletins0Query = z.object({
   version: zCaamlVersion.optional(),
   regions: z.array(z.string()),
   region: z.string(),
-  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   lang: zLanguageCode,
+  date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
 });
 
 /**
@@ -2025,7 +2031,7 @@ export const zCreateJsonBulletinResponse = z.array(zAvalancheBulletin).describe(
 export const zGetPublishedCaamlBulletinsQuery = z.object({
   date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
   regions: z.array(z.string()),
-  lang: zLanguageCode,
+  lang: zLanguageCode.optional(),
   version: zCaamlVersion.optional(),
 });
 
@@ -2226,7 +2232,7 @@ export const zGetTendencyQuery = z.object({
 /**
  * tendency of each micro region with published bulletins
  */
-export const zGetTendencyResponse = zAvalancheBulletinServiceTendencyResult;
+export const zGetTendencyResponse = zTendencyProgression;
 
 export const zDeleteJsonBulletinPath = z.object({
   bulletinId: z.string(),
