@@ -1,3 +1,4 @@
+import caamlDe from "../../../../app/i18n/caaml/de.json";
 import de from "../../../../src/assets/i18n/de.json";
 import incidentReportDe from "../../../../src/assets/i18n/incident-report/de.json";
 import {
@@ -1338,7 +1339,7 @@ function translateAll(values: string[] | undefined, keys: Record<string, string>
 }
 
 function getSnowStabilityText(s: SnowStability | string): string | undefined {
-  return de.snowpackStability[getStability(s as SnowStability)];
+  return caamlDe[`snowpackStability.${getStability(s as SnowStability)}`];
 }
 
 function formatTests(tests: Test[]): string {

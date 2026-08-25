@@ -1060,47 +1060,6 @@
       "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
-  "dangerRating": {
-    "missing": "falta",
-    "noRating": "Sense grau de perill",
-    "no_rating": "Sense grau de perill",
-    "no_snow": "no snow",
-    "low": "Feble",
-    "moderate": "Moderat",
-    "considerable": "Marcat",
-    "high": "Fort",
-    "very_high": "molt fort",
-    "veryHigh": "Molt fort"
-  },
-  "avalancheProblem": {
-    "newSnow": "Neu recent",
-    "new_snow": "Neu recent",
-    "windSlab": "Plaques de vent",
-    "wind_slab": "Plaques de vent",
-    "persistentWeakLayers": "Capes febles persistents",
-    "persistent_weak_layers": "Capes febles persistents",
-    "wetSnow": "Neu humida",
-    "wet_snow": "Neu humida",
-    "glidingSnow": "Lliscaments",
-    "gliding_snow": "Lliscaments",
-    "cornices": "Cornises",
-    "noDistinctAvalancheProblem": "Cap problema d'allaus evident",
-    "no_distinct_avalanche_problem": "Cap problema d'allaus evident",
-    "favourableSituation": "Situació favorable",
-    "favourable_situation": "Situació favorable"
-  },
-  "dangerPattern": {
-    "dp1": "pp.1: capa feble persistent profunda",
-    "dp2": "pp.2: allaus de lliscament",
-    "dp3": "pp.3: pluja",
-    "dp4": "pp.4: fred després de temperat / temperat després de fred",
-    "dp5": "pp.5: nevada després d'un llarg període fred",
-    "dp6": "pp.6: neu freda i solta i vent",
-    "dp7": "pp.7: mantell de neu prim vora mantell de neu gruixut",
-    "dp8": "pp.8: gebre enterrat",
-    "dp9": "pp.9: neu rodona enterrada",
-    "dp10": "pp.10: escenari de primavera"
-  },
   "strategicMindset": {
     "title": "Predisposició mental estratègica",
     "assessment": "Incertesa elevada",
@@ -1163,26 +1122,6 @@
     "decreasing": "El perill d'allaus disminueix",
     "steady": "El perill d'allaus roman estable",
     "increasing": "El perill d'allaus augmenta"
-  },
-  "snowpackStability": {
-    "unknown": "desconegut",
-    "good": "bona",
-    "fair": "regular",
-    "poor": "pobre",
-    "very_poor": "molt pobre"
-  },
-  "frequency": {
-    "none": "(gairebé) cap",
-    "few": "unes poques",
-    "some": "algunes",
-    "many": "moltes"
-  },
-  "avalancheSize": {
-    "small": "petita",
-    "medium": "mitjana",
-    "large": "gran",
-    "very_large": "molt gran",
-    "extreme": "extremadament gran"
   },
   "complexity": {
     "easy": "Fàcil",

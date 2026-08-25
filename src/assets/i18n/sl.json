@@ -1060,47 +1060,6 @@
       "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
-  "dangerRating": {
-    "missing": "manjka",
-    "noRating": "no rating",
-    "no_rating": "no rating",
-    "no_snow": "no snow",
-    "low": "majhna",
-    "moderate": "zmerna",
-    "considerable": "znatna",
-    "high": "velika",
-    "very_high": "zelo velika",
-    "veryHigh": "zelo velika"
-  },
-  "avalancheProblem": {
-    "newSnow": "Nov sneg",
-    "new_snow": "Nov sneg",
-    "windSlab": "Napihan sneg",
-    "wind_slab": "Napihan sneg",
-    "persistentWeakLayers": "Trdožive šibke plasti",
-    "persistent_weak_layers": "Trdožive šibke plasti",
-    "wetSnow": "Moker sneg",
-    "wet_snow": "Moker sneg",
-    "glidingSnow": "Drseč sneg",
-    "gliding_snow": "Drseč sneg",
-    "cornices": "Opasti",
-    "noDistinctAvalancheProblem": "No distinct avalanche problem",
-    "no_distinct_avalanche_problem": "No distinct avalanche problem",
-    "favourableSituation": "Ugodne razmere",
-    "favourable_situation": "Ugodne razmere"
-  },
-  "dangerPattern": {
-    "dp1": "dp.1: globoka trdoživa šibka plast",
-    "dp2": "vn.2: zdrsni plazovi",
-    "dp3": "dp.3: dež",
-    "dp4": "dp.4: ohladitev po toploti / otoplitev po mrazu",
-    "dp5": "dp.5: sneženje po dolgem hladnem obdobju",
-    "dp6": "dp.6: mrzel nesprijet sneg z vetrom",
-    "dp7": "vn.7: tanka snežna odeja ob globoki snežni odeji",
-    "dp8": "vn.8: zakopan površinski srež",
-    "dp9": "dp.9: zakopano babje pšeno",
-    "dp10": "dp.10: spomladanske razmere"
-  },
   "strategicMindset": {
     "title": "Strategic Mindset",
     "assessment": "Velika negotovost",
@@ -1163,26 +1122,6 @@
     "decreasing": "Nevarnost plazov se bo zmanjšala",
     "steady": "Nevarnost plazov bo ostala enaka",
     "increasing": "Nevarnost plazov se bo povečala"
-  },
-  "snowpackStability": {
-    "unknown": "neznano",
-    "good": "dobra",
-    "fair": "zadovoljiva",
-    "poor": "slaba",
-    "very_poor": "zelo slaba"
-  },
-  "frequency": {
-    "none": "(skoraj) nič",
-    "few": "redki",
-    "some": "nekaj",
-    "many": "veliko"
-  },
-  "avalancheSize": {
-    "small": "majhni",
-    "medium": "srednji",
-    "large": "veliki",
-    "very_large": "zelo veliki",
-    "extreme": "izjemno veliki"
   },
   "complexity": {
     "easy": " Easy",

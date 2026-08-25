@@ -1060,47 +1060,6 @@
       "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
-  "dangerRating": {
-    "missing": "absent",
-    "noRating": "Sense grad de perilh",
-    "no_rating": "Sense grad de perilh",
-    "no_snow": "no snow",
-    "low": "fèble",
-    "moderate": "moderat",
-    "considerable": "mercat",
-    "high": "fòrt",
-    "very_high": "molt fòrt",
-    "veryHigh": "molt fòrt"
-  },
-  "avalancheProblem": {
-    "newSnow": "Nhèu recenta",
-    "new_snow": "Nhèu recenta",
-    "windSlab": "Plaques de vent",
-    "wind_slab": "Plaques de vent",
-    "persistentWeakLayers": "Coches fèbles persistentes",
-    "persistent_weak_layers": "Coches febles persistentes",
-    "wetSnow": "Nhèu umida",
-    "wet_snow": "Nhèu umida",
-    "glidingSnow": "Esguitlaments basaus",
-    "gliding_snow": "Esguitlaments basaus",
-    "cornices": "Cornises",
-    "noDistinctAvalancheProblem": "Cap problèma de lauegi evident",
-    "no_distinct_avalanche_problem": "Cap problèma de lauegi evident",
-    "favourableSituation": "Situacion favorabla",
-    "favourable_situation": "Situacion favorabla"
-  },
-  "dangerPattern": {
-    "dp1": "pp.1:  capa fèbla persistenta e prigonda",
-    "dp2": "pp.2: litsades basaus",
-    "dp3": "pp.3: ploja",
-    "dp4": "pp.4: heired dempús de caud / caud dempús de heired",
-    "dp5": "pp.5: nheuades dempús d’un long periòde de heired",
-    "dp6": "pp.6: nhèu heireda, sense coesion e vent",
-    "dp7": "pp.7 nhèu escassa ath costat de nhèu prigonda",
-    "dp8": "pp.8: geladiua de superfícia enterrada",
-    "dp9": "pp.9: graupel enterrat",
-    "dp10": "pp.10: scenari de primauera"
-  },
   "strategicMindset": {
     "title": "Predisposicion mentau estrategica",
     "assessment": "Incertesa nauta",
@@ -1163,26 +1122,6 @@
     "decreasing": "Perilh de lauegi diminuís",
     "steady": "Perilh de lauegi seguís parièr",
     "increasing": "El perill d’allaus aumente"
-  },
-  "snowpackStability": {
-    "unknown": "desconeishut",
-    "good": "bona",
-    "fair": "regular",
-    "poor": "praube",
-    "very_poor": "molt praube"
-  },
-  "frequency": {
-    "none": "(quasi) cap",
-    "few": "ues pòques",
-    "some": "beres ues",
-    "many": "moltes"
-  },
-  "avalancheSize": {
-    "small": "petit",
-    "medium": "mejan",
-    "large": "gran",
-    "very_large": "molt gran",
-    "extreme": "extremadament gran"
   },
   "complexity": {
     "easy": "Facil",

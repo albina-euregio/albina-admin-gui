@@ -1060,47 +1060,6 @@
       "downloadFailed": "Le téléchargement de l'exportation des statistiques a échoué. Veuillez réessayer."
     }
   },
-  "dangerRating": {
-    "missing": "manquant",
-    "noRating": "pas noté",
-    "no_rating": "pas noté",
-    "no_snow": "pas de neige",
-    "low": "faible",
-    "moderate": "limité",
-    "considerable": "marqué",
-    "high": "fort",
-    "very_high": "très fort",
-    "veryHigh": "très fort"
-  },
-  "avalancheProblem": {
-    "newSnow": "Neige fraîche",
-    "new_snow": "Neige fraîche",
-    "windSlab": "Plaque à vent",
-    "wind_slab": "Plaque à vent",
-    "persistentWeakLayers": "Neige ancienne (Sous-couches fragiles persistantes)",
-    "persistent_weak_layers": "Neige ancienne (Sous-couches fragiles persistantes)",
-    "wetSnow": "Avalanches mouillées (Neige humide)",
-    "wet_snow": "Avalanches mouillées (Neige humide)",
-    "glidingSnow": "Avalanches de glissement (Avalanches de fond)",
-    "gliding_snow": "Avalanches de glissement (Avalanches de fond)",
-    "cornices": "Congères",
-    "noDistinctAvalancheProblem": "Pas de situation avalancheuse particulière",
-    "no_distinct_avalanche_problem": "Pas de situation avalancheuse particulière",
-    "favourableSituation": "Situation favorable",
-    "favourable_situation": "Situation favorable"
-  },
-  "dangerPattern": {
-    "dp1": "mr.1 : sous-couche fragile persistante",
-    "dp2": "mr.2 : neige glissante",
-    "dp3": "mr.3 : pluie",
-    "dp4": "mr.4 : froid suivant chaud / chaud suivant froid",
-    "dp5": "mr.5 : chute de neige après une longue période de froid",
-    "dp6": "mr.6 : neige meuble et vent",
-    "dp7": "mr.7 : enneigement faible à coté d'enneigement abondant",
-    "dp8": "mr.8 : givre de surface recouvert de neige",
-    "dp9": "mr.9 : neige roulée recouverte de neige",
-    "dp10": "mr.10 : situation de printemps"
-  },
   "strategicMindset": {
     "title": "État d'esprit stratégique",
     "assessment": "Grande incertitude",
@@ -1163,26 +1122,6 @@
     "decreasing": "Le danger d'avalanche diminue",
     "steady": "Le danger d'avalanche reste inchangé",
     "increasing": "Le danger d'avalanche augmente"
-  },
-  "snowpackStability": {
-    "unknown": "inconnue",
-    "good": "stable",
-    "fair": "moyennement stable",
-    "poor": "instable",
-    "very_poor": "très instable"
-  },
-  "frequency": {
-    "none": "(pratiquement) pas",
-    "few": "quelques-uns",
-    "some": "plusieurs",
-    "many": "beaucoup"
-  },
-  "avalancheSize": {
-    "small": "petit",
-    "medium": "moyenne",
-    "large": "grande",
-    "very_large": "très grande",
-    "extreme": "extrême"
   },
   "complexity": {
     "easy": "Facile",
