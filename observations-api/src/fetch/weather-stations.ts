@@ -2,6 +2,7 @@ import { Feature, FeatureCollectionSchema, ParameterTypeSchema, Unit } from "@al
 import { PROVIDERS } from "@albina-euregio/linea/providers";
 import { orderBy, groupBy } from "es-toolkit";
 import { average, max, median, min, sum } from "simple-statistics";
+import * as v from "valibot";
 
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { fetchJSON } from "../util/fetchJSON";
@@ -23,7 +24,7 @@ export async function getAwsWeatherStations(
   }
 
   const json: unknown = await fetchJSON(url);
-  const geojson = await FeatureCollectionSchema.parseAsync(json);
+  const geojson = await v.parseAsync(FeatureCollectionSchema, json);
   const stations$ = geojson.features.map(async (feature) => {
     await fetchStatistics(startDate, endDate, feature);
     return mapFeature(feature);

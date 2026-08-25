@@ -1,7 +1,7 @@
 import { ParameterTypeSchema, type Feature } from "@albina-euregio/linea/listing";
 import { inject, Injectable } from "@angular/core";
 import { Marker as MlMarker } from "maplibre-gl";
-import z from "zod";
+import * as v from "valibot";
 
 import { Aspect } from "../enums/enums";
 import { makeIcon } from "./make-icon";
@@ -9,7 +9,7 @@ import { degreeToAspect, GenericObservation } from "./models/generic-observation
 import { ObservationMarkerService } from "./observation-marker.service";
 
 type FeatureProperties = Feature["properties"];
-type ParameterType = z.infer<typeof ParameterTypeSchema>;
+type ParameterType = v.InferOutput<typeof ParameterTypeSchema>;
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
 const elevationColors = {
