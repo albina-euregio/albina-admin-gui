@@ -115,7 +115,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
     return x as Aspect;
   }
 
-  /** True in the {@link DisplayMode.EditMostRelevant} mode, which hides optional fields. */
+  /** True in the {@link DisplayMode.EditMostRelevant} mode, which hides fields not flagged `mostRelevant`. */
   readonly showMandatoryOnly = computed(() => this.displayMode() === DisplayMode.EditMostRelevant);
 
   isPublicField(key: string): boolean {
@@ -154,7 +154,7 @@ export class ZodSchemaFormComponent<T extends z.ZodObject, V extends z.infer<T>>
   shouldShowField(key: string, schema: z.ZodType): boolean {
     if (this.isPublicField(key)) return false;
     if (this.isOutsideField(key)) return false;
-    if (this.showMandatoryOnly() && zodUtil.isFieldOptional(schema)) return false;
+    if (this.showMandatoryOnly() && !widgetRegistry.get(zodUtil.unwrap(schema))?.mostRelevant) return false;
     if (this.displayMode() === DisplayMode.Public && !widgetRegistry.get(zodUtil.unwrap(schema))?.public) return false;
     if (this.displayMode() === DisplayMode.FilledOut && !zodUtil.hasValue(this.value()?.[key])) return false;
     const showIf = widgetRegistry.get(zodUtil.unwrap(schema))?.showIf;

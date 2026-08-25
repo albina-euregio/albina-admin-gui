@@ -89,8 +89,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   get previewDisplayModes(): DisplayMode[] {
     return [DisplayMode.All, DisplayMode.Public, DisplayMode.FilledOut];
   }
-  /** Tabs visible to the current user; the analysis tab is forecaster-only. */
+  /**
+   * Tabs visible to the current user; the analysis tab is forecaster-only. In the
+   * {@link DisplayMode.EditMostRelevant} mode, Other Damages, Incident Analysis and
+   * Attachments are dropped entirely: they hold no "most relevant" fields.
+   */
   get allTabs() {
+    const isMostRelevant = this.displayMode === DisplayMode.EditMostRelevant;
     return [
       { id: "general", label: "incidentReport.generalInformation", schema: IncidentModels.GeneralInformationSchema },
       { id: "bulletin", label: "incidentReport.bulletinInformation", schema: IncidentModels.BulletinInformationSchema },
@@ -100,18 +105,32 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         schema: IncidentModels.AvalancheInformationSchema,
       },
       { id: "group", label: "incidentReport.personInvolvement" },
-      { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
+      ...(isMostRelevant
+        ? ([] as const)
+        : ([
+            { id: "other-damages", label: "incidentReport.otherDamages", schema: IncidentModels.OtherDamagesSchema },
+          ] as const)),
       // The incident analysis is forecaster-only.
-      ...(this.userCan("VIEW_ANALYSIS")
+      ...(this.userCan("VIEW_ANALYSIS") && !isMostRelevant
         ? ([
             { id: "analysis", label: "incidentReport.incidentAnalysis", schema: IncidentModels.IncidentAnalysisSchema },
           ] as const)
         : ([] as const)),
-      { id: "attachments", label: "incidentReport.incidentAttachments" },
+      ...(isMostRelevant
+        ? ([] as const)
+        : ([{ id: "attachments", label: "incidentReport.incidentAttachments" }] as const)),
     ] as const;
   }
 
   activeTab: (typeof this.allTabs)[number]["id"] = "general";
+
+  /** Switches the display mode, moving off a tab that the new mode hides. */
+  setDisplayMode(mode: DisplayMode) {
+    this.displayMode = mode;
+    if (!this.allTabs.some((tab) => tab.id === this.activeTab)) {
+      this.activeTab = this.allTabs[0].id;
+    }
+  }
 
   get prevTab(): (typeof this.allTabs)[number]["id"] {
     const tabs = this.allTabs;

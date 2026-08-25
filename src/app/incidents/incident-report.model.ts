@@ -86,18 +86,14 @@ export const BulletinInformationSchema = z.object({
   dangerRating: z
     .enum(Enums.DangerRating)
     .exclude([Enums.DangerRating.missing])
-    .register(widgetRegistry, { widget: "dangerRating", public: true })
+    .register(widgetRegistry, { widget: "dangerRating", public: true, mostRelevant: true })
     .nullish(),
 
   avalancheProblems: AvalancheProblemSchema.array()
-    .register(widgetRegistry, { widget: "none", public: true, mostRelevant: true })
+    .register(widgetRegistry, { widget: "none", public: true })
     .default(() => [{}]),
 
-  dangerPattern: z
-    .enum(Enums.DangerPattern)
-    .array()
-    .register(widgetRegistry, { public: true, mostRelevant: true })
-    .nullish(),
+  dangerPattern: z.enum(Enums.DangerPattern).array().register(widgetRegistry, { public: true }).nullish(),
 
   bulletinInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
 });
@@ -378,6 +374,7 @@ export const AvalancheInformationSchema = z.object({
       valueI18n: "avalancheProblem.#",
       widget: "avalancheProblem",
       public: true,
+      mostRelevant: true,
     })
     .nullish(),
   avalancheLength: z.number().register(widgetRegistry, { unit: "m", public: true }).nullish(),
@@ -405,7 +402,7 @@ export const AvalancheInformationSchema = z.object({
     .nullish(),
   startZoneIncline: z
     .number()
-    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "°", public: true })
+    .register(widgetRegistry, { class: "col-6 bg-avalanche-start-zone", unit: "°", public: true, mostRelevant: true })
     .nullish(),
   startZoneMoisture: z
     .enum(["Dry", "Moist", "Wet", "Unknown"])
@@ -435,7 +432,7 @@ export const AvalancheInformationSchema = z.object({
     .register(widgetRegistry, { class: "bg-avalanche-start-zone" })
     .nullish(),
   trigger: enumWithOther(z.enum(["natural", "person", "explosives", "vehicle", "unknown"]))
-    .register(widgetRegistry, { class: "bg-avalanche-trigger", public: true })
+    .register(widgetRegistry, { class: "bg-avalanche-trigger", public: true, mostRelevant: true })
     .nullish(),
   remoteTriggering: z
     .enum(["Yes", "No"])
@@ -616,8 +613,8 @@ export const IncidentReportSchema = z.object({
     .register(widgetRegistry, { public: true, mostRelevant: true })
     .nullish(),
   ...OtherDamagesSchema.shape,
-  groupInformation: GroupInformationSchema.array().register(widgetRegistry, { mostRelevant: true }).nullish(),
-  victimInformation: VictimInformationSchema.array().register(widgetRegistry, { mostRelevant: true }).nullish(),
+  groupInformation: GroupInformationSchema.array().register(widgetRegistry, {}).nullish(),
+  victimInformation: VictimInformationSchema.array().register(widgetRegistry, {}).nullish(),
   involvementsFatalitiesBurials: InvolvementsFatalitiesBurialsSchema.nullish(),
   ...IncidentAnalysisSchema.shape,
   ...IncidentLinksSchema.shape,

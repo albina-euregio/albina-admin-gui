@@ -129,7 +129,7 @@
       <app-toggle-btn-group
         [enumValues]="editDisplayModes"
         [value]="displayMode"
-        (valueChange)="displayMode = $event ?? DisplayMode.Edit"
+        (valueChange)="setDisplayMode($event ?? DisplayMode.Edit)"
         [labelI18n]="'incidentReportUI.displayMode.#'"
       />
     }

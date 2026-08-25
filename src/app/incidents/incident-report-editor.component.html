@@ -321,7 +321,7 @@
           {{ "incidentReportUI.overview" | translate }}
         </button>
       </li>
-      @if (incidentReport().personInvolvement === "Yes") {
+      @if (incidentReport().personInvolvement === "Yes" && !isMostRelevantMode) {
         <li class="nav-item">
           <button
             class="nav-link d-flex align-items-center gap-2"
@@ -336,7 +336,7 @@
           </button>
         </li>
       }
-      @if (incidentReport().personInvolvement === "Yes") {
+      @if (incidentReport().personInvolvement === "Yes" && !isMostRelevantMode) {
         <li class="nav-item">
           <button
             class="nav-link d-flex align-items-center gap-2"
@@ -364,7 +364,7 @@
         [helpI18n]="helpI18n"
       />
 
-      @if (incidentReport().personInvolvement === "Yes") {
+      @if (incidentReport().personInvolvement === "Yes" && !isMostRelevantMode) {
         <div class="rounded border bg-body-secondary px-3 py-3 mt-3">
           <h4 class="mb-3 text-secondary d-flex align-items-center gap-2">
             <i class="ph ph-calculator"></i>
@@ -379,18 +379,20 @@
           />
         </div>
       }
-      <app-zod-schema-form
-        [displayMode]="displayMode()"
-        [value]="involvementsFatalitiesBurials"
-        [zodType]="InvolvementsCommentSchema"
-        [labelI18n]="labelI18n"
-        [helpI18n]="helpI18n"
-        (valueChange)="onInvolvementsCommentChange($event)"
-      />
+      @if (!isMostRelevantMode) {
+        <app-zod-schema-form
+          [displayMode]="displayMode()"
+          [value]="involvementsFatalitiesBurials"
+          [zodType]="InvolvementsCommentSchema"
+          [labelI18n]="labelI18n"
+          [helpI18n]="helpI18n"
+          (valueChange)="onInvolvementsCommentChange($event)"
+        />
+      }
     }
 
     <!-- Groups sub-tab -->
-    @if (activeGroupSubTab === "groups" || displayOnly) {
+    @if ((activeGroupSubTab === "groups" && !isMostRelevantMode) || displayOnly) {
       @if (!incidentReport().groupInformation?.length && displayOnly) {
         <div class="alert alert-info">{{ "incidentReportUI.noGroups" | translate }}</div>
       } @else if (displayOnly) {
@@ -475,7 +477,7 @@
     }
 
     <!-- Victims sub-tab -->
-    @if (activeGroupSubTab === "victims" || displayOnly) {
+    @if ((activeGroupSubTab === "victims" && !isMostRelevantMode) || displayOnly) {
       @if (!incidentReport().victimInformation?.length && displayOnly) {
         <div class="alert alert-info">{{ "incidentReportUI.noVictims" | translate }}</div>
       } @else if (displayOnly) {

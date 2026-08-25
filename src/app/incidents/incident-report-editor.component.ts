@@ -114,12 +114,24 @@ export class IncidentReportEditorComponent implements OnInit {
     return !isEditableDisplayMode(this.displayMode());
   }
 
+  /** True in {@link DisplayMode.EditMostRelevant}: hides group/victim management, keeping only the `personInvolvement` selection. */
+  get isMostRelevantMode(): boolean {
+    return this.displayMode() === DisplayMode.EditMostRelevant;
+  }
+
   constructor() {
     // (Re-)initialise and fit the map whenever the location tab becomes active;
     // the map element only exists in the DOM while that tab is rendered.
     effect(() => {
       if (this.activeTab() === "general") {
         setTimeout(() => this.mapService.initLocationMap(), 50);
+      }
+    });
+    // The group/victim sub-tabs are unreachable in "most relevant" mode; reset off
+    // them so a stale selection from Edit mode doesn't linger when switching modes.
+    effect(() => {
+      if (this.isMostRelevantMode) {
+        this.activeGroupSubTab = "overview";
       }
     });
     // Seed the geocoder's last point when a persisted report first appears so
