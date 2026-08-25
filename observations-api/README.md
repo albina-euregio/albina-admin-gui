@@ -64,7 +64,6 @@ Environment=ALBINA_LOLA_KRONOS_API_TOKEN=
 Environment=ALBINA_LWDKIP_PASSWORD=
 Environment=ALBINA_LWDKIP_USERNAME=
 Environment=ALBINA_SMET_API=
-Environment=ALBINA_WIKISNOW_API=
 Environment=MYSQL_HOST=
 Environment=MYSQL_PORT=
 Environment=MYSQL_USER=
