@@ -21,7 +21,7 @@ export interface WidgetType {
   /** Phosphor icon class rendered before the field label. */
   icon?: `ph ph-${string}`;
   /** Marks the field as most-relevant (intended for a "most relevant" edit/preview view). */
-  important?: boolean;
+  mostRelevant?: boolean;
   /** Field is included in the public preview (`DisplayMode.Public`); others are hidden there. */
   public?: boolean;
   /** Input control to render; `"none"` hides the field entirely. */
