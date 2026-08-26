@@ -149,6 +149,12 @@ build:aran:
   environment:
     name: aran
 
+# The dist an AWSOME server or container installs, straight from this pipeline.
+build:awsome:
+  extends: .copy-env
+  environment:
+    name: awsome
+
 build:docker:
   extends: .copy-env
   environment:

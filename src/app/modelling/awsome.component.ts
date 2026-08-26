@@ -251,9 +251,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private get baseURL() {
+    // Relative URLs in the config are relative to the app, not to the route the
+    // user happens to be on: resolve against <base href>, which is the app root
+    // wherever it is mounted. location.href would be ".../modelling/awsome" and
+    // would send every source, timeseries and details URL one level too deep.
     return this.configURL.endsWith("dcfg/awsome.json")
-      ? new URL(this.configURL.replace("dcfg/awsome.json", ""), location.href)
-      : location.href;
+      ? new URL(this.configURL.replace("dcfg/awsome.json", ""), document.baseURI)
+      : document.baseURI;
   }
 
   private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {
