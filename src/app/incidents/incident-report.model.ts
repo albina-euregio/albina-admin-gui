@@ -570,10 +570,10 @@ withShowIf(OtherDamagesSchema, {
 });
 
 export const IncidentAnalysisSchema = z.object({
-  recentSlabAvalanches: z.enum(["Present", "Absent", "Unknown"]).nullish(),
-  signsOfInstability: z.enum(["Present", "Absent", "Unknown"]).nullish(),
-  recentLoading: z.enum(["Present", "Absent", "Unknown"]).nullish(),
-  criticalWarming: z.enum(["Present", "Absent", "Unknown"]).nullish(),
+  recentSlabAvalanches: z.enum(["Present", "Absent", "Unknown"]).register(widgetRegistry, { public: true }).nullish(),
+  signsOfInstability: z.enum(["Present", "Absent", "Unknown"]).register(widgetRegistry, { public: true }).nullish(),
+  recentLoading: z.enum(["Present", "Absent", "Unknown"]).register(widgetRegistry, { public: true }).nullish(),
+  criticalWarming: z.enum(["Present", "Absent", "Unknown"]).register(widgetRegistry, { public: true }).nullish(),
   incidentLedePublic: z.boolean().nullish(),
   incidentLede: LangTextsSchema.register(widgetRegistry, { widget: "rich-text-multilang" }).nullish(),
   incidentDescriptionPublic: z.boolean().nullish(),
