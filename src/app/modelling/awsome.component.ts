@@ -319,8 +319,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.config$q;
     let regions: FeatureCollection<MultiPolygon, RegionProperties> | undefined;
     if (this.config.regions?.url) {
+      // like every other URL in the config: relative to the app, not the route
       regions = await firstValueFrom(
-        this.fetchJSON<FeatureCollection<MultiPolygon, RegionProperties>>(this.config.regions?.url),
+        this.fetchJSON<FeatureCollection<MultiPolygon, RegionProperties>>(
+          new URL(this.config.regions.url, this.baseURL).toString(),
+        ),
       );
     }
 
