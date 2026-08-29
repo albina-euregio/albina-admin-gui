@@ -5,7 +5,7 @@
   },
   "login": {
     "title": "Login",
-    "text": "Accedi al tuo account",
+    "text": "Login to your account",
     "button": "Login",
     "stressLevel": "Livello di stress",
     "errorDialog": {
@@ -15,6 +15,9 @@
     "placeholder": {
       "username": "Inserire nome utente",
       "password": "Inserire password"
+    },
+    "passkey": {
+      "button": "Login with a passkey"
     }
   },
   "sidebar": {
@@ -665,9 +668,7 @@
       },
       "decisionTree": {
         "filepath": "./assets/img/decision_tree-it.svg",
-        "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
         "decisionTree": "Albero decisionale",
-        "feedback": "Feedback",
         "save": "Salva",
         "discard": "Scarta"
       }
@@ -1042,6 +1043,20 @@
         "showCaaml": "Mostra CAAML",
         "showJson": "Mostra JSON"
       }
+    },
+    "passkeys": {
+      "title": "Passkeys",
+      "unsupported": "Your browser does not support passkeys.",
+      "empty": "No passkeys registered yet.",
+      "unnamed": "Passkey",
+      "lastUsed": "Last used",
+      "neverUsed": "Never used",
+      "namePlaceholder": "e.g. iPhone, YubiKey",
+      "add": "Add passkey",
+      "delete": "Delete",
+      "added": "Passkey added",
+      "addError": "Could not add passkey",
+      "deleteError": "Could not delete passkey"
     }
   },
   "statistics": {
