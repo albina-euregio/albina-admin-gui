@@ -19,6 +19,7 @@ export class AvalanchePhotoDetailComponent {
 
   readonly bulletin = input<BulletinModel>(undefined);
   readonly photo = input<BulletinPhotoModel>(undefined);
+  /** Set by the parent from `CreateBulletinComponent.isDisabled()`. */
   readonly disabled = input<boolean>(undefined);
   readonly changeAvalanchePhotoDetailEvent = output();
 

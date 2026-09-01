@@ -75,7 +75,7 @@ export class FullLayoutComponent {
       if (
         this.router.url.startsWith("/bulletins/") &&
         !this.router.url.endsWith("/publication") &&
-        this.bulletinsService.getIsEditable()
+        this.bulletinsService.canWrite()
       ) {
         this.tmpRegion = region;
         this.openChangeRegionModal(this.changeRegionTemplate());

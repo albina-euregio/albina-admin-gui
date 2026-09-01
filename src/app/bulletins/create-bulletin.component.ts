@@ -479,17 +479,31 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.removeMaps();
 
     this.bulletinsService.sourceDates.setActiveDate(undefined);
-    this.bulletinsService.setIsEditable(false);
+    this.bulletinsService.setStatusAllowsEditing(false);
 
     this.loading = false;
     this.editRegions = false;
     this.copying = false;
   }
 
+  /**
+   * Whether the bulletin form must reject writes right now. Folds together
+   * every reason editing is currently impossible:
+   *
+   * - `loading`: a request is in flight, so the model is in flux;
+   * - `!canWrite()`: the date's status forbids edits, or it was opened read-only;
+   * - `editRegions`: the micro-region editor owns the interaction;
+   * - `!isCreator(...)`: the active bulletin belongs to another region;
+   * - `OBSERVER`: the role may never write.
+   *
+   * Passed down to the child components as their `disabled` input, which
+   * is the single source of truth for "editing is off" -- children must not
+   * re-derive it from the service.
+   */
   isDisabled() {
     return (
       this.loading ||
-      !this.bulletinsService.getIsEditable() ||
+      !this.bulletinsService.canWrite() ||
       this.editRegions ||
       !this.isCreator(this.activeBulletin) ||
       this.authenticationService.isCurrentUserInRole("OBSERVER")
@@ -2171,7 +2185,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         } else if (this.bulletinsService.getActiveRegionStatus(date) === Enums.BulletinStatus.draft) {
           this.bulletinsService.setActiveRegionStatus(date, Enums.BulletinStatus.submitted);
         }
-        this.bulletinsService.setIsEditable(false);
+        this.bulletinsService.setStatusAllowsEditing(false);
         this.submitting = false;
       },
       error: (error) => {
@@ -2216,7 +2230,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   createUpdate(event: Event) {
     event.stopPropagation();
     this.updateBulletinStatusEdit();
-    this.bulletinsService.setIsEditable(true);
+    this.bulletinsService.setStatusAllowsEditing(true);
     this.save();
   }
 

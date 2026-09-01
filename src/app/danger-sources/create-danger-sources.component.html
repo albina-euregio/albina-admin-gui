@@ -105,7 +105,7 @@
       <!-- Own danger sources -->
       <header class="create-bulletin__region-divider" style="background: none; border-top: none">
         <h5 class="font-s-bold w-100">
-          @if (dangerSourcesService.getIsEditable()) {
+          @if (dangerSourcesService.canWrite()) {
             <button
               [disabled]="editRegions || loading"
               (click)="createDangerSource()"
@@ -146,7 +146,7 @@
               </li>
               <!-- load danger sources from yesterday -->
               <li>
-                @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
+                @if (dangerSourcesService.canWrite()) {
                   <button
                     [disabled]="editRegions || loading"
                     type="button"
@@ -161,11 +161,7 @@
               </li>
               <!-- load variants from forecast of the same day -->
               <li>
-                @if (
-                  dangerSourcesService.getIsEditable() &&
-                  !dangerSourcesService.getIsReadOnly() &&
-                  hasForecastVariantsInList
-                ) {
+                @if (dangerSourcesService.canWrite() && hasForecastVariantsInList) {
                   <button
                     [disabled]="editRegions || loading"
                     type="button"
@@ -373,7 +369,7 @@
           <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
             <!-- load variants from yesterday -->
             <li>
-              @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
+              @if (dangerSourcesService.canWrite()) {
                 <button
                   [disabled]="editRegions || loading"
                   type="reset"
@@ -391,7 +387,7 @@
               <hr class="dropdown-divider" />
             </li>
             <li>
-              @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
+              @if (dangerSourcesService.canWrite()) {
                 <button
                   [disabled]="editRegions || loading"
                   type="reset"
@@ -406,11 +402,7 @@
               }
             </li>
             <li>
-              @if (
-                dangerSourcesService.getIsEditable() &&
-                !dangerSourcesService.getIsReadOnly() &&
-                hasForecastVariantsForDangerSource(dangerSource.id)
-              ) {
+              @if (dangerSourcesService.canWrite() && hasForecastVariantsForDangerSource(dangerSource.id)) {
                 <button
                   [disabled]="editRegions || loading"
                   type="reset"
@@ -439,7 +431,7 @@
           </button>
         </div>
         <div style="height: 100%; padding-left: 3px">
-          @if (dangerSourcesService.getIsEditable()) {
+          @if (dangerSourcesService.canWrite()) {
             <button
               [disabled]="editRegions || loading"
               (click)="$event.stopPropagation(); createVariant(dangerSource)"
@@ -588,7 +580,7 @@
         </button>
       }
 
-      @if (dangerSourcesService.getIsEditable()) {
+      @if (dangerSourcesService.canWrite()) {
         <button
           [disabled]="loading || editRegions"
           type="button"

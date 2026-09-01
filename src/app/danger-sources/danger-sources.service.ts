@@ -31,7 +31,18 @@ export class DangerSourcesService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
-  private isEditable: boolean;
+  /**
+   * Whether the danger-source editor is mounted for an active date and a
+   * logged-in user. Unlike the bulletins service this is *not* derived from a
+   * status -- it is simply set on activation and cleared on destroy. Says
+   * nothing about the current user or about read-only mode; use
+   * {@link canWrite} to decide whether the UI may write.
+   */
+  private editorActive: boolean;
+  /**
+   * Whether the active date was opened for viewing only (`?readOnly=true`).
+   * Independent of {@link editorActive}.
+   */
   private isReadOnly: boolean;
 
   public forecastStatusMap: Map<number, boolean>;
@@ -47,7 +58,7 @@ export class DangerSourcesService {
   );
 
   init({ days } = { days: 10 }) {
-    this.isEditable = false;
+    this.editorActive = false;
     this.isReadOnly = false;
     this.sourceDates.init(days);
     this.loadStatus();
@@ -111,12 +122,18 @@ export class DangerSourcesService {
     ).pipe(map((res) => schema.parse(res.data)));
   }
 
-  getIsEditable(): boolean {
-    return this.isEditable && !this.isReadOnly;
+  /**
+   * Whether the active date may be written to at all: the editor is live and
+   * we are not in read-only mode. This is a property of the *date*, not of the
+   * current user or of any in-flight request -- components additionally check
+   * creator/role/loading, see `isDisabled()`.
+   */
+  canWrite(): boolean {
+    return this.editorActive && !this.isReadOnly;
   }
 
-  setIsEditable(isEditable: boolean) {
-    this.isEditable = isEditable;
+  setEditorActive(editorActive: boolean) {
+    this.editorActive = editorActive;
   }
 
   getIsReadOnly(): boolean {

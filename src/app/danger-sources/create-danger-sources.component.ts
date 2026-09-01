@@ -189,7 +189,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       this.loadDangerSourcesFromServer();
       this.mapService.deselectAggregatedRegion();
 
-      this.dangerSourcesService.setIsEditable(true);
+      this.dangerSourcesService.setEditorActive(true);
     } else {
       this.goBack();
     }
@@ -288,17 +288,31 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.mapService.removeMaps();
 
     this.dangerSourcesService.sourceDates.activeDate = undefined;
-    this.dangerSourcesService.setIsEditable(false);
+    this.dangerSourcesService.setEditorActive(false);
 
     this.loading = false;
     this.editRegions = false;
     this.copying = false;
   }
 
+  /**
+   * Whether the variant form must reject writes right now. Folds together
+   * every reason editing is currently impossible:
+   *
+   * - `loading`: a request is in flight, so the model is in flux;
+   * - `!canWrite()`: the editor is not live, or the date was opened read-only;
+   * - `editRegions`: the micro-region editor owns the interaction;
+   * - `!isCreator(...)`: the active variant belongs to another region;
+   * - `OBSERVER`: the role may never write.
+   *
+   * Passed down to the child components as their `disabled` input, which is
+   * the single source of truth for "editing is off" -- children must not
+   * re-derive it from the service.
+   */
   isDisabled() {
     return (
       this.loading ||
-      !this.dangerSourcesService.getIsEditable() ||
+      !this.dangerSourcesService.canWrite() ||
       this.editRegions ||
       !this.isCreator(this.activeVariant) ||
       this.authenticationService.isCurrentUserInRole("OBSERVER")

@@ -135,7 +135,6 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     [DangerSign.glide_cracks]: !this.isAvalancheType(Enums.AvalancheType.glide),
   });
 
-  public editRegions: boolean;
   public isEditingTitle = false;
   @ViewChild("titleInput") titleInput?: ElementRef<HTMLInputElement>;
 
@@ -233,9 +232,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   }
 
   showEditMicroRegionsButton(): boolean {
-    return (
-      !this.isComparedVariant() && !this.editRegions && this.isInternal() && this.dangerSourcesService.getIsEditable()
-    );
+    return !this.isComparedVariant() && this.isInternal() && this.dangerSourcesService.canWrite();
   }
 
   isCreator(variant: DangerSourceVariantModel): boolean {

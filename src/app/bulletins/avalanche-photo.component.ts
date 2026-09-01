@@ -21,6 +21,7 @@ export class AvalanchePhotoComponent {
   regionsService = inject(RegionsService);
 
   readonly bulletin = input<BulletinModel>(undefined);
+  /** Set by the parent from `CreateBulletinComponent.isDisabled()`. */
   readonly disabled = input<boolean>(undefined);
   readonly updateBulletinOnServer = output();
 

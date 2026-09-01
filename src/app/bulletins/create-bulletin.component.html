@@ -439,10 +439,7 @@
 
               <!-- load bulletin from yesterday -->
               <li>
-                @if (
-                  (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) ||
-                  localStorageService.isTrainingEnabled
-                ) {
+                @if (bulletinsService.canWrite() || localStorageService.isTrainingEnabled) {
                   <button
                     [disabled]="editRegions || loading"
                     type="reset"
@@ -482,8 +479,7 @@
 
               <!-- upload json -->
               @if (
-                bulletinsService.getIsEditable() &&
-                !bulletinsService.getIsReadOnly() &&
+                bulletinsService.canWrite() &&
                 authenticationService.isCurrentUserInRole("ADMIN") // experimental feature for now
               ) {
                 <li>
@@ -501,7 +497,7 @@
                   </button>
                 </li>
               }
-              @if (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) {
+              @if (bulletinsService.canWrite()) {
                 <li>
                   <button
                     [disabled]="editRegions || loading"
@@ -576,7 +572,7 @@
               </li>
             </ul>
           </div>
-          @if (bulletinsService.getIsEditable() && !this.copyService.isCopyBulletin()) {
+          @if (bulletinsService.canWrite() && !this.copyService.isCopyBulletin()) {
             <button
               [disabled]="editRegions || loading"
               (click)="createBulletin(false)"
@@ -960,7 +956,7 @@
         </button>
       }
 
-      @if (bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin)) {
+      @if (bulletinsService.canWrite() && !hasSuggestions(bulletin) && isCreator(bulletin)) {
         <button
           [disabled]="loading || editRegions"
           type="button"

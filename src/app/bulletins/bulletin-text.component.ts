@@ -31,6 +31,7 @@ export class BulletinTextComponent {
 
   readonly textField = input<Enums.TextcatTextfield>(undefined);
   readonly rows = input<number>(undefined);
+  /** Set by the parent from `CreateBulletinComponent.isDisabled()`. */
   readonly disabled = input<boolean>(undefined);
   readonly bulletin = input<BulletinModel>(undefined);
   readonly comparedBulletin = input<BulletinModel>(undefined);

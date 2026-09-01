@@ -67,6 +67,7 @@ export class AvalancheBulletinComponent implements OnInit {
 
   readonly bulletin = input<BulletinModel>(undefined);
   readonly comparedBulletin = input<BulletinModel>(undefined);
+  /** Set by the parent from `CreateBulletinComponent.isDisabled()`. */
   readonly disabled = input<boolean>(undefined);
   readonly isCompactMapLayout = input<boolean>(undefined);
   readonly isBulletinSidebarVisible = input<boolean>(undefined);
@@ -84,8 +85,6 @@ export class AvalancheBulletinComponent implements OnInit {
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
   strategicMindset: Enums.StrategicMindset[] = Object.values(Enums.StrategicMindset);
-
-  public editRegions: boolean;
 
   public accordionOpen: Partial<Record<AccordionGroupName, boolean>> = {};
 
@@ -209,9 +208,7 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 
   showEditMicroRegionsButton(): boolean {
-    return (
-      !this.isComparedBulletin() && !this.editRegions && this.isInternal() && this.bulletinsService.getIsEditable()
-    );
+    return !this.isComparedBulletin() && this.isInternal() && this.bulletinsService.canWrite();
   }
 
   accordionChanged(isOpen: boolean, groupName: AccordionGroupName) {
@@ -255,7 +252,7 @@ export class AvalancheBulletinComponent implements OnInit {
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
     const bulletin = this.bulletin();
-    if (this.bulletinsService.getIsEditable() && this.isCreator(bulletin)) {
+    if (this.bulletinsService.canWrite() && this.isCreator(bulletin)) {
       if (value) {
         bulletin.hasDaytimeDependency = value;
 

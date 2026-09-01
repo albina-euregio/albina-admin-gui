@@ -102,25 +102,25 @@
     </select>
   </div>
 
-  @if (!this.isComparedVariant() && dangerSourcesService.getIsEditable() && isCreator(variant())) {
+  <!-- these two banners are exact complements: disabled() already folds in
+       canWrite(), isCreator() and the region/role checks -- do not re-derive them -->
+  @if (!disabled()) {
     <div class="region-form__banner banner banner-info">
       <p class="banner__text">
         <i class="ph ph-pencil-line"></i>
         {{ "dangerSources.create.variantEditable" | translate }}
       </p>
       <div class="btn-group banner__actions">
-        @if (!editRegions) {
-          <button
-            (click)="editMicroRegions()"
-            data-toggle="tooltip"
-            title="{{ 'dangerSources.create.tooltip.edit' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-          >
-            <i class="ph ph-globe-hemisphere-west"></i>
-          </button>
-        }
-        @if (!editRegions && !authenticationService.isCurrentUserInRole("OBSERVER")) {
+        <button
+          (click)="editMicroRegions()"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.edit' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+        >
+          <i class="ph ph-globe-hemisphere-west"></i>
+        </button>
+        @if (!authenticationService.isCurrentUserInRole("OBSERVER")) {
           <button
             (click)="copyVariant()"
             data-toggle="tooltip"
@@ -131,52 +131,42 @@
             <i class="ph ph-copy"></i>
           </button>
         }
-        @if (!editRegions) {
-          <button
-            (click)="deleteVariant()"
-            data-toggle="tooltip"
-            title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-          >
-            <i class="ph ph-trash"></i>
-          </button>
-        }
-        @if (!editRegions) {
-          <button
-            (click)="undoRedoEvent.emit('undo')"
-            [disabled]="!dangerSourcesService.undoRedo.isEnabled('undo', variant().id)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.undo' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-            ngxMousetrapKey="mod+z"
-          >
-            <i class="ph ph-arrow-counter-clockwise"></i>
-          </button>
-        }
-        @if (!editRegions) {
-          <button
-            (click)="undoRedoEvent.emit('redo')"
-            [disabled]="!dangerSourcesService.undoRedo.isEnabled('redo', variant().id)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.redo' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-            ngxMousetrapKey="mod+y"
-          >
-            <i class="ph ph-arrow-clockwise"></i>
-          </button>
-        }
+        <button
+          (click)="deleteVariant()"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+        >
+          <i class="ph ph-trash"></i>
+        </button>
+        <button
+          (click)="undoRedoEvent.emit('undo')"
+          [disabled]="!dangerSourcesService.undoRedo.isEnabled('undo', variant().id)"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.undo' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+          ngxMousetrapKey="mod+z"
+        >
+          <i class="ph ph-arrow-counter-clockwise"></i>
+        </button>
+        <button
+          (click)="undoRedoEvent.emit('redo')"
+          [disabled]="!dangerSourcesService.undoRedo.isEnabled('redo', variant().id)"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.redo' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+          ngxMousetrapKey="mod+y"
+        >
+          <i class="ph ph-arrow-clockwise"></i>
+        </button>
       </div>
     </div>
   }
 
-  @if (
-    this.isComparedVariant() ||
-    !dangerSourcesService.getIsEditable() ||
-    (dangerSourcesService.getIsEditable() && !isCreator(variant()))
-  ) {
+  @if (disabled()) {
     <div class="region-form__banner banner banner-warning">
       <p class="banner__text">
         <i class="ph ph-pencil-slash"></i>

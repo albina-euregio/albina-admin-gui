@@ -58,7 +58,18 @@ export class BulletinsService {
 
   public readonly sourceDates = new SourceDates();
   private copyDate: [Date, Date];
-  private isEditable: boolean;
+  /**
+   * Whether the active date's bulletin status permits editing at all
+   * (see {@link updateEditable}). Says nothing about the current user or
+   * about read-only mode -- use {@link canWrite} to decide whether the UI
+   * may write.
+   */
+  private statusAllowsEditing: boolean;
+  /**
+   * Whether the active date was opened for viewing only (`?readOnly=true`).
+   * Independent of {@link statusAllowsEditing}: a draft bulletin is still
+   * status-editable while being viewed read-only.
+   */
   private isReadOnly: boolean;
 
   public stress: Record<StressLevel["date"], StressLevel["stressLevel"]> = {};
@@ -83,7 +94,7 @@ export class BulletinsService {
 
   init({ days } = { days: 10 }) {
     this.copyDate = undefined;
-    this.isEditable = false;
+    this.statusAllowsEditing = false;
     this.isReadOnly = false;
 
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
@@ -168,12 +179,18 @@ export class BulletinsService {
     this.copyDate = date;
   }
 
-  getIsEditable(): boolean {
-    return this.isEditable && !this.isReadOnly;
+  /**
+   * Whether the active date may be written to at all: the status permits
+   * editing and we are not in read-only mode. This is a property of the
+   * *date*, not of the current user or of any in-flight request -- components
+   * additionally check creator/role/loading, see `isDisabled()`.
+   */
+  canWrite(): boolean {
+    return this.statusAllowsEditing && !this.isReadOnly;
   }
 
-  setIsEditable(isEditable: boolean) {
-    this.isEditable = isEditable;
+  setStatusAllowsEditing(statusAllowsEditing: boolean) {
+    this.statusAllowsEditing = statusAllowsEditing;
   }
 
   getIsReadOnly(): boolean {
@@ -612,8 +629,9 @@ export class BulletinsService {
     this.accordionChangedSubject.next(event);
   }
 
+  /** Recomputes {@link statusAllowsEditing} from the active region's status. */
   updateEditable() {
-    this.setIsEditable(
+    this.setStatusAllowsEditing(
       ((this.getActiveRegionStatus() === Enums.BulletinStatus.missing || this.getActiveRegionStatus() === undefined) &&
         !this.sourceDates.hasBeenPublished5PM()) ||
         this.getActiveRegionStatus() === Enums.BulletinStatus.updated ||

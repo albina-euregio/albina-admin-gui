@@ -23,6 +23,7 @@ export class AvalancheProblemComponent {
   readonly comparedBulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly isComparedBulletin = input<boolean>(undefined);
   readonly afternoon = input<boolean>(undefined);
+  /** Set by the parent from `CreateBulletinComponent.isDisabled()`. */
   readonly disabled = input<boolean>(undefined);
   readonly changeAvalancheProblemEvent = output();
 

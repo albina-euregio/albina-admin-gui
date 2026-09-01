@@ -61,14 +61,16 @@
     </div>
   }
 
-  @if (!disabled() && bulletinsService.getIsEditable() && isCreator(bulletin())) {
+  <!-- these two banners are exact complements: disabled() already folds in
+       canWrite(), isCreator() and the region/role checks -- do not re-derive them -->
+  @if (!disabled()) {
     <div class="region-form__banner banner banner-info">
       <p class="banner__text">
         <i class="ph ph-pencil-line"></i>
         {{ "bulletins.create.regionEditable" | translate }}
       </p>
       <div class="btn-group banner__actions">
-        @if (!editRegions && !isNoSnowSelected()) {
+        @if (!isNoSnowSelected()) {
           <button
             [class]="bulletin().hasDaytimeDependency ? 'btn-primary' : 'btn-outline-primary'"
             (click)="daytimeDependencyChanged($event, !bulletin().hasDaytimeDependency)"
@@ -80,18 +82,16 @@
             <i class="ph ph-sun-horizon"></i>
           </button>
         }
-        @if (!editRegions) {
-          <button
-            (click)="editMicroRegions()"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.edit' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-          >
-            <i class="ph ph-globe-hemisphere-west"></i>
-          </button>
-        }
-        @if (!editRegions && !copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole("OBSERVER")) {
+        <button
+          (click)="editMicroRegions()"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.edit' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+        >
+          <i class="ph ph-globe-hemisphere-west"></i>
+        </button>
+        @if (!copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole("OBSERVER")) {
           <button
             (click)="copyBulletin()"
             data-toggle="tooltip"
@@ -103,44 +103,38 @@
             <i class="ph ph-copy"></i>
           </button>
         }
-        @if (!editRegions) {
-          <button
-            (click)="deleteBulletin()"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.delete' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-            ngxMousetrapKey="del"
-          >
-            <i class="ph ph-trash"></i>
-          </button>
-        }
-        @if (!editRegions) {
-          <button
-            (click)="undoRedoEvent.emit('undo')"
-            [disabled]="!bulletinsService.undoRedo.isEnabled('undo', bulletin().id)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.undo' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-            ngxMousetrapKey="mod+z"
-          >
-            <i class="ph ph-arrow-counter-clockwise"></i>
-          </button>
-        }
-        @if (!editRegions) {
-          <button
-            (click)="undoRedoEvent.emit('redo')"
-            [disabled]="!bulletinsService.undoRedo.isEnabled('redo', bulletin().id)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.redo' | translate }}"
-            type="button"
-            class="btn btn-sm btn-icon btn-outline-primary"
-            ngxMousetrapKey="mod+y"
-          >
-            <i class="ph ph-arrow-clockwise"></i>
-          </button>
-        }
+        <button
+          (click)="deleteBulletin()"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.delete' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+          ngxMousetrapKey="del"
+        >
+          <i class="ph ph-trash"></i>
+        </button>
+        <button
+          (click)="undoRedoEvent.emit('undo')"
+          [disabled]="!bulletinsService.undoRedo.isEnabled('undo', bulletin().id)"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.undo' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+          ngxMousetrapKey="mod+z"
+        >
+          <i class="ph ph-arrow-counter-clockwise"></i>
+        </button>
+        <button
+          (click)="undoRedoEvent.emit('redo')"
+          [disabled]="!bulletinsService.undoRedo.isEnabled('redo', bulletin().id)"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.redo' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+          ngxMousetrapKey="mod+y"
+        >
+          <i class="ph ph-arrow-clockwise"></i>
+        </button>
       </div>
     </div>
 
@@ -169,12 +163,12 @@
         {{ "bulletins.create.pendingSuggestions" | translate }}
       </p>
       <div class="btn-group banner__actions">
-        @if (bulletinsService.getIsEditable()) {
+        @if (bulletinsService.canWrite()) {
           <button (click)="rejectSuggestions($event)" type="button" class="btn btn-sm btn-outline-dark">
             <i class="ph ph-x"></i> <span>{{ "bulletins.create.rejectSuggestion" | translate }}</span>
           </button>
         }
-        @if (bulletinsService.getIsEditable()) {
+        @if (bulletinsService.canWrite()) {
           <button (click)="acceptSuggestions($event)" type="button" class="btn btn-sm btn-dark">
             <i class="ph ph-check"></i><span>{{ "bulletins.create.acceptSuggestion" | translate }}</span>
           </button>
@@ -183,11 +177,7 @@
     </div>
   }
 
-  @if (
-    !bulletinsService.getIsEditable() ||
-    (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())) ||
-    disabled()
-  ) {
+  @if (disabled()) {
     <div class="region-form__banner banner banner-warning">
       <p class="banner__text">
         <i class="ph ph-pencil-slash"></i>
@@ -250,7 +240,7 @@
             <div class="btn-group accordion-header__buttons">
               @if (!disabled()) {
                 <button
-                  [disabled]="editRegions || hasFiveAvalancheProblems(false)"
+                  [disabled]="hasFiveAvalancheProblems(false)"
                   (click)="createAvalancheProblem(false); $event.stopPropagation()"
                   class="btn btn-primary btn-icon btn-sm ml-2"
                   title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -290,7 +280,7 @@
               <div class="btn-group accordion-header__buttons">
                 @if (!disabled()) {
                   <button
-                    [disabled]="editRegions || hasFiveAvalancheProblems(false) || !isCreator(bulletin())"
+                    [disabled]="hasFiveAvalancheProblems(false) || !isCreator(bulletin())"
                     (click)="createAvalancheProblem(true); $event.stopPropagation()"
                     class="btn btn-primary btn-icon btn-sm"
                     title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -416,7 +406,7 @@
             <div class="btn-group accordion-header__buttons">
               @if (!disabled()) {
                 <button
-                  [disabled]="editRegions || !isCreator(bulletin())"
+                  [disabled]="!isCreator(bulletin())"
                   (click)="createAvalanchePhoto(); $event.stopPropagation()"
                   class="btn btn-primary btn-icon btn-sm"
                   title="{{ 'bulletins.create.createAvalanchePhoto' | translate }}"

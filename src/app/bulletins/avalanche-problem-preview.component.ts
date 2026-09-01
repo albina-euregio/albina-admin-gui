@@ -30,6 +30,7 @@ export class AvalancheProblemPreviewComponent {
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly avalancheProblem = input<AvalancheProblemModel>(undefined);
   readonly count = input<number>(undefined);
+  /** Set by the parent from `CreateBulletinComponent.isDisabled()`. */
   readonly disabled = input<boolean>(undefined);
   readonly changeAvalancheProblemPreviewEvent = output();
 
