@@ -1,172 +1,138 @@
-import { Injectable, inject } from "@angular/core";
+import { Injectable, inject, signal } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ImageSource, Map as MlMap } from "maplibre-gl";
 
-function legend(label: string, color: string) {
-  return `<i style="color:${color}">■</i> ${label}`;
+/** A single `{ range: [from, to], color }` entry from the live config.json. */
+export interface RemoteThreshold {
+  range: [number | null, number | null];
+  color: string;
 }
+
+/** A single entry from the live config.json's `timeRanges`. */
+interface RemoteTimeRange {
+  timeRange: number;
+  timeStepHours: number;
+  imageOverlayURL: string;
+  dataOverlayURL: string;
+  initialValidity: [string, string];
+  initialTimestamp: string;
+  maxForecastTimestamp: string;
+  maxAnalysisTimestamp: string;
+}
+
+/**
+ * The shape of `.../zamg_meteo/overlays/{domain}/config.json`. The payload
+ * also carries `startDateURL`, a wiski.tirol.gv.at URL (no CORS headers)
+ * serving the same `startDate` this config already states — nothing reads it,
+ * so it is left out.
+ */
+interface RemoteDomainConfig {
+  parameter: string;
+  units: string;
+  thresholds: RemoteThreshold[];
+  timeRanges: RemoteTimeRange[];
+  startDate: string;
+  startDateModifyTimestamp: string;
+}
+
+function formatThreshold({ range: [from, to] }: RemoteThreshold, units: string): string {
+  if (from === null) return `<${to} ${units}`;
+  if (to === null) return `>${from} ${units}`;
+  return `${from}–${to} ${units}`;
+}
+
+const domains = [
+  "snow-height",
+  "new-snow",
+  "diff-snow",
+  "relative-snow",
+  "snow-line",
+  "temp",
+  "wind",
+  "gust",
+  "wind700hpa",
+] as const;
+
+type Domain = (typeof domains)[number];
 
 @Injectable()
 export class ZamgMeteoSourceService {
   private translateService = inject(TranslateService);
 
-  maps = Object.freeze([
-    ...[6, 12, 24, 48, 72].map(
-      (i) =>
-        new MapLink({
-          href: `https://static.avalanche.report/zamg_meteo/overlays/new-snow/{{date}}_new-snow_${String(i)}h_V2.gif`,
-          dateHref: "https://static.avalanche.report/zamg_meteo/overlays/new-snow/startDate.ok",
-          dateForceHour: i >= 24 ? "00:00" : undefined,
-          dateOffsetHour: i,
-          dateStepHour: Math.min(i, 24),
-          dateMin: i,
-          dateMax: i >= 48 ? i : 72,
-          label: i + "h " + this.translateService.instant("observations.weatherStations.tooltips.newSnow"),
-          attribution: [
-            legend("<1cm", "#fffffe"),
-            legend("1–5cm", "#ffffb3"),
-            legend("5–10cm", "#b0ffbc"),
-            legend("10–20cm", "#8cffff"),
-            legend("20–30cm", "#03cdff"),
-            legend("30–50cm", "#0481ff"),
-            legend("50–75cm", "#035bbe"),
-            legend("75–100cm", "#784bff"),
-            legend(">100cm", "#cc0ce8"),
-          ].join(", "),
-        }),
-    ),
-    new MapLink({
-      href: "https://static.avalanche.report/zamg_meteo/overlays/snow-line/{{date}}_snow-line_V3.gif",
-      dateHref: "https://static.avalanche.report/zamg_meteo/overlays/snow-line/startDate.ok",
-      dateOffsetHour: 1,
-      dateStepHour: 1,
-      dateMin: 1,
-      dateMax: 60,
-      label: this.translateService.instant("observations.weatherStations.tooltips.snowLine"),
-      attribution: [
-        legend("", "#c060ff"),
-        legend("", "#9b00e0"),
-        legend("", "#8000ff"),
-        legend("", "#6600c0"),
-        legend("500 m", "#330080"),
-        legend("", "#0000c0"),
-        legend("", "#00f"),
-        legend("", "#39f"),
-        legend("", "#80ccff"),
-        legend("1000 m", "#80ffff"),
-        legend("", "#00ffc0"),
-        legend("", "#00ff80"),
-        legend("", "#00e400"),
-        legend("", "#00c000"),
-        legend("1500 m", "#009b00"),
-        legend("", "green"),
-        legend("", "#609b00"),
-        legend("", "#9b9b00"),
-        legend("", "#c09b00"),
-        legend("2000 m", "#c0c000"),
-        legend("", "#c0e000"),
-        legend("", "#c0ff00"),
-        legend("", "#ff0"),
-        legend("", "#ffc000"),
-        legend("2500 m", "#ff9b00"),
-        legend("", "#ff8000"),
-        legend("", "red"),
-        legend("", "#e00000"),
-        legend("", "#c00000"),
-        legend("3000 m", "#b00000"),
-        legend("", "maroon"),
-        legend("", "#906"),
-        legend("", "#c00066"),
-        legend("", "#c06"),
-        legend("3500 m", "#cc005c"),
-      ].join(", "),
-    }),
-    new MapLink({
-      href: "https://static.avalanche.report/zamg_meteo/overlays/temp/{{date}}_temp_V3.gif",
-      dateHref: "https://static.avalanche.report/zamg_meteo/overlays/temp/startDate.ok",
-      dateOffsetHour: 1,
-      dateStepHour: 1,
-      dateMin: 1,
-      dateMax: 60,
-      label: this.translateService.instant("observations.weatherStations.tooltips.airTemperature"),
-      attribution: [
-        legend("-25 \u00b0C", "#9f80ff"),
-        legend("-25–-20 \u00b0C", "#784cff"),
-        legend("-20–-15 \u00b0C", "#0f5abe"),
-        legend("-15–-10 \u00b0C", "#1380ff"),
-        legend("-10–-5 \u00b0C", "#19cdff"),
-        legend("-5–0 \u00b0C", "#8fffff"),
-        legend("0–5 \u00b0C", "#b0ffbc"),
-        legend("5–10 \u00b0C", "#ffff73"),
-        legend("10–15 \u00b0C", "#ffbe7d"),
-        legend("15–20 \u00b0C", "#ff9b41"),
-        legend("20–25 \u00b0C", "#ff5a41"),
-        legend("25–30 \u00b0C", "#ff1e23"),
-        legend(">30 \u00b0C", "#fa3c96"),
-      ].join(", "),
-    }),
-    new MapLink({
-      href: "https://static.avalanche.report/zamg_meteo/overlays/wind700hpa/{{date}}_wind700hpa.gif",
-      dateHref: "https://static.avalanche.report/zamg_meteo/overlays/wind/startDate.ok",
-      dateOffsetHour: 1,
-      dateStepHour: 1,
-      dateMin: 1,
-      dateMax: 72,
-      label: this.translateService.instant("observations.weatherStations.tooltips.windSpeed") + " 3000m",
-      attribution: [
-        legend("0–5 km/h", "#ffff64"),
-        legend("5–10 km/h", "#c8ff64"),
-        legend("10–20 km/h", "#96ff96"),
-        legend("20–40 km/h", "#32c8ff"),
-        legend("40–60 km/h", "#6496ff"),
-        legend("60–80 km/h", "#9664ff"),
-        legend(">80 km/h", "#ff3232"),
-      ].join(", "),
-    }),
-    new MapLink({
-      href: "https://static.avalanche.report/zamg_meteo/overlays/wind/{{date}}_wind_V3.gif",
-      dateHref: "https://static.avalanche.report/zamg_meteo/overlays/wind/startDate.ok",
-      dateStepHour: 1,
-      dateMax: 60,
-      label: this.translateService.instant("observations.weatherStations.tooltips.windSpeed") + " 10m",
-      attribution: [
-        legend("0–5 km/h", "#ffff64"),
-        legend("5–10 km/h", "#c8ff64"),
-        legend("10–20 km/h", "#96ff96"),
-        legend("20–40 km/h", "#32c8ff"),
-        legend("40–60 km/h", "#6496ff"),
-        legend("60–80 km/h", "#9664ff"),
-        legend(">80 km/h", "#ff3232"),
-      ].join(", "),
-    }),
-    new MapLink({
-      href: "https://static.avalanche.report/zamg_meteo/overlays/gust/{{date}}_gust_V3.gif",
-      dateHref: "https://static.avalanche.report/zamg_meteo/overlays/wind/startDate.ok",
-      dateStepHour: 1,
-      dateMax: 60,
-      label: this.translateService.instant("observations.weatherStations.tooltips.windGust") + " 10m",
-      attribution: [
-        legend("0–5 km/h", "#ffff64"),
-        legend("5–10 km/h", "#c8ff64"),
-        legend("10–20 km/h", "#96ff96"),
-        legend("20–40 km/h", "#32c8ff"),
-        legend("40–60 km/h", "#6496ff"),
-        legend("60–80 km/h", "#9664ff"),
-        legend(">80 km/h", "#ff3232"),
-      ].join(", "),
-    }),
-  ]);
+  maps = signal<readonly MapLink[]>([]);
+
+  constructor() {
+    void this.loadMaps();
+  }
+
+  private async loadMaps(): Promise<void> {
+    const maps = await Promise.all(domains.map((domain) => this.loadDomain(domain)));
+    this.maps.set(Object.freeze(maps.flat()));
+  }
+
+  private async loadDomain(domain: Domain): Promise<MapLink[]> {
+    try {
+      const response = await fetch(`https://static.avalanche.report/zamg_meteo/overlays/${domain}/config.json`, {
+        cache: "no-cache",
+      });
+      if (!response.ok) return [];
+      const config: RemoteDomainConfig = await response.json();
+      const attribution = config.thresholds
+        .map((threshold) => `<i style="color:${threshold.color}">■</i> ${formatThreshold(threshold, config.units)}`)
+        .join(", ");
+      const label = this.domainLabel(domain);
+      return config.timeRanges.map(
+        (timeRange) =>
+          new MapLink({
+            href: timeRange.imageOverlayURL.replace(
+              "https://wiski.tirol.gv.at/lawine",
+              "https://static.avalanche.report",
+            ),
+            date: Temporal.Instant.from(timeRange.initialTimestamp),
+            dateMin: Temporal.Instant.from(timeRange.maxAnalysisTimestamp),
+            dateMax: Temporal.Instant.from(timeRange.maxForecastTimestamp),
+            dateStepHour: timeRange.timeStepHours,
+            label: config.timeRanges.length > 1 ? `${timeRange.timeRange}h ${label}` : label,
+            attribution,
+          }),
+      );
+    } catch (e) {
+      console.error(`Failed to load ZAMG meteo config for domain "${domain}"`, e);
+      return [];
+    }
+  }
+
+  private domainLabel(domain: Domain): string {
+    const tooltip = (key: string) => this.translateService.instant(`observations.weatherStations.tooltips.${key}`);
+    switch (domain) {
+      case "snow-height":
+        return tooltip("snowHeight");
+      case "new-snow":
+        return tooltip("newSnow");
+      case "diff-snow":
+        return tooltip("snowDifference");
+      case "relative-snow":
+        return domain;
+      case "snow-line":
+        return tooltip("snowLine");
+      case "temp":
+        return tooltip("airTemperature");
+      case "wind":
+        return `${tooltip("windSpeed")} 10m`;
+      case "gust":
+        return `${tooltip("windGust")} 10m`;
+      case "wind700hpa":
+        return `${tooltip("windSpeed")} 3000m`;
+    }
+  }
 }
 
 class MapLink {
   href: string;
   label: string;
-  date?: Temporal.Instant;
-  dateMin?: number | Temporal.Instant;
-  dateMax?: number | Temporal.Instant;
-  dateHref?: string;
-  dateForceHour?: string;
-  dateOffsetHour?: number;
+  date: Temporal.Instant;
+  dateMin?: Temporal.Instant;
+  dateMax?: Temporal.Instant;
   dateStepHour?: number;
   attribution?: string;
   selected: boolean;
@@ -186,49 +152,28 @@ class MapLink {
     Object.assign(this, data);
     this.href = data.href!;
     this.label = data.label!;
+    this.date = data.date!;
   }
 
   change(change: 1 | -1 | Temporal.Instant) {
-    if (!this.date || !this.dateStepHour) {
+    if (!this.dateStepHour) {
       return this;
     }
     this.date = change instanceof Temporal.Instant ? change : this.date.add({ hours: change * this.dateStepHour });
     this.updateImage();
   }
 
-  async fetchDate(): Promise<void> {
-    if (!this.dateHref) {
-      return;
-    }
-    const response = await fetch(this.dateHref, { cache: "no-cache" });
-    this.dateHref = undefined;
-    if (!response.ok) return;
-    let dateString = await response.text();
-    dateString = dateString.trim(); // trim "\n"
-    if (this.dateForceHour) {
-      dateString = dateString.replace(/T\d\d:\d\d/, `T${this.dateForceHour}`);
-    }
-    const parsedDate = Temporal.Instant.from(dateString);
-    this.date = parsedDate.add({ hours: this.dateOffsetHour ?? 0 });
-    if (typeof this.dateMin === "number") {
-      this.dateMin = parsedDate.add({ hours: this.dateMin });
-    }
-    if (typeof this.dateMax === "number") {
-      this.dateMax = parsedDate.add({ hours: this.dateMax });
-    }
-    this.updateImage();
-  }
-
   get epochMilliseconds(): number {
-    return this.date?.epochMilliseconds;
+    return this.date.epochMilliseconds;
   }
 
   get linkHref(): string {
-    const isoString = this.date?.toString() ?? "";
+    const isoString = this.date.toString();
+    const [date0, time] = isoString.split("T");
     return this.href
-      .replace("{{date}}", isoString.replace("T", "_").replace(":", "-").substring(0, "2006-01-02_15-04".length))
-      .replace("{{date0}}", isoString.slice(0, "2006-01-02".length))
-      .replace("{{year}}", isoString.slice(0, "2006".length));
+      .replaceAll("$year", date0.slice(0, "2006".length))
+      .replaceAll("$date", date0)
+      .replaceAll("$hour", time.slice(0, "15".length));
   }
 
   private updateImage(): void {
@@ -236,9 +181,8 @@ class MapLink {
     source?.updateImage({ url: this.linkHref });
   }
 
-  async addImageOverlay(map: MlMap): Promise<void> {
+  addImageOverlay(map: MlMap): void {
     this.map = map;
-    await this.fetchDate();
     if (map.getSource(this.imageId)) {
       this.updateImage();
       return;
