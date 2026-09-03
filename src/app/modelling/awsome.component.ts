@@ -38,6 +38,7 @@ import * as z from "zod/v4";
 import { environment } from "../../environments/environment";
 import { LayerToggleControl } from "../map/controls/layer-toggle-control";
 import { RegionMapService } from "../map/region-map.service";
+import type { FilterSelectionValue } from "../observations/filter-selection-config";
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
@@ -60,6 +61,8 @@ export type FeatureProperties = GeoJSON.Feature["properties"] & {
 } & Pick<GenericObservation, "$source" | "latitude" | "longitude" | "elevation">;
 
 type DetailsTabLabel = string;
+
+const MEDIAN_COLOR = "green";
 
 @Component({
   selector: "app-awsome",
@@ -444,7 +447,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         left: 40,
         top: 40,
         bottom: 40,
-        right: 40,
+        right: 10,
         backgroundColor: "#f7f7f7",
         show: true,
       } satisfies GridComponentOption,
@@ -462,6 +465,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           },
           data,
           symbolSize: 7,
+          markLine: this.classLines(markerClassify, 1),
         } satisfies ScatterSeriesOption,
         {
           type: "scatter",
@@ -474,7 +478,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           data: [],
           symbol: "diamond",
           symbolSize: 25,
-          color: "green",
+          color: MEDIAN_COLOR,
         } satisfies ScatterSeriesOption,
       ],
     } satisfies EChartsOption;
@@ -491,6 +495,19 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       // $event.data[2] as FeatureProperties
       o as unknown as number,
     ];
+  }
+
+  /** Dashed lines on a filter's class boundaries, each coloured like the class listed above it. */
+  private classLines(filter: FilterSelectionData<FeatureProperties>, z: number): MarkLineOption {
+    const classes = filter.values.filter((v): v is FilterSelectionValue & { numericRange: number[] } =>
+      Array.isArray(v.numericRange),
+    );
+    const data = classes.slice(1).flatMap((below, i) => {
+      const above = classes[i];
+      const bound = above.numericRange.find((b) => below.numericRange.includes(b));
+      return bound === undefined ? [] : [{ yAxis: bound, lineStyle: { color: above.color } }];
+    });
+    return { z, silent: true, symbol: "none", label: { show: false }, lineStyle: { type: "dashed", width: 1.2 }, data };
   }
 
   private highlightInHazardChart = throttle((o: FeatureProperties) => this.highlightInHazardChart0(o), 500);
@@ -569,13 +586,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           name: this.t("Date"),
         } satisfies XAXisOption,
         yAxis: {
-          name: stabilityIndex.type,
+          name: this.t(stabilityIndex.label),
+          position: "right",
+          min: stabilityIndex.chartAxisRange?.[0],
+          max: stabilityIndex.chartAxisRange?.[1],
         } satisfies YAXisOption,
         grid: {
-          left: 40,
+          left: 10,
           top: 40,
           bottom: 40,
-          right: 40,
+          right: 50,
           backgroundColor: "#f7f7f7",
           show: true,
         } satisfies GridComponentOption,
@@ -596,22 +616,30 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           {
             name: "mean",
             type: "line",
+            color: MEDIAN_COLOR,
             data: data.timestamps.map((t, i) => [t, indexData.mean[i]]),
             markLine: {
-              data: [{ label: { formatter: "" }, xAxis: this.date }],
+              silent: true,
+              symbol: "none",
+              label: { show: false },
+              lineStyle: { color: "#000" },
+              data: [{ xAxis: this.date }],
             } satisfies MarkLineOption,
           } satisfies LineSeriesOption,
           {
             name: "lower",
             type: "line",
+            z: 1,
             data: data.timestamps.map((t, i) => [t, indexData.lower[i]]),
             lineStyle: { opacity: 0 },
             stack: "confidence-band",
             symbol: "none",
+            markLine: this.classLines(stabilityIndex, 2),
           } satisfies LineSeriesOption,
           {
             name: "upper",
             type: "line",
+            z: 1,
             data: data.timestamps.map((t, i) => [t, indexData.upper[i] - indexData.lower[i]]),
             lineStyle: { opacity: 0 },
             areaStyle: { color: "#bbb" },
@@ -623,6 +651,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
                 {
                   name: "lower",
                   type: "line",
+                  z: 1,
                   data: data.timestamps.map((t, i) => [t, indexData.lower2[i]]),
                   lineStyle: { opacity: 0 },
                   stack: "confidence-band2",
@@ -631,6 +660,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
                 {
                   name: "upper",
                   type: "line",
+                  z: 1,
                   data: data.timestamps.map((t, i) => [t, indexData.upper2[i] - indexData.lower2[i]]),
                   lineStyle: { opacity: 0 },
                   areaStyle: { color: "#ddd" },
