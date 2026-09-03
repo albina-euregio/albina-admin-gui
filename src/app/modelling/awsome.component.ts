@@ -402,7 +402,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
     if (this.selectedObservation && !this.localObservations.includes(this.selectedObservation)) {
       const observation = this.localObservations.find((o) => o?.location === this.selectedObservation?.location);
-      this.onObservationRightClick(observation);
+      this.showObservationDetails(observation);
     }
 
     try {
@@ -704,6 +704,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.clearHighlight();
   }
 
+  chartClick($event: ECElementEvent) {
+    const observation = $event.data[2] as FeatureProperties;
+    if (observation) {
+      this.showObservationDetails(observation);
+    }
+  }
+
   private clearHighlight() {
     this.highlightMarker?.remove();
     this.highlightMarker = undefined;
@@ -750,7 +757,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     });
     map.on("contextmenu", fillId, (e) => {
       const o = obsAt(e);
-      if (o) this.onObservationRightClick(o);
+      if (o) this.showObservationDetails(o);
     });
   }
 
@@ -779,7 +786,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     el.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      this.onObservationRightClick(observation);
+      this.showObservationDetails(observation);
     });
   }
 
@@ -836,7 +843,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     }
   }
 
-  private onObservationRightClick(observation: FeatureProperties) {
+  private showObservationDetails(observation: FeatureProperties) {
     this.selectedObservation = observation;
     this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => {
       let html = this.markerService.formatTemplate(template, observation);
