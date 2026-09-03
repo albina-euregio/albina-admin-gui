@@ -63,6 +63,7 @@ export type FeatureProperties = GeoJSON.Feature["properties"] & {
 type DetailsTabLabel = string;
 
 const MEDIAN_COLOR = "green";
+const SPLIT_LINE = { lineStyle: { color: "#e8e8e8" } };
 
 @Component({
   selector: "app-awsome",
@@ -437,12 +438,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         min: xType?.chartAxisRange?.[0],
         max: xType?.chartAxisRange?.[1],
         axisPointer: { type: "line" },
+        splitLine: SPLIT_LINE,
       } satisfies XAXisOption,
       yAxis: {
         name: this.t(markerClassify.label),
         min: markerClassify.chartAxisRange?.[0],
         max: markerClassify.chartAxisRange?.[1],
         axisPointer: { type: "line" },
+        splitLine: SPLIT_LINE,
       } satisfies YAXisOption,
       grid: {
         left: 40,
@@ -480,6 +483,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           symbol: "diamond",
           symbolSize: 25,
           color: MEDIAN_COLOR,
+          itemStyle: { borderColor: "#000", borderWidth: 1 },
         } satisfies ScatterSeriesOption,
       ],
     } satisfies EChartsOption;
@@ -508,7 +512,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       const bound = above.numericRange.find((b) => below.numericRange.includes(b));
       return bound === undefined ? [] : [{ yAxis: bound, lineStyle: { color: above.color } }];
     });
-    return { z, silent: true, symbol: "none", label: { show: false }, lineStyle: { type: "dashed", width: 1.2 }, data };
+    return { z, silent: true, symbol: "none", label: { show: false }, lineStyle: { type: "dashed", width: 1.6 }, data };
   }
 
   private highlightInHazardChart = throttle((o: FeatureProperties) => this.highlightInHazardChart0(o), 500);
@@ -585,12 +589,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           type: "time",
           nameLocation: "center",
           name: this.t("Date"),
+          splitLine: SPLIT_LINE,
         } satisfies XAXisOption,
         yAxis: {
           name: this.t(stabilityIndex.label),
           position: "right",
           min: stabilityIndex.chartAxisRange?.[0],
           max: stabilityIndex.chartAxisRange?.[1],
+          splitLine: SPLIT_LINE,
         } satisfies YAXisOption,
         grid: {
           left: 10,
