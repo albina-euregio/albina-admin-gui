@@ -332,6 +332,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
     const map = await this.mapService.initMap(this.mapDiv().nativeElement, { clickMode: "awsome", regions });
     this.map = map;
+    map.boxZoom.disable();
 
     const [lat, lon, zoom] = this.config.mapCenter;
     map.jumpTo({ center: [lon, lat], zoom });
