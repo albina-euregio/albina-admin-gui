@@ -65,6 +65,21 @@ type DetailsTabLabel = string;
 const MEDIAN_COLOR = "green";
 const SPLIT_LINE = { lineStyle: { color: "#e8e8e8" } };
 
+const IndexSchema = z.object({
+  depth: z.number().nullish().array(),
+  size_estimate: z.number().nullish().array(),
+  lower: z.number().nullish().array(),
+  lower2: z.number().nullish().array().optional(),
+  mean: z.number().nullish().array(),
+  upper: z.number().nullish().array(),
+  upper2: z.number().nullish().array().optional(),
+});
+const TimeseriesSchema = z.object({
+  indexes: z.record(z.string(), IndexSchema),
+  timestamps: z.coerce.date().array(),
+});
+type Timeseries = z.infer<typeof TimeseriesSchema>;
+
 @Component({
   selector: "app-awsome",
   standalone: true,
@@ -120,7 +135,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }) as Popup;
   hazardChart: EChartsOption | undefined;
   timeseriesChart: EChartsOption | undefined;
-  timeseriesChart$loading: Subscription;
+  private timeseries?: { url: string; data: Timeseries };
+  private timeseries$loading?: { url: string; subscription: Subscription };
   loadingState: "loading" | "error" | undefined;
 
   t(key: string) {
@@ -173,6 +189,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   async loadSources() {
     this.removeImageOverlays();
     this.observations.length = 0;
+    this.timeseries = undefined;
     this.applyLocalFilter();
 
     this.loadingState = "loading";
@@ -550,145 +567,144 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private loadTimeseriesChart() {
-    this.timeseriesChart = undefined;
-    this.timeseriesChart$loading?.unsubscribe();
-    this.timeseriesChart$loading = undefined;
     const stabilityIndex = this.stabilityIndex;
-    if (!stabilityIndex) {
-      return;
-    }
-
     const url0 = this.config.timeseriesChart?.url;
-    if (!url0) {
+    if (!stabilityIndex || !url0) {
+      this.timeseriesChart = undefined;
+      this.timeseries$loading?.subscription.unsubscribe();
+      this.timeseries$loading = undefined;
       return;
     }
-    const url = this.setSearchParams(new URL(url0, this.baseURL), this.activeSources);
+    const url = this.setSearchParams(new URL(url0, this.baseURL), this.activeSources).toString();
+    if (this.timeseries?.url === url) {
+      this.renderTimeseries(this.timeseries.data, stabilityIndex);
+      return;
+    }
+    if (this.timeseries$loading?.url === url) {
+      return;
+    }
+    this.timeseriesChart = undefined;
+    this.timeseries$loading?.subscription.unsubscribe();
+    this.timeseries$loading = {
+      url,
+      subscription: this.fetchJSON(url).subscribe((d) => {
+        this.timeseries$loading = undefined;
+        this.timeseries = { url, data: TimeseriesSchema.parse(d) };
+        this.renderTimeseries(this.timeseries.data, stabilityIndex);
+      }),
+    };
+  }
 
-    this.timeseriesChart$loading = this.fetchJSON(url.toString()).subscribe((d) => {
-      this.timeseriesChart$loading = undefined;
-      const IndexSchema = z.object({
-        depth: z.number().nullish().array(),
-        size_estimate: z.number().nullish().array(),
-        lower: z.number().nullish().array(),
-        lower2: z.number().nullish().array().optional(),
-        mean: z.number().nullish().array(),
-        upper: z.number().nullish().array(),
-        upper2: z.number().nullish().array().optional(),
-      });
-      const TimeseriesSchema = z.object({
-        indexes: z.record(z.string(), IndexSchema),
-        timestamps: z.coerce.date().array(),
-      });
-      const data = TimeseriesSchema.parse(d);
-      const indexData = data.indexes[stabilityIndex.type];
-      if (!indexData) {
-        return;
-      }
-      this.timeseriesChart = {
-        xAxis: {
-          type: "time",
-          nameLocation: "center",
-          name: this.t("Date"),
-          splitLine: SPLIT_LINE,
-        } satisfies XAXisOption,
-        yAxis: {
-          name: this.t(stabilityIndex.label),
-          position: "right",
-          min: stabilityIndex.chartAxisRange?.[0],
-          max: stabilityIndex.chartAxisRange?.[1],
-          splitLine: SPLIT_LINE,
-        } satisfies YAXisOption,
-        grid: {
-          left: 10,
-          top: 40,
-          bottom: 40,
-          right: 50,
-          backgroundColor: "#f7f7f7",
-          show: true,
-        } satisfies GridComponentOption,
-        tooltip: {
-          trigger: "axis",
-          formatter: ([series]: CallbackDataParams[]) => `
+  private renderTimeseries(data: Timeseries, stabilityIndex: FilterSelectionData<FeatureProperties>) {
+    const indexData = data.indexes[stabilityIndex.type];
+    if (!indexData) {
+      this.timeseriesChart = undefined;
+      return;
+    }
+    this.timeseriesChart = {
+      xAxis: {
+        type: "time",
+        nameLocation: "center",
+        name: this.t("Date"),
+        splitLine: SPLIT_LINE,
+      } satisfies XAXisOption,
+      yAxis: {
+        name: this.t(stabilityIndex.label),
+        position: "right",
+        min: stabilityIndex.chartAxisRange?.[0],
+        max: stabilityIndex.chartAxisRange?.[1],
+        splitLine: SPLIT_LINE,
+      } satisfies YAXisOption,
+      grid: {
+        left: 10,
+        top: 40,
+        bottom: 40,
+        right: 50,
+        backgroundColor: "#f7f7f7",
+        show: true,
+      } satisfies GridComponentOption,
+      tooltip: {
+        trigger: "axis",
+        formatter: ([series]: CallbackDataParams[]) => `
             <dl>
               <dt>${stabilityIndex.type}</dt><dd>${indexData.mean[series.dataIndex]}</dd>
               <dt>${this.t("Depth")}<dt><dd>${indexData.depth[series.dataIndex]}</dd>
               <dt>${this.t("Size estimate")}<dt><dd>${indexData.size_estimate[series.dataIndex]}</dd>
             </dl>`,
-          showContent: true,
-          axisPointer: {
-            type: "cross",
-          },
-        } satisfies TooltipOption,
-        series: [
-          {
-            name: "mean",
-            type: "line",
-            color: MEDIAN_COLOR,
-            data: data.timestamps.map((t, i) => [t, indexData.mean[i]]),
-            markLine: {
-              silent: true,
-              symbol: "none",
-              label: { show: false },
-              lineStyle: { color: "#000" },
-              data: [{ xAxis: this.date }],
-            } satisfies MarkLineOption,
-          } satisfies LineSeriesOption,
-          {
-            name: "lower",
-            type: "line",
-            z: 1,
-            data: data.timestamps.map((t, i) => [t, indexData.lower[i]]),
-            lineStyle: { opacity: 0 },
-            stack: "confidence-band",
+        showContent: true,
+        axisPointer: {
+          type: "cross",
+        },
+      } satisfies TooltipOption,
+      series: [
+        {
+          name: "mean",
+          type: "line",
+          color: MEDIAN_COLOR,
+          data: data.timestamps.map((t, i) => [t, indexData.mean[i]]),
+          markLine: {
+            silent: true,
             symbol: "none",
-            markLine: this.classLines(stabilityIndex, 2),
-          } satisfies LineSeriesOption,
-          {
-            name: "upper",
-            type: "line",
-            z: 1,
-            data: data.timestamps.map((t, i) => [t, indexData.upper[i] - indexData.lower[i]]),
-            lineStyle: { opacity: 0 },
-            areaStyle: { color: "#bbb" },
-            stack: "confidence-band",
-            symbol: "none",
-          } satisfies LineSeriesOption,
-          ...(indexData.lower2
-            ? [
-                {
-                  name: "lower",
-                  type: "line",
-                  z: 1,
-                  data: data.timestamps.map((t, i) => [t, indexData.lower2[i]]),
-                  lineStyle: { opacity: 0 },
-                  stack: "confidence-band2",
-                  symbol: "none",
-                } satisfies LineSeriesOption,
-                {
-                  name: "upper",
-                  type: "line",
-                  z: 1,
-                  data: data.timestamps.map((t, i) => [t, indexData.upper2[i] - indexData.lower2[i]]),
-                  lineStyle: { opacity: 0 },
-                  areaStyle: { color: "#ddd" },
-                  stack: "confidence-band2",
-                  symbol: "none",
-                } satisfies LineSeriesOption,
-              ]
-            : []),
-        ],
-      } satisfies EChartsOption;
+            label: { show: false },
+            lineStyle: { color: "#000" },
+            data: [{ xAxis: this.date }],
+          } satisfies MarkLineOption,
+        } satisfies LineSeriesOption,
+        {
+          name: "lower",
+          type: "line",
+          z: 1,
+          data: data.timestamps.map((t, i) => [t, indexData.lower[i]]),
+          lineStyle: { opacity: 0 },
+          stack: "confidence-band",
+          symbol: "none",
+          markLine: this.classLines(stabilityIndex, 2),
+        } satisfies LineSeriesOption,
+        {
+          name: "upper",
+          type: "line",
+          z: 1,
+          data: data.timestamps.map((t, i) => [t, indexData.upper[i] - indexData.lower[i]]),
+          lineStyle: { opacity: 0 },
+          areaStyle: { color: "#bbb" },
+          stack: "confidence-band",
+          symbol: "none",
+        } satisfies LineSeriesOption,
+        ...(indexData.lower2
+          ? [
+              {
+                name: "lower",
+                type: "line",
+                z: 1,
+                data: data.timestamps.map((t, i) => [t, indexData.lower2[i]]),
+                lineStyle: { opacity: 0 },
+                stack: "confidence-band2",
+                symbol: "none",
+              } satisfies LineSeriesOption,
+              {
+                name: "upper",
+                type: "line",
+                z: 1,
+                data: data.timestamps.map((t, i) => [t, indexData.upper2[i] - indexData.lower2[i]]),
+                lineStyle: { opacity: 0 },
+                areaStyle: { color: "#ddd" },
+                stack: "confidence-band2",
+                symbol: "none",
+              } satisfies LineSeriesOption,
+            ]
+          : []),
+      ],
+    } satisfies EChartsOption;
 
-      // show diamond marker in hazard chart
-      this.hazardChart = { ...this.hazardChart };
-      const series: ScatterSeriesOption = this.hazardChart.series[2];
-      if (this.config.hazardChart.xType === "size_estimate") {
-        const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
-        series.data = i >= 0 ? [[indexData.size_estimate[i], indexData.mean[i]]] : [];
-      } else {
-        series.data = [];
-      }
-    });
+    // show diamond marker in hazard chart
+    this.hazardChart = { ...this.hazardChart };
+    const series: ScatterSeriesOption = this.hazardChart.series[2];
+    if (this.config.hazardChart.xType === "size_estimate") {
+      const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
+      series.data = i >= 0 ? [[indexData.size_estimate[i], indexData.mean[i]]] : [];
+    } else {
+      series.data = [];
+    }
   }
 
   chartMouseOver($event: ECElementEvent) {
