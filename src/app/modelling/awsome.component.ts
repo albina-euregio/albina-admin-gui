@@ -16,7 +16,7 @@ import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { GridComponentOption } from "echarts/components";
-import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
+import type { ECElementEvent, ECharts, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type {
   CallbackDataParams,
   LineSeriesOption,
@@ -63,6 +63,7 @@ export type FeatureProperties = GeoJSON.Feature["properties"] & {
 type DetailsTabLabel = string;
 
 const MEDIAN_COLOR = "green";
+const MEDIAN_SERIES = 2;
 const SPLIT_LINE = { lineStyle: { color: "#e8e8e8" } };
 
 const IndexSchema = z.object({
@@ -135,6 +136,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }) as Popup;
   hazardChart: EChartsOption | undefined;
   timeseriesChart: EChartsOption | undefined;
+  timeseriesInstance?: ECharts;
+  private timeseriesDateIndex = -1;
   private timeseries?: { url: string; data: Timeseries };
   private timeseries$loading?: { url: string; subscription: Subscription };
   loadingState: "loading" | "error" | undefined;
@@ -477,6 +480,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         showContent: false,
         axisPointer: { type: "cross" },
       } satisfies TooltipOption,
+      axisPointer: { triggerEmphasis: false },
       series: [
         {
           type: "scatter",
@@ -486,6 +490,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           },
           data,
           symbolSize: 7,
+          emphasis: { scale: 1.8 },
           markLine: this.classLines(markerClassify, 1),
         } satisfies ScatterSeriesOption,
         {
@@ -641,6 +646,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           name: "mean",
           type: "line",
           color: MEDIAN_COLOR,
+          emphasis: { scale: 2.5 },
           data: data.timestamps.map((t, i) => [t, indexData.mean[i]]),
           markLine: {
             silent: true,
@@ -698,9 +704,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
     // show diamond marker in hazard chart
     this.hazardChart = { ...this.hazardChart };
-    const series: ScatterSeriesOption = this.hazardChart.series[2];
+    const series: ScatterSeriesOption = this.hazardChart.series[MEDIAN_SERIES];
+    const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
+    this.timeseriesDateIndex = i;
     if (this.config.hazardChart.xType === "size_estimate") {
-      const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
       series.data = i >= 0 ? [[indexData.size_estimate[i], indexData.mean[i]]] : [];
     } else {
       series.data = [];
@@ -709,6 +716,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   chartMouseOver($event: ECElementEvent) {
     this.clearHighlight();
+    if ($event.seriesIndex === MEDIAN_SERIES) {
+      this.emphasizeMedian("highlight");
+      return;
+    }
     const observation = $event.data[2] as FeatureProperties;
     if (!observation || !this.map) return;
     const marker = this.markerService.createMaplibreMarker(observation, true);
@@ -724,6 +735,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   chartMouseOut() {
     this.clearHighlight();
+    this.emphasizeMedian("downplay");
+  }
+
+  private emphasizeMedian(type: "highlight" | "downplay") {
+    if (this.timeseriesDateIndex >= 0) {
+      this.timeseriesInstance?.dispatchAction({ type, seriesIndex: 0, dataIndex: this.timeseriesDateIndex });
+    }
   }
 
   chartClick($event: ECElementEvent) {

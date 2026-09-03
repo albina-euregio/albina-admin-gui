@@ -182,7 +182,7 @@
 
           @if (!selectedObservationDetails && timeseriesChart) {
             <div class="chart-container timeseries-chart">
-              <div echarts [options]="timeseriesChart"></div>
+              <div echarts [options]="timeseriesChart" (chartInit)="timeseriesInstance = $event"></div>
             </div>
           }
         </div>
