@@ -25,6 +25,20 @@ export const AwsomeSourceSchema = z.object({
     .describe(
       "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
     ),
+  borderColor: z
+    .string()
+    .optional()
+    .describe("Border stroke color of this source's markers, overrides the filter value's"),
+  borderWidth: z
+    .number()
+    .optional()
+    .describe("Border stroke width of this source's markers, overrides the filter value's"),
+  borderDashArray: z
+    .string()
+    .optional()
+    .describe(
+      "Border stroke dash-array of this source's markers, overrides the filter value's, see https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-dasharray",
+    ),
   imageOverlays: z
     .object({
       name: z.string().describe("Identifier shown in map layer control"),

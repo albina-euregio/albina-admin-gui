@@ -41,20 +41,21 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     labelColor: "#fff",
   } as FilterSelectionValue;
 
-  createMaplibreMarker(observation: T, isHighlighted = false): MlMarker | undefined {
+  createMaplibreMarker(observation: T & { $sourceObject?: AwsomeSource }, isHighlighted = false): MlMarker | undefined {
     try {
       const filterSelectionValue = isHighlighted
         ? this.highlighted
         : this.markerClassify?.findForObservation(observation);
+      const border = this.borderStyle(observation.$sourceObject, filterSelectionValue);
       // NB: per-zoom radius resizing (radiusByZoom) is not yet ported to MapLibre
       const icon = makeIcon(
         castArray(observation.aspect)[0],
         "#898989",
         filterSelectionValue?.radius ?? 40,
         filterSelectionValue?.color ?? "white",
-        filterSelectionValue?.borderColor ?? "#000",
-        filterSelectionValue?.borderWidth ?? 2,
-        filterSelectionValue?.borderDashArray ?? "",
+        border.color,
+        border.width,
+        border.dashArray,
         filterSelectionValue?.labelColor ?? "#000",
         filterSelectionValue?.labelFontSize ?? 12,
         this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,
@@ -65,6 +66,15 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       console.error(e);
       throw e;
     }
+  }
+
+  /** A source's own border style wins over the classifying filter value's. */
+  private borderStyle(source: AwsomeSource | undefined, value: FilterSelectionValue | undefined) {
+    return {
+      color: source?.borderColor ?? value?.borderColor ?? "#000",
+      width: source?.borderWidth ?? value?.borderWidth ?? 2,
+      dashArray: source?.borderDashArray ?? value?.borderDashArray ?? "",
+    };
   }
 
   createMaplibreMarkerForIcon(

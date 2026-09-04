@@ -256,6 +256,18 @@
             "description": "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
             "type": "string"
           },
+          "borderColor": {
+            "description": "Border stroke color of this source's markers, overrides the filter value's",
+            "type": "string"
+          },
+          "borderWidth": {
+            "description": "Border stroke width of this source's markers, overrides the filter value's",
+            "type": "number"
+          },
+          "borderDashArray": {
+            "description": "Border stroke dash-array of this source's markers, overrides the filter value's, see https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-dasharray",
+            "type": "string"
+          },
           "imageOverlays": {
             "description": "Image overlays to be shown on the map.",
             "type": "array",
