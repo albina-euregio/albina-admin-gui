@@ -423,7 +423,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
     if (this.selectedObservation && !this.localObservations.includes(this.selectedObservation)) {
       const observation = this.localObservations.find((o) => o?.location === this.selectedObservation?.location);
-      this.showObservationDetails(observation);
+      if (observation) {
+        this.showObservationDetails(observation);
+      }
     }
 
     try {
@@ -909,6 +911,20 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (this.isMobile) {
       this.layout = "chart";
     }
+    this.selectBand(observation);
+  }
+
+  private selectBand(observation: FeatureProperties) {
+    if (observation.$geometry.type === "Point") {
+      return;
+    }
+    const band = this.filterService.filterSelectionData.find((f) => f.key === "band");
+    const value = observation.band as string | undefined;
+    if (!band || !value || (band.selected.size === 1 && band.selected.has(value))) {
+      return;
+    }
+    band.selected = new Set([value]);
+    this.applyLocalFilter();
   }
 
   closeObservation() {
