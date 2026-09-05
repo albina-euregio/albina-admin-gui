@@ -344,7 +344,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           map((collections): FeatureProperties[] =>
             collections
               .flatMap((c) => c.features)
-              .flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
+              .map((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties => {
                 feature.properties.$date = date;
                 feature.properties.$source = this.asSource(source);
                 feature.properties.$sourceObject = source;
@@ -362,16 +362,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
                   feature.properties.latitude ??= feature.geometry.coordinates[0][0][0][1];
                   feature.properties.elevation ??= feature.geometry.coordinates[0][0][0][2];
                 }
-                if (aspects.some((aspect) => feature.properties.snp_characteristics?.[aspect])) {
-                  return aspects
-                    .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
-                    .map((aspect) => ({
-                      ...feature.properties,
-                      aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
-                      snp_characteristics: feature.properties.snp_characteristics[aspect],
-                    }));
-                }
-                return [feature.properties];
+                return feature.properties;
               }),
           ),
         )
@@ -574,9 +565,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const markerClassify = this.markerService.markerClassify;
     const xType = this.filterService.filterSelectionData.find((f) => f.type === this.config.hazardChart?.xType);
     return [
-      // snp_characteristics.Punstable.size_estimate
+      // snowpack.Punstable.size_estimate
       xType.getValue(o) as number,
-      // snp_characteristics.Punstable.value
+      // snowpack.Punstable.value
       markerClassify.getValue(o) as number,
       // this.chartObservations[$event.data[2]]
       index,
