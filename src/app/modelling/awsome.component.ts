@@ -30,7 +30,7 @@ import { Feature, FeatureCollection, MultiPolygon } from "geojson";
 import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
-import { firstValueFrom, type Subscription } from "rxjs";
+import { firstValueFrom, forkJoin, type Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import Split from "split.js";
 import * as z from "zod/v4";
@@ -68,6 +68,7 @@ export type FeatureProperties = GeoJSON.Feature["properties"] & {
 type DetailsTabLabel = string;
 
 const MEDIAN_COLOR = "green";
+const ASPECT_FILE = /\.[A-Za-z]+\.json(\?|$)/;
 const MEDIAN_SERIES = 2;
 const SPLIT_LINE = { lineStyle: { color: "#e8e8e8" } };
 
@@ -331,15 +332,19 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const aspects = Array.isArray(aspectFilter?.values)
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
+    const selectedAspects = aspectFilter?.selected.size ? [...aspectFilter.selected] : [...aspects, "nan"];
+    const urls = filterUrl ? [url] : selectedAspects.map((aspect) => url.replace(ASPECT_FILE, `.${aspect}.json$1`));
 
     source.imageOverlays?.forEach((overlay) => this.addImageOverlay(overlay));
 
     source.$loading?.unsubscribe();
     return new Promise((next, error) => {
-      source.$loading = this.fetchJSON<GeoJSON.FeatureCollection>(url)
+      source.$loading = forkJoin(urls.map((u) => this.fetchJSON<GeoJSON.FeatureCollection>(u)))
         .pipe(
-          map(({ features }): FeatureProperties[] =>
-            features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
+          map((collections): FeatureProperties[] =>
+            collections
+              .flatMap((c) => c.features)
+              .flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
                 feature.properties.$date = date;
                 feature.properties.$source = this.asSource(source);
                 feature.properties.$sourceObject = source;
@@ -788,6 +793,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       .setLngLat(marker.getLngLat())
       .setHTML((marker.getElement() as ObsMarkerElement).tooltipHtml ?? "")
       .addTo(this.map);
+  }
+
+  onFilterChange(filter: FilterSelectionData<FeatureProperties>) {
+    if (filter.type === "aspect") {
+      this.loadSources();
+    } else {
+      this.applyLocalFilter();
+    }
   }
 
   chartMouseOut() {

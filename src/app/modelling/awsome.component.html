@@ -142,7 +142,7 @@
                   class="chart-container"
                   [filterSelection]="filterSelection"
                   (handleReload)="loadSources()"
-                  (handleChange)="applyLocalFilter()"
+                  (handleChange)="onFilterChange(filterSelection)"
                 />
               }
             </div>
