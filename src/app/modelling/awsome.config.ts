@@ -3,12 +3,17 @@ import * as z from "zod/v4";
 import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-selection-config";
 
 export const AwsomeSourceSchema = z.object({
-  name: z.string().optional().describe("Identifier shown in source multiselect"),
-  recipe: z
+  name: z
     .string()
     .optional()
     .describe(
-      "Recipe identifier used in AWSOME, for instance tirol25: names the source's folder and its data in the API",
+      "The recipe the source comes from, for instance tirol25: its folder under the simulation tree, its label in the source menu and its name in the API",
+    ),
+  group: z
+    .string()
+    .optional()
+    .describe(
+      "Where the source sits in the source menu, nested with slashes such as Tirol/Gridded; top level when absent",
     ),
   url: UrlSchema.optional().describe(
     "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",

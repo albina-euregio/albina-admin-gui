@@ -210,11 +210,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "description": "Identifier shown in source multiselect",
+            "description": "The recipe the source comes from, for instance tirol25: its folder under the simulation tree, its label in the source menu and its name in the API",
             "type": "string"
           },
-          "recipe": {
-            "description": "Recipe identifier used in AWSOME, for instance tirol25: names the source's folder and its data in the API",
+          "group": {
+            "description": "Where the source sits in the source menu, nested with slashes such as Tirol/Gridded; top level when absent",
             "type": "string"
           },
           "url": {

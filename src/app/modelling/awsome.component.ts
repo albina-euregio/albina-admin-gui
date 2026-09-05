@@ -50,6 +50,11 @@ import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
+interface SourceGroup {
+  label: string;
+  groups: SourceGroup[];
+  sources: AwsomeSource[];
+}
 
 export type FeatureProperties = GeoJSON.Feature["properties"] & {
   $date: string;
@@ -121,6 +126,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
+  sourceTree: SourceGroup = { label: "", groups: [], sources: [] };
   private map?: MlMap;
   private pointMarkers: MlMarker[] = [];
   private highlightMarker?: MlMarker;
@@ -161,6 +167,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.config = await this.config$q;
     this.date ||= this.config.date;
     this.sources = this.config.sources;
+    this.sourceTree = this.buildSourceTree(this.sources);
+    this.sources.forEach((s) => (this.filterService.observationSources[this.asSource(s)] ??= true));
 
     const spec = this.config.filters as FilterSelectionSpec<FeatureProperties>[];
     this.filterService.filterSelectionData = spec.map((f) => {
@@ -187,6 +195,38 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private asSource(source: AwsomeSource): ObservationSource {
     return source.name as unknown as ObservationSource;
+  }
+
+  private buildSourceTree(sources: AwsomeSource[]): SourceGroup {
+    const root: SourceGroup = { label: "", groups: [], sources: [] };
+    for (const source of sources) {
+      let node = root;
+      for (const label of source.group?.split("/").filter(Boolean) ?? []) {
+        node =
+          node.groups.find((g) => g.label === label) ??
+          node.groups[node.groups.push({ label, groups: [], sources: [] }) - 1];
+      }
+      node.sources.push(source);
+    }
+    return root;
+  }
+
+  private groupSources(group: SourceGroup): AwsomeSource[] {
+    return [...group.sources, ...group.groups.flatMap((g) => this.groupSources(g))];
+  }
+
+  isGroupOn(group: SourceGroup): boolean {
+    return this.groupSources(group).every((s) => this.filterService.observationSources[this.asSource(s)]);
+  }
+
+  isGroupMixed(group: SourceGroup): boolean {
+    const on = this.groupSources(group).map((s) => !!this.filterService.observationSources[this.asSource(s)]);
+    return on.some(Boolean) && !on.every(Boolean);
+  }
+
+  toggleGroup(group: SourceGroup, on: boolean) {
+    this.groupSources(group).forEach((s) => (this.filterService.observationSources[this.asSource(s)] = on));
+    this.loadSources();
   }
 
   async loadSources() {
@@ -256,7 +296,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     url.searchParams.set("ts", date);
 
     sources.forEach((source) => {
-      if (source.recipe) url.searchParams.append("source", source.recipe);
+      if (source.name) url.searchParams.append("source", source.name);
     });
 
     const stabilityIndex = this.stabilityIndex;
