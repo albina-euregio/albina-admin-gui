@@ -190,7 +190,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   get activeSources() {
-    return this.sources.filter((s) => this.filterService.inObservationSources(this.asSource(s)));
+    return this.sources.filter((s) => this.filterService.observationSources[this.asSource(s)]);
   }
 
   private asSource(source: AwsomeSource): ObservationSource {
@@ -613,7 +613,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private loadTimeseriesChart() {
     const stabilityIndex = this.stabilityIndex;
     const url0 = this.config.timeseriesChart?.url;
-    if (!stabilityIndex || !url0) {
+    if (!stabilityIndex || !url0 || !this.activeSources.length) {
       this.timeseriesChart = undefined;
       this.timeseries$loading?.subscription.unsubscribe();
       this.timeseries$loading = undefined;
