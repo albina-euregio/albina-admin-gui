@@ -213,12 +213,8 @@
             "description": "Identifier shown in source multiselect",
             "type": "string"
           },
-          "domain": {
-            "description": "Domain identifier used in AWSOME, for instance tirol24",
-            "type": "string"
-          },
-          "toolchain": {
-            "description": "Toolchain identifier used in AWSOME, for instance gridded-chain",
+          "recipe": {
+            "description": "Recipe identifier used in AWSOME, for instance tirol25: names the source's folder and its data in the API",
             "type": "string"
           },
           "url": {

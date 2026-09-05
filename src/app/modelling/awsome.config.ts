@@ -4,8 +4,12 @@ import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-sel
 
 export const AwsomeSourceSchema = z.object({
   name: z.string().optional().describe("Identifier shown in source multiselect"),
-  domain: z.string().optional().describe("Domain identifier used in AWSOME, for instance tirol24"),
-  toolchain: z.string().optional().describe("Toolchain identifier used in AWSOME, for instance gridded-chain"),
+  recipe: z
+    .string()
+    .optional()
+    .describe(
+      "Recipe identifier used in AWSOME, for instance tirol25: names the source's folder and its data in the API",
+    ),
   url: UrlSchema.optional().describe(
     "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
   ),

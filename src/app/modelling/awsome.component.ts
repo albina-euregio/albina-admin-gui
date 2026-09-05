@@ -256,10 +256,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     url.searchParams.set("ts", date);
 
     sources.forEach((source) => {
-      if (!source.domain) return;
-      if (!source.toolchain) return;
-      url.searchParams.append("domain", source.domain);
-      url.searchParams.append("toolchain", source.toolchain);
+      if (source.recipe) url.searchParams.append("source", source.recipe);
     });
 
     const stabilityIndex = this.stabilityIndex;
