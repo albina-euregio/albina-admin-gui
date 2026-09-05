@@ -25,7 +25,6 @@ import type {
   XAXisOption,
   YAXisOption,
 } from "echarts/types/dist/shared";
-import { throttle } from "es-toolkit";
 import { Feature, FeatureCollection, MultiPolygon } from "geojson";
 import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
 import { TabsModule } from "ngx-bootstrap/tabs";
@@ -69,7 +68,7 @@ type DetailsTabLabel = string;
 
 const MEDIAN_COLOR = "green";
 const ASPECT_FILE = /\.[A-Za-z]+\.json(\?|$)/;
-const MEDIAN_SERIES = 2;
+const MEDIAN_SERIES = 1;
 const SPLIT_LINE = { lineStyle: { color: "#e8e8e8" } };
 
 const IndexSchema = z.object({
@@ -134,6 +133,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private highlightMarker?: MlMarker;
   // a hovered circle marker takes tooltip priority over the polygon layer underneath it
   private markerHovered = false;
+  private hoveredObservation?: FeatureProperties;
   private imageOverlays: { id: string; name: string }[] = [];
   private overlayControl?: LayerToggleControl;
   private readonly polygonSource = "awsome-polygons";
@@ -143,6 +143,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     className: "obs-tooltip",
   }) as Popup;
   hazardChart: EChartsOption | undefined;
+  hazardInstance?: ECharts;
+  private hazardHighlight = -1;
   timeseriesChart: EChartsOption | undefined;
   timeseriesInstance?: ECharts;
   private timeseriesDateIndex = -1;
@@ -496,6 +498,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       return;
     }
     this.chartObservations = this.localObservations;
+    this.liveHazardChart?.dispatchAction({ type: "downplay", seriesIndex: 0 });
+    this.hazardHighlight = -1;
+    this.hoveredObservation = undefined;
     const observations = this.chartObservations;
     const data = observations.map((o, i) => this.toChartData(o, i));
     this.hazardChart = {
@@ -540,14 +545,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           },
           data,
           symbolSize: 7,
-          emphasis: { scale: 1.8 },
+          emphasis: { scale: 1.8, itemStyle: { borderColor: "#000", borderWidth: 1.5 } },
           markLine: this.classLines(markerClassify, 1),
-        } satisfies ScatterSeriesOption,
-        {
-          type: "scatter",
-          data: [],
-          symbolSize: 15,
-          color: "red",
         } satisfies ScatterSeriesOption,
         {
           type: "scatter",
@@ -587,23 +586,20 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return { z, silent: true, symbol: "none", label: { show: false }, lineStyle: { type: "dashed", width: 1.6 }, data };
   }
 
-  private highlightInHazardChart = throttle((o: FeatureProperties) => this.highlightInHazardChart0(o), 500);
-  private highlightInHazardChart0(observation: FeatureProperties) {
-    this.hazardChart = { ...this.hazardChart };
-    const series: ScatterSeriesOption = this.hazardChart.series[1];
-    const xAxis: XAXisOption = this.hazardChart.xAxis;
-    const yAxis: YAXisOption = this.hazardChart.yAxis;
-    if (observation) {
-      const data = this.toChartData(observation, this.chartObservations.indexOf(observation));
-      series.data = [data];
-      xAxis.axisPointer.value = data[0];
-      xAxis.axisPointer.status = "show";
-      yAxis.axisPointer.value = data[1];
-      yAxis.axisPointer.status = "show";
+  /** Crosshair and emphasis on the hovered observation's point, without touching the option object. */
+  private highlightInHazardChart(observation: FeatureProperties | undefined) {
+    const chart = this.liveHazardChart;
+    if (!chart) return;
+    if (this.hazardHighlight >= 0) {
+      chart.dispatchAction({ type: "downplay", seriesIndex: 0, dataIndex: this.hazardHighlight });
+    }
+    const dataIndex = observation ? this.chartObservations.indexOf(observation) : -1;
+    this.hazardHighlight = dataIndex;
+    if (dataIndex >= 0) {
+      chart.dispatchAction({ type: "showTip", seriesIndex: 0, dataIndex });
+      chart.dispatchAction({ type: "highlight", seriesIndex: 0, dataIndex });
     } else {
-      series.data = [];
-      xAxis.axisPointer.value = undefined;
-      yAxis.axisPointer.value = undefined;
+      chart.dispatchAction({ type: "updateAxisPointer", currTrigger: "leave" });
     }
   }
 
@@ -767,6 +763,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     }
   }
 
+  /** The chart instance while its view exists; the details view disposes it without telling us. */
+  private get liveHazardChart(): ECharts | undefined {
+    return this.hazardInstance?.isDisposed() ? undefined : this.hazardInstance;
+  }
+
   chartMouseOver($event: ECElementEvent) {
     this.clearHighlight();
     if ($event.seriesIndex === MEDIAN_SERIES) {
@@ -835,20 +836,22 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const fillId = `${this.polygonSource}-fill`;
     const obsAt = (e: MapLayerMouseEvent): FeatureProperties | undefined =>
       this.localObservations[e.features?.[0]?.properties?.["index"] as number];
-    map.on("mouseenter", fillId, (e) => {
+    const hover = (e: MapLayerMouseEvent) => {
       if (this.markerHovered) return; // prefer the circle marker's tooltip
       map.getCanvas().style.cursor = "pointer";
       const o = obsAt(e);
       if (!o) return;
-      this.tooltipPopup.setLngLat(e.lngLat).setHTML(this.markerService.tooltipHtml(o)).addTo(map);
-      this.highlightInHazardChart(o);
-    });
-    map.on("mousemove", fillId, (e) => {
-      if (this.markerHovered) return;
       this.tooltipPopup.setLngLat(e.lngLat);
-    });
+      if (o === this.hoveredObservation) return;
+      this.hoveredObservation = o;
+      this.tooltipPopup.setHTML(this.markerService.tooltipHtml(o)).addTo(map);
+      this.highlightInHazardChart(o);
+    };
+    map.on("mouseenter", fillId, hover);
+    map.on("mousemove", fillId, hover);
     map.on("mouseleave", fillId, () => {
       map.getCanvas().style.cursor = "";
+      this.hoveredObservation = undefined;
       this.tooltipPopup.remove();
       this.highlightInHazardChart(undefined);
     });
