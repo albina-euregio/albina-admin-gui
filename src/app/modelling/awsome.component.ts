@@ -127,6 +127,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
   sourceTree: SourceGroup = { label: "", groups: [], sources: [] };
+  private chartObservations: FeatureProperties[] = [];
   private map?: MlMap;
   private pointMarkers: MlMarker[] = [];
   private highlightMarker?: MlMarker;
@@ -233,7 +234,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.removeImageOverlays();
     this.observations.length = 0;
     this.timeseries = undefined;
-    this.applyLocalFilter();
+    this.clearMap();
+    this.loadHazardChart();
+    this.loadTimeseriesChart();
 
     this.loadingState = "loading";
     this.observations = (
@@ -263,11 +266,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.map.addControl(this.overlayControl, "bottom-right");
     }
 
-    this.filterService.filterSelectionData.forEach((filter) =>
-      filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
-        this.filterService.isSelected(o),
-      ),
-    );
     this.applyLocalFilter();
   }
 
@@ -342,34 +340,34 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         .pipe(
           map(({ features }): FeatureProperties[] =>
             features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
-              feature.properties.$date = date;
-              feature.properties.$source = this.asSource(source);
-              feature.properties.$sourceObject = source;
-              feature.properties.$geometry = feature.geometry;
-              if (feature.geometry.type === "Point") {
-                feature.properties.longitude ??= feature.geometry.coordinates[0];
-                feature.properties.latitude ??= feature.geometry.coordinates[1];
-                feature.properties.elevation ??= feature.geometry.coordinates[2];
-              } else if (feature.geometry.type === "Polygon") {
-                feature.properties.longitude ??= feature.geometry.coordinates[0][0][0];
-                feature.properties.latitude ??= feature.geometry.coordinates[0][0][1];
-                feature.properties.elevation ??= feature.geometry.coordinates[0][0][2];
-              } else if (feature.geometry.type === "MultiPolygon") {
-                feature.properties.longitude ??= feature.geometry.coordinates[0][0][0][0];
-                feature.properties.latitude ??= feature.geometry.coordinates[0][0][0][1];
-                feature.properties.elevation ??= feature.geometry.coordinates[0][0][0][2];
-              }
-              if (aspects.some((aspect) => feature.properties.snp_characteristics?.[aspect])) {
-                return aspects
-                  .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
-                  .map((aspect) => ({
-                    ...feature.properties,
-                    aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
-                    snp_characteristics: feature.properties.snp_characteristics[aspect],
-                  }));
-              }
-              return [feature.properties];
-            }),
+                feature.properties.$date = date;
+                feature.properties.$source = this.asSource(source);
+                feature.properties.$sourceObject = source;
+                feature.properties.$geometry = feature.geometry;
+                if (feature.geometry.type === "Point") {
+                  feature.properties.longitude ??= feature.geometry.coordinates[0];
+                  feature.properties.latitude ??= feature.geometry.coordinates[1];
+                  feature.properties.elevation ??= feature.geometry.coordinates[2];
+                } else if (feature.geometry.type === "Polygon") {
+                  feature.properties.longitude ??= feature.geometry.coordinates[0][0][0];
+                  feature.properties.latitude ??= feature.geometry.coordinates[0][0][1];
+                  feature.properties.elevation ??= feature.geometry.coordinates[0][0][2];
+                } else if (feature.geometry.type === "MultiPolygon") {
+                  feature.properties.longitude ??= feature.geometry.coordinates[0][0][0][0];
+                  feature.properties.latitude ??= feature.geometry.coordinates[0][0][0][1];
+                  feature.properties.elevation ??= feature.geometry.coordinates[0][0][0][2];
+                }
+                if (aspects.some((aspect) => feature.properties.snp_characteristics?.[aspect])) {
+                  return aspects
+                    .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
+                    .map((aspect) => ({
+                      ...feature.properties,
+                      aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
+                      snp_characteristics: feature.properties.snp_characteristics[aspect],
+                    }));
+                }
+                return [feature.properties];
+              }),
           ),
         )
         .subscribe({ next, error });
@@ -420,13 +418,25 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.loadSources();
   }
 
-  applyLocalFilter() {
+  private clearMap() {
     this.pointMarkers.forEach((m) => m.remove());
     this.pointMarkers = [];
+    this.localObservations = [];
+    (this.map?.getSource(this.polygonSource) as GeoJSONSource | undefined)?.setData({
+      type: "FeatureCollection",
+      features: [],
+    });
+  }
+
+  applyLocalFilter() {
+    this.clearMap();
     const stabilityIndex = this.stabilityIndex;
     this.observations.forEach((o) => (o.$stabilityIndex = stabilityIndex?.type));
+    const selected = new Set(this.observations.filter((o) => this.filterService.isSelected(o)));
+    const classify = new Map(this.observations.map((o) => [o, this.markerService.markerClassify?.getValue(o)]));
+    const highlighting = this.filterService.filterSelectionData.some((f) => f.highlighted.size > 0);
     this.localObservations = this.observations.filter(
-      (observation) => this.filterService.isHighlighted(observation) || this.filterService.isSelected(observation),
+      (o) => selected.has(o) || (highlighting && this.filterService.isHighlighted(o)),
     );
 
     const polygonFeatures: Feature[] = [];
@@ -453,8 +463,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     });
 
     this.filterService.filterSelectionData.forEach((filter) =>
-      filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
-        this.filterService.isSelected(o),
+      filter.buildChartsData(
+        this.markerService.markerClassify,
+        this.observations,
+        (o) => selected.has(o),
+        (o) => classify.get(o),
       ),
     );
 
@@ -486,7 +499,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.hazardChart = undefined;
       return;
     }
-    const data = this.localObservations.map((o) => this.toChartData(o));
+    this.chartObservations = this.localObservations;
+    const observations = this.chartObservations;
+    const data = observations.map((o, i) => this.toChartData(o, i));
     this.hazardChart = {
       xAxis: {
         nameLocation: "center",
@@ -525,7 +540,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           type: "scatter",
           itemStyle: {
             borderColor: "rgba(0, 0, 0, 0.3)",
-            color: ({ data }) => grainType?.findForObservation(data[2] as FeatureProperties)?.color ?? "black",
+            color: ({ data }) => grainType?.findForObservation(observations[data[2] as number])?.color ?? "black",
           },
           data,
           symbolSize: 7,
@@ -550,7 +565,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     } satisfies EChartsOption;
   }
 
-  private toChartData(o: FeatureProperties): number[] {
+  private toChartData(o: FeatureProperties, index: number): number[] {
     const markerClassify = this.markerService.markerClassify;
     const xType = this.filterService.filterSelectionData.find((f) => f.type === this.config.hazardChart?.xType);
     return [
@@ -558,8 +573,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       xType.getValue(o) as number,
       // snp_characteristics.Punstable.value
       markerClassify.getValue(o) as number,
-      // $event.data[2] as FeatureProperties
-      o as unknown as number,
+      // this.chartObservations[$event.data[2]]
+      index,
     ];
   }
 
@@ -583,7 +598,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const xAxis: XAXisOption = this.hazardChart.xAxis;
     const yAxis: YAXisOption = this.hazardChart.yAxis;
     if (observation) {
-      const data = this.toChartData(observation);
+      const data = this.toChartData(observation, this.chartObservations.indexOf(observation));
       series.data = [data];
       xAxis.axisPointer.value = data[0];
       xAxis.axisPointer.status = "show";
@@ -742,6 +757,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     } satisfies EChartsOption;
 
     // show diamond marker in hazard chart
+    if (!this.hazardChart) {
+      return;
+    }
     this.hazardChart = { ...this.hazardChart };
     const series: ScatterSeriesOption = this.hazardChart.series[MEDIAN_SERIES];
     const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
@@ -759,7 +777,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.emphasizeMedian("highlight");
       return;
     }
-    const observation = $event.data[2] as FeatureProperties;
+    const observation = this.chartObservations[$event.data[2] as number];
     if (!observation || !this.map) return;
     const marker = this.markerService.createMaplibreMarker(observation, true);
     if (!marker) return;
@@ -784,7 +802,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   chartClick($event: ECElementEvent) {
-    const observation = $event.data[2] as FeatureProperties;
+    const observation = this.chartObservations[$event.data[2] as number];
     if (observation) {
       this.showObservationDetails(observation);
     }

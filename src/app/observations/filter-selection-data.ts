@@ -109,13 +109,19 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
         return values;
       }
     }
-    if (typeof key === "string" && key.includes("$stabilityIndex")) {
-      return get(
-        observation,
-        key.replace("$stabilityIndex", (observation as unknown as FeatureProperties).$stabilityIndex),
-      ) as ValueType;
+    return get(observation, this.path(key, (observation as unknown as FeatureProperties).$stabilityIndex)) as ValueType;
+  }
+
+  private readonly paths = new Map<string, string[]>();
+
+  private path(key: keyof T, stabilityIndex: string | undefined): string[] {
+    const resolved = typeof key === "string" ? key.replace("$stabilityIndex", stabilityIndex) : String(key);
+    let path = this.paths.get(resolved);
+    if (!path) {
+      path = resolved.split(".");
+      this.paths.set(resolved, path);
     }
-    return get(observation, key) as ValueType;
+    return path;
   }
 
   getValues(observation: T) {
@@ -146,7 +152,12 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     }
   }
 
-  buildChartsData(markerClassify: FilterSelectionData<T>, observations: T[], isSelected: (o: T) => boolean): void {
+  buildChartsData(
+    markerClassify: FilterSelectionData<T>,
+    observations: T[],
+    isSelected: (o: T) => boolean,
+    classifyValue: (o: T) => ValueType = (o) => markerClassify?.getValue(o),
+  ): void {
     this.nan = 0;
     const dataRaw = this.values.map((value) => ({
       value,
@@ -185,7 +196,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
           data[0]++;
           return;
         }
-        const value2 = markerClassify.getValue(observation);
+        const value2 = classifyValue(observation);
         if (value2 === undefined || value2 === null) {
           data[0]++;
           return;
