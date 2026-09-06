@@ -123,7 +123,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private observations: FeatureProperties[] = [];
   private localObservations: FeatureProperties[] = [];
   selectedObservation: FeatureProperties | undefined = undefined;
-  selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
+  selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml; source: string }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
   sourceTree: SourceGroup = { label: "", groups: [], sources: [] };
@@ -469,11 +469,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       ),
     );
 
-    if (this.selectedObservation && !this.localObservations.includes(this.selectedObservation)) {
-      const observation = this.localObservations.find((o) => o?.location === this.selectedObservation?.location);
-      if (observation) {
-        this.showObservationDetails(observation);
-      }
+    if (this.selectedObservation) {
+      // the details follow the selection: the same observation, or its stand-in after a reload
+      const observation = this.localObservations.includes(this.selectedObservation)
+        ? this.selectedObservation
+        : (this.localObservations.find((o) => o?.location === this.selectedObservation?.location) ??
+          this.selectedObservation);
+      this.showObservationDetails(observation);
     }
 
     try {
@@ -949,8 +951,17 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private showObservationDetails(observation: FeatureProperties) {
     this.selectedObservation = observation;
+    const regions = [...this.filterService.regions].sort();
+    const band = this.filterService.filterSelectionData.find((f) => f.key === "band");
+    // a template may address the selection: the selected regions (else the observation's) and bands
+    const context = {
+      ...observation,
+      $regions: (regions.length ? regions : [observation.region_id]).join(","),
+      $bands: [...(band?.selected ?? [])].sort().join(","),
+    };
+    const previous = this.selectedObservationDetails ?? [];
     this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => {
-      let html = this.markerService.formatTemplate(template, observation);
+      let html = this.markerService.formatTemplate(template, context);
       try {
         const dom = new DOMParser().parseFromString(html, "text/html");
         dom.querySelectorAll("[src]").forEach((node) => {
@@ -960,10 +971,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       } catch (e) {
         console.warn("Failed update URLs using DOMParser", html, e);
       }
-      return {
-        label: this.markerService.formatTemplate(label, observation),
-        html: this.sanitizer.bypassSecurityTrustHtml(html),
-      };
+      const tab = { label: this.markerService.formatTemplate(label, context), source: html };
+      // an unchanged tab keeps its object, so its iframe is not reloaded
+      return (
+        previous.find((p) => p.label === tab.label && p.source === tab.source) ?? {
+          ...tab,
+          html: this.sanitizer.bypassSecurityTrustHtml(html),
+        }
+      );
     });
     this.selectedObservationActiveTabs[observation.$source] = (
       this.selectedObservationDetails.find(
@@ -973,20 +988,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (this.isMobile) {
       this.layout = "chart";
     }
-    this.selectBand(observation);
-  }
-
-  private selectBand(observation: FeatureProperties) {
-    if (observation.$geometry.type === "Point") {
-      return;
-    }
-    const band = this.filterService.filterSelectionData.find((f) => f.key === "band");
-    const value = observation.band as string | undefined;
-    if (!band || !value || (band.selected.size === 1 && band.selected.has(value))) {
-      return;
-    }
-    band.selected = new Set([value]);
-    this.applyLocalFilter();
   }
 
   closeObservation() {
