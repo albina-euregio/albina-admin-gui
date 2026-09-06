@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   inject,
   OnInit,
   viewChild,
@@ -131,6 +132,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private map?: MlMap;
   private pointMarkers: MlMarker[] = [];
   private highlightMarker?: MlMarker;
+  private highlightPolygon?: number;
   // a hovered circle marker takes tooltip priority over the polygon layer underneath it
   private markerHovered = false;
   private hoveredObservation?: FeatureProperties;
@@ -777,15 +779,49 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       return;
     }
     const observation = this.chartObservations[$event.data[2] as number];
-    if (!observation || !this.map) return;
-    const marker = this.markerService.createMaplibreMarker(observation, true);
+    if (observation) {
+      this.highlightOnMap(observation);
+    }
+  }
+
+  /** The viewer in a details frame names the location under its pointer, or null when it left. */
+  @HostListener("window:message", ["$event"])
+  onViewerMessage(event: MessageEvent<{ type?: string; location?: string | null }>) {
+    if (event.origin !== window.location.origin || event.data?.type !== "nivix:hover") return;
+    this.clearHighlight();
+    const location = event.data.location;
+    const observation = location && this.localObservations.find((o) => o.location === location);
+    if (observation) {
+      this.highlightOnMap(observation);
+    }
+  }
+
+  /** A cell keeps its shape and gets a heavy outline; a point grows, in its own colour. */
+  private highlightOnMap(observation: FeatureProperties) {
+    if (!this.map) return;
+    if (observation.$geometry.type !== "Point") {
+      const index = this.localObservations.indexOf(observation);
+      if (index < 0) return;
+      this.map.setFeatureState({ source: this.polygonSource, id: index }, { hover: true });
+      this.highlightPolygon = index;
+      this.tooltipPopup
+        .setLngLat([observation.longitude, observation.latitude])
+        .setHTML(this.markerService.tooltipHtml(observation))
+        .addTo(this.map);
+      return;
+    }
+    const marker = this.markerService.createMaplibreMarker(observation);
     if (!marker) return;
-    marker.getElement().style.zIndex = "42000";
+    const el = marker.getElement() as ObsMarkerElement;
+    el.style.zIndex = "42000";
+    const size = (parseFloat(el.style.width) || 40) * 1.6;
+    el.style.width = `${size}px`;
+    el.style.height = `${size}px`;
     marker.addTo(this.map);
     this.highlightMarker = marker;
     this.tooltipPopup
       .setLngLat(marker.getLngLat())
-      .setHTML((marker.getElement() as ObsMarkerElement).tooltipHtml ?? "")
+      .setHTML(el.tooltipHtml ?? "")
       .addTo(this.map);
   }
 
@@ -818,22 +854,37 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private clearHighlight() {
     this.highlightMarker?.remove();
     this.highlightMarker = undefined;
+    if (this.highlightPolygon !== undefined) {
+      this.map?.removeFeatureState({ source: this.polygonSource, id: this.highlightPolygon });
+      this.highlightPolygon = undefined;
+    }
     this.tooltipPopup.remove();
   }
 
   private setupPolygonLayer(map: MlMap) {
-    map.addSource(this.polygonSource, { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addSource(this.polygonSource, {
+      type: "geojson",
+      promoteId: "index",
+      data: { type: "FeatureCollection", features: [] },
+    });
     map.addLayer({
       id: `${this.polygonSource}-fill`,
       type: "fill",
       source: this.polygonSource,
-      paint: { "fill-color": ["get", "fillColor"], "fill-opacity": ["get", "fillOpacity"] },
+      paint: {
+        "fill-color": ["get", "fillColor"],
+        "fill-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 1, ["get", "fillOpacity"]],
+      },
     });
     map.addLayer({
       id: `${this.polygonSource}-line`,
       type: "line",
       source: this.polygonSource,
-      paint: { "line-color": ["get", "color"], "line-width": ["get", "weight"], "line-opacity": ["get", "opacity"] },
+      paint: {
+        "line-color": ["case", ["boolean", ["feature-state", "hover"], false], "#000", ["get", "color"]],
+        "line-width": ["case", ["boolean", ["feature-state", "hover"], false], 4, ["get", "weight"]],
+        "line-opacity": ["case", ["boolean", ["feature-state", "hover"], false], 1, ["get", "opacity"]],
+      },
     });
     const fillId = `${this.polygonSource}-fill`;
     const obsAt = (e: MapLayerMouseEvent): FeatureProperties | undefined =>
