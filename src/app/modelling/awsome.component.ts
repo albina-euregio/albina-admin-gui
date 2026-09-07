@@ -124,7 +124,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private observations: FeatureProperties[] = [];
   private localObservations: FeatureProperties[] = [];
   selectedObservation: FeatureProperties | undefined = undefined;
-  selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml; source: string }[] | undefined = undefined;
+  selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml; source: string; frame?: string }[] | undefined =
+    undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
   sourceTree: SourceGroup = { label: "", groups: [], sources: [] };
@@ -786,8 +787,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   /** The viewer in a details frame names the location under its pointer, or null when it left. */
   @HostListener("window:message", ["$event"])
-  onViewerMessage(event: MessageEvent<{ type?: string; location?: string | null }>) {
-    if (event.origin !== window.location.origin || event.data?.type !== "nivix:hover") return;
+  onViewerMessage(event: MessageEvent<{ type?: string; location?: string | null; state?: Record<string, string> }>) {
+    if (event.origin !== window.location.origin) return;
+    if (event.data?.type === "nivix:state") {
+      this.resteerFrame(event.source, event.data.state ?? {});
+      return;
+    }
+    if (event.data?.type !== "nivix:hover") return;
     this.clearHighlight();
     const location = event.data.location;
     const observation = location && this.localObservations.find((o) => o.location === location);
@@ -797,6 +803,50 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   /** A cell keeps its shape and gets a heavy outline; a point grows, in its own colour. */
+  /** Both HTML hold one viewer frame on the same path: post the new query to the rendered frame. */
+  // the tabs left behind lose their content; a steered one gets its current link back
+  // for when it is shown again
+  selectDetailsTab(tab: { label: DetailsTabLabel }) {
+    this.selectedObservationActiveTabs[this.selectedObservation.$source] = tab.label;
+    for (const other of this.selectedObservationDetails ?? []) {
+      if (other !== tab && other.frame !== undefined && other.frame !== this.frameSrc(other.source)) {
+        other.html = this.sanitizer.bypassSecurityTrustHtml(other.source);
+        other.frame = this.frameSrc(other.source);
+      }
+    }
+  }
+
+  private frameSrc(html: string): string | undefined {
+    return html.match(/<iframe[^>]*\ssrc="([^"]+)"/)?.[1]?.replace(/&amp;/g, "&");
+  }
+
+  private detailsFrames(): HTMLIFrameElement[] {
+    return [...document.querySelectorAll<HTMLIFrameElement>(".layout-details iframe")];
+  }
+
+  // the frame keeps the src it was rendered with; the viewer inside follows the posted queries
+  private steerFrame(frame: HTMLIFrameElement, nextHtml: string): boolean {
+    const after = this.frameSrc(nextHtml);
+    if (!after || !frame.contentWindow) return false;
+    const [pathBefore] = (frame.getAttribute("src") ?? "").split("?");
+    const [pathAfter, query] = after.split("?");
+    if (pathBefore !== pathAfter || !pathAfter.includes("/nivix/") || !query) return false;
+    frame.contentWindow.postMessage({ type: "nivix:query", query: `?${query}` }, window.location.origin);
+    return true;
+  }
+
+  // a viewer that announces a selection other than its tab's missed a steer while it was
+  // still loading: it is steered again
+  private resteerFrame(source: MessageEventSource | null, shown: Record<string, string>) {
+    const frame = this.detailsFrames().find((f) => f.contentWindow === source);
+    const tab = frame && this.selectedObservationDetails?.find((t) => t.frame === frame.getAttribute("src"));
+    const wanted = tab && this.frameSrc(tab.source)?.split("?")[1];
+    if (!wanted) return;
+    const params = new URLSearchParams(wanted);
+    if (["file", "region", "band"].every((key) => (params.get(key) ?? "") === (shown[key] ?? ""))) return;
+    frame.contentWindow?.postMessage({ type: "nivix:query", query: `?${wanted}` }, window.location.origin);
+  }
+
   private highlightOnMap(observation: FeatureProperties) {
     if (!this.map) return;
     if (observation.$geometry.type !== "Point") {
@@ -1001,6 +1051,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private showObservationDetails(observation: FeatureProperties) {
+    const previous =
+      this.selectedObservation?.$source === observation.$source ? (this.selectedObservationDetails ?? []) : [];
+    const active = this.selectedObservationActiveTabs[observation.$source];
+    const activeIndex = previous.findIndex((p) => p.label === active);
     this.selectedObservation = observation;
     const regions = [...this.filterService.regions].sort();
     const band = this.filterService.filterSelectionData.find((f) => f.key === "band");
@@ -1010,8 +1064,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       $regions: (regions.length ? regions : [observation.region_id]).join(","),
       $bands: [...(band?.selected ?? [])].sort().join(","),
     };
-    const previous = this.selectedObservationDetails ?? [];
-    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => {
+    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }, index) => {
       let html = this.markerService.formatTemplate(template, context);
       try {
         const dom = new DOMParser().parseFromString(html, "text/html");
@@ -1023,18 +1076,26 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         console.warn("Failed update URLs using DOMParser", html, e);
       }
       const tab = { label: this.markerService.formatTemplate(label, context), source: html };
-      // an unchanged tab keeps its object, so its iframe is not reloaded
-      return (
-        previous.find((p) => p.label === tab.label && p.source === tab.source) ?? {
-          ...tab,
-          html: this.sanitizer.bypassSecurityTrustHtml(html),
+      // an unchanged tab keeps its object, so its content is not re-rendered; a tab whose
+      // viewer frame is on the page and only got another query keeps it too and re-points
+      // the frame; a steered tab that is not shown is rebuilt, for when it is
+      const prev = previous[index];
+      if (prev) {
+        const steered = prev.frame !== undefined && prev.frame !== this.frameSrc(prev.source);
+        const frame = prev.frame && this.detailsFrames().find((f) => f.getAttribute("src") === prev.frame);
+        if (prev.source === tab.source && (!steered || frame)) return prev;
+        if (frame && this.steerFrame(frame, html)) {
+          prev.label = tab.label;
+          prev.source = html;
+          return prev;
         }
-      );
+      }
+      return { ...tab, html: this.sanitizer.bypassSecurityTrustHtml(html), frame: this.frameSrc(html) };
     });
     this.selectedObservationActiveTabs[observation.$source] = (
-      this.selectedObservationDetails.find(
-        ({ label }) => label === this.selectedObservationActiveTabs[observation.$source],
-      ) ?? this.selectedObservationDetails[0]
+      this.selectedObservationDetails[activeIndex] ??
+      this.selectedObservationDetails.find(({ label }) => label === active) ??
+      this.selectedObservationDetails[0]
     ).label;
     if (this.isMobile) {
       this.layout = "chart";

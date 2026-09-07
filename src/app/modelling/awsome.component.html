@@ -178,7 +178,7 @@
                     <tab
                       [heading]="tab.label"
                       [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
-                      (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
+                      (selectTab)="selectDetailsTab(tab)"
                     >
                       @if (selectedObservationActiveTabs[selectedObservation.$source] === tab.label) {
                         <div [innerHTML]="tab.html"></div>
