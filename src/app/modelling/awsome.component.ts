@@ -38,6 +38,7 @@ import * as z from "zod/v4";
 import { environment } from "../../environments/environment";
 import { LayerToggleControl } from "../map/controls/layer-toggle-control";
 import { RegionMapService } from "../map/region-map.service";
+import { addTerrainControl } from "../map/terrain";
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
@@ -390,6 +391,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const map = await this.mapService.initMap(this.mapDiv().nativeElement, { clickMode: "awsome", regions });
     this.map = map;
     map.boxZoom.disable();
+    addTerrainControl(map);
 
     const [lat, lon, zoom] = this.config.mapCenter;
     map.jumpTo({ center: [lon, lat], zoom });
