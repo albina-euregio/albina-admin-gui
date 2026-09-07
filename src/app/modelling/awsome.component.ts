@@ -26,7 +26,7 @@ import type {
   XAXisOption,
   YAXisOption,
 } from "echarts/types/dist/shared";
-import { Feature, FeatureCollection, MultiPolygon } from "geojson";
+import { Feature, FeatureCollection, Geometry, MultiPolygon } from "geojson";
 import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
@@ -847,6 +847,20 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     frame.contentWindow?.postMessage({ type: "nivix:query", query: `?${wanted}` }, window.location.origin);
   }
 
+  private topEdgeCentre(geometry: Geometry): [number, number] | undefined {
+    const rings =
+      geometry.type === "Polygon"
+        ? [geometry.coordinates]
+        : geometry.type === "MultiPolygon"
+          ? geometry.coordinates
+          : [];
+    const points = rings.flatMap((polygon) => polygon[0] ?? []);
+    if (!points.length) return undefined;
+    const lngs = points.map((p) => p[0]);
+    const lats = points.map((p) => p[1]);
+    return [(Math.min(...lngs) + Math.max(...lngs)) / 2, Math.max(...lats)];
+  }
+
   private highlightOnMap(observation: FeatureProperties) {
     if (!this.map) return;
     if (observation.$geometry.type !== "Point") {
@@ -854,8 +868,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       if (index < 0) return;
       this.map.setFeatureState({ source: this.polygonSource, id: index }, { hover: true });
       this.highlightPolygon = index;
+      // the popup stands above the cell, pointing at the middle of its top edge,
+      // so the cell it names stays visible
       this.tooltipPopup
-        .setLngLat([observation.longitude, observation.latitude])
+        .setLngLat(this.topEdgeCentre(observation.$geometry) ?? [observation.longitude, observation.latitude])
         .setHTML(this.markerService.tooltipHtml(observation))
         .addTo(this.map);
       return;
