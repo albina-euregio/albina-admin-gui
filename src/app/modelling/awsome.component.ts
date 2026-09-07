@@ -217,6 +217,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return this.sources.filter((s) => this.filterService.observationSources[this.asSource(s)]);
   }
 
+  /** Active sources whose last load succeeded, i.e. the ones on the map. */
+  private get loadedSources() {
+    return this.activeSources.filter((s) => !s.$error);
+  }
+
   private listParam(key: string): string[] {
     return this.route.snapshot.queryParamMap
       .getAll(key)
@@ -725,13 +730,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private loadTimeseriesChart() {
     const stabilityIndex = this.stabilityIndex;
     const url0 = this.config.timeseriesChart?.url;
-    if (!stabilityIndex || !url0 || !this.activeSources.length) {
+    if (!stabilityIndex || !url0 || !this.loadedSources.length) {
       this.timeseriesChart = undefined;
       this.timeseries$loading?.subscription.unsubscribe();
       this.timeseries$loading = undefined;
       return;
     }
-    const url = this.setSearchParams(new URL(url0, this.baseURL), this.activeSources).toString();
+    const url = this.setSearchParams(new URL(url0, this.baseURL), this.loadedSources).toString();
     if (this.timeseries?.url === url) {
       this.renderTimeseries(this.timeseries.data, stabilityIndex);
       return;
