@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import {
   AfterViewInit,
@@ -12,7 +12,7 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import type { ScatterSeriesOption } from "echarts/charts";
@@ -38,7 +38,7 @@ import * as z from "zod/v4";
 import { environment } from "../../environments/environment";
 import { LayerToggleControl } from "../map/controls/layer-toggle-control";
 import { RegionMapService } from "../map/region-map.service";
-import { addTerrainControl } from "../map/terrain";
+import { addTerrainControl, setTerrainEnabled } from "../map/terrain";
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
@@ -107,6 +107,8 @@ type Timeseries = z.infer<typeof TimeseriesSchema>;
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private location = inject(Location);
   filterService = inject<ObservationFilterService<FeatureProperties>>(ObservationFilterService);
   mapService = inject(RegionMapService);
   markerService = inject<ObservationMarkerService<FeatureProperties>>(ObservationMarkerService);
@@ -140,6 +142,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private hoveredObservation?: FeatureProperties;
   private imageOverlays: { id: string; name: string }[] = [];
   private overlayControl?: LayerToggleControl;
+  shareCopied = false;
+  private defaultClassify?: string;
+  private defaultLabel?: string;
+  private defaultSelected = new Map<string, string[]>();
   private readonly polygonSource = "awsome-polygons";
   private readonly tooltipPopup = new Popup({
     closeButton: false,
@@ -177,6 +183,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.sources = this.config.sources;
     this.sourceTree = this.buildSourceTree(this.sources);
     this.sources.forEach((s) => (this.filterService.observationSources[this.asSource(s)] ??= true));
+    const wantedSources = this.listParam("source").filter((name) => this.sources.some((s) => s.name === name));
+    if (wantedSources.length) {
+      this.sources.forEach(
+        (s) => (this.filterService.observationSources[this.asSource(s)] = wantedSources.includes(s.name)),
+      );
+    }
 
     const spec = this.config.filters as FilterSelectionSpec<FeatureProperties>[];
     this.filterService.filterSelectionData = spec.map((f) => {
@@ -194,11 +206,86 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.markerService.markerLabel = this.filterService.filterSelectionData.find(
       (f) => f.type === spec.find((f) => f.default === "label")?.type,
     );
+    this.defaultClassify = this.markerService.markerClassify?.type;
+    this.defaultLabel = this.markerService.markerLabel?.type;
+    this.defaultSelected = new Map(this.filterService.filterSelectionData.map((f) => [f.type, [...f.selected]]));
+    this.applyStateParams();
     await this.loadSources();
   }
 
   get activeSources() {
     return this.sources.filter((s) => this.filterService.observationSources[this.asSource(s)]);
+  }
+
+  private listParam(key: string): string[] {
+    return this.route.snapshot.queryParamMap
+      .getAll(key)
+      .flatMap((v) => v.split(","))
+      .map((v) => v.trim())
+      .filter(Boolean);
+  }
+
+  private filterByType(type: string | null): FilterSelectionData<FeatureProperties> | undefined {
+    return this.filterService.filterSelectionData.find((f) => f.type === type);
+  }
+
+  private applyStateParams() {
+    const params = this.route.snapshot.queryParamMap;
+    for (const f of this.filterService.filterSelectionData) {
+      if (params.has(`filter.${f.type}`)) f.selected = new Set(this.listParam(`filter.${f.type}`));
+      if (params.has(`highlight.${f.type}`)) f.highlighted = new Set(this.listParam(`highlight.${f.type}`));
+    }
+    if (params.has("classify")) this.markerService.markerClassify = this.filterByType(params.get("classify"));
+    if (params.has("label")) this.markerService.markerLabel = this.filterByType(params.get("label"));
+    const layout = params.get("layout");
+    if (layout === "map" || layout === "chart" || layout === "details") this.layout = layout;
+  }
+
+  /** Link that reopens the dashboard with the current date, sources, regions, filters, layout and map view. */
+  shareLink(): string {
+    const params: Params = {};
+    const config = this.route.snapshot.queryParamMap.get("config");
+    if (config) params["config"] = config;
+    params["date"] = this.date;
+    if (this.activeSources.length < this.sources.length) params["source"] = this.activeSources.map((s) => s.name);
+    const regions = this.mapService.getSelectedRegions();
+    if (regions.length) params["region"] = regions;
+    for (const f of this.filterService.filterSelectionData) {
+      const defaults = this.defaultSelected.get(f.type) ?? [];
+      const isDefault = f.selected.size === defaults.length && defaults.every((v) => f.selected.has(v));
+      if (!isDefault) params[`filter.${f.type}`] = [...f.selected].join(",");
+      if (f.highlighted.size) params[`highlight.${f.type}`] = [...f.highlighted].join(",");
+    }
+    const classify = this.markerService.markerClassify?.type ?? "none";
+    if (classify !== (this.defaultClassify ?? "none")) params["classify"] = classify;
+    const label = this.markerService.markerLabel?.type ?? "none";
+    if (label !== (this.defaultLabel ?? "none")) params["label"] = label;
+    if (this.layout !== "map") params["layout"] = this.layout;
+    if (this.map) {
+      const { lat, lng } = this.map.getCenter();
+      const view = [
+        lat.toFixed(4),
+        lng.toFixed(4),
+        this.map.getZoom().toFixed(2),
+        Math.round(this.map.getBearing()),
+        Math.round(this.map.getPitch()),
+      ];
+      params["map"] = view.join(",");
+      if (this.map.getTerrain()) params["terrain"] = "1";
+    }
+    const tree = this.router.createUrlTree([], { relativeTo: this.route, queryParams: params });
+    return new URL(this.location.prepareExternalUrl(this.router.serializeUrl(tree)), window.location.href).toString();
+  }
+
+  async copyShareLink() {
+    const link = this.shareLink();
+    try {
+      await navigator.clipboard.writeText(link);
+      this.shareCopied = true;
+      setTimeout(() => (this.shareCopied = false), 2000);
+    } catch {
+      window.prompt("Link to this view", link);
+    }
   }
 
   private asSource(source: AwsomeSource): ObservationSource {
@@ -393,14 +480,25 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     map.boxZoom.disable();
     addTerrainControl(map);
 
-    const [lat, lon, zoom] = this.config.mapCenter;
-    map.jumpTo({ center: [lon, lat], zoom });
+    if (this.route.snapshot.queryParamMap.get("terrain") === "1") setTerrainEnabled(map, true);
+    const view = this.listParam("map").map(Number);
+    if (view.length >= 3 && view.every(Number.isFinite)) {
+      map.jumpTo({ center: [view[1], view[0]], zoom: view[2], bearing: view[3] ?? 0, pitch: view[4] ?? 0 });
+    } else {
+      const [lat, lon, zoom] = this.config.mapCenter;
+      map.jumpTo({ center: [lon, lat], zoom });
+    }
 
     this.setupPolygonLayer(map);
     this.mapService.onSelectionChange(() => {
       this.filterService.regions = new Set(this.mapService.getSelectedRegions());
       this.applyLocalFilter();
     });
+    const selectedRegions = this.listParam("region");
+    if (selectedRegions.length) {
+      this.mapService.setSelectedRegions(selectedRegions);
+      this.filterService.regions = new Set(this.mapService.getSelectedRegions());
+    }
     this.applyLocalFilter();
 
     if (window.matchMedia("(min-width: 769px)").matches) {

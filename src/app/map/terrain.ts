@@ -33,3 +33,7 @@ export function addTerrainControl(map: MlMap): void {
     if (e.sourceId === DEM_SOURCE && map.getTerrain()) map.setTerrain(null);
   });
 }
+
+export function setTerrainEnabled(map: MlMap, on: boolean): void {
+  map.setTerrain(on ? { source: DEM_SOURCE } : null);
+}

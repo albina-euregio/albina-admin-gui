@@ -113,6 +113,12 @@
             </div>
 
             <div class="global-bar-item">
+              <button type="button" class="btn btn-bare" title="Copy a link to this view" (click)="copyShareLink()">
+                <i class="ph" [ngClass]="shareCopied ? 'ph-check' : 'ph-share-network'"></i>
+              </button>
+            </div>
+
+            <div class="global-bar-item">
               <a
                 href="https://gitlab.com/groups/avalanche-warning/-/wikis/home"
                 class="btn"
