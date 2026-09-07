@@ -34,7 +34,7 @@ export function createMap(opts: CreateMapOptions): MlMap {
     interactive: opts.interactive ?? true,
     minZoom: opts.minZoom ?? 4,
     maxZoom: opts.maxZoom ?? 15,
-    attributionControl: opts.attribution === false ? false : undefined,
+    attributionControl: opts.attribution === false ? false : { compact: true },
   });
   if (opts.navigationControl) {
     map.addControl(new NavigationControl({ showCompass: false }), "top-left");
