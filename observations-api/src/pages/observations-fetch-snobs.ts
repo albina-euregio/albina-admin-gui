@@ -36,7 +36,8 @@ export const POST = async (request: Bun.BunRequest) => {
     observation.$externalURL = undefined;
     observation.$data = undefined;
   }
-  const file = process.env.ALBINA_SNOBS_OUTPUT ?? "snobs.json";
+  let file = process.env.ALBINA_SNOBS_OUTPUT ?? "snobs/$date_snobs.json";
+  file = file.replaceAll("$date", endDate.toISOString().slice(0, "2006-01-02".length));
   console.log(`Writing ${observations.length} observations to ${file}`);
   await writeFile(file, JSON.stringify(observations), { encoding: "utf8" });
   return new Response("", { status: 204, statusText: "No Content" });
