@@ -4,3 +4,7 @@ app-root {
   min-height: 100vh;
   background-color: $gray-100;
 }
+
+.maplibregl-marker-covered {
+  pointer-events: none;
+}

@@ -86,10 +86,13 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       return;
     }
     const el = iconElement(icon);
-    el.style.opacity = String(filterSelectionValue?.opacity ?? 1);
     el.style.zIndex = String(filterSelectionValue?.zIndexOffset ?? zIndex[observation.stability ?? "unknown"] ?? 0);
     el.tooltipHtml = this.createTooltipText(observation);
-    return new MlMarker({ element: el, anchor: "center" }).setLngLat([observation.longitude, observation.latitude]);
+    const opacity = filterSelectionValue?.opacity ?? 1;
+    return new MlMarker({ element: el, anchor: "center", opacity, opacityWhenCovered: 0 }).setLngLat([
+      observation.longitude,
+      observation.latitude,
+    ]);
   }
 
   /** Public tooltip HTML, for callers rendering their own MapLibre popups (e.g. polygon layers). */
