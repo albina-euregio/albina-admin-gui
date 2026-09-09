@@ -431,7 +431,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
     const selectedAspects = aspectFilter?.selected.size ? [...aspectFilter.selected] : [...aspects, "nan"];
-    const urls = filterUrl ? [url] : selectedAspects.map((aspect) => url.replace(ASPECT_FILE, `.${aspect}.json$1`));
+    // Only URLs carrying an aspect infix (foo.north.json) exist once per aspect;
+    // for any other source the replace would be a no-op and we would fetch the
+    // same URL once per aspect, duplicating every observation.
+    const urls =
+      filterUrl || !ASPECT_FILE.test(url)
+        ? [url]
+        : selectedAspects.map((aspect) => url.replace(ASPECT_FILE, `.${aspect}.json$1`));
 
     source.imageOverlays?.forEach((overlay) => this.addImageOverlay(overlay));
 
