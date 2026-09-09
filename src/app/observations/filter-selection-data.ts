@@ -1,5 +1,5 @@
 import { FeatureProperties } from "app/modelling/awsome.component";
-import { castArray, get } from "es-toolkit/compat";
+import { castArray, get, toPath } from "es-toolkit/compat";
 
 import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
 import type { GenericObservation } from "./models/generic-observation.model";
@@ -118,7 +118,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     const resolved = typeof key === "string" ? key.replace("$stabilityIndex", stabilityIndex) : String(key);
     let path = this.paths.get(resolved);
     if (!path) {
-      path = resolved.split(".");
+      path = toPath(resolved);
       this.paths.set(resolved, path);
     }
     return path;
