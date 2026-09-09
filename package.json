@@ -96,6 +96,7 @@
     "istanbul-lib-instrument": "^6.0.3",
     "typescript": "6.0.3",
     "typescript-eslint": "^8.61.1",
+    "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "resolutions": {
