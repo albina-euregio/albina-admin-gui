@@ -1,5 +1,5 @@
 import { FeatureProperties } from "app/modelling/awsome.component";
-import { castArray, get, toPath } from "es-toolkit/compat";
+import { castArray, get, memoize, toPath } from "es-toolkit/compat";
 
 import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
 import type { GenericObservation } from "./models/generic-observation.model";
@@ -112,16 +112,12 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     return get(observation, this.path(key, (observation as unknown as FeatureProperties).$stabilityIndex)) as ValueType;
   }
 
-  private readonly paths = new Map<string, string[]>();
+  /** A key is parsed into its path once, then looked up. */
+  private readonly parsePath = memoize(toPath);
 
   private path(key: keyof T, stabilityIndex: string | undefined): string[] {
     const resolved = typeof key === "string" ? key.replace("$stabilityIndex", stabilityIndex) : String(key);
-    let path = this.paths.get(resolved);
-    if (!path) {
-      path = toPath(resolved);
-      this.paths.set(resolved, path);
-    }
-    return path;
+    return this.parsePath(resolved);
   }
 
   getValues(observation: T) {
