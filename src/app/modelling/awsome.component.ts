@@ -584,11 +584,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     );
 
     if (this.selectedObservation) {
-      // the details follow the selection: the same observation, or its stand-in after a reload
+      // the details follow the selection: the same observation, or its stand-in after a
+      // reload, which only a location can name -- without one every observation looks alike
+      const location = this.selectedObservation.location;
+      const standIn = location === undefined ? undefined : this.localObservations.find((o) => o.location === location);
       const observation = this.localObservations.includes(this.selectedObservation)
         ? this.selectedObservation
-        : (this.localObservations.find((o) => o?.location === this.selectedObservation?.location) ??
-          this.selectedObservation);
+        : (standIn ?? this.selectedObservation);
       this.showObservationDetails(observation);
     }
 
