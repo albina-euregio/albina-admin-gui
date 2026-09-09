@@ -26,30 +26,52 @@
                   ></div>
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll">
-                  @for (source of sources; track source) {
-                    <div class="form-check">
-                      <label class="form-check-label text-nowrap">
-                        <input
-                          [(ngModel)]="filterService.observationSources[source.name]"
-                          [ngModelOptions]="{ standalone: true }"
-                          (change)="ngOnInit()"
-                          type="checkbox"
-                          class="form-check-input"
-                        />
-                        {{ source.name }}
-                        @if (source.$error) {
-                          <div
-                            class="spinner-grow spinner-grow-sm text-danger"
-                            role="alert"
-                            [title]="source.$error | json"
-                          ></div>
-                        }
-                        @if (source.$loading) {
-                          <div class="spinner-grow spinner-grow-sm text-success" role="status" title="Loading"></div>
-                        }
-                      </label>
-                    </div>
-                  }
+                  <ng-container *ngTemplateOutlet="sourceGroup; context: { $implicit: sourceTree }" />
+                  <ng-template #sourceGroup let-group>
+                    @for (source of group.sources; track source.name) {
+                      <div class="form-check">
+                        <label class="form-check-label text-nowrap">
+                          <input
+                            [(ngModel)]="filterService.observationSources[source.name]"
+                            [ngModelOptions]="{ standalone: true }"
+                            (change)="loadSources()"
+                            type="checkbox"
+                            class="form-check-input"
+                          />
+                          {{ source.name }}
+                          @if (source.$error) {
+                            <div
+                              class="spinner-grow spinner-grow-sm text-danger"
+                              role="alert"
+                              [title]="source.$error | json"
+                            ></div>
+                          }
+                          @if (source.$loading) {
+                            <div class="spinner-grow spinner-grow-sm text-success" role="status" title="Loading"></div>
+                          }
+                        </label>
+                      </div>
+                    }
+                    @for (child of group.groups; track child.label) {
+                      <details open>
+                        <summary>
+                          <span class="form-check d-inline-block">
+                            <input
+                              [checked]="isGroupOn(child)"
+                              [indeterminate]="isGroupMixed(child)"
+                              (change)="toggleGroup(child, $any($event.target).checked)"
+                              type="checkbox"
+                              class="form-check-input"
+                            />
+                            <label class="form-check-label text-nowrap fw-semibold">{{ t(child.label) }}</label>
+                          </span>
+                        </summary>
+                        <div class="ms-3">
+                          <ng-container *ngTemplateOutlet="sourceGroup; context: { $implicit: child }" />
+                        </div>
+                      </details>
+                    }
+                  </ng-template>
                 </form>
               </div>
             </div>
@@ -91,6 +113,12 @@
             </div>
 
             <div class="global-bar-item">
+              <button type="button" class="btn btn-bare" title="Copy a link to this view" (click)="copyShareLink()">
+                <i class="ph" [ngClass]="shareCopied ? 'ph-check' : 'ph-share-network'"></i>
+              </button>
+            </div>
+
+            <div class="global-bar-item">
               <a
                 href="https://gitlab.com/groups/avalanche-warning/-/wikis/home"
                 class="btn"
@@ -120,7 +148,7 @@
                   class="chart-container"
                   [filterSelection]="filterSelection"
                   (handleReload)="loadSources()"
-                  (handleChange)="applyLocalFilter()"
+                  (handleChange)="onFilterChange(filterSelection)"
                 />
               }
             </div>
@@ -156,7 +184,7 @@
                     <tab
                       [heading]="tab.label"
                       [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
-                      (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
+                      (selectTab)="selectDetailsTab(tab)"
                     >
                       @if (selectedObservationActiveTabs[selectedObservation.$source] === tab.label) {
                         <div [innerHTML]="tab.html"></div>
@@ -174,6 +202,8 @@
                 echarts
                 (chartMouseOver)="chartMouseOver($event)"
                 (chartMouseOut)="chartMouseOut()"
+                (chartClick)="chartClick($event)"
+                (chartInit)="hazardInstance = $event"
                 [options]="hazardChart"
               ></div>
             </div>
@@ -181,7 +211,7 @@
 
           @if (!selectedObservationDetails && timeseriesChart) {
             <div class="chart-container timeseries-chart">
-              <div echarts [options]="timeseriesChart"></div>
+              <div echarts [options]="timeseriesChart" (chartInit)="timeseriesInstance = $event"></div>
             </div>
           }
         </div>

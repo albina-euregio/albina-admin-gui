@@ -335,11 +335,13 @@ $estimated-navbar-height: 60px;
 .chart-container {
   width: calc(50% - 20px * 0.5);
   height: 440px;
-  &.hazard-chart {
-    width: 100%;
-  }
+  &.hazard-chart,
   &.timeseries-chart {
     width: 100%;
+    height: 480px;
+    > div {
+      height: 100%;
+    }
   }
 }
 
@@ -354,11 +356,13 @@ $estimated-navbar-height: 60px;
     width: 220px;
     &.hazard-chart {
       display: inline-block;
-      width: 440px;
+      width: 528px;
+      max-width: 100%;
     }
     &.timeseries-chart {
       display: inline-block;
-      width: 660px;
+      width: 792px;
+      max-width: 100%;
     }
   }
 }

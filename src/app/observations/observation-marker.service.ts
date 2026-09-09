@@ -41,20 +41,21 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     labelColor: "#fff",
   } as FilterSelectionValue;
 
-  createMaplibreMarker(observation: T, isHighlighted = false): MlMarker | undefined {
+  createMaplibreMarker(observation: T & { $sourceObject?: AwsomeSource }, isHighlighted = false): MlMarker | undefined {
     try {
       const filterSelectionValue = isHighlighted
         ? this.highlighted
         : this.markerClassify?.findForObservation(observation);
+      const border = this.borderStyle(observation.$sourceObject, filterSelectionValue);
       // NB: per-zoom radius resizing (radiusByZoom) is not yet ported to MapLibre
       const icon = makeIcon(
         castArray(observation.aspect)[0],
         "#898989",
         filterSelectionValue?.radius ?? 40,
         filterSelectionValue?.color ?? "white",
-        filterSelectionValue?.borderColor ?? "#000",
-        filterSelectionValue?.borderWidth ?? 2,
-        filterSelectionValue?.borderDashArray ?? "",
+        border.color,
+        border.width,
+        border.dashArray,
         filterSelectionValue?.labelColor ?? "#000",
         filterSelectionValue?.labelFontSize ?? 12,
         this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,
@@ -67,6 +68,15 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     }
   }
 
+  /** A source's own border style wins over the classifying filter value's. */
+  private borderStyle(source: AwsomeSource | undefined, value: FilterSelectionValue | undefined) {
+    return {
+      color: source?.borderColor ?? value?.borderColor ?? "#000",
+      width: source?.borderWidth ?? value?.borderWidth ?? 2,
+      dashArray: source?.borderDashArray ?? value?.borderDashArray ?? "",
+    };
+  }
+
   createMaplibreMarkerForIcon(
     observation: T,
     icon: MarkerIcon,
@@ -76,10 +86,13 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       return;
     }
     const el = iconElement(icon);
-    el.style.opacity = String(filterSelectionValue?.opacity ?? 1);
     el.style.zIndex = String(filterSelectionValue?.zIndexOffset ?? zIndex[observation.stability ?? "unknown"] ?? 0);
     el.tooltipHtml = this.createTooltipText(observation);
-    return new MlMarker({ element: el, anchor: "center" }).setLngLat([observation.longitude, observation.latitude]);
+    const opacity = filterSelectionValue?.opacity ?? 1;
+    return new MlMarker({ element: el, anchor: "center", opacity, opacityWhenCovered: 0 }).setLngLat([
+      observation.longitude,
+      observation.latitude,
+    ]);
   }
 
   /** Public tooltip HTML, for callers rendering their own MapLibre popups (e.g. polygon layers). */
@@ -132,7 +145,11 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     }
   }
 
+  /** Substitutes {a.b} from the data; $stabilityIndex in a key names the index the data is classified by. */
   formatTemplate(t: string, data: unknown): string {
-    return t.replace(/{([^{}]+)}/g, (_match, key) => _get(data, key, ""));
+    const stabilityIndex = (data as { $stabilityIndex?: string } | undefined)?.$stabilityIndex;
+    return t.replace(/{([^{}]+)}/g, (_match, key: string) =>
+      _get(data, stabilityIndex ? key.replace("$stabilityIndex", stabilityIndex) : key, ""),
+    );
   }
 }

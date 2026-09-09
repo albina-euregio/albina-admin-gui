@@ -3,9 +3,18 @@ import * as z from "zod/v4";
 import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-selection-config";
 
 export const AwsomeSourceSchema = z.object({
-  name: z.string().optional().describe("Identifier shown in source multiselect"),
-  domain: z.string().optional().describe("Domain identifier used in AWSOME, for instance tirol24"),
-  toolchain: z.string().optional().describe("Toolchain identifier used in AWSOME, for instance gridded-chain"),
+  name: z
+    .string()
+    .optional()
+    .describe(
+      "The recipe the source comes from, for instance tirol25: its folder under the simulation tree, its label in the source menu and its name in the API",
+    ),
+  group: z
+    .string()
+    .optional()
+    .describe(
+      "Where the source sits in the source menu, nested with slashes such as Tirol/Gridded; top level when absent",
+    ),
   url: UrlSchema.optional().describe(
     "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
   ),
@@ -24,6 +33,20 @@ export const AwsomeSourceSchema = z.object({
     .optional()
     .describe(
       "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
+    ),
+  borderColor: z
+    .string()
+    .optional()
+    .describe("Border stroke color of this source's markers, overrides the filter value's"),
+  borderWidth: z
+    .number()
+    .optional()
+    .describe("Border stroke width of this source's markers, overrides the filter value's"),
+  borderDashArray: z
+    .string()
+    .optional()
+    .describe(
+      "Border stroke dash-array of this source's markers, overrides the filter value's, see https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-dasharray",
     ),
   imageOverlays: z
     .object({

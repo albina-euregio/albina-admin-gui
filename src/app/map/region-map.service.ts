@@ -51,7 +51,7 @@ export class RegionMapService implements OnDestroy {
 
     const active = await this.regionsService.getActiveServerRegionsAsync();
     // Restore the last viewed center/zoom if stored; otherwise frame the active regions.
-    if (!this.localStorageService.getMapCenter()) {
+    if (active && !this.localStorageService.getMapCenter()) {
       fitFeatureCollection(map, active);
     }
     this.disposeMapCenter = bindMapCenterPersistence(map, this.localStorageService);

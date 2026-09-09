@@ -210,15 +210,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "description": "Identifier shown in source multiselect",
+            "description": "The recipe the source comes from, for instance tirol25: its folder under the simulation tree, its label in the source menu and its name in the API",
             "type": "string"
           },
-          "domain": {
-            "description": "Domain identifier used in AWSOME, for instance tirol24",
-            "type": "string"
-          },
-          "toolchain": {
-            "description": "Toolchain identifier used in AWSOME, for instance gridded-chain",
+          "group": {
+            "description": "Where the source sits in the source menu, nested with slashes such as Tirol/Gridded; top level when absent",
             "type": "string"
           },
           "url": {
@@ -254,6 +250,18 @@
           },
           "tooltipTemplate": {
             "description": "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
+            "type": "string"
+          },
+          "borderColor": {
+            "description": "Border stroke color of this source's markers, overrides the filter value's",
+            "type": "string"
+          },
+          "borderWidth": {
+            "description": "Border stroke width of this source's markers, overrides the filter value's",
+            "type": "number"
+          },
+          "borderDashArray": {
+            "description": "Border stroke dash-array of this source's markers, overrides the filter value's, see https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-dasharray",
             "type": "string"
           },
           "imageOverlays": {
