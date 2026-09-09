@@ -754,10 +754,18 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.timeseries$loading?.subscription.unsubscribe();
     this.timeseries$loading = {
       url,
-      subscription: this.fetchJSON(url).subscribe((d) => {
-        this.timeseries$loading = undefined;
-        this.timeseries = { url, data: TimeseriesSchema.parse(d) };
-        this.renderTimeseries(this.timeseries.data, stabilityIndex);
+      subscription: this.fetchJSON(url).subscribe({
+        next: (d) => {
+          this.timeseries$loading = undefined;
+          this.timeseries = { url, data: TimeseriesSchema.parse(d) };
+          this.renderTimeseries(this.timeseries.data, stabilityIndex);
+        },
+        // a failed load has to forget its URL, or the guard above takes it for
+        // one still in flight and the chart is never asked for again
+        error: (err) => {
+          this.timeseries$loading = undefined;
+          console.warn("Failed to load timeseries", url, err);
+        },
       }),
     };
   }
