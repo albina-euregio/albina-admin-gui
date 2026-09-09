@@ -1024,6 +1024,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   chartClick($event: ECElementEvent) {
     const observation = this.chartObservations[$event.data[2] as number];
     if (observation) {
+      this.chartMouseOut();
       this.showObservationDetails(observation);
     }
   }
