@@ -25,7 +25,7 @@ variables:
 
 .build:
   stage: build
-  image: node:26.4.0
+  image: node:26.8.2
   interruptible: true
   cache:
     - *pnpm-cache
@@ -33,7 +33,7 @@ variables:
       paths:
         - .angular/cache/
   before_script:
-    - command -v pnpm || npm install --global pnpm@12.4.0
+    - command -v pnpm || npm install --global pnpm@12.4.1
     - pnpm config set store-dir "$PNPM_STORE_DIR"
     - pnpm install --frozen-lockfile
     - npm --no-git-tag-version version $(git describe --tags)
@@ -213,7 +213,7 @@ deploy:observations-api-dev:
     reports:
       junit: test-results/junit-results.xml
   before_script:
-    - command -v pnpm || npm install --global pnpm@12.4.0
+    - command -v pnpm || npm install --global pnpm@12.4.1
     - pnpm config set store-dir "$PNPM_STORE_DIR"
     - pnpm install --frozen-lockfile
     - export TZ="Europe/Vienna"

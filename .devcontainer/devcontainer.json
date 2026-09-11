@@ -1,5 +1,5 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:24",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:26",
   "postAttachCommand": "pnpm dev",
   "postCreateCommand": "pnpm ci",
   "mounts": ["source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind"],
