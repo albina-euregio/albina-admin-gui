@@ -525,7 +525,7 @@
   <div class="modal-header">
     <span class="modal-title">
       {{ observationEditor.observation?.$source }}
-      <span [style]="{ color: markerService.toMarkerColor(observationPopup?.observation) }">█</span>
+      <span [style]="{ color: markerService.toMarkerColor(observationEditor.observation) }">█</span>
       {{ observationEditor.observation?.locationName }}
     </span>
     <button type="button" class="btn-close" aria-label="Close" (click)="hideObservationEditor()"></button>
