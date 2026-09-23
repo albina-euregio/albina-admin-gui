@@ -31,10 +31,10 @@
       - tablist:
         - tab " low Wet snow SLAB ":
           - button " low Wet snow SLAB " [expanded]:
-            - text: ""
+            - text: 
             - img "low"
             - img "Wet snow"
-            - text: ""
+            - text: SLAB
             - img:
               - button
               - button
@@ -52,11 +52,9 @@
         - tabpanel:
           - text: Avalanche problem
           - button "Decision tree"
-          - link "Feedback":
-            - /url: https://admin.avalanche.report/umfrage-entscheidungsbaum/en/
           - img "New snow"
           - img "Wind slab"
-          - img "Persistent weak layers"
+          - img "Persistent weak layer"
           - img "Wet snow"
           - img "Gliding snow"
           - img "Cornices"
@@ -134,7 +132,7 @@
           - button ""
           - checkbox "(override danger rating)"
           - text: (override danger rating) Matrix
-          - img: 5 4 3 2 1 Avalanche Size Frequency many some a few (nearly) none Refer to fair stability very poor 5 5 (4) 4 3 (4) 2 (3) 5 (4) 4 3 (4) 3 2 4 3 (4) 3 2 1 (2) poor 5 (4) 4 4 (3) 3 2 4 4 (3) 3 2 (3) 2 3 (4) 3 2 (3) 2 1 fair 4 (3) 3 (4) 3 (2) 2 1 (2) 3 (4) 3 2 (3) 2 1 (2) 3 2 (3) 2 (1) 1 (2) 1 Danger level 1 (Low) Refer to poor stability 5 4 3 2 1 5 4 3 2 1 Snowpack Stability
+          - img: 5 4 3 2 1 Avalanche Size Frequency many some few none Refer to fair stability very poor 5 5 (4) 4 3 (4) 2 (3) 5 (4) 4 3 (4) 3 2 4 3 (4) 3 2 1 (2) poor 5 (4) 4 4 (3) 3 2 4 4 (3) 3 2 (3) 2 3 (4) 3 2 (3) 2 1 fair 4 (3) 3 (4) 3 (2) 2 1 (2) 3 (4) 3 2 (3) 2 1 (2) 3 2 (3) 2 (1) 1 (2) 1 Danger level 1 (Low) Refer to poor stability 5 4 3 2 1 5 4 3 2 1 Snowpack Stability
     - tab " Description of avalanche danger":
       - button " Description of avalanche danger" [expanded]:
         - heading " Description of avalanche danger" [level=2]
@@ -194,27 +192,27 @@
       - combobox:
         - option [selected]
         - 'option "dp.1: deep persistent weak layer"'
-        - 'option "dp.2: gliding avalanches"'
+        - 'option "dp.2: gliding snow"'
         - 'option "dp.3: rain"'
         - 'option "dp.4: cold following warm / warm following cold"'
         - 'option "dp.5: snowfall after a long period of cold"'
         - 'option "dp.6: cold, loose snow and wind"'
-        - 'option "dp.7: shallow snow next to deep snow"'
-        - 'option "dp.8: buried surface hoar"'
-        - 'option "dp.9: buried graupel"'
-        - 'option /dp\.\d+: springtime scenario/'
+        - 'option "dp.7: snow-poor zones in snow-rich surrounding"'
+        - 'option "dp.8: surface hoar blanketed with snow"'
+        - 'option "dp.9: graupel blanketed with snow"'
+        - 'option "dp.10: springtime scenario"'
       - combobox:
         - option [selected]
         - 'option "dp.1: deep persistent weak layer"'
-        - 'option "dp.2: gliding avalanches"'
+        - 'option "dp.2: gliding snow"'
         - 'option "dp.3: rain"'
         - 'option "dp.4: cold following warm / warm following cold"'
         - 'option "dp.5: snowfall after a long period of cold"'
         - 'option "dp.6: cold, loose snow and wind"'
-        - 'option "dp.7: shallow snow next to deep snow"'
-        - 'option "dp.8: buried surface hoar"'
-        - 'option "dp.9: buried graupel"'
-        - 'option /dp\.\d+: springtime scenario/'
+        - 'option "dp.7: snow-poor zones in snow-rich surrounding"'
+        - 'option "dp.8: surface hoar blanketed with snow"'
+        - 'option "dp.9: graupel blanketed with snow"'
+        - 'option "dp.10: springtime scenario"'
       - text: Description of snowpack structure
       - button ""
       - button ""
