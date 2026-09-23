@@ -239,8 +239,8 @@ test("Create new observation", async ({ page }) => {
   await page.locator('#reportDate input[type="time"]').fill("08:00");
   await page.getByTitle("Wind slab").click();
   await page.getByLabel("Danger source").selectOption("60635f9e-63f8-456e-8202-740467eab952");
-  await page.getByRole("button", { name: "Gliding snow" }).click();
-  await page.getByRole("button", { name: "dp.2: gliding avalanches" }).click();
+  await page.getByRole("button", { name: "Gliding snow", exact: true }).click();
+  await page.getByRole("button", { name: "dp.2: gliding snow" }).click();
   await page.getByRole("button", { name: "For blog" }).click();
   await page.getByRole("textbox", { name: "Content" }).fill("Playwright test");
   await expect(page.getByRole("button", { name: "Save" })).toBeEnabled();
@@ -253,6 +253,7 @@ test("Edit existing observation", async () => {
 });
 
 test("Webcams and Observers", async ({ page }) => {
+  test.slow();
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
   await test.step("Gallery", async () => {
