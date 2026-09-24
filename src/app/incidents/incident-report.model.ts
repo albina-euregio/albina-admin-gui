@@ -17,7 +17,7 @@ export const MetaInformationSchema = z.object({
 export const GeneralInformationSchema = z.object({
   reportStatus: z
     .enum(["Draft", "Incomplete", "InReview", "Verified"])
-    .register(widgetRegistry, { widget: "none", mostRelevant: true })
+    .register(widgetRegistry, { widget: "none", public: true, mostRelevant: true })
     .nullish(),
 
   sourceOfInformation: z
