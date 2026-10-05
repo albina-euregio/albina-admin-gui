@@ -41,7 +41,6 @@
     "@angular/forms": "^22.2.1",
     "@angular/platform-browser": "^22.2.1",
     "@angular/router": "^22.2.1",
-    "@angular/upgrade": "^22.2.1",
     "@auth0/angular-jwt": "^5.2.0",
     "@eaws/micro-regions": "^8.4.0",
     "@eaws/micro-regions_names": "^8.4.0",
