@@ -56,7 +56,7 @@
     "echarts": "^6.0.0",
     "es-toolkit": "^1.44.0",
     "file-saver": "^2.0.5",
-    "maplibre-gl": "^6.8.0",
+    "maplibre-gl": "^6.12.0",
     "mousetrap": "^1.6.5",
     "ngx-bootstrap": "^22.0.0",
     "ngx-echarts": "^22.0.0",
