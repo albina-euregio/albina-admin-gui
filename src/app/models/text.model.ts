@@ -28,7 +28,7 @@ export function concatenateLangTexts(t1: LangTexts, t2: LangTexts): LangTexts {
   return Object.fromEntries(LANGUAGES.map((l) => [l, `${t1[l] || ""} ${t2[l] || ""}`.trim()])) as LangTexts;
 }
 
-export function convertLangTextsToJSON(t: LangTexts): TextModel[] {
+export function convertLangTextsToJSON(t: Partial<LangTexts>): TextModel[] {
   return Object.entries(t).map(([languageCode, text]) => ({ languageCode: languageCode as AlbinaLanguage, text }));
 }
 
