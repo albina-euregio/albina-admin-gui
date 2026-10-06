@@ -35,7 +35,7 @@ import { saveAs } from "file-saver";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 // For iframe
-import { forkJoin, map, Observable, of, Subscription, tap, timer } from "rxjs";
+import { defer, finalize, forkJoin, map, Observable, of, Subscription, tap, timer } from "rxjs";
 
 import { DangerSourcesService } from "../danger-sources/danger-sources.service";
 import * as Enums from "../enums/enums";
@@ -116,6 +116,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public comparedBulletin: BulletinModel;
   public internBulletinsList: BulletinModel[];
   private internBulletinsListEtag: string;
+  /** Incremented when a bulletin write starts and ends, to discard stale responses of overlapping loads. */
+  private internBulletinsWriteCount = 0;
   public externRegionsMap: Map<string, { server: ServerModel; bulletins: BulletinModel[] }>;
   public showExternRegionsMap: Map<string, boolean>;
   public showExternRegions: boolean;
@@ -426,6 +428,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private loadBulletinsFromServer() {
     console.log("Load internal bulletins");
+    const writeCount = this.internBulletinsWriteCount;
     this.bulletinsService
       .loadBulletins(
         this.getActiveDate(),
@@ -435,7 +438,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       .subscribe(
         ({ bulletins, etag }) => {
           this.loadInternalBulletinsError = false;
-          if (!etag || etag !== this.internBulletinsListEtag) {
+          if (writeCount !== this.internBulletinsWriteCount) {
+            console.info("Skipping internal bulletin update overlapping with a write");
+          } else if (!etag || etag !== this.internBulletinsListEtag) {
             this.addInternalBulletins(bulletins);
             this.internBulletinsListEtag = etag;
           } else {
@@ -1675,7 +1680,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const regionId = bulletin.getSavedAndPublishedRegions()[0];
     bulletin.validity.from = this.bulletinsService.sourceDates.activeValidFrom;
     bulletin.validity.until = this.bulletinsService.sourceDates.activeValidUntil;
-    this.bulletinsService.createBulletin(bulletin).subscribe(
+    this.trackWrite(this.bulletinsService.createBulletin(bulletin)).subscribe(
       (data) => {
         if (this.activeBulletin && this.activeBulletin.id == undefined) {
           this.activeBulletin.id = this.getNewId(data, regionId);
@@ -1707,7 +1712,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (writeUndoStack) {
       this.bulletinsService.undoRedo.pushToUndoStack(bulletin);
     }
-    this.bulletinsService.updateBulletin(bulletin).subscribe(
+    this.trackWrite(this.bulletinsService.updateBulletin(bulletin)).subscribe(
       (data) => {
         this.addInternalBulletins(data);
         this.saveError.delete(bulletin.id);
@@ -1726,12 +1731,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
+  private trackWrite<T>(request: Observable<T>): Observable<T> {
+    return defer(() => {
+      this.internBulletinsWriteCount++;
+      return request.pipe(finalize(() => this.internBulletinsWriteCount++));
+    });
+  }
+
   private deleteBulletinOnServer(bulletin: BulletinModel): Observable<BulletinModelAsJSON[]> {
     if (this.isWriteDisabled()) {
       return of(null);
     }
     // tap is used to perform side-effects for the observable
-    return this.bulletinsService.deleteBulletin(bulletin).pipe(
+    return this.trackWrite(this.bulletinsService.deleteBulletin(bulletin)).pipe(
       tap({
         next: (data) => {
           this.addInternalBulletins(data);
