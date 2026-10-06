@@ -20,6 +20,14 @@ interface RemoteTimeRange {
   maxAnalysisTimestamp: string;
 }
 
+/** A single entry from the live config.json's `boundingBoxes`. */
+interface RemoteBoundingBox {
+  /** Start and end of the period this bounding box applies to (ISO 8601). */
+  validity: [string, string];
+  /** Extent of the overlay images, as min lng, min lat, max lng, max lat. */
+  bbox: [number, number, number, number];
+}
+
 /**
  * The shape of `.../zamg_meteo/overlays/{domain}/config.json`. The payload
  * also carries `startDateURL`, a wiski.tirol.gv.at URL (no CORS headers)
@@ -31,6 +39,8 @@ interface RemoteDomainConfig {
   units: string;
   thresholds: RemoteThreshold[];
   timeRanges: RemoteTimeRange[];
+  /** Extent of the overlay images, per period of validity; may be absent. */
+  boundingBoxes?: RemoteBoundingBox[];
   startDate: string;
   startDateModifyTimestamp: string;
 }
@@ -54,6 +64,17 @@ const domains = [
 ] as const;
 
 type Domain = (typeof domains)[number];
+
+type Corners = [[number, number], [number, number], [number, number], [number, number]];
+
+function cornersFromBbox([minLng, minLat, maxLng, maxLat]: [number, number, number, number]): Corners {
+  return [
+    [minLng, maxLat],
+    [maxLng, maxLat],
+    [maxLng, minLat],
+    [minLng, minLat],
+  ];
+}
 
 @Injectable()
 export class ZamgMeteoSourceService {
@@ -81,6 +102,11 @@ export class ZamgMeteoSourceService {
         .map((threshold) => `<i style="color:${threshold.color}">■</i> ${formatThreshold(threshold, config.units)}`)
         .join(", ");
       const label = this.domainLabel(domain);
+      // `boundingBoxes` is ordered by validity, so the last entry is the one in force now.
+      const boundingBoxes = config.boundingBoxes ?? [];
+      const coordinates = boundingBoxes.length
+        ? cornersFromBbox(boundingBoxes[boundingBoxes.length - 1].bbox)
+        : undefined;
       return config.timeRanges.map(
         (timeRange) =>
           new MapLink({
@@ -94,6 +120,7 @@ export class ZamgMeteoSourceService {
             dateStepHour: timeRange.timeStepHours,
             label: config.timeRanges.length > 1 ? `${timeRange.timeRange}h ${label}` : label,
             attribution,
+            coordinates,
           }),
       );
     } catch (e) {
@@ -136,23 +163,26 @@ class MapLink {
   dateStepHour?: number;
   attribution?: string;
   selected: boolean;
+  private readonly coordinates: Corners;
 
   private static seq = 0;
   readonly imageId = `zamg-meteo-${MapLink.seq++}`;
   private map?: MlMap;
-  // image corners (TL, TR, BR, BL) in [lng, lat]
-  private static readonly coordinates: [[number, number], [number, number], [number, number], [number, number]] = [
+  // image corners (TL, TR, BR, BL) in [lng, lat], used when the domain's
+  // config.json states no boundingBoxes.
+  private static readonly fallbackCoordinates: Corners = [
     [9.4, 47.8167],
     [13.0333, 47.8167],
     [13.0333, 45.6167],
     [9.4, 45.6167],
   ];
 
-  constructor(data: Partial<MapLink>) {
+  constructor(data: Partial<MapLink> & { coordinates?: Corners }) {
     Object.assign(this, data);
     this.href = data.href!;
     this.label = data.label!;
     this.date = data.date!;
+    this.coordinates = data.coordinates ?? MapLink.fallbackCoordinates;
   }
 
   change(change: 1 | -1 | Temporal.Instant) {
@@ -187,7 +217,7 @@ class MapLink {
       this.updateImage();
       return;
     }
-    map.addSource(this.imageId, { type: "image", url: this.linkHref, coordinates: MapLink.coordinates });
+    map.addSource(this.imageId, { type: "image", url: this.linkHref, coordinates: this.coordinates });
     // TODO(maplibre-migration): legend attribution + multiply blend not yet ported
     map.addLayer({ id: this.imageId, type: "raster", source: this.imageId });
   }
