@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 
-import { changeRegion, loginForecaster } from "./utils";
+import { changeRegion, loginForecaster, setFixedTime } from "./utils";
 
 test("check all links in navbar", async ({ page }) => {
+  // fixed date with observations in the default date range (last 7 days)
+  await setFixedTime(page, new Date("2024-12-24"));
   await page.goto("");
   await loginForecaster(page);
 

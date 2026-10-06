@@ -199,7 +199,8 @@ test("Edit bulletin", async ({ page }) => {
   await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("cell", { name: "Wednesday, December 25, 2024" }).getByTitle("edit bulletin").click();
-  await expect(page.locator(".badge").first()).toContainText("draft", { timeout: 7000 });
+  // "missing" if a previous run cleaned up all regions
+  await expect(page.locator(".badge").first()).toContainText(/draft|missing/, { timeout: 7000 });
   await clearWarningRegions(page);
   const regionProblem = page.locator(".region-thumb").first();
   await test.step("Create new region", async () => {
@@ -422,7 +423,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
 test("Post bulletin ahead of DST change", async ({ page }) => {
   const testDate = new Date("2025-03-29");
   await setFixedTime(page, testDate);
-  page.reload();
+  await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("row", { name: "Sunday, March 30, 2025" }).getByTitle("edit bulletin").click();
 
@@ -484,9 +485,21 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
 test("Textcat", async ({ page }) => {
   const testDate = new Date("2025-03-29");
   await setFixedTime(page, testDate);
-  page.reload();
+  await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("row", { name: "Tuesday, April 1, 2025" }).getByTitle("edit bulletin").click();
+  const snowpackStructure = page.locator("#region-form-snowpack-structure");
+  // bulletin updates are debounced, wait for them to be saved
+  const deleteSnowpackStructureText = async () => {
+    const updateResponsePromise = page.waitForResponse(
+      (response) =>
+        /\/api\/bulletins\/[^/?]+\?/.test(response.url()) &&
+        response.status() === 200 &&
+        response.request().method() === "POST",
+    );
+    await snowpackStructure.getByTitle("Delete", { exact: true }).click();
+    await updateResponsePromise;
+  };
 
   await test.step("Check existing text", async () => {
     await page.getByTitle("[shift+1]").click();
@@ -499,7 +512,11 @@ test("Textcat", async ({ page }) => {
 
   await test.step("Create new Snowpack structure texts", async () => {
     await page.getByRole("button", { name: " Snowpack structure" }).click();
-    await page.locator("#region-form-snowpack-structure").getByTitle("Edit").click();
+    // remove leftovers of previous (failed) runs, the new sentence would be appended otherwise
+    if (await snowpackStructure.getByRole("textbox").inputValue()) {
+      await deleteSnowpackStructureText();
+    }
+    await snowpackStructure.getByTitle("Edit").click();
 
     const sentenceSelector = page
       .locator("iframe")
@@ -519,7 +536,7 @@ test("Textcat", async ({ page }) => {
   });
 
   await test.step("Edit existing sentence", async () => {
-    await page.locator("#region-form-snowpack-structure").getByTitle("Edit").click();
+    await snowpackStructure.getByTitle("Edit").click();
     await expect(page.locator("iframe").contentFrame().locator("#app")).toMatchAriaSnapshot({
       name: "textcat-edit-existing-sentence.yaml",
     });
@@ -527,8 +544,8 @@ test("Textcat", async ({ page }) => {
   });
 
   await test.step("Delete text", async () => {
-    await page.locator("#region-form-snowpack-structure").getByTitle("Delete", { exact: true }).click();
-    await expect(page.locator("#region-form-snowpack-structure")).toMatchAriaSnapshot(`
+    await deleteSnowpackStructureText();
+    await expect(snowpackStructure).toMatchAriaSnapshot(`
     - text: Description of snowpack structure
     - button ""
     - button ""

@@ -13,7 +13,17 @@ import type { GeoJSONSource, Map as MlMap } from "maplibre-gl";
  * Pass a region by `name` (e.g. "Brandenberg Alps") or id.
  */
 export async function clickRegion(page: Page, region: string) {
-  const pos = await page.evaluate((target) => {
+  // the edit-selection layer may not be rendered yet right after entering region-editing mode
+  let pos: { x: number; y: number } | null = null;
+  await expect.poll(async () => (pos = await findRegionPixel(page, region))).not.toBeNull();
+  // Click via absolute page coords (canvas maps: bypasses element-relative hit-testing).
+  const box = await page.locator("#map canvas.maplibregl-canvas").boundingBox();
+  if (!box) throw new Error("clickRegion: #map canvas not found");
+  await page.mouse.click(box.x + pos.x, box.y + pos.y);
+}
+
+function findRegionPixel(page: Page, region: string): Promise<{ x: number; y: number } | null> {
+  return page.evaluate((target) => {
     const el = document.getElementById("map") as (HTMLElement & { _albinaMap?: MlMap }) | null;
     const map = el?._albinaMap;
     if (!map) throw new Error("#map is not initialised (its _albinaMap is not exposed)");
@@ -60,12 +70,6 @@ export async function clickRegion(page: Page, region: string) {
     }
     return null;
   }, region);
-
-  if (!pos) throw new Error(`clickRegion: could not find a clickable interior point for ${JSON.stringify(region)}`);
-  // Click via absolute page coords (canvas maps: bypasses element-relative hit-testing).
-  const box = await page.locator("#map canvas.maplibregl-canvas").boundingBox();
-  if (!box) throw new Error("clickRegion: #map canvas not found");
-  await page.mouse.click(box.x + pos.x, box.y + pos.y);
 }
 
 /**
@@ -136,6 +140,8 @@ export const waitForGetEdit = (page: Page) =>
  * @param page
  */
 export async function clearWarningRegions(page: Page) {
+  // the "new region" button is disabled while the bulletins are loading
+  await expect(page.getByRole("button", { name: "" })).toBeEnabled({ timeout: 10000 });
   const deleteRegionButton = page.getByTitle("Delete region").first();
 
   while (await deleteRegionButton.isVisible()) {
