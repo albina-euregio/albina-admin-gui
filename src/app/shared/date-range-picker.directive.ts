@@ -1,7 +1,7 @@
 import { Directive, ElementRef, OnDestroy, OnInit, computed, effect, forwardRef, inject, input } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
-import { Calendar, type FormatDateString, type Options } from "vanilla-calendar-pro";
+import { Calendar, type FormatDateString, months, type Options } from "vanilla-calendar-pro";
 
 /**
  * Date range picker based on https://vanilla-calendar.pro/ for `<input>` elements, bound via `ngModel` to `[startDate, endDate]`.
@@ -45,6 +45,9 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
     this.calendar = new Calendar(this.elementRef.nativeElement, {
       inputMode: true,
       positionToInput: "auto",
+      extensions: [months],
+      type: "multiple",
+      displayMonthsCount: 3,
       selectionDatesMode: "multiple-ranged",
       firstWeekday: 1,
       selectedTheme: "light",
@@ -55,7 +58,7 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
       onInit: (self) => {
         self.context.mainElement.addEventListener("change", (event) => this.onChangeTime(event.target as HTMLElement));
         // the default layouts are only set by the first render
-        this.defaultLayout = self.layouts.default;
+        this.defaultLayout = self.layouts.multiple;
         if (this.updateTimeLayout()) self.set(this.toCalendarOptions(this.value));
       },
     });
@@ -132,7 +135,7 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
     const [startDate, endDate] = this.value;
     this.calendar.layouts = {
       ...this.calendar.layouts,
-      default: this.defaultLayout.replace(
+      multiple: this.defaultLayout.replace(
         "<#ControlTime />",
         `<div class="app-date-range-time">
         <input type="time" class="form-control form-control-sm" data-app-date-range-time="start" value="${formatTime(startDate)}">
