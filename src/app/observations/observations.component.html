@@ -157,11 +157,11 @@
               <div class="global-bar-item global-bar-item-calendar">
                 <input
                   class="form-control d-inline-block"
-                  #drp="bsDaterangepicker"
-                  bsDaterangepicker
+                  appDateRangePicker
                   [(ngModel)]="filter.dateRange"
                   (ngModelChange)="filter.updateDateInURL()"
-                  [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true }"
+                  [withTime]="true"
+                  [keepOpen]="true"
                   [maxDate]="filter.dateRangeMaxDate"
                 />
               </div>

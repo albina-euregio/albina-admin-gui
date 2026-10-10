@@ -2,18 +2,18 @@ import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { saveAs } from "file-saver";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { firstValueFrom } from "rxjs";
 
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { StatisticsService } from "../providers/statistics-service/statistics.service";
+import { DateRangePickerDirective } from "../shared/date-range-picker.directive";
 
 @Component({
   templateUrl: "statistics.component.html",
   selector: "app-statistics",
   standalone: true,
-  imports: [FormsModule, BsDatepickerModule, TranslatePipe, TabsModule],
+  imports: [FormsModule, DateRangePickerDirective, TranslatePipe, TabsModule],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [StatisticsService],
 })
@@ -24,16 +24,16 @@ export class StatisticsComponent {
 
   public loadingStatistics = false;
   public statisticsError = "";
-  public bsRangeValueBulletin: Date[];
+  public dateRangeBulletin: Date[];
   public duplicates: boolean;
   public extended: boolean;
 
-  public bsRangeValueDangerSource: Date[];
+  public dateRangeDangerSource: Date[];
 
   async getBulletinStatistics(event: Event) {
     event.stopPropagation();
 
-    if (!this.bsRangeValueBulletin) {
+    if (!this.dateRangeBulletin) {
       return;
     }
 
@@ -43,15 +43,15 @@ export class StatisticsComponent {
     try {
       const blob = await firstValueFrom(
         this.statisticsService.getBulletinStatisticsCsv(
-          this.bsRangeValueBulletin[0],
-          this.bsRangeValueBulletin[1],
+          this.dateRangeBulletin[0],
+          this.dateRangeBulletin[1],
           this.translateService.getCurrentLang(),
           this.extended,
           this.duplicates,
         ),
       );
-      const startDate = this.constantsService.getISODateString(this.bsRangeValueBulletin[0]);
-      const endDate = this.constantsService.getISODateString(this.bsRangeValueBulletin[1]);
+      const startDate = this.constantsService.getISODateString(this.dateRangeBulletin[0]);
+      const endDate = this.constantsService.getISODateString(this.dateRangeBulletin[1]);
       let filename = "statistic_" + startDate + "_" + endDate;
       if (this.extended || this.duplicates) {
         filename = filename + "_";
@@ -76,7 +76,7 @@ export class StatisticsComponent {
   async getDangerSourceStatistics(event: Event) {
     event.stopPropagation();
 
-    if (!this.bsRangeValueDangerSource) {
+    if (!this.dateRangeDangerSource) {
       return;
     }
 
@@ -86,12 +86,12 @@ export class StatisticsComponent {
     try {
       const blob = await firstValueFrom(
         this.statisticsService.getDangerSourceStatisticsCsv(
-          this.bsRangeValueDangerSource[0],
-          this.bsRangeValueDangerSource[1],
+          this.dateRangeDangerSource[0],
+          this.dateRangeDangerSource[1],
         ),
       );
-      const startDate = this.constantsService.getISODateString(this.bsRangeValueDangerSource[0]);
-      const endDate = this.constantsService.getISODateString(this.bsRangeValueDangerSource[1]);
+      const startDate = this.constantsService.getISODateString(this.dateRangeDangerSource[0]);
+      const endDate = this.constantsService.getISODateString(this.dateRangeDangerSource[1]);
       let filename = "danger_source_statistic_" + startDate + "_" + endDate;
       filename = filename + ".csv";
       saveAs(blob, filename);

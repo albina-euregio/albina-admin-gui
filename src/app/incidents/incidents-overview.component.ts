@@ -6,9 +6,9 @@ import { ZodDisplayComponent } from "app/shared/zod-display.component";
 import { unwrap, zEnumValues } from "app/shared/zod-util";
 import { orderBy } from "es-toolkit";
 import "bootstrap";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
+import { DateRangePickerDirective } from "../shared/date-range-picker.directive";
 import { IncidentReport, IncidentReportSchema } from "./incident-report.model";
 import { IncidentService } from "./incident.service";
 
@@ -18,7 +18,7 @@ type IncidentColumn = keyof IncidentReport;
   selector: "app-incidents-overview",
   templateUrl: "incidents-overview.component.html",
   standalone: true,
-  imports: [TranslatePipe, FormsModule, BsDatepickerModule, ZodDisplayComponent],
+  imports: [TranslatePipe, FormsModule, DateRangePickerDirective, ZodDisplayComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   providers: [IncidentService],
 })
@@ -95,18 +95,16 @@ export class IncidentsOverviewComponent implements OnInit {
       type: "FeatureCollection",
       features: this.displayedIncidents
         .filter((incident) => incident.latitude && incident.longitude)
-        .map(
-          (incident): GeoJSON.Feature<GeoJSON.Point> => ({
-            type: "Feature",
-            // Stored coordinates are [lat, lng]; GeoJSON requires [lng, lat].
-            geometry: { type: "Point", coordinates: [incident.longitude, incident.latitude] },
-            properties: Object.fromEntries(
-              Object.entries(incident).filter(
-                ([, value]) => value == null || typeof value !== "object" || value instanceof Date,
-              ),
+        .map((incident): GeoJSON.Feature<GeoJSON.Point> => ({
+          type: "Feature",
+          // Stored coordinates are [lat, lng]; GeoJSON requires [lng, lat].
+          geometry: { type: "Point", coordinates: [incident.longitude, incident.latitude] },
+          properties: Object.fromEntries(
+            Object.entries(incident).filter(
+              ([, value]) => value == null || typeof value !== "object" || value instanceof Date,
             ),
-          }),
-        ),
+          ),
+        })),
     };
     const blob = new Blob([JSON.stringify(featureCollection, null, 2)], { type: "application/geo+json" });
     const url = URL.createObjectURL(blob);
