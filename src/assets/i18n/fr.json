@@ -5,7 +5,7 @@
   },
   "login": {
     "title": "Se connecter",
-    "text": "Login to your account",
+    "text": "",
     "button": "Se connecter",
     "stressLevel": "Niveau de stress",
     "errorDialog": {
@@ -17,7 +17,7 @@
       "password": "Veuillez saisir votre mot de passe"
     },
     "passkey": {
-      "button": "Login with a passkey"
+      "button": ""
     }
   },
   "sidebar": {
@@ -386,7 +386,7 @@
       "savedInfo": "Enregistré par {{user}}, {{time}}",
       "print": {
         "contact": {
-          "title": "Emergency contact",
+          "title": "",
           "emailLabel": "E-mail :",
           "nameLabel": "Nom :",
           "phoneLabel": "Téléphone :"
@@ -1045,18 +1045,18 @@
       }
     },
     "passkeys": {
-      "title": "Passkeys",
-      "unsupported": "Your browser does not support passkeys.",
-      "empty": "No passkeys registered yet.",
-      "unnamed": "Passkey",
-      "lastUsed": "Last used",
-      "neverUsed": "Never used",
-      "namePlaceholder": "e.g. iPhone, YubiKey",
-      "add": "Add passkey",
-      "delete": "Delete",
-      "added": "Passkey added",
-      "addError": "Could not add passkey",
-      "deleteError": "Could not delete passkey"
+      "title": "",
+      "unsupported": "",
+      "empty": "",
+      "unnamed": "",
+      "lastUsed": "",
+      "neverUsed": "",
+      "namePlaceholder": "",
+      "add": "",
+      "delete": "",
+      "added": "",
+      "addError": "",
+      "deleteError": ""
     }
   },
   "statistics": {

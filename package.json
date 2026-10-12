@@ -29,6 +29,7 @@
     "playwright": "NODE_OPTIONS=--disable-warning=DEP0205 playwright test",
     "prepare": "vp config",
     "openapi": "pnpm exec openapi-ts && vp fmt src/app/providers/albina-api/ && node scripts/zod-describe.mjs",
+    "tx-pull-json": "tx pull --use-git-timestamps --mode onlytranslated",
     "changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag",
     "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },

@@ -1,6 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, type TranslationObject } from "@ngx-translate/core";
 
 import caamlCa from "../../app/i18n/caaml/ca.json";
 import caamlDe from "../../app/i18n/caaml/de.json";
@@ -47,28 +47,22 @@ export class AppComponent {
     // The caaml resource uses flat dot-keys (e.g. "dangerRating.low"), which only
     // resolve when the main resource has no nested object under that first segment
     // (e.g. "aspect", "tendency" stay defined in the main resource on purpose).
-    this.translateService.addLangs(["de", "it", "en", "fr", "es", "ca", "oc"]);
-    this.translateService.setTranslation("de", de);
-    this.translateService.setTranslation("de", incidentReportDe, true);
-    this.translateService.setTranslation("de", caamlDe, true);
-    this.translateService.setTranslation("it", it);
-    this.translateService.setTranslation("it", incidentReportIt, true);
-    this.translateService.setTranslation("it", caamlIt, true);
-    this.translateService.setTranslation("en", en);
-    this.translateService.setTranslation("en", incidentReportEn, true);
-    this.translateService.setTranslation("en", caamlEn, true);
-    this.translateService.setTranslation("fr", fr);
-    this.translateService.setTranslation("fr", incidentReportFr, true);
-    this.translateService.setTranslation("fr", caamlFr, true);
-    this.translateService.setTranslation("es", es);
-    this.translateService.setTranslation("es", incidentReportEs, true);
-    this.translateService.setTranslation("es", caamlEs, true);
-    this.translateService.setTranslation("ca", ca);
-    this.translateService.setTranslation("ca", incidentReportCa, true);
-    this.translateService.setTranslation("ca", caamlCa, true);
-    this.translateService.setTranslation("oc", oc);
-    this.translateService.setTranslation("oc", incidentReportOc, true);
-    this.translateService.setTranslation("oc", caamlOc, true);
+    // Transifex pulls with --mode onlytranslated yield "" for untranslated strings,
+    // so every language is layered over English, skipping those empty values.
+    const resources: Record<string, TranslationObject[]> = {
+      de: [de, incidentReportDe, caamlDe],
+      it: [it, incidentReportIt, caamlIt],
+      en: [en, incidentReportEn, caamlEn],
+      fr: [fr, incidentReportFr, caamlFr],
+      es: [es, incidentReportEs, caamlEs],
+      ca: [ca, incidentReportCa, caamlCa],
+      oc: [oc, incidentReportOc, caamlOc],
+    };
+    this.translateService.addLangs(Object.keys(resources));
+    for (const [lang, translations] of Object.entries(resources)) {
+      const layers = lang === "en" ? translations : [...resources.en, ...translations];
+      layers.forEach((t, i) => this.translateService.setTranslation(lang, withoutEmpty(t), i > 0));
+    }
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translateService.setFallbackLang("en");
     // the lang to use, if the lang isn't available, it will use the current loader to get them
@@ -77,4 +71,15 @@ export class AppComponent {
 
     document.getElementById("appFavicon").setAttribute("href", `${environment.faviconPath}`);
   }
+}
+
+function withoutEmpty(translations: TranslationObject): TranslationObject {
+  return Object.fromEntries(
+    Object.entries(translations)
+      .filter(([, value]) => value !== "")
+      .map(([key, value]) => [
+        key,
+        typeof value === "object" && value !== null ? withoutEmpty(value as TranslationObject) : value,
+      ]),
+  );
 }
