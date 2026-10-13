@@ -153,25 +153,14 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     observations: T[],
     isSelected: (o: T) => boolean,
     classifyValue: (o: T) => ValueType = (o) => markerClassify?.getValue(o),
+    classSlots = 10,
   ): void {
     this.nan = 0;
+    const slots = Array.from({ length: classSlots + 1 }, (_, slot) => slot);
+    const emptySlots = Object.fromEntries(slots.map((slot) => [slot, 0])) as Record<number, number>;
     const dataRaw = this.values.map((value) => ({
       value,
-      data: {
-        all: 0,
-        available: 0,
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-      },
+      data: { all: 0, available: 0, ...emptySlots },
     }));
     observations.forEach((observation) => {
       const value = this.getValue(observation);
@@ -203,25 +192,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
       });
     });
 
-    const header = [
-      "category",
-      "max",
-      "all",
-      "highlighted",
-      "available",
-      "selected",
-      "0",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-    ];
+    const header = ["category", "max", "all", "highlighted", "available", "selected", ...slots.map(String)];
 
     const data: Dataset = dataRaw.map((f) => {
       const key = f.value.value;
@@ -238,17 +209,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
         highlighted ? all : highlighted,
         available,
         selected,
-        values["0"],
-        values["1"],
-        values["2"],
-        values["3"],
-        values["4"],
-        values["5"],
-        values["6"],
-        values["7"],
-        values["8"],
-        values["9"],
-        values["10"],
+        ...slots.map((slot) => values[slot]),
       ];
     });
 

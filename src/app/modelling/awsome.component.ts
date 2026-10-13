@@ -49,7 +49,14 @@ import { RegionProperties } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
-import { alignToClasses, classBounds, sharedBoundary, unstableAtMinimum } from "./index-classes";
+import {
+  alignToClasses,
+  classBounds,
+  classSlotsFor,
+  fallbackStabilityIndex,
+  sharedBoundary,
+  unstableAtMinimum,
+} from "./index-classes";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 interface SourceGroup {
@@ -227,6 +234,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return this.activeSources.filter((s) => !s.$error);
   }
 
+  /** One class slot count for every chart and its data. */
+  get classSlots(): number {
+    return classSlotsFor(this.filterService.filterSelectionData);
+  }
+
+  /** Whether a filter may classify: its values fit the class slots, or it is the classifier already. */
+  canClassify(filter: FilterSelectionData<FeatureProperties>): boolean {
+    return filter.values.length <= this.classSlots || filter.type === this.markerService.markerClassify?.type;
+  }
+
   private listParam(key: string): string[] {
     return this.route.snapshot.queryParamMap
       .getAll(key)
@@ -245,7 +262,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       if (params.has(`filter.${f.type}`)) f.selected = new Set(this.listParam(`filter.${f.type}`));
       if (params.has(`highlight.${f.type}`)) f.highlighted = new Set(this.listParam(`highlight.${f.type}`));
     }
-    if (params.has("classify")) this.markerService.markerClassify = this.filterByType(params.get("classify"));
+    const classifier = this.filterByType(params.get("classify"));
+    if (params.has("classify") && (!classifier || this.canClassify(classifier))) {
+      this.markerService.markerClassify = classifier;
+    }
     if (params.has("label")) this.markerService.markerLabel = this.filterByType(params.get("label"));
     const layout = params.get("layout");
     if (layout === "map" || layout === "chart" || layout === "details") this.layout = layout;
@@ -548,8 +568,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   applyLocalFilter() {
     this.clearMap();
-    const stabilityIndex = this.stabilityIndex;
-    this.observations.forEach((o) => (o.$stabilityIndex = stabilityIndex?.type));
+    const placeholderIndex = this.placeholderIndex;
+    this.observations.forEach((o) => (o.$stabilityIndex = placeholderIndex?.type));
     const selected = new Set(this.observations.filter((o) => this.filterService.isSelected(o)));
     const classify = new Map(this.observations.map((o) => [o, this.markerService.markerClassify?.getValue(o)]));
     const highlighting = this.filterService.filterSelectionData.some((f) => f.highlighted.size > 0);
@@ -586,6 +606,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         this.observations,
         (o) => selected.has(o),
         (o) => classify.get(o),
+        this.classSlots,
       ),
     );
 
@@ -738,6 +759,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private get stabilityIndex(): FilterSelectionData<FeatureProperties> | undefined {
     const markerClassify = this.markerService.markerClassify;
     return markerClassify?.stabilityIndex ? markerClassify : undefined;
+  }
+
+  /** The index whose type fills the $stabilityIndex placeholder: the classifying one, else the fallback index. */
+  private get placeholderIndex(): FilterSelectionData<FeatureProperties> | undefined {
+    return this.stabilityIndex ?? fallbackStabilityIndex(this.filterService.filterSelectionData, this.defaultClassify);
   }
 
   /** The other indices of the classified index's regime, in config order, at most one per companion line style. */

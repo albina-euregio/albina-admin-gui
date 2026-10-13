@@ -78,7 +78,7 @@ export const FilterSelectionSpecSchema = z.object({
     .enum(["dry", "wet"])
     .optional()
     .describe(
-      "Marks this filter as a snowpack stability index of the dry or the wet regime. While the markers are classified by a filter with this keyword, that filter drives the timeseries chart and its type fills the `stabilityIndex` request parameter and the `$stabilityIndex` placeholder in keys and templates.",
+      "Marks this filter as a snowpack stability index of the dry or the wet regime. While the markers are classified by a filter with this keyword, that filter drives the timeseries chart and its type fills the `stabilityIndex` request parameter and the `$stabilityIndex` placeholder in keys and templates. While a filter without the keyword classifies, or none does, the placeholder is filled by the default classifier (`default: classify`) if it carries the keyword, else by the first filter in the list that does.",
     ),
   type: z.string().describe("Identifier for this filter"),
   url: UrlSchema.optional().describe(

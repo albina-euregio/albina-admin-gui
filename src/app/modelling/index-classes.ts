@@ -51,3 +51,17 @@ export function unstableAtMinimum(index: ClassedIndex): boolean {
   const bounds = classBounds(index);
   return bounds !== undefined && bounds[0] < bounds.at(-1);
 }
+
+/** The index filling the placeholder while no index classifies: the default classifier if it is one, else the first. */
+export function fallbackStabilityIndex<F extends { type: string; stabilityIndex?: string }>(
+  filters: readonly F[],
+  defaultClassify: string | undefined,
+): F | undefined {
+  const preferred = filters.find((f) => f.type === defaultClassify);
+  return preferred?.stabilityIndex ? preferred : filters.find((f) => f.stabilityIndex);
+}
+
+/** Class slots that fit the values of every filter without a url, never fewer than the ten of upstream. */
+export function classSlotsFor(filters: readonly { url?: string; values: readonly unknown[] }[]): number {
+  return Math.max(10, ...filters.filter((f) => !f.url).map((f) => f.values.length));
+}

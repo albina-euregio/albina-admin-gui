@@ -4,6 +4,8 @@ import {
   alignToClasses,
   classBounds,
   classFraction,
+  classSlotsFor,
+  fallbackStabilityIndex,
   unstableAtMinimum,
   valueAtClassFraction,
 } from "../src/app/modelling/index-classes";
@@ -73,4 +75,35 @@ test("an index most unstable at its minimum runs downwards", () => {
   expect(unstableAtMinimum(unstableLow)).toBe(true);
   expect(unstableAtMinimum(unstableHigh)).toBe(false);
   expect(unstableAtMinimum(withoutAxisRange)).toBe(false);
+});
+
+const elevation = { type: "elevation" };
+const sk38 = { type: "sk38_ccl", stabilityIndex: "dry" };
+const punstable = { type: "Punstable", stabilityIndex: "dry" };
+const lwc = { type: "lwc", stabilityIndex: "wet" };
+const filters = [elevation, sk38, punstable, lwc];
+
+test("the default classifier fills the placeholder when it is a stability index", () => {
+  expect(fallbackStabilityIndex(filters, "Punstable")).toBe(punstable);
+  expect(fallbackStabilityIndex(filters, "lwc")).toBe(lwc);
+});
+
+test("otherwise the first stability index in config order fills it", () => {
+  expect(fallbackStabilityIndex(filters, "elevation")).toBe(sk38);
+  expect(fallbackStabilityIndex(filters, undefined)).toBe(sk38);
+  expect(fallbackStabilityIndex(filters, "unknown")).toBe(sk38);
+});
+
+test("without any stability index the placeholder stays empty", () => {
+  expect(fallbackStabilityIndex([elevation, { type: "hs" }], "elevation")).toBeUndefined();
+  expect(fallbackStabilityIndex([], undefined)).toBeUndefined();
+});
+
+test("the class slots fit the longest filter without a url, never fewer than ten", () => {
+  const values = (n: number) => Array.from({ length: n }, (_, i) => i);
+  const datetags = { url: "api/locations", values: values(72) };
+  expect(classSlotsFor([{ values: values(5) }, { values: values(11) }, datetags])).toBe(11);
+  expect(classSlotsFor([{ values: values(5) }, { url: "api/locations", values: values(8) }])).toBe(10);
+  expect(classSlotsFor([datetags])).toBe(10);
+  expect(classSlotsFor([])).toBe(10);
 });

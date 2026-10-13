@@ -22,6 +22,8 @@ export class ObservationChartComponent<T> implements OnInit {
   private pressTimer;
 
   readonly filterSelection = input<FilterSelectionData<T>>(undefined);
+  readonly classSlots = input(10);
+  readonly classifiable = input(true);
   readonly handleChange = output();
   readonly handleReload = output();
   public options: EChartsOption;
@@ -36,6 +38,11 @@ export class ObservationChartComponent<T> implements OnInit {
 
   get fontFamily() {
     return getComputedStyle(document.body).getPropertyValue("font-family");
+  }
+
+  /** Stacked class series: the unclassified in black, then the classifier's values by index. */
+  private get classSeries(): (number | undefined)[] {
+    return [undefined, ...Array.from({ length: this.classSlots() + 1 }, (_, i) => i)];
   }
 
   get barOptions(): EChartsOption {
@@ -196,7 +203,7 @@ export class ObservationChartComponent<T> implements OnInit {
             disabled: true,
           },
         },
-        ...[undefined, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
+        ...this.classSeries.map((i) => ({
           ...defaultDataBarOptions,
           stack: "total",
           itemStyle: {
@@ -351,7 +358,7 @@ export class ObservationChartComponent<T> implements OnInit {
             disabled: true,
           },
         },
-        ...[undefined, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
+        ...this.classSeries.map((i) => ({
           ...barDefaults,
           stack: "total",
           itemStyle: {
@@ -485,9 +492,7 @@ export class ObservationChartComponent<T> implements OnInit {
     if (params.seriesName === "highlighted") {
       val = params.value[1];
     } else if (params.seriesName === "all") {
-      val = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        .map((entry) => params.value[entry])
-        .reduce((sum, entry) => sum + entry);
+      val = (params.value as number[]).slice(6).reduce((sum, entry) => sum + entry);
     }
     return `
 <span class="badge rounded-pill me-1" style="width: 0.75rem;height:0.75rem;background-color:${params.color};"></span>

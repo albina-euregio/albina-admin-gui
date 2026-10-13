@@ -16,14 +16,16 @@
             <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
           </div>
         }
-        <div
-          class="obs-switch-item"
-          [class.is-active]="filterSelection().type === markerService.markerClassify?.type"
-          (click)="onMarkerClassify()"
-          title="{{ 'admin.observations.charts.classify' | translate }}"
-        >
-          <i class="ph ph-paint-brush-household" aria-hidden="true"></i>
-        </div>
+        @if (classifiable()) {
+          <div
+            class="obs-switch-item"
+            [class.is-active]="filterSelection().type === markerService.markerClassify?.type"
+            (click)="onMarkerClassify()"
+            title="{{ 'admin.observations.charts.classify' | translate }}"
+          >
+            <i class="ph ph-paint-brush-household" aria-hidden="true"></i>
+          </div>
+        }
         <div
           class="obs-switch-item"
           [class.is-active]="filterSelection().type === markerService.markerLabel?.type"

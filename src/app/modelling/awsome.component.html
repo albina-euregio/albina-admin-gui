@@ -147,6 +147,8 @@
                 <app-observation-chart
                   class="chart-container"
                   [filterSelection]="filterSelection"
+                  [classSlots]="classSlots"
+                  [classifiable]="canClassify(filterSelection)"
                   (handleReload)="loadSources()"
                   (handleChange)="onFilterChange(filterSelection)"
                 />

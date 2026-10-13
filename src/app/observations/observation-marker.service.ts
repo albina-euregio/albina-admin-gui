@@ -145,7 +145,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     }
   }
 
-  /** Substitutes {a.b} from the data; $stabilityIndex in a key names the index the data is classified by. */
+  /** Substitutes {a.b} from the data; $stabilityIndex in a key is replaced by the data's $stabilityIndex. */
   formatTemplate(t: string, data: unknown): string {
     const stabilityIndex = (data as { $stabilityIndex?: string } | undefined)?.$stabilityIndex;
     return t.replace(/{([^{}]+)}/g, (_match, key: string) =>
