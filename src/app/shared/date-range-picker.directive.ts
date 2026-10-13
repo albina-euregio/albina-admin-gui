@@ -7,6 +7,7 @@ import { Calendar, type FormatDateString, months, type Options } from "vanilla-c
  * Date range picker based on https://vanilla-calendar.pro/ for `<input>` elements, bound via `ngModel` to `[startDate, endDate]`.
  *
  * Selecting a new range keeps the times of the previous range; with `withTime`, start and end time can be edited.
+ * The calendar closes after selecting a range unless `keepOpen` is set, which defaults to `withTime`.
  */
 @Directive({
   standalone: true,
@@ -19,7 +20,7 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
   private readonly translateService = inject(TranslateService);
 
   readonly withTime = input(false);
-  readonly keepOpen = input(false);
+  readonly keepOpen = input<boolean | undefined>(undefined);
   readonly maxDate = input<Date | undefined>(undefined);
 
   private calendar: Calendar;
@@ -59,6 +60,9 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
       onClickDate: (self) => this.onClickDate(self),
       onInit: (self) => {
         self.context.mainElement.addEventListener("change", (event) => this.onChangeTime(event.target as HTMLElement));
+        self.context.mainElement.addEventListener("click", (event) => {
+          if ((event.target as HTMLElement).closest("[data-app-date-range-done]")) self.hide();
+        });
         // the default layouts are only set by the first render
         this.defaultLayout = self.layouts.multiple;
         if (this.updateTimeLayout()) self.set(this.toCalendarOptions(this.value));
@@ -105,7 +109,7 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
     if (oldStart) startDate.setHours(oldStart.getHours(), oldStart.getMinutes(), oldStart.getSeconds());
     if (oldEnd) endDate.setHours(oldEnd.getHours(), oldEnd.getMinutes(), oldEnd.getSeconds());
     this.emit([startDate, endDate]);
-    if (!this.keepOpen()) {
+    if (!(this.keepOpen() ?? this.withTime())) {
       self.hide();
     }
   }
@@ -143,6 +147,7 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
         <input type="time" class="form-control form-control-sm" data-app-date-range-time="start" value="${formatTime(startDate)}">
         <span>–</span>
         <input type="time" class="form-control form-control-sm" data-app-date-range-time="end" value="${formatTime(endDate)}">
+        <button type="button" class="btn btn-sm btn-primary" data-app-date-range-done>${this.translateService.instant("button.ok")}</button>
       </div>`,
       ),
     };
