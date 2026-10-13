@@ -1580,10 +1580,10 @@ export const zUser = z.object({
   languageCode: zLanguageCode.optional(),
   deleted: z.boolean().optional(),
   lastUsedAt: z.iso.datetime().describe("When the user last logged in, whether by password or passkey").optional(),
-  passkeyCount: z.coerce
-    .bigint()
-    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
-    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" })
+  passkeyCount: z
+    .int()
+    .min(-2147483648, { error: "Invalid value: Expected int32 to be >= -2147483648" })
+    .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
     .describe("Number of passkeys registered for the user (read-only)")
     .readonly()
     .optional(),
