@@ -31,6 +31,7 @@ export type AuthenticationServiceAuthenticationResponse = {
   user: User;
   regions: Array<Region>;
   access_token: string;
+  passwordStrength: PasswordStrength;
 };
 
 export type AuthenticationServiceCredentials = {
@@ -1450,6 +1451,11 @@ export type PasskeyServiceUserEntity = {
   displayName: string;
 };
 
+/**
+ * Password strength check following NIST SP 800-63B-4 (2025) and OWASP ASVS 5.0 (V6.2): length is what matters, composition rules (upper/lower/digit/symbol) are explicitly discouraged.
+ */
+export type PasswordStrength = "VERY_WEAK" | "WEAK" | "STRONG";
+
 export type Position = "topleft" | "topright" | "bottomleft" | "bottomright";
 
 export type Probability = "likely" | "possible" | "unlikely";
@@ -1505,7 +1511,7 @@ export type Region = {
    */
   languageConfigurations?: Array<RegionLanguageConfiguration>;
   /**
-   * URL to static avalanche files
+   * URL to static avalanche files, e.g. `https://static.avalanche.report`. Bulletin PDFs and danger maps are published below `/bulletins`, simple HTML bulletins below `/simple`, and media files (e.g. audio) below `/media_files`.
    */
   staticUrl?: string;
   /**
@@ -1867,6 +1873,10 @@ export type User = {
    * When the user last logged in, whether by password or passkey
    */
   lastUsedAt?: string;
+  /**
+   * Number of passkeys registered for the user (read-only)
+   */
+  readonly passkeyCount?: number;
 };
 
 export type UserServiceChangePassword = {
@@ -2090,6 +2100,113 @@ export type WeatherStationsStatistics = {
 
 export type Wetness = "wet" | "moist" | "dry";
 
+export type AuthenticationServiceAuthenticationResponseWritable = {
+  user: UserWritable;
+  regions: Array<Region>;
+  access_token: string;
+  passwordStrength: PasswordStrength;
+};
+
+/**
+ * This class holds all information about one avalanche bulletin.
+ */
+export type AvalancheBulletinWritable = AbstractPersistentObject & {
+  id?: string | null;
+  /**
+   * Information about the author of the avalanche bulletin
+   */
+  author?: UserWritable | null;
+  additionalAuthors?: Array<string>;
+  updateDate?: string;
+  ownerRegion?: string;
+  highlightsTextcat?: string;
+  avActivityHighlightsTextcat?: string;
+  avActivityCommentTextcat?: string;
+  snowpackStructureHighlightsTextcat?: string;
+  snowpackStructureCommentTextcat?: string;
+  tendencyCommentTextcat?: string;
+  generalHeadlineCommentTextcat?: string;
+  synopsisCommentTextcat?: string;
+  avActivityHighlightsNotes?: string;
+  avActivityCommentNotes?: string;
+  snowpackStructureHighlightsNotes?: string;
+  snowpackStructureCommentNotes?: string;
+  tendencyCommentNotes?: string;
+  generalHeadlineCommentNotes?: string;
+  highlights?: Array<AvalancheBulletinText>;
+  avActivityHighlights?: Array<AvalancheBulletinText>;
+  avActivityComment?: Array<AvalancheBulletinText>;
+  synopsisHighlights?: Array<AvalancheBulletinText>;
+  synopsisComment?: Array<AvalancheBulletinText>;
+  snowpackStructureHighlights?: Array<AvalancheBulletinText>;
+  snowpackStructureComment?: Array<AvalancheBulletinText>;
+  travelAdvisoryHighlights?: Array<AvalancheBulletinText>;
+  travelAdvisoryComment?: Array<AvalancheBulletinText>;
+  tendencyComment?: Array<AvalancheBulletinText>;
+  generalHeadlineComment?: Array<AvalancheBulletinText>;
+  tendency?: Tendency;
+  dangerPattern1?: DangerPattern;
+  dangerPattern2?: DangerPattern;
+  publicationDate?: string;
+  validity?: AvalancheBulletinValidity;
+  /**
+   * The recommended regions the avalanche bulletin is for.
+   */
+  suggestedRegions?: Array<string>;
+  /**
+   * The saved regions the avalanche bulletin is for.
+   */
+  savedRegions?: Array<string>;
+  savedOrPublishedRegions?: Array<string>;
+  regions?: Array<string>;
+  /**
+   * The published regions the avalanche bulletin is for.
+   */
+  publishedRegions?: Array<string>;
+  strategicMindset?: StrategicMindset;
+  forenoon?: AvalancheBulletinDaytimeDescription | null;
+  afternoon?: AvalancheBulletinDaytimeDescription | null;
+  /**
+   * Collection containing all photos of a bulletin
+   */
+  photos?: Array<AvalancheBulletinPhoto>;
+  hasDaytimeDependency?: boolean;
+};
+
+export type UserWritable = {
+  /**
+   * Email address of the user
+   */
+  email?: string;
+  /**
+   * Password of the user
+   */
+  password?: string;
+  /**
+   * Name of the user
+   */
+  name?: string;
+  roles?: Array<Role>;
+  regions?: Array<string>;
+  /**
+   * Image of the user
+   */
+  image?: string;
+  /**
+   * Organization the user works for
+   */
+  organization?: string;
+  /**
+   * Preferred language of the user
+   */
+  languageCode?: LanguageCode;
+  deleted?: boolean;
+  /**
+   * When the user last logged in, whether by password or passkey
+   */
+  lastUsedAt?: string;
+};
+
 /**
  * Date of validity in the format yyyy-MM-dd
  */
@@ -2258,6 +2375,9 @@ export type TestAuthResponse = TestAuthResponses[keyof TestAuthResponses];
 
 export type GetBlogPostData = {
   body?: never;
+  headers?: {
+    "If-None-Match"?: string | null;
+  };
   path?: never;
   query: {
     region?: string;
@@ -2278,6 +2398,9 @@ export type GetBlogPostResponse = GetBlogPostResponses[keyof GetBlogPostResponse
 
 export type GetBlogPostsData = {
   body?: never;
+  headers?: {
+    "If-None-Match"?: string | null;
+  };
   path?: never;
   query: {
     region?: string;
@@ -2411,7 +2534,7 @@ export type GetPublishedJsonBulletins0Response =
   GetPublishedJsonBulletins0Responses[keyof GetPublishedJsonBulletins0Responses];
 
 export type CreateJsonBulletinsData = {
-  body: Array<AvalancheBulletin>;
+  body: Array<AvalancheBulletinWritable>;
   path?: never;
   query: {
     /**
@@ -2433,7 +2556,7 @@ export type CreateJsonBulletinsResponses = {
 export type CreateJsonBulletinsResponse = CreateJsonBulletinsResponses[keyof CreateJsonBulletinsResponses];
 
 export type CreateJsonBulletinData = {
-  body: AvalancheBulletin;
+  body: AvalancheBulletinWritable;
   path?: never;
   query: {
     /**
@@ -2682,7 +2805,7 @@ export type UploadBulletinPhotoResponses = {
 export type UploadBulletinPhotoResponse = UploadBulletinPhotoResponses[keyof UploadBulletinPhotoResponses];
 
 export type GetPreviewPdfData = {
-  body: Array<AvalancheBulletin>;
+  body: Array<AvalancheBulletinWritable>;
   path?: never;
   query: {
     region: string;
@@ -2988,7 +3111,7 @@ export type GetJsonBulletinResponses = {
 export type GetJsonBulletinResponse = GetJsonBulletinResponses[keyof GetJsonBulletinResponses];
 
 export type UpdateJsonBulletinData = {
-  body: AvalancheBulletin;
+  body: AvalancheBulletinWritable;
   path: {
     bulletinId: string;
   };
@@ -3889,7 +4012,7 @@ export type GetUsersResponses = {
 export type GetUsersResponse = GetUsersResponses[keyof GetUsersResponses];
 
 export type SaveUserData = {
-  body: User;
+  body: UserWritable;
   path?: never;
   query?: never;
   url: "/user";

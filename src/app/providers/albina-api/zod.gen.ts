@@ -1218,6 +1218,15 @@ export const zPasskeyServiceRegistrationChallenge = z.object({
   publicKey: zPasskeyServicePublicKeyCredentialCreationOptions,
 });
 
+/**
+ * Password strength check following NIST SP 800-63B-4 (2025) and OWASP ASVS 5.0 (V6.2): length is what matters, composition rules (upper/lower/digit/symbol) are explicitly discouraged.
+ */
+export const zPasswordStrength = z
+  .enum(["VERY_WEAK", "WEAK", "STRONG"])
+  .describe(
+    "Password strength check following NIST SP 800-63B-4 (2025) and OWASP ASVS 5.0 (V6.2): length is what matters, composition rules (upper/lower/digit/symbol) are explicitly discouraged.",
+  );
+
 export const zPosition = z.enum(["topleft", "topright", "bottomleft", "bottomright"]);
 
 export const zProbability = z.enum(["likely", "possible", "unlikely"]);
@@ -1467,7 +1476,12 @@ export const zRegion = z
     superRegions: z.array(z.string()).describe("ID of super regions").optional(),
     neighborRegions: z.array(z.string()).describe("ID of neighbouring regions").optional(),
     languageConfigurations: z.array(zRegionLanguageConfiguration).describe("Language configuration").optional(),
-    staticUrl: z.string().describe("URL to static avalanche files").optional(),
+    staticUrl: z
+      .string()
+      .describe(
+        "URL to static avalanche files, e.g. `https://static.avalanche.report`. Bulletin PDFs and danger maps are published below `/bulletins`, simple HTML bulletins below `/simple`, and media files (e.g. audio) below `/media_files`.",
+      )
+      .optional(),
     enabledLanguages: z.array(zLanguageCode).describe("Enabled languages").optional(),
     ttsLanguages: z.array(zLanguageCode).describe("Text-to-speech languages").optional(),
     publishBulletins: z.boolean().describe("Publish avalanche forecast").optional(),
@@ -1566,12 +1580,20 @@ export const zUser = z.object({
   languageCode: zLanguageCode.optional(),
   deleted: z.boolean().optional(),
   lastUsedAt: z.iso.datetime().describe("When the user last logged in, whether by password or passkey").optional(),
+  passkeyCount: z.coerce
+    .bigint()
+    .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+    .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" })
+    .describe("Number of passkeys registered for the user (read-only)")
+    .readonly()
+    .optional(),
 });
 
 export const zAuthenticationServiceAuthenticationResponse = z.object({
   user: zUser,
   regions: z.array(zRegion),
   access_token: z.string(),
+  passwordStrength: zPasswordStrength,
 });
 
 /**
@@ -1867,6 +1889,79 @@ export const zDangerSourceVariant = zAbstractPersistentObject.and(
   }),
 );
 
+export const zUserWritable = z.object({
+  email: z.string().describe("Email address of the user").optional(),
+  password: z.string().describe("Password of the user").optional(),
+  name: z.string().describe("Name of the user").optional(),
+  roles: z.array(zRole).optional(),
+  regions: z.array(z.string()).optional(),
+  image: z.string().describe("Image of the user").optional(),
+  organization: z.string().describe("Organization the user works for").optional(),
+  languageCode: zLanguageCode.optional(),
+  deleted: z.boolean().optional(),
+  lastUsedAt: z.iso.datetime().describe("When the user last logged in, whether by password or passkey").optional(),
+});
+
+export const zAuthenticationServiceAuthenticationResponseWritable = z.object({
+  user: zUserWritable,
+  regions: z.array(zRegion),
+  access_token: z.string(),
+  passwordStrength: zPasswordStrength,
+});
+
+/**
+ * This class holds all information about one avalanche bulletin.
+ */
+export const zAvalancheBulletinWritable = zAbstractPersistentObject.and(
+  z.object({
+    id: z.string().nullish(),
+    author: zUserWritable.nullish(),
+    additionalAuthors: z.array(z.string()).optional(),
+    updateDate: z.iso.datetime().optional(),
+    ownerRegion: z.string().optional(),
+    highlightsTextcat: z.string().optional(),
+    avActivityHighlightsTextcat: z.string().optional(),
+    avActivityCommentTextcat: z.string().optional(),
+    snowpackStructureHighlightsTextcat: z.string().optional(),
+    snowpackStructureCommentTextcat: z.string().optional(),
+    tendencyCommentTextcat: z.string().optional(),
+    generalHeadlineCommentTextcat: z.string().optional(),
+    synopsisCommentTextcat: z.string().optional(),
+    avActivityHighlightsNotes: z.string().optional(),
+    avActivityCommentNotes: z.string().optional(),
+    snowpackStructureHighlightsNotes: z.string().optional(),
+    snowpackStructureCommentNotes: z.string().optional(),
+    tendencyCommentNotes: z.string().optional(),
+    generalHeadlineCommentNotes: z.string().optional(),
+    highlights: z.array(zAvalancheBulletinText).optional(),
+    avActivityHighlights: z.array(zAvalancheBulletinText).optional(),
+    avActivityComment: z.array(zAvalancheBulletinText).optional(),
+    synopsisHighlights: z.array(zAvalancheBulletinText).optional(),
+    synopsisComment: z.array(zAvalancheBulletinText).optional(),
+    snowpackStructureHighlights: z.array(zAvalancheBulletinText).optional(),
+    snowpackStructureComment: z.array(zAvalancheBulletinText).optional(),
+    travelAdvisoryHighlights: z.array(zAvalancheBulletinText).optional(),
+    travelAdvisoryComment: z.array(zAvalancheBulletinText).optional(),
+    tendencyComment: z.array(zAvalancheBulletinText).optional(),
+    generalHeadlineComment: z.array(zAvalancheBulletinText).optional(),
+    tendency: zTendency.optional(),
+    dangerPattern1: zDangerPattern.optional(),
+    dangerPattern2: zDangerPattern.optional(),
+    publicationDate: z.iso.datetime().optional(),
+    validity: zAvalancheBulletinValidity.optional(),
+    suggestedRegions: z.array(z.string()).describe("The recommended regions the avalanche bulletin is for.").optional(),
+    savedRegions: z.array(z.string()).describe("The saved regions the avalanche bulletin is for.").optional(),
+    savedOrPublishedRegions: z.array(z.string()).optional(),
+    regions: z.array(z.string()).optional(),
+    publishedRegions: z.array(z.string()).describe("The published regions the avalanche bulletin is for.").optional(),
+    strategicMindset: zStrategicMindset.optional(),
+    forenoon: zAvalancheBulletinDaytimeDescription.nullish(),
+    afternoon: zAvalancheBulletinDaytimeDescription.nullish(),
+    photos: z.array(zAvalancheBulletinPhoto).describe("Collection containing all photos of a bulletin").optional(),
+    hasDaytimeDependency: z.boolean().optional(),
+  }),
+);
+
 /**
  * Date of validity in the format yyyy-MM-dd
  */
@@ -1941,6 +2036,10 @@ export const zDeletePasskeyPath = z.object({
  */
 export const zTestAuthResponse = zAuthenticationServiceUsername;
 
+export const zGetBlogPostHeaders = z.object({
+  "If-None-Match": z.string().nullish(),
+});
+
 export const zGetBlogPostQuery = z.object({
   region: z.string().optional().default("AT-07"),
   lang: zLanguageCode.optional(),
@@ -1951,6 +2050,10 @@ export const zGetBlogPostQuery = z.object({
  * getBlogPost 200 response
  */
 export const zGetBlogPostResponse = zBlogItem;
+
+export const zGetBlogPostsHeaders = z.object({
+  "If-None-Match": z.string().nullish(),
+});
 
 export const zGetBlogPostsQuery = z.object({
   region: z.string().optional().default("AT-07"),
@@ -2004,7 +2107,7 @@ export const zGetPublishedJsonBulletins0Query = z.object({
  */
 export const zGetPublishedJsonBulletins0Response = z.array(zAvalancheBulletin).describe("bulletins");
 
-export const zCreateJsonBulletinsBody = z.array(zAvalancheBulletin);
+export const zCreateJsonBulletinsBody = z.array(zAvalancheBulletinWritable);
 
 export const zCreateJsonBulletinsQuery = z.object({
   date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
@@ -2016,7 +2119,7 @@ export const zCreateJsonBulletinsQuery = z.object({
  */
 export const zCreateJsonBulletinsResponse = z.array(zAvalancheBulletin).describe("createJSONBulletins 200 response");
 
-export const zCreateJsonBulletinBody = zAvalancheBulletin;
+export const zCreateJsonBulletinBody = zAvalancheBulletinWritable;
 
 export const zCreateJsonBulletinQuery = z.object({
   date: z.string().describe("Date in the format yyyy-MM-dd'T'HH:mm:ssZZ"),
@@ -2137,7 +2240,7 @@ export const zUploadBulletinPhotoQuery = z.object({
  */
 export const zUploadBulletinPhotoResponse = zCaamlAvalancheBulletinCustomDataBulletinPhoto;
 
-export const zGetPreviewPdfBody = z.array(zAvalancheBulletin);
+export const zGetPreviewPdfBody = z.array(zAvalancheBulletinWritable);
 
 export const zGetPreviewPdfQuery = z.object({
   region: z.string(),
@@ -2257,7 +2360,7 @@ export const zGetJsonBulletinPath = z.object({
  */
 export const zGetJsonBulletinResponse = zAvalancheBulletin;
 
-export const zUpdateJsonBulletinBody = zAvalancheBulletin;
+export const zUpdateJsonBulletinBody = zAvalancheBulletinWritable;
 
 export const zUpdateJsonBulletinPath = z.object({
   bulletinId: z.string(),
@@ -2649,7 +2752,7 @@ export const zTriggerStatusChecksResponse = z.array(zStatusInformation).describe
  */
 export const zGetUsersResponse = z.array(zUser).describe("getUsers 200 response");
 
-export const zSaveUserBody = zUser;
+export const zSaveUserBody = zUserWritable;
 
 /**
  * saveUser 200 response
