@@ -8,7 +8,6 @@ import {
   type PublicKeyCredentialCreationOptionsJSON,
   type PublicKeyCredentialRequestOptionsJSON,
 } from "@simplewebauthn/browser";
-import { zUser } from "app/providers/albina-api/zod.gen";
 import { BehaviorSubject, from, Observable } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { z } from "zod/v4";
@@ -19,6 +18,7 @@ import { RegionConfiguration, RegionConfigurationSchema } from "../../models/reg
 import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
 import * as albinaApi from "../albina-api";
+import { zAuthenticationServiceAuthenticationResponse, zRegion } from "../albina-api/zod.gen";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 
 @Injectable({ providedIn: "root" })
@@ -403,12 +403,7 @@ export class AuthenticationService {
   }
 }
 
-export const AuthenticationResponseSchema = z.object({
-  user: zUser,
-  regions: RegionConfigurationSchema.array(),
-  access_token: z.string(),
-  api_url: z.string().nullish(),
-});
+export const AuthenticationResponseSchema = zAuthenticationServiceAuthenticationResponse;
 export type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;
 
 /**
@@ -416,10 +411,11 @@ export type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema
  * configuration need not validate against ours (different languages, unset fields sent as
  * `null`, …). We only ever store the token and the region IDs, so parse just those.
  */
-export const ExternalServerLoginSchema = z.object({
-  access_token: z.string(),
-  regions: z.object({ id: z.string() }).array().nullish(),
-});
+export const ExternalServerLoginSchema = zAuthenticationServiceAuthenticationResponse
+  .pick({ access_token: true })
+  .extend({
+    regions: zRegion.pick({ id: true }).array().nullish(),
+  });
 export type ExternalServerLogin = z.infer<typeof ExternalServerLoginSchema>;
 
 /**
@@ -444,6 +440,5 @@ export const AuthenticationResponseSchema2024 = z
       },
       regions: a.regions,
       access_token: a.access_token,
-      api_url: a.api_url,
     }),
   );
