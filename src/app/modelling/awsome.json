@@ -336,25 +336,25 @@
       "chartAxisRange": [0, 1],
       "values": [
         {
-          "numericRange": [0.8, 1.0],
+          "numericRange": [0.85, 1.0],
           "color": "#d7191c",
-          "label": ">0.8",
-          "legend": "very poor (>=0.8)",
-          "value": ">=0.8"
+          "label": ">0.85",
+          "legend": "very poor (>=0.85)",
+          "value": ">=0.85"
         },
         {
-          "numericRange": [0.77, 0.8],
+          "numericRange": [0.78, 0.85],
           "color": "#fdae61",
-          "label": ">0.77",
-          "legend": "poor (>=0.77)",
-          "value": ">=0.77"
+          "label": ">0.78",
+          "legend": "poor (>=0.78)",
+          "value": ">=0.78"
         },
         {
-          "numericRange": [0.7, 0.77],
+          "numericRange": [0.7, 0.78],
           "color": "#ffffbf",
-          "label": "<0.77",
-          "legend": "fair (<0.77)",
-          "value": "<0.77"
+          "label": "<0.78",
+          "legend": "fair (<0.78)",
+          "value": "<0.78"
         },
         {
           "numericRange": [0.0, 0.7],
