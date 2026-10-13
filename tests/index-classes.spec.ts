@@ -1,0 +1,76 @@
+import { expect, test } from "@playwright/test";
+
+import {
+  alignToClasses,
+  classBounds,
+  classFraction,
+  unstableAtMinimum,
+  valueAtClassFraction,
+} from "../src/app/modelling/index-classes";
+
+const unstableHigh = {
+  chartAxisRange: [0, 1],
+  values: [
+    { numericRange: [0.8, 1] },
+    { numericRange: [0.77, 0.8] },
+    { numericRange: [0.7, 0.77] },
+    { numericRange: [0, 0.7] },
+  ],
+};
+const unstableLow = {
+  chartAxisRange: [0, 1.5],
+  values: [
+    { numericRange: [0, 0.5] },
+    { numericRange: [0.5, 0.95] },
+    { numericRange: [0.95, 1.05] },
+    { numericRange: [1.05, 100] },
+  ],
+};
+const withoutAxisRange = { values: [{ numericRange: [3, 100] }, { numericRange: [1, 3] }, { numericRange: [0, 1] }] };
+
+test("bounds run from the most unstable end to the most stable one", () => {
+  expect(classBounds(unstableHigh)).toEqual([1, 0.8, 0.77, 0.7, 0]);
+  expect(classBounds(unstableLow)).toEqual([0, 0.5, 0.95, 1.05, 1.5]);
+  expect(classBounds(withoutAxisRange)).toEqual([100, 3, 1, 0]);
+});
+
+test("classes that do not chain have no bounds", () => {
+  expect(classBounds({ values: [{ numericRange: [0.8, 1] }, { numericRange: [0, 0.7] }] })).toBeUndefined();
+  expect(classBounds({ chartAxisRange: [0, 0.75], values: unstableHigh.values })).toBeUndefined();
+  expect(classBounds({ values: [{ numericRange: [0, 1] }] })).toBeUndefined();
+});
+
+test("each boundary maps onto the matching boundary, across a direction flip", () => {
+  const low = classBounds(unstableLow);
+  const high = classBounds(unstableHigh);
+  low.forEach((bound, i) => {
+    expect(alignToClasses(bound, low, high)).toBeCloseTo(high[i], 12);
+    expect(alignToClasses(high[i], high, low)).toBeCloseTo(bound, 12);
+  });
+});
+
+test("a value keeps its position inside its class", () => {
+  const low = classBounds(unstableLow);
+  const high = classBounds(unstableHigh);
+  expect(classFraction(high, 0.785)).toBeCloseTo(0.375, 12);
+  expect(alignToClasses(0.785, high, low)).toBeCloseTo(0.725, 12);
+  expect(alignToClasses(1.275, low, high)).toBeCloseTo(0.35, 12);
+});
+
+test("values beyond either end clamp to that end", () => {
+  const low = classBounds(unstableLow);
+  const high = classBounds(unstableHigh);
+  expect(classFraction(low, -1)).toBe(0);
+  expect(classFraction(low, 3.7)).toBe(1);
+  expect(classFraction(high, 1.2)).toBe(0);
+  expect(alignToClasses(3.7, low, high)).toBe(0);
+  expect(alignToClasses(-0.5, high, low)).toBe(1.5);
+  expect(valueAtClassFraction(high, 2)).toBe(0);
+  expect(valueAtClassFraction(high, -1)).toBe(1);
+});
+
+test("an index most unstable at its minimum runs downwards", () => {
+  expect(unstableAtMinimum(unstableLow)).toBe(true);
+  expect(unstableAtMinimum(unstableHigh)).toBe(false);
+  expect(unstableAtMinimum(withoutAxisRange)).toBe(false);
+});

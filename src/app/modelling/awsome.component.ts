@@ -16,7 +16,7 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import type { ScatterSeriesOption } from "echarts/charts";
-import type { GridComponentOption } from "echarts/components";
+import type { GridComponentOption, LegendComponentOption } from "echarts/components";
 import type { ECElementEvent, ECharts, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type {
   CallbackDataParams,
@@ -49,6 +49,7 @@ import { RegionProperties } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
+import { alignToClasses, classBounds, sharedBoundary, unstableAtMinimum } from "./index-classes";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 interface SourceGroup {
@@ -72,6 +73,10 @@ const MEDIAN_COLOR = "green";
 const ASPECT_FILE = /\.[A-Za-z]+\.json(\?|$)/;
 const MEDIAN_SERIES = 1;
 const SPLIT_LINE = { lineStyle: { color: "#e8e8e8" } };
+const INNER_BAND_COLOR = "#bbb";
+const OUTER_BAND_COLOR = "#ddd";
+const COMPANION_COLOR = "#555";
+const COMPANION_LINE_TYPES: LineSeriesOption["lineStyle"]["type"][] = ["solid", "dotted", "dashed", [8, 4, 2, 4]];
 
 const IndexSchema = z.object({
   depth: z.number().nullish().array(),
@@ -632,10 +637,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         min: xType?.chartAxisRange?.[0],
         max: xType?.chartAxisRange?.[1],
         axisPointer: { type: "line" },
+        axisLine: { onZero: false },
         splitLine: SPLIT_LINE,
       } satisfies XAXisOption,
       yAxis: {
         name: this.t(markerClassify.label),
+        ...this.unstableOnTop(markerClassify),
         min: markerClassify.chartAxisRange?.[0],
         max: markerClassify.chartAxisRange?.[1],
         axisPointer: { type: "line" },
@@ -699,10 +706,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     );
     const data = classes.slice(1).flatMap((below, i) => {
       const above = classes[i];
-      const bound = above.numericRange.find((b) => below.numericRange.includes(b));
+      const bound = sharedBoundary(above.numericRange, below.numericRange);
       return bound === undefined ? [] : [{ yAxis: bound, lineStyle: { color: above.color } }];
     });
     return { z, silent: true, symbol: "none", label: { show: false }, lineStyle: { type: "dashed", width: 1.6 }, data };
+  }
+
+  /** A stability index axis runs downwards when the index is most unstable at its minimum, its name kept on top. */
+  private unstableOnTop(filter: FilterSelectionData<FeatureProperties>): Pick<YAXisOption, "inverse" | "nameLocation"> {
+    const inverse = !!filter.stabilityIndex && unstableAtMinimum(filter);
+    return { inverse, nameLocation: inverse ? "start" : "end" };
   }
 
   /** Crosshair and emphasis on the hovered observation's point, without touching the option object. */
@@ -727,6 +740,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return markerClassify?.stabilityIndex ? markerClassify : undefined;
   }
 
+  /** The other indices of the classified index's regime, in config order, at most one per companion line style. */
+  private companionsOf(
+    stabilityIndex: FilterSelectionData<FeatureProperties>,
+  ): FilterSelectionData<FeatureProperties>[] {
+    if (!classBounds(stabilityIndex)) return [];
+    return this.filterService.filterSelectionData
+      .filter((f) => f !== stabilityIndex && f.stabilityIndex === stabilityIndex.stabilityIndex && classBounds(f))
+      .slice(0, COMPANION_LINE_TYPES.length);
+  }
+
   private loadTimeseriesChart() {
     const stabilityIndex = this.stabilityIndex;
     const url0 = this.config.timeseriesChart?.url;
@@ -736,9 +759,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.timeseries$loading = undefined;
       return;
     }
-    const url = this.setSearchParams(new URL(url0, this.baseURL), this.loadedSources).toString();
+    const companions = this.companionsOf(stabilityIndex);
+    const request = this.setSearchParams(new URL(url0, this.baseURL), this.loadedSources);
+    companions.forEach((companion) => request.searchParams.append("stabilityIndex", companion.type));
+    const url = request.toString();
     if (this.timeseries?.url === url) {
-      this.renderTimeseries(this.timeseries.data, stabilityIndex);
+      this.renderTimeseries(this.timeseries.data, stabilityIndex, companions);
       return;
     }
     if (this.timeseries$loading?.url === url) {
@@ -752,7 +778,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         next: (d) => {
           this.timeseries$loading = undefined;
           this.timeseries = { url, data: TimeseriesSchema.parse(d) };
-          this.renderTimeseries(this.timeseries.data, stabilityIndex);
+          this.renderTimeseries(this.timeseries.data, stabilityIndex, companions);
         },
         // a failed load has to forget its URL, or the guard above takes it for
         // one still in flight and the chart is never asked for again
@@ -764,22 +790,42 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     };
   }
 
-  private renderTimeseries(data: Timeseries, stabilityIndex: FilterSelectionData<FeatureProperties>) {
+  private renderTimeseries(
+    data: Timeseries,
+    stabilityIndex: FilterSelectionData<FeatureProperties>,
+    companions: FilterSelectionData<FeatureProperties>[],
+  ) {
     const indexData = data.indexes[stabilityIndex.type];
     if (!indexData) {
       this.timeseriesChart = undefined;
       return;
     }
+    const label = this.t(stabilityIndex.label);
+    const innerBand = `${label} 25-75 %`;
+    const outerBand = `${label} 10-90 %`;
+    const bounds = classBounds(stabilityIndex);
+    const classLines = this.classLines(stabilityIndex, 2);
+    const companionLines = companions
+      .map((companion, i) => ({
+        companion,
+        name: this.t(companion.label),
+        median: data.indexes[companion.type]?.mean,
+        from: classBounds(companion),
+        type: COMPANION_LINE_TYPES[i],
+      }))
+      .filter(({ median }) => median);
     this.timeseriesChart = {
       xAxis: {
         type: "time",
         nameLocation: "center",
         name: this.t("Date"),
+        axisLine: { onZero: false },
         splitLine: SPLIT_LINE,
       } satisfies XAXisOption,
       yAxis: {
-        name: this.t(stabilityIndex.label),
+        name: label,
         position: "right",
+        ...this.unstableOnTop(stabilityIndex),
         min: stabilityIndex.chartAxisRange?.[0],
         max: stabilityIndex.chartAxisRange?.[1],
         splitLine: SPLIT_LINE,
@@ -792,14 +838,37 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         backgroundColor: "#f7f7f7",
         show: true,
       } satisfies GridComponentOption,
+      legend: {
+        orient: "vertical",
+        left: 16,
+        bottom: 46,
+        itemGap: 6,
+        padding: 6,
+        backgroundColor: "rgba(255, 255, 255, 0.75)",
+        data: [
+          label,
+          { name: innerBand, icon: "rect", itemStyle: { color: INNER_BAND_COLOR, borderWidth: 0, opacity: 1 } },
+          ...(indexData.lower2
+            ? [{ name: outerBand, icon: "rect", itemStyle: { color: OUTER_BAND_COLOR, borderWidth: 0, opacity: 1 } }]
+            : []),
+          ...companionLines.map(({ name }) => ({ name, itemStyle: { opacity: 0 } })),
+        ],
+      } satisfies LegendComponentOption,
       tooltip: {
         trigger: "axis",
-        formatter: ([series]: CallbackDataParams[]) => `
+        formatter: ([series]: CallbackDataParams[]) => {
+          if (!series) return "";
+          const companionRows = companionLines.map(
+            ({ companion, median }) => `<dt>${companion.type}</dt><dd>${median[series.dataIndex]}</dd>`,
+          );
+          return `
             <dl>
               <dt>${stabilityIndex.type}</dt><dd>${indexData.mean[series.dataIndex]}</dd>
-              <dt>${this.t("Depth")}<dt><dd>${indexData.depth[series.dataIndex]}</dd>
-              <dt>${this.t("Size estimate")}<dt><dd>${indexData.size_estimate[series.dataIndex]}</dd>
-            </dl>`,
+              <dt>${this.t("Depth")}</dt><dd>${indexData.depth[series.dataIndex]}</dd>
+              <dt>${this.t("Size estimate")}</dt><dd>${indexData.size_estimate[series.dataIndex]}</dd>
+              ${companionRows.join("")}
+            </dl>`;
+        },
         showContent: true,
         axisPointer: {
           type: "cross",
@@ -807,43 +876,43 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       } satisfies TooltipOption,
       series: [
         {
-          name: "mean",
+          name: label,
           type: "line",
           color: MEDIAN_COLOR,
           emphasis: { scale: 2.5 },
           data: data.timestamps.map((t, i) => [t, indexData.mean[i]]),
+        } satisfies LineSeriesOption,
+        {
+          type: "line",
+          data: [],
           markLine: {
-            silent: true,
-            symbol: "none",
-            label: { show: false },
-            lineStyle: { color: "#000" },
-            data: [{ xAxis: this.date }],
+            ...classLines,
+            data: [...classLines.data, { xAxis: this.date, lineStyle: { color: "#000", width: 1 } }],
           } satisfies MarkLineOption,
         } satisfies LineSeriesOption,
         {
-          name: "lower",
+          name: innerBand,
           type: "line",
           z: 1,
           data: data.timestamps.map((t, i) => [t, indexData.lower[i]]),
           lineStyle: { opacity: 0 },
           stack: "confidence-band",
           symbol: "none",
-          markLine: this.classLines(stabilityIndex, 2),
         } satisfies LineSeriesOption,
         {
-          name: "upper",
+          name: innerBand,
           type: "line",
           z: 1,
           data: data.timestamps.map((t, i) => [t, indexData.upper[i] - indexData.lower[i]]),
           lineStyle: { opacity: 0 },
-          areaStyle: { color: "#bbb" },
+          areaStyle: { color: INNER_BAND_COLOR },
           stack: "confidence-band",
           symbol: "none",
         } satisfies LineSeriesOption,
         ...(indexData.lower2
           ? [
               {
-                name: "lower",
+                name: outerBand,
                 type: "line",
                 z: 1,
                 data: data.timestamps.map((t, i) => [t, indexData.lower2[i]]),
@@ -852,17 +921,32 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
                 symbol: "none",
               } satisfies LineSeriesOption,
               {
-                name: "upper",
+                name: outerBand,
                 type: "line",
                 z: 1,
                 data: data.timestamps.map((t, i) => [t, indexData.upper2[i] - indexData.lower2[i]]),
                 lineStyle: { opacity: 0 },
-                areaStyle: { color: "#ddd" },
+                areaStyle: { color: OUTER_BAND_COLOR },
                 stack: "confidence-band2",
                 symbol: "none",
               } satisfies LineSeriesOption,
             ]
           : []),
+        ...companionLines.map(
+          ({ name, median, from, type }) =>
+            ({
+              name,
+              type: "line",
+              z: 2,
+              color: COMPANION_COLOR,
+              symbol: "none",
+              lineStyle: { width: 1.2, type },
+              data: data.timestamps.map((t, i) => [
+                t,
+                typeof median[i] === "number" ? alignToClasses(median[i], from, bounds) : null,
+              ]),
+            }) satisfies LineSeriesOption,
+        ),
       ],
     } satisfies EChartsOption;
 
