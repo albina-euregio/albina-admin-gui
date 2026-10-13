@@ -336,6 +336,7 @@
       "label": "Punstable",
       "key": "snowpack.Punstable.value",
       "type": "Punstable",
+      "stabilityIndex": "dry",
       "default": "classify",
       "chartAxisRange": [0, 1],
       "values": [
@@ -375,7 +376,7 @@
       "label": "Sk38_CCL",
       "key": "snowpack.sk38_ccl.value",
       "type": "sk38_ccl",
-      "stabilityIndex": true,
+      "stabilityIndex": "dry",
       "chartAxisRange": [0, 1.5],
       "values": [
         {
@@ -414,6 +415,7 @@
       "label": "LWC index",
       "key": "snowpack.lwc.value",
       "type": "lwc",
+      "stabilityIndex": "wet",
       "values": [
         { "numericRange": [3, 100], "color": "#d7301f", "label": ">3", "legend": "very poor (>3)", "value": "3" },
         { "numericRange": [1, 3], "color": "#fc8d59", "label": "<=3", "legend": "poor (<=3)", "value": "<=3" },

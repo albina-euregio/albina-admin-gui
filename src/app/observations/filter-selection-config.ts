@@ -74,7 +74,12 @@ export const FilterSelectionSpecSchema = z.object({
     .array()
     .optional()
     .describe("Initially selected values, use 'nan' for features w/o specification"),
-  stabilityIndex: z.boolean().optional().describe("Whether this filter represents a snowpack stability index"),
+  stabilityIndex: z
+    .enum(["dry", "wet"])
+    .optional()
+    .describe(
+      "Marks this filter as a snowpack stability index of the dry or the wet regime. While the markers are classified by a filter with this keyword, that filter drives the timeseries chart and its type fills the `stabilityIndex` request parameter and the `$stabilityIndex` placeholder in keys and templates.",
+    ),
   type: z.string().describe("Identifier for this filter"),
   url: UrlSchema.optional().describe(
     "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",

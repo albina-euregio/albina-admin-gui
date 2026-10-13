@@ -724,16 +724,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private get stabilityIndex(): FilterSelectionData<FeatureProperties> | undefined {
     const markerClassify = this.markerService.markerClassify;
-    if (
-      markerClassify?.stabilityIndex ||
-      markerClassify?.type === "Punstable" ||
-      markerClassify?.type === "ccl" ||
-      markerClassify?.type === "lwc" ||
-      markerClassify?.type === "sk38_rta"
-    ) {
-      return markerClassify;
-    }
-    return undefined;
+    return markerClassify?.stabilityIndex ? markerClassify : undefined;
   }
 
   private loadTimeseriesChart() {

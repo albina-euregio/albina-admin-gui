@@ -13,7 +13,7 @@ export type Dataset = (string | number)[][];
 export type ValueType = number | string | Date | number[] | string[];
 
 export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
-  readonly stabilityIndex?: boolean;
+  readonly stabilityIndex?: FilterSelectionSpec<T>["stabilityIndex"];
   readonly type: string;
   readonly label: string;
   readonly key: keyof T;

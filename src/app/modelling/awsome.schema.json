@@ -82,8 +82,9 @@
             }
           },
           "stabilityIndex": {
-            "description": "Whether this filter represents a snowpack stability index",
-            "type": "boolean"
+            "description": "Marks this filter as a snowpack stability index of the dry or the wet regime. While the markers are classified by a filter with this keyword, that filter drives the timeseries chart and its type fills the `stabilityIndex` request parameter and the `$stabilityIndex` placeholder in keys and templates.",
+            "type": "string",
+            "enum": ["dry", "wet"]
           },
           "type": {
             "type": "string",
