@@ -3,6 +3,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 import { Calendar, type FormatDateString, months, type Options } from "vanilla-calendar-pro";
 
+const DISPLAY_MONTHS_COUNT = 3;
+
 /**
  * Date range picker based on https://vanilla-calendar.pro/ for `<input>` elements, bound via `ngModel` to `[startDate, endDate]`.
  *
@@ -48,7 +50,7 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
       positionToInput: "auto",
       extensions: [months],
       type: "multiple",
-      displayMonthsCount: 3,
+      displayMonthsCount: DISPLAY_MONTHS_COUNT,
       selectionDatesMode: "multiple-ranged",
       // clicking the first date again selects a single-day range; toggling it off would yield `[undefined, undefined]`
       enableDateToggle: false,
@@ -155,11 +157,17 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
   }
 
   private toCalendarOptions([startDate, endDate]: Date[]): Options {
-    if (!startDate || !endDate) return { selectedDates: [] };
+    const selectedDates: Options["selectedDates"] =
+      startDate && endDate ? [`${formatDate(startDate)}:${formatDate(endDate)}`] : [];
+    // show the start month, but no months after `maxDate`
+    const start = startDate ?? new Date();
+    let month = start.getFullYear() * 12 + start.getMonth();
+    const maxDate = this.maxDate();
+    if (maxDate) month = Math.min(month, maxDate.getFullYear() * 12 + maxDate.getMonth() - (DISPLAY_MONTHS_COUNT - 1));
     return {
-      selectedDates: [`${formatDate(startDate)}:${formatDate(endDate)}`],
-      selectedMonth: startDate.getMonth() as Options["selectedMonth"],
-      selectedYear: startDate.getFullYear(),
+      selectedDates,
+      selectedMonth: (month % 12) as Options["selectedMonth"],
+      selectedYear: Math.floor(month / 12),
     };
   }
 
