@@ -17,6 +17,7 @@ export const UserSchema = z.object({
     .array()
     .default(() => []),
   languageCode: z.string().nullish(),
+  passkeyCount: z.number().nullish(),
 });
 
 export type UserModel = z.infer<typeof UserSchema>;

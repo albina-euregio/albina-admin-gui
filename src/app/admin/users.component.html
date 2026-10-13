@@ -36,7 +36,12 @@
               <img [src]="authenticationService.getUserImageSanitized(user.image)" class="user-avatar__img" />
             }
           </td>
-          <td>{{ user.name }}</td>
+          <td>
+            {{ user.name }}
+            @if (user.passkeyCount) {
+              <i class="ph ph-fingerprint" title="{{ 'settings.passkeys.title' | translate }}"></i>
+            }
+          </td>
           <td>{{ user.email }}</td>
           <td>{{ user.organization }}</td>
           <td>{{ user.regions }}</td>
