@@ -49,6 +49,8 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
       type: "multiple",
       displayMonthsCount: 3,
       selectionDatesMode: "multiple-ranged",
+      // clicking the first date again selects a single-day range; toggling it off would yield `[undefined, undefined]`
+      enableDateToggle: false,
       firstWeekday: 1,
       selectedTheme: "light",
       locale: this.translateService.getCurrentLang() || "en",
