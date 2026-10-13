@@ -165,6 +165,7 @@
       "variantStatus": "Status",
       "variantEditable": "This variant can be edited.",
       "variantNotEditable": "This variant can not be edited.",
+      "uploadError": "The variant could not be loaded from the file.",
       "noVariantsForSelectedDay": "No variants defined for this date.",
       "tooltip": {
         "editDangerSource": "Edit danger source",
@@ -173,6 +174,8 @@
         "showVariantsOnMap": "Show variants on map",
         "edit": "Edit micro regions",
         "copy": "Copy variant",
+        "download": "Download variant as JSON",
+        "upload": "Load variant from JSON",
         "delete": "Delete variant",
         "compare": "Compare variant",
         "forecast": "Compare with forecast"

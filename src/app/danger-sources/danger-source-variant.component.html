@@ -132,6 +132,25 @@
           </button>
         }
         <button
+          (click)="downloadVariant()"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.download' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+        >
+          <i class="ph ph-download-simple"></i>
+        </button>
+        <button
+          (click)="uploadInput.click()"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.upload' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+        >
+          <i class="ph ph-upload-simple"></i>
+        </button>
+        <input #uploadInput type="file" accept=".json,application/json" hidden (change)="uploadVariant($event)" />
+        <button
           (click)="deleteVariant()"
           data-toggle="tooltip"
           title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
@@ -173,9 +192,14 @@
         {{ "dangerSources.create.variantNotEditable" | translate }}
       </p>
       <div class="btn-group banner__actions">
-        <!-- dummy button to keep layout -->
-        <button class="btn btn-sm btn-icon btn-outline-primary" style="visibility: hidden">
-          <i class="ph ph-globe-hemisphere-west"></i>
+        <button
+          (click)="downloadVariant()"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.download' | translate }}"
+          type="button"
+          class="btn btn-sm btn-icon btn-outline-primary"
+        >
+          <i class="ph ph-download-simple"></i>
         </button>
       </div>
     </div>

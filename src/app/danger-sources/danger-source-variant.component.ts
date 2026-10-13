@@ -15,6 +15,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { MatrixInformationSchema } from "app/models/matrix-information.model";
 import { ZodSchemaFormComponent } from "app/shared/zod-schema-form.component";
+import { saveAs } from "file-saver";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -97,6 +98,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   readonly deleteVariantEvent = output<DangerSourceVariantModel>();
   readonly editMicroRegionsEvent = output<DangerSourceVariantModel>();
   readonly copyVariantEvent = output<DangerSourceVariantModel>();
+  readonly uploadVariantEvent = output<DangerSourceVariantModel>();
   readonly deselectVariantEvent = output<DangerSourceVariantModel>();
   readonly toggleVariantsSidebarEvent = output<void>();
   readonly undoRedoEvent = output<UndoOrRedo>();
@@ -212,6 +214,43 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
 
   copyVariant() {
     this.copyVariantEvent.emit(this.variant());
+  }
+
+  downloadVariant() {
+    const variant = this.variant();
+    const json = JSON.stringify(variant, undefined, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const date = this.constantsService.getISODateString(this.dangerSourcesService.sourceDates.activeValidUntil);
+    const title = (variant.title || variant.dangerSource?.title || variant.id || "variant").replace(/[^\w-]+/g, "_");
+    saveAs(blob, `${date}_${title}.json`);
+  }
+
+  async uploadVariant(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = "";
+    if (!file) return;
+    try {
+      const uploaded = DangerSourceVariantSchema.parse(JSON.parse(await file.text()));
+      const current = this.variant();
+      // keep the identity of the current variant, take over its contents from the file
+      const variant = DangerSourceVariantModel.parse({
+        ...uploaded,
+        id: current.id,
+        originalDangerSourceVariantId: current.originalDangerSourceVariantId,
+        forecastDangerSourceVariantId: current.forecastDangerSourceVariantId,
+        dangerSource: current.dangerSource,
+        creationDate: current.creationDate,
+        validFrom: current.validFrom,
+        validUntil: current.validUntil,
+        dangerSourceVariantType: current.dangerSourceVariantType,
+        ownerRegion: current.ownerRegion,
+      });
+      this.uploadVariantEvent.emit(variant);
+    } catch (error) {
+      console.error("Variant could not be loaded from file!", error);
+      alert(this.translateService.instant("dangerSources.create.uploadError"));
+    }
   }
 
   deselectVariant() {
