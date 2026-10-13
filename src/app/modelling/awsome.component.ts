@@ -401,9 +401,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       url.searchParams.set("stabilityIndex", stabilityIndex.type);
     }
 
-    this.filterService.filterSelectionData.forEach((f) =>
-      f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.type), v.value)),
-    );
+    this.filterService.filterSelectionData.forEach((f) => {
+      f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.type), v.value));
+      if (f.type === "aspect" && f.selected.has("nan")) url.searchParams.append("aspect", "nan");
+    });
     this.filterService.regions.forEach((r) => url.searchParams.append("region", r));
     return url;
   }
