@@ -24,6 +24,7 @@ export class ObservationChartComponent<T> implements OnInit {
   readonly filterSelection = input<FilterSelectionData<T>>(undefined);
   readonly classSlots = input(10);
   readonly classifiable = input(true);
+  readonly reloadPending = input(false);
   readonly handleChange = output();
   readonly handleReload = output();
   public options: EChartsOption;

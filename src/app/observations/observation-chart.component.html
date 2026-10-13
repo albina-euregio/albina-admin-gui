@@ -10,6 +10,7 @@
         @if (filterSelection().url) {
           <div
             class="obs-switch-item"
+            [class.is-active]="reloadPending()"
             (click)="onReload()"
             title="{{ 'admin.observations.charts.reload' | translate }}"
           >

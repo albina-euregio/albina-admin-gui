@@ -149,6 +149,7 @@
                   [filterSelection]="filterSelection"
                   [classSlots]="classSlots"
                   [classifiable]="canClassify(filterSelection)"
+                  [reloadPending]="isReloadPending(filterSelection)"
                   (handleReload)="loadSources()"
                   (handleChange)="onFilterChange(filterSelection)"
                 />

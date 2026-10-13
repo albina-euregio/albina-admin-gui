@@ -57,6 +57,7 @@ import {
   sharedBoundary,
   unstableAtMinimum,
 } from "./index-classes";
+import { selectionQuery } from "./selection-query";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 interface SourceGroup {
@@ -137,6 +138,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   layout: "map" | "chart" | "details" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   private observations: FeatureProperties[] = [];
+  private loadedSelectionQuery = "";
   private localObservations: FeatureProperties[] = [];
   selectedObservation: FeatureProperties | undefined = undefined;
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml; source: string; frame?: string }[] | undefined =
@@ -363,6 +365,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.loadTimeseriesChart();
 
     this.loadingState = "loading";
+    this.loadedSelectionQuery = selectionQuery(this.filterService.filterSelectionData);
     this.observations = (
       await Promise.all(
         this.activeSources.flatMap(async (source): Promise<FeatureProperties[]> => {
@@ -1114,8 +1117,15 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       .addTo(this.map);
   }
 
+  /** Whether the filter has a url while the url-backed selections differ from those the shown data was loaded with. */
+  isReloadPending(filter: FilterSelectionData<FeatureProperties>): boolean {
+    return !!filter.url && selectionQuery(this.filterService.filterSelectionData) !== this.loadedSelectionQuery;
+  }
+
   onFilterChange(filter: FilterSelectionData<FeatureProperties>) {
-    if (filter.type === "aspect") {
+    const queryCleared =
+      !!filter.url && !!this.loadedSelectionQuery && !selectionQuery(this.filterService.filterSelectionData);
+    if (filter.type === "aspect" || queryCleared) {
       this.loadSources();
     } else {
       this.applyLocalFilter();
