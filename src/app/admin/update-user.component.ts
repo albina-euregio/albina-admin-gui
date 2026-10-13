@@ -2,12 +2,13 @@ import { AfterContentInit, Component, inject, ChangeDetectionStrategy } from "@a
 import { FormsModule } from "@angular/forms";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { User } from "app/providers/albina-api";
+import { zUser } from "app/providers/albina-api/zod.gen";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
 
-import { UserModel, UserSchema } from "../models/user.model";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
@@ -42,7 +43,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public update: boolean;
   public isAdmin: boolean;
 
-  public user: UserModel;
+  public user: User;
   public alerts: Alert[] = [];
   public roles: string[];
   public regions: string[];
@@ -137,7 +138,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public saveUser() {
     this.updateUserLoading = true;
 
-    const user: UserModel = UserSchema.parse({
+    const user: User = zUser.parse({
       image: this.activeImage,
       name: this.activeName,
       email: this.activeEmail,

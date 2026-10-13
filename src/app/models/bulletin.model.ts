@@ -1,4 +1,5 @@
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
+import { zUser } from "app/providers/albina-api/zod.gen";
 import { z } from "zod/v4";
 
 import * as Enums from "../enums/enums";
@@ -10,7 +11,6 @@ import {
 } from "./bulletin-daytime-description.model";
 import { BulletinPhotoSchema } from "./bulletin-photo.model";
 import { TextSchema } from "./text.model";
-import { UserSchema } from "./user.model";
 
 export const DateSchema = z.preprocess((value) => {
   if (typeof value === "string") {
@@ -22,7 +22,7 @@ export const DateSchema = z.preprocess((value) => {
 export const BulletinSchema = z.object({
   id: z.string().nullish(),
 
-  author: UserSchema.partial().default(() => ({})),
+  author: zUser.default(() => ({})),
   additionalAuthors: z
     .string()
     .array()

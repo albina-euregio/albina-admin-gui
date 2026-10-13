@@ -8,7 +8,7 @@ import {
   type PublicKeyCredentialCreationOptionsJSON,
   type PublicKeyCredentialRequestOptionsJSON,
 } from "@simplewebauthn/browser";
-import { UserModel, UserSchema } from "app/models/user.model";
+import { zUser } from "app/providers/albina-api/zod.gen";
 import { BehaviorSubject, from, Observable } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { z } from "zod/v4";
@@ -274,11 +274,11 @@ export class AuthenticationService {
     }
   }
 
-  get currentAuthor(): UserModel {
+  get currentAuthor(): albinaApi.User {
     return this.authentication?.user;
   }
 
-  public getCurrentAuthor(): UserModel {
+  public getCurrentAuthor(): albinaApi.User {
     return this.currentAuthor;
   }
 
@@ -348,7 +348,7 @@ export class AuthenticationService {
   }
 
   public isCurrentUserInRole(...roles0: (keyof typeof Enums.UserRole)[]): boolean {
-    let roles: Enums.UserRole[] = this.currentAuthor?.roles ?? [];
+    let roles: albinaApi.Role[] = this.currentAuthor?.roles ?? [];
     // the user may restrict themselves to a single effective role (e.g. an admin who does not want admin powers)
     const effectiveRole = this.localStorageService.effectiveRole;
     if (effectiveRole) {
@@ -404,7 +404,7 @@ export class AuthenticationService {
 }
 
 export const AuthenticationResponseSchema = z.object({
-  user: UserSchema,
+  user: zUser,
   regions: RegionConfigurationSchema.array(),
   access_token: z.string(),
   api_url: z.string().nullish(),
