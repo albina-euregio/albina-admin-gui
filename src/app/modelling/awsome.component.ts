@@ -31,7 +31,7 @@ import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Po
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, forkJoin, type Subscription } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, timeout } from "rxjs/operators";
 import Split from "split.js";
 import * as z from "zod/v4";
 
@@ -42,13 +42,15 @@ import { addTerrainControl, setTerrainEnabled } from "../map/terrain";
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
-import { ObservationChartComponent } from "../observations/observation-chart.component";
+import { BAR_CHART_ROWS, ObservationChartComponent } from "../observations/observation-chart.component";
 import { ObservationFilterService } from "../observations/observation-filter.service";
 import { ObsMarkerElement, ObservationMarkerService } from "../observations/observation-marker.service";
 import { RegionProperties } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
+import { dormantDatetags, sortDatetags } from "./dormant-datetags";
+import { DormantDatetagsMenuComponent } from "./dormant-datetags-menu.component";
 import {
   alignToClasses,
   classBounds,
@@ -85,6 +87,7 @@ const INNER_BAND_COLOR = "#bbb";
 const OUTER_BAND_COLOR = "#ddd";
 const COMPANION_COLOR = "#555";
 const COMPANION_LINE_TYPES: LineSeriesOption["lineStyle"]["type"][] = ["solid", "dotted", "dashed", [8, 4, 2, 4]];
+const DORMANT_READ_TIMEOUT_MS = 3000;
 
 const IndexSchema = z.object({
   depth: z.number().nullish().array(),
@@ -106,6 +109,7 @@ type Timeseries = z.infer<typeof TimeseriesSchema>;
   standalone: true,
   imports: [
     CommonModule,
+    DormantDatetagsMenuComponent,
     FormsModule,
     FormsModule,
     ObservationChartComponent,
@@ -134,6 +138,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private configURL = "";
   private config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
+  dormantMenu?: { values: FilterSelectionValue[]; dormant: Set<string>; saveUrl: string };
+  readonly barChartRows = BAR_CHART_ROWS;
   date = "";
   layout: "map" | "chart" | "details" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
@@ -191,7 +197,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.configURL = params.get("config") || this.configURL;
       this.date = params.get("date") || this.date;
     });
-    this.config$q = firstValueFrom(this.fetchJSON(this.configURL)).then((c) => AwsomeConfigSchema.parseAsync(c));
+    this.config$q = firstValueFrom(this.fetchJSON(this.configURL))
+      .then((c) => AwsomeConfigSchema.parseAsync(c))
+      .then((c) => this.prepareDatetags(c));
     this.config = await this.config$q;
     this.date ||= this.config.date;
     this.sources = this.config.sources;
@@ -210,7 +218,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       f.values.forEach((v) => {
         v.label = v.labelI18nKey ? this.translateService.instant(v.labelI18nKey) : this.t(v.label);
       });
-      return new FilterSelectionData(f);
+      const dormant = f.type === "datetag" ? this.dormantMenu?.dormant : undefined;
+      const filter = new FilterSelectionData<FeatureProperties>({
+        ...f,
+        values: f.values.filter((v) => !dormant?.has(v.value)),
+      });
+      filter.unmatchedAsNan = f.type === "datetag";
+      filter.retainKnown();
+      return filter;
     });
     this.filterService.mapBounds = undefined;
 
@@ -241,9 +256,49 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return classSlotsFor(this.filterService.filterSelectionData);
   }
 
-  /** Whether a filter may classify: its values fit the class slots, or it is the classifier already. */
+  /** Whether a filter may classify: it classifies already, or it has no url and its values fit the class slots. */
   canClassify(filter: FilterSelectionData<FeatureProperties>): boolean {
-    return filter.values.length <= this.classSlots || filter.type === this.markerService.markerClassify?.type;
+    return (
+      filter.type === this.markerService.markerClassify?.type ||
+      (!filter.url && filter.values.length <= this.classSlots)
+    );
+  }
+
+  /**
+   * Sorts the datetag values canonically and, when the datetag filter asks for the menu, reads the dormant dates.
+   * When that list cannot be read, nothing is dormant and there is no menu.
+   */
+  private async prepareDatetags(config: AwsomeConfig): Promise<AwsomeConfig> {
+    const datetag = config.filters.find((f) => f.type === "datetag");
+    if (!datetag) return config;
+    datetag.values = sortDatetags(datetag.values);
+    const dormant = datetag.dormantMenu ? await this.readDormantDatetags(datetag.values) : undefined;
+    if (dormant) {
+      this.dormantMenu = {
+        values: datetag.values,
+        dormant,
+        saveUrl: new URL("api/dormant-datetags", this.baseURL).toString(),
+      };
+    }
+    return config;
+  }
+
+  /** The dormant dates listed next to the config, undefined when that list cannot be read in time. */
+  private async readDormantDatetags(values: FilterSelectionValue[]): Promise<Set<string> | undefined> {
+    try {
+      const url = new URL("dormant_datetags.json", new URL(this.configURL, document.baseURI));
+      const content = await firstValueFrom(this.fetchJSON(url.toString()).pipe(timeout(DORMANT_READ_TIMEOUT_MS)));
+      return dormantDatetags(content, values);
+    } catch (err) {
+      console.warn("Failed to read the dormant datetags, all of them stay active and the menu is off", err);
+      return undefined;
+    }
+  }
+
+  /** Reopens the dashboard on the current view, which reads the saved dormant dates anew. */
+  reloadView() {
+    window.history.replaceState(window.history.state, "", this.shareLink());
+    window.location.reload();
   }
 
   private listParam(key: string): string[] {
@@ -263,6 +318,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     for (const f of this.filterService.filterSelectionData) {
       if (params.has(`filter.${f.type}`)) f.selected = new Set(this.listParam(`filter.${f.type}`));
       if (params.has(`highlight.${f.type}`)) f.highlighted = new Set(this.listParam(`highlight.${f.type}`));
+      f.retainKnown();
     }
     const classifier = this.filterByType(params.get("classify"));
     if (params.has("classify") && (!classifier || this.canClassify(classifier))) {

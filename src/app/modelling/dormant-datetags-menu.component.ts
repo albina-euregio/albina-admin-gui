@@ -1,0 +1,94 @@
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+  output,
+  signal,
+  viewChild,
+} from "@angular/core";
+import { TranslatePipe } from "@ngx-translate/core";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { firstValueFrom } from "rxjs";
+
+import type { FilterSelectionValue } from "../observations/filter-selection-config";
+import { isDateDatetag } from "./dormant-datetags";
+
+@Component({
+  selector: "app-dormant-datetags-menu",
+  standalone: true,
+  imports: [BsDropdownModule, TranslatePipe],
+  templateUrl: "dormant-datetags-menu.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: "obs-switch-item",
+    "[class.is-active]": "changed()",
+    "(document:keydown.escape)": "dropdown()?.hide()",
+  },
+})
+export class DormantDatetagsMenuComponent {
+  private httpClient = inject(HttpClient);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
+  readonly values = input.required<FilterSelectionValue[]>();
+  readonly dormant = input.required<ReadonlySet<string>>();
+  readonly visibleRows = input.required<number>();
+  readonly saveUrl = input.required<string>();
+  readonly saved = output();
+  readonly dropdown = viewChild(BsDropdownDirective);
+
+  readonly isDateDatetag = isDateDatetag;
+  readonly hintKey = "awsome.{{active}} active, {{visible}} visible in the chart";
+  readonly pending = linkedSignal(() => new Set(this.dormant()));
+  readonly opensUp = signal(false);
+  readonly saving = signal(false);
+  readonly error = signal("");
+  readonly activeCount = computed(() => this.values().filter((v) => !this.pending().has(v.value)).length);
+  readonly visibleCount = computed(() => Math.min(this.activeCount(), this.visibleRows()));
+  readonly changed = computed(
+    () => this.pending().size !== this.dormant().size || [...this.pending()].some((v) => !this.dormant().has(v)),
+  );
+
+  /** Opens the menu upwards when the icon sits in the lower half of the viewport, settled before the click opens it. */
+  aim(toggle: HTMLElement) {
+    const { top, bottom } = toggle.getBoundingClientRect();
+    this.opensUp.set(top + bottom > window.innerHeight);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  /** Marks a date active or dormant in the pending list. */
+  setActive(value: string, active: boolean) {
+    const pending = new Set(this.pending());
+    if (active) pending.delete(value);
+    else pending.add(value);
+    this.pending.set(pending);
+  }
+
+  /** Marks every date active, or every date dormant. */
+  setAllDates(active: boolean) {
+    const dates = this.values()
+      .map((v) => v.value)
+      .filter(isDateDatetag);
+    this.pending.set(new Set(active ? [] : dates));
+  }
+
+  /** Stores the pending dormant dates newest first and reports success; a failure stays in the menu. */
+  async save() {
+    this.saving.set(true);
+    this.error.set("");
+    const dormant = this.values()
+      .map((v) => v.value)
+      .filter((value) => isDateDatetag(value) && this.pending().has(value));
+    try {
+      await firstValueFrom(this.httpClient.put(this.saveUrl(), { dormant_datetags: dormant }));
+      this.saved.emit();
+    } catch (err) {
+      this.error.set(err instanceof HttpErrorResponse ? (err.error?.error ?? err.message) : String(err));
+      this.saving.set(false);
+    }
+  }
+}

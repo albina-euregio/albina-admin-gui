@@ -27,6 +27,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   highlighted = new Set<string>();
   dataset: Dataset;
   nan = 0;
+  unmatchedAsNan = false;
 
   constructor(spec: FilterSelectionSpec<T>) {
     Object.assign(this, spec);
@@ -57,6 +58,13 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   resetFilter() {
     this.selected = new Set();
     this.highlighted = new Set();
+  }
+
+  /** Drops the selected and highlighted values the filter does not offer, keeping nan. */
+  retainKnown() {
+    const known = new Set(["nan", ...this.values.map((v) => v.value)]);
+    this.selected = new Set([...this.selected].filter((value) => known.has(value)));
+    this.highlighted = new Set([...this.highlighted].filter((value) => known.has(value)));
   }
 
   invertFilter(subset: "highlighted" | "selected") {
@@ -109,7 +117,10 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
         return values;
       }
     }
-    return get(observation, this.path(key, (observation as unknown as FeatureProperties).$stabilityIndex)) as ValueType;
+    const value = get(observation, this.path(key, (observation as unknown as FeatureProperties).$stabilityIndex));
+    return this.unmatchedAsNan && typeof value === "string" && !this.values.some((v) => v.value === value)
+      ? undefined
+      : (value as ValueType);
   }
 
   /** A key is parsed into its path once, then looked up. */

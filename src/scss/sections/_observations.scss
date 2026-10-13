@@ -275,6 +275,11 @@ $layout-global-height: 55px;
   background-color: #19abff;
 }
 
+.dormant-datetags-list {
+  max-height: clamp(120px, calc(50svh - 200px), 400px);
+  overflow-y: auto;
+}
+
 .layout-map {
   z-index: 0;
   position: absolute;

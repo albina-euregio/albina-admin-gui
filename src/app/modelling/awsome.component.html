@@ -150,10 +150,22 @@
                   [classSlots]="classSlots"
                   [classifiable]="canClassify(filterSelection)"
                   [reloadPending]="isReloadPending(filterSelection)"
+                  [switchTemplate]="filterSelection.type === 'datetag' && dormantMenu ? datetagMenu : undefined"
                   (handleReload)="loadSources()"
                   (handleChange)="onFilterChange(filterSelection)"
                 />
               }
+              <ng-template #datetagMenu>
+                @if (dormantMenu; as menu) {
+                  <app-dormant-datetags-menu
+                    [values]="menu.values"
+                    [dormant]="menu.dormant"
+                    [visibleRows]="barChartRows"
+                    [saveUrl]="menu.saveUrl"
+                    (saved)="reloadView()"
+                  />
+                }
+              </ng-template>
             </div>
           </div>
         </div>

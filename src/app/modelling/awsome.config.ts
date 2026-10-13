@@ -77,13 +77,22 @@ export const AwsomeSourceSchema = z.object({
 });
 export type AwsomeSource = z.infer<typeof AwsomeSourceSchema>;
 
+export const AwsomeFilterSchema = FilterSelectionSpecSchema.extend({
+  dormantMenu: z
+    .boolean()
+    .optional()
+    .describe(
+      "On the datetag filter (type `datetag`): a menu in its chart header sets dates dormant. The filter and its chart stop offering a dormant date and count the features it drives as without specification; these stay on the map without a datetag marker label, and tooltips, the hazard chart and the timeseries keep the date. The list is read from `dormant_datetags.json` next to the config (when it cannot be read, nothing is dormant and there is no menu) and saved through `api/dormant-datetags`.",
+    ),
+});
+
 export const AwsomeConfigSchema = z.object({
   $schema: UrlSchema.optional().describe("URL of JSON Schema awsome.schema.json"),
   date: z.iso.datetime({ local: true }).describe("Initial date/time when opening the dashboard"),
   dateMax: z.iso.datetime({ local: true }).optional(),
   dateMin: z.iso.datetime({ local: true }).optional(),
   dateStepSeconds: z.number().describe("Seconds between two models runs"),
-  filters: FilterSelectionSpecSchema.array(),
+  filters: AwsomeFilterSchema.array(),
   sources: AwsomeSourceSchema.array(),
   mapCenter: z
     .number()

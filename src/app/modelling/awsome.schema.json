@@ -199,6 +199,10 @@
               "required": ["color", "label", "value"],
               "additionalProperties": false
             }
+          },
+          "dormantMenu": {
+            "description": "On the datetag filter (type `datetag`): a menu in its chart header sets dates dormant. The filter and its chart stop offering a dormant date and count the features it drives as without specification; these stay on the map without a datetag marker label, and tooltips, the hazard chart and the timeseries keep the date. The list is read from `dormant_datetags.json` next to the config (when it cannot be read, nothing is dormant and there is no menu) and saved through `api/dormant-datetags`.",
+            "type": "boolean"
           }
         },
         "required": ["chartRichLabel", "chartType", "key", "label", "type", "values"],
