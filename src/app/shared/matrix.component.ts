@@ -31,6 +31,7 @@ export class MatrixComponent {
   readonly frequency = model<Enums.Frequency>(undefined);
   readonly avalancheSize = model<Enums.AvalancheSize>(undefined);
   readonly disabled = input<boolean>(undefined);
+  readonly avalancheType = input<Enums.AvalancheType>(undefined);
 
   readonly CELLS: MatrixCell[] = [
     undefined,
@@ -320,10 +321,26 @@ export class MatrixComponent {
     );
   }
 
-  selectCell({ dangerRating, avalancheSize, snowpackStability, frequency }: MatrixCell) {
-    if (this.disabled()) {
+  isApplicable({ snowpackStability, frequency }: MatrixCell): boolean {
+    switch (this.avalancheType()) {
+      case Enums.AvalancheType.glide:
+        return snowpackStability === Enums.SnowpackStability.very_poor && frequency !== Enums.Frequency.many;
+      case Enums.AvalancheType.loose:
+        return (
+          (snowpackStability === Enums.SnowpackStability.very_poor ||
+            snowpackStability === Enums.SnowpackStability.poor) &&
+          frequency !== Enums.Frequency.many
+        );
+      default:
+        return true;
+    }
+  }
+
+  selectCell(cell: MatrixCell) {
+    if (this.disabled() || !this.isApplicable(cell)) {
       return;
     }
+    const { dangerRating, avalancheSize, snowpackStability, frequency } = cell;
     this.dangerRating.emit(dangerRating);
     this.avalancheSize.set(avalancheSize);
     this.snowpackStability.set(snowpackStability);

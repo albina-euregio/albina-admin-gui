@@ -257,36 +257,145 @@
           {{ "snowpackStability.very_poor" | translate }}
         </text>
 
-        <rect x="202" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[1])" (click)="selectCell(CELLS[1])" />
-        <text x="222" y="186" class="matrix-danger-text white">5</text>
-        <rect x="242" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[2])" (click)="selectCell(CELLS[2])" />
-        <text x="262" y="186" class="matrix-danger-text white">5 (4)</text>
-        <rect x="282" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[3])" (click)="selectCell(CELLS[3])" />
-        <text x="302" y="186" class="matrix-danger-text">4</text>
-        <rect x="322" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[4])" (click)="selectCell(CELLS[4])" />
-        <text x="342" y="186" class="matrix-danger-text">3 (4)</text>
-        <rect x="362" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[5])" (click)="selectCell(CELLS[5])" />
-        <text x="382" y="186" class="matrix-danger-text">2 (3)</text>
-        <rect x="202" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[6])" (click)="selectCell(CELLS[6])" />
-        <text x="222" y="226" class="matrix-danger-text white">5 (4)</text>
-        <rect x="242" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[7])" (click)="selectCell(CELLS[7])" />
-        <text x="262" y="226" class="matrix-danger-text">4</text>
-        <rect x="282" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[8])" (click)="selectCell(CELLS[8])" />
-        <text x="302" y="226" class="matrix-danger-text">3 (4)</text>
-        <rect x="322" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[9])" (click)="selectCell(CELLS[9])" />
-        <text x="342" y="226" class="matrix-danger-text">3</text>
-        <rect x="362" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[10])" (click)="selectCell(CELLS[10])" />
-        <text x="382" y="226" class="matrix-danger-text">2</text>
-        <rect x="202" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[11])" (click)="selectCell(CELLS[11])" />
-        <text x="222" y="266" class="matrix-danger-text">4</text>
-        <rect x="242" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[12])" (click)="selectCell(CELLS[12])" />
-        <text x="262" y="266" class="matrix-danger-text">3 (4)</text>
-        <rect x="282" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[13])" (click)="selectCell(CELLS[13])" />
-        <text x="302" y="266" class="matrix-danger-text">3</text>
-        <rect x="322" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[14])" (click)="selectCell(CELLS[14])" />
-        <text x="342" y="266" class="matrix-danger-text">2</text>
-        <rect x="362" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[15])" (click)="selectCell(CELLS[15])" />
-        <text x="382" y="266" class="matrix-danger-text">1 (2)</text>
+        <rect
+          x="202"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[1])"
+          (click)="selectCell(CELLS[1])"
+          [class.inapplicable]="!isApplicable(CELLS[1])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[1])" x="222" y="186" class="matrix-danger-text white">5</text>
+        <rect
+          x="242"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[2])"
+          (click)="selectCell(CELLS[2])"
+          [class.inapplicable]="!isApplicable(CELLS[2])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[2])" x="262" y="186" class="matrix-danger-text white">
+          5 (4)
+        </text>
+        <rect
+          x="282"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[3])"
+          (click)="selectCell(CELLS[3])"
+          [class.inapplicable]="!isApplicable(CELLS[3])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[3])" x="302" y="186" class="matrix-danger-text">4</text>
+        <rect
+          x="322"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[4])"
+          (click)="selectCell(CELLS[4])"
+          [class.inapplicable]="!isApplicable(CELLS[4])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[4])" x="342" y="186" class="matrix-danger-text">3 (4)</text>
+        <rect
+          x="362"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[5])"
+          (click)="selectCell(CELLS[5])"
+          [class.inapplicable]="!isApplicable(CELLS[5])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[5])" x="382" y="186" class="matrix-danger-text">2 (3)</text>
+        <rect
+          x="202"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[6])"
+          (click)="selectCell(CELLS[6])"
+          [class.inapplicable]="!isApplicable(CELLS[6])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[6])" x="222" y="226" class="matrix-danger-text white">
+          5 (4)
+        </text>
+        <rect
+          x="242"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[7])"
+          (click)="selectCell(CELLS[7])"
+          [class.inapplicable]="!isApplicable(CELLS[7])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[7])" x="262" y="226" class="matrix-danger-text">4</text>
+        <rect
+          x="282"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[8])"
+          (click)="selectCell(CELLS[8])"
+          [class.inapplicable]="!isApplicable(CELLS[8])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[8])" x="302" y="226" class="matrix-danger-text">3 (4)</text>
+        <rect
+          x="322"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[9])"
+          (click)="selectCell(CELLS[9])"
+          [class.inapplicable]="!isApplicable(CELLS[9])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[9])" x="342" y="226" class="matrix-danger-text">3</text>
+        <rect
+          x="362"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[10])"
+          (click)="selectCell(CELLS[10])"
+          [class.inapplicable]="!isApplicable(CELLS[10])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[10])" x="382" y="226" class="matrix-danger-text">2</text>
+        <rect
+          x="202"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[11])"
+          (click)="selectCell(CELLS[11])"
+          [class.inapplicable]="!isApplicable(CELLS[11])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[11])" x="222" y="266" class="matrix-danger-text">4</text>
+        <rect
+          x="242"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[12])"
+          (click)="selectCell(CELLS[12])"
+          [class.inapplicable]="!isApplicable(CELLS[12])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[12])" x="262" y="266" class="matrix-danger-text">3 (4)</text>
+        <rect
+          x="282"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[13])"
+          (click)="selectCell(CELLS[13])"
+          [class.inapplicable]="!isApplicable(CELLS[13])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[13])" x="302" y="266" class="matrix-danger-text">3</text>
+        <rect
+          x="322"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[14])"
+          (click)="selectCell(CELLS[14])"
+          [class.inapplicable]="!isApplicable(CELLS[14])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[14])" x="342" y="266" class="matrix-danger-text">2</text>
+        <rect
+          x="362"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[15])"
+          (click)="selectCell(CELLS[15])"
+          [class.inapplicable]="!isApplicable(CELLS[15])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[15])" x="382" y="266" class="matrix-danger-text">1 (2)</text>
 
         <rect x="442" y="122" width="200" height="160" fill="#ffffff" stroke="none" pointer-events="none" />
         <path
@@ -358,26 +467,96 @@
           {{ "snowpackStability.poor" | translate }}
         </text>
 
-        <rect x="442" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[16])" (click)="selectCell(CELLS[16])" />
-        <text x="462" y="186" class="matrix-danger-text">5 (4)</text>
-        <rect x="482" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[17])" (click)="selectCell(CELLS[17])" />
-        <text x="502" y="186" class="matrix-danger-text">4</text>
-        <rect x="522" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[18])" (click)="selectCell(CELLS[18])" />
-        <text x="542" y="186" class="matrix-danger-text">4 (3)</text>
-        <rect x="562" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[19])" (click)="selectCell(CELLS[19])" />
-        <text x="582" y="186" class="matrix-danger-text">3</text>
-        <rect x="602" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[20])" (click)="selectCell(CELLS[20])" />
-        <text x="622" y="186" class="matrix-danger-text">2</text>
-        <rect x="442" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[21])" (click)="selectCell(CELLS[21])" />
-        <text x="462" y="226" class="matrix-danger-text">4</text>
-        <rect x="482" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[22])" (click)="selectCell(CELLS[22])" />
-        <text x="502" y="226" class="matrix-danger-text">4 (3)</text>
-        <rect x="522" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[23])" (click)="selectCell(CELLS[23])" />
-        <text x="542" y="226" class="matrix-danger-text">3</text>
-        <rect x="562" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[24])" (click)="selectCell(CELLS[24])" />
-        <text x="582" y="226" class="matrix-danger-text">2 (3)</text>
-        <rect x="602" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[25])" (click)="selectCell(CELLS[25])" />
-        <text x="622" y="226" class="matrix-danger-text">2</text>
+        <rect
+          x="442"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[16])"
+          (click)="selectCell(CELLS[16])"
+          [class.inapplicable]="!isApplicable(CELLS[16])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[16])" x="462" y="186" class="matrix-danger-text">5 (4)</text>
+        <rect
+          x="482"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[17])"
+          (click)="selectCell(CELLS[17])"
+          [class.inapplicable]="!isApplicable(CELLS[17])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[17])" x="502" y="186" class="matrix-danger-text">4</text>
+        <rect
+          x="522"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[18])"
+          (click)="selectCell(CELLS[18])"
+          [class.inapplicable]="!isApplicable(CELLS[18])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[18])" x="542" y="186" class="matrix-danger-text">4 (3)</text>
+        <rect
+          x="562"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[19])"
+          (click)="selectCell(CELLS[19])"
+          [class.inapplicable]="!isApplicable(CELLS[19])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[19])" x="582" y="186" class="matrix-danger-text">3</text>
+        <rect
+          x="602"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[20])"
+          (click)="selectCell(CELLS[20])"
+          [class.inapplicable]="!isApplicable(CELLS[20])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[20])" x="622" y="186" class="matrix-danger-text">2</text>
+        <rect
+          x="442"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[21])"
+          (click)="selectCell(CELLS[21])"
+          [class.inapplicable]="!isApplicable(CELLS[21])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[21])" x="462" y="226" class="matrix-danger-text">4</text>
+        <rect
+          x="482"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[22])"
+          (click)="selectCell(CELLS[22])"
+          [class.inapplicable]="!isApplicable(CELLS[22])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[22])" x="502" y="226" class="matrix-danger-text">4 (3)</text>
+        <rect
+          x="522"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[23])"
+          (click)="selectCell(CELLS[23])"
+          [class.inapplicable]="!isApplicable(CELLS[23])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[23])" x="542" y="226" class="matrix-danger-text">3</text>
+        <rect
+          x="562"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[24])"
+          (click)="selectCell(CELLS[24])"
+          [class.inapplicable]="!isApplicable(CELLS[24])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[24])" x="582" y="226" class="matrix-danger-text">2 (3)</text>
+        <rect
+          x="602"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[25])"
+          (click)="selectCell(CELLS[25])"
+          [class.inapplicable]="!isApplicable(CELLS[25])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[25])" x="622" y="226" class="matrix-danger-text">2</text>
         <rect
           x="442"
           y="242"
@@ -387,16 +566,45 @@
           height="40px"
           fill="none"
           stroke="none"
+          [class.inapplicable]="!isApplicable(CELLS[26])"
         />
-        <text x="462" y="266" class="matrix-danger-text">3 (4)</text>
-        <rect x="482" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[27])" (click)="selectCell(CELLS[27])" />
-        <text x="502" y="266" class="matrix-danger-text">3</text>
-        <rect x="522" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[28])" (click)="selectCell(CELLS[28])" />
-        <text x="542" y="266" class="matrix-danger-text">2 (3)</text>
-        <rect x="562" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[29])" (click)="selectCell(CELLS[29])" />
-        <text x="582" y="266" class="matrix-danger-text">2</text>
-        <rect x="602" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[30])" (click)="selectCell(CELLS[30])" />
-        <text x="622" y="266" class="matrix-danger-text">1</text>
+        <text [class.inapplicable]="!isApplicable(CELLS[26])" x="462" y="266" class="matrix-danger-text">3 (4)</text>
+        <rect
+          x="482"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[27])"
+          (click)="selectCell(CELLS[27])"
+          [class.inapplicable]="!isApplicable(CELLS[27])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[27])" x="502" y="266" class="matrix-danger-text">3</text>
+        <rect
+          x="522"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[28])"
+          (click)="selectCell(CELLS[28])"
+          [class.inapplicable]="!isApplicable(CELLS[28])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[28])" x="542" y="266" class="matrix-danger-text">2 (3)</text>
+        <rect
+          x="562"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[29])"
+          (click)="selectCell(CELLS[29])"
+          [class.inapplicable]="!isApplicable(CELLS[29])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[29])" x="582" y="266" class="matrix-danger-text">2</text>
+        <rect
+          x="602"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[30])"
+          (click)="selectCell(CELLS[30])"
+          [class.inapplicable]="!isApplicable(CELLS[30])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[30])" x="622" y="266" class="matrix-danger-text">1</text>
 
         <path
           d="M 782 282 L 782 302 L 782 262 L 782 275.63"
@@ -491,8 +699,9 @@
           height="40px"
           fill="none"
           stroke="none"
+          [class.inapplicable]="!isApplicable(CELLS[31])"
         />
-        <text x="702" y="186" class="matrix-danger-text">4 (3)</text>
+        <text [class.inapplicable]="!isApplicable(CELLS[31])" x="702" y="186" class="matrix-danger-text">4 (3)</text>
         <rect
           x="722"
           y="162"
@@ -502,14 +711,36 @@
           height="40px"
           fill="none"
           stroke="none"
+          [class.inapplicable]="!isApplicable(CELLS[32])"
         />
-        <text x="742" y="186" class="matrix-danger-text">3 (4)</text>
-        <rect x="762" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[33])" (click)="selectCell(CELLS[33])" />
-        <text x="782" y="186" class="matrix-danger-text">3 (2)</text>
-        <rect x="802" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[34])" (click)="selectCell(CELLS[34])" />
-        <text x="822" y="186" class="matrix-danger-text">2</text>
-        <rect x="842" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[35])" (click)="selectCell(CELLS[35])" />
-        <text x="862" y="186" class="matrix-danger-text">1 (2)</text>
+        <text [class.inapplicable]="!isApplicable(CELLS[32])" x="742" y="186" class="matrix-danger-text">3 (4)</text>
+        <rect
+          x="762"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[33])"
+          (click)="selectCell(CELLS[33])"
+          [class.inapplicable]="!isApplicable(CELLS[33])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[33])" x="782" y="186" class="matrix-danger-text">3 (2)</text>
+        <rect
+          x="802"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[34])"
+          (click)="selectCell(CELLS[34])"
+          [class.inapplicable]="!isApplicable(CELLS[34])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[34])" x="822" y="186" class="matrix-danger-text">2</text>
+        <rect
+          x="842"
+          y="162"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[35])"
+          (click)="selectCell(CELLS[35])"
+          [class.inapplicable]="!isApplicable(CELLS[35])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[35])" x="862" y="186" class="matrix-danger-text">1 (2)</text>
         <rect
           x="682"
           y="202"
@@ -519,8 +750,9 @@
           height="40px"
           fill="none"
           stroke="none"
+          [class.inapplicable]="!isApplicable(CELLS[36])"
         />
-        <text x="702" y="226" class="matrix-danger-text">3 (4)</text>
+        <text [class.inapplicable]="!isApplicable(CELLS[36])" x="702" y="226" class="matrix-danger-text">3 (4)</text>
         <rect
           x="722"
           y="202"
@@ -530,14 +762,36 @@
           height="40px"
           fill="none"
           stroke="none"
+          [class.inapplicable]="!isApplicable(CELLS[37])"
         />
-        <text x="742" y="226" class="matrix-danger-text">3</text>
-        <rect x="762" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[38])" (click)="selectCell(CELLS[38])" />
-        <text x="782" y="226" class="matrix-danger-text">2 (3)</text>
-        <rect x="802" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[39])" (click)="selectCell(CELLS[39])" />
-        <text x="822" y="226" class="matrix-danger-text">2</text>
-        <rect x="842" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[40])" (click)="selectCell(CELLS[40])" />
-        <text x="862" y="226" class="matrix-danger-text">1 (2)</text>
+        <text [class.inapplicable]="!isApplicable(CELLS[37])" x="742" y="226" class="matrix-danger-text">3</text>
+        <rect
+          x="762"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[38])"
+          (click)="selectCell(CELLS[38])"
+          [class.inapplicable]="!isApplicable(CELLS[38])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[38])" x="782" y="226" class="matrix-danger-text">2 (3)</text>
+        <rect
+          x="802"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[39])"
+          (click)="selectCell(CELLS[39])"
+          [class.inapplicable]="!isApplicable(CELLS[39])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[39])" x="822" y="226" class="matrix-danger-text">2</text>
+        <rect
+          x="842"
+          y="202"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[40])"
+          (click)="selectCell(CELLS[40])"
+          [class.inapplicable]="!isApplicable(CELLS[40])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[40])" x="862" y="226" class="matrix-danger-text">1 (2)</text>
         <rect
           x="682"
           y="242"
@@ -547,8 +801,9 @@
           height="40px"
           fill="none"
           stroke="none"
+          [class.inapplicable]="!isApplicable(CELLS[41])"
         />
-        <text x="702" y="266" class="matrix-danger-text">3</text>
+        <text [class.inapplicable]="!isApplicable(CELLS[41])" x="702" y="266" class="matrix-danger-text">3</text>
         <rect
           x="722"
           y="242"
@@ -558,14 +813,36 @@
           height="40px"
           fill="none"
           stroke="none"
+          [class.inapplicable]="!isApplicable(CELLS[42])"
         />
-        <text x="742" y="266" class="matrix-danger-text">2 (3)</text>
-        <rect x="762" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[43])" (click)="selectCell(CELLS[43])" />
-        <text x="782" y="266" class="matrix-danger-text">2 (1)</text>
-        <rect x="802" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[44])" (click)="selectCell(CELLS[44])" />
-        <text x="822" y="266" class="matrix-danger-text">1 (2)</text>
-        <rect x="842" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[45])" (click)="selectCell(CELLS[45])" />
-        <text x="862" y="266" class="matrix-danger-text">1</text>
+        <text [class.inapplicable]="!isApplicable(CELLS[42])" x="742" y="266" class="matrix-danger-text">2 (3)</text>
+        <rect
+          x="762"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[43])"
+          (click)="selectCell(CELLS[43])"
+          [class.inapplicable]="!isApplicable(CELLS[43])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[43])" x="782" y="266" class="matrix-danger-text">2 (1)</text>
+        <rect
+          x="802"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[44])"
+          (click)="selectCell(CELLS[44])"
+          [class.inapplicable]="!isApplicable(CELLS[44])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[44])" x="822" y="266" class="matrix-danger-text">1 (2)</text>
+        <rect
+          x="842"
+          y="242"
+          class="matrix-cell"
+          [attr.fill]="getColor(CELLS[45])"
+          (click)="selectCell(CELLS[45])"
+          [class.inapplicable]="!isApplicable(CELLS[45])"
+        />
+        <text [class.inapplicable]="!isApplicable(CELLS[45])" x="862" y="266" class="matrix-danger-text">1</text>
         <rect
           x="682"
           y="282"
@@ -574,8 +851,9 @@
           (click)="selectCell(CELLS[46])"
           height="40px"
           stroke="#000000"
+          [class.inapplicable]="!isApplicable(CELLS[46])"
         />
-        <text x="782" y="306" class="matrix-danger-text">
+        <text [class.inapplicable]="!isApplicable(CELLS[46])" x="782" y="306" class="matrix-danger-text">
           {{ "matrix.label.dangerLevel1" | translate }}
         </text>
 
