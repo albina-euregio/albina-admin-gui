@@ -86,11 +86,15 @@ export const AwsomeFilterSchema = FilterSelectionSpecSchema.extend({
     ),
 });
 
+const ConfigDateSchema = z.union([z.string().regex(/^now(?:[+-]\d+[hd])?$/), z.iso.datetime({ local: true })]);
+
 export const AwsomeConfigSchema = z.object({
   $schema: UrlSchema.optional().describe("URL of JSON Schema awsome.schema.json"),
-  date: z.iso.datetime({ local: true }).describe("Initial date/time when opening the dashboard"),
-  dateMax: z.iso.datetime({ local: true }).optional(),
-  dateMin: z.iso.datetime({ local: true }).optional(),
+  date: ConfigDateSchema.describe(
+    "Initial date/time when opening the dashboard; `now` opens it at the latest time on the dateStepSeconds grid before the current time",
+  ),
+  dateMax: ConfigDateSchema.optional().describe("Last date/time the dashboard offers; `now` or `now+48h` for a time relative to now"),
+  dateMin: ConfigDateSchema.optional().describe("First date/time the dashboard offers; `now-14d` for a rolling window"),
   dateStepSeconds: z.number().describe("Seconds between two models runs"),
   filters: AwsomeFilterSchema.array(),
   sources: AwsomeSourceSchema.array(),

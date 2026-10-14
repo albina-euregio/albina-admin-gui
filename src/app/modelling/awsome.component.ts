@@ -49,6 +49,7 @@ import { RegionProperties } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
+import { resolveConfigDate } from "./dashboard-date";
 import { dormantDatetags, sortDatetags } from "./dormant-datetags";
 import { DormantDatetagsMenuComponent } from "./dormant-datetags-menu.component";
 import {
@@ -202,6 +203,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       .then((c) => AwsomeConfigSchema.parseAsync(c))
       .then((c) => this.prepareDatetags(c));
     this.config = await this.config$q;
+    const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
+    this.config.date = resolveConfigDate(this.config.date, dateStepSeconds);
+    if (this.config.dateMax) this.config.dateMax = resolveConfigDate(this.config.dateMax, dateStepSeconds);
+    if (this.config.dateMin) this.config.dateMin = resolveConfigDate(this.config.dateMin, dateStepSeconds);
     this.date ||= this.config.date;
     this.sources = this.config.sources;
     this.sourceTree = this.buildSourceTree(this.sources);
