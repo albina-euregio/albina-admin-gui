@@ -7,11 +7,14 @@ import { fetchLwdKip } from "./observations/lwdkip";
 
 export async function fetchAndInsert(startDate: Date, endDate: Date) {
   const connection = await ObservationDatabaseConnection.createConnection();
-  const existing = await connection.selectObservations(startDate, endDate);
-  for await (const obs of fetchAll(startDate, endDate, existing)) {
-    await connection.augmentAndInsertObservation(obs, existing);
+  try {
+    const existing = await connection.selectObservations(startDate, endDate);
+    for await (const obs of fetchAll(startDate, endDate, existing)) {
+      await connection.augmentAndInsertObservation(obs, existing);
+    }
+  } finally {
+    connection.destroy();
   }
-  connection.destroy();
 }
 
 async function* fetchAll(
