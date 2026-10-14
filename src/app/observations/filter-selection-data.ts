@@ -14,6 +14,7 @@ export type ValueType = number | string | Date | number[] | string[];
 
 export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   readonly stabilityIndex?: FilterSelectionSpec<T>["stabilityIndex"];
+  readonly hidden?: boolean;
   readonly type: string;
   readonly label: string;
   readonly key: keyof T;

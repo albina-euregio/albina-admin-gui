@@ -57,6 +57,7 @@ export const FilterSelectionSpecSchema = z.object({
     .optional()
     .describe("Min and max value for chart range when plotting values on a parametric chart"),
   default: z.enum(["classify", "label"]).optional(),
+  hidden: z.boolean().optional().describe("Keeps the filter for the charts and templates but shows no panel for it"),
   key: z
     .string()
     .describe(

@@ -62,6 +62,10 @@
             "type": "string",
             "enum": ["classify", "label"]
           },
+          "hidden": {
+            "description": "Keeps the filter for the charts and templates but shows no panel for it",
+            "type": "boolean"
+          },
           "key": {
             "type": "string",
             "description": "Key name defining how to obtain the value from a GeoJSON Feature representing this filter, such as `path.to.variable.in.json`, evaluated relative to the `properties` of a GeoJSON Feature."

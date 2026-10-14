@@ -251,6 +251,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return this.activeSources.filter((s) => !s.$error);
   }
 
+  /** The filters with a panel: every filter not marked hidden. */
+  get shownFilters(): FilterSelectionData<FeatureProperties>[] {
+    return this.filterService.filterSelectionData.filter((f) => !f.hidden);
+  }
+
   /** One class slot count for every chart and its data. */
   get classSlots(): number {
     return classSlotsFor(this.filterService.filterSelectionData);

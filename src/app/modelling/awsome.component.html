@@ -143,7 +143,7 @@
         <div class="layout-chart toolset toolset-1 overflow-scroll">
           <div class="toolset-content">
             <div class="toolset-charts">
-              @for (filterSelection of filterService.filterSelectionData; track filterSelection) {
+              @for (filterSelection of shownFilters; track filterSelection) {
                 <app-observation-chart
                   class="chart-container"
                   [filterSelection]="filterSelection"
