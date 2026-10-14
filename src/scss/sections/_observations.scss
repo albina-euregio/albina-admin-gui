@@ -411,6 +411,128 @@ $estimated-navbar-height: 60px;
   height: 300px;
 }
 
+.chart-content.has-aside {
+  position: relative;
+  padding-left: 28px;
+}
+
+.elevation-cut {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  pointer-events: none;
+  user-select: none;
+  > * {
+    --at: calc(var(--grid-top) + var(--k, 0) * (100% - var(--grid-top)) / var(--rows) - var(--label-offset) / 2);
+    --at-end: calc(
+      var(--grid-top) + var(--k-end, 0) * (100% - var(--grid-top)) / var(--rows) - var(--label-offset) / 2
+    );
+    position: absolute;
+  }
+}
+
+.elevation-cut-track {
+  --k-end: var(--last);
+  left: 11px;
+  width: 6px;
+  top: var(--at);
+  bottom: calc(100% - var(--at-end));
+  border-radius: 3px;
+  background-color: #e6eef2;
+}
+
+.elevation-cut-tick {
+  left: 8px;
+  width: 12px;
+  height: 1px;
+  top: var(--at);
+  transform: translateY(-50%);
+  background-color: #b1c1c7;
+}
+
+.elevation-cut-band {
+  left: 0;
+  width: 28px;
+  top: max(0px, var(--at));
+  bottom: calc(100% - var(--at-end));
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  touch-action: manipulation;
+  cursor: pointer;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    width: 6px;
+    top: 3px;
+    bottom: 3px;
+    border-radius: 3px;
+  }
+  @media (hover: hover) {
+    &:hover::before {
+      background-color: #b1c1c7;
+    }
+  }
+  &.pressed::before {
+    background-color: #19abff;
+  }
+  &.highlighted::before {
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.5);
+  }
+  &:focus-visible {
+    outline: 2px solid #19abff;
+    outline-offset: -2px;
+  }
+}
+
+.elevation-cut-line {
+  left: 14px;
+  right: 0;
+  top: var(--at);
+  border-top: 1px dashed #19abff;
+  transform: translateY(-50%);
+}
+
+.elevation-cut-thumb {
+  left: 0;
+  width: 28px;
+  top: max(0px, calc(var(--at) - 13px));
+  height: 26px;
+  z-index: 1;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+  outline: none;
+  &:active {
+    cursor: grabbing;
+  }
+  &:focus-visible .elevation-cut-pill {
+    outline: 2px solid #19abff;
+    outline-offset: 2px;
+  }
+}
+
+.elevation-cut-pill {
+  position: absolute;
+  left: 2px;
+  top: 4px;
+  width: 24px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #19abff;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  pointer-events: none;
+  .parked & {
+    background-color: #839194;
+  }
+}
+
 .layout-gallery,
 .layout-table {
   z-index: 30;

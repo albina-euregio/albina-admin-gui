@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-import { FilterSelectionData } from "../src/app/observations/filter-selection-data";
+import {
+  clickFilterValues,
+  type ClickModifiers,
+  FilterSelectionData,
+} from "../src/app/observations/filter-selection-data";
 
 const grainTypes = ["PP", "DF", "PPgp", "SH", "DH", "FC", "FCxr", "RG", "MF", "MFcr", "IF"];
 /** A filter over the eleven grain types of the live config, keyed through the placeholder. */
@@ -138,4 +142,124 @@ test("a selection of values the filter does not offer is emptied and selects eve
   expect(filter.selected.size).toBe(0);
   expect(filter.isIncluded("selected", filter.getValue(drivenBy("2026-03-24")))).toBe(true);
   expect(filter.isIncluded("selected", filter.getValue(drivenBy("2026-01-28")))).toBe(true);
+});
+
+const letters = ["a", "b", "c", "d"];
+/** A filter over four plain values. */
+const lettered = () =>
+  new FilterSelectionData<Record<string, unknown>>({
+    type: "letter",
+    label: "Letter",
+    key: "letter",
+    chartType: "bar",
+    chartRichLabel: "label",
+    values: letters.map((value) => ({ value, label: value, color: "#000" })),
+  });
+
+test("setFilterValues puts exactly the values in the subset and empties it on a repeat", () => {
+  const filter = lettered();
+  filter.selected = new Set(["a", "c"]);
+  filter.setFilterValues("selected", ["a", "b"]);
+  expect(filter.selected).toEqual(new Set(["a", "b"]));
+  filter.setFilterValues("selected", ["b", "a"]);
+  expect(filter.selected.size).toBe(0);
+  filter.selected = new Set(["a"]);
+  filter.setFilterValues("selected", ["a", "b"]);
+  expect(filter.selected).toEqual(new Set(["a", "b"]));
+  filter.setFilterValues("highlighted", ["c"]);
+  expect(filter.highlighted).toEqual(new Set(["c"]));
+  expect(filter.selected).toEqual(new Set(["a", "b"]));
+});
+
+test("toggleFilterValues adds the values unless the subset holds them all, then removes them all", () => {
+  const filter = lettered();
+  filter.toggleFilterValues("highlighted", ["a", "b"]);
+  expect(filter.highlighted).toEqual(new Set(["a", "b"]));
+  filter.toggleFilterValues("highlighted", ["a", "b"]);
+  expect(filter.highlighted.size).toBe(0);
+  filter.highlighted = new Set(["a", "c"]);
+  filter.toggleFilterValues("highlighted", ["a", "b"]);
+  expect(filter.highlighted).toEqual(new Set(["a", "b", "c"]));
+  filter.toggleFilterValues("highlighted", ["a", "b"]);
+  expect(filter.highlighted).toEqual(new Set(["c"]));
+});
+
+/** The click rules of a chart row as they stood before clickFilterValues took them over. */
+function rowClick(
+  filter: FilterSelectionData<Record<string, unknown>>,
+  event: ClickModifiers,
+  value: string,
+  platform: string,
+) {
+  const subset = event.altKey ? "highlighted" : "selected";
+  if (event.shiftKey) {
+    filter.toggleFilterValue(subset, value);
+  } else {
+    filter.setFilterValue(subset, value);
+  }
+  if (/Mac|iPod|iPhone|iPad/.test(platform) ? event.metaKey : event.ctrlKey) {
+    filter.invertFilter(subset);
+  }
+}
+
+test("a click on one value keeps the row rules for every modifier, start state and platform", () => {
+  const values = [...letters, "nan"];
+  const subsets = values.reduce<string[][]>((all, value) => all.flatMap((s) => [s, [...s, value]]), [[]]);
+  const sorted = (set: Set<string>) => [...set].sort();
+  const mismatches: string[] = [];
+  let cases = 0;
+  for (const platform of ["Linux x86_64", "MacIntel", "iPhone"]) {
+    for (let modifiers = 0; modifiers < 16; modifiers++) {
+      const event = {
+        altKey: !!(modifiers & 1),
+        shiftKey: !!(modifiers & 2),
+        ctrlKey: !!(modifiers & 4),
+        metaKey: !!(modifiers & 8),
+      };
+      for (const selected of subsets) {
+        for (const highlighted of [[], ["b"], ["a", "nan"]]) {
+          for (const value of values) {
+            const before = lettered();
+            const after = lettered();
+            for (const filter of [before, after]) {
+              filter.selected = new Set(selected);
+              filter.highlighted = new Set(highlighted);
+            }
+            rowClick(before, event, value, platform);
+            clickFilterValues(after, event, [value], platform);
+            const expected = [sorted(before.selected), sorted(before.highlighted)];
+            const actual = [sorted(after.selected), sorted(after.highlighted)];
+            if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+              mismatches.push(JSON.stringify({ platform, event, selected, highlighted, value }));
+            }
+            cases++;
+          }
+        }
+      }
+    }
+  }
+  expect(mismatches).toEqual([]);
+  expect(cases).toBe(3 * 16 * 32 * 3 * 5);
+});
+
+test("a click on several values selects them, adds them with Shift, highlights them with Alt and inverts with Ctrl", () => {
+  const filter = lettered();
+  const plain = { altKey: false, shiftKey: false, ctrlKey: false, metaKey: false };
+  clickFilterValues(filter, plain, ["a", "b"], "Linux x86_64");
+  expect(filter.selected).toEqual(new Set(["a", "b"]));
+  clickFilterValues(filter, { ...plain, shiftKey: true }, ["c", "d"], "Linux x86_64");
+  expect(filter.selected).toEqual(new Set(["a", "b", "c", "d"]));
+  clickFilterValues(filter, plain, ["a", "b"], "Linux x86_64");
+  expect(filter.selected).toEqual(new Set(["a", "b"]));
+  clickFilterValues(filter, plain, ["a", "b"], "Linux x86_64");
+  expect(filter.selected.size).toBe(0);
+  clickFilterValues(filter, { ...plain, altKey: true }, ["c", "d"], "Linux x86_64");
+  expect(filter.highlighted).toEqual(new Set(["c", "d"]));
+  expect(filter.selected.size).toBe(0);
+  clickFilterValues(filter, { ...plain, ctrlKey: true }, ["a", "b"], "Linux x86_64");
+  expect(filter.selected).toEqual(new Set(["c", "d", "nan"]));
+  clickFilterValues(filter, { ...plain, ctrlKey: true }, ["a", "b"], "MacIntel");
+  expect(filter.selected).toEqual(new Set(["a", "b"]));
+  clickFilterValues(filter, { ...plain, metaKey: true }, ["c"], "MacIntel");
+  expect(filter.selected).toEqual(new Set(["a", "b", "d", "nan"]));
 });

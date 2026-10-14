@@ -69,7 +69,7 @@
   <!-- /chart-unspecified -->
 
   <!-- !chart-content -->
-  <div class="chart-content">
+  <div class="chart-content" [class.has-aside]="!!asideTemplate()">
     @if (filterSelection().dataset) {
       <div
         echarts
@@ -79,6 +79,7 @@
         (chartMouseUp)="onMouseUp($event)"
         class="chart"
       ></div>
+      <ng-container [ngTemplateOutlet]="asideTemplate()" />
     }
   </div>
   <!-- /chart-content -->

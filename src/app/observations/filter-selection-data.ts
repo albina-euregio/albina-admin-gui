@@ -12,6 +12,8 @@ export type Dataset = (string | number)[][];
 
 export type ValueType = number | string | Date | number[] | string[];
 
+export type ClickModifiers = Pick<MouseEvent, "altKey" | "ctrlKey" | "metaKey" | "shiftKey">;
+
 export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   readonly stabilityIndex?: FilterSelectionSpec<T>["stabilityIndex"];
   readonly hidden?: boolean;
@@ -54,6 +56,21 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     } else {
       selectedData.add(value);
     }
+  }
+
+  /** Puts exactly the given values in the subset, or empties it when it holds exactly them already. */
+  setFilterValues(subset: "highlighted" | "selected", values: readonly string[]) {
+    const selectedData = this[subset];
+    const exactly = selectedData.size === values.length && values.every((value) => selectedData.has(value));
+    selectedData.clear();
+    if (!exactly) values.forEach((value) => selectedData.add(value));
+  }
+
+  /** Adds the given values to the subset, or removes them all when it holds every one of them already. */
+  toggleFilterValues(subset: "highlighted" | "selected", values: readonly string[]) {
+    const selectedData = this[subset];
+    const all = values.every((value) => selectedData.has(value));
+    values.forEach((value) => (all ? selectedData.delete(value) : selectedData.add(value)));
   }
 
   resetFilter() {
@@ -226,5 +243,23 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     });
 
     this.dataset = [header, ...data];
+  }
+}
+
+/** Applies a chart click to the values: Alt aims at the highlight, Shift toggles, Ctrl (Cmd on Apple) inverts after. */
+export function clickFilterValues<T>(
+  filter: FilterSelectionData<T>,
+  event: ClickModifiers,
+  values: readonly string[],
+  platform = navigator.platform,
+) {
+  const subset = event.altKey ? "highlighted" : "selected";
+  if (event.shiftKey) {
+    filter.toggleFilterValues(subset, values);
+  } else {
+    filter.setFilterValues(subset, values);
+  }
+  if (/Mac|iPod|iPhone|iPad/.test(platform) ? event.metaKey : event.ctrlKey) {
+    filter.invertFilter(subset);
   }
 }

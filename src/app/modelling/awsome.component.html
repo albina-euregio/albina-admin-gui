@@ -151,10 +151,22 @@
                   [classifiable]="canClassify(filterSelection)"
                   [reloadPending]="isReloadPending(filterSelection)"
                   [switchTemplate]="filterSelection.type === 'datetag' && dormantMenu ? datetagMenu : undefined"
+                  [asideTemplate]="filterSelection === cutFilter ? elevationCut : undefined"
                   (handleReload)="loadSources()"
                   (handleChange)="onFilterChange(filterSelection)"
                 />
               }
+              <ng-template #elevationCut>
+                <app-elevation-cut
+                  [stops]="cutStops"
+                  [cuts]="elevationCuts"
+                  [pressed]="bandPressed"
+                  [highlighted]="bandHighlighted"
+                  (cutsChange)="setElevationCuts($event)"
+                  (bandClick)="onCutBand($event.band, $event.event)"
+                  (bandPress)="onCutBandPress($event)"
+                />
+              </ng-template>
               <ng-template #datetagMenu>
                 @if (dormantMenu; as menu) {
                   <app-dormant-datetags-menu

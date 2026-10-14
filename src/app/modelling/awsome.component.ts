@@ -40,7 +40,7 @@ import { LayerToggleControl } from "../map/controls/layer-toggle-control";
 import { RegionMapService } from "../map/region-map.service";
 import { addTerrainControl, setTerrainEnabled } from "../map/terrain";
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
-import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
+import { clickFilterValues, FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
 import { BAR_CHART_ROWS, ObservationChartComponent } from "../observations/observation-chart.component";
 import { ObservationFilterService } from "../observations/observation-filter.service";
@@ -52,6 +52,8 @@ import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.confi
 import { resolveConfigDate } from "./dashboard-date";
 import { dormantDatetags, sortDatetags } from "./dormant-datetags";
 import { DormantDatetagsMenuComponent } from "./dormant-datetags-menu.component";
+import { bandValues, cutParam, cutsFromParam, followBands, holdsAll, sliderStops, staysSplit } from "./elevation-cut";
+import { ElevationCutComponent } from "./elevation-cut.component";
 import {
   alignToClasses,
   classBounds,
@@ -111,6 +113,7 @@ type Timeseries = z.infer<typeof TimeseriesSchema>;
   imports: [
     CommonModule,
     DormantDatetagsMenuComponent,
+    ElevationCutComponent,
     FormsModule,
     FormsModule,
     ObservationChartComponent,
@@ -141,6 +144,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   config: AwsomeConfig = {} as AwsomeConfig;
   dormantDatetags?: Set<string>;
   dormantMenu?: { values: FilterSelectionValue[]; dormant: Set<string>; saveUrl: string };
+  cutFilter?: FilterSelectionData<FeatureProperties>;
+  cutStops: number[] = [];
+  defaultCuts: number[] = [];
+  elevationCuts: readonly number[] = [];
+  bandPressed: boolean[] = [];
+  bandHighlighted: boolean[] = [];
   readonly barChartRows = BAR_CHART_ROWS;
   date = "";
   layout: "map" | "chart" | "details" = "map";
@@ -244,6 +253,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.defaultClassify = this.markerService.markerClassify?.type;
     this.defaultLabel = this.markerService.markerLabel?.type;
     this.defaultSelected = new Map(this.filterService.filterSelectionData.map((f) => [f.type, [...f.selected]]));
+    this.initElevationCuts();
     this.applyStateParams();
     await this.loadSources();
   }
@@ -339,6 +349,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (params.has("label")) this.markerService.markerLabel = this.filterByType(params.get("label"));
     const layout = params.get("layout");
     if (layout === "map" || layout === "chart" || layout === "details") this.layout = layout;
+    const cut = params.get("cut");
+    if (this.cutFilter && cut !== null) {
+      this.elevationCuts = cutsFromParam(cut, this.cutStops, this.defaultCuts) ?? this.elevationCuts;
+    }
   }
 
   /** Link that reopens the dashboard with the current date, sources, regions, filters, layout and map view. */
@@ -360,6 +374,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (classify !== (this.defaultClassify ?? "none")) params["classify"] = classify;
     const label = this.markerService.markerLabel?.type ?? "none";
     if (label !== (this.defaultLabel ?? "none")) params["label"] = label;
+    if (this.cutFilter) {
+      const cut = cutParam(this.cutStops, this.elevationCuts);
+      if (cut !== this.defaultCuts.join(",")) params["cut"] = cut;
+    }
     if (this.layout !== "map") params["layout"] = this.layout;
     if (this.map) {
       const { lat, lng } = this.map.getCenter();
@@ -680,6 +698,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         this.classSlots,
       ),
     );
+    this.updateCutBands();
 
     if (this.selectedObservation) {
       // the details follow the selection: the same observation, or its stand-in after a
@@ -1198,6 +1217,64 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     } else {
       this.applyLocalFilter();
     }
+  }
+
+  /** Offers the cut slider beside the elevation chart when its filter has cuts and a chart the slider can follow. */
+  private initElevationCuts() {
+    const cuts = this.config.filters.find((f) => f.type === "elevation")?.cuts;
+    const filter = this.filterByType("elevation");
+    const stops = filter && sliderStops(filter, BAR_CHART_ROWS);
+    if (!cuts?.length || !stops) return;
+    this.cutFilter = filter;
+    this.cutStops = stops;
+    this.defaultCuts = [...cuts];
+    this.elevationCuts = [...cuts];
+  }
+
+  /** The elevation values of the rows wholly inside each band of the cuts, lowest band first. */
+  private bandsOf(cuts: readonly number[]): string[][] {
+    return bandValues(this.cutFilter?.values ?? [], this.cutStops, cuts);
+  }
+
+  /** Moves the cuts; between splits, a fully selected or highlighted band keeps all its rows at its new extent. */
+  setElevationCuts(cuts: readonly number[]) {
+    const filter = this.cutFilter;
+    if (!filter) return;
+    const before = this.bandsOf(this.elevationCuts);
+    const after = this.bandsOf(cuts);
+    const follow = staysSplit(this.cutStops, this.elevationCuts, cuts);
+    this.elevationCuts = cuts;
+    const selected = follow ? followBands(filter.selected, before, after) : undefined;
+    const highlighted = follow ? followBands(filter.highlighted, before, after) : undefined;
+    if (selected) filter.selected = selected;
+    if (highlighted) filter.highlighted = highlighted;
+    if (selected || highlighted) {
+      this.onFilterChange(filter);
+    } else {
+      this.updateCutBands();
+    }
+  }
+
+  /** Applies a click on a band to its rows as a click on a row applies to that row. */
+  onCutBand(band: number, event: MouseEvent) {
+    if (!this.cutFilter) return;
+    clickFilterValues(this.cutFilter, event, this.bandsOf(this.elevationCuts)[band] ?? []);
+    this.onFilterChange(this.cutFilter);
+  }
+
+  /** Toggles a band in the highlight, as a long press on a row toggles that row. */
+  onCutBandPress(band: number) {
+    if (!this.cutFilter) return;
+    this.cutFilter.toggleFilterValues("highlighted", this.bandsOf(this.elevationCuts)[band] ?? []);
+    this.onFilterChange(this.cutFilter);
+  }
+
+  /** Marks the bands whose rows are all selected, and those whose rows are all highlighted. */
+  private updateCutBands() {
+    if (!this.cutFilter) return;
+    const bands = this.bandsOf(this.elevationCuts);
+    this.bandPressed = bands.map((rows) => holdsAll(this.cutFilter.selected, rows));
+    this.bandHighlighted = bands.map((rows) => holdsAll(this.cutFilter.highlighted, rows));
   }
 
   chartMouseOut() {

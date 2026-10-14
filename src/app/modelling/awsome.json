@@ -156,6 +156,7 @@
       "chartType": "bar",
       "chartRichLabel": "label",
       "default": "label",
+      "cuts": [2200],
       "values": [
         {
           "value": "3200-4000",

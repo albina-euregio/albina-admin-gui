@@ -1,6 +1,7 @@
 import * as z from "zod/v4";
 
 import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-selection-config";
+import { cutProblems, MAX_CUTS } from "./elevation-cut";
 
 export const AwsomeSourceSchema = z.object({
   name: z
@@ -84,6 +85,18 @@ export const AwsomeFilterSchema = FilterSelectionSpecSchema.extend({
     .describe(
       "On the datetag filter (type `datetag`): a menu in its chart header sets dates dormant. The filter and its chart stop offering a dormant date and count the features it drives as without specification; these stay on the map without a datetag marker label, and tooltips, the hazard chart and the timeseries keep the date. Every dashboard reads the list from `dormant_datetags.json` next to its config (when it cannot be read, nothing is dormant); only a dashboard with this flag shows the menu, which saves the list through `api/dormant-datetags`.",
     ),
+  cuts: z
+    .number()
+    .int()
+    .array()
+    .min(1)
+    .max(MAX_CUTS)
+    .optional()
+    .describe(
+      "On the elevation filter (type `elevation`): one or two elevations in whole metres, ascending, that split its rows into bands; each must be a bound that two consecutive values share. While the filter is shown as a bar chart whose rows run from the highest down and fit the chart, a slider beside it moves the cuts from row bound to row bound (an end of the slider means no split), and a click between the cuts selects the rows of that band. A link carries cuts that differ from these as `cut`.",
+    ),
+}).superRefine(({ cuts, values }, ctx) => {
+  for (const message of cutProblems(cuts ?? [], values)) ctx.addIssue({ code: "custom", path: ["cuts"], message });
 });
 
 const ConfigDateSchema = z.union([z.string().regex(/^now(?:[+-]\d+[hd])?$/), z.iso.datetime({ local: true })]);

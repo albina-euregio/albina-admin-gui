@@ -5,10 +5,12 @@ import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { NgxEchartsDirective } from "ngx-echarts";
 
-import type { FilterSelectionData } from "./filter-selection-data";
+import { clickFilterValues, type FilterSelectionData } from "./filter-selection-data";
 import { ObservationMarkerService } from "./observation-marker.service";
 
 export const BAR_CHART_ROWS = 11;
+export const BAR_CHART_GRID_TOP = 5;
+export const BAR_LABEL_OFFSET = 14;
 
 @Component({
   standalone: true,
@@ -29,6 +31,7 @@ export class ObservationChartComponent<T> implements OnInit {
   readonly classifiable = input(true);
   readonly reloadPending = input(false);
   readonly switchTemplate = input<TemplateRef<unknown> | undefined>(undefined);
+  readonly asideTemplate = input<TemplateRef<unknown> | undefined>(undefined);
   readonly handleChange = output();
   readonly handleReload = output();
   public options: EChartsOption;
@@ -71,7 +74,7 @@ export class ObservationChartComponent<T> implements OnInit {
       // },
       grid: [
         {
-          top: "5px",
+          top: `${BAR_CHART_GRID_TOP}px`,
           left: 0,
           right: 0,
           bottom: 0,
@@ -146,7 +149,7 @@ export class ObservationChartComponent<T> implements OnInit {
             fontFamily: this.fontFamily,
             //grey
             color: "#839194",
-            position: [0, -14],
+            position: [0, -BAR_LABEL_OFFSET],
             formatter: (params: CallbackDataParams) => this.getItemLabel(params),
             show: true,
             rich: {
@@ -405,15 +408,7 @@ export class ObservationChartComponent<T> implements OnInit {
   }
 
   onSeriesClick(event: MouseEvent | TouchEvent, value: "nan" | string) {
-    const subset = event.altKey ? "highlighted" : "selected";
-    if (event.shiftKey) {
-      this.filterSelection().toggleFilterValue(subset, value);
-    } else {
-      this.filterSelection().setFilterValue(subset, value);
-    }
-    if (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? event.metaKey : event.ctrlKey) {
-      this.filterSelection().invertFilter(subset);
-    }
+    clickFilterValues(this.filterSelection(), event, [value]);
     this.handleChange.emit();
   }
 
