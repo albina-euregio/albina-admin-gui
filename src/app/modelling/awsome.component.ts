@@ -138,6 +138,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private configURL = "";
   private config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
+  dormantDatetags?: Set<string>;
   dormantMenu?: { values: FilterSelectionValue[]; dormant: Set<string>; saveUrl: string };
   readonly barChartRows = BAR_CHART_ROWS;
   date = "";
@@ -218,7 +219,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       f.values.forEach((v) => {
         v.label = v.labelI18nKey ? this.translateService.instant(v.labelI18nKey) : this.t(v.label);
       });
-      const dormant = f.type === "datetag" ? this.dormantMenu?.dormant : undefined;
+      const dormant = f.type === "datetag" ? this.dormantDatetags : undefined;
       const filter = new FilterSelectionData<FeatureProperties>({
         ...f,
         values: f.values.filter((v) => !dormant?.has(v.value)),
@@ -270,15 +271,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * Sorts the datetag values canonically and, when the datetag filter asks for the menu, reads the dormant dates.
-   * When that list cannot be read, nothing is dormant and there is no menu.
+   * Sorts the datetag values canonically and reads the dormant dates; the menu that changes them only when the
+   * datetag filter asks for it. When that list cannot be read, nothing is dormant and there is no menu.
    */
   private async prepareDatetags(config: AwsomeConfig): Promise<AwsomeConfig> {
     const datetag = config.filters.find((f) => f.type === "datetag");
     if (!datetag) return config;
     datetag.values = sortDatetags(datetag.values);
-    const dormant = datetag.dormantMenu ? await this.readDormantDatetags(datetag.values) : undefined;
-    if (dormant) {
+    const dormant = await this.readDormantDatetags(datetag.values);
+    this.dormantDatetags = dormant;
+    if (dormant && datetag.dormantMenu) {
       this.dormantMenu = {
         values: datetag.values,
         dormant,

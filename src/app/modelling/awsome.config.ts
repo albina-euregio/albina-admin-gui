@@ -82,7 +82,7 @@ export const AwsomeFilterSchema = FilterSelectionSpecSchema.extend({
     .boolean()
     .optional()
     .describe(
-      "On the datetag filter (type `datetag`): a menu in its chart header sets dates dormant. The filter and its chart stop offering a dormant date and count the features it drives as without specification; these stay on the map without a datetag marker label, and tooltips, the hazard chart and the timeseries keep the date. The list is read from `dormant_datetags.json` next to the config (when it cannot be read, nothing is dormant and there is no menu) and saved through `api/dormant-datetags`.",
+      "On the datetag filter (type `datetag`): a menu in its chart header sets dates dormant. The filter and its chart stop offering a dormant date and count the features it drives as without specification; these stay on the map without a datetag marker label, and tooltips, the hazard chart and the timeseries keep the date. Every dashboard reads the list from `dormant_datetags.json` next to its config (when it cannot be read, nothing is dormant); only a dashboard with this flag shows the menu, which saves the list through `api/dormant-datetags`.",
     ),
 });
 
