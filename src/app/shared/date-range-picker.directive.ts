@@ -10,11 +10,12 @@ const DISPLAY_MONTHS_COUNT = 3;
  *
  * Selecting a new range keeps the times of the previous range; with `withTime`, start and end time can be edited.
  * The calendar closes after selecting a range unless `keepOpen` is set, which defaults to `withTime`.
+ * The range can also be typed in the displayed format or as ISO dates; omitted times keep the previous times.
  */
 @Directive({
   standalone: true,
   selector: "input[appDateRangePicker]",
-  host: { readonly: "", "(blur)": "onTouched()" },
+  host: { "(blur)": "onTouched()", "(change)": "onChangeInput()" },
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DateRangePickerDirective), multi: true }],
 })
 export class DateRangePickerDirective implements ControlValueAccessor, OnInit, OnDestroy {
@@ -127,6 +128,16 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
     this.emit(dates);
   }
 
+  protected onChangeInput(): void {
+    const dates = this.parse(this.elementRef.nativeElement.value);
+    if (!dates) {
+      this.elementRef.nativeElement.value = this.format(this.value);
+      return;
+    }
+    this.emit(dates);
+    this.calendar.set(this.toCalendarOptions(dates));
+  }
+
   private emit(dates: Date[]): void {
     this.value = dates;
     this.elementRef.nativeElement.value = this.format(dates);
@@ -171,13 +182,30 @@ export class DateRangePickerDirective implements ControlValueAccessor, OnInit, O
     };
   }
 
-  private format(dates: Date[]): string {
-    if (dates.length !== 2) return "";
-    const format = new Intl.DateTimeFormat(this.translateService.getCurrentLang() || undefined, {
+  private dateTimeFormat(): Intl.DateTimeFormat {
+    return new Intl.DateTimeFormat(this.translateService.getCurrentLang() || undefined, {
       dateStyle: this.withTime() ? "short" : "medium",
       timeStyle: this.withTime() ? "short" : undefined,
     });
-    return format.formatRange(dates[0], dates[1]);
+  }
+
+  // not using `formatRange`, which omits shared parts (`Dec 18 – 24, 2024`) and could not be parsed back
+  private format(dates: Date[]): string {
+    if (dates.length !== 2) return "";
+    const format = this.dateTimeFormat();
+    return `${format.format(dates[0])} – ${format.format(dates[1])}`;
+  }
+
+  private parse(text: string): Date[] | undefined {
+    const parts = text.split(/\s+[-–—]\s+|[–—]/).filter((part) => part.trim());
+    if (parts.length < 1 || parts.length > 2) return undefined;
+    const format = this.dateTimeFormat();
+    const [oldStart, oldEnd] = this.value;
+    const startDate = parseDate(format, parts[0], oldStart);
+    const endDate = parseDate(format, parts[1] ?? parts[0], oldEnd ?? oldStart);
+    if (!startDate || !endDate || startDate > endDate) return undefined;
+    if (formatDate(endDate) > this.dateMax()) return undefined;
+    return [startDate, endDate];
   }
 }
 
@@ -191,6 +219,84 @@ function formatDate(date: Date): FormatDateString {
 
 function formatTime(date: Date | undefined): string {
   return date ? `${pad(date.getHours())}:${pad(date.getMinutes())}` : "";
+}
+
+const localeNamesCache = new Map<string, { monthNames: string[][]; dayPeriodNames: string[] }>();
+
+/** Lower-cased month names (long and short) and AM/PM names of `locale`, without dots. */
+function localeNames(locale: string) {
+  let names = localeNamesCache.get(locale);
+  if (!names) {
+    const monthFormats = (["long", "short"] as const).map((month) => new Intl.DateTimeFormat(locale, { month }));
+    const hourFormat = new Intl.DateTimeFormat(locale, { hour: "numeric", hour12: true });
+    names = {
+      monthNames: Array.from({ length: 12 }, (_, month) =>
+        monthFormats.map((format) => normalizeName(locale, format.format(new Date(2000, month, 1)))),
+      ),
+      dayPeriodNames: [0, 12].map((hour) =>
+        normalizeName(
+          locale,
+          hourFormat.formatToParts(new Date(2000, 0, 1, hour)).find((part) => part.type === "dayPeriod")?.value ?? "",
+        ),
+      ),
+    };
+    localeNamesCache.set(locale, names);
+  }
+  return names;
+}
+
+function normalizeName(locale: string, name: string): string {
+  return name.toLocaleLowerCase(locale).replace(/\./g, "");
+}
+
+/**
+ * Parses a date formatted by `format`, using the order of its fields and its month and day period names.
+ * Times not given are taken from `timeOf`.
+ */
+function parseDate(format: Intl.DateTimeFormat, text: string, timeOf: Date | undefined): Date | undefined {
+  const { locale } = format.resolvedOptions();
+  const { monthNames, dayPeriodNames } = localeNames(locale);
+
+  const fields: Partial<Record<"year" | "month" | "day" | "hour" | "minute", number>> = {};
+  let pm: boolean | undefined;
+  const numbers = text.match(/\d+/g) ?? [];
+  for (const token of text.match(/\p{L}[\p{L}.]*/gu) ?? []) {
+    const name = normalizeName(locale, token);
+    const month = monthNames.findIndex((names) =>
+      names.some((n) => n === name || (name.length >= 3 && n.startsWith(name))),
+    );
+    const dayPeriod = dayPeriodNames.indexOf(name);
+    if (month >= 0) fields.month = month + 1;
+    else if (dayPeriod >= 0) pm = dayPeriod === 1;
+  }
+
+  const isoOrder = ["year", "month", "day", "hour", "minute"] as const;
+  const order =
+    numbers[0]?.length === 4
+      ? isoOrder
+      : format
+          .formatToParts(new Date(2000, 0, 1))
+          .map((part) => part.type)
+          .filter((type): type is (typeof isoOrder)[number] => (isoOrder as readonly string[]).includes(type));
+  const numericFields = order.filter((field) => fields[field] === undefined);
+  if (numbers.length > numericFields.length) return undefined;
+  numbers.forEach((n, i) => (fields[numericFields[i]] = Number(n)));
+
+  const { month, day } = fields;
+  let { year, hour, minute } = fields;
+  if (year === undefined || month === undefined || day === undefined) return undefined;
+  if (year < 100) year += 2000;
+  if (hour === undefined) {
+    hour = timeOf?.getHours() ?? 0;
+    minute = timeOf?.getMinutes() ?? 0;
+  } else if (pm !== undefined) {
+    if (hour < 1 || hour > 12) return undefined;
+    hour = (hour % 12) + (pm ? 12 : 0);
+  }
+  minute ??= 0;
+  if (hour > 23 || minute > 59) return undefined;
+  const date = new Date(year, month - 1, day, hour, minute);
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day ? date : undefined;
 }
 
 function sameDay(a: Date, b: Date): boolean {

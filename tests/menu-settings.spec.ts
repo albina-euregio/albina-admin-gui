@@ -43,6 +43,7 @@ test("Statistics", async ({ page }) => {
   await test.step("Avalanche Bulletins", async () => {
     await expect(page.getByRole("tab", { name: "Avalanche Bulletins" })).toBeVisible();
     await page.getByRole("textbox").fill("01/01/2025 - 01/08/2025");
+    await page.getByText("Extended").click();
     await page.locator('input[name="extended"]').check();
     await page.getByRole("button", { name: "Download" }).click();
     const downloadPromise = page.waitForEvent("download");
