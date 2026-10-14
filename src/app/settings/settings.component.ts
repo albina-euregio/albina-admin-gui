@@ -5,8 +5,9 @@ import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
 import { UpdateUserComponent } from "app/admin/update-user.component";
-import { UserModel, UserSchema } from "app/models/user.model";
+import { User } from "app/providers/albina-api";
 import { PasskeyServicePasskeyInfo } from "app/providers/albina-api";
+import { zUser } from "app/providers/albina-api/zod.gen";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalService } from "ngx-bootstrap/modal";
 
@@ -90,7 +91,7 @@ export class SettingsComponent implements OnInit {
 
   showUpdateUserDialog() {
     const author = this.authenticationService.getCurrentAuthor();
-    const user: UserModel = UserSchema.parse({
+    const user: User = zUser.parse({
       email: author.email,
       name: author.name,
       organization: author.organization,

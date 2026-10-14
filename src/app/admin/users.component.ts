@@ -2,11 +2,11 @@ import { AfterContentInit, Component, viewChild, inject, ChangeDetectionStrategy
 import { TemplateRef } from "@angular/core";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { User } from "app/providers/albina-api";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
-import { UserModel } from "../models/user.model";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { UserService } from "../providers/user-service/user.service";
 import { ChangePasswordComponent } from "./change-password.component";
@@ -28,7 +28,7 @@ export class UsersComponent implements AfterContentInit {
   configurationService = inject(ConfigurationService);
 
   public alerts: Alert[] = [];
-  public users: UserModel[];
+  public users: User[];
 
   public deleteUserModalRef: BsModalRef;
   readonly deleteUserTemplate = viewChild<TemplateRef<unknown>>("deleteUserTemplate");
@@ -38,7 +38,7 @@ export class UsersComponent implements AfterContentInit {
     keyboard: true,
     class: "modal-sm",
   };
-  activeUser: UserModel;
+  activeUser: User;
 
   ngAfterContentInit() {
     this.updateUsers();
@@ -63,7 +63,7 @@ export class UsersComponent implements AfterContentInit {
     this.showUpdateDialog(false);
   }
 
-  showUpdateDialog(update: boolean, user?: UserModel) {
+  showUpdateDialog(update: boolean, user?: User) {
     const dialogRef = this.modalService.show(UpdateUserComponent, {
       class: "modal-xl",
       initialState: update
@@ -91,11 +91,11 @@ export class UsersComponent implements AfterContentInit {
     });
   }
 
-  editUser(user: UserModel) {
+  editUser(user: User) {
     this.showUpdateDialog(true, user);
   }
 
-  showChangePasswordDialog(user: UserModel) {
+  showChangePasswordDialog(user: User) {
     const dialogRef = this.modalService.show(ChangePasswordComponent, {
       initialState: {
         isAdmin: true,
@@ -115,11 +115,11 @@ export class UsersComponent implements AfterContentInit {
     });
   }
 
-  changePassword(user: UserModel) {
+  changePassword(user: User) {
     this.showChangePasswordDialog(user);
   }
 
-  deleteUser(user: UserModel) {
+  deleteUser(user: User) {
     this.activeUser = user;
     this.openDeleteUserModal(this.deleteUserTemplate());
   }

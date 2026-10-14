@@ -1,4 +1,5 @@
 import { inject, Injectable } from "@angular/core";
+import { zUser } from "app/providers/albina-api/zod.gen";
 import { from, map, Observable } from "rxjs";
 
 import {
@@ -7,7 +8,6 @@ import {
   TeamStressLevels,
   TeamStressLevelsSchema,
 } from "../../models/stress-level.model";
-import { UserModel, UserSchema } from "../../models/user.model";
 import * as albinaApi from "../albina-api";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 
@@ -33,14 +33,14 @@ export class UserService {
     );
   }
 
-  public postUser(user: UserModel): Observable<Response> {
-    return from(albinaApi.saveUser({ body: user as unknown as albinaApi.User, throwOnError: true })).pipe(
+  public postUser(user: albinaApi.User): Observable<Response> {
+    return from(albinaApi.saveUser({ body: user, throwOnError: true })).pipe(
       map((res) => res.data as unknown as Response),
     );
   }
 
-  public getUsers(): Observable<UserModel[]> {
-    return from(albinaApi.getUsers({ throwOnError: true })).pipe(map((res) => UserSchema.array().parse(res.data)));
+  public getUsers(): Observable<albinaApi.User[]> {
+    return from(albinaApi.getUsers({ throwOnError: true })).pipe(map((res) => zUser.array().parse(res.data)));
   }
 
   public getRoles(): Observable<string[]> {
@@ -54,7 +54,7 @@ export class UserService {
     return from(albinaApi.getRegions1({ throwOnError: true })).pipe(map((res) => res.data));
   }
 
-  public deleteUser(userId: UserModel["email"]): Observable<Response> {
+  public deleteUser(userId: albinaApi.User["email"]): Observable<Response> {
     return from(albinaApi.deleteUser({ path: { id: userId }, throwOnError: true })).pipe(
       map((res) => res.data as unknown as Response),
     );
