@@ -7,8 +7,7 @@
         class="form-control"
         [ngModel]="dateRange()"
         (ngModelChange)="dateRange.set($event)"
-        bsDaterangepicker
-        [bsConfig]="{ adaptivePosition: true }"
+        appDateRangePicker
         [placeholder]="'incidentReport.dateTime' | translate"
       />
     </div>

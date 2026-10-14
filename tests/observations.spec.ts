@@ -33,16 +33,14 @@ test("filter observations", async ({ page }) => {
 
   // sources filter is checked by test "observation details"
   await test.step("Date filter", async () => {
-    await expect(page.getByRole("textbox")).toHaveValue("12/18/2024 - 12/24/2024");
-    await page.getByRole("textbox").click();
-    await page.getByPlaceholder("HH").first().fill("10");
-    await page.getByPlaceholder("HH").nth(1).fill("02");
-    await page.getByPlaceholder("MM").nth(1).fill("30");
-    await page.getByRole("button", { name: "AM" }).nth(1);
-    await page.getByText(": AM : PM").click();
-    await page.locator(".bs-datepicker").getByText("3", { exact: true }).first().click();
-    await page.locator(".bs-datepicker").getByText("6", { exact: true }).first().click();
-    await expect(page.getByRole("textbox")).toHaveValue("12/03/2024 - 12/06/2024");
+    const dateRange = page.locator(".global-bar-item-calendar input");
+    await expect(dateRange).toHaveValue("12/18/24, 12:00 AM – 12/24/24, 11:59 PM");
+    await dateRange.click();
+    await page.locator('[data-app-date-range-time="start"]').fill("10:00");
+    await page.locator('[data-app-date-range-time="end"]').fill("14:30");
+    await page.locator('[data-vc-date="2024-12-03"]').click();
+    await page.locator('[data-vc-date="2024-12-06"]').click();
+    await expect(dateRange).toHaveValue("12/3/24, 10:00 AM – 12/6/24, 2:30 PM");
     await expect(page).toHaveURL("#/observations?startDate=2024-12-03T10:00&endDate=2024-12-06T14:30");
     await expect(page.locator(".keydata")).toHaveText("177 / 177", { timeout: 7000 });
     await page.getByText("Table", { exact: true }).click();

@@ -26,19 +26,20 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { orderBy } from "es-toolkit";
 import { saveAs } from "file-saver";
 import { Map as MlMap, Marker as MlMarker, Popup } from "maplibre-gl";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { firstValueFrom } from "rxjs";
 import Split from "split.js";
-import "@albina-euregio/linea";
 
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import "@albina-euregio/linea";
+
 import { incidentToGenericObservation } from "../incidents/incident-observation";
 import { IncidentService } from "../incidents/incident.service";
 import type { AlbinaLanguage } from "../models/text.model";
 import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
 import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
+import { DateRangePickerDirective } from "../shared/date-range-picker.directive";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { FilterSelectionValue } from "./filter-selection-config";
 import { observationFilters } from "./filter-selection-data-data";
@@ -180,7 +181,7 @@ class ObservationData {
   standalone: true,
   imports: [
     ObservationChartComponent,
-    BsDatepickerModule,
+    DateRangePickerDirective,
     BsDropdownModule,
     CommonModule,
     FormsModule,
