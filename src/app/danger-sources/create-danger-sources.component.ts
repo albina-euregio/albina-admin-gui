@@ -1004,6 +1004,14 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.saveVariantOnServer(variant, true, false);
   }
 
+  replaceActiveVariant(variant: DangerSourceVariantModel) {
+    const index = this.internVariantsList.indexOf(this.activeVariant);
+    this.activeVariant = variant;
+    if (index >= 0) this.internVariantsList.splice(index, 1, variant);
+    this.mapService.updateAggregatedRegion(variant);
+    this.saveVariantOnServer(variant);
+  }
+
   saveVariantOnServer(variant: DangerSourceVariantModel, checkErrors: boolean | "modal" = true, writeUndoStack = true) {
     variant.validFrom = this.dangerSourcesService.sourceDates.activeValidFrom;
     variant.validUntil = this.dangerSourcesService.sourceDates.activeValidUntil;
