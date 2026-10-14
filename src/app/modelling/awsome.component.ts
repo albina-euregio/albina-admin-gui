@@ -752,8 +752,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           type: "scatter",
           itemStyle: {
             borderColor: "rgba(0, 0, 0, 0.3)",
-            color: ({ data }) =>
-              (grainType ?? markerClassify).findForObservation(observations[data[2] as number])?.color ?? "black",
+            color: ({ data }) => grainType?.findForObservation(observations[data[2] as number])?.color ?? "black",
           },
           data,
           symbolSize: 7,
