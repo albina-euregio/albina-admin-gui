@@ -40,8 +40,8 @@ test("filter observations", async ({ page }) => {
     await page.getByPlaceholder("MM").nth(1).fill("30");
     await page.getByRole("button", { name: "AM" }).nth(1);
     await page.getByText(": AM : PM").click();
-    await page.getByText("3", { exact: true }).first().click();
-    await page.getByText("6", { exact: true }).first().click();
+    await page.locator(".bs-datepicker").getByText("3", { exact: true }).first().click();
+    await page.locator(".bs-datepicker").getByText("6", { exact: true }).first().click();
     await expect(page.getByRole("textbox")).toHaveValue("12/03/2024 - 12/06/2024");
     await expect(page).toHaveURL("#/observations?startDate=2024-12-03T10:00&endDate=2024-12-06T14:30");
     await expect(page.locator(".keydata")).toHaveText("177 / 177", { timeout: 7000 });

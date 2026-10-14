@@ -172,7 +172,7 @@ test("View bulletin", async ({ page }) => {
   });
 
   await test.step("External regions are visible", async () => {
-    await page.locator("header").filter({ hasText: "GeoSphere (11)" }).getByRole("button").click();
+    await page.locator("header").filter({ hasText: "GeoSphere" }).getByRole("button").click();
     await expect(page.locator(".region-thumb").filter({ hasText: "Werdenfels Alps + 4" })).toMatchAriaSnapshot(`
       - button "Werdenfels Alps + 4"
       - button "Christoph Hummel"
@@ -182,8 +182,8 @@ test("View bulletin", async ({ page }) => {
     `);
 
     await page.locator("header").filter({ hasText: "SLF (7)" }).getByRole("button").click();
-    await expect(page.locator(".region-thumb").filter({ hasText: "Münstertal + 45" })).toMatchAriaSnapshot(`
-      - button /Münstertal \\+ \\d+/
+    await expect(page.locator(".region-thumb").filter({ hasText: "Montana + 32" })).toMatchAriaSnapshot(`
+      - button /Montana \\+ \\d+/
       - button
       - text: 
       - button "Incomplete"

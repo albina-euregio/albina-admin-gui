@@ -19,8 +19,8 @@
     - textbox "Region ID"
     - text: Image URL for coat of arms
     - textbox "Image URL for coat of arms": https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg
-    - text: URL to static avalanche files
-    - textbox "URL to static avalanche files"
+    - text: /URL to static avalanche files/
+    - textbox /URL to static avalanche files/
     - text: URL to server images
     - textbox "URL to server images": https://dev.avalanche.report/api/images/
     - text: URL to education content

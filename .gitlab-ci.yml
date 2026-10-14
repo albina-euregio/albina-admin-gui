@@ -202,12 +202,14 @@ deploy:observations-api-dev:
 .playwright:
   stage: playwright
   image: mcr.microsoft.com/playwright:v1.61.1
+  parallel: 2
   interruptible: true
   cache:
     - *pnpm-cache
   artifacts:
     when: always
     paths:
+      - blob-report/
       - playwright-report/
       - test-results/
     reports:
@@ -218,7 +220,7 @@ deploy:observations-api-dev:
     - pnpm install --frozen-lockfile
     - export TZ="Europe/Vienna"
   script:
-    - pnpm playwright test
+    - pnpm playwright test --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL
 
 playwright:dev:
   extends: .playwright
@@ -237,7 +239,7 @@ playwright:dev:chromium:
     - when: manual
       allow_failure: true
   script:
-    - pnpm playwright test --project=chromium
+    - pnpm playwright test --project=chromium --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL
 
 playwright:localhost:
   extends: .playwright
@@ -250,4 +252,4 @@ playwright:localhost:
     - when: manual
       allow_failure: true
   script:
-    - pnpm playwright test --project=chromium # especially webkit is slow -> don't run on merge requests
+    - pnpm playwright test --project=chromium --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL # especially webkit is slow -> don't run on merge requests
