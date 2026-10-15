@@ -197,6 +197,18 @@ export function toAlbinaBulletin(b: Bulletin): BulletinModelAsJSON {
         text: b.snowpackStructure?.comment,
       },
     ],
+    travelAdvisoryHighlights: [
+      {
+        languageCode: b.lang,
+        text: b.travelAdvisory?.highlights,
+      },
+    ],
+    travelAdvisoryComment: [
+      {
+        languageCode: b.lang,
+        text: b.travelAdvisory?.comment,
+      },
+    ],
     tendencyComment: [
       {
         languageCode: b.lang,
