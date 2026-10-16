@@ -136,9 +136,15 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
       }
     }
     const value = get(observation, this.path(key, (observation as unknown as FeatureProperties).$stabilityIndex));
-    return this.unmatchedAsNan && typeof value === "string" && !this.values.some((v) => v.value === value)
-      ? undefined
-      : (value as ValueType);
+    return this.unmatchedAsNan ? this.offeredPart(value as ValueType) : (value as ValueType);
+  }
+
+  /** The part of a value the filter offers: strings it does not offer drop out, and undefined when nothing is left. */
+  private offeredPart(value: ValueType): ValueType | undefined {
+    const offered = (v: unknown) => typeof v !== "string" || this.values.some((f) => f.value === v);
+    if (!Array.isArray(value)) return offered(value) ? value : undefined;
+    const kept = (value as readonly unknown[]).filter(offered);
+    return kept.length ? (kept as ValueType) : undefined;
   }
 
   /** A key is parsed into its path once, then looked up. */

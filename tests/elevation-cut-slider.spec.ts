@@ -277,6 +277,33 @@ test("a thumb parked at the top end is grabbed anywhere on its pill", async ({ p
   await expect(thumb(page)).toHaveAttribute("aria-valuenow", "2200");
 });
 
+test("a parked thumb stays in the link, which reopens both thumbs where they stood", async ({ page }) => {
+  await openDashboard(page, "&cut=1800,2600");
+  await thumb(page, "Upper elevation cut").focus();
+  await page.keyboard.press("End");
+  await expect(thumb(page, "Upper elevation cut")).toHaveAttribute("aria-valuenow", "4000");
+  const parkedUpper = await copiedLink(page);
+  expect(parkedUpper.get("cut")).toBe("1800,4000");
+  await thumb(page, "Upper elevation cut").focus();
+  await page.keyboard.press("PageDown");
+  await thumb(page, "Lower elevation cut").focus();
+  await page.keyboard.press("Home");
+  await expect(thumb(page, "Lower elevation cut")).toHaveAttribute("aria-valuenow", "1400");
+  const parkedLower = await copiedLink(page);
+  expect(parkedLower.get("cut")).toBe("1400,3000");
+  for (const [link, lower, upper] of [
+    [parkedUpper, "1800", "4000"],
+    [parkedLower, "1400", "3000"],
+  ] as const) {
+    await page.goto("about:blank");
+    await page.goto(`#/modelling/awsome?${link}`);
+    await expect(page.getByRole("slider")).toHaveCount(2, { timeout: 15000 });
+    await expect(thumb(page, "Lower elevation cut")).toHaveAttribute("aria-valuenow", lower);
+    await expect(thumb(page, "Upper elevation cut")).toHaveAttribute("aria-valuenow", upper);
+    await expect(page.locator(".elevation-cut-line")).toHaveCount(1);
+  }
+});
+
 test("two cuts from the link make three bands", async ({ page }) => {
   await openDashboard(page, "&cut=1800,2400");
   await expect(thumb(page, "Lower elevation cut")).toHaveAttribute("aria-valuenow", "1800");

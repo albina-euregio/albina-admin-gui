@@ -79,7 +79,10 @@ export function nearestStop(stops: readonly number[], value: number): number {
   });
 }
 
-/** The cuts a link asks for, snapped to splits; `none` parks the thumbs at the ends; undefined when malformed. */
+/**
+ * The cuts a link asks for, each on its nearest stop, where an end stop parks its thumb; `none` parks every thumb;
+ * undefined when malformed.
+ */
 export function cutsFromParam(
   raw: string,
   stops: readonly number[],
@@ -88,16 +91,14 @@ export function cutsFromParam(
   if (raw === "none") return defaults.map((_, thumb) => (thumb === 0 ? stops.at(-1) : stops[0]));
   if (!/^\d+(,\d+)*$/.test(raw)) return undefined;
   const asked = raw.split(",").map(Number);
-  const splits = stops.filter((stop) => isSplit(stops, stop));
-  if (!splits.length || asked.length > MAX_CUTS || asked.some((cut, i) => i > 0 && cut <= asked[i - 1])) {
-    return undefined;
-  }
-  return [...new Set(asked.map((cut) => nearestStop(splits, cut)))];
+  if (asked.length > MAX_CUTS || asked.some((cut, i) => i > 0 && cut <= asked[i - 1])) return undefined;
+  return [...new Set(asked.map((cut) => nearestStop(stops, cut)))];
 }
 
-/** The link value of the cuts: those that split, or `none`. */
-export function cutParam(stops: readonly number[], cuts: readonly number[]): string {
-  return cuts.filter((cut) => isSplit(stops, cut)).join(",") || "none";
+/** The link value of the cuts: every thumb at its stop, or `none` when as many thumbs as the defaults all park. */
+export function cutParam(stops: readonly number[], cuts: readonly number[], defaults: readonly number[]): string {
+  const parked = !cuts.some((cut) => isSplit(stops, cut));
+  return parked && cuts.length === defaults.length ? "none" : cuts.join(",");
 }
 
 /** The edges of the bands the cuts make, lowest band first, as [lower, upper] in metres. */

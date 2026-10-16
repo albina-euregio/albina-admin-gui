@@ -6,6 +6,7 @@ import {
   classFraction,
   classSlotsFor,
   fallbackStabilityIndex,
+  fitsClassSlots,
   unstableAtMinimum,
   valueAtClassFraction,
 } from "../src/app/modelling/index-classes";
@@ -106,4 +107,12 @@ test("the class slots fit the longest filter without a url, never fewer than ten
   expect(classSlotsFor([{ values: values(5) }, { url: "api/locations", values: values(8) }])).toBe(10);
   expect(classSlotsFor([datetags])).toBe(10);
   expect(classSlotsFor([])).toBe(10);
+});
+
+test("a filter fits the class slots while it has no more values than slots, with a url or without", () => {
+  const values = (n: number) => Array.from({ length: n }, (_, i) => i);
+  expect(fitsClassSlots({ values: values(11) }, 11)).toBe(true);
+  expect(fitsClassSlots({ values: values(12) }, 11)).toBe(false);
+  expect(fitsClassSlots({ url: "api/locations", values: values(10) }, 10)).toBe(true);
+  expect(fitsClassSlots({ url: "api/locations", values: values(72) }, 11)).toBe(false);
 });

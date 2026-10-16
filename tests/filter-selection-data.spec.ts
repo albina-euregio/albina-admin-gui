@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { classSlotsFor, fitsClassSlots } from "../src/app/modelling/index-classes";
 import {
   clickFilterValues,
   type ClickModifiers,
@@ -74,10 +75,28 @@ const datetag = (values: string[]) =>
   });
 /** The same filter, reading a value it does not offer as nan. */
 const datetagAsNan = (values: string[]) => Object.assign(datetag(values), { unmatchedAsNan: true });
-/** An observation whose Punstable layer is driven by the given datetag. */
-const drivenBy = (tag: string | undefined) => ({
+/** An observation whose Punstable layer is driven by the given datetag or datetags. */
+const drivenBy = (tag: string | string[] | undefined) => ({
   $stabilityIndex: "Punstable",
   snowpack: { Punstable: { instabilityDrivenBy: tag, value: 0.9 } },
+});
+
+test("a url-backed classifier fits the class slots only while each of its classes lands in a slot", () => {
+  const dates = Array.from({ length: 12 }, (_, i) => `2026-03-${i + 10}`);
+  const twelve = datetag(dates);
+  const eleven = datetag(dates.slice(0, 11));
+  const classSlots = classSlotsFor([band(), grainType(), twelve]);
+  expect(classSlots).toBe(11);
+  expect(fitsClassSlots(eleven, classSlots)).toBe(true);
+  expect(fitsClassSlots(twelve, classSlots)).toBe(false);
+  const observations = dates.map((date) => ({ ...drivenBy(date), band: "low" }));
+  const slotSum = (classifier: FilterSelectionData<Record<string, unknown>>) => {
+    const chart = band();
+    chart.buildChartsData(classifier, observations, () => true, undefined, classSlots);
+    return (chart.dataset[1].slice(6) as number[]).reduce((sum, count) => sum + count, 0);
+  };
+  expect(slotSum(eleven)).toBe(12);
+  expect(slotSum(twelve)).toBe(11);
 });
 
 test("by default a value the filter does not offer is read as it is and counted nowhere", () => {
@@ -98,6 +117,39 @@ test("with unmatchedAsNan a value the filter does not offer counts without speci
     ["new_snow", 0],
     ["2026-03-24", 1],
   ]);
+});
+
+test("with unmatchedAsNan an array keeps the datetags the filter offers and counts without specification when none", () => {
+  const filter = datetagAsNan(["new_snow", "2026-03-24"]);
+  const dormant = drivenBy(["2026-01-28", "2025-12-01"]);
+  const partly = drivenBy(["2026-01-28", "2026-03-24", "new_snow"]);
+  expect(filter.getValue(dormant)).toBeUndefined();
+  expect(filter.getValue(partly)).toEqual(["2026-03-24", "new_snow"]);
+  expect(filter.getValue(drivenBy([]))).toBeUndefined();
+  expect(datetag(["new_snow"]).getValue(dormant)).toEqual(["2026-01-28", "2025-12-01"]);
+  filter.buildChartsData(undefined, [dormant, partly, drivenBy(["2026-03-24"])], () => true);
+  expect(filter.nan).toBe(1);
+  expect(filter.dataset.slice(1).map((row) => [row[0], row[6]])).toEqual([
+    ["new_snow", 1],
+    ["2026-03-24", 2],
+  ]);
+  filter.selected = new Set(["nan"]);
+  expect(filter.isIncluded("selected", filter.getValue(dormant))).toBe(true);
+  expect(filter.isIncluded("selected", filter.getValue(partly))).toBe(false);
+  filter.selected = new Set(["2026-03-24"]);
+  expect(filter.isIncluded("selected", filter.getValue(dormant))).toBe(false);
+  expect(filter.isIncluded("selected", filter.getValue(partly))).toBe(true);
+});
+
+test("a fully dormant datetag array classifies as unclassified, a partly dormant one by its offered datetags", () => {
+  const classifier = datetagAsNan(["new_snow", "2026-03-24"]);
+  const chart = band();
+  const observations = [
+    { ...drivenBy(["2026-01-28", "2025-12-01"]), band: "low" },
+    { ...drivenBy(["2026-01-28", "2026-03-24"]), band: "low" },
+  ];
+  chart.buildChartsData(classifier, observations, () => true);
+  expect(chart.dataset[1].slice(6, 9)).toEqual([1, 0, 1]);
 });
 
 test("unmatchedAsNan leaves values that are not strings alone", () => {

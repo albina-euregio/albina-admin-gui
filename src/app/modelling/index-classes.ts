@@ -65,3 +65,8 @@ export function fallbackStabilityIndex<F extends { type: string; stabilityIndex?
 export function classSlotsFor(filters: readonly { url?: string; values: readonly unknown[] }[]): number {
   return Math.max(10, ...filters.filter((f) => !f.url).map((f) => f.values.length));
 }
+
+/** Whether every value of a filter has a class slot, as a classifier needs. */
+export function fitsClassSlots(filter: { values: readonly unknown[] }, classSlots: number): boolean {
+  return filter.values.length <= classSlots;
+}

@@ -104,3 +104,31 @@ test("the menu saves the pending dormant dates newest first and reopens on them"
   await expect(menu.getByRole("checkbox", { name: "2026-03-20" })).not.toBeChecked();
   await expect(menu).toContainText("3 active, 3 visible in the chart");
 });
+
+test("a config in any dcfg/ folder saves through the api above that folder and rereads the list beside the config", async ({
+  page,
+}) => {
+  let dormant = ["2026-03-20"];
+  const puts: string[] = [];
+  const reads: string[] = [];
+  await page.route("**/e2e-dcfg/dcfg/awsome.other.json", (route) => route.fulfill({ json: config }));
+  await page.route("**/dormant_datetags.json", (route) => {
+    reads.push(route.request().url());
+    return route.fulfill({ json: { dormant_datetags: dormant } });
+  });
+  await page.route("**/api/dormant-datetags", (route) => {
+    puts.push(`${route.request().method()} ${route.request().url()}`);
+    dormant = JSON.parse(route.request().postData() ?? "{}").dormant_datetags;
+    return route.fulfill({ json: { dormant_datetags: dormant } });
+  });
+  await page.goto("#/modelling/awsome?config=e2e-dcfg/dcfg/awsome.other.json");
+  let menu = await openMenu(page);
+  await menu.getByRole("checkbox", { name: "2026-03-29" }).uncheck();
+  await Promise.all([page.waitForEvent("load"), menu.getByRole("button", { name: "Save and reload" }).click()]);
+  const folder = new URL("e2e-dcfg/", page.url());
+  expect(puts).toEqual([`PUT ${new URL("api/dormant-datetags", folder)}`]);
+  menu = await openMenu(page);
+  await expect(menu.getByRole("checkbox", { name: "2026-03-29" })).not.toBeChecked();
+  const list = new URL("dcfg/dormant_datetags.json", folder).toString();
+  expect(reads).toEqual([list, list]);
+});

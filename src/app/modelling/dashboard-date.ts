@@ -3,17 +3,22 @@ export const RELATIVE_DATE = /^now(?:([+-])(\d+)([hd]))?$/;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** The latest time on the dashboard's grid before now: steps of stepSeconds counted from local midnight. */
+/** The latest time on the dashboard's grid before now: steps of stepSeconds counted from UTC midnight. */
 export function latestStep(now: Date, stepSeconds: number): Date {
-  const secondsOfDay = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+  const secondsOfDay = now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds();
   const passed = Math.floor(secondsOfDay / stepSeconds) * stepSeconds;
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, passed);
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, passed));
 }
 
-/** A local time as the config spells its dates. */
+/** A local time as the config spells its dates, the inverse of reading a config date as local time. */
 export function formatConfigDate(date: Date): string {
   const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
   return `${day}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
+/** A UTC time as the config spells its dates, whose model times are UTC. */
+export function formatUtcConfigDate(date: Date): string {
+  return date.toISOString().slice(0, 19);
 }
 
 /** A dashboard date's day and month, dd.mm. */
@@ -26,14 +31,14 @@ export function withinDates(date: string, min?: string, max?: string): boolean {
   return !(min && date < min) && !(max && date > max);
 }
 
-/** A config date as the dashboard opens it: "now", "now+48h" or "now-14d" count from the latest grid time before now. */
+/** A config date as the dashboard opens it: "now", "now+48h" or "now-14d" count in UTC from the latest grid time. */
 export function resolveConfigDate(value: string, stepSeconds: number, now = new Date()): string {
   const relative = RELATIVE_DATE.exec(value);
   if (!relative) return value;
   const [, sign, amount, unit] = relative;
   const date = latestStep(now, stepSeconds);
   const offset = (sign === "-" ? -1 : 1) * Number(amount ?? 0);
-  if (unit === "d") date.setDate(date.getDate() + offset);
-  else date.setHours(date.getHours() + offset);
-  return formatConfigDate(date);
+  if (unit === "d") date.setUTCDate(date.getUTCDate() + offset);
+  else date.setUTCHours(date.getUTCHours() + offset);
+  return formatUtcConfigDate(date);
 }

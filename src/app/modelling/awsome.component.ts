@@ -98,6 +98,7 @@ import {
   classBounds,
   classSlotsFor,
   fallbackStabilityIndex,
+  fitsClassSlots,
   sharedBoundary,
   unstableAtMinimum,
 } from "./index-classes";
@@ -123,6 +124,7 @@ type DetailsTabLabel = string;
 
 const MEDIAN_COLOR = "green";
 const ASPECT_FILE = /\.[A-Za-z]+\.json(\?|$)/;
+const PUBLISHED_CONFIG = /\/dcfg\/[^/]+\.json$/;
 const MEDIAN_SERIES = 1;
 const SPLIT_LINE = { lineStyle: { color: "#e8e8e8" } };
 const INNER_BAND_COLOR = "#bbb";
@@ -325,9 +327,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     });
     this.filterService.mapBounds = undefined;
 
-    this.markerService.markerClassify = this.filterService.filterSelectionData.find(
+    const defaultClassifier = this.filterService.filterSelectionData.find(
       (f) => f.type === spec.find((f) => f.default === "classify")?.type,
     );
+    const defaultFits = !!defaultClassifier && fitsClassSlots(defaultClassifier, this.classSlots);
+    if (defaultClassifier && !defaultFits) {
+      console.warn(
+        `The default classifier ${defaultClassifier.type} has more values than the class slots, none classifies`,
+      );
+    }
+    this.markerService.markerClassify = defaultFits ? defaultClassifier : undefined;
     this.markerService.markerLabel = this.filterService.filterSelectionData.find(
       (f) => f.type === spec.find((f) => f.default === "label")?.type,
     );
@@ -358,11 +367,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return classSlotsFor(this.filterService.filterSelectionData);
   }
 
-  /** Whether a filter may classify: it classifies already, or it has no url and its values fit the class slots. */
+  /** Whether a filter may classify: it classifies already or has no url, and its values fit the class slots. */
   canClassify(filter: FilterSelectionData<FeatureProperties>): boolean {
     return (
-      filter.type === this.markerService.markerClassify?.type ||
-      (!filter.url && filter.values.length <= this.classSlots)
+      (filter.type === this.markerService.markerClassify?.type || !filter.url) &&
+      fitsClassSlots(filter, this.classSlots)
     );
   }
 
@@ -457,7 +466,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const label = this.markerService.markerLabel?.type ?? "none";
     if (label !== (this.defaultLabel ?? "none")) params["label"] = label;
     if (this.cutFilter) {
-      const cut = cutParam(this.cutStops, this.elevationCuts);
+      const cut = cutParam(this.cutStops, this.elevationCuts, this.defaultCuts);
       if (cut !== this.defaultCuts.join(",") || this.view === "danger") params["cut"] = cut;
     }
     if (this.view === "danger") params["view"] = "danger";
@@ -609,14 +618,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return url;
   }
 
-  private get baseURL() {
-    // Relative URLs in the config are relative to the app, not to the route the
-    // user happens to be on: resolve against <base href>, which is the app root
-    // wherever it is mounted. location.href would be ".../modelling/awsome" and
-    // would send every source, timeseries and details URL one level too deep.
-    return this.configURL.endsWith("dcfg/awsome.json")
-      ? new URL(this.configURL.replace("dcfg/awsome.json", ""), document.baseURI)
-      : document.baseURI;
+  /** The base of the config's data and API URLs: the folder above a config's dcfg/ folder, else the app's base href. */
+  private get baseURL(): string {
+    const config = new URL(this.configURL, document.baseURI);
+    return PUBLISHED_CONFIG.test(config.pathname) ? new URL("..", config).toString() : document.baseURI;
   }
 
   private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {

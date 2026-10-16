@@ -70,7 +70,7 @@ test("every split puts each row wholly into the band below it or the band above 
   }
 });
 
-test("a cut at an end of the slider splits nothing and the link says none", () => {
+test("a cut at an end of the slider splits nothing and the link says none when every thumb parks", () => {
   expect(bandValues(live, stops, [1400])).toEqual([[], values]);
   expect(bandValues(live, stops, [4000])).toEqual([values, []]);
   expect(bandEdges(stops, [1400, 4000])).toEqual([
@@ -78,11 +78,32 @@ test("a cut at an end of the slider splits nothing and the link says none", () =
     [1400, 4000],
     [4000, 4000],
   ]);
-  expect(cutParam(stops, [1400])).toBe("none");
-  expect(cutParam(stops, [4000])).toBe("none");
-  expect(cutParam(stops, [1400, 4000])).toBe("none");
-  expect(cutParam(stops, [1400, 2400])).toBe("2400");
-  expect(cutParam(stops, [1800, 2400])).toBe("1800,2400");
+  expect(cutParam(stops, [1400], [2200])).toBe("none");
+  expect(cutParam(stops, [4000], [2200])).toBe("none");
+  expect(cutParam(stops, [1400, 4000], [1800, 2400])).toBe("none");
+  expect(cutParam(stops, [1800, 2400], [2200])).toBe("1800,2400");
+});
+
+test("the link carries every thumb, a parked one at its end, and keeps a thumb count the defaults lack", () => {
+  expect(cutParam(stops, [1800, 4000], [1800, 2600])).toBe("1800,4000");
+  expect(cutParam(stops, [1400, 2400], [1800, 2400])).toBe("1400,2400");
+  expect(cutParam(stops, [1400, 4000], [2200])).toBe("1400,4000");
+  expect(cutParam(stops, [4000], [1800, 2400])).toBe("4000");
+});
+
+test("a link reopens every thumb where it stood, a parked one at its end", () => {
+  for (const defaults of [[2200], [1800, 2400]]) {
+    for (const cut of stops) {
+      const reopened = cutsFromParam(cutParam(stops, [cut], defaults), stops, defaults);
+      expect(reopened, `${cut} of ${defaults}`).toEqual(defaults.length === 1 && cut === 4000 ? [1400] : [cut]);
+    }
+    for (const upper of stops) {
+      for (const lower of stops.filter((stop) => stop < upper)) {
+        const reopened = cutsFromParam(cutParam(stops, [lower, upper], defaults), stops, defaults);
+        expect(reopened, `${lower},${upper} of ${defaults}`).toEqual([lower, upper]);
+      }
+    }
+  }
 });
 
 test("two cuts make three bands", () => {
@@ -111,8 +132,6 @@ test("a link snaps its cuts, parks the thumbs for none and is ignored when malfo
   expect(cutsFromParam("1800,2400", stops, [2200])).toEqual([1800, 2400]);
   expect(cutsFromParam("2150,2190", stops, [2200])).toEqual([2200]);
   expect(cutsFromParam("2200", stops, [1800, 2400])).toEqual([2200]);
-  expect(cutsFromParam("4000", stops, [2200])).toEqual([3200]);
-  expect(cutsFromParam("1400", stops, [2200])).toEqual([1600]);
   expect(cutsFromParam("none", stops, [2200])).toEqual([1400]);
   expect(cutsFromParam("none", stops, [1800, 2400])).toEqual([1400, 4000]);
   for (const raw of [
@@ -130,6 +149,21 @@ test("a link snaps its cuts, parks the thumbs for none and is ignored when malfo
     expect(cutsFromParam(raw, stops, [2200]), raw).toBeUndefined();
   }
   for (const raw of ["NONE", "none,2200", "abc"]) expect(cutsFromParam(raw, stops, [2200]), raw).toBeUndefined();
+});
+
+test("a link cut at or nearest an end stop parks its thumb there, and two cuts on one stop make one thumb", () => {
+  expect(cutsFromParam("4000", stops, [2200])).toEqual([4000]);
+  expect(cutsFromParam("1400", stops, [2200])).toEqual([1400]);
+  expect(cutsFromParam("3700", stops, [2200])).toEqual([4000]);
+  expect(cutsFromParam("1450", stops, [2200])).toEqual([1400]);
+  expect(cutsFromParam("1800,4000", stops, [1800, 2600])).toEqual([1800, 4000]);
+  expect(cutsFromParam("1400,2400", stops, [2200])).toEqual([1400, 2400]);
+  expect(cutsFromParam("1400,1600", stops, [2200])).toEqual([1400, 1600]);
+  expect(cutsFromParam("3200,4000", stops, [2200])).toEqual([3200, 4000]);
+  expect(cutsFromParam("1400,4000", stops, [2200])).toEqual([1400, 4000]);
+  expect(cutsFromParam("1400", stops, [1800, 2400])).toEqual([1400]);
+  expect(cutsFromParam("0,100", stops, [1800, 2400])).toEqual([1400]);
+  expect(cutsFromParam("3900,5000", stops, [1800, 2400])).toEqual([4000]);
 });
 
 test("a thumb keeps at least one row between itself and its neighbours", () => {
