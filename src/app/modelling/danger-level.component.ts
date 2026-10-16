@@ -136,8 +136,6 @@ export class DangerLevelColors extends ConstantsService {
     class: "danger-level",
     role: "region",
     "[attr.aria-label]": "title()",
-    "[attr.data-levels]": "seriesLevels()",
-    "[attr.data-current]": "seriesView()?.current",
   },
 })
 export class DangerLevelComponent {
@@ -199,11 +197,6 @@ export class DangerLevelComponent {
   readonly seriesView = computed(() => this.seriesViewOf(this.series()));
   readonly seriesNote = computed(() =>
     this.series() !== undefined && !hasRows(this.series()) ? this.tr("no danger level series") : undefined,
-  );
-  readonly seriesLevels = computed(() =>
-    this.seriesView()
-      ?.readings.map((steps) => steps.map((reading) => reading.levels?.[0] ?? "").join(","))
-      .join(";"),
   );
   readonly stripBox = signal<StripBox | undefined>(undefined, { equal: isEqual });
   readonly hovered = signal<number | undefined>(undefined);

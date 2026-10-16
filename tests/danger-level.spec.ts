@@ -1,6 +1,7 @@
 import { expect, type Locator, test, type Page } from "@playwright/test";
 
 import { DangerLevelSchema } from "../src/app/modelling/awsome.config";
+import { levelColor } from "../src/app/modelling/danger-paint";
 import { DAY_LABEL_GAP } from "../src/app/modelling/danger-series.component";
 import { readSteps } from "../src/app/modelling/eaws-reading";
 import { captureClipboard, copiedLink, elevationFilter } from "./utils";
@@ -134,16 +135,16 @@ function mapIndex(steps: number) {
 function total(counts: number[][]): number[] {
   return counts[0].map((_, t) => counts.reduce((sum, row) => sum + row[t], 0));
 }
-/** The data-levels the strip must show for the bands' counts and sizes, read step by step with the matrix. */
-function expectedLevels(bands: [number[][], (number | null)[][]][]): string {
+/** The levels the strip must show for the bands' counts and sizes, read step by step with the matrix. */
+function expectedLevels(bands: [number[][], (number | null)[][]][]): (number | undefined)[][] {
   const calibration = DangerLevelSchema.parse(config.dangerLevel);
-  return bands
-    .map(([count, size]) =>
-      readSteps(count, size, calibration)
-        .map((reading) => reading.levels?.[0] ?? "")
-        .join(","),
-    )
-    .join(";");
+  return bands.map(([count, size]) => readSteps(count, size, calibration).map((reading) => reading.levels?.[0]));
+}
+/** The background colour a cell shows for a level, transparent without one. */
+function cellColor(level: number | undefined): string {
+  if (!level) return "rgba(0, 0, 0, 0)";
+  const [red, green, blue] = [1, 3, 5].map((at) => parseInt(levelColor(level).slice(at, at + 2), 16));
+  return `rgb(${red}, ${green}, ${blue})`;
 }
 
 /** A point slope at an elevation whose Punstable reads value with size, north facing unless told otherwise. */
@@ -203,7 +204,24 @@ const strip = (page: Page) => panel(page).locator(".danger-level-strip");
 /** The series rows of the panel, top band first. */
 const seriesRows = (page: Page) => panel(page).locator("app-danger-series");
 /** The cell of a step in every series row, top band first. */
-const stepCells = (page: Page, step: number) => seriesRows(page).locator(`.danger-series-cell[data-step="${step}"]`);
+const stepCells = (page: Page, step: number) => seriesRows(page).locator(`.danger-series-cell:nth-child(${step + 1})`);
+/** Asserts the colour of every cell of every series row against the expected levels. */
+async function expectSeriesLevels(page: Page, levels: (number | undefined)[][]) {
+  await expect(seriesRows(page)).toHaveCount(levels.length);
+  for (const [row, steps] of levels.entries()) {
+    const cells = seriesRows(page).nth(row).locator(".danger-series-cell");
+    await expect(cells).toHaveCount(steps.length);
+    for (const [step, level] of steps.entries())
+      await expect(cells.nth(step)).toHaveCSS("background-color", cellColor(level));
+  }
+}
+/** Asserts that the cell of a step carries the class in each of the rows, and no other cell does. */
+async function expectStepMarked(page: Page, cls: string, step: number, rows: number) {
+  await expect(seriesRows(page)).toHaveCount(rows);
+  await expect(panel(page).locator(`.danger-series-cell.${cls}`)).toHaveCount(rows);
+  for (let row = 0; row < rows; row++)
+    await expect(seriesRows(page).nth(row).locator(".danger-series-cell").nth(step)).toHaveClass(new RegExp(cls));
+}
 /** Whether an element shows all its content without scrolling, down or across. */
 const fitsWithoutScrolling = (element: Locator) =>
   element.evaluate((el) => el.scrollHeight <= el.clientHeight && el.scrollWidth <= el.clientWidth);
@@ -725,7 +743,7 @@ test("the series asks the index chart's request for the reading index's classes,
     { ...config, filters: [...filters, sk38] },
     seriesAnswer(),
   );
-  await expect(panel(page)).toHaveAttribute("data-current", "4");
+  await expectStepMarked(page, "current", 4, 2);
   expect(requests).toHaveLength(1);
   const query = requests[0].searchParams;
   expect(query.getAll("stabilityIndex")).toEqual(["Punstable", "sk38_ccl"]);
@@ -743,34 +761,20 @@ test("the series reads every band at every step with the matrix and marks the cu
   await page.setViewportSize({ width: 1920, height: 1080 });
   await openDashboard(page, "&view=danger", highAboveLowBelow, config, seriesAnswer());
   const levels = expectedLevels([
-    [lowerCounts, lowerSizes],
     [upperCounts, upperSizes],
+    [lowerCounts, lowerSizes],
   ]);
-  expect(levels).toBe("1,3,,3,1,;4,1,5,,4,1");
-  await expect(panel(page)).toHaveAttribute("data-levels", levels);
-  await expect(panel(page)).toHaveAttribute("data-current", "4");
+  expect(levels).toEqual([
+    [4, 1, 5, undefined, 4, 1],
+    [1, 3, undefined, 3, 1, undefined],
+  ]);
+  await expectSeriesLevels(page, levels);
+  await expectStepMarked(page, "current", 4, 2);
   await expect(strip(page)).toHaveAttribute("aria-label", "danger level series");
   await expect(panel(page).locator(".danger-level-series-note")).toHaveCount(0);
   await expect(chips(page)).toHaveCount(0);
   const rows = seriesRows(page);
-  await expect(rows).toHaveCount(2);
-  const colors = await rows.evaluateAll((items) =>
-    items.map((row) =>
-      [...row.querySelectorAll(".danger-series-cell")].map((cell) => getComputedStyle(cell).backgroundColor),
-    ),
-  );
-  const red = "rgb(215, 25, 28)";
-  const green = "rgb(166, 217, 106)";
-  const orange = "rgb(253, 174, 97)";
-  const none = "rgba(0, 0, 0, 0)";
-  expect(colors).toEqual([
-    [red, green, "rgb(0, 0, 0)", none, red, green],
-    [green, orange, none, orange, green, none],
-  ]);
   const current = stepCells(page, 4);
-  await expect(current).toHaveCount(2);
-  for (const cell of await current.all()) await expect(cell).toHaveClass(/current/);
-  await expect(panel(page).locator(".danger-series-cell.current")).toHaveCount(2);
   const now = await panel(page).locator(".danger-series-now").boundingBox();
   const step = await current.first().boundingBox();
   expect(Math.abs(now.x - (step.x + step.width / 2))).toBeLessThanOrEqual(1);
@@ -883,8 +887,7 @@ test("hovering a step marks it in every band row and shows its readings below th
     "≥ 2200 m: 4 (very poor · many 30 % · size 3) · 10 read",
     "< 2200 m: 1 (good throughout) · 10 read",
   ]);
-  await expect(panel(page).locator(".danger-series-cell.hovered")).toHaveCount(2);
-  for (const cell of await stepCells(page, 0).all()) await expect(cell).toHaveClass(/hovered/);
+  await expectStepMarked(page, "hovered", 0, 2);
   const [box, last, area] = [
     await tip.boundingBox(),
     await seriesRows(page).last().boundingBox(),
@@ -930,16 +933,15 @@ test("a series cut otherwise than the bands draws no rows and no note until the 
   await expect(bandLines(page)).toHaveCount(3);
   await expect(seriesRows(page)).toHaveCount(0);
   await expect(panel(page).locator(".danger-level-series-note")).toHaveCount(0);
-  expect(await panel(page).getAttribute("data-levels")).toBeNull();
   await page.keyboard.press("Shift+ArrowRight");
   await expect(seriesRows(page)).toHaveCount(3);
-  await expect(panel(page)).toHaveAttribute("data-current", "5");
-  await expect(panel(page)).toHaveAttribute(
-    "data-levels",
+  await expectStepMarked(page, "current", 5, 3);
+  await expectSeriesLevels(
+    page,
     expectedLevels([
+      [upperCounts, upperSizes],
+      [upperCounts, upperSizes],
       [lowerCounts, lowerSizes],
-      [upperCounts, upperSizes],
-      [upperCounts, upperSizes],
     ]),
   );
 });
@@ -952,14 +954,15 @@ test("a chip warns when the series' level at the current step differs from the p
   const sizes = upperSizes.map((row) => [...row]);
   sizes[2][4] = 1.2;
   await openDashboard(page, "&view=danger", highAboveLowBelow, config, seriesAnswer([2200], upper, sizes));
-  await expect(panel(page)).toHaveAttribute(
-    "data-levels",
-    expectedLevels([
-      [lowerCounts, lowerSizes],
-      [upper, sizes],
-    ]),
-  );
-  await expect(panel(page)).toHaveAttribute("data-levels", "1,3,,3,1,;4,1,5,,1,1");
+  const levels = expectedLevels([
+    [upper, sizes],
+    [lowerCounts, lowerSizes],
+  ]);
+  expect(levels).toEqual([
+    [4, 1, 5, undefined, 1, 1],
+    [1, 3, undefined, 3, 1, undefined],
+  ]);
+  await expectSeriesLevels(page, levels);
   const chip = chips(page).locator(".danger-level-chip", { hasText: "series ≠ panel at this step" });
   await expect(chip).toBeVisible();
   await expect(chip).toHaveAttribute(
@@ -992,7 +995,6 @@ for (const [name, answer] of [
     await expect(note).toHaveText("no danger level series");
     await expect(seriesRows(page)).toHaveCount(0);
     await expect(panel(page).locator("app-danger-series-axis, .danger-series-day")).toHaveCount(0);
-    expect(await panel(page).getAttribute("data-levels")).toBeNull();
     expect((await panel(page).boundingBox()).height).toBe(635);
     const box = await note.boundingBox();
     const matrixEnd = await panel(page).locator(".danger-level-panel").last().boundingBox();
@@ -1020,21 +1022,19 @@ test("a click on a step moves the dashboard to its date and reloads the sources 
   });
   const lastDate = { ...config, dateMax: "2026-04-05T00:00:00" };
   await openDashboard(page, "&view=danger", highAboveLowBelow, lastDate, seriesAnswer());
-  await expect(panel(page)).toHaveAttribute("data-current", "4");
+  await expectStepMarked(page, "current", 4, 2);
   await expect(stepCells(page, 2).first()).toHaveCSS("cursor", "pointer");
   await expect(stepCells(page, 4).first()).toHaveCSS("cursor", "pointer");
   await expect(stepCells(page, 5).first()).toHaveCSS("cursor", "default");
   await expect(panel(page).locator(".danger-series-cell.outside")).toHaveCount(2);
   await stepCells(page, 5).first().click();
-  await expect(panel(page)).toHaveAttribute("data-current", "4");
+  await expectStepMarked(page, "current", 4, 2);
   await stepCells(page, 2).last().click();
   await expect(panel(page)).toHaveAttribute("aria-label", "Danger level · Punstable · 03.04.2026 00:00");
-  await expect(panel(page)).toHaveAttribute("data-current", "2");
-  await expect(panel(page).locator(".danger-series-cell.current")).toHaveCount(2);
-  for (const cell of await stepCells(page, 2).all()) await expect(cell).toHaveClass(/current/);
+  await expectStepMarked(page, "current", 2, 2);
   expect((await copiedLink(page)).get("date")).toBe("2026-04-03T00:00:00");
   expect(requests.map((url) => url.searchParams.get("ts"))).toEqual(["2026-04-05_00-00-00", "2026-04-03_00-00-00"]);
   await stepCells(page, 4).first().click();
-  await expect(panel(page)).toHaveAttribute("data-current", "4");
+  await expectStepMarked(page, "current", 4, 2);
   expect((await copiedLink(page)).get("date")).toBe("2026-04-05T00:00:00");
 });

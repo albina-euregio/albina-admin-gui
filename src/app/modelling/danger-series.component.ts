@@ -105,7 +105,6 @@ export function separatedCells(steps: number, width: number): boolean {
         [class.hovered]="$index === hovered()"
         [class.outside]="outside()[$index]"
         [style.background-color]="color"
-        [attr.data-step]="$index"
         (mouseenter)="stepHovered.emit($index)"
         (click)="stepPicked.emit($index)"
       ></span>
