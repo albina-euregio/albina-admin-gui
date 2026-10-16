@@ -1,5 +1,6 @@
 import { formatDate } from "@angular/common";
 import { Injectable } from "@angular/core";
+import { escape } from "es-toolkit";
 import { castArray, get as _get } from "es-toolkit/compat";
 import { Marker as MlMarker } from "maplibre-gl";
 
@@ -15,6 +16,8 @@ const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.poor]: 10,
   [SnowpackStability.very_poor]: 20,
 };
+
+type BorderFields = Pick<FilterSelectionValue, "borderColor" | "borderWidth" | "borderDashArray">;
 
 /** Marker element carrying its tooltip HTML, read by the observations view on hover. */
 export interface ObsMarkerElement extends HTMLImageElement {
@@ -40,13 +43,23 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     weight: 1,
     labelColor: "#fff",
   } as FilterSelectionValue;
+  public paintOverride?: (observation: T) => FilterSelectionValue | undefined;
+  public tooltipNote?: (observation: T) => string | undefined;
+
+  /** The value an observation is painted with: the override's, else the highlight's or its classifying value's. */
+  paintOf(observation: T, isHighlighted = false): FilterSelectionValue | undefined {
+    return (
+      this.paintOverride?.(observation) ??
+      (isHighlighted ? this.highlighted : this.markerClassify?.findForObservation(observation))
+    );
+  }
 
   createMaplibreMarker(observation: T & { $sourceObject?: AwsomeSource }, isHighlighted = false): MlMarker | undefined {
     try {
-      const filterSelectionValue = isHighlighted
-        ? this.highlighted
-        : this.markerClassify?.findForObservation(observation);
-      const border = this.borderStyle(observation.$sourceObject, filterSelectionValue);
+      const filterSelectionValue = this.paintOf(observation, isHighlighted);
+      const border = this.paintOverride
+        ? this.borderStyle(filterSelectionValue, observation.$sourceObject)
+        : this.borderStyle(observation.$sourceObject, filterSelectionValue);
       // NB: per-zoom radius resizing (radiusByZoom) is not yet ported to MapLibre
       const icon = makeIcon(
         castArray(observation.aspect)[0],
@@ -68,12 +81,12 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     }
   }
 
-  /** A source's own border style wins over the classifying filter value's. */
-  private borderStyle(source: AwsomeSource | undefined, value: FilterSelectionValue | undefined) {
+  /** The border of a marker, the first style's fields winning: a source's over its class, an override's over its source. */
+  private borderStyle(first: BorderFields | undefined, second: BorderFields | undefined) {
     return {
-      color: source?.borderColor ?? value?.borderColor ?? "#000",
-      width: source?.borderWidth ?? value?.borderWidth ?? 2,
-      dashArray: source?.borderDashArray ?? value?.borderDashArray ?? "",
+      color: first?.borderColor ?? second?.borderColor ?? "#000",
+      width: first?.borderWidth ?? second?.borderWidth ?? 2,
+      dashArray: first?.borderDashArray ?? second?.borderDashArray ?? "",
     };
   }
 
@@ -105,7 +118,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     observation: T,
     isHighlighted = false,
   ): { fillColor: string; fillOpacity: number; color: string; opacity: number; weight: number } {
-    const fsv = isHighlighted ? this.highlighted : this.markerClassify?.findForObservation(observation);
+    const fsv = this.paintOf(observation, isHighlighted);
     return {
       fillColor: fsv?.color ?? "rgba(0, 0, 0, 0)",
       fillOpacity: fsv?.fillOpacity ?? 0,
@@ -116,6 +129,13 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   }
 
   private createTooltipText(observation: T & { $sourceObject?: AwsomeSource }): string {
+    const note = this.tooltipNote?.(observation);
+    const text = this.createSourceTooltipText(observation);
+    return note ? `${text}<div class="obs-tooltip-note">${escape(note)}</div>` : text;
+  }
+
+  /** The source's tooltip text, from its template or the default table. */
+  private createSourceTooltipText(observation: T & { $sourceObject?: AwsomeSource }): string {
     if (observation.$sourceObject?.tooltipTemplate) {
       return this.formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
     }
@@ -134,7 +154,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   }
 
   toMarkerColor(observation: T): string {
-    return this.markerClassify?.findForObservation(observation)?.color ?? "white";
+    return this.paintOf(observation)?.color ?? "white";
   }
 
   getLabel(observation: T) {

@@ -430,6 +430,75 @@
         }
       },
       "additionalProperties": false
+    },
+    "dangerLevel": {
+      "type": "object",
+      "properties": {
+        "frequencyBounds": {
+          "default": {
+            "few": 0,
+            "some": 0.04,
+            "many": 0.2
+          },
+          "description": "Shares of a band's read slopes from which a stability class counts as a few (above few), some (from some) and many (above many); the default is Techel et al. (2020b), derived for the Rutschblock class very poor",
+          "type": "object",
+          "properties": {
+            "few": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "some": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "many": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": ["few", "some", "many"],
+          "additionalProperties": false
+        },
+        "sizePercentile": {
+          "default": 90,
+          "description": "Percentile of the decisive class's size estimates taken as the largest avalanche size to be reckoned with (numpy's method lower)",
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        },
+        "minCount": {
+          "default": 1,
+          "description": "Fewest slopes a stability class needs to count as more than none or nearly none",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "minFeatures": {
+          "default": 20,
+          "description": "Fewest read slopes a band needs for a danger level",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sources": {
+          "description": "Names of the sources whose features are read; every active source when absent",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "snowDepthKey": {
+          "default": "snowpack.hs",
+          "description": "Key of the snow depth; a feature whose snow depth is 0 (no snow or no model output) is not read",
+          "type": "string"
+        }
+      },
+      "required": ["frequencyBounds", "sizePercentile", "minCount", "minFeatures", "snowDepthKey"],
+      "additionalProperties": false,
+      "description": "Offers the danger level view: a button beside the share button reads the selected features that have an aspect against the EAWS matrix, once per elevation band of the elevation filter's cuts, from the classifying stability index (else the default one) and the hazard chart's size, shows the matrix in place of the hazard chart and paints the map by band. The settings are uncalibrated defaults."
     }
   },
   "required": ["date", "dateStepSeconds", "filters", "sources", "mapCenter", "hazardChart"],

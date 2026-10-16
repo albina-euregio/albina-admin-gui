@@ -26,16 +26,19 @@ import type {
   XAXisOption,
   YAXisOption,
 } from "echarts/types/dist/shared";
+import { mapValues } from "es-toolkit";
+import { get } from "es-toolkit/compat";
 import { Feature, FeatureCollection, Geometry, MultiPolygon } from "geojson";
 import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
-import { firstValueFrom, forkJoin, type Subscription } from "rxjs";
-import { map, timeout } from "rxjs/operators";
+import { firstValueFrom, forkJoin, type Subscription, timer } from "rxjs";
+import { map, switchMap, timeout } from "rxjs/operators";
 import Split from "split.js";
 import * as z from "zod/v4";
 
 import { environment } from "../../environments/environment";
+import type { DangerRating } from "../enums/enums";
 import { LayerToggleControl } from "../map/controls/layer-toggle-control";
 import { RegionMapService } from "../map/region-map.service";
 import { addTerrainControl, setTerrainEnabled } from "../map/terrain";
@@ -45,15 +48,51 @@ import type { GenericObservation, ObservationSource } from "../observations/mode
 import { BAR_CHART_ROWS, ObservationChartComponent } from "../observations/observation-chart.component";
 import { ObservationFilterService } from "../observations/observation-filter.service";
 import { ObsMarkerElement, ObservationMarkerService } from "../observations/observation-marker.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionProperties } from "../providers/regions-service/regions.service";
+import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AwsomeConfigSchema } from "./awsome.config";
-import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
-import { resolveConfigDate } from "./dashboard-date";
+import type { AwsomeConfig, AwsomeSource as AwsomeSource0, DangerLevelConfig } from "./awsome.config";
+import {
+  awsomeText,
+  type DangerContext,
+  type DangerIndex,
+  DangerLevelColors,
+  DangerLevelComponent,
+  dangerRating,
+} from "./danger-level.component";
+import {
+  type DangerBand,
+  dangerBands,
+  dangerNote,
+  dangerPaint,
+  type DangerProbe,
+  type DangerSample,
+  levelColor,
+  levelStyle,
+  NOTE_WORDS,
+  planDanger,
+  sampleOf,
+} from "./danger-paint";
+import type { DangerSeries } from "./danger-series.component";
+import { resolveConfigDate, withinDates } from "./dashboard-date";
 import { dormantDatetags, sortDatetags } from "./dormant-datetags";
 import { DormantDatetagsMenuComponent } from "./dormant-datetags-menu.component";
-import { bandValues, cutParam, cutsFromParam, followBands, holdsAll, sliderStops, staysSplit } from "./elevation-cut";
-import { ElevationCutComponent } from "./elevation-cut.component";
+import { stabilityClasses } from "./eaws-reading";
+import {
+  bandEdges,
+  bandOf,
+  bandValues,
+  cutParam,
+  cutsFromParam,
+  followBands,
+  holdsAll,
+  isSplit,
+  sliderStops,
+  staysSplit,
+} from "./elevation-cut";
+import { type BandLevel, ElevationCutComponent } from "./elevation-cut.component";
 import {
   alignToClasses,
   classBounds,
@@ -91,6 +130,7 @@ const OUTER_BAND_COLOR = "#ddd";
 const COMPANION_COLOR = "#555";
 const COMPANION_LINE_TYPES: LineSeriesOption["lineStyle"]["type"][] = ["solid", "dotted", "dashed", [8, 4, 2, 4]];
 const DORMANT_READ_TIMEOUT_MS = 3000;
+const DANGER_SERIES_DEBOUNCE_MS = 150;
 
 const IndexSchema = z.object({
   depth: z.number().nullish().array(),
@@ -106,12 +146,46 @@ const TimeseriesSchema = z.object({
   timestamps: z.coerce.date().array(),
 });
 type Timeseries = z.infer<typeof TimeseriesSchema>;
+const ClassesSchema = z.object({
+  bounds: z.number().array(),
+  cuts: z.number().array(),
+  bands: z
+    .object({
+      count: z.number().array().array(),
+      size: z.number().nullable().array().array(),
+    })
+    .array(),
+});
+const DangerSeriesSchema = TimeseriesSchema.extend({
+  indexes: z.record(z.string(), IndexSchema.extend({ classes: ClassesSchema.optional() })),
+  applied: z.string().array().optional(),
+});
+
+interface DangerView {
+  readonly bands: readonly DangerBand[];
+  readonly index?: DangerIndex;
+  readonly context: DangerContext;
+  readonly legend: readonly DangerRating[];
+  readonly legendColors: readonly string[];
+}
+
+/** Whether a feature is drawn as a polygon rather than as a point marker. */
+function isPolygon(o: FeatureProperties): boolean {
+  return o.$geometry.type === "Polygon" || o.$geometry.type === "MultiPolygon";
+}
+
+/** Whether the danger level reads a source's features. */
+function readsSource(calibration: DangerLevelConfig, name: string): boolean {
+  return !calibration.sources || calibration.sources.includes(name);
+}
 
 @Component({
   selector: "app-awsome",
   standalone: true,
   imports: [
     CommonModule,
+    DangerLevelComponent,
+    DangerRatingIconComponent,
     DormantDatetagsMenuComponent,
     ElevationCutComponent,
     FormsModule,
@@ -124,7 +198,12 @@ type Timeseries = z.infer<typeof TimeseriesSchema>;
   ],
   templateUrl: "awsome.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [RegionMapService, ObservationFilterService, ObservationMarkerService],
+  providers: [
+    RegionMapService,
+    ObservationFilterService,
+    ObservationMarkerService,
+    { provide: ConstantsService, useClass: DangerLevelColors },
+  ],
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
   private route = inject(ActivatedRoute);
@@ -150,6 +229,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   elevationCuts: readonly number[] = [];
   bandPressed: boolean[] = [];
   bandHighlighted: boolean[] = [];
+  view: "hazard" | "danger" = "hazard";
+  danger?: DangerView;
+  cutLevels: readonly (BandLevel | undefined)[] = [];
   readonly barChartRows = BAR_CHART_ROWS;
   date = "";
   layout: "map" | "chart" | "details" = "map";
@@ -191,14 +273,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private timeseriesDateIndex = -1;
   private timeseries?: { url: string; data: Timeseries };
   private timeseries$loading?: { url: string; subscription: Subscription };
+  dangerSeries?: { url: string; series: DangerSeries | "none" };
+  private dangerSeries$loading?: { url: string; subscription: Subscription };
   loadingState: "loading" | "error" | undefined;
 
-  t(key: string) {
-    let t = this.translateService.instant(`awsome.${key}`);
-    if (typeof t === "string" && t.startsWith("awsome.")) {
-      t = t.slice("awsome.".length);
-    }
-    return t;
+  /** The dashboard text of a key, the key itself when it has none. */
+  t(key: string, params?: Record<string, unknown>): string {
+    return awsomeText(this.translateService, key, params);
   }
 
   async ngOnInit() {
@@ -353,6 +434,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (this.cutFilter && cut !== null) {
       this.elevationCuts = cutsFromParam(cut, this.cutStops, this.defaultCuts) ?? this.elevationCuts;
     }
+    if (this.config.dangerLevel && params.get("view") === "danger") this.view = "danger";
   }
 
   /** Link that reopens the dashboard with the current date, sources, regions, filters, layout and map view. */
@@ -376,8 +458,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (label !== (this.defaultLabel ?? "none")) params["label"] = label;
     if (this.cutFilter) {
       const cut = cutParam(this.cutStops, this.elevationCuts);
-      if (cut !== this.defaultCuts.join(",")) params["cut"] = cut;
+      if (cut !== this.defaultCuts.join(",") || this.view === "danger") params["cut"] = cut;
     }
+    if (this.view === "danger") params["view"] = "danger";
     if (this.layout !== "map") params["layout"] = this.layout;
     if (this.map) {
       const { lat, lng } = this.map.getCenter();
@@ -446,9 +529,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.removeImageOverlays();
     this.observations.length = 0;
     this.timeseries = undefined;
+    this.clearDangerLevel();
     this.clearMap();
     this.loadHazardChart();
     this.loadTimeseriesChart();
+    this.dangerSeries &&= { url: "", series: this.dangerSeries.series };
+    this.loadDangerSeries();
 
     this.loadingState = "loading";
     this.loadedSelectionQuery = selectionQuery(this.filterService.filterSelectionData);
@@ -665,11 +751,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.localObservations = this.observations.filter(
       (o) => selected.has(o) || (highlighting && this.filterService.isHighlighted(o)),
     );
+    this.readDangerLevel(selected);
 
     const polygonFeatures: Feature[] = [];
     this.localObservations.forEach((observation, index) => {
       const isHighlighted = this.filterService.isHighlighted(observation);
-      if (observation.$geometry.type === "Polygon" || observation.$geometry.type === "MultiPolygon") {
+      if (isPolygon(observation)) {
         polygonFeatures.push({
           type: "Feature",
           properties: { index, ...this.markerService.maplibrePolygonPaint(observation, isHighlighted) },
@@ -722,6 +809,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     } catch (e) {
       console.error("Failed to load timeseries chart", e);
     }
+    this.loadDangerSeries();
   }
 
   private loadHazardChart() {
@@ -867,6 +955,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private loadTimeseriesChart() {
+    if (this.view === "danger") return;
     const stabilityIndex = this.stabilityIndex;
     const url0 = this.config.timeseriesChart?.url;
     if (!stabilityIndex || !url0 || !this.loadedSources.length) {
@@ -904,6 +993,77 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         },
       }),
     };
+  }
+
+  /**
+   * Asks the API for the danger level series of the selection while the danger level view is on: the index chart's
+   * request with the reading index's classes, the cuts, the size percentile and the panel's compass population.
+   */
+  private loadDangerSeries() {
+    const calibration = this.config.dangerLevel;
+    if (this.view !== "danger" || !calibration) {
+      this.cancelDangerSeries();
+      return;
+    }
+    const index = this.placeholderIndex;
+    const bounds = index && classBounds(index);
+    const url0 = this.config.timeseriesChart?.url;
+    const sources = this.loadedSources.filter((s) => readsSource(calibration, s.name));
+    if (!url0 || !bounds || !stabilityClasses(bounds.length - 1) || !sources.length) {
+      this.cancelDangerSeries();
+      this.dangerSeries = { url: "", series: "none" };
+      return;
+    }
+    const request = this.setSearchParams(new URL(url0, this.baseURL), sources);
+    request.searchParams.set("stabilityIndex", index.type);
+    this.companionsOf(index).forEach((companion) => request.searchParams.append("stabilityIndex", companion.type));
+    request.searchParams.set(`classes.${index.type}`, bounds.slice(1, -1).join(","));
+    this.splitCuts.forEach((cut) => request.searchParams.append("cut", String(cut)));
+    request.searchParams.set("size_percentile", String(calibration.sizePercentile));
+    request.searchParams.set("population", "compass");
+    const url = request.toString();
+    if (this.dangerSeries?.url === url || this.dangerSeries$loading?.url === url) return;
+    this.cancelDangerSeries();
+    this.dangerSeries$loading = {
+      url,
+      subscription: timer(DANGER_SERIES_DEBOUNCE_MS)
+        .pipe(switchMap(() => this.fetchJSON(url)))
+        .subscribe({
+          next: (body) => {
+            this.dangerSeries$loading = undefined;
+            this.dangerSeries = { url, series: this.dangerSeriesOf(body, index.type) };
+          },
+          error: (err) => {
+            this.dangerSeries$loading = undefined;
+            this.dangerSeries = { url: "", series: "none" };
+            console.warn("Failed to load the danger level series", url, err);
+          },
+        }),
+    };
+  }
+
+  /** Stops the danger level series request in flight, if any. */
+  private cancelDangerSeries() {
+    this.dangerSeries$loading?.subscription.unsubscribe();
+    this.dangerSeries$loading = undefined;
+  }
+
+  /** The danger level series in an API answer, none when the answer carries no classes of the reading index. */
+  private dangerSeriesOf(body: unknown, index: string): DangerSeries | "none" {
+    const parsed = DangerSeriesSchema.safeParse(body);
+    if (!parsed.success) console.warn("Failed to parse the danger level series", parsed.error);
+    const classes = parsed.data?.indexes[index]?.classes;
+    if (!classes) return "none";
+    const { bounds, cuts, bands } = classes;
+    return { timestamps: parsed.data.timestamps, bounds, cuts, bands, applied: parsed.data.applied };
+  }
+
+  /** Moves the dashboard to a date picked in the danger level series and loads it as a date step does. */
+  async selectDate(date: string) {
+    const picked = date.slice(0, this.date.length);
+    if (picked === this.date || !withinDates(picked, this.config.dateMin, this.config.dateMax)) return;
+    this.date = picked;
+    await this.loadSources();
   }
 
   private renderTimeseries(
@@ -1250,6 +1410,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (highlighted) filter.highlighted = highlighted;
     if (selected || highlighted) {
       this.onFilterChange(filter);
+    } else if (this.view === "danger") {
+      this.applyLocalFilter();
     } else {
       this.updateCutBands();
     }
@@ -1275,6 +1437,129 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const bands = this.bandsOf(this.elevationCuts);
     this.bandPressed = bands.map((rows) => holdsAll(this.cutFilter.selected, rows));
     this.bandHighlighted = bands.map((rows) => holdsAll(this.cutFilter.highlighted, rows));
+  }
+
+  /** The cuts that split the elevations, ascending; none without the cut slider. */
+  private get splitCuts(): number[] {
+    return this.cutFilter ? this.elevationCuts.filter((cut) => isSplit(this.cutStops, cut)) : [];
+  }
+
+  /** Switches the right column between the hazard chart view and the danger level view. */
+  toggleDangerView() {
+    if (!this.config.dangerLevel) return;
+    this.view = this.view === "danger" ? "hazard" : "danger";
+    this.applyLocalFilter();
+  }
+
+  /** Clears the selection of a filter that conditions the danger level shares. */
+  clearDangerFilter(type: string) {
+    const filter = this.filterByType(type);
+    if (!filter) return;
+    filter.selected = new Set();
+    this.onFilterChange(filter);
+  }
+
+  /** Forgets the danger level readings with their paint and tooltip note. */
+  private clearDangerLevel() {
+    this.danger = undefined;
+    this.cutLevels = [];
+    this.markerService.paintOverride = undefined;
+    this.markerService.tooltipNote = undefined;
+  }
+
+  /** The level of each band of the slider while the danger level view is on, none for a band without a level. */
+  private levelsOnSlider(levels: readonly (number | undefined)[]): (BandLevel | undefined)[] {
+    if (this.view !== "danger" || !this.cutFilter) return [];
+    const cuts = this.splitCuts;
+    return bandEdges(this.cutStops, this.elevationCuts).map(([lower, upper]) => {
+      const level = upper > lower ? levels[bandOf(lower, cuts)] : undefined;
+      return level ? { level, ...levelStyle(level) } : undefined;
+    });
+  }
+
+  /** What the danger level asks of a feature: its location, aspect, elevation, snow depth, index value and size. */
+  private dangerProbe(
+    o: FeatureProperties,
+    key: string,
+    index: FilterSelectionData<FeatureProperties> | undefined,
+    sizeFilter: FilterSelectionData<FeatureProperties> | undefined,
+    calibration: DangerLevelConfig,
+  ): DangerProbe {
+    return {
+      key,
+      polygon: isPolygon(o),
+      aspect: o["aspect"],
+      elevation: o.elevation,
+      snowDepth: get(o, calibration.snowDepthKey),
+      value: index?.getValue(o),
+      size: sizeFilter?.getValue(o),
+      sourceRead: readsSource(calibration, o.$source),
+    };
+  }
+
+  /**
+   * Reads the selected features against the EAWS matrix once per elevation band while the danger level view is on,
+   * and paints the map by the bands' levels; the readings must exist before the map is painted.
+   */
+  private readDangerLevel(selected: ReadonlySet<FeatureProperties>) {
+    const calibration = this.config.dangerLevel;
+    if (this.view !== "danger" || !calibration) {
+      this.clearDangerLevel();
+      return;
+    }
+    const index = this.placeholderIndex;
+    const bounds = index && classBounds(index);
+    const sizeFilter = this.filterByType(this.config.hazardChart.xType);
+    const cuts = this.splitCuts;
+    const samples = new Map<FeatureProperties, DangerSample>();
+    for (const o of selected) {
+      const key = `${o.$source}\n${o.location ?? `#${samples.size}`}`;
+      samples.set(o, sampleOf(this.dangerProbe(o, key, index, sizeFilter, calibration), cuts));
+    }
+    const bands = dangerBands(samples.values(), cuts, bounds ?? [], calibration);
+    const pending = this.filterService.filterSelectionData.some((f) => this.isReloadPending(f));
+    const levels = bands.map(({ reading }) => (pending ? undefined : reading.levels?.[0]));
+    const plan = planDanger(samples, levels);
+    this.markerService.paintOverride = (o) => dangerPaint(plan, o, isPolygon(o));
+    const words = mapValues(NOTE_WORDS, (word) => this.t(word));
+    const names = bands.map(({ name }) => this.t(name.key, name.params));
+    this.markerService.tooltipNote = (o) => dangerNote(plan, o, names, words);
+    this.danger = {
+      bands,
+      index: index && {
+        label: index.label,
+        bounds,
+        colors: index.values.filter((v) => Array.isArray(v.numericRange)).map((v) => v.color),
+      },
+      context: this.dangerContext(index, sizeFilter, pending),
+      legend: levels.map(dangerRating),
+      legendColors: [...levels].reverse().map(levelColor),
+    };
+    this.cutLevels = this.levelsOnSlider(levels);
+  }
+
+  /** What the danger level panel shows beside its readings: the selected aspects and filters, a pending reload. */
+  private dangerContext(
+    index: FilterSelectionData<FeatureProperties> | undefined,
+    sizeFilter: FilterSelectionData<FeatureProperties> | undefined,
+    pending: boolean,
+  ): DangerContext {
+    const chosen = this.filterService.filterSelectionData.filter((f) => f.selected.size);
+    const named = ({ type, label }: FilterSelectionData<FeatureProperties>) => ({ type, label });
+    return {
+      aspects:
+        this.filterByType("aspect")
+          ?.getSelectedValues("selected")
+          .map((v) => v.value) ?? [],
+      conditioning: chosen
+        .filter((f) => f === index || f === sizeFilter || String(f.key).includes("$stabilityIndex"))
+        .map(named),
+      selected: [
+        ...(this.filterService.regions.size ? [{ type: "region", label: this.t("Region") }] : []),
+        ...chosen.map(named),
+      ],
+      pending,
+    };
   }
 
   chartMouseOut() {

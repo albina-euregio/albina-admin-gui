@@ -4,7 +4,7 @@
 }
 @for (thumb of thumbs(); track thumb.cutIndex) {
   @if (thumb.split) {
-    <div class="elevation-cut-line" [style.--k]="thumb.stop"></div>
+    <div class="elevation-cut-line" [class.solid]="solid()" [style.--k]="thumb.stop"></div>
   }
   <div
     class="elevation-cut-thumb"
@@ -47,5 +47,11 @@
     (pointerleave)="cancelPress()"
     (pointercancel)="cancelPress()"
     (click)="clickBand(band.index, $event)"
-  ></button>
+  >
+    @if (band.level; as level) {
+      <span class="elevation-cut-level" [class.white]="level.white" [style.background-color]="level.color">{{
+        level.level
+      }}</span>
+    }
+  </button>
 }

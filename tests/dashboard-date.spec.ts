@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { formatConfigDate, latestStep, resolveConfigDate } from "../src/app/modelling/dashboard-date";
+import { formatConfigDate, latestStep, resolveConfigDate, withinDates } from "../src/app/modelling/dashboard-date";
 
 const at = (hour: number, minute: number, second = 0) => new Date(2026, 9, 14, hour, minute, second);
 
@@ -28,4 +28,16 @@ test("only now and its offsets are resolved", () => {
   expect(resolveConfigDate("now", 10800, at(14, 30))).toBe("2026-10-14T12:00:00");
   expect(resolveConfigDate("2026-04-05T00:00:00", 10800, at(14, 30))).toBe("2026-04-05T00:00:00");
   expect(resolveConfigDate("now+1w", 10800, at(14, 30))).toBe("now+1w");
+});
+
+test("a date lies within the dashboard's dates on and between its bounds, a bound left out is open", () => {
+  const [first, last] = ["2026-04-01T00:00:00", "2026-04-05T00:00:00"];
+  expect(withinDates("2026-04-03T12:00:00", first, last)).toBe(true);
+  expect(withinDates(first, first, last)).toBe(true);
+  expect(withinDates(last, first, last)).toBe(true);
+  expect(withinDates("2026-03-31T21:00:00", first, last)).toBe(false);
+  expect(withinDates("2026-04-05T03:00:00", first, last)).toBe(false);
+  expect(withinDates("2020-01-01T00:00:00", undefined, last)).toBe(true);
+  expect(withinDates("2030-01-01T00:00:00", first)).toBe(true);
+  expect(withinDates("2030-01-01T00:00:00")).toBe(true);
 });

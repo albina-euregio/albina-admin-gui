@@ -232,3 +232,38 @@ export async function setFixedTime(page: Page, date: Date | string | number): Pr
 export function statusBadge(page: Page) {
   return page.locator("header").locator(".badge").first();
 }
+
+const ELEVATION_BOUNDS = [4000, 3200, 3000, 2800, 2600, 2400, 2200, 2000, 1800, 1600, 1400];
+
+export const elevationFilter = {
+  type: "elevation",
+  label: "Elevation",
+  key: "elevation",
+  chartType: "bar",
+  chartRichLabel: "label",
+  cuts: [2200],
+  values: ELEVATION_BOUNDS.slice(1).map((low, i) => ({
+    value: `${low}-${ELEVATION_BOUNDS[i]}`,
+    numericRange: [low, ELEVATION_BOUNDS[i]],
+    label: String(low / 100),
+    color: "#0481FF",
+  })),
+};
+
+/** Makes the page keep the text written to its clipboard as window.copiedLink. */
+export async function captureClipboard(page: Page) {
+  await page.addInitScript(() =>
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: async (text: string) => ((window as unknown as { copiedLink?: string }).copiedLink = text) },
+    }),
+  );
+}
+
+/** The query of the link the share button copies. */
+export async function copiedLink(page: Page): Promise<URLSearchParams> {
+  await page.evaluate(() => delete (window as unknown as { copiedLink?: string }).copiedLink);
+  await page.getByTitle("Copy a link to this view").click();
+  const link = await page.waitForFunction(() => (window as unknown as { copiedLink?: string }).copiedLink);
+  return new URLSearchParams(new URL(await link.jsonValue()).hash.split("?")[1]);
+}

@@ -23,6 +23,12 @@ export interface BandClick {
   event: MouseEvent;
 }
 
+export interface BandLevel {
+  readonly level: number;
+  readonly color: string;
+  readonly white: boolean;
+}
+
 @Component({
   selector: "app-elevation-cut",
   standalone: true,
@@ -44,6 +50,8 @@ export class ElevationCutComponent {
   readonly cuts = model.required<readonly number[]>();
   readonly pressed = input<readonly boolean[]>([]);
   readonly highlighted = input<readonly boolean[]>([]);
+  readonly levels = input<readonly (BandLevel | undefined)[]>([]);
+  readonly solid = input(false);
   readonly bandClick = output<BandClick>();
   readonly bandPress = output<number>();
 
@@ -79,6 +87,7 @@ export class ElevationCutComponent {
         bottom: stops.indexOf(lower),
         pressed: !!this.pressed()[index],
         highlighted: !!this.highlighted()[index],
+        level: this.levels()[index],
         ...this.bandLabel(lower, upper),
       }))
       .filter(({ top, bottom }) => bottom > top)

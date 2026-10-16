@@ -99,6 +99,50 @@ export const AwsomeFilterSchema = FilterSelectionSpecSchema.extend({
   for (const message of cutProblems(cuts ?? [], values)) ctx.addIssue({ code: "custom", path: ["cuts"], message });
 });
 
+export const DangerLevelSchema = z
+  .object({
+    frequencyBounds: z
+      .object({
+        few: z.number().min(0).max(1),
+        some: z.number().min(0).max(1),
+        many: z.number().min(0).max(1),
+      })
+      .refine(({ few, some, many }) => few < some && some < many, {
+        message: "frequency bounds must rise: few < some < many",
+      })
+      .default({ few: 0, some: 0.04, many: 0.2 })
+      .describe(
+        "Shares of a band's read slopes from which a stability class counts as a few (above few), some (from some) and many (above many); the default is Techel et al. (2020b), derived for the Rutschblock class very poor",
+      ),
+    sizePercentile: z
+      .number()
+      .gt(0)
+      .max(100)
+      .default(90)
+      .describe(
+        "Percentile of the decisive class's size estimates taken as the largest avalanche size to be reckoned with (numpy's method lower)",
+      ),
+    minCount: z
+      .number()
+      .int()
+      .min(1)
+      .default(1)
+      .describe("Fewest slopes a stability class needs to count as more than none or nearly none"),
+    minFeatures: z.number().int().min(1).default(20).describe("Fewest read slopes a band needs for a danger level"),
+    sources: z
+      .string()
+      .array()
+      .optional()
+      .describe("Names of the sources whose features are read; every active source when absent"),
+    snowDepthKey: z
+      .string()
+      .default("snowpack.hs")
+      .describe("Key of the snow depth; a feature whose snow depth is 0 (no snow or no model output) is not read"),
+  })
+  .describe(
+    "Offers the danger level view: a button beside the share button reads the selected features that have an aspect against the EAWS matrix, once per elevation band of the elevation filter's cuts, from the classifying stability index (else the default one) and the hazard chart's size, shows the matrix in place of the hazard chart and paints the map by band. The settings are uncalibrated defaults.",
+  );
+
 const ConfigDateSchema = z.union([z.string().regex(/^now(?:[+-]\d+[hd])?$/), z.iso.datetime({ local: true })]);
 
 export const AwsomeConfigSchema = z.object({
@@ -106,7 +150,9 @@ export const AwsomeConfigSchema = z.object({
   date: ConfigDateSchema.describe(
     "Initial date/time when opening the dashboard; `now` opens it at the latest time on the dateStepSeconds grid before the current time",
   ),
-  dateMax: ConfigDateSchema.optional().describe("Last date/time the dashboard offers; `now` or `now+48h` for a time relative to now"),
+  dateMax: ConfigDateSchema.optional().describe(
+    "Last date/time the dashboard offers; `now` or `now+48h` for a time relative to now",
+  ),
   dateMin: ConfigDateSchema.optional().describe("First date/time the dashboard offers; `now-14d` for a rolling window"),
   dateStepSeconds: z.number().describe("Seconds between two models runs"),
   filters: AwsomeFilterSchema.array(),
@@ -138,5 +184,7 @@ export const AwsomeConfigSchema = z.object({
       url: UrlSchema.optional(),
     })
     .optional(),
+  dangerLevel: DangerLevelSchema.optional(),
 });
 export type AwsomeConfig = z.infer<typeof AwsomeConfigSchema>;
+export type DangerLevelConfig = z.infer<typeof DangerLevelSchema>;

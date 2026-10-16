@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import {
   bandEdges,
+  bandOf,
   bandValues,
   cutParam,
   cutProblems,
@@ -95,6 +96,13 @@ test("two cuts make three bands", () => {
     ["2200-2400", "2000-2200", "1800-2000"],
     ["3200-4000", "3000-3200", "2800-3000", "2600-2800", "2400-2600"],
   ]);
+});
+
+test("an elevation on a cut belongs to the band above it, and two cuts make three bands", () => {
+  expect(bandOf(2200, [2200])).toBe(1);
+  expect(bandOf(2199.9, [2200])).toBe(0);
+  expect(bandOf(3500, [])).toBe(0);
+  expect([1700, 1800, 2399, 2400, 3600].map((elevation) => bandOf(elevation, [1800, 2400]))).toEqual([0, 1, 1, 2, 2]);
 });
 
 test("a link snaps its cuts, parks the thumbs for none and is ignored when malformed", () => {

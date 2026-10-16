@@ -3,7 +3,7 @@
     <div class="layout-left">
       <div class="layout-global">
         <div class="global-bar-scroll">
-          <div class="global-bar global-bar-left">
+          <div class="global-bar global-bar-left global-bar-scrolls">
             <div class="global-bar-item global-bar-item-source">
               <div class="dropdown">
                 <button
@@ -12,6 +12,7 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   data-bs-auto-close="outside"
+                  data-bs-popper-config='{"strategy": "fixed"}'
                 >
                   {{ "admin.observations.selectSources.placeholder" | translate }}
                   <div
@@ -112,6 +113,38 @@
               </button>
             </div>
 
+            @if (config.dangerLevel) {
+              <div class="global-bar-item">
+                <button
+                  type="button"
+                  class="btn btn-bare danger-level-toggle"
+                  [class.is-active]="view === 'danger'"
+                  [attr.aria-pressed]="view === 'danger'"
+                  title="Danger level"
+                  [attr.aria-label]="t('Danger level')"
+                  (click)="toggleDangerView()"
+                  ngxMousetrapKey="shift+d"
+                >
+                  <i class="ph ph-warning-diamond"></i>
+                  @if (view === "danger" && danger; as reading) {
+                    @if (reading.legend.length > 2) {
+                      <span class="danger-level-stack">
+                        @for (color of reading.legendColors; track $index) {
+                          <span [style.background-color]="color"></span>
+                        }
+                      </span>
+                    } @else {
+                      <app-danger-rating-icon
+                        [dangerRatingAbove]="reading.legend.at(-1)"
+                        [dangerRatingBelow]="reading.legend[0]"
+                        [hasElevationDependency]="reading.legend.length === 2"
+                      />
+                    }
+                  }
+                </button>
+              </div>
+            }
+
             <div class="global-bar-item">
               <button type="button" class="btn btn-bare" title="Copy a link to this view" (click)="copyShareLink()">
                 <i class="ph" [ngClass]="shareCopied ? 'ph-check' : 'ph-share-network'"></i>
@@ -162,6 +195,8 @@
                   [cuts]="elevationCuts"
                   [pressed]="bandPressed"
                   [highlighted]="bandHighlighted"
+                  [levels]="cutLevels"
+                  [solid]="view === 'danger'"
                   (cutsChange)="setElevationCuts($event)"
                   (bandClick)="onCutBand($event.band, $event.event)"
                   (bandPress)="onCutBandPress($event)"
@@ -223,7 +258,25 @@
             </div>
           }
 
-          @if (!selectedObservationDetails && hazardChart) {
+          @if (!selectedObservationDetails && view === "danger") {
+            <div class="chart-container danger-level-chart">
+              <app-danger-level
+                [bands]="danger?.bands ?? []"
+                [index]="danger?.index"
+                [calibration]="config.dangerLevel"
+                [date]="date"
+                [dateMin]="config.dateMin"
+                [dateMax]="config.dateMax"
+                [context]="danger?.context"
+                [series]="dangerSeries?.series"
+                (clearFilter)="clearDangerFilter($event)"
+                (reload)="loadSources()"
+                (dateSelected)="selectDate($event)"
+              />
+            </div>
+          }
+
+          @if (!selectedObservationDetails && view === "hazard" && hazardChart) {
             <div class="chart-container hazard-chart">
               <div
                 echarts
@@ -236,7 +289,7 @@
             </div>
           }
 
-          @if (!selectedObservationDetails && timeseriesChart) {
+          @if (!selectedObservationDetails && view === "hazard" && timeseriesChart) {
             <div class="chart-container timeseries-chart">
               <div echarts [options]="timeseriesChart" (chartInit)="timeseriesInstance = $event"></div>
             </div>

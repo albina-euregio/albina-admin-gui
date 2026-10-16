@@ -1,28 +1,14 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const bounds = [4000, 3200, 3000, 2800, 2600, 2400, 2200, 2000, 1800, 1600, 1400];
+import { captureClipboard, copiedLink, elevationFilter } from "./utils";
+
 const upperRows = ["3200-4000", "3000-3200", "2800-3000", "2600-2800", "2400-2600", "2200-2400"];
 const lowerRows = ["2000-2200", "1800-2000", "1600-1800", "1400-1600"];
 const elevations = [1300, 1500, 2100, 2300, 2600];
 const config = {
   date: "2026-04-05T00:00:00",
   dateStepSeconds: 86400,
-  filters: [
-    {
-      type: "elevation",
-      label: "Elevation",
-      key: "elevation",
-      chartType: "bar",
-      chartRichLabel: "label",
-      cuts: [2200],
-      values: bounds.slice(1).map((low, i) => ({
-        value: `${low}-${bounds[i]}`,
-        numericRange: [low, bounds[i]],
-        label: String(low / 100),
-        color: "#0481FF",
-      })),
-    },
-  ],
+  filters: [elevationFilter],
   sources: [{ name: "e2e", url: "e2e-cut/points.json", tooltipTemplate: "{elevation}" }],
 };
 const points = {
@@ -50,25 +36,12 @@ const shown = (page: Page) =>
 
 /** Opens the dashboard on the test config with the given link parameters and waits for every marker. */
 async function openDashboard(page: Page, params = "") {
-  await page.addInitScript(() =>
-    Object.defineProperty(navigator, "clipboard", {
-      configurable: true,
-      value: { writeText: async (text: string) => ((window as unknown as { copiedLink?: string }).copiedLink = text) },
-    }),
-  );
+  await captureClipboard(page);
   await page.route("**/e2e-cut/awsome.json", (route) => route.fulfill({ json: config }));
   await page.route(/\/e2e-cut\/points\.json/, (route) => route.fulfill({ json: points }));
   await page.goto(`#/modelling/awsome?config=e2e-cut/awsome.json${params}`);
   await expect(page.getByRole("slider").first()).toBeVisible({ timeout: 15000 });
   await expect.poll(() => shown(page), { timeout: 15000 }).toEqual(elevations);
-}
-
-/** The query of the link the share button copies. */
-async function copiedLink(page: Page): Promise<URLSearchParams> {
-  await page.evaluate(() => delete (window as unknown as { copiedLink?: string }).copiedLink);
-  await page.getByTitle("Copy a link to this view").click();
-  const link = await page.waitForFunction(() => (window as unknown as { copiedLink?: string }).copiedLink);
-  return new URLSearchParams(new URL(await link.jsonValue()).hash.split("?")[1]);
 }
 
 test("the thumb starts at the configured cut and ArrowUp moves it one row up, into the link, without a repaint", async ({

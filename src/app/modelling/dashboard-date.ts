@@ -16,6 +16,16 @@ export function formatConfigDate(date: Date): string {
   return `${day}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
+/** A dashboard date's day and month, dd.mm. */
+export function dayMonth(date: string): string {
+  return `${date.slice(8, 10)}.${date.slice(5, 7)}.`;
+}
+
+/** Whether a date lies within the dashboard's first and last date, either open when absent. */
+export function withinDates(date: string, min?: string, max?: string): boolean {
+  return !(min && date < min) && !(max && date > max);
+}
+
 /** A config date as the dashboard opens it: "now", "now+48h" or "now-14d" count from the latest grid time before now. */
 export function resolveConfigDate(value: string, stepSeconds: number, now = new Date()): string {
   const relative = RELATIVE_DATE.exec(value);

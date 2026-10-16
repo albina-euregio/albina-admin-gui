@@ -1,0 +1,154 @@
+<div
+  class="danger-level-top"
+  [class.single]="bandRows() === 1"
+  [class.dense]="bandRows() > 2"
+  [style.--bands]="bandRows()"
+>
+  @for (line of lines(); track line.band; let row = $index) {
+    <div class="danger-level-band" [class.no-level]="!!line.reason" [title]="line.title" [style.--row]="row + 2">
+      <span class="danger-level-badge" [class.white]="line.white" [style.background-color]="line.color">{{
+        line.level ?? "–"
+      }}</span>
+      <app-elevation-icon [bands]="bandRows()" [band]="line.band" [width]="55" [label]="line.name" />
+      <span class="danger-level-elevation">{{ line.elevation }}</span>
+      @if (line.reason) {
+        <span class="danger-level-reason">{{ line.reason }}</span>
+      } @else {
+        <div class="danger-level-distribution">
+          @for (share of line.shares; track $index) {
+            <span [style.width.%]="share.width" [style.background-color]="share.color" [title]="share.title"></span>
+          }
+        </div>
+      }
+    </div>
+  } @empty {
+    <span class="danger-level-reason danger-level-loading">{{ loading }}</span>
+  }
+  <app-aspect-rose
+    class="danger-level-rose"
+    [aspects]="aspects()"
+    [size]="87"
+    [label]="aspectsTitle()"
+    [title]="aspectsTitle()"
+  />
+  @if (seriesView(); as view) {
+    <div
+      #strip
+      class="danger-level-strip"
+      role="group"
+      [attr.aria-label]="seriesLabel"
+      (mouseleave)="hovered.set(undefined)"
+    >
+      <app-danger-series-axis [dates]="view.dates" [current]="view.current" [width]="stripBox()?.width ?? 0" />
+      @for (row of view.rows; track row.band) {
+        <app-danger-series
+          [levels]="row.levels"
+          [current]="view.current"
+          [hovered]="hovered()"
+          [outside]="view.outside"
+          [separated]="separated()"
+          (stepHovered)="hovered.set($event)"
+          (stepPicked)="pickStep($event)"
+        />
+      }
+    </div>
+  } @else if (seriesNote(); as note) {
+    <span class="danger-level-series-note">{{ note }}</span>
+  }
+</div>
+
+@if (tip(); as tooltip) {
+  <div class="danger-level-tip" role="tooltip" [style.--x.px]="tooltip.x" [style.top.px]="tooltip.y">
+    @for (line of tooltip.lines; track $index) {
+      <div>{{ line }}</div>
+    }
+  </div>
+}
+
+@if (chips().length) {
+  <div class="danger-level-chips">
+    @for (chip of chips(); track $index) {
+      <span class="danger-level-chip" [title]="chip.title"
+        >{{ chip.text }}
+        @if (chip.clear; as clear) {
+          <button
+            type="button"
+            [title]="clear.title"
+            [attr.aria-label]="clear.title"
+            (click)="clearFilter.emit(clear.type)"
+          >
+            <i class="ph ph-x"></i>
+          </button>
+        }
+        @if (chip.reload; as reloadTitle) {
+          <button type="button" [title]="reloadTitle" [attr.aria-label]="reloadTitle" (click)="reload.emit()">
+            <i class="ph ph-arrows-clockwise"></i>
+          </button>
+        }
+      </span>
+    }
+  </div>
+}
+
+<div class="danger-level-matrix" [class.dense]="bandRows() > 2">
+  <div class="danger-level-rows">
+    <span></span>
+    @for (label of rowLabels; track $index) {
+      <span [class.none]="$last">{{ label }}</span>
+    }
+    <span></span>
+  </div>
+  @for (panel of panels(); track panel.stability) {
+    <div class="danger-level-panel">
+      <div class="danger-level-panel-title" [title]="panel.title">{{ panel.title }}</div>
+      @for (cell of panel.cells; track cell.key) {
+        <div
+          class="danger-level-cell"
+          [class.marked]="cell.marks.length"
+          [class.white]="cell.white"
+          [style.background-color]="cell.color"
+          [title]="cell.title"
+        >
+          {{ cell.level }}
+          @if (cell.alt) {
+            <span class="danger-level-alt">({{ cell.alt }})</span>
+          }
+          @if (cell.marks.length) {
+            <span class="danger-level-marks">
+              @for (mark of cell.marks; track mark.band) {
+                <span class="danger-level-mark">
+                  <app-elevation-icon [bands]="bandRows()" [band]="mark.band" [width]="18" [label]="mark.label" />
+                </span>
+              }
+            </span>
+          }
+        </div>
+      }
+      @if (panel.walk; as walk) {
+        <div
+          class="danger-level-walk"
+          [class.low]="walk.low"
+          [class.passed]="walk.passed.length"
+          [style.background-color]="walk.color"
+        >
+          {{ walk.text }}
+          @if (walk.passed.length) {
+            <span class="danger-level-walk-marks">
+              @for (mark of walk.passed; track mark.band) {
+                <span class="danger-level-mark">
+                  <app-elevation-icon [bands]="bandRows()" [band]="mark.band" [width]="18" [label]="mark.label" />
+                </span>
+              }
+            </span>
+          }
+        </div>
+      }
+      <div class="danger-level-sizes">
+        @for (size of sizes; track size) {
+          <span>{{ size }}</span>
+        }
+      </div>
+    </div>
+  }
+  <div class="danger-level-caption">{{ sizeCaption }}</div>
+</div>

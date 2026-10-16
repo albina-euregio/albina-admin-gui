@@ -106,6 +106,11 @@ export function bandEdges(stops: readonly number[], cuts: readonly number[]): [n
   return edges.slice(1).map((upper, i) => [edges[i], upper]);
 }
 
+/** The band of an elevation among ascending cuts, the lowest band 0; an elevation on a cut belongs to the band above. */
+export function bandOf(elevation: number, cuts: readonly number[]): number {
+  return cuts.filter((cut) => elevation >= cut).length;
+}
+
 /** The values of the rows wholly inside each band, lowest band first. */
 export function bandValues(values: Rows, stops: readonly number[], cuts: readonly number[]): string[][] {
   return bandEdges(stops, cuts).map(([lower, upper]) =>
