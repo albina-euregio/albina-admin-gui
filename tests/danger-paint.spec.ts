@@ -197,7 +197,7 @@ test("the bands are named from the lowest up, as translation keys whose English 
 });
 
 test("dangerBands reads the samples read in each band and counts every sample with a band as selected", () => {
-  const calibration = DangerLevelSchema.parse({ minFeatures: 1 });
+  const calibration = DangerLevelSchema.parse({ minFeatures: 1, frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
   const punstable = [1, 0.85, 0.78, 0.7, 0];
   const samples = [
     sampleOf(probe(), cuts),

@@ -64,7 +64,7 @@ const config = {
   filters,
   sources: [{ name: "e2e", url: "e2e-danger/points.json", tooltipTemplate: "{location}" }],
   timeseriesChart: { url: "e2e-danger/api/timeseries" },
-  dangerLevel: { minFeatures: 5 },
+  dangerLevel: { minFeatures: 5, frequencyBounds: { few: 0, some: 0.04, many: 0.2 } },
 };
 const timeseries = {
   timestamps: ["2026-04-04T00:00:00", "2026-04-05T00:00:00"],
@@ -330,6 +330,15 @@ test("a band reading 4 above and 1 below colours the legend, the markers, the ba
   await expect(levels.nth(0)).toHaveClass(/white/);
   await expect(levels.nth(1)).not.toHaveClass(/white/);
   await expect(page.locator("app-elevation-cut .elevation-cut-line")).toHaveClass(/solid/);
+});
+
+test("the band tooltip names the frequency bounds the dashboard states", async ({ page }) => {
+  const dangerLevel = { minFeatures: 5, frequencyBounds: { few: 0.05, some: 0.15, many: 0.4 } };
+  await openDashboard(page, "&view=danger", highAboveLowBelow, { ...config, dangerLevel });
+  await expect(bandLines(page).nth(0)).toHaveAttribute(
+    "title",
+    /^≥ 2200 m · 3 .*\nvery poor · a few · size 4\n10\.0 % very poor of 10 slopes \(a few above 5 %, some from 15 %\) · p90 size 4\.20$/,
+  );
 });
 
 test("the marker tooltips say why a flat slope is not read", async ({ page }) => {

@@ -17,7 +17,7 @@ import {
 } from "../src/app/modelling/eaws-reading";
 import golden from "./data/eaws-read-matrix.json";
 
-const calibration = DangerLevelSchema.parse({});
+const calibration = DangerLevelSchema.parse({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
 const nivix = { ...calibration, minFeatures: 1 };
 const punstable = [1, 0.85, 0.78, 0.7, 0];
 const sk38 = [0, 0.5, 0.95, 1.05, 1.5];
@@ -69,6 +69,17 @@ test("the frequency follows Techel's bounds: none at 0, a few above it, some fro
   expect(frequencyClass(200, 1000, calibration)).toBe("some");
   expect(frequencyClass(2001, 10000, calibration)).toBe("many");
   expect(frequencyClass(0, 0, calibration)).toBe("none");
+});
+
+test("a class is none up to few, a few above it, some from some, many above many", () => {
+  const preset = DangerLevelSchema.parse({ frequencyBounds: { few: 0.05, some: 0.15, many: 0.4 } });
+  expect(frequencyClass(50, 1000, preset)).toBe("none");
+  expect(frequencyClass(51, 1000, preset)).toBe("a few");
+  expect(frequencyClass(149, 1000, preset)).toBe("a few");
+  expect(frequencyClass(150, 1000, preset)).toBe("some");
+  expect(frequencyClass(400, 1000, preset)).toBe("some");
+  expect(frequencyClass(401, 1000, preset)).toBe("many");
+  expect(frequencyClass(0, 0, preset)).toBe("none");
 });
 
 test("minCount makes a rare class none, minFeatures refuses a band with too few slopes", () => {

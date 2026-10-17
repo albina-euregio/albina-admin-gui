@@ -110,10 +110,7 @@ export const DangerLevelSchema = z
       .refine(({ few, some, many }) => few < some && some < many, {
         message: "frequency bounds must rise: few < some < many",
       })
-      .default({ few: 0, some: 0.04, many: 0.2 })
-      .describe(
-        "Shares of a band's read slopes from which a stability class counts as a few (above few), some (from some) and many (above many); the default is Techel et al. (2020b), derived for the Rutschblock class very poor",
-      ),
+      .describe("Shares of a band's read slopes from which a stability class counts as a few (above few), some (from some) and many (above many), as numbers: the publisher writes them out from its named presets"),
     sizePercentile: z
       .number()
       .gt(0)

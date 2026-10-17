@@ -128,7 +128,7 @@
   "dateStepSeconds": 10800,
   "hazardChart": { "xType": "size_estimate", "xAxisLabels": [0, 18, 35, 70, 150, 300] },
   "timeseriesChart": { "url": "api/timeseries?days_before=14&days_after=3" },
-  "dangerLevel": {},
+  "dangerLevel": { "frequencyBounds": { "few": 0.05, "some": 0.15, "many": 0.4 } },
   "dateMin": "2025-10-01T00:00:00",
   "dateMax": "2026-04-05T00:00:00",
   "date": "2026-04-05T00:00:00",
