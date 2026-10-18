@@ -57,6 +57,8 @@ const STEP_REASONS: Readonly<Record<NoReading, string>> = {
   nothing: "nothing read",
   "no size": "the decisive class carries no size",
 };
+const MEDIAN = 50;
+const EMPHASIS = "\uE000";
 
 export interface DangerIndex {
   readonly label: string;
@@ -81,6 +83,12 @@ interface Chip {
 interface BandMark {
   readonly band: number;
   readonly label: string;
+}
+
+interface InfoLine {
+  readonly before: string;
+  readonly strong?: string;
+  readonly after?: string;
 }
 
 interface SeriesView {
@@ -125,11 +133,14 @@ export class DangerLevelColors extends ConstantsService {
     class: "danger-level",
     role: "region",
     "[attr.aria-label]": "title()",
+    "(document:click)": "closeInfoOutside($event)",
+    "(document:keydown.escape)": "infoOpen.set(false)",
   },
 })
 export class DangerLevelComponent {
   private translate = inject(TranslateService);
   private strip = viewChild<ElementRef<HTMLElement>>("strip");
+  private info = viewChild<ElementRef<HTMLElement>>("info");
 
   readonly bands = input.required<readonly DangerBand[]>();
   readonly cuts = input<readonly number[]>([]);
@@ -149,6 +160,8 @@ export class DangerLevelComponent {
   readonly sizeCaption: string = this.translate.instant("matrix.label.avalancheSize");
   readonly seriesLabel = this.t("danger level series");
   readonly loading = this.t("loading");
+  readonly infoTitle = this.t("How the danger level is derived");
+  readonly infoOpen = signal(false);
   readonly title = computed(() =>
     [this.t("Danger level"), this.index()?.label, this.dateText(this.date())].filter(Boolean).join(" · "),
   );
@@ -159,6 +172,7 @@ export class DangerLevelComponent {
       stabilityClasses((this.index()?.bounds?.length ?? 5) - 1) ?? stabilityClasses(4),
   );
   readonly innerBounds = computed(() => this.index()?.bounds?.slice(1, -1));
+  readonly infoLines = computed(() => this.infoOf());
   readonly lines = computed(() =>
     this.bands()
       .map((band) => this.lineOf(band))
@@ -217,6 +231,16 @@ export class DangerLevelComponent {
         this.hovered.set(undefined);
       });
     });
+  }
+
+  /** Opens the explanation of the view, or closes it when it is open. */
+  toggleInfo() {
+    this.infoOpen.update((open) => !open);
+  }
+
+  /** Closes the explanation on a click outside the marker and its text. */
+  closeInfoOutside(event: Event) {
+    if (this.infoOpen() && !this.info()?.nativeElement.contains(event.target as Node)) this.infoOpen.set(false);
   }
 
   /** Moves the dashboard to the date of a step picked in the series. */
@@ -360,6 +384,27 @@ export class DangerLevelComponent {
       }),
       sized,
     ].join(" · ");
+  }
+
+  /** How the view derives a band's stability class, frequency class and size, in three general sentences. */
+  private infoOf(): InfoLine[] {
+    const { sizePercentile } = this.dangerLevel();
+    const words = mapValues(Frequency, (frequency) => this.frequencyText(frequency));
+    const statistic =
+      sizePercentile === MEDIAN
+        ? this.t("median of the decisive class's size estimates")
+        : this.t("p{{percentile}} of the decisive class's size estimates", { percentile: sizePercentile });
+    const [before, after] = this.t("The avalanche size is the {{statistic}}.", { statistic: EMPHASIS }).split(EMPHASIS);
+    return [
+      { before: this.t("Each read slope's stability class comes from the classifying stability index.") },
+      {
+        before: this.t(
+          "The decisive class is the most unstable class whose share of the band's read slopes is above the {{few}} bound; without one the band is good throughout and reads 1. Its frequency class, {{none}}, {{few}}, {{some}} or {{many}}, follows the configured bounds.",
+          words,
+        ),
+      },
+      { before, strong: statistic, after },
+    ];
   }
 
   /** One matrix cell: its levels, and the bands whose reading lands on it. */

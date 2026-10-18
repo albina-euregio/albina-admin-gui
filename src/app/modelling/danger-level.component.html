@@ -4,6 +4,27 @@
   [class.dense]="bandRows() > 2"
   [style.--bands]="bandRows()"
 >
+  <div #info class="danger-level-info">
+    <button
+      type="button"
+      class="danger-level-info-toggle"
+      [class.open]="infoOpen()"
+      [title]="infoTitle"
+      [attr.aria-label]="infoTitle"
+      [attr.aria-expanded]="infoOpen()"
+      aria-controls="danger-level-info-text"
+      (click)="toggleInfo()"
+    >
+      <i class="ph ph-info"></i>
+    </button>
+    @if (infoOpen()) {
+      <ol id="danger-level-info-text" class="danger-level-info-text" [attr.aria-label]="infoTitle">
+        @for (line of infoLines(); track $index) {
+          <li>{{ line.before }}@if (line.strong) {<strong>{{ line.strong }}</strong>}{{ line.after }}</li>
+        }
+      </ol>
+    }
+  </div>
   @for (line of lines(); track line.band; let row = $index) {
     <div class="danger-level-band" [class.no-level]="!!line.reason" [title]="line.title" [style.--row]="row + 2">
       <span class="danger-level-badge" [class.white]="line.white" [style.background-color]="line.color">{{

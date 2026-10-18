@@ -223,6 +223,16 @@ const toggle = (page: Page) => page.locator("button.danger-level-toggle");
 const panel = (page: Page) => page.locator("app-danger-level");
 /** The band lines of the panel, highest band first. */
 const bandLines = (page: Page) => panel(page).locator(".danger-level-band");
+/** The info marker in the panel's top-left corner. */
+const infoToggle = (page: Page) => panel(page).locator("button.danger-level-info-toggle");
+/** The explanation the info marker opens, one item per step of the reading. */
+const infoText = (page: Page) => panel(page).locator(".danger-level-info-text");
+/** The three sentences of the explanation, the size read as the given statistic of the decisive class. */
+const explanation = (statistic: string) => [
+  "Each read slope's stability class comes from the classifying stability index.",
+  "The decisive class is the most unstable class whose share of the band's read slopes is above the few bound; without one the band is good throughout and reads 1. Its frequency class, none, few, some or many, follows the configured bounds.",
+  `The avalanche size is the ${statistic} of the decisive class's size estimates.`,
+];
 /** The chip row of the panel: the chips that offer an action and the warnings on the series. */
 const chips = (page: Page) => panel(page).locator(".danger-level-chips");
 /** The y and height of the filled band of each elevation icon inside a locator, as "y+height". */
@@ -327,6 +337,82 @@ test("view=danger shows the panel in its own slot, without the hazard and the ti
   await expect(page.locator(".timeseries-chart")).toHaveCount(0);
   await expect(panel(page)).toHaveAttribute("aria-label", "Danger level · Punstable · 05.04.2026 00:00");
 });
+
+for (const [size, params] of [
+  ["2200x1200", ""],
+  ["600x900", "&layout=details"],
+] as const) {
+  test(`at ${size} the info marker sits in the panel's top-left corner, clear of the bands, the series and the matrix`, async ({
+    page,
+  }) => {
+    const [width, height] = size.split("x").map(Number);
+    await page.setViewportSize({ width, height });
+    await openDashboard(page, `&view=danger${params}`, highAboveLowBelow, config, seriesAnswer());
+    await expect(seriesRows(page)).toHaveCount(2);
+    const [view, marker] = [await panel(page).boundingBox(), await infoToggle(page).boundingBox()];
+    expect(marker.x - view.x).toBeLessThanOrEqual(12);
+    expect(marker.y - view.y).toBeLessThanOrEqual(12);
+    expect(Math.max(marker.width, marker.height)).toBeLessThanOrEqual(24);
+    for (const selector of [
+      ".danger-level-badge",
+      ".danger-level-rose",
+      "app-danger-series-axis",
+      "app-danger-series",
+      ".danger-level-matrix",
+    ]) {
+      for (const other of await panel(page).locator(selector).all()) {
+        const box = await other.boundingBox();
+        const apart =
+          marker.x + marker.width <= box.x ||
+          box.x + box.width <= marker.x ||
+          marker.y + marker.height <= box.y ||
+          box.y + box.height <= marker.y;
+        expect(apart, selector).toBe(true);
+      }
+    }
+    await expect(infoToggle(page)).toHaveAttribute("title", "How the danger level is derived");
+    await expect(infoToggle(page)).toHaveAttribute("aria-expanded", "false");
+    await expect(infoText(page)).toHaveCount(0);
+    expect(await fitsWithoutScrolling(panel(page))).toBe(true);
+  });
+}
+
+test("the info marker opens the explanation, and a second click, a click outside or escape closes it", async ({
+  page,
+}) => {
+  await openDashboard(page, "&view=danger");
+  await infoToggle(page).click();
+  await expect(infoText(page)).toBeVisible();
+  await expect(infoToggle(page)).toHaveAttribute("aria-expanded", "true");
+  await infoText(page).click();
+  await expect(infoText(page)).toBeVisible();
+  await infoToggle(page).click();
+  await expect(infoText(page)).toHaveCount(0);
+  await infoToggle(page).click();
+  await expect(infoText(page)).toBeVisible();
+  await panel(page).locator(".danger-level-caption").click();
+  await expect(infoText(page)).toHaveCount(0);
+  await infoToggle(page).click();
+  await page.keyboard.press("Escape");
+  await expect(infoText(page)).toHaveCount(0);
+});
+
+for (const [percentile, statistic] of [
+  [90, "p90"],
+  [50, "median"],
+] as const) {
+  test(`with sizePercentile ${percentile} the explanation reads in three general sentences, the ${statistic} of the decisive class in bold`, async ({
+    page,
+  }) => {
+    const dashboard = { ...config, dangerLevel: { ...config.dangerLevel, sizePercentile: percentile } };
+    await openDashboard(page, "&view=danger", highAboveLowBelow, dashboard);
+    await infoToggle(page).click();
+    await expect(infoText(page).locator("li")).toHaveText(explanation(statistic));
+    await expect(infoText(page).locator("strong")).toHaveText(`${statistic} of the decisive class's size estimates`);
+    await expect(infoText(page).locator("strong")).toHaveCSS("font-weight", "700");
+    await expect(infoText(page).locator("li").first()).toHaveCSS("font-weight", "400");
+  });
+}
 
 test("a band reading 4 above and 1 below colours the legend, the markers, the band lines and the slider", async ({
   page,

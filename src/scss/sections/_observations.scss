@@ -766,6 +766,53 @@ $danger-level-cell: 63px;
   }
 }
 
+.danger-level-info {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  line-height: 0;
+}
+
+.danger-level-info-toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #839194;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+  &:hover,
+  &.open {
+    color: #1b2430;
+  }
+}
+
+.danger-level-info-text {
+  position: absolute;
+  z-index: 11;
+  top: 34px;
+  left: 9px;
+  width: min(640px, calc(100% - 18px));
+  max-height: calc(100% - 43px);
+  margin: 0;
+  padding: 8px 12px 8px 30px;
+  overflow-y: auto;
+  border: 1px solid #c5ccd3;
+  border-radius: 3px;
+  background-color: #fff;
+  box-shadow: 0 2px 7px rgba(27, 36, 48, 0.12);
+  color: #1b2430;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19px;
+  li + li {
+    margin-top: 4px;
+  }
+  strong {
+    font-weight: 700;
+  }
+}
+
 .danger-level-chips {
   display: flex;
   flex-wrap: wrap;
