@@ -171,6 +171,7 @@ export class DangerLevelComponent {
   readonly classes = computed(
     (): readonly Stability[] => stabilityClasses((this.index()?.bounds?.length ?? 5) - 1) ?? stabilityClasses(4),
   );
+  readonly innerBounds = computed(() => this.index()?.bounds?.slice(1, -1));
   readonly lines = computed(() =>
     this.bands()
       .map((band) => this.lineOf(band))
@@ -410,7 +411,11 @@ export class DangerLevelComponent {
   private seriesViewOf(series: DangerSeries | "none" | undefined): SeriesView | undefined {
     if (!hasRows(series)) return undefined;
     const bands = this.bands();
-    if (series.bands.length !== bands.length || !isEqual(series.cuts, this.cuts())) return undefined;
+    const readsLikeBands =
+      series.bands.length === bands.length &&
+      isEqual(series.cuts, this.cuts()) &&
+      isEqual(series.bounds, this.innerBounds());
+    if (!readsLikeBands) return undefined;
     const calibration = this.calibration();
     const readings = series.bands.map((band) => readSteps(band.count, band.size, calibration));
     const labels = bands.map((band) => this.nameOf(band));
@@ -456,8 +461,7 @@ export class DangerLevelComponent {
 
   /** The bands whose series level at the current step differs from the panel's, when both read the same bands. */
   private differingBands(view: SeriesView): string[] {
-    const inner = this.index()?.bounds?.slice(1, -1);
-    if (view.current < 0 || this.pending() || !isEqual(view.series.bounds, inner)) return [];
+    if (view.current < 0 || this.pending()) return [];
     return this.bands().flatMap((band) => {
       const series = view.readings[band.band][view.current].levels?.[0];
       const panel = band.reading.levels?.[0];

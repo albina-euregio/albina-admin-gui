@@ -58,6 +58,21 @@ const filters = [
     values: datetags.map((value) => ({ value, label: value, color: "#0078ff" })),
   },
 ];
+const sk38 = {
+  type: "sk38_ccl",
+  label: "SK38",
+  key: "snowpack.sk38_ccl.value",
+  chartType: "bar",
+  chartRichLabel: "label",
+  stabilityIndex: "dry",
+  chartAxisRange: [0, 1.5],
+  values: [
+    { value: "<0.5", numericRange: [0, 0.5], color: "#d7191c", label: "<0.5" },
+    { value: "<0.95", numericRange: [0.5, 0.95], color: "#fdae61", label: "<0.95" },
+    { value: "<1.05", numericRange: [0.95, 1.05], color: "#ffffbf", label: "<1.05" },
+    { value: ">=1.05", numericRange: [1.05, 1.5], color: "#a6d96a", label: ">=1.05" },
+  ],
+};
 const config = {
   date: "2026-04-05T00:00:00",
   dateStepSeconds: 86400,
@@ -126,6 +141,26 @@ const seriesAnswer = (cuts: readonly number[] = [2200], upper = upperCounts, siz
     population: "compass",
   };
 };
+/** The series answer for another reading index with its own inner class bounds, the upper band given. */
+function indexAnswer(type: string, bounds: number[], upper = upperCounts, sizes = upperSizes) {
+  const { indexes, ...answer } = seriesAnswer([2200], upper, sizes);
+  return {
+    ...answer,
+    indexes: { [type]: { ...indexes.Punstable, classes: { ...indexes.Punstable.classes, bounds } } },
+  };
+}
+/** Whether a request asks for the danger level series read with an index. */
+const seriesRequestOf = (url: URL, index: string) =>
+  url.pathname.endsWith("/e2e-danger/api/timeseries") && url.searchParams.get(`classes.${index}`) !== null;
+/** A gate that holds what waits on it until it is opened. */
+function gate() {
+  let open!: () => void;
+  const opened = new Promise<void>((resolve) => (open = resolve));
+  return { opened, open };
+}
+/** Waits until the page has drawn two more frames. */
+const nextFrames = (page: Page) =>
+  page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 /** The index statistics of a timeseries answer, flat over the steps. */
 function mapIndex(steps: number) {
   const flat = Array.from({ length: steps }, () => 0.5);
@@ -739,21 +774,6 @@ test("on a 390 px phone the global bar scrolls, so the danger level and share bu
 test("the series asks the index chart's request for the reading index's classes, the cuts, p90 and the compass population", async ({
   page,
 }) => {
-  const sk38 = {
-    type: "sk38_ccl",
-    label: "SK38",
-    key: "snowpack.sk38_ccl.value",
-    chartType: "bar",
-    chartRichLabel: "label",
-    stabilityIndex: "dry",
-    chartAxisRange: [0, 1.5],
-    values: [
-      { value: "<0.5", numericRange: [0, 0.5], color: "#d7191c", label: "<0.5" },
-      { value: "<0.95", numericRange: [0.5, 0.95], color: "#fdae61", label: "<0.95" },
-      { value: "<1.05", numericRange: [0.95, 1.05], color: "#ffffbf", label: "<1.05" },
-      { value: ">=1.05", numericRange: [1.05, 1.5], color: "#a6d96a", label: ">=1.05" },
-    ],
-  };
   const requests: URL[] = [];
   page.on("request", (request) => {
     if (request.url().includes("/e2e-danger/api/timeseries")) requests.push(new URL(request.url()));
@@ -967,6 +987,110 @@ test("a series cut otherwise than the bands draws no rows and no note until the 
     ]),
   );
 });
+
+test("a series read with other class bounds than the panel's index draws no rows and no note", async ({ page }) => {
+  const answer = seriesAnswer();
+  answer.indexes.Punstable.classes.bounds = [0.9, 0.8, 0.7];
+  const answered = page.waitForResponse((response) => seriesRequestOf(new URL(response.url()), "Punstable"));
+  await openDashboard(page, "&view=danger", highAboveLowBelow, config, answer);
+  await (await answered).finished();
+  await nextFrames(page);
+  await expect(bandLines(page)).toHaveCount(2);
+  await expect(panel(page).locator(".danger-level-badge")).toHaveText(["4", "1"]);
+  await expect(seriesRows(page)).toHaveCount(0);
+  await expect(panel(page).locator(".danger-level-series-note")).toHaveCount(0);
+});
+
+test("another classify brush empties the strip until its index's series lands, a date step keeps the strip", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  let held = gate();
+  const dashboard = { ...config, filters: [...filters, sk38] };
+  await openDashboard(page, "&view=danger", highAboveLowBelow, dashboard, seriesAnswer());
+  await page.route(
+    (url) => seriesRequestOf(url, "sk38_ccl"),
+    async (route) => {
+      await held.opened;
+      await route.fulfill({ json: indexAnswer("sk38_ccl", [0.5, 0.95, 1.05], lowerCounts, lowerSizes) });
+    },
+  );
+  await expectSeriesLevels(
+    page,
+    expectedLevels([
+      [upperCounts, upperSizes],
+      [lowerCounts, lowerSizes],
+    ]),
+  );
+
+  const asked = page.waitForRequest((request) => seriesRequestOf(new URL(request.url()), "sk38_ccl"));
+  await page.locator("app-observation-chart", { hasText: "SK38" }).getByTitle("Classify").click();
+  await expect(panel(page)).toHaveAttribute("aria-label", "Danger level · SK38 · 05.04.2026 00:00");
+  await asked;
+  await nextFrames(page);
+  expect(await seriesRows(page).count()).toBe(0);
+  await expect(panel(page).locator(".danger-level-series-note")).toHaveCount(0);
+  held.open();
+  const sk38Levels = expectedLevels([
+    [lowerCounts, lowerSizes],
+    [lowerCounts, lowerSizes],
+  ]);
+  await expectSeriesLevels(page, sk38Levels);
+  await expectStepMarked(page, "current", 4, 2);
+
+  held = gate();
+  const stepped = page.waitForRequest((request) => {
+    const url = new URL(request.url());
+    return seriesRequestOf(url, "sk38_ccl") && url.searchParams.get("ts") === "2026-04-06_00-00-00";
+  });
+  await page.keyboard.press("Shift+ArrowRight");
+  await stepped;
+  await expectStepMarked(page, "current", 5, 2);
+  await expectSeriesLevels(page, sk38Levels);
+  held.open();
+});
+
+test("while the sources load after a date step the panel shows its loading line, not nothing selected", async ({
+  page,
+}) => {
+  await openDashboard(page, "&view=danger");
+  await expect(panel(page).locator(".danger-level-badge")).toHaveText(["4", "1"]);
+  const sources = gate();
+  await page.route(/\/e2e-danger\/points\.json/, async (route) => {
+    await sources.opened;
+    await route.fulfill({ json: highAboveLowBelow });
+  });
+  const asked = page.waitForRequest(/\/e2e-danger\/points\.json/);
+  await page.keyboard.press("Shift+ArrowRight");
+  await asked;
+  await page.keyboard.press("Shift+D");
+  await expect(panel(page)).toHaveCount(0);
+  await page.keyboard.press("Shift+D");
+  await expect(panel(page).locator(".danger-level-loading")).toHaveText("loading");
+  await expect(bandLines(page)).toHaveCount(0);
+  await expect(panel(page)).not.toContainText("nothing selected");
+  sources.open();
+  await expect(panel(page).locator(".danger-level-badge")).toHaveText(["4", "1"]);
+  await expect(panel(page)).toHaveAttribute("aria-label", "Danger level · Punstable · 06.04.2026 00:00");
+});
+
+for (const [date, opened, step] of [
+  ["now", "03.04.2026 00:00", "2026-04-03T00:00:00"],
+  ["now%2B1d", "04.04.2026 00:00", "2026-04-04T00:00:00"],
+] as const) {
+  test(`a link date ${decodeURIComponent(date)} opens the dashboard at the grid time it names`, async ({ page }) => {
+    await page.clock.setFixedTime(new Date("2026-04-03T10:30:00Z"));
+    const asked: string[] = [];
+    page.on("request", (request) => {
+      const url = new URL(request.url());
+      if (url.pathname.endsWith("/e2e-danger/points.json")) asked.push(url.searchParams.get("ts"));
+    });
+    await openDashboard(page, `&view=danger&date=${date}`);
+    await expect(panel(page)).toHaveAttribute("aria-label", `Danger level · Punstable · ${opened}`);
+    expect(asked).toEqual([step.replace("T", "_").replace(/:/g, "-")]);
+    expect((await copiedLink(page)).get("date")).toBe(step);
+  });
+}
 
 test("a chip warns when the series' level at the current step differs from the panel's", async ({ page }) => {
   const upper = upperCounts.map((row) => [...row]);

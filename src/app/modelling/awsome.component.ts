@@ -177,6 +177,14 @@ function isPolygon(o: FeatureProperties): boolean {
   return o.$geometry.type === "Polygon" || o.$geometry.type === "MultiPolygon";
 }
 
+/** A series request without its timestep, which asks for the same series at another date. */
+function withoutTimestep(url: string): string {
+  if (!url) return url;
+  const request = new URL(url);
+  request.searchParams.delete("ts");
+  return request.toString();
+}
+
 @Component({
   selector: "app-awsome",
   standalone: true,
@@ -271,7 +279,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private timeseriesDateIndex = -1;
   private timeseries?: { url: string; data: Timeseries };
   private timeseries$loading?: { url: string; subscription: Subscription };
-  dangerSeries?: { url: string; series: DangerSeries | "none" };
+  dangerSeries?: { url: string; series: DangerSeries | "none"; outdated?: boolean };
   private dangerSeries$loading?: { url: string; subscription: Subscription };
   loadingState: "loading" | "error" | undefined;
 
@@ -295,7 +303,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.config.date = resolveConfigDate(this.config.date, dateStepSeconds);
     if (this.config.dateMax) this.config.dateMax = resolveConfigDate(this.config.dateMax, dateStepSeconds);
     if (this.config.dateMin) this.config.dateMin = resolveConfigDate(this.config.dateMin, dateStepSeconds);
-    this.date ||= this.config.date;
+    this.date = this.date ? resolveConfigDate(this.date, dateStepSeconds) : this.config.date;
     this.sources = this.config.sources;
     this.sourceTree = this.buildSourceTree(this.sources);
     this.sources.forEach((s) => (this.filterService.observationSources[this.asSource(s)] ??= true));
@@ -538,7 +546,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.clearMap();
     this.loadHazardChart();
     this.loadTimeseriesChart();
-    this.dangerSeries &&= { url: "", series: this.dangerSeries.series };
+    this.dangerSeries &&= { ...this.dangerSeries, outdated: true };
     this.loadDangerSeries();
 
     this.loadingState = "loading";
@@ -817,7 +825,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const markerClassify = this.markerService.markerClassify;
     const grainType = this.filterService.filterSelectionData.find((f) => f.type === "grainType");
     const xType = this.filterService.filterSelectionData.find((f) => f.type === this.config.hazardChart.xType);
-    if (!markerClassify) {
+    if (!markerClassify || this.view === "danger") {
       this.hazardChart = undefined;
       return;
     }
@@ -1023,8 +1031,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     request.searchParams.set("size_percentile", String(calibration.sizePercentile));
     request.searchParams.set("population", "compass");
     const url = request.toString();
-    if (this.dangerSeries?.url === url || this.dangerSeries$loading?.url === url) return;
+    const shown = this.dangerSeries;
+    if ((shown?.url === url && !shown.outdated) || this.dangerSeries$loading?.url === url) return;
     this.cancelDangerSeries();
+    if (shown && withoutTimestep(shown.url) !== withoutTimestep(url)) this.dangerSeries = undefined;
     this.dangerSeries$loading = {
       url,
       subscription: timer(DANGER_SERIES_DEBOUNCE_MS)
@@ -1036,7 +1046,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           },
           error: (err) => {
             this.dangerSeries$loading = undefined;
-            this.dangerSeries = { url: "", series: "none" };
+            this.dangerSeries = { url, series: "none", outdated: true };
             console.warn("Failed to load the danger level series", url, err);
           },
         }),
@@ -1497,12 +1507,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * Reads the selected features against the EAWS matrix once per elevation band while the danger level view is on,
-   * and paints the map by the bands' levels; the readings must exist before the map is painted.
+   * Reads the selected features against the EAWS matrix once per elevation band while the danger level view is on
+   * and the sources are loaded, and paints the map by the bands' levels; the readings must exist before the map is
+   * painted.
    */
   private readDangerLevel(selected: ReadonlySet<FeatureProperties>) {
     const calibration = this.config.dangerLevel;
-    if (this.view !== "danger" || !calibration) {
+    if (this.view !== "danger" || !calibration || this.loadingState === "loading") {
       this.clearDangerLevel();
       return;
     }
