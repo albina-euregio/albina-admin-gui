@@ -10,7 +10,7 @@ globalThis.ENV = {
   initialUrl: "modelling/awsome",
   apiBaseUrl: "https://dev.avalanche.report/api/",
   textcatUrl: "https://dev.avalanche.report/textcat-ng/",
-  awsomeConfigUrl: "dcfg/awsome.json",
+  awsomeConfigUrl: "dcfg/research.json",
   headerBgColor: "#19abff",
   faviconPath: "assets/img/admin-favicon-dev.ico",
   logoPath: "assets/img/admin-logo-dev.svg",
