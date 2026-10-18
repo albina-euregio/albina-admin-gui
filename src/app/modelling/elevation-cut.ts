@@ -1,4 +1,4 @@
-import { clamp } from "es-toolkit";
+import { clamp, isEqual } from "es-toolkit";
 
 import { sharedBoundary } from "./index-classes";
 
@@ -138,7 +138,7 @@ export function followBands(
     ...[...values].filter((value) => !left.has(value)),
     ...after.flatMap((rows, band) => (held[band] ? rows : [])),
   ]);
-  return moved.size === values.size && [...moved].every((value) => values.has(value)) ? undefined : moved;
+  return isEqual(moved, values) ? undefined : moved;
 }
 
 /** The stop indices a thumb may take, top first: one row below its higher neighbour, one row above its lower one. */

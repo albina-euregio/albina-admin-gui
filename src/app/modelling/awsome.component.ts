@@ -77,7 +77,7 @@ import {
   SNOW_DEPTH_KEY,
 } from "./danger-paint";
 import type { DangerSeries } from "./danger-series.component";
-import { resolveConfigDate, withinDates } from "./dashboard-date";
+import { resolveConfigDate, resolveConfigDates, withinDates } from "./dashboard-date";
 import { dormantDatetags, sortDatetags } from "./dormant-datetags";
 import { DormantDatetagsMenuComponent } from "./dormant-datetags-menu.component";
 import { stabilityClasses } from "./eaws-reading";
@@ -227,7 +227,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private configURL = "";
   private config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
-  dormantDatetags?: Set<string>;
+  private dormantDatetags?: Set<string>;
+  /** The filters with a panel: every filter not marked hidden. */
+  shownFilters: FilterSelectionData<FeatureProperties>[] = [];
+  /** One class slot count for every chart and its data. */
+  classSlots = 10;
   dormantMenu?: { values: FilterSelectionValue[]; dormant: Set<string>; saveUrl: string };
   cutFilter?: FilterSelectionData<FeatureProperties>;
   cutStops: number[] = [];
@@ -238,7 +242,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   view: "hazard" | "danger" = "hazard";
   danger?: DangerView;
   cutLevels: readonly (BandLevel | undefined)[] = [];
-  readonly barChartRows = BAR_CHART_ROWS;
   date = "";
   layout: "map" | "chart" | "details" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
@@ -300,9 +303,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       .then((c) => this.prepareDatetags(c));
     this.config = await this.config$q;
     const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
-    this.config.date = resolveConfigDate(this.config.date, dateStepSeconds);
-    if (this.config.dateMax) this.config.dateMax = resolveConfigDate(this.config.dateMax, dateStepSeconds);
-    if (this.config.dateMin) this.config.dateMin = resolveConfigDate(this.config.dateMin, dateStepSeconds);
+    resolveConfigDates(this.config, dateStepSeconds);
     this.date = this.date ? resolveConfigDate(this.date, dateStepSeconds) : this.config.date;
     this.sources = this.config.sources;
     this.sourceTree = this.buildSourceTree(this.sources);
@@ -329,6 +330,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       filter.retainKnown();
       return filter;
     });
+    this.shownFilters = this.filterService.filterSelectionData.filter((f) => !f.hidden);
+    this.classSlots = classSlotsFor(this.filterService.filterSelectionData);
     this.filterService.mapBounds = undefined;
 
     const defaultClassifier = this.filterService.filterSelectionData.find(
@@ -359,16 +362,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   /** Active sources whose last load succeeded, i.e. the ones on the map. */
   private get loadedSources() {
     return this.activeSources.filter((s) => !s.$error);
-  }
-
-  /** The filters with a panel: every filter not marked hidden. */
-  get shownFilters(): FilterSelectionData<FeatureProperties>[] {
-    return this.filterService.filterSelectionData.filter((f) => !f.hidden);
-  }
-
-  /** One class slot count for every chart and its data. */
-  get classSlots(): number {
-    return classSlotsFor(this.filterService.filterSelectionData);
   }
 
   /** Whether a filter may classify: it classifies already or has no url, and its values fit the class slots. */
@@ -785,7 +778,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       features: polygonFeatures,
     });
 
-    this.filterService.filterSelectionData.forEach((filter) =>
+    this.shownFilters.forEach((filter) =>
       filter.buildChartsData(
         this.markerService.markerClassify,
         this.observations,
@@ -1017,13 +1010,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const index = this.placeholderIndex;
     const bounds = index && classBounds(index);
     const url0 = this.config.timeseriesChart?.url;
-    const sources = this.loadedSources;
-    if (!url0 || !bounds || !stabilityClasses(bounds.length - 1) || !sources.length) {
+    if (!url0 || !bounds || !stabilityClasses(bounds.length - 1) || !this.loadedSources.length) {
       this.cancelDangerSeries();
       this.dangerSeries = { url: "", series: "none" };
       return;
     }
-    const request = this.setSearchParams(new URL(url0, this.baseURL), sources);
+    const request = this.setSearchParams(new URL(url0, this.baseURL), this.loadedSources);
     request.searchParams.set("stabilityIndex", index.type);
     this.companionsOf(index).forEach((companion) => request.searchParams.append("stabilityIndex", companion.type));
     request.searchParams.set(`classes.${index.type}`, bounds.slice(1, -1).join(","));

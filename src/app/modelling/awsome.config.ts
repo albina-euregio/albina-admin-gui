@@ -2,6 +2,7 @@ import * as z from "zod/v4";
 
 import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-selection-config";
 import { SNOW_DEPTH_KEY } from "./danger-paint";
+import { RELATIVE_DATE } from "./dashboard-date";
 import { DEFAULT_FREQUENCY_BOUNDS, SIZE_PERCENTILE } from "./eaws-reading";
 import { cutProblems, MAX_CUTS } from "./elevation-cut";
 
@@ -129,7 +130,7 @@ export const DangerLevelSchema = z
     `Offers the danger level view: a button beside the share button reads the selected features of every active source that have an aspect against the EAWS matrix, once per elevation band of the elevation filter's cuts, from the classifying stability index (else the default one) and the hazard chart's size, of which it reckons with the size percentile of the decisive class, shows the matrix in place of the hazard chart and paints the map by band. A feature whose snow depth ${SNOW_DEPTH_KEY} is 0 (no snow or no model output) is not read, a class counts as more than none from a share above few, and a band with one read slope gets a level; the frequency bounds and the size percentile are its only settings.`,
   );
 
-const ConfigDateSchema = z.union([z.string().regex(/^now(?:[+-]\d+[hd])?$/), z.iso.datetime({ local: true })]);
+const ConfigDateSchema = z.union([z.string().regex(RELATIVE_DATE), z.iso.datetime({ local: true })]);
 
 export const AwsomeConfigSchema = z.object({
   $schema: UrlSchema.optional().describe("URL of JSON Schema awsome.schema.json"),

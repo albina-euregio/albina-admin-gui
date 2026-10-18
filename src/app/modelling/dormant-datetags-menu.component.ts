@@ -12,10 +12,12 @@ import {
   viewChild,
 } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
+import { isEqual } from "es-toolkit";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { firstValueFrom } from "rxjs";
 
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
+import { BAR_CHART_ROWS } from "../observations/observation-chart.component";
 import { isDateDatetag } from "./dormant-datetags";
 
 @Component({
@@ -36,7 +38,6 @@ export class DormantDatetagsMenuComponent {
 
   readonly values = input.required<FilterSelectionValue[]>();
   readonly dormant = input.required<ReadonlySet<string>>();
-  readonly visibleRows = input.required<number>();
   readonly saveUrl = input.required<string>();
   readonly saved = output();
   readonly dropdown = viewChild(BsDropdownDirective);
@@ -48,10 +49,8 @@ export class DormantDatetagsMenuComponent {
   readonly saving = signal(false);
   readonly error = signal("");
   readonly activeCount = computed(() => this.values().filter((v) => !this.pending().has(v.value)).length);
-  readonly visibleCount = computed(() => Math.min(this.activeCount(), this.visibleRows()));
-  readonly changed = computed(
-    () => this.pending().size !== this.dormant().size || [...this.pending()].some((v) => !this.dormant().has(v)),
-  );
+  readonly visibleCount = computed(() => Math.min(this.activeCount(), BAR_CHART_ROWS));
+  readonly changed = computed(() => !isEqual(this.pending(), this.dormant()));
 
   /** Opens the menu upwards when the icon sits in the lower half of the viewport, settled before the click opens it. */
   aim(toggle: HTMLElement) {

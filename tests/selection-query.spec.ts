@@ -34,7 +34,7 @@ test("the selected values of a url-backed filter, sorted whatever the order they
 
 test("filters without a url, highlights and values the filter does not list never count", () => {
   const highlighted = datetag();
-  highlighted.toggleFilterValue("highlighted", "2026-03-24");
+  highlighted.toggleFilterValues("highlighted", ["2026-03-24"]);
   expect(selectionQuery([highlighted])).toBe("");
   expect(selectionQuery([datetag("nan", "2026-12-31")])).toBe("");
   expect(selectionQuery([elevation("1600-1800"), datetag("nan", "2026-03-24")])).toBe("datetag=2026-03-24");
@@ -43,9 +43,9 @@ test("filters without a url, highlights and values the filter does not list neve
 test("a change of the selection changes the query, a reset empties it", () => {
   const f = datetag("2026-03-24");
   const loaded = selectionQuery([f]);
-  f.toggleFilterValue("selected", "2026-01-24");
+  f.toggleFilterValues("selected", ["2026-01-24"]);
   expect(selectionQuery([f])).not.toBe(loaded);
-  f.toggleFilterValue("selected", "2026-01-24");
+  f.toggleFilterValues("selected", ["2026-01-24"]);
   expect(selectionQuery([f])).toBe(loaded);
   f.resetFilter();
   expect(selectionQuery([f])).toBe("");

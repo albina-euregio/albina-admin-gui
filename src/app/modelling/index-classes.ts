@@ -10,8 +10,15 @@ export function sharedBoundary(above: readonly number[], below: readonly number[
   return above.find((bound) => below.includes(bound));
 }
 
+const boundsOfIndex = new WeakMap<ClassedIndex, number[] | undefined>();
+
 /** Class bounds from the most unstable end to the most stable one; undefined unless the classes chain monotonically. */
 export function classBounds(index: ClassedIndex): number[] | undefined {
+  if (!boundsOfIndex.has(index)) boundsOfIndex.set(index, computeClassBounds(index));
+  return boundsOfIndex.get(index);
+}
+
+function computeClassBounds(index: ClassedIndex): number[] | undefined {
   const ranges = index.values.map((v) => v.numericRange).filter((range) => Array.isArray(range));
   if (ranges.length < 2) return undefined;
   const [min, max] = index.chartAxisRange ?? [Math.min(...ranges.flat()), Math.max(...ranges.flat())];

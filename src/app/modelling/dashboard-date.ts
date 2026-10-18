@@ -1,4 +1,3 @@
-export const NOW = "now";
 export const RELATIVE_DATE = /^now(?:([+-])(\d+)([hd]))?$/;
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -29,6 +28,16 @@ export function dayMonth(date: string): string {
 /** Whether a date lies within the dashboard's first and last date, either open when absent. */
 export function withinDates(date: string, min?: string, max?: string): boolean {
   return !(min && date < min) && !(max && date > max);
+}
+
+/** Resolves the date, dateMin and dateMax of a config in place, the two limits only when it has them. */
+export function resolveConfigDates(
+  config: { date?: string; dateMin?: string; dateMax?: string },
+  stepSeconds: number,
+): void {
+  config.date = resolveConfigDate(config.date, stepSeconds);
+  if (config.dateMax) config.dateMax = resolveConfigDate(config.dateMax, stepSeconds);
+  if (config.dateMin) config.dateMin = resolveConfigDate(config.dateMin, stepSeconds);
 }
 
 /** A config date as the dashboard opens it: "now", "now+48h" or "now-14d" count in UTC from the latest grid time. */

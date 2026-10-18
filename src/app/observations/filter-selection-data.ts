@@ -1,6 +1,7 @@
 import { FeatureProperties } from "app/modelling/awsome.component";
 import { castArray, get, memoize, toPath } from "es-toolkit/compat";
 
+import { haveSameElements } from "../shared/compareArrays";
 import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
 import type { GenericObservation } from "./models/generic-observation.model";
 
@@ -39,29 +40,10 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     }
   }
 
-  setFilterValue(subset: "highlighted" | "selected", value: string) {
-    const selectedData = this[subset];
-    if (selectedData.has(value) && selectedData.size === 1) {
-      selectedData.clear();
-    } else {
-      selectedData.clear();
-      selectedData.add(value);
-    }
-  }
-
-  toggleFilterValue(subset: "highlighted" | "selected", value: string) {
-    const selectedData = this[subset];
-    if (selectedData.has(value)) {
-      selectedData.delete(value);
-    } else {
-      selectedData.add(value);
-    }
-  }
-
   /** Puts exactly the given values in the subset, or empties it when it holds exactly them already. */
   setFilterValues(subset: "highlighted" | "selected", values: readonly string[]) {
     const selectedData = this[subset];
-    const exactly = selectedData.size === values.length && values.every((value) => selectedData.has(value));
+    const exactly = haveSameElements([...selectedData], [...values]);
     selectedData.clear();
     if (!exactly) values.forEach((value) => selectedData.add(value));
   }

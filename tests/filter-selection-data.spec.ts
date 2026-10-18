@@ -244,10 +244,15 @@ function rowClick(
   platform: string,
 ) {
   const subset = event.altKey ? "highlighted" : "selected";
+  const selectedData = filter[subset];
   if (event.shiftKey) {
-    filter.toggleFilterValue(subset, value);
+    if (selectedData.has(value)) selectedData.delete(value);
+    else selectedData.add(value);
+  } else if (selectedData.has(value) && selectedData.size === 1) {
+    selectedData.clear();
   } else {
-    filter.setFilterValue(subset, value);
+    selectedData.clear();
+    selectedData.add(value);
   }
   if (/Mac|iPod|iPhone|iPad/.test(platform) ? event.metaKey : event.ctrlKey) {
     filter.invertFilter(subset);
