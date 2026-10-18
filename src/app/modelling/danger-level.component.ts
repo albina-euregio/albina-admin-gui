@@ -434,7 +434,7 @@ export class DangerLevelComponent {
     };
   }
 
-  /** The (nearly) none box of a panel: where the walk goes on, 1 Low after the last class; the bands that passed it. */
+  /** The (nearly) none box of a panel: where the walk goes on, 1 Low after the last class with the bands that land there. */
   private walkOf(k: number, bands: readonly DangerBand[]) {
     const classes = this.classes();
     if (k >= classes.length - 1) return undefined;
@@ -444,7 +444,7 @@ export class DangerLevelComponent {
       low,
       color: low ? levelColor(1) : undefined,
       text: low ? `1 ${this.levelName(1)}` : this.t("→ {{next}}", { next: this.stabilityText(next) }),
-      passed: this.marksOf(bands.filter(({ reading }) => (reading.decisive ?? -1) > k)),
+      marks: low ? this.marksOf(bands.filter(({ reading }) => reading.stability === SnowpackStability.good)) : [],
     };
   }
 

@@ -511,16 +511,23 @@ test("the matrix marks the cell each band lands on, both elevation icons where t
   await expect(veryHigh).toHaveText(/^\s*5\s*$/);
   await expect(veryHigh).toHaveCSS("background-color", "rgb(0, 0, 0)");
   await expect(veryHigh).toHaveCSS("color", "rgb(255, 255, 255)");
-  await expect(panel(page).locator(".danger-level-walk.passed")).toHaveCount(0);
+  await expect(panel(page).locator(".danger-level-walk.marked")).toHaveCount(0);
 });
 
-test("a stable band walks every (nearly) none box to 1 low below the size axis caption", async ({ page }) => {
+test("a stable band walks the (nearly) none boxes to 1 low, marked only where it lands, below the size axis caption", async ({
+  page,
+}) => {
   await openDashboard(page, "&view=danger");
   await expect(panel(page).locator(".danger-level-rows")).toHaveText(/^\s*many\s*some\s*few\s*\(nearly\) none\s*$/);
   const walks = panel(page).locator(".danger-level-walk");
   await expect(walks).toHaveText(["→ poor", "→ fair", "1 low"]);
-  await expect(walks.and(panel(page).locator(".passed"))).toHaveCount(3);
-  expect(await filledBands(walks.locator("app-elevation-icon svg"))).toEqual(["24+24", "24+24", "24+24"]);
+  await expect(walks.and(panel(page).locator(".marked"))).toHaveCount(1);
+  await expect(walks.nth(2)).toHaveClass(/marked/);
+  for (const passed of [walks.nth(0), walks.nth(1)]) {
+    await expect(passed.locator(".danger-level-mark")).toHaveCount(0);
+    await expect(passed).toHaveCSS("border-color", "rgb(213, 219, 224)");
+  }
+  expect(await filledBands(walks.locator("app-elevation-icon svg"))).toEqual(["24+24"]);
   await expect(walks.nth(2)).toHaveClass(/low/);
   await expect(walks.nth(2)).toHaveCSS("background-color", "rgb(166, 217, 106)");
   const cell = await panel(page).locator(".danger-level-cell").first().boundingBox();

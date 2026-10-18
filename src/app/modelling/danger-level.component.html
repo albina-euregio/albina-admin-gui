@@ -149,13 +149,13 @@
         <div
           class="danger-level-walk"
           [class.low]="walk.low"
-          [class.passed]="walk.passed.length"
+          [class.marked]="walk.marks.length"
           [style.background-color]="walk.color"
         >
           {{ walk.text }}
-          @if (walk.passed.length) {
+          @if (walk.marks.length) {
             <span class="danger-level-walk-marks">
-              @for (mark of walk.passed; track mark.band) {
+              @for (mark of walk.marks; track mark.band) {
                 <span class="danger-level-mark">
                   <app-elevation-icon [bands]="bandRows()" [band]="mark.band" [width]="18" [label]="mark.label" />
                 </span>

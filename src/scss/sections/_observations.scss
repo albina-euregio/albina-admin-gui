@@ -939,7 +939,7 @@ $danger-level-cell: 63px;
 }
 
 .danger-level-cell.marked,
-.danger-level-walk.low.passed {
+.danger-level-walk.low.marked {
   box-shadow:
     inset 0 0 0 3px #000,
     inset 0 0 0 4px #fff;
@@ -1011,9 +1011,8 @@ $danger-level-cell: 63px;
     border-color: rgba(0, 0, 0, 0.08);
     color: #1b2430;
   }
-  &.passed {
+  &.marked {
     border-color: #1b2430;
-    color: #1b2430;
   }
 }
 
