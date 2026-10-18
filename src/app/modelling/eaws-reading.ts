@@ -1,5 +1,7 @@
 import { clamp, sum } from "es-toolkit";
 
+import { bandOf } from "./elevation-cut";
+
 export type UnstableClass = "very poor" | "poor" | "fair";
 export type Stability = UnstableClass | "good";
 export type Frequency = "many" | "some" | "a few";
@@ -70,9 +72,7 @@ export function stabilityClasses(classCount: number): Stability[] | undefined {
 /** The class of a finite value among bounds from the most unstable end: the map's [lo, hi) classes, the outer ones open. */
 export function classIndex(bounds: readonly number[], value: number): number {
   const inner = bounds.slice(1, -1);
-  return bounds[0] > bounds.at(-1)
-    ? inner.filter((bound) => value < bound).length
-    : inner.filter((bound) => value >= bound).length;
+  return bounds[0] > bounds.at(-1) ? inner.filter((bound) => value < bound).length : bandOf(value, inner);
 }
 
 /** The EAWS frequency of a class holding count of total slopes. */

@@ -7,6 +7,8 @@ import {
   classSlotsFor,
   fallbackStabilityIndex,
   fitsClassSlots,
+  rangedValues,
+  sharedBounds,
   unstableAtMinimum,
   valueAtClassFraction,
 } from "../src/app/modelling/index-classes";
@@ -35,6 +37,18 @@ test("bounds run from the most unstable end to the most stable one", () => {
   expect(classBounds(unstableHigh)).toEqual([1, 0.8, 0.77, 0.7, 0]);
   expect(classBounds(unstableLow)).toEqual([0, 0.5, 0.95, 1.05, 1.5]);
   expect(classBounds(withoutAxisRange)).toEqual([100, 3, 1, 0]);
+});
+
+test("the ranged values keep their order, and each shared bound comes with the value above it", () => {
+  const high = { value: "high", numericRange: [0.8, 1] };
+  const nan = { value: "nan" };
+  const mid = { value: "mid", numericRange: [0.7, 0.8] };
+  const low = { value: "low", numericRange: [0, 0.6] };
+  expect(rangedValues([high, nan, mid, low])).toEqual([high, mid, low]);
+  expect(sharedBounds([high, mid, low])).toEqual([{ bound: 0.8, above: high }]);
+  expect(sharedBounds([high, nan, mid])).toEqual([]);
+  expect(sharedBounds(rangedValues([high, nan, mid]))).toEqual([{ bound: 0.8, above: high }]);
+  expect(classBounds({ values: [high, nan, { numericRange: [0, 0.8] }] })).toEqual([1, 0.8, 0]);
 });
 
 test("classes that do not chain have no bounds", () => {

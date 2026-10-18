@@ -152,6 +152,27 @@ test("a fully dormant datetag array classifies as unclassified, a partly dormant
   expect(chart.dataset[1].slice(6, 9)).toEqual([1, 0, 1]);
 });
 
+test("with unmatchedAsNan the offered values follow every replacement of the values", () => {
+  const filter = datetagAsNan(["new_snow"]);
+  expect(filter.getValue(drivenBy("2026-03-24"))).toBeUndefined();
+  filter.replaceValues([{ value: "2026-03-24", label: "2026-03-24", color: "#000" }]);
+  expect(filter.getValue(drivenBy("2026-03-24"))).toBe("2026-03-24");
+  expect(filter.getValue(drivenBy("new_snow"))).toBeUndefined();
+  const day = new FilterSelectionData<Record<string, unknown>>({
+    type: "day",
+    label: "Day",
+    key: "day",
+    chartType: "bar",
+    chartRichLabel: "label",
+    values: [],
+  });
+  day.unmatchedAsNan = true;
+  expect(day.getValue({ day: "2026-03-02" })).toBeUndefined();
+  day.setDateRange(new Date(2026, 2, 1), new Date(2026, 2, 3));
+  expect(day.values.map((v) => v.value)).toEqual(["2026-03-01", "2026-03-02", "2026-03-03"]);
+  expect(day.getValue({ day: "2026-03-02" })).toBe("2026-03-02");
+});
+
 test("unmatchedAsNan leaves values that are not strings alone", () => {
   const punstable = new FilterSelectionData<Record<string, unknown>>({
     type: "Punstable",

@@ -18,8 +18,8 @@ import { DangerRating } from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import type { DangerLevelConfig } from "./awsome.config";
 import { type DangerBand, levelColor, levelStyle } from "./danger-paint";
+import type { DangerSeries } from "./danger-series";
 import {
-  type DangerSeries,
   DangerSeriesAxisComponent,
   DangerSeriesComponent,
   separatedCells,
@@ -39,6 +39,7 @@ import {
   stabilityClasses,
   UNSTABLE_CLASSES,
 } from "./eaws-reading";
+import { type BandKeys, bandName } from "./elevation-cut";
 import { AspectRoseComponent, ElevationIconComponent } from "./elevation-icon.component";
 
 const TIP_GAP = 5;
@@ -51,6 +52,12 @@ const RATINGS = [
   DangerRating.high,
   DangerRating.very_high,
 ];
+const BAND_PHRASES: BandKeys = {
+  all: "at any elevation",
+  below: "below {{elevation}} m",
+  above: "above {{elevation}} m",
+  between: "between {{lower}} and {{upper}} m",
+};
 const STEP_REASONS: Readonly<Record<NoReading, string>> = {
   classes: "no stability index to read",
   nothing: "nothing read",
@@ -142,6 +149,7 @@ export class DangerLevelComponent {
   private strip = viewChild<ElementRef<HTMLElement>>("strip");
 
   readonly bands = input.required<readonly DangerBand[]>();
+  readonly cuts = input<readonly number[]>([]);
   readonly index = input<DangerIndex | undefined>(undefined);
   readonly calibration = input.required<DangerLevelConfig>();
   readonly date = input.required<string>();
@@ -163,11 +171,6 @@ export class DangerLevelComponent {
   );
   readonly pending = computed(() => !!this.context()?.pending);
   readonly bandRows = computed(() => Math.max(1, this.bands().length));
-  readonly cuts = computed(() =>
-    this.bands()
-      .slice(1)
-      .map((band) => band.edges[0]),
-  );
   readonly classes = computed(
     (): readonly Stability[] => stabilityClasses((this.index()?.bounds?.length ?? 5) - 1) ?? stabilityClasses(4),
   );
@@ -265,11 +268,9 @@ export class DangerLevelComponent {
   }
 
   /** Where a band lies, in words. */
-  private phraseOf({ edges: [lower, upper] }: DangerBand): string {
-    if (lower === undefined && upper === undefined) return this.tr("at any elevation");
-    if (lower === undefined) return this.tr("below {{elevation}} m", { elevation: upper });
-    if (upper === undefined) return this.tr("above {{elevation}} m", { elevation: lower });
-    return this.tr("between {{lower}} and {{upper}} m", { lower, upper });
+  private phraseOf({ edges }: DangerBand): string {
+    const { key, params } = bandName(edges, BAND_PHRASES);
+    return this.tr(key, params);
   }
 
   /** The bands as the matrix marks them: each band's index with its name. */

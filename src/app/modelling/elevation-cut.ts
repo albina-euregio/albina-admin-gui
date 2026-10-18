@@ -1,11 +1,24 @@
 import { clamp, isEqual } from "es-toolkit";
 
-import { sharedBoundary } from "./index-classes";
+import { sharedBounds } from "./index-classes";
 
 export const MAX_CUTS = 2;
 
 type Ranged = readonly { readonly numericRange?: readonly number[] }[];
 type Rows = readonly { readonly value: string; readonly numericRange?: readonly number[] }[];
+type OpenEdges = [number | undefined, number | undefined];
+
+export interface BandName {
+  readonly key: string;
+  readonly params?: Readonly<Record<string, number>>;
+}
+
+export interface BandKeys {
+  readonly all?: string;
+  readonly below: string;
+  readonly above: string;
+  readonly between: string;
+}
 
 export interface ChartRows {
   readonly rows: number;
@@ -22,21 +35,12 @@ const KEY_STEPS: ReadonlyMap<string, number> = new Map([
   ["PageDown", 2],
 ]);
 
-/** The bounds that consecutive values share, in row order. */
-export function sharedBounds(values: Ranged): number[] {
-  return values.slice(1).flatMap(({ numericRange: below }, i) => {
-    const above = values[i].numericRange;
-    const bound = above && below ? sharedBoundary(above, below) : undefined;
-    return bound === undefined ? [] : [bound];
-  });
-}
-
 /** The row bounds from the top of the first row to the bottom of the last; undefined unless the rows chain downwards. */
 export function cutStops(values: Ranged): number[] | undefined {
   const ranges = values.map((v) => v.numericRange);
   if (ranges.length < 2 || ranges.some((range) => range?.length !== 2)) return undefined;
-  const stops = [ranges[0][1], ...ranges.map((range) => range[0])];
-  return ranges.every(([low, high], i) => high === stops[i] && low < high) ? stops : undefined;
+  const stops = [ranges[0][1], ...sharedBounds(values).map(({ bound }) => bound), ranges.at(-1)[0]];
+  return ranges.every(([low, high], i) => high === stops[i] && low === stops[i + 1] && low < high) ? stops : undefined;
 }
 
 /** The stops of a slider beside a filter's chart; undefined unless it is a shown bar chart whose rows fit and chain. */
@@ -51,7 +55,7 @@ export function sliderStops(
 
 /** What is wrong with cuts for a filter's values: each must be a bound two consecutive values share, ascending. */
 export function cutProblems(cuts: readonly number[], values: Ranged): string[] {
-  const bounds = sharedBounds(values);
+  const bounds = sharedBounds(values).map(({ bound }) => bound);
   const offered = [...bounds].sort((a, b) => a - b).join(", ") || "none";
   const strangers = cuts.filter((cut) => !bounds.includes(cut));
   const descending = cuts.some((cut, i) => i > 0 && cut <= cuts[i - 1]);
@@ -101,10 +105,36 @@ export function cutParam(stops: readonly number[], cuts: readonly number[], defa
   return parked && cuts.length === defaults.length ? "none" : cuts.join(",");
 }
 
-/** The edges of the bands the cuts make, lowest band first, as [lower, upper] in metres. */
-export function bandEdges(stops: readonly number[], cuts: readonly number[]): [number, number][] {
-  const edges = [stops.at(-1), ...cuts, stops[0]];
+/** The edges of the bands the cuts make, lowest band first, as [lower, upper] in metres; open without the ends. */
+export function bandEdges(cuts: readonly number[]): OpenEdges[];
+export function bandEdges(cuts: readonly number[], ends: readonly [number, number]): [number, number][];
+export function bandEdges(cuts: readonly number[], [bottom, top]: readonly (number | undefined)[] = []): OpenEdges[] {
+  const edges = [bottom, ...cuts, top];
   return edges.slice(1).map((upper, i) => [edges[i], upper]);
+}
+
+/** The lowest and the highest of the stops, which run top first. */
+export function stopEnds(stops: readonly number[]): [number, number] {
+  return [stops.at(-1), stops[0]];
+}
+
+/** Whether a band holds no rows, its edges on one stop. */
+export function isEmptyBand([lower, upper]: readonly [number, number]): boolean {
+  return upper <= lower;
+}
+
+/** A band's name from a key table, an edge undefined or at its end being open; with no all key it names both bounds. */
+export function bandName(
+  [lower, upper]: readonly [number | undefined, number | undefined],
+  keys: BandKeys,
+  [bottom, top]: readonly (number | undefined)[] = [],
+): BandName {
+  const openBelow = lower === bottom;
+  const openAbove = upper === top;
+  if (openBelow && openAbove && keys.all) return { key: keys.all };
+  if (openBelow && !openAbove) return { key: keys.below, params: { elevation: upper } };
+  if (openAbove && !openBelow) return { key: keys.above, params: { elevation: lower } };
+  return { key: keys.between, params: { lower, upper } };
 }
 
 /** The band of an elevation among ascending cuts, the lowest band 0; an elevation on a cut belongs to the band above. */
@@ -114,7 +144,7 @@ export function bandOf(elevation: number, cuts: readonly number[]): number {
 
 /** The values of the rows wholly inside each band, lowest band first. */
 export function bandValues(values: Rows, stops: readonly number[], cuts: readonly number[]): string[][] {
-  return bandEdges(stops, cuts).map(([lower, upper]) =>
+  return bandEdges(cuts, stopEnds(stops)).map(([lower, upper]) =>
     values
       .filter(({ numericRange }) => numericRange && numericRange[0] >= lower && numericRange[1] <= upper)
       .map((v) => v.value),

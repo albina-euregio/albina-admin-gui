@@ -14,19 +14,6 @@ import { range } from "es-toolkit";
 import { levelColor } from "./danger-paint";
 import { dayMonth } from "./dashboard-date";
 
-export interface SeriesBand {
-  readonly count: readonly (readonly number[])[];
-  readonly size: readonly (readonly (number | null)[])[];
-}
-
-export interface DangerSeries {
-  readonly timestamps: readonly Date[];
-  readonly bounds: readonly number[];
-  readonly cuts: readonly number[];
-  readonly bands: readonly SeriesBand[];
-  readonly applied?: readonly string[];
-}
-
 export interface SeriesRow {
   readonly band: number;
   readonly levels: readonly (number | undefined)[];

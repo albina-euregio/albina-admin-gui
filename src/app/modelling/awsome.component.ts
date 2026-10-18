@@ -26,7 +26,7 @@ import type {
   XAXisOption,
   YAXisOption,
 } from "echarts/types/dist/shared";
-import { mapValues } from "es-toolkit";
+import { isEqual, mapValues } from "es-toolkit";
 import { get } from "es-toolkit/compat";
 import { Feature, FeatureCollection, Geometry, MultiPolygon } from "geojson";
 import { GeoJSONSource, Map as MlMap, MapLayerMouseEvent, Marker as MlMarker, Popup } from "maplibre-gl";
@@ -35,7 +35,6 @@ import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, forkJoin, type Subscription, timer } from "rxjs";
 import { map, switchMap, timeout } from "rxjs/operators";
 import Split from "split.js";
-import * as z from "zod/v4";
 
 import { environment } from "../../environments/environment";
 import type { DangerRating } from "../enums/enums";
@@ -76,7 +75,7 @@ import {
   sampleOf,
   SNOW_DEPTH_KEY,
 } from "./danger-paint";
-import type { DangerSeries } from "./danger-series.component";
+import { type DangerSeries, dangerSeriesOf, type Timeseries, TimeseriesSchema } from "./danger-series";
 import { resolveConfigDate, resolveConfigDates, withinDates } from "./dashboard-date";
 import { dormantDatetags, sortDatetags } from "./dormant-datetags";
 import { DormantDatetagsMenuComponent } from "./dormant-datetags-menu.component";
@@ -89,18 +88,22 @@ import {
   cutsFromParam,
   followBands,
   holdsAll,
+  isEmptyBand,
   isSplit,
   sliderStops,
   staysSplit,
+  stopEnds,
 } from "./elevation-cut";
 import { type BandLevel, ElevationCutComponent } from "./elevation-cut.component";
+import { InFlight } from "./in-flight";
 import {
   alignToClasses,
   classBounds,
   classSlotsFor,
   fallbackStabilityIndex,
   fitsClassSlots,
-  sharedBoundary,
+  rangedValues,
+  sharedBounds,
   unstableAtMinimum,
 } from "./index-classes";
 import { selectionQuery } from "./selection-query";
@@ -135,37 +138,9 @@ const COMPANION_LINE_TYPES: LineSeriesOption["lineStyle"]["type"][] = ["solid", 
 const DORMANT_READ_TIMEOUT_MS = 3000;
 const DANGER_SERIES_DEBOUNCE_MS = 150;
 
-const IndexSchema = z.object({
-  depth: z.number().nullish().array(),
-  size_estimate: z.number().nullish().array(),
-  lower: z.number().nullish().array(),
-  lower2: z.number().nullish().array().optional(),
-  mean: z.number().nullish().array(),
-  upper: z.number().nullish().array(),
-  upper2: z.number().nullish().array().optional(),
-});
-const TimeseriesSchema = z.object({
-  indexes: z.record(z.string(), IndexSchema),
-  timestamps: z.coerce.date().array(),
-});
-type Timeseries = z.infer<typeof TimeseriesSchema>;
-const ClassesSchema = z.object({
-  bounds: z.number().array(),
-  cuts: z.number().array(),
-  bands: z
-    .object({
-      count: z.number().array().array(),
-      size: z.number().nullable().array().array(),
-    })
-    .array(),
-});
-const DangerSeriesSchema = TimeseriesSchema.extend({
-  indexes: z.record(z.string(), IndexSchema.extend({ classes: ClassesSchema.optional() })),
-  applied: z.string().array().optional(),
-});
-
 interface DangerView {
   readonly bands: readonly DangerBand[];
+  readonly cuts: readonly number[];
   readonly index?: DangerIndex;
   readonly context: DangerContext;
   readonly legend: readonly DangerRating[];
@@ -281,9 +256,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   timeseriesInstance?: ECharts;
   private timeseriesDateIndex = -1;
   private timeseries?: { url: string; data: Timeseries };
-  private timeseries$loading?: { url: string; subscription: Subscription };
+  private readonly timeseriesRequest = new InFlight((url) => this.fetchJSON(url));
+  private timeseriesShown?: { url: string; index: string; date: string };
   dangerSeries?: { url: string; series: DangerSeries | "none"; outdated?: boolean };
-  private dangerSeries$loading?: { url: string; subscription: Subscription };
+  private readonly dangerSeriesRequest = new InFlight((url) =>
+    timer(DANGER_SERIES_DEBOUNCE_MS).pipe(switchMap(() => this.fetchJSON(url))),
+  );
   loadingState: "loading" | "error" | undefined;
 
   /** The dashboard text of a key, the key itself when it has none. */
@@ -326,7 +304,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ...f,
         values: f.values.filter((v) => !dormant?.has(v.value)),
       });
-      filter.unmatchedAsNan = f.type === "datetag";
+      filter.unmatchedAsNan = !!dormant?.size;
       filter.retainKnown();
       return filter;
     });
@@ -902,14 +880,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   /** Dashed lines on a filter's class boundaries, each coloured like the class listed above it. */
   private classLines(filter: FilterSelectionData<FeatureProperties>, z: number): MarkLineOption {
-    const classes = filter.values.filter((v): v is FilterSelectionValue & { numericRange: number[] } =>
-      Array.isArray(v.numericRange),
-    );
-    const data = classes.slice(1).flatMap((below, i) => {
-      const above = classes[i];
-      const bound = sharedBoundary(above.numericRange, below.numericRange);
-      return bound === undefined ? [] : [{ yAxis: bound, lineStyle: { color: above.color } }];
-    });
+    const data = sharedBounds(rangedValues(filter.values)).map(({ bound, above }) => ({
+      yAxis: bound,
+      lineStyle: { color: above.color },
+    }));
     return { z, silent: true, symbol: "none", label: { show: false }, lineStyle: { type: "dashed", width: 1.6 }, data };
   }
 
@@ -956,45 +930,38 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       .slice(0, COMPANION_LINE_TYPES.length);
   }
 
+  /** The index chart's request for the selection, asking for an index and its companions. */
+  private indexRequest(index: FilterSelectionData<FeatureProperties>): URL {
+    const request = this.setSearchParams(new URL(this.config.timeseriesChart.url, this.baseURL), this.loadedSources);
+    request.searchParams.set("stabilityIndex", index.type);
+    this.companionsOf(index).forEach((companion) => request.searchParams.append("stabilityIndex", companion.type));
+    return request;
+  }
+
   private loadTimeseriesChart() {
     if (this.view === "danger") return;
     const stabilityIndex = this.stabilityIndex;
-    const url0 = this.config.timeseriesChart?.url;
-    if (!stabilityIndex || !url0 || !this.loadedSources.length) {
+    if (!stabilityIndex || !this.config.timeseriesChart?.url || !this.loadedSources.length) {
       this.timeseriesChart = undefined;
-      this.timeseries$loading?.subscription.unsubscribe();
-      this.timeseries$loading = undefined;
+      this.timeseriesRequest.cancel();
       return;
     }
-    const companions = this.companionsOf(stabilityIndex);
-    const request = this.setSearchParams(new URL(url0, this.baseURL), this.loadedSources);
-    companions.forEach((companion) => request.searchParams.append("stabilityIndex", companion.type));
-    const url = request.toString();
+    const url = this.indexRequest(stabilityIndex).toString();
     if (this.timeseries?.url === url) {
-      this.renderTimeseries(this.timeseries.data, stabilityIndex, companions);
+      this.renderTimeseries(this.timeseries, stabilityIndex);
       return;
     }
-    if (this.timeseries$loading?.url === url) {
-      return;
-    }
+    if (this.timeseriesRequest.loads(url)) return;
     this.timeseriesChart = undefined;
-    this.timeseries$loading?.subscription.unsubscribe();
-    this.timeseries$loading = {
+    this.timeseriesRequest.load(
       url,
-      subscription: this.fetchJSON(url).subscribe({
-        next: (d) => {
-          this.timeseries$loading = undefined;
-          this.timeseries = { url, data: TimeseriesSchema.parse(d) };
-          this.renderTimeseries(this.timeseries.data, stabilityIndex, companions);
-        },
-        // a failed load has to forget its URL, or the guard above takes it for
-        // one still in flight and the chart is never asked for again
-        error: (err) => {
-          this.timeseries$loading = undefined;
-          console.warn("Failed to load timeseries", url, err);
-        },
-      }),
-    };
+      (body) => TimeseriesSchema.parse(body),
+      (data) => {
+        this.timeseries = { url, data };
+        this.renderTimeseries(this.timeseries, stabilityIndex);
+      },
+      (err) => console.warn("Failed to load timeseries", url, err),
+    );
   }
 
   /**
@@ -1004,61 +971,35 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private loadDangerSeries() {
     const calibration = this.config.dangerLevel;
     if (this.view !== "danger" || !calibration) {
-      this.cancelDangerSeries();
+      this.dangerSeriesRequest.cancel();
       return;
     }
     const index = this.placeholderIndex;
     const bounds = index && classBounds(index);
     const url0 = this.config.timeseriesChart?.url;
     if (!url0 || !bounds || !stabilityClasses(bounds.length - 1) || !this.loadedSources.length) {
-      this.cancelDangerSeries();
+      this.dangerSeriesRequest.cancel();
       this.dangerSeries = { url: "", series: "none" };
       return;
     }
-    const request = this.setSearchParams(new URL(url0, this.baseURL), this.loadedSources);
-    request.searchParams.set("stabilityIndex", index.type);
-    this.companionsOf(index).forEach((companion) => request.searchParams.append("stabilityIndex", companion.type));
+    const request = this.indexRequest(index);
     request.searchParams.set(`classes.${index.type}`, bounds.slice(1, -1).join(","));
     this.splitCuts.forEach((cut) => request.searchParams.append("cut", String(cut)));
     request.searchParams.set("size_percentile", String(calibration.sizePercentile));
     request.searchParams.set("population", "compass");
     const url = request.toString();
     const shown = this.dangerSeries;
-    if ((shown?.url === url && !shown.outdated) || this.dangerSeries$loading?.url === url) return;
-    this.cancelDangerSeries();
+    if ((shown?.url === url && !shown.outdated) || this.dangerSeriesRequest.loads(url)) return;
     if (shown && withoutTimestep(shown.url) !== withoutTimestep(url)) this.dangerSeries = undefined;
-    this.dangerSeries$loading = {
+    this.dangerSeriesRequest.load(
       url,
-      subscription: timer(DANGER_SERIES_DEBOUNCE_MS)
-        .pipe(switchMap(() => this.fetchJSON(url)))
-        .subscribe({
-          next: (body) => {
-            this.dangerSeries$loading = undefined;
-            this.dangerSeries = { url, series: this.dangerSeriesOf(body, index.type) };
-          },
-          error: (err) => {
-            this.dangerSeries$loading = undefined;
-            this.dangerSeries = { url, series: "none", outdated: true };
-            console.warn("Failed to load the danger level series", url, err);
-          },
-        }),
-    };
-  }
-
-  /** Stops the danger level series request in flight, if any. */
-  private cancelDangerSeries() {
-    this.dangerSeries$loading?.subscription.unsubscribe();
-    this.dangerSeries$loading = undefined;
-  }
-
-  /** The danger level series in an API answer, none when the answer carries no classes of the reading index. */
-  private dangerSeriesOf(body: unknown, index: string): DangerSeries | "none" {
-    const parsed = DangerSeriesSchema.safeParse(body);
-    if (!parsed.success) console.warn("Failed to parse the danger level series", parsed.error);
-    const classes = parsed.data?.indexes[index]?.classes;
-    if (!classes) return "none";
-    const { bounds, cuts, bands } = classes;
-    return { timestamps: parsed.data.timestamps, bounds, cuts, bands, applied: parsed.data.applied };
+      (body) => dangerSeriesOf(body, index.type),
+      (series) => (this.dangerSeries = { url, series }),
+      (err) => {
+        this.dangerSeries = { url, series: "none", outdated: true };
+        console.warn("Failed to load the danger level series", url, err);
+      },
+    );
   }
 
   /** Moves the dashboard to a date picked in the danger level series and loads it as a date step does. */
@@ -1070,15 +1011,21 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private renderTimeseries(
-    data: Timeseries,
+    { url, data }: { url: string; data: Timeseries },
     stabilityIndex: FilterSelectionData<FeatureProperties>,
-    companions: FilterSelectionData<FeatureProperties>[],
   ) {
     const indexData = data.indexes[stabilityIndex.type];
     if (!indexData) {
       this.timeseriesChart = undefined;
       return;
     }
+    const shown = { url, index: stabilityIndex.type, date: this.date };
+    if (this.timeseriesChart && isEqual(shown, this.timeseriesShown)) {
+      this.markMedianInHazardChart(data, indexData);
+      return;
+    }
+    this.timeseriesShown = shown;
+    const companions = this.companionsOf(stabilityIndex);
     const label = this.t(stabilityIndex.label);
     const innerBand = `${label} 25-75 %`;
     const outerBand = `${label} 10-90 %`;
@@ -1228,20 +1175,25 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ),
       ],
     } satisfies EChartsOption;
+    this.markMedianInHazardChart(data, indexData);
+  }
 
+  /** Puts the timeseries median at the dashboard date into the hazard chart, setting a new option only when it moves. */
+  private markMedianInHazardChart(data: Timeseries, indexData: Timeseries["indexes"][string]) {
     // show diamond marker in hazard chart
     if (!this.hazardChart) {
       return;
     }
-    this.hazardChart = { ...this.hazardChart };
-    const series: ScatterSeriesOption = this.hazardChart.series[MEDIAN_SERIES];
     const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
     this.timeseriesDateIndex = i;
-    if (this.config.hazardChart.xType === "size_estimate") {
-      series.data = i >= 0 ? [[indexData.size_estimate[i], indexData.mean[i]]] : [];
-    } else {
-      series.data = [];
-    }
+    const median =
+      this.config.hazardChart.xType === "size_estimate" && i >= 0
+        ? [[indexData.size_estimate[i], indexData.mean[i]]]
+        : [];
+    if (isEqual(this.hazardChart.series[MEDIAN_SERIES].data, median)) return;
+    this.hazardChart = { ...this.hazardChart };
+    const series: ScatterSeriesOption = this.hazardChart.series[MEDIAN_SERIES];
+    series.data = median;
   }
 
   /** The chart instance while its view exists; the details view disposes it without telling us. */
@@ -1474,8 +1426,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private levelsOnSlider(levels: readonly (number | undefined)[]): (BandLevel | undefined)[] {
     if (this.view !== "danger" || !this.cutFilter) return [];
     const cuts = this.splitCuts;
-    return bandEdges(this.cutStops, this.elevationCuts).map(([lower, upper]) => {
-      const level = upper > lower ? levels[bandOf(lower, cuts)] : undefined;
+    return bandEdges(this.elevationCuts, stopEnds(this.cutStops)).map((edges) => {
+      const level = isEmptyBand(edges) ? undefined : levels[bandOf(edges[0], cuts)];
       return level ? { level, ...levelStyle(level) } : undefined;
     });
   }
@@ -1528,10 +1480,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.markerService.tooltipNote = (o) => dangerNote(plan, o, names, words);
     this.danger = {
       bands,
+      cuts,
       index: index && {
         label: index.label,
         bounds,
-        colors: index.values.filter((v) => Array.isArray(v.numericRange)).map((v) => v.color),
+        colors: rangedValues(index.values).map((v) => v.color),
       },
       context: this.dangerContext(index, sizeFilter, pending),
       legend: levels.map(dangerRating),

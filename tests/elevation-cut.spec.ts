@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import {
   bandEdges,
+  bandName,
   bandOf,
   bandValues,
   cutParam,
@@ -10,16 +11,18 @@ import {
   cutStops,
   followBands,
   holdsAll,
+  isEmptyBand,
   isSplit,
   nearestStop,
-  sharedBounds,
   sliderStops,
   staysSplit,
   stepStop,
   stopAtPointer,
   stopCode,
+  stopEnds,
   thumbRange,
 } from "../src/app/modelling/elevation-cut";
+import { sharedBounds } from "../src/app/modelling/index-classes";
 
 const bounds = [4000, 3200, 3000, 2800, 2600, 2400, 2200, 2000, 1800, 1600, 1400];
 const live = bounds.slice(1).map((low, i) => ({ value: `${low}-${bounds[i]}`, numericRange: [low, bounds[i]] }));
@@ -32,7 +35,7 @@ const rowsOf = (...rows: string[]) => new Set(rows);
 
 test("the stops of the live elevation rows are their bounds from 4000 m down to 1400 m", () => {
   expect(stops).toEqual(bounds);
-  expect(sharedBounds(live)).toEqual(bounds.slice(1, -1));
+  expect(sharedBounds(live).map(({ bound }) => bound)).toEqual(bounds.slice(1, -1));
   expect(splits).toEqual(bounds.slice(1, -1));
 });
 
@@ -73,7 +76,7 @@ test("every split puts each row wholly into the band below it or the band above 
 test("a cut at an end of the slider splits nothing and the link says none when every thumb parks", () => {
   expect(bandValues(live, stops, [1400])).toEqual([[], values]);
   expect(bandValues(live, stops, [4000])).toEqual([values, []]);
-  expect(bandEdges(stops, [1400, 4000])).toEqual([
+  expect(bandEdges([1400, 4000], stopEnds(stops))).toEqual([
     [1400, 1400],
     [1400, 4000],
     [4000, 4000],
@@ -107,7 +110,7 @@ test("a link reopens every thumb where it stood, a parked one at its end", () =>
 });
 
 test("two cuts make three bands", () => {
-  expect(bandEdges(stops, [1800, 2400])).toEqual([
+  expect(bandEdges([1800, 2400], stopEnds(stops))).toEqual([
     [1400, 1800],
     [1800, 2400],
     [2400, 4000],
@@ -117,6 +120,48 @@ test("two cuts make three bands", () => {
     ["2200-2400", "2000-2200", "1800-2000"],
     ["3200-4000", "3000-3200", "2800-3000", "2600-2800", "2400-2600"],
   ]);
+});
+
+test("the bands end on the ends they are given, open without them, the slider's ends its lowest and highest stop", () => {
+  expect(stopEnds(stops)).toEqual([1400, 4000]);
+  expect(bandEdges([2200], [1400, 4000])).toEqual([
+    [1400, 2200],
+    [2200, 4000],
+  ]);
+  expect(bandEdges([], [1400, 4000])).toEqual([[1400, 4000]]);
+  expect(bandEdges([1800, 2400])).toEqual([
+    [undefined, 1800],
+    [1800, 2400],
+    [2400, undefined],
+  ]);
+  expect(bandEdges([])).toEqual([[undefined, undefined]]);
+});
+
+test("a band is empty when its edges meet, as a parked thumb leaves the band beyond it", () => {
+  expect(bandEdges([1400, 2200], stopEnds(stops)).map(isEmptyBand)).toEqual([true, false, false]);
+  expect(bandEdges([2200, 4000], stopEnds(stops)).map(isEmptyBand)).toEqual([false, false, true]);
+  expect(isEmptyBand([2200, 2200])).toBe(true);
+});
+
+test("a band is named below, above or between from a key table, by an all key only when it has one", () => {
+  const keys = { below: "below {{elevation}}", above: "above {{elevation}}", between: "{{lower}} to {{upper}}" };
+  const withAll = { ...keys, all: "anywhere" };
+  expect(bandEdges([1800, 2400]).map((edges) => bandName(edges, withAll))).toEqual([
+    { key: "below {{elevation}}", params: { elevation: 1800 } },
+    { key: "{{lower}} to {{upper}}", params: { lower: 1800, upper: 2400 } },
+    { key: "above {{elevation}}", params: { elevation: 2400 } },
+  ]);
+  expect(bandName([undefined, undefined], withAll)).toEqual({ key: "anywhere" });
+  const ends = stopEnds(stops);
+  expect(bandEdges([2200], ends).map((edges) => bandName(edges, keys, ends))).toEqual([
+    { key: "below {{elevation}}", params: { elevation: 2200 } },
+    { key: "above {{elevation}}", params: { elevation: 2200 } },
+  ]);
+  expect(bandName([1400, 4000], keys, ends)).toEqual({
+    key: "{{lower}} to {{upper}}",
+    params: { lower: 1400, upper: 4000 },
+  });
+  expect(bandName([1400, 4000], withAll, ends)).toEqual({ key: "anywhere" });
 });
 
 test("an elevation on a cut belongs to the band above it, and two cuts make three bands", () => {

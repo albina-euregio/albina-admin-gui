@@ -32,6 +32,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   dataset: Dataset;
   nan = 0;
   unmatchedAsNan = false;
+  private offeredValues?: ReadonlySet<string>;
 
   constructor(spec: FilterSelectionSpec<T>) {
     Object.assign(this, spec);
@@ -94,15 +95,23 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
 
   setDateRange(startDate: Date, endDate: Date) {
     const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-    this.values.length = 0;
+    const values: FilterSelectionValue[] = [];
     for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
-      this.values.push({
+      values.push({
         value: FilterSelectionData.getISODateString(i),
         color: colors.shift(),
         label: FilterSelectionData.getISODateString(i).slice(-2),
         legend: FilterSelectionData.getISODateString(i),
       });
     }
+    this.replaceValues(values);
+  }
+
+  /** Offers the given values in place of the current ones, in the same array. */
+  replaceValues(values: readonly FilterSelectionValue[]) {
+    this.values.length = 0;
+    this.values.push(...values);
+    this.offeredValues = undefined;
   }
 
   getValue(observation: T, key = this.key): ValueType {
@@ -123,7 +132,8 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
 
   /** The part of a value the filter offers: strings it does not offer drop out, and undefined when nothing is left. */
   private offeredPart(value: ValueType): ValueType | undefined {
-    const offered = (v: unknown) => typeof v !== "string" || this.values.some((f) => f.value === v);
+    this.offeredValues ??= new Set(this.values.map((f) => f.value));
+    const offered = (v: unknown) => typeof v !== "string" || this.offeredValues.has(v);
     if (!Array.isArray(value)) return offered(value) ? value : undefined;
     const kept = (value as readonly unknown[]).filter(offered);
     return kept.length ? (kept as ValueType) : undefined;

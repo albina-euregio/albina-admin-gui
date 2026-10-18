@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { dangerSeriesOf } from "../src/app/modelling/danger-series";
 import {
   DAY_LABEL_GAP,
   DAY_LABEL_WIDTH,
@@ -146,4 +147,29 @@ test("the cells of a strip are told apart by a white line only when they are wid
   expect(separatedCells(136, 340)).toBe(false);
   expect(separatedCells(136, 128)).toBe(false);
   expect(separatedCells(0, 440)).toBe(false);
+});
+
+test("the danger level series of an answer are the reading index's classes on the answer's steps", () => {
+  const index = { depth: [10, 20], size_estimate: [2, 3], lower: [0.5, 0.6], mean: [0.7, 0.8], upper: [0.9, 1] };
+  const classes = {
+    bounds: [0.85, 0.78, 0.7],
+    cuts: [2200],
+    bands: [
+      { count: [[1, 2]], size: [[2.5, null]] },
+      { count: [[3, 4]], size: [[3.5, 4]] },
+    ],
+  };
+  const answer = {
+    timestamps: ["2026-04-04T00:00:00", "2026-04-04T03:00:00"],
+    indexes: { Punstable: { ...index, classes }, sk38_ccl: index },
+    applied: ["aspect"],
+  };
+  expect(dangerSeriesOf(answer, "Punstable")).toEqual({
+    timestamps: answer.timestamps.map((timestamp) => new Date(timestamp)),
+    ...classes,
+    applied: ["aspect"],
+  });
+  expect(dangerSeriesOf(answer, "sk38_ccl")).toBe("none");
+  expect(dangerSeriesOf(answer, "lwc")).toBe("none");
+  expect(dangerSeriesOf({ timestamps: "not a list" }, "Punstable")).toBe("none");
 });

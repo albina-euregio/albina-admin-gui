@@ -31,7 +31,7 @@
   </div>
 }
 @for (band of bands(); track band.index) {
-  @let label = band.label | translate: band.params;
+  @let label = band.name.key | translate: band.name.params;
   <button
     type="button"
     class="elevation-cut-band"

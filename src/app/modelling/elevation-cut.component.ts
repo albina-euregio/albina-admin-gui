@@ -13,10 +13,26 @@ import { TranslatePipe } from "@ngx-translate/core";
 import { clamp, isEqual } from "es-toolkit";
 
 import { BAR_CHART_GRID_TOP, BAR_CHART_ROWS, BAR_LABEL_OFFSET } from "../observations/observation-chart.component";
-import { bandEdges, isSplit, stepStop, stopAtPointer, stopCode, thumbRange } from "./elevation-cut";
+import {
+  bandEdges,
+  type BandKeys,
+  bandName,
+  isEmptyBand,
+  isSplit,
+  stepStop,
+  stopAtPointer,
+  stopCode,
+  stopEnds,
+  thumbRange,
+} from "./elevation-cut";
 
 const LONG_PRESS_MS = 200;
 const PAIRED_THUMB_LABELS = ["awsome.Lower elevation cut", "awsome.Upper elevation cut"];
+const BAND_BUTTONS: BandKeys = {
+  below: "awsome.Select the elevations below {{elevation}} m",
+  above: "awsome.Select the elevations above {{elevation}} m",
+  between: "awsome.Select the elevations between {{lower}} and {{upper}} m",
+};
 
 export interface BandClick {
   band: number;
@@ -80,7 +96,9 @@ export class ElevationCutComponent {
   });
   readonly bands = computed(() => {
     const stops = this.stops();
-    return bandEdges(stops, this.preview())
+    const ends = stopEnds(stops);
+    const edges = bandEdges(this.preview(), ends);
+    return edges
       .map(([lower, upper], index) => ({
         index,
         top: stops.indexOf(upper),
@@ -88,27 +106,14 @@ export class ElevationCutComponent {
         pressed: !!this.pressed()[index],
         highlighted: !!this.highlighted()[index],
         level: this.levels()[index],
-        ...this.bandLabel(lower, upper),
+        name: bandName([lower, upper], BAND_BUTTONS, ends),
       }))
-      .filter(({ top, bottom }) => bottom > top)
+      .filter(({ index }) => !isEmptyBand(edges[index]))
       .reverse();
   });
   private grabbed?: number;
   private pressTimer?: ReturnType<typeof setTimeout>;
   private longPressed = false;
-
-  /** The label of a band's button and its parameters; a band over every row names both bounds. */
-  private bandLabel(lower: number, upper: number): { label: string; params: Record<string, number> } {
-    const bottom = lower === this.stops().at(-1);
-    const top = upper === this.stops()[0];
-    if (bottom && !top) {
-      return { label: "awsome.Select the elevations below {{elevation}} m", params: { elevation: upper } };
-    }
-    if (top && !bottom) {
-      return { label: "awsome.Select the elevations above {{elevation}} m", params: { elevation: lower } };
-    }
-    return { label: "awsome.Select the elevations between {{lower}} and {{upper}} m", params: { lower, upper } };
-  }
 
   /** Moves a thumb by the key pressed on it; modified keys pass, so Shift+Arrow keeps stepping the date. */
   step(thumb: number, event: KeyboardEvent) {

@@ -2,7 +2,7 @@ import { castArray } from "es-toolkit/compat";
 
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
 import { type BandPoint, type Calibration, type Reading, readBand } from "./eaws-reading";
-import { bandOf } from "./elevation-cut";
+import { bandEdges, type BandKeys, type BandName, bandName, bandOf } from "./elevation-cut";
 
 export type NotRead = "flat" | "aspect" | "elevation" | "snow" | "value";
 
@@ -20,6 +20,13 @@ export const NOTE_WORDS: Readonly<Record<NotRead | "read" | "not read", string>>
   ...NOT_READ,
   read: "read",
   "not read": "not read",
+};
+
+const BAND_NAMES: BandKeys = {
+  all: "all elevations",
+  below: "< {{elevation}} m",
+  above: "≥ {{elevation}} m",
+  between: "{{lower}}–{{upper}} m",
 };
 
 const DANGER_LEVEL_COLORS: readonly string[] = ["#a6d96a", "#ffffbf", "#fdae61", "#d7191c", "#000000"];
@@ -60,11 +67,6 @@ export interface DangerPlan<T> {
   readonly samples: ReadonlyMap<T, DangerSample>;
   readonly owners: ReadonlySet<T>;
   readonly locations: ReadonlyMap<string, DangerLocation>;
-}
-
-export interface BandName {
-  readonly key: string;
-  readonly params?: Readonly<Record<string, number>>;
 }
 
 export interface DangerBand {
@@ -192,12 +194,7 @@ export function dangerNote<T>(
 
 /** The name of each band of the cuts, lowest first, as a translation key and its parameters. */
 export function bandNames(cuts: readonly number[]): BandName[] {
-  if (!cuts.length) return [{ key: "all elevations" }];
-  return [
-    { key: "< {{elevation}} m", params: { elevation: cuts[0] } },
-    ...cuts.slice(1).map((upper, i) => ({ key: "{{lower}}–{{upper}} m", params: { lower: cuts[i], upper } })),
-    { key: "≥ {{elevation}} m", params: { elevation: cuts.at(-1) } },
-  ];
+  return bandEdges(cuts).map((edges) => bandName(edges, BAND_NAMES));
 }
 
 /** The bands of the cuts, lowest first: name, edges, the reading of the samples read in it and how many it holds. */
@@ -208,7 +205,7 @@ export function dangerBands(
   calibration: Calibration,
 ): DangerBand[] {
   const names = bandNames(cuts);
-  const edges = [undefined, ...cuts, undefined];
+  const edges = bandEdges(cuts);
   const points = names.map((): BandPoint[] => []);
   const selected = names.map(() => 0);
   for (const sample of samples) {
@@ -219,7 +216,7 @@ export function dangerBands(
   return names.map((name, band) => ({
     name,
     band,
-    edges: [edges[band], edges[band + 1]],
+    edges: edges[band],
     reading: readBand(points[band], bounds, calibration),
     selected: selected[band],
   }));
