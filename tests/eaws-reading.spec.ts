@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { Frequency, SnowpackStability } from "../src/app/enums/enums";
 import { DangerLevelSchema } from "../src/app/modelling/awsome.config";
 import {
   classIndex,
@@ -18,7 +19,13 @@ import {
 } from "../src/app/modelling/eaws-reading";
 import golden from "./data/eaws-read-matrix.json";
 
-const calibration = DangerLevelSchema.parse({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
+const dangerLevel = DangerLevelSchema.parse({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
+const NIVIX_WORDS: Readonly<Record<string, string>> = {
+  [SnowpackStability.very_poor]: "very poor",
+  [Frequency.few]: "a few",
+};
+/** A stability class or frequency in the words of nivix's golden vectors. */
+const nivixWord = (word: string) => NIVIX_WORDS[word] ?? word;
 const punstable = [1, 0.85, 0.78, 0.7, 0];
 const sk38 = [0, 0.5, 0.95, 1.05, 1.5];
 const lwc = [100, 3, 1, 0];
@@ -29,24 +36,24 @@ test("the matrix holds nivix's EAWS 2025 table in all 45 cells, primary level fi
     for (const frequency of FREQUENCIES) {
       for (const size of MATRIX_SIZES) {
         expect(EAWS_MATRIX[stability][frequency][size], `${stability} ${frequency} ${size}`).toEqual(
-          golden.matrix[stability][frequency][size],
+          golden.matrix[nivixWord(stability)][nivixWord(frequency)][size],
         );
         cells++;
       }
     }
   }
   expect(cells).toBe(45);
-  expect(EAWS_MATRIX.poor.many[3][0]).toBe(4);
+  expect(EAWS_MATRIX[SnowpackStability.poor][Frequency.many][3][0]).toBe(4);
 });
 
 test("readCounts reproduces nivix read_matrix on its 2016 golden vectors, a good reading without its size", () => {
   expect(golden.vectors).toHaveLength(2016);
-  expect(golden.bounds).toEqual(calibration.frequencyBounds);
+  expect(golden.bounds).toEqual(dangerLevel.frequencyBounds);
   for (const { counts, size, out } of golden.vectors) {
-    const reading = readCounts([counts.vp, counts.poor, counts.fair, counts.good], () => size, calibration);
+    const reading = readCounts([counts.vp, counts.poor, counts.fair, counts.good], () => size, dangerLevel);
     const vector = JSON.stringify({ counts, size });
-    expect(reading.stability, vector).toBe(out.stability);
-    expect(reading.frequency, vector).toBe(out.frequency);
+    expect(nivixWord(reading.stability), vector).toBe(out.stability);
+    expect(nivixWord(reading.frequency), vector).toBe(out.frequency);
     expect(reading.levels, vector).toEqual(out.levels);
     expect(reading.levels[0], vector).toBe(out.level);
     expect(reading.sizeClass, vector).toBe(out.stability === "good" ? undefined : out.size);
@@ -61,40 +68,61 @@ test("classIndex puts a value in the map's [lo, hi) class, the outer classes ope
   expect([3, 2.99, 1, 0.5, 100].map((value) => classIndex(lwc, value))).toEqual([0, 1, 1, 2, 0]);
 });
 
-test("the frequency follows Techel's bounds: none at 0, a few above it, some from 4 %, many above 20 %", () => {
-  expect(frequencyClass(0, 1000, calibration)).toBe("none");
-  expect(frequencyClass(1, 1e9, calibration)).toBe("a few");
-  expect(frequencyClass(39, 1000, calibration)).toBe("a few");
-  expect(frequencyClass(40, 1000, calibration)).toBe("some");
-  expect(frequencyClass(200, 1000, calibration)).toBe("some");
-  expect(frequencyClass(2001, 10000, calibration)).toBe("many");
-  expect(frequencyClass(0, 0, calibration)).toBe("none");
+test("the frequency follows Techel's bounds: none at 0, few above it, some from 4 %, many above 20 %", () => {
+  expect(frequencyClass(0, 1000, dangerLevel)).toBe(Frequency.none);
+  expect(frequencyClass(1, 1e9, dangerLevel)).toBe(Frequency.few);
+  expect(frequencyClass(39, 1000, dangerLevel)).toBe(Frequency.few);
+  expect(frequencyClass(40, 1000, dangerLevel)).toBe(Frequency.some);
+  expect(frequencyClass(200, 1000, dangerLevel)).toBe(Frequency.some);
+  expect(frequencyClass(2001, 10000, dangerLevel)).toBe(Frequency.many);
+  expect(frequencyClass(0, 0, dangerLevel)).toBe(Frequency.none);
 });
 
-test("a class is none up to few, a few above it, some from some, many above many", () => {
+test("a class is none up to few, few above it, some from some, many above many", () => {
   const preset = DangerLevelSchema.parse({ frequencyBounds: { few: 0.05, some: 0.15, many: 0.4 } });
-  expect(frequencyClass(50, 1000, preset)).toBe("none");
-  expect(frequencyClass(51, 1000, preset)).toBe("a few");
-  expect(frequencyClass(149, 1000, preset)).toBe("a few");
-  expect(frequencyClass(150, 1000, preset)).toBe("some");
-  expect(frequencyClass(400, 1000, preset)).toBe("some");
-  expect(frequencyClass(401, 1000, preset)).toBe("many");
-  expect(frequencyClass(0, 0, preset)).toBe("none");
+  expect(frequencyClass(50, 1000, preset)).toBe(Frequency.none);
+  expect(frequencyClass(51, 1000, preset)).toBe(Frequency.few);
+  expect(frequencyClass(149, 1000, preset)).toBe(Frequency.few);
+  expect(frequencyClass(150, 1000, preset)).toBe(Frequency.some);
+  expect(frequencyClass(400, 1000, preset)).toBe(Frequency.some);
+  expect(frequencyClass(401, 1000, preset)).toBe(Frequency.many);
+  expect(frequencyClass(0, 0, preset)).toBe(Frequency.none);
 });
 
 test("a single slope counts once its share exceeds few, and a band with one read slope reads a level", () => {
-  expect(frequencyClass(1, 100, calibration)).toBe("a few");
-  expect(readCounts([1, 0, 0, 99], () => 3, calibration)).toMatchObject({ stability: "very poor", levels: [3] });
-  expect(readCounts([5, 0, 0, 14], () => 3, calibration)).toMatchObject({ total: 19, frequency: "many", levels: [4] });
-  expect(readCounts([1, 0, 0, 0], () => 3, calibration)).toMatchObject({ total: 1, frequency: "many", levels: [4] });
-  expect(readCounts([0, 0, 0, 1], () => 3, calibration)).toMatchObject({ total: 1, stability: "good", levels: [1] });
-  expect(readCounts([0, 0, 0, 0], () => 3, calibration)).toMatchObject({ total: 0, reason: "nothing" });
-  expect(readCounts([0, 0, 0, 0], () => 3, calibration).levels).toBeUndefined();
+  expect(frequencyClass(1, 100, dangerLevel)).toBe(Frequency.few);
+  expect(readCounts([1, 0, 0, 99], () => 3, dangerLevel)).toMatchObject({
+    stability: SnowpackStability.very_poor,
+    levels: [3],
+  });
+  expect(readCounts([5, 0, 0, 14], () => 3, dangerLevel)).toMatchObject({
+    total: 19,
+    frequency: Frequency.many,
+    levels: [4],
+  });
+  expect(readCounts([1, 0, 0, 0], () => 3, dangerLevel)).toMatchObject({
+    total: 1,
+    frequency: Frequency.many,
+    levels: [4],
+  });
+  expect(readCounts([0, 0, 0, 1], () => 3, dangerLevel)).toMatchObject({
+    total: 1,
+    stability: SnowpackStability.good,
+    levels: [1],
+  });
+  expect(readCounts([0, 0, 0, 0], () => 3, dangerLevel)).toMatchObject({ total: 0, reason: "nothing" });
+  expect(readCounts([0, 0, 0, 0], () => 3, dangerLevel).levels).toBeUndefined();
 });
 
 test("the walk passes very poor and poor to fair, and good throughout reads 1 Low without asking for a size", () => {
-  const fair = readCounts([0, 0, 50, 950], () => 2.4, calibration);
-  expect(fair).toMatchObject({ decisive: 2, stability: "fair", frequency: "some", sizeClass: 2, levels: [2] });
+  const fair = readCounts([0, 0, 50, 950], () => 2.4, dangerLevel);
+  expect(fair).toMatchObject({
+    decisive: 2,
+    stability: SnowpackStability.fair,
+    frequency: Frequency.some,
+    sizeClass: 2,
+    levels: [2],
+  });
   const asked: number[] = [];
   const good = readCounts(
     [0, 0, 0, 1000],
@@ -102,9 +130,14 @@ test("the walk passes very poor and poor to fair, and good throughout reads 1 Lo
       asked.push(decisive);
       return 4;
     },
-    calibration,
+    dangerLevel,
   );
-  expect(good).toMatchObject({ decisive: 3, stability: "good", frequency: "none", levels: [1] });
+  expect(good).toMatchObject({
+    decisive: 3,
+    stability: SnowpackStability.good,
+    frequency: Frequency.none,
+    levels: [1],
+  });
   expect(good.size).toBeUndefined();
   expect(asked).toEqual([]);
 });
@@ -114,13 +147,13 @@ test("the size is asked of the decisive class only; a decisive class without siz
     ...Array.from({ length: 10 }, () => ({ value: 0.8 })),
     ...Array.from({ length: 90 }, () => ({ value: 0.2, size: 5 })),
   ];
-  expect(readBand(points, punstable, calibration)).toMatchObject({
+  expect(readBand(points, punstable, dangerLevel)).toMatchObject({
     decisive: 1,
-    stability: "poor",
-    frequency: "some",
+    stability: SnowpackStability.poor,
+    frequency: Frequency.some,
     reason: "no size",
   });
-  expect(readBand(points, punstable, calibration).levels).toBeUndefined();
+  expect(readBand(points, punstable, dangerLevel).levels).toBeUndefined();
   const asked: number[] = [];
   readCounts(
     [0, 5, 0, 95],
@@ -128,11 +161,11 @@ test("the size is asked of the decisive class only; a decisive class without siz
       asked.push(decisive);
       return undefined;
     },
-    calibration,
+    dangerLevel,
   );
   expect(asked).toEqual([1]);
   const sized = [...points.slice(0, 9), { value: 0.79, size: 3.6 }, ...points.slice(10)];
-  expect(readBand(sized, punstable, calibration)).toMatchObject({ size: 3.6, sizeClass: 4, levels: [4, 3] });
+  expect(readBand(sized, punstable, dangerLevel)).toMatchObject({ size: 3.6, sizeClass: 4, levels: [4, 3] });
 });
 
 test("reckonedSize takes the size at floor(p/100 (n-1)) of the finite sizes, numpy's method lower", () => {
@@ -150,11 +183,23 @@ test("a configured sizePercentile of 50 reckons the decisive class's median size
     ...[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5].map((size) => ({ value: 0.9, size })),
     ...Array.from({ length: 90 }, () => ({ value: 0.5, size: 1 })),
   ];
-  expect(calibration.sizePercentile).toBe(SIZE_PERCENTILE);
-  const p90 = readBand(points, punstable, calibration);
-  expect(p90).toMatchObject({ stability: "very poor", frequency: "some", size: 5, sizeClass: 5, levels: [5, 4] });
-  const median = readBand(points, punstable, DangerLevelSchema.parse({ ...calibration, sizePercentile: 50 }));
-  expect(median).toMatchObject({ stability: "very poor", frequency: "some", size: 3, sizeClass: 3, levels: [3, 4] });
+  expect(dangerLevel.sizePercentile).toBe(SIZE_PERCENTILE);
+  const p90 = readBand(points, punstable, dangerLevel);
+  expect(p90).toMatchObject({
+    stability: SnowpackStability.very_poor,
+    frequency: Frequency.some,
+    size: 5,
+    sizeClass: 5,
+    levels: [5, 4],
+  });
+  const median = readBand(points, punstable, DangerLevelSchema.parse({ ...dangerLevel, sizePercentile: 50 }));
+  expect(median).toMatchObject({
+    stability: SnowpackStability.very_poor,
+    frequency: Frequency.some,
+    size: 3,
+    sizeClass: 3,
+    levels: [3, 4],
+  });
 });
 
 test("a size rounds half up into the matrix columns 1 to 5", () => {
@@ -167,12 +212,18 @@ test("readBand classes the points with the map's classes and drops values that a
     { value: 0.95, size: 4 },
     { value: NaN, size: 5 },
   ];
-  const reading = readBand(points, sk38, calibration);
+  const reading = readBand(points, sk38, dangerLevel);
   expect(reading.counts).toEqual([0, 30, 1, 0]);
-  expect(reading).toMatchObject({ total: 31, stability: "poor", frequency: "many", size: 2, levels: [3] });
-  expect(readBand([{ value: 1 }, { value: 0.85 }], punstable, calibration).counts).toEqual([2, 0, 0, 0]);
-  expect(readBand([{ value: 0.9, size: 3 }], [], calibration)).toMatchObject({ reason: "classes", total: 0 });
-  expect(readBand([{ value: 0.9, size: 3 }], [1, 0], calibration).reason).toBe("classes");
+  expect(reading).toMatchObject({
+    total: 31,
+    stability: SnowpackStability.poor,
+    frequency: Frequency.many,
+    size: 2,
+    levels: [3],
+  });
+  expect(readBand([{ value: 1 }, { value: 0.85 }], punstable, dangerLevel).counts).toEqual([2, 0, 0, 0]);
+  expect(readBand([{ value: 0.9, size: 3 }], [], dangerLevel)).toMatchObject({ reason: "classes", total: 0 });
+  expect(readBand([{ value: 0.9, size: 3 }], [1, 0], dangerLevel).reason).toBe("classes");
 });
 
 test("readSteps reads each step's class counts with the size the API reckoned for the decisive class", () => {
@@ -188,38 +239,60 @@ test("readSteps reads each step's class counts with the size the API reckoned fo
     [null, null, null, null, null],
     [1, null, 1, 5, 5],
   ];
-  const readings = readSteps(count, size, calibration);
+  const readings = readSteps(count, size, dangerLevel);
   expect(readings).toHaveLength(5);
   expect(readings[0]).toMatchObject({
-    stability: "very poor",
-    frequency: "many",
+    stability: SnowpackStability.very_poor,
+    frequency: Frequency.many,
     size: 3.6,
     sizeClass: 4,
     levels: [5, 4],
   });
   expect(readings[1]).toMatchObject({ total: 0, reason: "nothing" });
-  expect(readings[2]).toMatchObject({ stability: "very poor", frequency: "a few", size: 2.4, levels: [2] });
-  expect(readings[3]).toMatchObject({ decisive: 0, stability: "very poor", frequency: "some", reason: "no size" });
+  expect(readings[2]).toMatchObject({
+    stability: SnowpackStability.very_poor,
+    frequency: Frequency.few,
+    size: 2.4,
+    levels: [2],
+  });
+  expect(readings[3]).toMatchObject({
+    decisive: 0,
+    stability: SnowpackStability.very_poor,
+    frequency: Frequency.some,
+    reason: "no size",
+  });
   expect(readings[3].levels).toBeUndefined();
-  expect(readings[4]).toMatchObject({ total: 3, stability: "very poor", frequency: "many", size: 5, levels: [5] });
+  expect(readings[4]).toMatchObject({
+    total: 3,
+    stability: SnowpackStability.very_poor,
+    frequency: Frequency.many,
+    size: 5,
+    levels: [5],
+  });
   readings.forEach((reading, t) =>
     expect(reading).toEqual(
       readCounts(
         count.map((counts) => counts[t]),
         (decisive) => size[decisive][t] ?? undefined,
-        calibration,
+        dangerLevel,
       ),
     ),
   );
-  expect(readSteps([], [], calibration)).toEqual([]);
+  expect(readSteps([], [], dangerLevel)).toEqual([]);
 });
 
 test("an index's classes map onto the EAWS stability classes by position from its most unstable end", () => {
-  expect(stabilityClasses(4)).toEqual(["very poor", "poor", "fair", "good"]);
-  expect(stabilityClasses(3)).toEqual(["very poor", "poor", "good"]);
+  expect(stabilityClasses(4)).toEqual(["very_poor", "poor", "fair", "good"]);
+  expect(stabilityClasses(3)).toEqual(["very_poor", "poor", "good"]);
   expect(stabilityClasses(5)).toBeUndefined();
   expect(stabilityClasses(1)).toBeUndefined();
-  expect(readCounts([0, 50, 950], () => 2, calibration)).toMatchObject({ stability: "poor", levels: [2, 3] });
-  expect(readCounts([0, 0, 1000], () => 2, calibration)).toMatchObject({ stability: "good", levels: [1] });
-  expect(readCounts([1, 1, 1, 1, 96], () => 2, calibration)).toMatchObject({ reason: "classes" });
+  expect(readCounts([0, 50, 950], () => 2, dangerLevel)).toMatchObject({
+    stability: SnowpackStability.poor,
+    levels: [2, 3],
+  });
+  expect(readCounts([0, 0, 1000], () => 2, dangerLevel)).toMatchObject({
+    stability: SnowpackStability.good,
+    levels: [1],
+  });
+  expect(readCounts([1, 1, 1, 1, 96], () => 2, dangerLevel)).toMatchObject({ reason: "classes" });
 });

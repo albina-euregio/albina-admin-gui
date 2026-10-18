@@ -132,3 +132,39 @@ test("a config in any dcfg/ folder saves through the api above that folder and r
   const list = new URL("dcfg/dormant_datetags.json", folder).toString();
   expect(reads).toEqual([list, list]);
 });
+
+test("Escape closes the open menu and leaves the details open, a second Escape closes them", async ({ page }) => {
+  const point = {
+    type: "Feature",
+    properties: { location: "P1", snowpack: {} },
+    geometry: { type: "Point", coordinates: [11.4, 47.3, 2000] },
+  };
+  const withDetails = {
+    ...config,
+    sources: [
+      {
+        name: "e2e",
+        url: "e2e-dormant/points.json",
+        tooltipTemplate: "{location}",
+        detailsTemplates: [{ label: "Details", template: "<p class='e2e-details'>{location}</p>" }],
+      },
+    ],
+  };
+  await page.route("**/e2e-dormant/awsome.json", (route) => route.fulfill({ json: withDetails }));
+  await page.route("**/e2e-dormant/dormant_datetags.json", (route) =>
+    route.fulfill({ json: { dormant_datetags: [] } }),
+  );
+  await page.route(/\/e2e-dormant\/(points\.json|api\/locations)/, (route) =>
+    route.fulfill({ json: { type: "FeatureCollection", features: [point] } }),
+  );
+  await page.goto("#/modelling/awsome?config=e2e-dormant/awsome.json");
+  await page.locator(".maplibregl-marker").first().click({ button: "right", timeout: 15000 });
+  const details = page.locator(".layout-details .e2e-details");
+  await expect(details).toHaveText("P1");
+  const menu = await openMenu(page);
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await expect(details).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(details).toHaveCount(0);
+});

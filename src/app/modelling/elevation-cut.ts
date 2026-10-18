@@ -8,6 +8,12 @@ type Ranged = readonly { readonly numericRange?: readonly number[] }[];
 type Rows = readonly { readonly value: string; readonly numericRange?: readonly number[] }[];
 type OpenEdges = [number | undefined, number | undefined];
 
+interface ChartedFilter {
+  readonly chartType: string;
+  readonly hidden?: boolean;
+  readonly values: Ranged;
+}
+
 export interface BandName {
   readonly key: string;
   readonly params?: Readonly<Record<string, number>>;
@@ -44,17 +50,18 @@ export function cutStops(values: Ranged): number[] | undefined {
 }
 
 /** The stops of a slider beside a filter's chart; undefined unless it is a shown bar chart whose rows fit and chain. */
-export function sliderStops(
-  filter: { readonly chartType: string; readonly hidden?: boolean; readonly values: Ranged },
-  rows: number,
-): number[] | undefined {
+export function sliderStops(filter: ChartedFilter, rows: number): number[] | undefined {
   return filter.chartType === "bar" && !filter.hidden && filter.values.length <= rows
     ? cutStops(filter.values)
     : undefined;
 }
 
-/** What is wrong with cuts for a filter's values: each must be a bound two consecutive values share, ascending. */
-export function cutProblems(cuts: readonly number[], values: Ranged): string[] {
+/**
+ * What is wrong with a filter's cuts: each a bound two consecutive values share, ascending, on a shown bar chart
+ * whose rows fit the chart and chain downwards, as the slider needs them.
+ */
+export function cutProblems(cuts: readonly number[], filter: ChartedFilter, rows: number): string[] {
+  const { values } = filter;
   const bounds = sharedBounds(values).map(({ bound }) => bound);
   const offered = [...bounds].sort((a, b) => a - b).join(", ") || "none";
   const strangers = cuts.filter((cut) => !bounds.includes(cut));
@@ -62,6 +69,12 @@ export function cutProblems(cuts: readonly number[], values: Ranged): string[] {
   return [
     ...strangers.map((cut) => `cut ${cut} is no bound that two consecutive values share (possible: ${offered})`),
     ...(descending ? [`cuts must ascend: ${cuts.join(", ")}`] : []),
+    ...(filter.hidden ? ["cuts need a shown filter: a hidden one has no slider to show them"] : []),
+    ...(filter.chartType !== "bar" ? [`cuts need a bar chart, not a ${filter.chartType} chart`] : []),
+    ...(values.length > rows ? [`cuts need at most ${rows} rows, the filter has ${values.length}`] : []),
+    ...(cutStops(values)
+      ? []
+      : ["cuts need rows that run from the highest down, each row's lower bound the upper bound of the next one"]),
   ];
 }
 

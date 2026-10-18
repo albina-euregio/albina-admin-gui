@@ -41,42 +41,38 @@ import type { DangerRating } from "../enums/enums";
 import { LayerToggleControl } from "../map/controls/layer-toggle-control";
 import { RegionMapService } from "../map/region-map.service";
 import { addTerrainControl, setTerrainEnabled } from "../map/terrain";
+import { BAR_CHART_ROWS } from "../observations/bar-chart-layout";
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
 import { clickFilterValues, FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
-import { BAR_CHART_ROWS, ObservationChartComponent } from "../observations/observation-chart.component";
+import { ObservationChartComponent } from "../observations/observation-chart.component";
 import { ObservationFilterService } from "../observations/observation-filter.service";
 import { ObsMarkerElement, ObservationMarkerService } from "../observations/observation-marker.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionProperties } from "../providers/regions-service/regions.service";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { awsomeText } from "./awsome-text";
 import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
 import {
-  awsomeText,
+  type DangerBand,
+  dangerBands,
+  type DangerProbe,
+  type DangerSample,
+  sampleOf,
+  SNOW_DEPTH_KEY,
+} from "./danger-bands";
+import {
   type DangerContext,
   type DangerIndex,
   DangerLevelColors,
   DangerLevelComponent,
-  dangerRating,
 } from "./danger-level.component";
-import {
-  type DangerBand,
-  dangerBands,
-  dangerNote,
-  dangerPaint,
-  type DangerProbe,
-  type DangerSample,
-  levelColor,
-  levelStyle,
-  NOTE_WORDS,
-  planDanger,
-  sampleOf,
-  SNOW_DEPTH_KEY,
-} from "./danger-paint";
+import { dangerRating, levelColor, levelStyle } from "./danger-levels";
+import { dangerNote, dangerPaint, NOTE_WORDS, planDanger } from "./danger-paint";
 import { type DangerSeries, dangerSeriesOf, type Timeseries, TimeseriesSchema } from "./danger-series";
-import { resolveConfigDate, resolveConfigDates, withinDates } from "./dashboard-date";
+import { parseModelTime, resolveConfigDate, resolveConfigDates, withinDates } from "./dashboard-date";
 import { dormantDatetags, sortDatetags } from "./dormant-datetags";
 import { DormantDatetagsMenuComponent } from "./dormant-datetags-menu.component";
 import { stabilityClasses } from "./eaws-reading";
@@ -216,6 +212,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   bandHighlighted: boolean[] = [];
   view: "hazard" | "danger" = "hazard";
   danger?: DangerView;
+  readonly empty: readonly never[] = Object.freeze<never[]>([]);
   cutLevels: readonly (BandLevel | undefined)[] = [];
   date = "";
   layout: "map" | "chart" | "details" = "map";
@@ -253,6 +250,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   hazardInstance?: ECharts;
   private hazardHighlight = -1;
   timeseriesChart: EChartsOption | undefined;
+  timeseriesNote?: { text: string; title: string };
   timeseriesInstance?: ECharts;
   private timeseriesDateIndex = -1;
   private timeseries?: { url: string; data: Timeseries };
@@ -300,9 +298,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         v.label = v.labelI18nKey ? this.translateService.instant(v.labelI18nKey) : this.t(v.label);
       });
       const dormant = f.type === "datetag" ? this.dormantDatetags : undefined;
+      if (f.hidden && f.selectedValues?.length) console.warn(`The hidden filter ${f.type} ignores its selectedValues`);
       const filter = new FilterSelectionData<FeatureProperties>({
         ...f,
         values: f.values.filter((v) => !dormant?.has(v.value)),
+        selectedValues: f.hidden ? undefined : f.selectedValues,
       });
       filter.unmatchedAsNan = !!dormant?.size;
       filter.retainKnown();
@@ -402,7 +402,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private applyStateParams() {
     const params = this.route.snapshot.queryParamMap;
-    for (const f of this.filterService.filterSelectionData) {
+    for (const f of this.shownFilters) {
       if (params.has(`filter.${f.type}`)) f.selected = new Set(this.listParam(`filter.${f.type}`));
       if (params.has(`highlight.${f.type}`)) f.highlighted = new Set(this.listParam(`highlight.${f.type}`));
       f.retainKnown();
@@ -940,6 +940,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private loadTimeseriesChart() {
     if (this.view === "danger") return;
+    this.timeseriesNote = this.nanOnlyDatetagNote();
     const stabilityIndex = this.stabilityIndex;
     if (!stabilityIndex || !this.config.timeseriesChart?.url || !this.loadedSources.length) {
       this.timeseriesChart = undefined;
@@ -964,13 +965,26 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     );
   }
 
+  /** The timeseries note while nan alone is selected of the datetags: the API cannot ask for nan and pools them all. */
+  private nanOnlyDatetagNote(): { text: string; title: string } | undefined {
+    const datetag = this.filterByType("datetag");
+    if (!datetag?.selected.has("nan") || datetag.getSelectedValues("selected").length) return undefined;
+    const { label } = datetag;
+    return {
+      text: this.t("timeseries ignores: {{label}}", { label }),
+      title: this.t("the API pools the timeseries over every {{label}}, it cannot ask for the locations without one", {
+        label,
+      }),
+    };
+  }
+
   /**
    * Asks the API for the danger level series of the selection while the danger level view is on: the index chart's
    * request with the reading index's classes, the cuts, the size percentile and the panel's compass population.
    */
   private loadDangerSeries() {
-    const calibration = this.config.dangerLevel;
-    if (this.view !== "danger" || !calibration) {
+    const dangerLevel = this.config.dangerLevel;
+    if (this.view !== "danger" || !dangerLevel) {
       this.dangerSeriesRequest.cancel();
       return;
     }
@@ -985,7 +999,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const request = this.indexRequest(index);
     request.searchParams.set(`classes.${index.type}`, bounds.slice(1, -1).join(","));
     this.splitCuts.forEach((cut) => request.searchParams.append("cut", String(cut)));
-    request.searchParams.set("size_percentile", String(calibration.sizePercentile));
+    request.searchParams.set("size_percentile", String(dangerLevel.sizePercentile));
     request.searchParams.set("population", "compass");
     const url = request.toString();
     const shown = this.dangerSeries;
@@ -1041,6 +1055,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       }))
       .filter(({ median }) => median);
     this.timeseriesChart = {
+      useUTC: true,
       xAxis: {
         type: "time",
         nameLocation: "center",
@@ -1113,7 +1128,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           data: [],
           markLine: {
             ...classLines,
-            data: [...classLines.data, { xAxis: this.date, lineStyle: { color: "#000", width: 1 } }],
+            data: [
+              ...classLines.data,
+              { xAxis: parseModelTime(this.date).getTime(), lineStyle: { color: "#000", width: 1 } },
+            ],
           } satisfies MarkLineOption,
         } satisfies LineSeriesOption,
         {
@@ -1184,7 +1202,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (!this.hazardChart) {
       return;
     }
-    const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
+    const dashboardTime = parseModelTime(this.date).getTime();
+    const i = data.timestamps.findIndex((t) => +t === dashboardTime);
     this.timeseriesDateIndex = i;
     const median =
       this.config.hazardChart.xType === "size_estimate" && i >= 0
@@ -1456,8 +1475,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
    * painted.
    */
   private readDangerLevel(selected: ReadonlySet<FeatureProperties>) {
-    const calibration = this.config.dangerLevel;
-    if (this.view !== "danger" || !calibration || this.loadingState === "loading") {
+    const dangerLevel = this.config.dangerLevel;
+    if (this.view !== "danger" || !dangerLevel || this.loadingState === "loading") {
       this.clearDangerLevel();
       return;
     }
@@ -1470,13 +1489,15 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       const key = `${o.$source}\n${o.location ?? `#${samples.size}`}`;
       samples.set(o, sampleOf(this.dangerProbe(o, key, index, sizeFilter), cuts));
     }
-    const bands = dangerBands(samples.values(), cuts, bounds ?? [], calibration);
+    const bands = dangerBands(samples.values(), cuts, bounds ?? [], dangerLevel, ({ key, params }) =>
+      this.t(key, params),
+    );
     const pending = this.filterService.filterSelectionData.some((f) => this.isReloadPending(f));
     const levels = bands.map(({ reading }) => (pending ? undefined : reading.levels?.[0]));
     const plan = planDanger(samples, levels);
     this.markerService.paintOverride = (o) => dangerPaint(plan, o, isPolygon(o));
     const words = mapValues(NOTE_WORDS, (word) => this.t(word));
-    const names = bands.map(({ name }) => this.t(name.key, name.params));
+    const names = bands.map(({ name }) => name);
     this.markerService.tooltipNote = (o) => dangerNote(plan, o, names, words);
     this.danger = {
       bands,

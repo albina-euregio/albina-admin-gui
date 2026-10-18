@@ -17,37 +17,43 @@
       ]
     },
     "date": {
-      "description": "Initial date/time when opening the dashboard; `now` opens it at the latest time on the dateStepSeconds grid before the current time",
       "anyOf": [
         {
           "type": "string",
-          "const": "now"
+          "pattern": "^now(?:([+-])(\\d+)([hd]))?$"
         },
         {
           "type": "string",
-          "format": "date-time",
-          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|))$"
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z)|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$"
         }
-      ]
+      ],
+      "description": "Initial date/time when opening the dashboard; `now` opens it at the latest time on the dateStepSeconds grid before the current time"
     },
     "dateMax": {
-      "description": "Last date/time the dashboard offers; `now` for the current time",
+      "description": "Last date/time the dashboard offers; `now` or `now+48h` for a time relative to now",
       "anyOf": [
         {
           "type": "string",
-          "const": "now"
+          "pattern": "^now(?:([+-])(\\d+)([hd]))?$"
         },
         {
           "type": "string",
-          "format": "date-time",
-          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|))$"
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z)|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$"
         }
       ]
     },
     "dateMin": {
-      "type": "string",
-      "format": "date-time",
-      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|))$"
+      "description": "First date/time the dashboard offers; `now-14d` for a rolling window",
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^now(?:([+-])(\\d+)([hd]))?$"
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z)|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$"
+        }
+      ]
     },
     "dateStepSeconds": {
       "type": "number",
@@ -226,7 +232,7 @@
             "type": "boolean"
           },
           "cuts": {
-            "description": "On the elevation filter (type `elevation`): one or two elevations in whole metres, ascending, that split its rows into bands; each must be a bound that two consecutive values share. While the filter is shown as a bar chart whose rows run from the highest down and fit the chart, a slider beside it moves the cuts from row bound to row bound (an end of the slider means no split), and a click between the cuts selects the rows of that band. A link carries cuts that differ from these as `cut`.",
+            "description": "On the elevation filter (type `elevation`): one or two elevations in whole metres, ascending, that split its rows into bands; each must be a bound that two consecutive values share, and the filter must be shown (not hidden) as a bar chart whose rows run from the highest down and fit the chart's 11 rows, else the config is refused. A slider beside the chart moves the cuts from row bound to row bound (an end of the slider means no split), and a click between the cuts selects the rows of that band. A link carries cuts that differ from these as `cut`.",
             "minItems": 1,
             "maxItems": 2,
             "type": "array",

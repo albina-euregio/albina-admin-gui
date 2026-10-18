@@ -14,10 +14,13 @@ import {
 import { TranslateService } from "@ngx-translate/core";
 import { isEqual, mapValues } from "es-toolkit";
 
-import { DangerRating } from "../enums/enums";
+import { DangerRating, Frequency, SnowpackStability } from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { AspectRoseComponent } from "./aspect-rose.component";
+import { awsomeText } from "./awsome-text";
 import type { DangerLevelConfig } from "./awsome.config";
-import { type DangerBand, levelColor, levelStyle } from "./danger-paint";
+import type { DangerBand } from "./danger-bands";
+import { dangerRating, levelColor, levelOfRating, levelStyle } from "./danger-levels";
 import type { DangerSeries } from "./danger-series";
 import {
   DangerSeriesAxisComponent,
@@ -26,32 +29,23 @@ import {
   type SeriesRow,
   type SeriesStep,
 } from "./danger-series.component";
-import { dayMonth, formatConfigDate, withinDates } from "./dashboard-date";
+import { dayMonth, formatUtcConfigDate, parseModelTime, withinDates } from "./dashboard-date";
 import {
   EAWS_MATRIX,
   FREQUENCIES,
-  type Frequency,
+  type MatrixFrequency,
   MATRIX_SIZES,
   type NoReading,
   type Reading,
   readSteps,
-  type Stability,
   stabilityClasses,
+  type UnstableClass,
   UNSTABLE_CLASSES,
 } from "./eaws-reading";
 import { type BandKeys, bandName } from "./elevation-cut";
-import { AspectRoseComponent, ElevationIconComponent } from "./elevation-icon.component";
+import { ElevationIconComponent } from "./elevation-icon.component";
 
 const TIP_GAP = 5;
-const LEVEL_NAMES = ["Low", "Moderate", "Considerable", "High", "Very high"];
-const RATINGS = [
-  DangerRating.missing,
-  DangerRating.low,
-  DangerRating.moderate,
-  DangerRating.considerable,
-  DangerRating.high,
-  DangerRating.very_high,
-];
 const BAND_PHRASES: BandKeys = {
   all: "at any elevation",
   below: "below {{elevation}} m",
@@ -105,17 +99,6 @@ interface StripBox {
   readonly bottom: number;
 }
 
-/** The danger rating of a level, missing without one. */
-export function dangerRating(level: number | undefined): DangerRating {
-  return RATINGS[level ?? 0] ?? DangerRating.missing;
-}
-
-/** The dashboard text of a key in the awsome block of the translations, the key itself when it has none. */
-export function awsomeText(translate: TranslateService, key: string, params?: Record<string, unknown>): string {
-  const text = translate.instant(`awsome.${key}`, params);
-  return typeof text === "string" && !text.startsWith("awsome.") ? text : key;
-}
-
 /** Whether an answer holds a series to draw: steps and bands. */
 function hasRows(series: DangerSeries | "none" | undefined): series is DangerSeries {
   return !!series && series !== "none" && series.timestamps.length > 0 && series.bands.length > 0;
@@ -125,7 +108,7 @@ function hasRows(series: DangerSeries | "none" | undefined): series is DangerSer
 export class DangerLevelColors extends ConstantsService {
   /** The colour of a rating: its level's map colour for levels 1 to 5. */
   override getDangerRatingColor(rating: DangerRating) {
-    const level = RATINGS.indexOf(rating);
+    const level = levelOfRating(rating);
     return (level > 0 ? levelColor(level) : super.getDangerRatingColor(rating)) as ReturnType<
       ConstantsService["getDangerRatingColor"]
     >;
@@ -151,7 +134,7 @@ export class DangerLevelComponent {
   readonly bands = input.required<readonly DangerBand[]>();
   readonly cuts = input<readonly number[]>([]);
   readonly index = input<DangerIndex | undefined>(undefined);
-  readonly calibration = input.required<DangerLevelConfig>();
+  readonly dangerLevel = input.required<DangerLevelConfig>();
   readonly date = input.required<string>();
   readonly dateMin = input<string | undefined>(undefined);
   readonly dateMax = input<string | undefined>(undefined);
@@ -162,17 +145,18 @@ export class DangerLevelComponent {
   readonly dateSelected = output<string>();
 
   readonly sizes = MATRIX_SIZES;
-  readonly rowLabels = [...FREQUENCIES, "(nearly) none"].map((frequency) => this.tr(frequency));
-  readonly sizeCaption = this.tr("avalanche size");
-  readonly seriesLabel = this.tr("danger level series");
-  readonly loading = this.tr("loading");
+  readonly rowLabels = [...FREQUENCIES.map((frequency) => this.frequencyText(frequency)), this.t("(nearly) none")];
+  readonly sizeCaption: string = this.translate.instant("matrix.label.avalancheSize");
+  readonly seriesLabel = this.t("danger level series");
+  readonly loading = this.t("loading");
   readonly title = computed(() =>
-    [this.tr("Danger level"), this.index()?.label, this.dateText(this.date())].filter(Boolean).join(" · "),
+    [this.t("Danger level"), this.index()?.label, this.dateText(this.date())].filter(Boolean).join(" · "),
   );
   readonly pending = computed(() => !!this.context()?.pending);
   readonly bandRows = computed(() => Math.max(1, this.bands().length));
   readonly classes = computed(
-    (): readonly Stability[] => stabilityClasses((this.index()?.bounds?.length ?? 5) - 1) ?? stabilityClasses(4),
+    (): readonly SnowpackStability[] =>
+      stabilityClasses((this.index()?.bounds?.length ?? 5) - 1) ?? stabilityClasses(4),
   );
   readonly innerBounds = computed(() => this.index()?.bounds?.slice(1, -1));
   readonly lines = computed(() =>
@@ -184,7 +168,7 @@ export class DangerLevelComponent {
     const bands = this.pending() ? [] : this.bands();
     return UNSTABLE_CLASSES.map((stability, k) => ({
       stability,
-      title: this.tr(stability),
+      title: this.stabilityText(stability),
       cells: FREQUENCIES.flatMap((frequency) =>
         MATRIX_SIZES.map((size) => this.cellOf(stability, frequency, size, bands)),
       ),
@@ -194,12 +178,12 @@ export class DangerLevelComponent {
   readonly aspects = computed(() => this.context()?.aspects ?? []);
   readonly aspectsTitle = computed(() =>
     this.aspects().length
-      ? this.tr("aspects {{aspects}}", { aspects: this.aspects().join(" ") })
-      : this.tr("all aspects"),
+      ? this.t("aspects {{aspects}}", { aspects: this.aspects().join(" ") })
+      : this.t("all aspects"),
   );
   readonly seriesView = computed(() => this.seriesViewOf(this.series()));
   readonly seriesNote = computed(() =>
-    this.series() !== undefined && !hasRows(this.series()) ? this.tr("no danger level series") : undefined,
+    this.series() !== undefined && !hasRows(this.series()) ? this.t("no danger level series") : undefined,
   );
   readonly stripBox = signal<StripBox | undefined>(undefined, { equal: isEqual });
   readonly hovered = signal<number | undefined>(undefined);
@@ -248,8 +232,25 @@ export class DangerLevelComponent {
   }
 
   /** The dashboard text of a key, the key itself when it has none. */
-  private tr(key: string, params?: Record<string, unknown>): string {
+  private t(key: string, params?: Record<string, unknown>): string {
     return awsomeText(this.translate, key, params);
+  }
+
+  /** The EAWS word of a stability class, good in the map's words. */
+  private stabilityText(stability: SnowpackStability): string {
+    return stability === SnowpackStability.good
+      ? this.t("good")
+      : this.translate.instant(`snowpackStability.${stability}`);
+  }
+
+  /** The EAWS word of a frequency. */
+  private frequencyText(frequency: Frequency): string {
+    return this.translate.instant(`frequency.${frequency}`);
+  }
+
+  /** The name of a danger level: its danger rating's. */
+  private levelName(level: number): string {
+    return this.translate.instant(`dangerRating.${dangerRating(level)}`);
   }
 
   /** A dashboard date as 05.04.2026 00:00. */
@@ -262,44 +263,38 @@ export class DangerLevelComponent {
     return ((100 * count) / total).toFixed(1);
   }
 
-  /** A band's name in the dashboard's words. */
-  private nameOf({ name }: DangerBand): string {
-    return this.tr(name.key, name.params);
-  }
-
   /** Where a band lies, in words. */
   private phraseOf({ edges }: DangerBand): string {
     const { key, params } = bandName(edges, BAND_PHRASES);
-    return this.tr(key, params);
+    return this.t(key, params);
   }
 
   /** The bands as the matrix marks them: each band's index with its name. */
   private marksOf(bands: readonly DangerBand[]): BandMark[] {
-    return bands.map((band) => ({ band: band.band, label: this.nameOf(band) })).reverse();
+    return bands.map((band) => ({ band: band.band, label: band.name })).reverse();
   }
 
   /** The line of one band: its level, elevation and distribution, its reading in words as the title. */
   private lineOf(band: DangerBand) {
-    const { reading } = band;
+    const { reading, name } = band;
     const pending = this.pending();
     const level = pending ? undefined : reading.levels?.[0];
     const alt = pending ? undefined : reading.levels?.[1];
     const head = level
-      ? [`${level} ${this.tr(LEVEL_NAMES[level - 1])}`, alt ? this.tr("also {{level}}", { level: alt }) : undefined]
+      ? [`${level} ${this.levelName(level)}`, alt ? this.t("also {{level}}", { level: alt }) : undefined]
           .filter(Boolean)
           .join(", ")
       : undefined;
     const triple =
       pending || !reading.stability
         ? undefined
-        : reading.stability === "good"
-          ? this.tr("good throughout")
+        : reading.stability === SnowpackStability.good
+          ? this.t("good throughout")
           : [
-              this.tr(reading.stability),
-              this.tr(reading.frequency),
-              reading.sizeClass ? this.tr("size {{size}}", { size: reading.sizeClass }) : this.tr("no size"),
+              this.stabilityText(reading.stability),
+              this.frequencyText(reading.frequency),
+              reading.sizeClass ? this.t("size {{size}}", { size: reading.sizeClass }) : this.t("no size"),
             ].join(" · ");
-    const name = this.nameOf(band);
     const detail = this.detailOf(band, pending);
     return {
       band: band.band,
@@ -313,7 +308,7 @@ export class DangerLevelComponent {
         ? reading.counts.map((count, k) => ({
             width: (100 * count) / reading.total,
             color: this.index()?.colors[k] ?? "#ccc",
-            title: `${this.tr(reading.classes[k])}: ${this.percent(count, reading.total)} %`,
+            title: `${this.stabilityText(reading.classes[k])}: ${this.percent(count, reading.total)} %`,
           }))
         : [],
     };
@@ -322,44 +317,44 @@ export class DangerLevelComponent {
   /** A band's reading in words: its margin, or why it has no level. */
   private detailOf(band: DangerBand, pending: boolean): string {
     const { reading } = band;
-    const { frequencyBounds, sizePercentile } = this.calibration();
-    if (pending) return this.tr("selection not loaded");
+    const { frequencyBounds, sizePercentile } = this.dangerLevel();
+    if (pending) return this.t("selection not loaded");
     if (reading.reason === "classes") {
       return this.index()
-        ? this.tr("{{index}} has no 2 to 4 chained classes the matrix can read", { index: this.index().label })
-        : this.tr("no stability index to read");
+        ? this.t("{{index}} has no 2 to 4 chained classes the matrix can read", { index: this.index().label })
+        : this.t("no stability index to read");
     }
     if (reading.reason === "nothing") {
       return band.selected
-        ? this.tr("nothing read {{band}}: {{count}} selected", { band: this.phraseOf(band), count: band.selected })
-        : this.tr("nothing selected {{band}}", { band: this.phraseOf(band) });
+        ? this.t("nothing read {{band}}: {{count}} selected", { band: this.phraseOf(band), count: band.selected })
+        : this.t("nothing selected {{band}}", { band: this.phraseOf(band) });
     }
     const decisive = reading.decisive ?? 0;
     const share = this.percent(reading.counts[decisive], reading.total);
-    if (reading.stability === "good") {
-      return this.tr("{{share}} % good of {{total}} slopes; every other class {{none}}", {
+    if (reading.stability === SnowpackStability.good) {
+      return this.t("{{share}} % good of {{total}} slopes; every other class {{none}}", {
         share,
         total: reading.total,
-        none: this.tr("none or nearly none"),
+        none: this.t("none or nearly none"),
       });
     }
     const bounds = mapValues(frequencyBounds, (bound) => +(100 * bound).toFixed(2));
-    const margin = this.tr(
+    const margin = this.t(
       {
-        many: "many above {{many}} %",
-        some: "some from {{some}} %, many above {{many}} %",
-        "a few": "a few above {{few}} %, some from {{some}} %",
-      }[reading.frequency as Frequency],
+        [Frequency.many]: "many above {{many}} %",
+        [Frequency.some]: "some from {{some}} %, many above {{many}} %",
+        [Frequency.few]: "few above {{few}} %, some from {{some}} %",
+      }[reading.frequency as MatrixFrequency],
       bounds,
     );
     const sized =
       reading.reason === "no size"
-        ? this.tr("the decisive class carries no size")
-        : this.tr("p{{percentile}} size {{size}}", { percentile: sizePercentile, size: reading.size.toFixed(2) });
+        ? this.t("the decisive class carries no size")
+        : this.t("p{{percentile}} size {{size}}", { percentile: sizePercentile, size: reading.size.toFixed(2) });
     return [
-      this.tr("{{share}} % {{stability}} of {{total}} slopes ({{margin}})", {
+      this.t("{{share}} % {{stability}} of {{total}} slopes ({{margin}})", {
         share,
-        stability: this.tr(reading.stability),
+        stability: this.stabilityText(reading.stability),
         total: reading.total,
         margin,
       }),
@@ -368,7 +363,7 @@ export class DangerLevelComponent {
   }
 
   /** One matrix cell: its levels, and the bands whose reading lands on it. */
-  private cellOf(stability: Stability, frequency: Frequency, size: number, bands: readonly DangerBand[]) {
+  private cellOf(stability: UnstableClass, frequency: MatrixFrequency, size: number, bands: readonly DangerBand[]) {
     const levels = EAWS_MATRIX[stability][frequency][size];
     const marks = this.marksOf(
       bands.filter(
@@ -385,9 +380,9 @@ export class DangerLevelComponent {
       alt: levels[1],
       marks,
       ...levelStyle(levels[0]),
-      title: this.tr("{{stability}} in {{frequency}} locations, size {{size}}: {{levels}}", {
-        stability: this.tr(stability),
-        frequency: this.tr(frequency),
+      title: this.t("{{stability}} in {{frequency}} locations, size {{size}}: {{levels}}", {
+        stability: this.stabilityText(stability),
+        frequency: this.frequencyText(frequency),
         size,
         levels: levels.join(", "),
       }),
@@ -399,11 +394,11 @@ export class DangerLevelComponent {
     const classes = this.classes();
     if (k >= classes.length - 1) return undefined;
     const next = classes[k + 1];
-    const low = next === "good";
+    const low = next === SnowpackStability.good;
     return {
       low,
       color: low ? levelColor(1) : undefined,
-      text: low ? this.tr("1 Low") : this.tr("→ {{next}}", { next: this.tr(next) }),
+      text: low ? `1 ${this.levelName(1)}` : this.t("→ {{next}}", { next: this.stabilityText(next) }),
       passed: this.marksOf(bands.filter(({ reading }) => (reading.decisive ?? -1) > k)),
     };
   }
@@ -417,11 +412,11 @@ export class DangerLevelComponent {
       isEqual(series.cuts, this.cuts()) &&
       isEqual(series.bounds, this.innerBounds());
     if (!readsLikeBands) return undefined;
-    const calibration = this.calibration();
-    const readings = series.bands.map((band) => readSteps(band.count, band.size, calibration));
-    const labels = bands.map((band) => this.nameOf(band));
+    const dangerLevel = this.dangerLevel();
+    const readings = series.bands.map((band) => readSteps(band.count, band.size, dangerLevel));
+    const labels = bands.map((band) => band.name);
     const steps = series.timestamps.map((timestamp, t) => {
-      const date = formatConfigDate(timestamp);
+      const date = formatUtcConfigDate(timestamp);
       return {
         date,
         tip: [
@@ -430,7 +425,7 @@ export class DangerLevelComponent {
         ],
       };
     });
-    const dashboardTime = Date.parse(this.date());
+    const dashboardTime = parseModelTime(this.date()).getTime();
     return {
       series,
       readings,
@@ -444,19 +439,19 @@ export class DangerLevelComponent {
 
   /** One step of a band in words: its level and where it lands, or why it has none; then how many slopes were read. */
   private stepText(reading: Reading): string {
-    const read = reading.total ? ` · ${this.tr("{{count}} read", { count: reading.total })}` : "";
+    const read = reading.total ? ` · ${this.t("{{count}} read", { count: reading.total })}` : "";
     const level = reading.levels?.[0];
-    if (level && reading.stability === "good") return `${level} (${this.tr("good throughout")})${read}`;
+    if (level && reading.stability === SnowpackStability.good) return `${level} (${this.t("good throughout")})${read}`;
     if (level) {
       const share = ((100 * reading.counts[reading.decisive]) / reading.total).toFixed(0);
       const where = [
-        this.tr(reading.stability),
-        `${this.tr(reading.frequency)} ${share} %`,
-        this.tr("size {{size}}", { size: reading.sizeClass }),
+        this.stabilityText(reading.stability),
+        `${this.frequencyText(reading.frequency)} ${share} %`,
+        this.t("size {{size}}", { size: reading.sizeClass }),
       ];
       return `${level} (${where.join(" · ")})${read}`;
     }
-    const reason = this.tr(STEP_REASONS[reading.reason ?? "nothing"]);
+    const reason = this.t(STEP_REASONS[reading.reason ?? "nothing"]);
     return `– (${reason})${read}`;
   }
 
@@ -469,8 +464,8 @@ export class DangerLevelComponent {
       return series === panel
         ? []
         : [
-            this.tr("{{band}}: series {{series}}, panel {{panel}}", {
-              band: this.nameOf(band),
+            this.t("{{band}}: series {{series}}, panel {{panel}}", {
+              band: band.name,
               series: series ?? "–",
               panel: panel ?? "–",
             }),
@@ -488,8 +483,8 @@ export class DangerLevelComponent {
     const chips: Chip[] = [];
     if (ignored.length) {
       chips.push({
-        text: this.tr("series ignores: {{types}}", { types: ignored.join(", ") }),
-        title: this.tr("the API reads the danger level series without the {{types}} selection", {
+        text: this.t("series ignores: {{types}}", { types: ignored.join(", ") }),
+        title: this.t("the API reads the danger level series without the {{types}} selection", {
           types: ignored.join(", "),
         }),
       });
@@ -497,11 +492,11 @@ export class DangerLevelComponent {
     const differing = this.differingBands(view);
     if (differing.length) {
       const reason = ignored.length
-        ? this.tr("the panel applies the {{types}} selection, the series does not", { types: ignored.join(", ") })
-        : this.tr(
+        ? this.t("the panel applies the {{types}} selection, the series does not", { types: ignored.join(", ") })
+        : this.t(
             "the series reads the API's population, every stored slope with a compass aspect, the panel the loaded features",
           );
-      chips.push({ text: this.tr("series ≠ panel at this step"), title: [...differing, reason].join("\n") });
+      chips.push({ text: this.t("series ≠ panel at this step"), title: [...differing, reason].join("\n") });
     }
     return chips;
   }
@@ -512,12 +507,12 @@ export class DangerLevelComponent {
     if (!context) return [];
     const chips: Chip[] = [];
     if (context.pending) {
-      const text = this.tr("selection not loaded");
-      chips.push({ text, title: text, reload: this.tr("Reload") });
+      const text = this.t("selection not loaded");
+      chips.push({ text, title: text, reload: this.t("Reload") });
     }
     for (const { type, label } of context.conditioning) {
-      const text = this.tr("{{label}} selected: the shares are conditioned", { label });
-      chips.push({ text, title: text, clear: { type, title: this.tr("Clear the {{label}} selection", { label }) } });
+      const text = this.t("{{label}} selected: the shares are conditioned", { label });
+      chips.push({ text, title: text, clear: { type, title: this.t("Clear the {{label}} selection", { label }) } });
     }
     return chips;
   }

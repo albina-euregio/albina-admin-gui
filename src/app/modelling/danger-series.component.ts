@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import { range } from "es-toolkit";
 
-import { levelColor } from "./danger-paint";
+import { levelColor } from "./danger-levels";
 import { dayMonth } from "./dashboard-date";
 
 export interface SeriesRow {

@@ -1,5 +1,8 @@
 import * as z from "zod/v4";
 
+import { parseModelTime } from "./dashboard-date";
+
+const ModelTimeSchema = z.string().transform(parseModelTime).pipe(z.date());
 const IndexSchema = z.object({
   depth: z.number().nullish().array(),
   size_estimate: z.number().nullish().array(),
@@ -11,7 +14,7 @@ const IndexSchema = z.object({
 });
 export const TimeseriesSchema = z.object({
   indexes: z.record(z.string(), IndexSchema),
-  timestamps: z.coerce.date().array(),
+  timestamps: ModelTimeSchema.array(),
 });
 export type Timeseries = z.infer<typeof TimeseriesSchema>;
 const ClassesSchema = z.object({

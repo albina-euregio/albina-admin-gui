@@ -1,22 +1,24 @@
 import { expect, test } from "@playwright/test";
 
+import { DangerRating, Frequency, SnowpackStability } from "../src/app/enums/enums";
 import { DangerLevelSchema } from "../src/app/modelling/awsome.config";
 import {
   bandNames,
   dangerBands,
-  dangerNote,
-  dangerPaint,
   type DangerProbe,
   type DangerSample,
-  HIGHLIGHT_ONLY_COLOR,
-  levelColor,
-  levelStyle,
-  MISSING_COLOR,
-  NOTE_WORDS,
-  planDanger,
   sampleOf,
   SNOW_DEPTH_KEY,
+} from "../src/app/modelling/danger-bands";
+import { DANGER_LEVELS, dangerRating, levelColor, levelOfRating, levelStyle } from "../src/app/modelling/danger-levels";
+import {
+  dangerNote,
+  dangerPaint,
+  HIGHLIGHT_ONLY_COLOR,
+  NOTE_WORDS,
+  planDanger,
 } from "../src/app/modelling/danger-paint";
+import type { BandName } from "../src/app/modelling/elevation-cut";
 import en from "../src/assets/i18n/en.json";
 
 const cuts = [2200];
@@ -34,11 +36,12 @@ const probe = (fields: Partial<DangerProbe> = {}): DangerProbe => ({
 /** The features of one location: one copy per aspect, each a sample of its probe. */
 const copies = (key: string, probes: Partial<DangerProbe>[]) =>
   new Map(probes.map((fields, i): [object, DangerSample] => [{ copy: i }, sampleOf(probe({ key, ...fields }), cuts)]));
+const missingGrey = "#969696";
+/** A band name as the dashboard's English spells it. */
+const englishName = ({ key, params }: BandName) =>
+  (en.awsome[key] as string).replace(/{{(\w+)}}/g, (_, name: string) => String(params[name]));
 /** The names of the bands of the cuts as the dashboard's English spells them. */
-const englishNames = (bandCuts: readonly number[]) =>
-  bandNames(bandCuts).map(({ key, params }) =>
-    (en.awsome[key] as string).replace(/{{(\w+)}}/g, (_, name: string) => String(params[name])),
-  );
+const englishNames = (bandCuts: readonly number[]) => bandNames(bandCuts).map(englishName);
 
 test("a snow-covered slope with an aspect, an elevation and an index value is read in its band", () => {
   expect(sampleOf(probe(), cuts)).toEqual({
@@ -125,7 +128,7 @@ test("a feature that is only highlighted gets a grey outline without a fill", ()
 test("a band without a level paints its read locations missing grey at 0.3", () => {
   const plan = planDanger(copies("tirol25\nGRID_1", [{}]), [1, undefined]);
   const [feature] = plan.samples.keys();
-  expect(dangerPaint(plan, feature, true)).toMatchObject({ color: MISSING_COLOR, fillOpacity: 0.3, weight: 0.5 });
+  expect(dangerPaint(plan, feature, true)).toMatchObject({ color: missingGrey, fillOpacity: 0.3, weight: 0.5 });
 });
 
 test("every copy of a point location takes the location's paint, labels white on levels 4 and 5", () => {
@@ -146,15 +149,35 @@ test("every copy of a point location takes the location's paint, labels white on
   }
 });
 
-test("the levels take the dashboard's index class colours, level 5 black", () => {
+test("the levels take the dashboard's index class colours, level 5 black, and no level the missing grey", () => {
   expect([1, 2, 3, 4, 5].map(levelColor)).toEqual(["#a6d96a", "#ffffbf", "#fdae61", "#d7191c", "#000000"]);
-  expect(levelColor(undefined)).toBe(MISSING_COLOR);
+  expect([undefined, 0, 6].map(levelColor)).toEqual([missingGrey, missingGrey, missingGrey]);
+});
+
+test("one table names each level by its danger rating, missing without a level, and finds a rating's level", () => {
+  expect(DANGER_LEVELS.map(({ rating }) => rating)).toEqual([
+    DangerRating.missing,
+    DangerRating.low,
+    DangerRating.moderate,
+    DangerRating.considerable,
+    DangerRating.high,
+    DangerRating.very_high,
+  ]);
+  expect([undefined, 0, 1, 5, 6].map(dangerRating)).toEqual([
+    DangerRating.missing,
+    DangerRating.missing,
+    DangerRating.low,
+    DangerRating.very_high,
+    DangerRating.missing,
+  ]);
+  expect(DANGER_LEVELS.map(({ rating }) => levelOfRating(rating))).toEqual([0, 1, 2, 3, 4, 5]);
+  expect([DangerRating.no_snow, DangerRating.no_rating].map(levelOfRating)).toEqual([0, 0]);
 });
 
 test("a level takes white text on levels 4 and 5 only, the missing grey without a level", () => {
   expect([1, 2, 3, 4, 5].map((level) => levelStyle(level).white)).toEqual([false, false, false, true, true]);
   expect(levelStyle(4)).toEqual({ color: levelColor(4), white: true });
-  expect(levelStyle(undefined)).toEqual({ color: MISSING_COLOR, white: false });
+  expect(levelStyle(undefined)).toEqual({ color: missingGrey, white: false });
 });
 
 test("the tooltip note names the band and, with several copies, which aspects were read and why not", () => {
@@ -196,8 +219,8 @@ test("the bands are named from the lowest up, as translation keys whose English 
   expect(englishNames([1800, 2400])).toEqual(["< 1800 m", "1800–2400 m", "≥ 2400 m"]);
 });
 
-test("dangerBands reads the samples read in each band and counts every sample with a band as selected", () => {
-  const calibration = DangerLevelSchema.parse({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
+test("dangerBands reads the samples read in each band, counts every sample with a band as selected and names it once", () => {
+  const dangerLevel = DangerLevelSchema.parse({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
   const punstable = [1, 0.85, 0.78, 0.7, 0];
   const samples = [
     sampleOf(probe(), cuts),
@@ -206,19 +229,30 @@ test("dangerBands reads the samples read in each band and counts every sample wi
     sampleOf(probe({ elevation: 1500, value: 0.5 }), cuts),
     sampleOf(probe({ elevation: undefined }), cuts),
   ];
-  const [below, above] = dangerBands(samples, cuts, punstable, calibration);
-  expect(below).toMatchObject({ name: bandNames(cuts)[0], band: 0, edges: [undefined, 2200], selected: 1 });
-  expect(below.reading).toMatchObject({ total: 1, counts: [0, 0, 0, 1], stability: "good", levels: [1] });
-  expect(above).toMatchObject({ name: bandNames(cuts)[1], band: 1, edges: [2200, undefined], selected: 3 });
+  const named: BandName[] = [];
+  const nameOf = (name: BandName) => {
+    named.push(name);
+    return englishName(name);
+  };
+  const [below, above] = dangerBands(samples, cuts, punstable, dangerLevel, nameOf);
+  expect(named).toEqual(bandNames(cuts));
+  expect(below).toMatchObject({ name: "< 2200 m", band: 0, edges: [undefined, 2200], selected: 1 });
+  expect(below.reading).toMatchObject({
+    total: 1,
+    counts: [0, 0, 0, 1],
+    stability: SnowpackStability.good,
+    levels: [1],
+  });
+  expect(above).toMatchObject({ name: "≥ 2200 m", band: 1, edges: [2200, undefined], selected: 3 });
   expect(above.reading).toMatchObject({
     total: 2,
     counts: [1, 0, 0, 1],
-    stability: "very poor",
-    frequency: "many",
+    stability: SnowpackStability.very_poor,
+    frequency: Frequency.many,
     sizeClass: 3,
     levels: [4],
   });
-  const [all] = dangerBands([], [], punstable, calibration);
-  expect(all).toMatchObject({ name: { key: "all elevations" }, edges: [undefined, undefined], selected: 0 });
+  const [all] = dangerBands([], [], punstable, dangerLevel, englishName);
+  expect(all).toMatchObject({ name: "all elevations", edges: [undefined, undefined], selected: 0 });
   expect(all.reading).toMatchObject({ total: 0, reason: "nothing" });
 });

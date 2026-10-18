@@ -1,7 +1,8 @@
 import * as z from "zod/v4";
 
+import { BAR_CHART_ROWS } from "../observations/bar-chart-layout";
 import { FilterSelectionSpecSchema, UrlSchema } from "../observations/filter-selection-config";
-import { SNOW_DEPTH_KEY } from "./danger-paint";
+import { SNOW_DEPTH_KEY } from "./danger-bands";
 import { RELATIVE_DATE } from "./dashboard-date";
 import { DEFAULT_FREQUENCY_BOUNDS, SIZE_PERCENTILE } from "./eaws-reading";
 import { cutProblems, MAX_CUTS } from "./elevation-cut";
@@ -96,10 +97,13 @@ export const AwsomeFilterSchema = FilterSelectionSpecSchema.extend({
     .max(MAX_CUTS)
     .optional()
     .describe(
-      "On the elevation filter (type `elevation`): one or two elevations in whole metres, ascending, that split its rows into bands; each must be a bound that two consecutive values share. While the filter is shown as a bar chart whose rows run from the highest down and fit the chart, a slider beside it moves the cuts from row bound to row bound (an end of the slider means no split), and a click between the cuts selects the rows of that band. A link carries cuts that differ from these as `cut`.",
+      `On the elevation filter (type \`elevation\`): one or two elevations in whole metres, ascending, that split its rows into bands; each must be a bound that two consecutive values share, and the filter must be shown (not hidden) as a bar chart whose rows run from the highest down and fit the chart's ${BAR_CHART_ROWS} rows, else the config is refused. A slider beside the chart moves the cuts from row bound to row bound (an end of the slider means no split), and a click between the cuts selects the rows of that band. A link carries cuts that differ from these as \`cut\`.`,
     ),
-}).superRefine(({ cuts, values }, ctx) => {
-  for (const message of cutProblems(cuts ?? [], values)) ctx.addIssue({ code: "custom", path: ["cuts"], message });
+}).superRefine((filter, ctx) => {
+  if (!filter.cuts) return;
+  for (const message of cutProblems(filter.cuts, filter, BAR_CHART_ROWS)) {
+    ctx.addIssue({ code: "custom", path: ["cuts"], message });
+  }
 });
 
 export const DangerLevelSchema = z

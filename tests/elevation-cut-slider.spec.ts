@@ -318,3 +318,30 @@ test("two cuts from the link make three bands", async ({ page }) => {
   await expect(band(page, "Select the elevations above 2400 m")).toHaveAttribute("aria-pressed", "false");
   expect((await copiedLink(page)).get("cut")).toBe("1800,2400");
 });
+
+test("a config whose cuts the slider cannot show is refused like any config error, its zod message in the console", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  const asked: string[] = [];
+  page.on("console", async (message) => {
+    if (message.type() !== "error") return;
+    for (const arg of message.args()) {
+      errors.push(
+        await arg.evaluate((value) => (value instanceof Error ? `${value.name}: ${value.message}` : `${value}`)),
+      );
+    }
+  });
+  page.on("request", (request) => asked.push(request.url()));
+  const hidden = { ...config, filters: [{ ...elevationFilter, hidden: true }] };
+  await page.route("**/e2e-cut/awsome.json", (route) => route.fulfill({ json: hidden }));
+  await page.route(/\/e2e-cut\/points\.json/, (route) => route.fulfill({ json: points }));
+  await page.goto("#/modelling/awsome?config=e2e-cut/awsome.json");
+  await expect.poll(() => errors.join("\n"), { timeout: 15000 }).toContain("ZodError");
+  await expect
+    .poll(() => errors.join("\n"))
+    .toContain('"message": "cuts need a shown filter: a hidden one has no slider to show them"');
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await expect(markers(page)).toHaveCount(0);
+  expect(asked.filter((url) => url.includes("/e2e-cut/points.json"))).toEqual([]);
+});

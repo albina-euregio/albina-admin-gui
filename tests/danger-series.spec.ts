@@ -165,7 +165,7 @@ test("the danger level series of an answer are the reading index's classes on th
     applied: ["aspect"],
   };
   expect(dangerSeriesOf(answer, "Punstable")).toEqual({
-    timestamps: answer.timestamps.map((timestamp) => new Date(timestamp)),
+    timestamps: answer.timestamps.map((timestamp) => new Date(`${timestamp}Z`)),
     ...classes,
     applied: ["aspect"],
   });

@@ -30,6 +30,7 @@ const values = live.map((row) => row.value);
 const stops = cutStops(live);
 const splits = stops.filter((stop) => isSplit(stops, stop));
 const chart = { rows: 11, gridTop: 5, labelOffset: 14 };
+const shownBars = { chartType: "bar", values: live };
 /** The rows as a set. */
 const rowsOf = (...rows: string[]) => new Set(rows);
 
@@ -282,17 +283,39 @@ test("a band counts as held only when it has rows and the set holds every one of
 });
 
 test("cuts must be bounds that two consecutive values share, in ascending order", () => {
-  expect(cutProblems([2200], live)).toEqual([]);
-  expect(cutProblems([1800, 2400], live)).toEqual([]);
+  expect(cutProblems([2200], shownBars, chart.rows)).toEqual([]);
+  expect(cutProblems([1800, 2400], shownBars, chart.rows)).toEqual([]);
   for (const cut of [2150, 4000, 1400, 0]) {
-    const problems = cutProblems([cut], live);
+    const problems = cutProblems([cut], shownBars, chart.rows);
     expect(problems).toHaveLength(1);
     expect(problems[0]).toContain(`cut ${cut} `);
     expect(problems[0]).toContain("1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200");
   }
-  expect(cutProblems([2400, 1800], live)).toEqual(["cuts must ascend: 2400, 1800"]);
-  expect(cutProblems([2200, 2200], live)).toEqual(["cuts must ascend: 2200, 2200"]);
-  expect(cutProblems([2200], [{ value: "a" }, { value: "b" }])[0]).toContain("possible: none");
+  expect(cutProblems([2400, 1800], shownBars, chart.rows)).toEqual(["cuts must ascend: 2400, 1800"]);
+  expect(cutProblems([2200, 2200], shownBars, chart.rows)).toEqual(["cuts must ascend: 2200, 2200"]);
+  const unranged = { chartType: "bar", values: [{ value: "a" }, { value: "b" }] };
+  expect(cutProblems([2200], unranged, chart.rows)[0]).toContain("possible: none");
+});
+
+test("cuts the slider cannot show are refused: on a hidden filter, a rose, more rows than the chart, unchained rows", () => {
+  expect(cutProblems([2200], { ...shownBars, hidden: true }, chart.rows)).toEqual([
+    "cuts need a shown filter: a hidden one has no slider to show them",
+  ]);
+  expect(cutProblems([2200], { ...shownBars, chartType: "rose" }, chart.rows)).toEqual([
+    "cuts need a bar chart, not a rose chart",
+  ]);
+  expect(cutProblems([2200], shownBars, 9)).toEqual(["cuts need at most 9 rows, the filter has 10"]);
+  const upwards = { ...shownBars, values: [...live].reverse() };
+  expect(cutProblems([2200], upwards, chart.rows)).toEqual([
+    "cuts need rows that run from the highest down, each row's lower bound the upper bound of the next one",
+  ]);
+  const gapped = { ...shownBars, values: live.filter((row) => row.value !== "2000-2200") };
+  expect(cutProblems([2400], gapped, chart.rows)).toEqual([
+    "cuts need rows that run from the highest down, each row's lower bound the upper bound of the next one",
+  ]);
+  for (const filter of [{ ...shownBars, hidden: true }, { ...shownBars, chartType: "rose" }, upwards, gapped]) {
+    expect(sliderStops(filter, chart.rows)).toBeUndefined();
+  }
 });
 
 test("a thumb shows its stop in hundreds of metres", () => {

@@ -1,22 +1,17 @@
 import { clamp, sum } from "es-toolkit";
 
+import { Frequency, SnowpackStability } from "../enums/enums";
+import type { DangerLevelConfig } from "./awsome.config";
 import { bandOf } from "./elevation-cut";
 
-export type UnstableClass = "very poor" | "poor" | "fair";
-export type Stability = UnstableClass | "good";
-export type Frequency = "many" | "some" | "a few";
-export type FrequencyClass = Frequency | "none";
+export type UnstableClass = Exclude<SnowpackStability, SnowpackStability.good>;
+export type MatrixFrequency = Exclude<Frequency, Frequency.none>;
 export type NoReading = "classes" | "nothing" | "no size";
 
 export interface FrequencyBounds {
   readonly few: number;
   readonly some: number;
   readonly many: number;
-}
-
-export interface Calibration {
-  readonly frequencyBounds: FrequencyBounds;
-  readonly sizePercentile: number;
 }
 
 export const DEFAULT_FREQUENCY_BOUNDS: FrequencyBounds = { few: 0.05, some: 0.15, many: 0.4 };
@@ -30,43 +25,49 @@ export interface BandPoint {
 export interface Reading {
   readonly total: number;
   readonly counts: readonly number[];
-  readonly classes: readonly Stability[];
+  readonly classes: readonly SnowpackStability[];
   readonly decisive?: number;
-  readonly stability?: Stability;
-  readonly frequency?: FrequencyClass;
+  readonly stability?: SnowpackStability;
+  readonly frequency?: Frequency;
   readonly size?: number;
   readonly sizeClass?: number;
   readonly levels?: readonly number[];
   readonly reason?: NoReading;
 }
 
-export const UNSTABLE_CLASSES: readonly UnstableClass[] = ["very poor", "poor", "fair"];
-export const FREQUENCIES: readonly Frequency[] = ["many", "some", "a few"];
+export const UNSTABLE_CLASSES: readonly UnstableClass[] = [
+  SnowpackStability.very_poor,
+  SnowpackStability.poor,
+  SnowpackStability.fair,
+];
+export const FREQUENCIES: readonly MatrixFrequency[] = [Frequency.many, Frequency.some, Frequency.few];
 export const MATRIX_SIZES: readonly number[] = [5, 4, 3, 2, 1];
 
 export const EAWS_MATRIX: Readonly<
-  Record<UnstableClass, Readonly<Record<Frequency, Readonly<Record<number, readonly number[]>>>>>
+  Record<UnstableClass, Readonly<Record<MatrixFrequency, Readonly<Record<number, readonly number[]>>>>>
 > = {
-  "very poor": {
-    many: { 5: [5], 4: [5, 4], 3: [4], 2: [3, 4], 1: [2, 3] },
-    some: { 5: [5, 4], 4: [4], 3: [3, 4], 2: [3], 1: [2] },
-    "a few": { 5: [4], 4: [3, 4], 3: [3], 2: [2], 1: [1, 2] },
+  [SnowpackStability.very_poor]: {
+    [Frequency.many]: { 5: [5], 4: [5, 4], 3: [4], 2: [3, 4], 1: [2, 3] },
+    [Frequency.some]: { 5: [5, 4], 4: [4], 3: [3, 4], 2: [3], 1: [2] },
+    [Frequency.few]: { 5: [4], 4: [3, 4], 3: [3], 2: [2], 1: [1, 2] },
   },
-  poor: {
-    many: { 5: [5, 4], 4: [4], 3: [4, 3], 2: [3], 1: [2] },
-    some: { 5: [4], 4: [4, 3], 3: [3], 2: [2, 3], 1: [2] },
-    "a few": { 5: [3, 4], 4: [3], 3: [2, 3], 2: [2], 1: [1] },
+  [SnowpackStability.poor]: {
+    [Frequency.many]: { 5: [5, 4], 4: [4], 3: [4, 3], 2: [3], 1: [2] },
+    [Frequency.some]: { 5: [4], 4: [4, 3], 3: [3], 2: [2, 3], 1: [2] },
+    [Frequency.few]: { 5: [3, 4], 4: [3], 3: [2, 3], 2: [2], 1: [1] },
   },
-  fair: {
-    many: { 5: [4, 3], 4: [3, 4], 3: [3, 2], 2: [2], 1: [1, 2] },
-    some: { 5: [3, 4], 4: [3], 3: [2, 3], 2: [2], 1: [1, 2] },
-    "a few": { 5: [3], 4: [2, 3], 3: [2, 1], 2: [1, 2], 1: [1] },
+  [SnowpackStability.fair]: {
+    [Frequency.many]: { 5: [4, 3], 4: [3, 4], 3: [3, 2], 2: [2], 1: [1, 2] },
+    [Frequency.some]: { 5: [3, 4], 4: [3], 3: [2, 3], 2: [2], 1: [1, 2] },
+    [Frequency.few]: { 5: [3], 4: [2, 3], 3: [2, 1], 2: [1, 2], 1: [1] },
   },
 };
 
 /** The EAWS stability class of each class of an index, from its most unstable end, the last one good; 2 to 4 classes. */
-export function stabilityClasses(classCount: number): Stability[] | undefined {
-  return classCount >= 2 && classCount <= 4 ? [...UNSTABLE_CLASSES.slice(0, classCount - 1), "good"] : undefined;
+export function stabilityClasses(classCount: number): SnowpackStability[] | undefined {
+  return classCount >= 2 && classCount <= 4
+    ? [...UNSTABLE_CLASSES.slice(0, classCount - 1), SnowpackStability.good]
+    : undefined;
 }
 
 /** The class of a finite value among bounds from the most unstable end: the map's [lo, hi) classes, the outer ones open. */
@@ -79,12 +80,12 @@ export function classIndex(bounds: readonly number[], value: number): number {
 export function frequencyClass(
   count: number,
   total: number,
-  { frequencyBounds }: Pick<Calibration, "frequencyBounds">,
-): FrequencyClass {
+  { frequencyBounds }: Pick<DangerLevelConfig, "frequencyBounds">,
+): Frequency {
   const share = count / total;
-  if (!(share > frequencyBounds.few)) return "none";
-  if (share > frequencyBounds.many) return "many";
-  return share >= frequencyBounds.some ? "some" : "a few";
+  if (!(share > frequencyBounds.few)) return Frequency.none;
+  if (share > frequencyBounds.many) return Frequency.many;
+  return share >= frequencyBounds.some ? Frequency.some : Frequency.few;
 }
 
 /** The size at a percentile of the finite sizes by numpy's method 'lower', floor(p/100 (n-1)); undefined without one. */
@@ -103,7 +104,7 @@ export function sizeClass(size: number): number {
 export function readCounts(
   counts: readonly number[],
   sizeOf: (decisive: number) => number | undefined,
-  calibration: Calibration,
+  dangerLevel: DangerLevelConfig,
 ): Reading {
   const classes = stabilityClasses(counts.length);
   const total = sum(counts);
@@ -111,13 +112,20 @@ export function readCounts(
   if (!classes) return { ...base, reason: "classes" };
   if (!total) return { ...base, reason: "nothing" };
   const decisive = classes.findIndex(
-    (stability, i) => stability !== "good" && frequencyClass(counts[i], total, calibration) !== "none",
+    (stability, i) =>
+      stability !== SnowpackStability.good && frequencyClass(counts[i], total, dangerLevel) !== Frequency.none,
   );
   if (decisive < 0) {
-    return { ...base, decisive: classes.length - 1, stability: "good", frequency: "none", levels: [1] };
+    return {
+      ...base,
+      decisive: classes.length - 1,
+      stability: SnowpackStability.good,
+      frequency: Frequency.none,
+      levels: [1],
+    };
   }
   const stability = classes[decisive] as UnstableClass;
-  const frequency = frequencyClass(counts[decisive], total, calibration) as Frequency;
+  const frequency = frequencyClass(counts[decisive], total, dangerLevel) as MatrixFrequency;
   const size = sizeOf(decisive);
   if (size === undefined || !Number.isFinite(size))
     return { ...base, decisive, stability, frequency, reason: "no size" };
@@ -137,20 +145,24 @@ export function readCounts(
 export function readSteps(
   count: readonly (readonly number[])[],
   size: readonly (readonly (number | null)[])[],
-  calibration: Calibration,
+  dangerLevel: DangerLevelConfig,
 ): Reading[] {
   return Array.from({ length: count[0]?.length ?? 0 }, (_, t) =>
     readCounts(
       count.map((counts) => counts[t] ?? 0),
       (decisive) => size[decisive]?.[t] ?? undefined,
-      calibration,
+      dangerLevel,
     ),
   );
 }
 
 /** The matrix reading of points classed among bounds from the most unstable end; points without a finite value drop. */
-export function readBand(points: readonly BandPoint[], bounds: readonly number[], calibration: Calibration): Reading {
-  if (bounds.length < 3) return readCounts([], () => undefined, calibration);
+export function readBand(
+  points: readonly BandPoint[],
+  bounds: readonly number[],
+  dangerLevel: DangerLevelConfig,
+): Reading {
+  if (bounds.length < 3) return readCounts([], () => undefined, dangerLevel);
   const counts = Array.from({ length: Math.max(0, bounds.length - 1) }, () => 0);
   const sizes = counts.map((): number[] => []);
   for (const { value, size } of points) {
@@ -159,5 +171,5 @@ export function readBand(points: readonly BandPoint[], bounds: readonly number[]
     counts[at]++;
     if (size !== undefined && Number.isFinite(size)) sizes[at].push(size);
   }
-  return readCounts(counts, (decisive) => reckonedSize(sizes[decisive], calibration.sizePercentile), calibration);
+  return readCounts(counts, (decisive) => reckonedSize(sizes[decisive], dangerLevel.sizePercentile), dangerLevel);
 }

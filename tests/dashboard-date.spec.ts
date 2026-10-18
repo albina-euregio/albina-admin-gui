@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 import {
-  formatConfigDate,
   formatUtcConfigDate,
   latestStep,
+  parseModelTime,
   resolveConfigDate,
   withinDates,
 } from "../src/app/modelling/dashboard-date";
@@ -53,10 +53,23 @@ test("now counts in UTC in any time zone, also on the days the clocks change", (
   });
 });
 
-test("a config date read as local time is spelled back unchanged in any time zone", () => {
+test("a model time without a zone reads as UTC in any time zone, so the steps in the spring gap stay apart", () => {
+  const steps = ["2026-03-29T01:00:00", "2026-03-29T02:00:00", "2026-03-29T03:00:00"];
   for (const zone of ["UTC", "Europe/Vienna", "America/New_York"]) {
-    inTimeZone(zone, () => expect(formatConfigDate(new Date("2026-04-05T00:00:00")), zone).toBe("2026-04-05T00:00:00"));
+    inTimeZone(zone, () => {
+      const times = steps.map(parseModelTime);
+      expect(
+        times.map((time) => time.toISOString()),
+        zone,
+      ).toEqual(steps.map((step) => `${step}.000Z`));
+      expect(new Set(times.map(Number)).size, zone).toBe(3);
+      expect(times.map(formatUtcConfigDate), zone).toEqual(steps);
+    });
   }
+  inTimeZone("Europe/Vienna", () => expect(new Date(steps[1]).getTime()).toBe(new Date(steps[2]).getTime()));
+  expect(parseModelTime("2026-03-29T02:00:00Z").toISOString()).toBe("2026-03-29T02:00:00.000Z");
+  expect(parseModelTime("2026-03-29T04:00:00+02:00").toISOString()).toBe("2026-03-29T02:00:00.000Z");
+  expect(parseModelTime("2026-03-29T02:00:00.500").toISOString()).toBe("2026-03-29T02:00:00.500Z");
 });
 
 test("offsets count from the grid time in hours or days", () => {

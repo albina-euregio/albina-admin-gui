@@ -5,12 +5,9 @@ import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { NgxEchartsDirective } from "ngx-echarts";
 
+import { BAR_CHART_GRID_TOP, BAR_CHART_ROWS, BAR_LABEL_OFFSET } from "./bar-chart-layout";
 import { clickFilterValues, type FilterSelectionData } from "./filter-selection-data";
 import { ObservationMarkerService } from "./observation-marker.service";
-
-export const BAR_CHART_ROWS = 11;
-export const BAR_CHART_GRID_TOP = 5;
-export const BAR_LABEL_OFFSET = 14;
 
 @Component({
   standalone: true,

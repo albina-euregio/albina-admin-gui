@@ -792,6 +792,17 @@ $danger-level-cell: 63px;
   }
 }
 
+.chart-container.timeseries-chart {
+  position: relative;
+}
+
+.timeseries-chart-note {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  left: 10px;
+}
+
 .danger-level-matrix {
   display: grid;
   grid-template-columns: min-content repeat(3, minmax(0, 5 * $danger-level-cell + 4px));

@@ -1,7 +1,7 @@
 import { expect, type Locator, test, type Page } from "@playwright/test";
 
 import { DangerLevelSchema } from "../src/app/modelling/awsome.config";
-import { levelColor } from "../src/app/modelling/danger-paint";
+import { levelColor } from "../src/app/modelling/danger-levels";
 import { DAY_LABEL_GAP } from "../src/app/modelling/danger-series.component";
 import { readSteps } from "../src/app/modelling/eaws-reading";
 import { captureClipboard, copiedLink, elevationFilter } from "./utils";
@@ -172,8 +172,8 @@ function total(counts: number[][]): number[] {
 }
 /** The levels the strip must show for the bands' counts and sizes, read step by step with the matrix. */
 function expectedLevels(bands: [number[][], (number | null)[][]][]): (number | undefined)[][] {
-  const calibration = DangerLevelSchema.parse(config.dangerLevel);
-  return bands.map(([count, size]) => readSteps(count, size, calibration).map((reading) => reading.levels?.[0]));
+  const dangerLevel = DangerLevelSchema.parse(config.dangerLevel);
+  return bands.map(([count, size]) => readSteps(count, size, dangerLevel).map((reading) => reading.levels?.[0]));
 }
 /** The background colour a cell shows for a level, transparent without one. */
 function cellColor(level: number | undefined): string {
@@ -347,11 +347,11 @@ test("a band reading 4 above and 1 below colours the legend, the markers, the ba
   await expect(bandLines(page).locator(".danger-level-distribution")).toHaveCount(2);
   await expect(bandLines(page).nth(0)).toHaveAttribute(
     "title",
-    "≥ 2200 m · 4 High\nvery poor · some · size 4\n10.0 % very poor of 10 slopes (some from 4 %, many above 20 %) · p90 size 4.20",
+    "≥ 2200 m · 4 high\nvery poor · some · size 4\n10.0 % very poor of 10 slopes (some from 4 %, many above 20 %) · p90 size 4.20",
   );
   await expect(bandLines(page).nth(1)).toHaveAttribute(
     "title",
-    "< 2200 m · 1 Low\ngood throughout\n100.0 % good of 10 slopes; every other class none or nearly none",
+    "< 2200 m · 1 low\ngood throughout\n100.0 % good of 10 slopes; every other class none or nearly none",
   );
   await expect(panel(page).locator(".danger-level-badge")).toHaveText(["4", "1"]);
   const badgeColors = await panel(page)
@@ -373,7 +373,7 @@ test("a dangerLevel without frequency bounds reads with the default preset and n
   await openDashboard(page, "&view=danger", highAboveLowBelow, { ...config, dangerLevel: {} });
   await expect(bandLines(page).nth(0)).toHaveAttribute(
     "title",
-    /^≥ 2200 m · 3 .*\nvery poor · a few · size 4\n10\.0 % very poor of 10 slopes \(a few above 5 %, some from 15 %\) · p90 size 4\.20$/,
+    /^≥ 2200 m · 3 considerable, also 4\nvery poor · few · size 4\n10\.0 % very poor of 10 slopes \(few above 5 %, some from 15 %\) · p90 size 4\.20$/,
   );
 });
 
@@ -428,11 +428,11 @@ test("the matrix marks the cell each band lands on, both elevation icons where t
   await expect(panel(page).locator(".danger-level-walk.passed")).toHaveCount(0);
 });
 
-test("a stable band walks every (nearly) none box to 1 Low below the size axis caption", async ({ page }) => {
+test("a stable band walks every (nearly) none box to 1 low below the size axis caption", async ({ page }) => {
   await openDashboard(page, "&view=danger");
-  await expect(panel(page).locator(".danger-level-rows")).toHaveText(/^\s*many\s*some\s*a few\s*\(nearly\) none\s*$/);
+  await expect(panel(page).locator(".danger-level-rows")).toHaveText(/^\s*many\s*some\s*few\s*\(nearly\) none\s*$/);
   const walks = panel(page).locator(".danger-level-walk");
-  await expect(walks).toHaveText(["→ poor", "→ fair", "1 Low"]);
+  await expect(walks).toHaveText(["→ poor", "→ fair", "1 low"]);
   await expect(walks.and(panel(page).locator(".passed"))).toHaveCount(3);
   expect(await filledBands(walks.locator("app-elevation-icon svg"))).toEqual(["24+24", "24+24", "24+24"]);
   await expect(walks.nth(2)).toHaveClass(/low/);
@@ -440,7 +440,7 @@ test("a stable band walks every (nearly) none box to 1 Low below the size axis c
   const cell = await panel(page).locator(".danger-level-cell").first().boundingBox();
   for (const walk of await walks.all())
     expect(Math.abs((await walk.boundingBox()).height - cell.height)).toBeLessThan(1);
-  await expect(panel(page).locator(".danger-level-caption")).toHaveText("avalanche size");
+  await expect(panel(page).locator(".danger-level-caption")).toHaveText("Avalanche Size");
   const sizes = await panel(page).locator(".danger-level-sizes").first().boundingBox();
   expect((await walks.first().boundingBox()).y).toBeLessThan(sizes.y);
   expect((await panel(page).locator(".danger-level-caption").boundingBox()).y).toBeGreaterThanOrEqual(
@@ -506,17 +506,46 @@ test("a datetag selection that is not loaded yet shows no levels and offers the 
   await expect(panel(page)).not.toContainText("selection not loaded");
 });
 
-test("a hidden filter on the reading index's layer conditions the shares and its chip clears it", async ({ page }) => {
-  await openDashboard(page, "&view=danger&filter.grainType=SH");
+test("a selection on a hidden filter, from the link or the config, is dropped: not applied to the map or the API", async ({
+  page,
+}) => {
+  const asked: URL[] = [];
+  const warnings: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.includes("/e2e-danger/")) asked.push(url);
+  });
+  page.on("console", (message) => warnings.push(message.text()));
+  const configured = filters.map((f) => (f.type === "grainType" ? { ...f, selectedValues: ["FC"] } : f));
+  await openDashboard(
+    page,
+    "&view=danger&filter.grainType=FC&highlight.grainType=SH",
+    highAboveLowBelow,
+    { ...config, filters: configured },
+    seriesAnswer(),
+  );
+  await expect(panel(page).locator(".danger-level-badge")).toHaveText(["4", "1"]);
+  await expectStepMarked(page, "current", 4, 2);
+  await expect(chips(page)).toHaveCount(0);
+  expect(asked.filter((url) => url.searchParams.has("ts")).length).toBeGreaterThanOrEqual(2);
+  for (const url of asked) expect(url.searchParams.has("grainType"), url.toString()).toBe(false);
+  const link = await copiedLink(page);
+  expect(link.has("filter.grainType")).toBe(false);
+  expect(link.has("highlight.grainType")).toBe(false);
+  expect(warnings).toContain("The hidden filter grainType ignores its selectedValues");
+});
+
+test("a shown filter on the reading index's layer conditions the shares and its chip clears it", async ({ page }) => {
+  await openDashboard(page, `&view=danger&filter.datetag=${datetags[0]}`);
   const chip = chips(page).locator(".danger-level-chip", {
-    hasText: "Grain type selected: the shares are conditioned",
+    hasText: "Datetag selected: the shares are conditioned",
   });
   await expect(chip).toBeVisible();
   await expect(chip).toHaveCSS("font-weight", "700");
-  expect((await copiedLink(page)).get("filter.grainType")).toBe("SH");
-  await chip.getByRole("button", { name: "Clear the Grain type selection" }).click();
+  expect((await copiedLink(page)).get("filter.datetag")).toBe(datetags[0]);
+  await chip.getByRole("button", { name: "Clear the Datetag selection" }).click();
   await expect(chip).toHaveCount(0);
-  expect((await copiedLink(page)).has("filter.grainType")).toBe(false);
+  expect((await copiedLink(page)).has("filter.datetag")).toBe(false);
 });
 
 test("shift+d toggles the view and its paint, the link carries view=danger and the cut while it is on", async ({
@@ -566,7 +595,7 @@ test("shift+d toggles the view and its paint, the link carries view=danger and t
 for (const [bands, params, cuts] of [
   [1, "&cut=none", []],
   [2, "", [2200]],
-  [3, "&cut=1800,2400&filter.grainType=SH", [1800, 2400]],
+  [3, `&cut=1800,2400&filter.datetag=${datetags[0]}`, [1800, 2400]],
 ] as const) {
   test(`with ${bands} band lines the panel is 1049 × 635 px, each 58 px series row beside its line up to the matrix's right edge and the cells 63 px`, async ({
     page,
@@ -860,7 +889,7 @@ test("every text of the panel is bold but the alternative levels, and the sectio
   page,
 }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await openDashboard(page, "&view=danger&filter.grainType=SH", highAboveLowBelow, config, seriesAnswer());
+  await openDashboard(page, `&view=danger&filter.datetag=${datetags[0]}`, highAboveLowBelow, config, seriesAnswer());
   await expect(chips(page).locator(".danger-level-chip")).not.toHaveCount(0);
   await stepCells(page, 0).first().hover();
   await expect(panel(page).locator(".danger-level-tip")).toBeVisible();
@@ -1183,4 +1212,89 @@ test("a click on a step moves the dashboard to its date and reloads the sources 
   await stepCells(page, 4).first().click();
   await expectStepMarked(page, "current", 4, 2);
   expect((await copiedLink(page)).get("date")).toBe("2026-04-05T00:00:00");
+});
+
+test.describe("in German", () => {
+  test.use({ locale: "de-DE" });
+
+  test("the danger view names the levels, stability classes, frequencies and the size axis in the EAWS words", async ({
+    page,
+  }) => {
+    await openDashboard(page, "&view=danger");
+    await expect(panel(page).locator(".danger-level-panel-title")).toHaveText(["sehr schlecht", "schlecht", "mittel"]);
+    await expect(panel(page).locator(".danger-level-rows")).toHaveText(
+      /^\s*viele\s*einige\s*wenige\s*\(nearly\) none\s*$/,
+    );
+    await expect(panel(page).locator(".danger-level-caption")).toHaveText("Lawinengröße");
+    await expect(panel(page).locator(".danger-level-walk")).toHaveText(["→ schlecht", "→ mittel", "1 gering"]);
+    await expect(bandLines(page).nth(0)).toHaveAttribute(
+      "title",
+      /^≥ 2200 m · 4 groß\nsehr schlecht · einige · size 4\n/,
+    );
+    await expect(bandLines(page).nth(1)).toHaveAttribute("title", /^< 2200 m · 1 gering\n/);
+    await expect(panel(page).locator(".danger-level-cell").first()).toHaveAttribute(
+      "title",
+      "sehr schlecht in viele locations, size 5: 5",
+    );
+  });
+});
+
+test("a datetag selection of only nan notes at the timeseries that the API pools every datetag", async ({ page }) => {
+  const asked: URL[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.endsWith("/e2e-danger/api/timeseries")) asked.push(url);
+  });
+  const untagged = structuredClone(highAboveLowBelow);
+  for (const feature of untagged.features) delete feature.properties.snowpack.Punstable.instabilityDrivenBy;
+  await openDashboard(page, "&filter.datetag=nan", untagged);
+  const chart = page.locator(".chart-container.timeseries-chart");
+  const note = chart.locator(".timeseries-chart-note");
+  await expect(note).toHaveText("timeseries ignores: Datetag");
+  await expect(note).toHaveAttribute(
+    "title",
+    "the API pools the timeseries over every Datetag, it cannot ask for the locations without one",
+  );
+  await expect(note).toHaveClass(/danger-level-chip/);
+  await expect(note).toHaveCSS("background-color", "rgb(255, 243, 205)");
+  const [box, area] = [await note.boundingBox(), await chart.boundingBox()];
+  expect(box.x).toBeGreaterThanOrEqual(area.x);
+  expect(box.y).toBeGreaterThanOrEqual(area.y);
+  expect(box.y + box.height).toBeLessThanOrEqual(area.y + 40);
+  expect(asked.length).toBeGreaterThan(0);
+  for (const url of asked) expect(url.searchParams.has("datetag"), url.toString()).toBe(false);
+  await page.locator("app-observation-chart", { hasText: "Datetag" }).getByTitle("Reset").click();
+  await expect(note).toHaveCount(0);
+  await expect(chart.locator("canvas")).not.toHaveCount(0);
+});
+
+test("a datetag value besides nan reaches the API, so the timeseries carries no note", async ({ page }) => {
+  await openDashboard(page, `&filter.datetag=nan,${datetags[0]}`);
+  await expect(page.locator(".chart-container.timeseries-chart canvas")).not.toHaveCount(0);
+  await expect(page.locator(".timeseries-chart-note")).toHaveCount(0);
+});
+
+test("hourly steps across the spring clock change stay apart: 02:00 and 03:00 are two steps, 03:00 the current one", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  const hours = ["00", "01", "02", "03", "04", "05"].map((hour) => `2026-03-29T${hour}:00:00`);
+  const answer = { ...seriesAnswer(), timestamps: hours };
+  const hourly = { ...config, date: "2026-03-29T03:00:00", dateStepSeconds: 3600 };
+  await openDashboard(page, "&view=danger", highAboveLowBelow, hourly, answer);
+  expect(await page.evaluate(() => new Date("2026-03-29T02:00:00").getHours())).toBe(3);
+  await expectStepMarked(page, "current", 3, 2);
+  const tip = panel(page).locator(".danger-level-tip div").first();
+  for (const [step, time] of [
+    [2, "29.03. 02:00"],
+    [3, "29.03. 03:00"],
+    [1, "29.03. 01:00"],
+  ] as const) {
+    await stepCells(page, step).first().hover();
+    await expect(tip).toHaveText(time);
+  }
+  await stepCells(page, 2).first().click();
+  await expect(panel(page)).toHaveAttribute("aria-label", "Danger level · Punstable · 29.03.2026 02:00");
+  expect((await copiedLink(page)).get("date")).toBe("2026-03-29T02:00:00");
+  await expectStepMarked(page, "current", 2, 2);
 });

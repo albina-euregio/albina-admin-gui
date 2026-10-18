@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  DestroyRef,
   inject,
   input,
   linkedSignal,
@@ -16,8 +17,8 @@ import { isEqual } from "es-toolkit";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { firstValueFrom } from "rxjs";
 
+import { BAR_CHART_ROWS } from "../observations/bar-chart-layout";
 import type { FilterSelectionValue } from "../observations/filter-selection-config";
-import { BAR_CHART_ROWS } from "../observations/observation-chart.component";
 import { isDateDatetag } from "./dormant-datetags";
 
 @Component({
@@ -29,7 +30,6 @@ import { isDateDatetag } from "./dormant-datetags";
   host: {
     class: "obs-switch-item",
     "[class.is-active]": "changed()",
-    "(document:keydown.escape)": "dropdown()?.hide()",
   },
 })
 export class DormantDatetagsMenuComponent {
@@ -51,6 +51,21 @@ export class DormantDatetagsMenuComponent {
   readonly activeCount = computed(() => this.values().filter((v) => !this.pending().has(v.value)).length);
   readonly visibleCount = computed(() => Math.min(this.activeCount(), BAR_CHART_ROWS));
   readonly changed = computed(() => !isEqual(this.pending(), this.dormant()));
+
+  /** Listens for Escape before the page's shortcuts do, so that it closes only the open menu. */
+  constructor() {
+    const escape = (event: KeyboardEvent) => this.closeOnEscape(event);
+    document.addEventListener("keydown", escape, true);
+    inject(DestroyRef).onDestroy(() => document.removeEventListener("keydown", escape, true));
+  }
+
+  /** Closes the open menu on Escape, keeping the key from the page's other shortcuts such as closing the details. */
+  private closeOnEscape(event: KeyboardEvent) {
+    const dropdown = this.dropdown();
+    if (event.key !== "Escape" || !dropdown?.isOpen) return;
+    event.stopPropagation();
+    dropdown.hide();
+  }
 
   /** Opens the menu upwards when the icon sits in the lower half of the viewport, settled before the click opens it. */
   aim(toggle: HTMLElement) {

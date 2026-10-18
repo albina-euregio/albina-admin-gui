@@ -1,6 +1,5 @@
 export const RELATIVE_DATE = /^now(?:([+-])(\d+)([hd]))?$/;
-
-const pad = (n: number) => String(n).padStart(2, "0");
+const NAIVE_TIME = /T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/;
 
 /** The latest time on the dashboard's grid before now: steps of stepSeconds counted from UTC midnight. */
 export function latestStep(now: Date, stepSeconds: number): Date {
@@ -9,15 +8,14 @@ export function latestStep(now: Date, stepSeconds: number): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, passed));
 }
 
-/** A local time as the config spells its dates, the inverse of reading a config date as local time. */
-export function formatConfigDate(date: Date): string {
-  const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-  return `${day}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-}
-
 /** A UTC time as the config spells its dates, whose model times are UTC. */
 export function formatUtcConfigDate(date: Date): string {
   return date.toISOString().slice(0, 19);
+}
+
+/** The instant of a model time, which a time without a zone names in UTC. */
+export function parseModelTime(value: string): Date {
+  return new Date(NAIVE_TIME.test(value) ? `${value}Z` : value);
 }
 
 /** A dashboard date's day and month, dd.mm. */

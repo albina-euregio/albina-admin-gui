@@ -12,7 +12,7 @@ import {
 import { TranslatePipe } from "@ngx-translate/core";
 import { clamp, isEqual } from "es-toolkit";
 
-import { BAR_CHART_GRID_TOP, BAR_CHART_ROWS, BAR_LABEL_OFFSET } from "../observations/observation-chart.component";
+import { BAR_CHART_GRID_TOP, BAR_CHART_ROWS, BAR_LABEL_OFFSET } from "../observations/bar-chart-layout";
 import {
   bandEdges,
   type BandKeys,

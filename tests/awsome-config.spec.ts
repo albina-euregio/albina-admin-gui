@@ -4,7 +4,9 @@ import * as z from "zod/v4";
 import { AwsomeConfigSchema, DangerLevelSchema } from "../src/app/modelling/awsome.config";
 import example from "../src/app/modelling/awsome.json";
 import checkedIn from "../src/app/modelling/awsome.schema.json";
+import { RELATIVE_DATE } from "../src/app/modelling/dashboard-date";
 import { DEFAULT_FREQUENCY_BOUNDS, SIZE_PERCENTILE } from "../src/app/modelling/eaws-reading";
+import { BAR_CHART_ROWS } from "../src/app/observations/bar-chart-layout";
 
 /** The datetag filter of the live config, with the given dormantMenu value unless it is undefined. */
 const datetag = (dormantMenu?: unknown) => ({
@@ -53,10 +55,15 @@ test("a dormantMenu flag that is not a boolean is refused", () => {
   }
 });
 
-test("the JSON schema declares the filters as zod generates them, dormantMenu included", () => {
+test("the JSON schema is the one zod generates in every property, dormantMenu and the relative dates included", () => {
   const generated = z.toJSONSchema(AwsomeConfigSchema) as { properties: Record<string, unknown> };
-  expect(checkedIn.properties.filters).toEqual(generated.properties.filters);
+  expect(Object.keys(checkedIn.properties)).toEqual(Object.keys(generated.properties));
+  expect(checkedIn).toEqual(generated);
   expect(checkedIn.properties.filters.items.properties.dormantMenu.type).toBe("boolean");
+  for (const key of ["date", "dateMin", "dateMax"]) {
+    const patterns = checkedIn.properties[key].anyOf.map((form: { pattern?: string }) => form.pattern);
+    expect(patterns, key).toContain(RELATIVE_DATE.source);
+  }
 });
 
 test("the cuts of the elevation filter survive parsing", () => {
@@ -79,6 +86,35 @@ test("cuts that no two consecutive rows share, that do not ascend, are no whole 
   for (const cuts of [[4000], [1400], [2200.5], [], [1800, 2200, 2600], ["2200"], 2200, null]) {
     expect(issues(cuts).length, JSON.stringify(cuts)).toBeGreaterThan(0);
   }
+});
+
+test("cuts the slider cannot show are refused: on a hidden filter, a rose, more rows than the chart, unchained rows", () => {
+  const refusal = (filter: object) =>
+    AwsomeConfigSchema.safeParse(config(filter)).error?.issues.map(({ path, message }) => ({ path, message }));
+  const path = ["filters", 0, "cuts"];
+  expect(refusal({ ...elevation([2200]), hidden: true })).toEqual([
+    { path, message: "cuts need a shown filter: a hidden one has no slider to show them" },
+  ]);
+  expect(refusal({ ...elevation([2200]), chartType: "rose" })).toEqual([
+    { path, message: "cuts need a bar chart, not a rose chart" },
+  ]);
+  const rows = [5000, 4800, ...bounds];
+  const tall = {
+    ...elevation([2200]),
+    values: rows
+      .slice(1)
+      .map((low, i) => ({ value: `${low}`, numericRange: [low, rows[i]], label: "", color: "#000" })),
+  };
+  expect(refusal(tall)).toEqual([{ path, message: `cuts need at most ${BAR_CHART_ROWS} rows, the filter has 12` }]);
+  const upwards = { ...elevation([2200]), values: [...elevation().values].reverse() };
+  expect(refusal(upwards)).toEqual([
+    {
+      path,
+      message: "cuts need rows that run from the highest down, each row's lower bound the upper bound of the next one",
+    },
+  ]);
+  expect(AwsomeConfigSchema.safeParse(config({ ...elevation(), hidden: true })).success).toBe(true);
+  expect(AwsomeConfigSchema.safeParse(config({ ...tall, cuts: undefined })).success).toBe(true);
 });
 
 test("the JSON schema declares the cuts as whole numbers, one or two of them", () => {
@@ -135,9 +171,7 @@ test("frequency bounds that do not rise or leave [0, 1], and a size percentile o
   expect(refused({})).toBe(false);
 });
 
-test("the JSON schema declares dangerLevel as zod generates it", () => {
-  const generated = z.toJSONSchema(AwsomeConfigSchema) as { properties: Record<string, unknown> };
-  expect(checkedIn.properties.dangerLevel).toEqual(generated.properties.dangerLevel);
+test("the JSON schema declares dangerLevel with its frequency bounds and size percentile only", () => {
   expect(Object.keys(checkedIn.properties.dangerLevel.properties)).toEqual(["frequencyBounds", "sizePercentile"]);
   expect(checkedIn.properties.dangerLevel.properties.frequencyBounds.default).toEqual(DEFAULT_FREQUENCY_BOUNDS);
   expect(checkedIn.properties.dangerLevel.properties.sizePercentile).toMatchObject({ type: "number", default: 90 });
