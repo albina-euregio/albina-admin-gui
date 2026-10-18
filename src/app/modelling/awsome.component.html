@@ -245,6 +245,7 @@
                   @for (tab of selectedObservationDetails; track tab) {
                     <tab
                       [heading]="tab.label"
+                      [tabOrder]="$index"
                       [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
                       (selectTab)="selectDetailsTab(tab)"
                     >
