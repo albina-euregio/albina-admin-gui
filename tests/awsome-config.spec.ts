@@ -4,6 +4,7 @@ import * as z from "zod/v4";
 import { AwsomeConfigSchema, DangerLevelSchema } from "../src/app/modelling/awsome.config";
 import example from "../src/app/modelling/awsome.json";
 import checkedIn from "../src/app/modelling/awsome.schema.json";
+import { DEFAULT_FREQUENCY_BOUNDS, SIZE_PERCENTILE } from "../src/app/modelling/eaws-reading";
 
 /** The datetag filter of the live config, with the given dormantMenu value unless it is undefined. */
 const datetag = (dormantMenu?: unknown) => ({
@@ -85,24 +86,26 @@ test("the JSON schema declares the cuts as whole numbers, one or two of them", (
   expect(cuts).toMatchObject({ type: "array", minItems: 1, maxItems: 2, items: { type: "integer" } });
 });
 
-test("dangerLevel needs its frequency bounds and receives every other default; an absent dangerLevel stays absent", () => {
-  const frequencyBounds = { few: 0.05, some: 0.15, many: 0.4 };
+test("dangerLevel holds its frequency bounds and size percentile, defaults without them; an absent one stays absent", () => {
+  const frequencyBounds = { few: 0.01, some: 0.1, many: 0.3 };
   const parsed = AwsomeConfigSchema.parse({ ...config(elevation([2200])), dangerLevel: { frequencyBounds } });
-  expect(parsed.dangerLevel).toEqual({
-    frequencyBounds,
-    sizePercentile: 90,
-    minCount: 1,
-    minFeatures: 20,
-    snowDepthKey: "snowpack.hs",
-  });
+  expect(parsed.dangerLevel).toEqual({ frequencyBounds, sizePercentile: 90 });
+  expect(DEFAULT_FREQUENCY_BOUNDS).toEqual({ few: 0.05, some: 0.15, many: 0.4 });
+  expect(SIZE_PERCENTILE).toBe(90);
+  const defaults = { frequencyBounds: DEFAULT_FREQUENCY_BOUNDS, sizePercentile: SIZE_PERCENTILE };
+  const empty = AwsomeConfigSchema.parse({ ...config(elevation([2200])), dangerLevel: {} });
+  expect(empty.dangerLevel).toEqual(defaults);
   expect(AwsomeConfigSchema.parse(config(elevation([2200])))).not.toHaveProperty("dangerLevel");
-  expect(AwsomeConfigSchema.parse(example).dangerLevel).toMatchObject({ sizePercentile: 90, minFeatures: 20 });
-  const tuned = { frequencyBounds: { few: 0.01, some: 0.1, many: 0.3 }, sources: ["tirol25"] };
-  expect(AwsomeConfigSchema.parse({ ...config(elevation()), dangerLevel: tuned }).dangerLevel).toMatchObject(tuned);
+  expect(AwsomeConfigSchema.parse(example).dangerLevel).toEqual(defaults);
+  const stale = { frequencyBounds, sizePercentile: 50, minCount: 2, minFeatures: 5, sources: ["tirol25"] };
+  expect(AwsomeConfigSchema.parse({ ...config(elevation()), dangerLevel: stale }).dangerLevel).toEqual({
+    frequencyBounds,
+    sizePercentile: 50,
+  });
 });
 
-test("the bounds come as the numbers the publisher resolved: a block without them or with a preset name is refused", () => {
-  expect(DangerLevelSchema.safeParse({}).success).toBe(false);
+test("the bounds come as the numbers the publisher resolved: a preset name is refused", () => {
+  expect(DangerLevelSchema.parse({})).toEqual({ frequencyBounds: DEFAULT_FREQUENCY_BOUNDS, sizePercentile: 90 });
   for (const frequencyBounds of ["default", "techel_2020"]) {
     expect(DangerLevelSchema.safeParse({ frequencyBounds }).success).toBe(false);
   }
@@ -110,7 +113,7 @@ test("the bounds come as the numbers the publisher resolved: a block without the
   expect(DangerLevelSchema.parse({ frequencyBounds: techel }).frequencyBounds).toEqual(techel);
 });
 
-test("frequency bounds that do not rise or leave [0, 1], and percentiles or minima out of range, are refused", () => {
+test("frequency bounds that do not rise or leave [0, 1], and a size percentile outside (0, 100], are refused", () => {
   const refused = (dangerLevel: unknown) =>
     !AwsomeConfigSchema.safeParse({ ...config(elevation()), dangerLevel }).success;
   for (const frequencyBounds of [
@@ -123,24 +126,19 @@ test("frequency bounds that do not rise or leave [0, 1], and percentiles or mini
   ]) {
     expect(refused({ frequencyBounds }), JSON.stringify(frequencyBounds)).toBe(true);
   }
-  const bounds = { few: 0, some: 0.04, many: 0.2 };
-  for (const dangerLevel of [
-    { sizePercentile: 0 },
-    { sizePercentile: 101 },
-    { minCount: 0 },
-    { minFeatures: 0 },
-    { minFeatures: 2.5 },
-    { sources: "tirol25" },
-    { snowDepthKey: 3 },
-  ]) {
-    expect(refused({ frequencyBounds: bounds, ...dangerLevel }), JSON.stringify(dangerLevel)).toBe(true);
+  for (const sizePercentile of [0, -10, 101, "90"]) {
+    expect(refused({ sizePercentile }), String(sizePercentile)).toBe(true);
   }
   for (const dangerLevel of [true, []]) expect(refused(dangerLevel)).toBe(true);
-  expect(refused({ frequencyBounds: bounds, sizePercentile: 100, minCount: 2, minFeatures: 1 })).toBe(false);
+  expect(refused({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 }, sizePercentile: 100 })).toBe(false);
+  expect(refused({ sizePercentile: 50 })).toBe(false);
+  expect(refused({})).toBe(false);
 });
 
 test("the JSON schema declares dangerLevel as zod generates it", () => {
   const generated = z.toJSONSchema(AwsomeConfigSchema) as { properties: Record<string, unknown> };
   expect(checkedIn.properties.dangerLevel).toEqual(generated.properties.dangerLevel);
-  expect(checkedIn.properties.dangerLevel.properties.minFeatures).toMatchObject({ type: "integer", default: 20 });
+  expect(Object.keys(checkedIn.properties.dangerLevel.properties)).toEqual(["frequencyBounds", "sizePercentile"]);
+  expect(checkedIn.properties.dangerLevel.properties.frequencyBounds.default).toEqual(DEFAULT_FREQUENCY_BOUNDS);
+  expect(checkedIn.properties.dangerLevel.properties.sizePercentile).toMatchObject({ type: "number", default: 90 });
 });

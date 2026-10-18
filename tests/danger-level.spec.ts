@@ -64,7 +64,7 @@ const config = {
   filters,
   sources: [{ name: "e2e", url: "e2e-danger/points.json", tooltipTemplate: "{location}" }],
   timeseriesChart: { url: "e2e-danger/api/timeseries" },
-  dangerLevel: { minFeatures: 5, frequencyBounds: { few: 0, some: 0.04, many: 0.2 } },
+  dangerLevel: { frequencyBounds: { few: 0, some: 0.04, many: 0.2 } },
 };
 const timeseries = {
   timestamps: ["2026-04-04T00:00:00", "2026-04-05T00:00:00"],
@@ -332,13 +332,26 @@ test("a band reading 4 above and 1 below colours the legend, the markers, the ba
   await expect(page.locator("app-elevation-cut .elevation-cut-line")).toHaveClass(/solid/);
 });
 
-test("the band tooltip names the frequency bounds the dashboard states", async ({ page }) => {
-  const dangerLevel = { minFeatures: 5, frequencyBounds: { few: 0.05, some: 0.15, many: 0.4 } };
-  await openDashboard(page, "&view=danger", highAboveLowBelow, { ...config, dangerLevel });
+test("a dangerLevel without frequency bounds reads with the default preset and names it in the band tooltip", async ({
+  page,
+}) => {
+  await openDashboard(page, "&view=danger", highAboveLowBelow, { ...config, dangerLevel: {} });
   await expect(bandLines(page).nth(0)).toHaveAttribute(
     "title",
     /^≥ 2200 m · 3 .*\nvery poor · a few · size 4\n10\.0 % very poor of 10 slopes \(a few above 5 %, some from 15 %\) · p90 size 4\.20$/,
   );
+});
+
+test("a configured size percentile reaches the series request and the band tooltip", async ({ page }) => {
+  const percentiles: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (url.searchParams.has("classes.Punstable")) percentiles.push(url.searchParams.get("size_percentile"));
+  });
+  const dangerLevel = { ...config.dangerLevel, sizePercentile: 50 };
+  await openDashboard(page, "&view=danger", highAboveLowBelow, { ...config, dangerLevel }, seriesAnswer());
+  await expect(bandLines(page).nth(0)).toHaveAttribute("title", /very poor of 10 slopes .* · p50 size 4\.20$/);
+  await expect.poll(() => percentiles).toEqual(["50"]);
 });
 
 test("the marker tooltips say why a flat slope is not read", async ({ page }) => {
@@ -775,7 +788,7 @@ test("the series reads every band at every step with the matrix and marks the cu
   ]);
   expect(levels).toEqual([
     [4, 1, 5, undefined, 4, 1],
-    [1, 3, undefined, 3, 1, undefined],
+    [1, 3, undefined, 3, 1, 1],
   ]);
   await expectSeriesLevels(page, levels);
   await expectStepMarked(page, "current", 4, 2);
@@ -969,7 +982,7 @@ test("a chip warns when the series' level at the current step differs from the p
   ]);
   expect(levels).toEqual([
     [4, 1, 5, undefined, 1, 1],
-    [1, 3, undefined, 3, 1, undefined],
+    [1, 3, undefined, 3, 1, 1],
   ]);
   await expectSeriesLevels(page, levels);
   const chip = chips(page).locator(".danger-level-chip", { hasText: "series ≠ panel at this step" });

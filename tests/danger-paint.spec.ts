@@ -15,6 +15,7 @@ import {
   NOTE_WORDS,
   planDanger,
   sampleOf,
+  SNOW_DEPTH_KEY,
 } from "../src/app/modelling/danger-paint";
 import en from "../src/assets/i18n/en.json";
 
@@ -28,7 +29,6 @@ const probe = (fields: Partial<DangerProbe> = {}): DangerProbe => ({
   snowDepth: 120,
   value: 0.9,
   size: 3.4,
-  sourceRead: true,
   ...fields,
 });
 /** The features of one location: one copy per aspect, each a sample of its probe. */
@@ -59,8 +59,8 @@ test("a snow-covered slope with an aspect, an elevation and an index value is re
   expect(sampleOf(probe({ snowDepth: undefined }), cuts).notRead).toBeUndefined();
 });
 
-test("a slope that cannot be read says why: source, flat, aspect, elevation, snow, index value", () => {
-  expect(sampleOf(probe({ sourceRead: false }), cuts).notRead).toBe("source");
+test("a slope that cannot be read says why: flat, aspect, elevation, snow, index value", () => {
+  expect(SNOW_DEPTH_KEY).toBe("snowpack.hs");
   expect(sampleOf(probe({ aspect: ["F"] }), cuts).notRead).toBe("flat");
   expect(sampleOf(probe({ aspect: undefined }), cuts).notRead).toBe("aspect");
   for (const aspect of ["SN", "EW", "NNN", "nan"])
@@ -197,7 +197,7 @@ test("the bands are named from the lowest up, as translation keys whose English 
 });
 
 test("dangerBands reads the samples read in each band and counts every sample with a band as selected", () => {
-  const calibration = DangerLevelSchema.parse({ minFeatures: 1, frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
+  const calibration = DangerLevelSchema.parse({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
   const punstable = [1, 0.85, 0.78, 0.7, 0];
   const samples = [
     sampleOf(probe(), cuts),

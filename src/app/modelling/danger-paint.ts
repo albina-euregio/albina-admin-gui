@@ -4,10 +4,11 @@ import type { FilterSelectionValue } from "../observations/filter-selection-conf
 import { type BandPoint, type Calibration, type Reading, readBand } from "./eaws-reading";
 import { bandOf } from "./elevation-cut";
 
-export type NotRead = "source" | "flat" | "aspect" | "elevation" | "snow" | "value";
+export type NotRead = "flat" | "aspect" | "elevation" | "snow" | "value";
+
+export const SNOW_DEPTH_KEY = "snowpack.hs";
 
 const NOT_READ: Readonly<Record<NotRead, string>> = {
-  source: "source not read",
   flat: "flat",
   aspect: "no aspect",
   elevation: "no elevation",
@@ -36,7 +37,6 @@ export interface DangerProbe {
   readonly snowDepth: unknown;
   readonly value: unknown;
   readonly size: unknown;
-  readonly sourceRead: boolean;
 }
 
 export interface DangerSample {
@@ -86,7 +86,6 @@ export function sampleOf(probe: DangerProbe, cuts: readonly number[]): DangerSam
   const aspect = typeof first === "string" ? first : undefined;
   const band = isFiniteNumber(probe.elevation) ? bandOf(probe.elevation, cuts) : undefined;
   const sample = { key: probe.key, polygon: probe.polygon, aspect, band };
-  if (!probe.sourceRead) return { ...sample, notRead: "source" };
   if (aspect === "F") return { ...sample, notRead: "flat" };
   if (!aspect || !COMPASS.has(aspect)) return { ...sample, notRead: "aspect" };
   if (band === undefined) return { ...sample, notRead: "elevation" };

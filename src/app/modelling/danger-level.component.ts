@@ -54,7 +54,6 @@ const RATINGS = [
 const STEP_REASONS: Readonly<Record<NoReading, string>> = {
   classes: "no stability index to read",
   nothing: "nothing read",
-  "too few": "too few slopes: {{count}} (at least {{min}})",
   "no size": "the decisive class carries no size",
 };
 
@@ -321,7 +320,7 @@ export class DangerLevelComponent {
   /** A band's reading in words: its margin, or why it has no level. */
   private detailOf(band: DangerBand, pending: boolean): string {
     const { reading } = band;
-    const { frequencyBounds, sizePercentile, minFeatures } = this.calibration();
+    const { frequencyBounds, sizePercentile } = this.calibration();
     if (pending) return this.tr("selection not loaded");
     if (reading.reason === "classes") {
       return this.index()
@@ -332,9 +331,6 @@ export class DangerLevelComponent {
       return band.selected
         ? this.tr("nothing read {{band}}: {{count}} selected", { band: this.phraseOf(band), count: band.selected })
         : this.tr("nothing selected {{band}}", { band: this.phraseOf(band) });
-    }
-    if (reading.reason === "too few") {
-      return this.tr("too few slopes: {{count}} (at least {{min}})", { count: reading.total, min: minFeatures });
     }
     const decisive = reading.decisive ?? 0;
     const share = this.percent(reading.counts[decisive], reading.total);
@@ -454,10 +450,7 @@ export class DangerLevelComponent {
       ];
       return `${level} (${where.join(" · ")})${read}`;
     }
-    const reason = this.tr(STEP_REASONS[reading.reason ?? "nothing"], {
-      count: reading.total,
-      min: this.calibration().minFeatures,
-    });
+    const reason = this.tr(STEP_REASONS[reading.reason ?? "nothing"]);
     return `– (${reason})${read}`;
   }
 

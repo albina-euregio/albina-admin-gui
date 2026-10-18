@@ -4,7 +4,7 @@ export type UnstableClass = "very poor" | "poor" | "fair";
 export type Stability = UnstableClass | "good";
 export type Frequency = "many" | "some" | "a few";
 export type FrequencyClass = Frequency | "none";
-export type NoReading = "classes" | "nothing" | "too few" | "no size";
+export type NoReading = "classes" | "nothing" | "no size";
 
 export interface FrequencyBounds {
   readonly few: number;
@@ -15,9 +15,10 @@ export interface FrequencyBounds {
 export interface Calibration {
   readonly frequencyBounds: FrequencyBounds;
   readonly sizePercentile: number;
-  readonly minCount: number;
-  readonly minFeatures: number;
 }
+
+export const DEFAULT_FREQUENCY_BOUNDS: FrequencyBounds = { few: 0.05, some: 0.15, many: 0.4 };
+export const SIZE_PERCENTILE = 90;
 
 export interface BandPoint {
   readonly value: number;
@@ -78,10 +79,10 @@ export function classIndex(bounds: readonly number[], value: number): number {
 export function frequencyClass(
   count: number,
   total: number,
-  { frequencyBounds, minCount }: Pick<Calibration, "frequencyBounds" | "minCount">,
+  { frequencyBounds }: Pick<Calibration, "frequencyBounds">,
 ): FrequencyClass {
   const share = count / total;
-  if (count < minCount || !(share > frequencyBounds.few)) return "none";
+  if (!(share > frequencyBounds.few)) return "none";
   if (share > frequencyBounds.many) return "many";
   return share >= frequencyBounds.some ? "some" : "a few";
 }
@@ -109,7 +110,6 @@ export function readCounts(
   const base = { total, counts, classes: classes ?? [] };
   if (!classes) return { ...base, reason: "classes" };
   if (!total) return { ...base, reason: "nothing" };
-  if (total < calibration.minFeatures) return { ...base, reason: "too few" };
   const decisive = classes.findIndex(
     (stability, i) => stability !== "good" && frequencyClass(counts[i], total, calibration) !== "none",
   );

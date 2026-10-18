@@ -11,6 +11,7 @@ import {
   readCounts,
   readSteps,
   reckonedSize,
+  SIZE_PERCENTILE,
   sizeClass,
   stabilityClasses,
   UNSTABLE_CLASSES,
@@ -18,7 +19,6 @@ import {
 import golden from "./data/eaws-read-matrix.json";
 
 const calibration = DangerLevelSchema.parse({ frequencyBounds: { few: 0, some: 0.04, many: 0.2 } });
-const nivix = { ...calibration, minFeatures: 1 };
 const punstable = [1, 0.85, 0.78, 0.7, 0];
 const sk38 = [0, 0.5, 0.95, 1.05, 1.5];
 const lwc = [100, 3, 1, 0];
@@ -43,7 +43,7 @@ test("readCounts reproduces nivix read_matrix on its 2016 golden vectors, a good
   expect(golden.vectors).toHaveLength(2016);
   expect(golden.bounds).toEqual(calibration.frequencyBounds);
   for (const { counts, size, out } of golden.vectors) {
-    const reading = readCounts([counts.vp, counts.poor, counts.fair, counts.good], () => size, nivix);
+    const reading = readCounts([counts.vp, counts.poor, counts.fair, counts.good], () => size, calibration);
     const vector = JSON.stringify({ counts, size });
     expect(reading.stability, vector).toBe(out.stability);
     expect(reading.frequency, vector).toBe(out.frequency);
@@ -82,14 +82,14 @@ test("a class is none up to few, a few above it, some from some, many above many
   expect(frequencyClass(0, 0, preset)).toBe("none");
 });
 
-test("minCount makes a rare class none, minFeatures refuses a band with too few slopes", () => {
-  expect(frequencyClass(2, 100, { ...calibration, minCount: 3 })).toBe("none");
-  expect(frequencyClass(3, 100, { ...calibration, minCount: 3 })).toBe("a few");
-  expect(readCounts([1, 0, 0, 99], () => 3, { ...calibration, minCount: 2 }).stability).toBe("good");
-  expect(readCounts([5, 0, 0, 14], () => 3, calibration)).toMatchObject({ total: 19, reason: "too few" });
-  expect(readCounts([5, 0, 0, 14], () => 3, calibration).levels).toBeUndefined();
-  expect(readCounts([5, 0, 0, 14], () => 3, nivix).levels).toEqual([4]);
-  expect(readCounts([0, 0, 0, 0], () => 3, nivix)).toMatchObject({ total: 0, reason: "nothing" });
+test("a single slope counts once its share exceeds few, and a band with one read slope reads a level", () => {
+  expect(frequencyClass(1, 100, calibration)).toBe("a few");
+  expect(readCounts([1, 0, 0, 99], () => 3, calibration)).toMatchObject({ stability: "very poor", levels: [3] });
+  expect(readCounts([5, 0, 0, 14], () => 3, calibration)).toMatchObject({ total: 19, frequency: "many", levels: [4] });
+  expect(readCounts([1, 0, 0, 0], () => 3, calibration)).toMatchObject({ total: 1, frequency: "many", levels: [4] });
+  expect(readCounts([0, 0, 0, 1], () => 3, calibration)).toMatchObject({ total: 1, stability: "good", levels: [1] });
+  expect(readCounts([0, 0, 0, 0], () => 3, calibration)).toMatchObject({ total: 0, reason: "nothing" });
+  expect(readCounts([0, 0, 0, 0], () => 3, calibration).levels).toBeUndefined();
 });
 
 test("the walk passes very poor and poor to fair, and good throughout reads 1 Low without asking for a size", () => {
@@ -137,11 +137,24 @@ test("the size is asked of the decisive class only; a decisive class without siz
 
 test("reckonedSize takes the size at floor(p/100 (n-1)) of the finite sizes, numpy's method lower", () => {
   expect(reckonedSize([10, 9, 8, 7, 6, 5, 4, 3, 2, 1], 90)).toBe(9);
+  expect(reckonedSize([10, 9, 8, 7, 6, 5, 4, 3, 2, 1], 50)).toBe(5);
   expect(reckonedSize([2, 1], 90)).toBe(1);
   expect(reckonedSize([1, 2, 3], 100)).toBe(3);
   expect(reckonedSize([4.35], 90)).toBe(4.35);
   expect(reckonedSize([NaN, Infinity, 2, 1], 90)).toBe(1);
   expect(reckonedSize([], 90)).toBeUndefined();
+});
+
+test("a configured sizePercentile of 50 reckons the decisive class's median size instead of its p90", () => {
+  const points = [
+    ...[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5].map((size) => ({ value: 0.9, size })),
+    ...Array.from({ length: 90 }, () => ({ value: 0.5, size: 1 })),
+  ];
+  expect(calibration.sizePercentile).toBe(SIZE_PERCENTILE);
+  const p90 = readBand(points, punstable, calibration);
+  expect(p90).toMatchObject({ stability: "very poor", frequency: "some", size: 5, sizeClass: 5, levels: [5, 4] });
+  const median = readBand(points, punstable, DangerLevelSchema.parse({ ...calibration, sizePercentile: 50 }));
+  expect(median).toMatchObject({ stability: "very poor", frequency: "some", size: 3, sizeClass: 3, levels: [3, 4] });
 });
 
 test("a size rounds half up into the matrix columns 1 to 5", () => {
@@ -157,9 +170,9 @@ test("readBand classes the points with the map's classes and drops values that a
   const reading = readBand(points, sk38, calibration);
   expect(reading.counts).toEqual([0, 30, 1, 0]);
   expect(reading).toMatchObject({ total: 31, stability: "poor", frequency: "many", size: 2, levels: [3] });
-  expect(readBand([{ value: 1 }, { value: 0.85 }], punstable, nivix).counts).toEqual([2, 0, 0, 0]);
-  expect(readBand([{ value: 0.9, size: 3 }], [], nivix)).toMatchObject({ reason: "classes", total: 0 });
-  expect(readBand([{ value: 0.9, size: 3 }], [1, 0], nivix).reason).toBe("classes");
+  expect(readBand([{ value: 1 }, { value: 0.85 }], punstable, calibration).counts).toEqual([2, 0, 0, 0]);
+  expect(readBand([{ value: 0.9, size: 3 }], [], calibration)).toMatchObject({ reason: "classes", total: 0 });
+  expect(readBand([{ value: 0.9, size: 3 }], [1, 0], calibration).reason).toBe("classes");
 });
 
 test("readSteps reads each step's class counts with the size the API reckoned for the decisive class", () => {
@@ -188,7 +201,7 @@ test("readSteps reads each step's class counts with the size the API reckoned fo
   expect(readings[2]).toMatchObject({ stability: "very poor", frequency: "a few", size: 2.4, levels: [2] });
   expect(readings[3]).toMatchObject({ decisive: 0, stability: "very poor", frequency: "some", reason: "no size" });
   expect(readings[3].levels).toBeUndefined();
-  expect(readings[4]).toMatchObject({ total: 3, reason: "too few" });
+  expect(readings[4]).toMatchObject({ total: 3, stability: "very poor", frequency: "many", size: 5, levels: [5] });
   readings.forEach((reading, t) =>
     expect(reading).toEqual(
       readCounts(

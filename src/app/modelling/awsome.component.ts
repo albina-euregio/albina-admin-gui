@@ -53,7 +53,7 @@ import { RegionProperties } from "../providers/regions-service/regions.service";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AwsomeConfigSchema } from "./awsome.config";
-import type { AwsomeConfig, AwsomeSource as AwsomeSource0, DangerLevelConfig } from "./awsome.config";
+import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
 import {
   awsomeText,
   type DangerContext,
@@ -74,6 +74,7 @@ import {
   NOTE_WORDS,
   planDanger,
   sampleOf,
+  SNOW_DEPTH_KEY,
 } from "./danger-paint";
 import type { DangerSeries } from "./danger-series.component";
 import { resolveConfigDate, withinDates } from "./dashboard-date";
@@ -174,11 +175,6 @@ interface DangerView {
 /** Whether a feature is drawn as a polygon rather than as a point marker. */
 function isPolygon(o: FeatureProperties): boolean {
   return o.$geometry.type === "Polygon" || o.$geometry.type === "MultiPolygon";
-}
-
-/** Whether the danger level reads a source's features. */
-function readsSource(calibration: DangerLevelConfig, name: string): boolean {
-  return !calibration.sources || calibration.sources.includes(name);
 }
 
 @Component({
@@ -1013,7 +1009,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const index = this.placeholderIndex;
     const bounds = index && classBounds(index);
     const url0 = this.config.timeseriesChart?.url;
-    const sources = this.loadedSources.filter((s) => readsSource(calibration, s.name));
+    const sources = this.loadedSources;
     if (!url0 || !bounds || !stabilityClasses(bounds.length - 1) || !sources.length) {
       this.cancelDangerSeries();
       this.dangerSeries = { url: "", series: "none" };
@@ -1488,17 +1484,15 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     key: string,
     index: FilterSelectionData<FeatureProperties> | undefined,
     sizeFilter: FilterSelectionData<FeatureProperties> | undefined,
-    calibration: DangerLevelConfig,
   ): DangerProbe {
     return {
       key,
       polygon: isPolygon(o),
       aspect: o["aspect"],
       elevation: o.elevation,
-      snowDepth: get(o, calibration.snowDepthKey),
+      snowDepth: get(o, SNOW_DEPTH_KEY),
       value: index?.getValue(o),
       size: sizeFilter?.getValue(o),
-      sourceRead: readsSource(calibration, o.$source),
     };
   }
 
@@ -1519,7 +1513,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const samples = new Map<FeatureProperties, DangerSample>();
     for (const o of selected) {
       const key = `${o.$source}\n${o.location ?? `#${samples.size}`}`;
-      samples.set(o, sampleOf(this.dangerProbe(o, key, index, sizeFilter, calibration), cuts));
+      samples.set(o, sampleOf(this.dangerProbe(o, key, index, sizeFilter), cuts));
     }
     const bands = dangerBands(samples.values(), cuts, bounds ?? [], calibration);
     const pending = this.filterService.filterSelectionData.some((f) => this.isReloadPending(f));
