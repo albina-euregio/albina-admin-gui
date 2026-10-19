@@ -32,6 +32,12 @@ export class AuthenticationService {
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
+  /**
+   * The single role the user acts as, restricting their effective permissions to a subset of
+   * their granted roles (e.g. an admin who does not want admin powers). `undefined` means all
+   * granted roles apply. Deliberately not persisted, so that it behaves the same on every computer.
+   */
+  public effectiveRole: Enums.UserRole | undefined;
   private activeRegionSubject = new BehaviorSubject<RegionConfiguration | undefined>(undefined);
   public readonly activeRegion$ = this.activeRegionSubject.asObservable();
 
@@ -39,6 +45,7 @@ export class AuthenticationService {
     this.externalServers = [];
     try {
       this.authentication = this.localStorageService.getCurrentAuthor();
+      this.effectiveRole = this.getInitialEffectiveRole();
     } catch {
       this.localStorageService.setCurrentAuthor(undefined);
     }
@@ -121,12 +128,19 @@ export class AuthenticationService {
     }
     this.authentication = data;
     this.localStorageService.setCurrentAuthor(data);
+    this.effectiveRole = this.getInitialEffectiveRole();
     const authorRegions = this.getCurrentAuthorRegions();
     const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
     this.setActiveRegion(authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0]);
     this.loadInternalRegions();
     this.externalServerLogins();
     return true;
+  }
+
+  /** The effective role to apply after login: the first granted role in order of {@link effectiveRolePriority}. */
+  private getInitialEffectiveRole(): Enums.UserRole | undefined {
+    const roles = this.currentAuthor?.roles ?? [];
+    return effectiveRolePriority.find((role) => roles.includes(role));
   }
 
   /** Registers a new passkey for the current (already-authenticated) user. Prompts the browser's WebAuthn UI. */
@@ -179,6 +193,7 @@ export class AuthenticationService {
   public logout() {
     console.debug("[" + this.currentAuthor?.name + "] Logged out!");
     this.authentication = null;
+    this.effectiveRole = undefined;
     this.activeRegion = undefined;
     this.activeRegionSubject.next(undefined);
     this.localStorageService.setCurrentAuthor(undefined);
@@ -350,9 +365,8 @@ export class AuthenticationService {
   public isCurrentUserInRole(...roles0: (keyof typeof Enums.UserRole)[]): boolean {
     let roles: albinaApi.Role[] = this.currentAuthor?.roles ?? [];
     // the user may restrict themselves to a single effective role (e.g. an admin who does not want admin powers)
-    const effectiveRole = this.localStorageService.effectiveRole;
-    if (effectiveRole) {
-      roles = roles.includes(effectiveRole) ? [effectiveRole] : [];
+    if (this.effectiveRole) {
+      roles = roles.includes(this.effectiveRole) ? [this.effectiveRole] : [];
     }
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
     if (roles.includes(Enums.UserRole.OBSERVER) && this.localStorageService.isTrainingEnabled) {
@@ -402,6 +416,15 @@ export class AuthenticationService {
     return false;
   }
 }
+
+/** Order in which the effective role is picked after login. */
+const effectiveRolePriority: Enums.UserRole[] = [
+  Enums.UserRole.FORECASTER,
+  Enums.UserRole.FOREMAN,
+  Enums.UserRole.OBSERVER,
+  Enums.UserRole.ADMIN,
+  Enums.UserRole.SUPERADMIN,
+];
 
 export const AuthenticationResponseSchema = zAuthenticationServiceAuthenticationResponse;
 export type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;

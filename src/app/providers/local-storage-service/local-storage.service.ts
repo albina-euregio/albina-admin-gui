@@ -4,7 +4,6 @@ import { filter, fromEventPattern, map, Observable } from "rxjs";
 import { z } from "zod/v4";
 
 import { environment } from "../../../environments/environment";
-import { UserRole } from "../../enums/enums";
 import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
 import { RegionConfiguration } from "../../models/region-configuration.model";
 import type { ServerModel } from "../../models/server.model";
@@ -20,6 +19,11 @@ type MapCenter = z.infer<typeof MapCenterSchema>;
 @Injectable({ providedIn: "root" })
 export class LocalStorageService {
   private translateService = inject(TranslateService);
+
+  constructor() {
+    // migration: the effective role is no longer persisted
+    localStorage.removeItem(this.key("effectiveRole"));
+  }
 
   key(key: string): string {
     return environment.apiBaseUrl + "_" + key;
@@ -108,19 +112,6 @@ export class LocalStorageService {
 
   setCompactMapLayout(compactMapLayout: boolean): void {
     return this.set("compactmapLayout", compactMapLayout);
-  }
-
-  /**
-   * The single role the user has chosen to act as, restricting their effective
-   * permissions to a subset of their granted roles (e.g. an admin who does not
-   * want admin powers). `undefined` means all granted roles apply.
-   */
-  get effectiveRole(): UserRole | undefined {
-    return this.get("effectiveRole") ?? undefined;
-  }
-
-  set effectiveRole(role: UserRole | undefined) {
-    this.set("effectiveRole", role);
   }
 
   get isTrainingEnabled(): boolean {

@@ -109,7 +109,7 @@
                   class="form-select"
                   id="effectiveRole"
                   name="effectiveRole"
-                  [(ngModel)]="localStorageService.effectiveRole"
+                  [(ngModel)]="authenticationService.effectiveRole"
                 >
                   <option [ngValue]="undefined">{{ "settings.effectiveRoleDefault" | translate }}</option>
                   @for (role of roles; track role) {
