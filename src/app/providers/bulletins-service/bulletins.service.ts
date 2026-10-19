@@ -30,6 +30,7 @@ class TrainingModeError extends Error {}
 
 export type AccordionGroupName =
   | "dangerRating"
+  | "travelAdvisory"
   | "avalancheProblem1"
   | "avalancheProblem2"
   | "avalancheProblem3"
