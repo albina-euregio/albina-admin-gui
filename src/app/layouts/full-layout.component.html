@@ -138,6 +138,14 @@
               />
             }
             {{ authenticationService.getUsername() }}
+            @if (authenticationService.effectiveRole; as role) {
+              <span
+                class="badge"
+                [class]="role === 'ADMIN' || role === 'SUPERADMIN' ? 'text-bg-danger' : 'text-bg-secondary'"
+              >
+                {{ "role." + role | translate }}
+              </span>
+            }
           </a>
           <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
             <li>
