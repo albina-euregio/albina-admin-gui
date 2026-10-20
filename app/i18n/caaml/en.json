@@ -42,6 +42,7 @@
   "avalancheType.loose": "Loose snow avalanche",
   "avalancheType.glide": "Glide snow avalanche",
   "avalancheProblem.label": "Avalanche Problem",
+  "avalancheProblem.coreZones.label": "Avalanche Problems with Core Zones",
   "avalancheProblem.new_snow": "New snow",
   "avalancheProblem.wind_slab": "Wind slab",
   "avalancheProblem.persistent_weak_layers": "Persistent weak layer",
