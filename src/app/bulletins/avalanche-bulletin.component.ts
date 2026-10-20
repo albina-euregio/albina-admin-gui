@@ -187,6 +187,11 @@ export class AvalancheBulletinComponent implements OnInit {
     return this.authenticationService.isTextfieldShown(textfield, this.bulletin(), this.disabled());
   }
 
+  /** The sidebar shows only the own region's general headline, so another region's is shown here. */
+  isForeignGeneralHeadlineShown(): boolean {
+    return !this.isCreator(this.bulletin()) && this.bulletin().generalHeadlineComment.some((t) => !!t.text);
+  }
+
   isInternal(): boolean {
     const ownerRegion = this.bulletin().ownerRegion;
     return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion);
