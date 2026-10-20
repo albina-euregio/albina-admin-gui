@@ -160,7 +160,7 @@ export const zCaamlDangerRatingValue = z
 
 export const zCaamlAvalancheBulletinCustomDataTendencyProgression = z.object({
   dates: z.array(z.iso.date()),
-  dangerRatings: z.record(z.string(), z.array(zCaamlDangerRatingValue)),
+  dangerRatings: z.record(z.string(), z.array(zCaamlDangerRatingValue.nullable())),
 });
 
 export const zCaamlAvalancheBulletinCustomDataAlbina = z.object({
@@ -1614,12 +1614,16 @@ export const zAvalancheBulletin = zAbstractPersistentObject.and(
     tendencyCommentTextcat: z.string().optional(),
     generalHeadlineCommentTextcat: z.string().optional(),
     synopsisCommentTextcat: z.string().optional(),
+    travelAdvisoryHighlightsTextcat: z.string().optional(),
+    travelAdvisoryCommentTextcat: z.string().optional(),
     avActivityHighlightsNotes: z.string().optional(),
     avActivityCommentNotes: z.string().optional(),
     snowpackStructureHighlightsNotes: z.string().optional(),
     snowpackStructureCommentNotes: z.string().optional(),
     tendencyCommentNotes: z.string().optional(),
     generalHeadlineCommentNotes: z.string().optional(),
+    travelAdvisoryHighlightsNotes: z.string().optional(),
+    travelAdvisoryCommentNotes: z.string().optional(),
     highlights: z.array(zAvalancheBulletinText).optional(),
     avActivityHighlights: z.array(zAvalancheBulletinText).optional(),
     avActivityComment: z.array(zAvalancheBulletinText).optional(),
@@ -1927,12 +1931,16 @@ export const zAvalancheBulletinWritable = zAbstractPersistentObject.and(
     tendencyCommentTextcat: z.string().optional(),
     generalHeadlineCommentTextcat: z.string().optional(),
     synopsisCommentTextcat: z.string().optional(),
+    travelAdvisoryHighlightsTextcat: z.string().optional(),
+    travelAdvisoryCommentTextcat: z.string().optional(),
     avActivityHighlightsNotes: z.string().optional(),
     avActivityCommentNotes: z.string().optional(),
     snowpackStructureHighlightsNotes: z.string().optional(),
     snowpackStructureCommentNotes: z.string().optional(),
     tendencyCommentNotes: z.string().optional(),
     generalHeadlineCommentNotes: z.string().optional(),
+    travelAdvisoryHighlightsNotes: z.string().optional(),
+    travelAdvisoryCommentNotes: z.string().optional(),
     highlights: z.array(zAvalancheBulletinText).optional(),
     avActivityHighlights: z.array(zAvalancheBulletinText).optional(),
     avActivityComment: z.array(zAvalancheBulletinText).optional(),

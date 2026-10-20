@@ -63,12 +63,16 @@ export type AvalancheBulletin = AbstractPersistentObject & {
   tendencyCommentTextcat?: string;
   generalHeadlineCommentTextcat?: string;
   synopsisCommentTextcat?: string;
+  travelAdvisoryHighlightsTextcat?: string;
+  travelAdvisoryCommentTextcat?: string;
   avActivityHighlightsNotes?: string;
   avActivityCommentNotes?: string;
   snowpackStructureHighlightsNotes?: string;
   snowpackStructureCommentNotes?: string;
   tendencyCommentNotes?: string;
   generalHeadlineCommentNotes?: string;
+  travelAdvisoryHighlightsNotes?: string;
+  travelAdvisoryCommentNotes?: string;
   highlights?: Array<AvalancheBulletinText>;
   avActivityHighlights?: Array<AvalancheBulletinText>;
   avActivityComment?: Array<AvalancheBulletinText>;
@@ -331,7 +335,7 @@ export type CaamlAvalancheBulletinCustomDataLwdTyrol = {
 export type CaamlAvalancheBulletinCustomDataTendencyProgression = {
   dates: Array<string>;
   dangerRatings: {
-    [key: string]: Array<CaamlDangerRatingValue>;
+    [key: string]: Array<CaamlDangerRatingValue | null>;
   };
 };
 
@@ -2127,12 +2131,16 @@ export type AvalancheBulletinWritable = AbstractPersistentObject & {
   tendencyCommentTextcat?: string;
   generalHeadlineCommentTextcat?: string;
   synopsisCommentTextcat?: string;
+  travelAdvisoryHighlightsTextcat?: string;
+  travelAdvisoryCommentTextcat?: string;
   avActivityHighlightsNotes?: string;
   avActivityCommentNotes?: string;
   snowpackStructureHighlightsNotes?: string;
   snowpackStructureCommentNotes?: string;
   tendencyCommentNotes?: string;
   generalHeadlineCommentNotes?: string;
+  travelAdvisoryHighlightsNotes?: string;
+  travelAdvisoryCommentNotes?: string;
   highlights?: Array<AvalancheBulletinText>;
   avActivityHighlights?: Array<AvalancheBulletinText>;
   avActivityComment?: Array<AvalancheBulletinText>;
