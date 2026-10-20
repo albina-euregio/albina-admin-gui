@@ -3,7 +3,15 @@ import path from "path";
 
 import { test, expect } from "@playwright/test";
 
-import { changeRegion, clearWarningRegions, clickRegion, loginForecaster, setFixedTime, waitForGetEdit } from "./utils";
+import {
+  changeRegion,
+  clearWarningRegions,
+  clickRegion,
+  loginForecaster,
+  setFixedTime,
+  statusBadge,
+  waitForGetEdit,
+} from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
@@ -200,7 +208,7 @@ test("Edit bulletin", async ({ page }) => {
   await changeRegion(page, "Tyrol");
   await page.getByRole("cell", { name: "Wednesday, December 25, 2024" }).getByTitle("edit bulletin").click();
   // "missing" if a previous run cleaned up all regions
-  await expect(page.locator(".badge").first()).toContainText(/draft|missing/, { timeout: 7000 });
+  await expect(statusBadge(page)).toContainText(/draft|missing/, { timeout: 7000 });
   await clearWarningRegions(page);
   const regionProblem = page.locator(".region-thumb").first();
   await test.step("Create new region", async () => {
@@ -316,7 +324,7 @@ test("Load bulletin from the day before", async ({ page }) => {
   await changeRegion(page, "Tyrol");
   await test.step("load into empty bulletin", async () => {
     await page.getByRole("row", { name: "Sunday, December 22, 2024" }).getByTitle("edit bulletin").click();
-    await expect(page.locator(".badge").first()).toContainText(/missing|draft/, { timeout: 7000 });
+    await expect(statusBadge(page)).toContainText(/missing|draft/, { timeout: 7000 });
     await clearWarningRegions(page);
     await expect(page.locator(".region-thumb")).not.toBeVisible();
     await test.step("Load from the day before", async () => {
@@ -330,7 +338,7 @@ test("Load bulletin from the day before", async ({ page }) => {
       );
       await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
       await responsePromise;
-      await expect(page.locator(".badge").first()).toContainText("draft");
+      await expect(statusBadge(page)).toContainText("draft");
       await expect(page.getByRole("heading", { name: "Tyrol (4)" })).toBeVisible();
       for (const region of [
         "Northern Zillertal Alps",
@@ -352,7 +360,7 @@ test("Load bulletin from the day before", async ({ page }) => {
     );
     await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
     await responsePromise;
-    await expect(page.locator(".badge").first()).toContainText("draft");
+    await expect(statusBadge(page)).toContainText("draft");
     await expect(page.getByRole("heading", { name: "Tyrol (4)" })).toBeVisible();
     await expect(page.locator(".region-thumb")).toContainText([
       "Northern Zillertal Alps",
@@ -372,9 +380,9 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   await page.reload();
   await page.getByRole("row", { name: "Friday, December 20, 2024" }).getByTitle("edit bulletin").click();
   await waitForGetEdit(page);
-  const statusBadge = await page.locator(".badge").first();
-  await expect(statusBadge).not.toContainText("missing");
-  if (!(await statusBadge.textContent()).match(/draft|updated/)) {
+  const badge = statusBadge(page);
+  await expect(badge).not.toContainText("missing");
+  if (!(await badge.textContent()).match(/draft|updated/)) {
     await page.getByRole("button", { name: "Edit" }).click();
   }
   await page.getByRole("button", { name: "Submit" }).click();
@@ -392,7 +400,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
       response.status() === 200 &&
       response.request().method() === "POST",
   );
-  await expect(statusBadge).toContainText("resubmitted");
+  await expect(badge).toContainText("resubmitted");
   await page.getByRole("button", { name: "Publish now (no messages)" }).click();
   await expect(page.getByRole("dialog")).toMatchAriaSnapshot(`
     - dialog:
@@ -408,7 +416,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
       response.status() === 200 &&
       response.request().method() === "POST",
   );
-  await expect(statusBadge).toContainText("republished");
+  await expect(badge).toContainText("republished");
   await page.getByRole("button", { name: "Edit" }).click();
   await page.waitForResponse(
     (response) =>
@@ -417,7 +425,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
       response.request().method() === "POST" &&
       response.request().postDataJSON().length === 4, // 4 bulletin regions are posted
   );
-  await expect(statusBadge).toContainText("updated");
+  await expect(badge).toContainText("updated");
 });
 
 test("Post bulletin ahead of DST change", async ({ page }) => {
@@ -526,7 +534,7 @@ test("Textcat", async ({ page }) => {
       .getByRole("combobox");
     await sentenceSelector.press("ArrowDown");
     await sentenceSelector.selectOption("Empfehlung08");
-    await page.locator("iframe").contentFrame().getByRole("button", { name: "Advice_08 — {distances}" }).click();
+    await page.locator("iframe").contentFrame().getByRole("button", { name: "Add sentence" }).click();
     await page.locator("iframe").contentFrame().getByText("Advice_08 — {⚠ distances}").click();
     await page.locator("iframe").contentFrame().getByRole("listbox").selectOption("1");
     await page.locator("iframe").contentFrame().getByRole("button", { name: "Save" }).click();

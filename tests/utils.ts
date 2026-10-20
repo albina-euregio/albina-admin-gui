@@ -227,3 +227,8 @@ export async function setFixedTime(page: Page, date: Date | string | number): Pr
     }
   }, epochMs);
 }
+
+/** The bulletin status badge ("draft", "missing", ...) in the page header. */
+export function statusBadge(page: Page) {
+  return page.locator("header").locator(".badge").first();
+}

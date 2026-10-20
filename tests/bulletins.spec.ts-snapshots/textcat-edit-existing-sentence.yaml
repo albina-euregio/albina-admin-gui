@@ -1,7 +1,6 @@
 - heading "All sentences" [level=2]
-- 'button "Advice_01 — {backcountry touring is to be} {to} {flat} {terrain} {as far as possible}" [disabled]':
-  - img
-- combobox:
+- button "Add sentence" [disabled]
+- combobox "All sentences":
   - 'option "Advice_01 — {backcountry touring is to be} {to} {flat} {terrain} {as far as possible}"'
   - 'option "Advice_02 — {as before} {it is} {inadvisable} {in} {backcountry touring} {outside marked and open pistes}"'
   - 'option "Advice_03 — {the conditions are} {dangerous} {for} {backcountry touring} {outside marked and open pistes}"'
@@ -136,31 +135,20 @@
   - 'option "Wind_slabs_17 — {where} {characteristics wind slabs} {wind slabs} {will form/formed}"'
 - heading "Search sentences" [level=2]
 - text: "Search:"
-- 'button "Search: Search sentence by prefix"':
-  - img
-- button "Search sentence by prefix":
-  - img
-- textbox
+- 'button "Search: Prefix Search" [pressed]': Words
+- button "Prefix"
+- searchbox "Search"
 - heading "Selected sentences" [level=2]
 - group:
-  - button "Copy sentence":
-    - img
-  - button "Paste sentence below":
-    - img
-  - button "Move sentence up" [disabled]:
-    - img
-  - button "Move sentence down" [disabled]:
-    - img
-  - button "Remove sentence":
-    - img
+  - button "Copy sentence"
+  - button "Paste sentence below"
+  - button "Move sentence up" [disabled]
+  - button "Move sentence down" [disabled]
+  - button "Remove sentence"
   - text: Advice_08 — Maintaining distances between individuals and one-at-a-time descents are recommended.
-- button "Save":
-  - img
-  - text: ""
-- button "Copy sentences":
-  - img
-- button "Paste sentences":
-  - img
+- button "Save"
+- button "Copy sentences"
+- button "Paste sentences"
 - separator
 - list:
   - listitem: textcat-ng
