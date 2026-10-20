@@ -97,7 +97,9 @@ export const AvalancheProblemSchema = z.object({
   elevation: z.optional(ElevationBoundaryOrBandSchema),
   frequency: z.optional(z.enum(Enums.Frequency)),
   metaData: z.optional(MetaDataSchema),
-  problemType: z.enum(Enums.AvalancheProblem),
+  // optional: SLF's following-day bulletin has avalanche problems without problemType,
+  // although the CAAMLv6 JSON schema requires it
+  problemType: z.optional(z.enum(Enums.AvalancheProblem)),
   snowpackStability: z.optional(z.enum(Enums.SnowpackStability)),
   validTimePeriod: z.optional(ValidTimePeriodSchema),
 });
