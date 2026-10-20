@@ -36,9 +36,21 @@ export class AuthenticationService {
    * The one granted role whose permissions currently apply. A user holding several roles acts as
    * only one of them at a time, e.g. a user who is both forecaster and admin works as forecaster
    * and only gets admin permissions after switching to admin. `undefined` only when logged out or
-   * without any role. Deliberately not persisted, so that it behaves the same on every computer.
+   * without any role. Kept in the tab's sessionStorage only, so that it survives a reload, while
+   * every login starts with the initial role and thus behaves the same on every computer.
    */
-  public effectiveRole: Enums.UserRole | undefined;
+  public get effectiveRole(): Enums.UserRole | undefined {
+    return this._effectiveRole;
+  }
+  public set effectiveRole(role: Enums.UserRole | undefined) {
+    this._effectiveRole = role;
+    if (role) {
+      sessionStorage.setItem(this.localStorageService.key("effectiveRole"), role);
+    } else {
+      sessionStorage.removeItem(this.localStorageService.key("effectiveRole"));
+    }
+  }
+  private _effectiveRole: Enums.UserRole | undefined;
   private activeRegionSubject = new BehaviorSubject<RegionConfiguration | undefined>(undefined);
   public readonly activeRegion$ = this.activeRegionSubject.asObservable();
 
@@ -46,7 +58,10 @@ export class AuthenticationService {
     this.externalServers = [];
     try {
       this.authentication = this.localStorageService.getCurrentAuthor();
-      this.effectiveRole = this.getInitialEffectiveRole();
+      const storedRole = sessionStorage.getItem(this.localStorageService.key("effectiveRole")) as Enums.UserRole;
+      this.effectiveRole = this.getCurrentAuthorRoles().includes(storedRole)
+        ? storedRole
+        : this.getInitialEffectiveRole();
     } catch {
       this.localStorageService.setCurrentAuthor(undefined);
     }
