@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, TemplateRef, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
@@ -21,7 +22,15 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
   templateUrl: "./full-layout.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [RouterLinkActive, RouterLink, BsDropdownModule, RouterOutlet, TranslatePipe, NgxMousetrapDirective],
+  imports: [
+    NgTemplateOutlet,
+    RouterLinkActive,
+    RouterLink,
+    BsDropdownModule,
+    RouterOutlet,
+    TranslatePipe,
+    NgxMousetrapDirective,
+  ],
 })
 export class FullLayoutComponent {
   translateService = inject(TranslateService);
@@ -50,6 +59,14 @@ export class FullLayoutComponent {
 
   get environment() {
     return environment;
+  }
+
+  get roles() {
+    return this.authenticationService.getCurrentAuthorRoles();
+  }
+
+  get hasAdminPowers(): boolean {
+    return this.authenticationService.isCurrentUserInRole("ADMIN", "SUPERADMIN");
   }
 
   get isNavbarShown(): boolean {

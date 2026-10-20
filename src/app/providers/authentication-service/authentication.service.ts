@@ -33,9 +33,10 @@ export class AuthenticationService {
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
   /**
-   * The single role the user acts as, restricting their effective permissions to a subset of
-   * their granted roles (e.g. an admin who does not want admin powers). `undefined` means all
-   * granted roles apply. Deliberately not persisted, so that it behaves the same on every computer.
+   * The one granted role whose permissions currently apply. A user holding several roles acts as
+   * only one of them at a time, e.g. a user who is both forecaster and admin works as forecaster
+   * and only gets admin permissions after switching to admin. `undefined` only when logged out or
+   * without any role. Deliberately not persisted, so that it behaves the same on every computer.
    */
   public effectiveRole: Enums.UserRole | undefined;
   private activeRegionSubject = new BehaviorSubject<RegionConfiguration | undefined>(undefined);
@@ -137,10 +138,15 @@ export class AuthenticationService {
     return true;
   }
 
-  /** The effective role to apply after login: the first granted role in order of {@link effectiveRolePriority}. */
-  private getInitialEffectiveRole(): Enums.UserRole | undefined {
+  /** The roles granted to the current user, in order of {@link effectiveRolePriority}. */
+  public getCurrentAuthorRoles(): Enums.UserRole[] {
     const roles = this.currentAuthor?.roles ?? [];
-    return effectiveRolePriority.find((role) => roles.includes(role));
+    return effectiveRolePriority.filter((role) => roles.includes(role));
+  }
+
+  /** The effective role to apply after login: the first granted role. */
+  private getInitialEffectiveRole(): Enums.UserRole | undefined {
+    return this.getCurrentAuthorRoles()[0];
   }
 
   /** Registers a new passkey for the current (already-authenticated) user. Prompts the browser's WebAuthn UI. */
@@ -364,7 +370,7 @@ export class AuthenticationService {
 
   public isCurrentUserInRole(...roles0: (keyof typeof Enums.UserRole)[]): boolean {
     let roles: albinaApi.Role[] = this.currentAuthor?.roles ?? [];
-    // the user may restrict themselves to a single effective role (e.g. an admin who does not want admin powers)
+    // only the effective role applies, see effectiveRole
     if (this.effectiveRole) {
       roles = roles.includes(this.effectiveRole) ? [this.effectiveRole] : [];
     }
@@ -417,7 +423,7 @@ export class AuthenticationService {
   }
 }
 
-/** Order in which the effective role is picked after login. */
+/** Order in which roles are listed and the effective role is picked after login. */
 const effectiveRolePriority: Enums.UserRole[] = [
   Enums.UserRole.FORECASTER,
   Enums.UserRole.FOREMAN,
