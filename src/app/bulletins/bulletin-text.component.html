@@ -92,7 +92,7 @@
             [rows]="rows()"
             [disabled]="disabled() || !enableEditableFields"
             [ngModel]="bulletinText[translateService.getCurrentLang()] | html"
-            (ngModelChange)="enableEditableFields && (bulletinText[translateService.getCurrentLang()] = $event)"
+            (ngModelChange)="updateBulletinText($event)"
             (focusout)="enableEditableFields && updateBulletinOnServer.emit()"
           ></textarea>
         }

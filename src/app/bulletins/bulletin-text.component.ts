@@ -83,6 +83,12 @@ export class BulletinTextComponent {
     });
   }
 
+  updateBulletinText(text: string) {
+    if (!this.enableEditableFields) return;
+    const lang = this.translateService.getCurrentLang();
+    this.bulletinText = { ...this.bulletinText, [lang]: text };
+  }
+
   get bulletinText(): LangTexts {
     const textField = this.textField();
     switch (textField) {
