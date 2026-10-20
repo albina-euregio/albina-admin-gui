@@ -575,7 +575,7 @@
         <!-- End tendency -->
 
         <!-- Weather synopsis -->
-        @if (this.authenticationService.isTextfieldEnabled("synopsisComment")) {
+        @if (isTextfieldShown("synopsisComment")) {
           <accordion-group [isOpen]="accordionOpen.tendency" (isOpenChange)="accordionChanged($event, 'synopsis')">
             <!-- Weather synopsis -->
             <div accordion-heading class="accordion-header">
