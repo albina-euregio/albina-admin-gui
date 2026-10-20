@@ -83,10 +83,11 @@ export class BulletinTextComponent {
     });
   }
 
+  /** Stores free text of the current language, line breaks as CAAML `<br/>`. */
   updateBulletinText(text: string) {
     if (!this.enableEditableFields) return;
     const lang = this.translateService.getCurrentLang();
-    this.bulletinText = { ...this.bulletinText, [lang]: text };
+    this.bulletinText = { ...this.bulletinText, [lang]: text.replace(/\r?\n/g, "<br/>") };
   }
 
   get bulletinText(): LangTexts {
