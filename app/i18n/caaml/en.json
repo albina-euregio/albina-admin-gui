@@ -79,6 +79,7 @@
   "aspect.W": "West",
   "aspect.NW": "North-West",
   "tendency.label": "Tendency",
+  "tendency.progression.label": "Development of avalanche danger",
   "tendency.decreasing": "Tendency: Decreasing avalanche danger",
   "tendency.steady": "Tendency: Constant avalanche danger",
   "tendency.increasing": "Tendency: Increasing avalanche danger",
