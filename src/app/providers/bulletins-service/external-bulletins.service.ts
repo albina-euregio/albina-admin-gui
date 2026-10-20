@@ -4,7 +4,7 @@ import { BulletinModelAsJSON } from "app/models/bulletin.model";
 import { from, Observable, of } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 
-import { Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
+import { Bulletin, Bulletins, toAlbinaBulletins } from "../../models/CAAMLv6";
 import { ServerModel } from "../../models/server.model";
 import * as albinaApi from "../albina-api";
 import { repeatedArrayQuerySerializer } from "../albina-api.provider";
@@ -31,8 +31,13 @@ export class ExternalBulletinsService {
     }
     const headers = { Authorization: "Bearer " + server.accessToken };
     if (server.apiUrl.includes("/api/bulletin-preview/caaml/")) {
-      const params = { activeAt: new Date(+date0 / 2 + +date1 / 2).toISOString() };
-      return this.http.get<Bulletins>(server.apiUrl, { headers, params }).pipe(map((data) => toAlbinaBulletins(data)));
+      const activeAt = new Date(+date0 / 2 + +date1 / 2);
+      const params = { activeAt: activeAt.toISOString() };
+      return this.http.get<Bulletins>(server.apiUrl, { headers, params }).pipe(
+        // skip bulletins not valid at activeAt, such as a following-day bulletin
+        map(({ bulletins }) => bulletins.filter((b) => isActiveAt(b, activeAt))),
+        map((bulletins) => toAlbinaBulletins({ bulletins })),
+      );
     }
     const baseUrl = server.apiUrl.replace(/\/$/, "");
     return from(albinaApi.getLatest({ baseUrl, headers, throwOnError: true })).pipe(
@@ -57,4 +62,9 @@ export class ExternalBulletinsService {
       map((res) => res.data as unknown as BulletinModelAsJSON[]),
     );
   }
+}
+
+function isActiveAt({ validTime }: Bulletin, activeAt: Date): boolean {
+  const { startTime, endTime } = validTime ?? {};
+  return (!startTime || new Date(startTime) <= activeAt) && (!endTime || activeAt < new Date(endTime));
 }
