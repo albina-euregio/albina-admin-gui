@@ -146,7 +146,7 @@
                 </li>
                 @for (role of roles; track role) {
                   <li>
-                    <a class="dropdown-item" role="button" (click)="authenticationService.effectiveRole = role">
+                    <a class="dropdown-item" role="button" (click)="switchEffectiveRole(role)">
                       {{ "role." + role | translate }}
                       @if (effectiveRole === role) {
                         <i class="ph ph-check"></i>
@@ -337,7 +337,10 @@
 <div class="app-body">
   <!-- Main content -->
   <main class="main">
-    <router-outlet></router-outlet>
+    <!-- recreate the page on a role switch, as pages check the role only once on init -->
+    @for (role of [authenticationService.effectiveRole]; track role) {
+      <router-outlet></router-outlet>
+    }
   </main>
 </div>
 

@@ -9,6 +9,7 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 import { environment } from "../../environments/environment";
+import * as Enums from "../enums/enums";
 import { RegionConfiguration } from "../models/region-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -63,6 +64,12 @@ export class FullLayoutComponent {
 
   get roles() {
     return this.authenticationService.getCurrentAuthorRoles();
+  }
+
+  /** Re-runs the route guards, so that a page the new role may not see is left. */
+  switchEffectiveRole(role: Enums.UserRole) {
+    this.authenticationService.effectiveRole = role;
+    void this.router.navigateByUrl(this.router.url, { onSameUrlNavigation: "reload" });
   }
 
   get hasAdminPowers(): boolean {
