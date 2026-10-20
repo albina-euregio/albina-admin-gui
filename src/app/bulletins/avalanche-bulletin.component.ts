@@ -183,6 +183,14 @@ export class AvalancheBulletinComponent implements OnInit {
     return tendency === this.bulletin().tendency;
   }
 
+  /** Editable if enabled for the active region; when read-only, shown whenever the bulletin has text. */
+  isTextfieldShown(textfield: "travelAdvisoryHighlights" | "travelAdvisoryComment"): boolean {
+    return (
+      this.authenticationService.isTextfieldEnabled(textfield) ||
+      (this.disabled() && this.bulletin()[textfield].some((t) => !!t.text))
+    );
+  }
+
   isInternal(): boolean {
     const ownerRegion = this.bulletin().ownerRegion;
     return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion);

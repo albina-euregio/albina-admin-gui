@@ -223,10 +223,7 @@
     <main class="region-form__content">
       <accordion class="accordion">
         <!-- Travel advisory -->
-        @if (
-          authenticationService.isTextfieldEnabled("travelAdvisoryHighlights") ||
-          authenticationService.isTextfieldEnabled("travelAdvisoryComment")
-        ) {
+        @if (isTextfieldShown("travelAdvisoryHighlights") || isTextfieldShown("travelAdvisoryComment")) {
           <accordion-group
             class="accordion-group"
             [isOpen]="accordionOpen.travelAdvisory"
@@ -240,7 +237,7 @@
                 </span>
               </h2>
             </div>
-            @if (authenticationService.isTextfieldEnabled("travelAdvisoryHighlights")) {
+            @if (isTextfieldShown("travelAdvisoryHighlights")) {
               <app-bulletin-text
                 [textField]="TextcatTextfield.travelAdvisoryHighlights"
                 [rows]="3"
@@ -251,7 +248,7 @@
                 (updateBulletinOnServer)="updateBulletinOnServer()"
               />
             }
-            @if (authenticationService.isTextfieldEnabled("travelAdvisoryComment")) {
+            @if (isTextfieldShown("travelAdvisoryComment")) {
               <app-bulletin-text
                 [textField]="TextcatTextfield.travelAdvisoryComment"
                 [rows]="9"
