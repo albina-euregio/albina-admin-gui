@@ -994,7 +994,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         const bulletins: BulletinModelAsJSON[] =
           format === "caaml"
             ? CAAML.toAlbinaBulletins(CAAML.BulletinsSchema.parse(json))
-            : BulletinModel.schema.array().parse(json);
+            : BulletinModel.schema.array().parse(
+                // bulletins exported with "regions" instead of "savedRegions"/"publishedRegions"
+                (json as (BulletinModelAsJSON & { regions?: string[] })[]).map(({ regions, ...b }) =>
+                  regions && !b.savedRegions?.length && !b.publishedRegions?.length
+                    ? { ...b, savedRegions: regions }
+                    : b,
+                ),
+              );
 
         this.reset();
         this.copyBulletins(bulletins);
