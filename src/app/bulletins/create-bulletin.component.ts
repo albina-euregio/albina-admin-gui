@@ -979,19 +979,30 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   uploadJsonBulletin(event: Event, format: "caaml" | "json") {
-    const selectedFile = (event.target as HTMLInputElement).files[0];
+    const input = event.target as HTMLInputElement;
+    const selectedFile = input.files?.[0];
+    // allow selecting the same file again
+    input.value = "";
+    if (!selectedFile) {
+      return;
+    }
     const fileReader = new FileReader();
     fileReader.readAsText(selectedFile, "UTF-8");
     fileReader.onload = () => {
-      const json = JSON.parse(fileReader.result.toString());
-      const bulletins: BulletinModelAsJSON[] =
-        format === "caaml"
-          ? CAAML.toAlbinaBulletins(CAAML.BulletinsSchema.parse(json))
-          : BulletinModel.schema.array().parse(json);
+      try {
+        const json = JSON.parse(fileReader.result.toString());
+        const bulletins: BulletinModelAsJSON[] =
+          format === "caaml"
+            ? CAAML.toAlbinaBulletins(CAAML.BulletinsSchema.parse(json))
+            : BulletinModel.schema.array().parse(json);
 
-      this.reset();
-      this.copyBulletins(bulletins);
-      console.info("Bulletins loaded from file: " + selectedFile.name);
+        this.reset();
+        this.copyBulletins(bulletins);
+        console.info("Bulletins loaded from file: " + selectedFile.name);
+      } catch (error) {
+        console.error("Bulletins could not be loaded from file", error);
+        this.openLoadingJsonFileErrorModal(this.loadingJsonFileErrorTemplate());
+      }
     };
     fileReader.onerror = (error) => {
       console.error("Bulletins could not be loaded from file: " + error);
