@@ -5,7 +5,7 @@
   },
   "login": {
     "title": "Se connecter",
-    "text": "",
+    "text": "Login to your account",
     "button": "Se connecter",
     "stressLevel": "Niveau de stress",
     "errorDialog": {
@@ -17,7 +17,7 @@
       "password": "Veuillez saisir votre mot de passe"
     },
     "passkey": {
-      "button": ""
+      "button": "Login with a passkey"
     }
   },
   "sidebar": {
@@ -165,6 +165,7 @@
       "variantStatus": "Statut",
       "variantEditable": "Ce type de source peut être édité.",
       "variantNotEditable": "Impossible d'éditer ce type de source.",
+      "uploadError": "The variant could not be loaded from the file.",
       "noVariantsForSelectedDay": "Pas de type de source défini pour cette date.",
       "tooltip": {
         "editDangerSource": "Éditer source de danger",
@@ -173,6 +174,8 @@
         "showVariantsOnMap": "Afficher les variantes sur la carte",
         "edit": "Éditer les microrégions",
         "copy": "Copier type de source",
+        "download": "Download variant as JSON",
+        "upload": "Load variant from JSON",
         "delete": "Effacer type de source",
         "compare": "Comparer type de source",
         "forecast": "Comparer avec les prévisions"
@@ -386,7 +389,7 @@
       "savedInfo": "Enregistré par {{user}}, {{time}}",
       "print": {
         "contact": {
-          "title": "",
+          "title": "Emergency contact",
           "emailLabel": "E-mail :",
           "nameLabel": "Nom :",
           "phoneLabel": "Téléphone :"
@@ -529,6 +532,7 @@
         "snowpackStructure": "Structure du manteau neigeux",
         "tendency": "Tendance",
         "synopsis": "Météo",
+        "travelAdvisory": "Travel advisory",
         "showTranslations": "Afficher traductions",
         "hideTranslations": "Masquer traductions"
       },
@@ -1045,18 +1049,18 @@
       }
     },
     "passkeys": {
-      "title": "",
-      "unsupported": "",
-      "empty": "",
-      "unnamed": "",
-      "lastUsed": "",
-      "neverUsed": "",
-      "namePlaceholder": "",
-      "add": "",
-      "delete": "",
-      "added": "",
-      "addError": "",
-      "deleteError": ""
+      "title": "Passkeys",
+      "unsupported": "Your browser does not support passkeys.",
+      "empty": "No passkeys registered yet.",
+      "unnamed": "Passkey",
+      "lastUsed": "Last used",
+      "neverUsed": "Never used",
+      "namePlaceholder": "e.g. iPhone, YubiKey",
+      "add": "Add passkey",
+      "delete": "Delete",
+      "added": "Passkey added",
+      "addError": "Could not add passkey",
+      "deleteError": "Could not delete passkey"
     }
   },
   "statistics": {

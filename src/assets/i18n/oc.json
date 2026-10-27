@@ -5,7 +5,7 @@
   },
   "login": {
     "title": "Iniciar session",
-    "text": "",
+    "text": "Login to your account",
     "button": "Iniciar session",
     "stressLevel": "Nivèu d'estrès",
     "errorDialog": {
@@ -17,7 +17,7 @@
       "password": "Se te platz, introdusís era tua contrasenya"
     },
     "passkey": {
-      "button": ""
+      "button": "Login with a passkey"
     }
   },
   "sidebar": {
@@ -38,27 +38,27 @@
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
     "lineaexport": "LINEA",
-    "awsstats": "",
-    "yearlystats": "",
-    "graphics": "",
+    "awsstats": "AWS Stats",
+    "yearlystats": "Yearly Stats",
+    "graphics": "Graphics",
     "icon": "Temps atmosferic"
   },
   "weather": {
-    "loading": "",
-    "noPng": "",
+    "loading": "Loading weather parameters and images...",
+    "noPng": "Image not found.",
     "error": {
-      "noParameters": "",
-      "loadFailed": ""
+      "noParameters": "No forecast parameters available.",
+      "loadFailed": "Could not load forecast data."
     },
     "headings": {
-      "model": "",
-      "modelRun": "",
+      "model": "Model",
+      "modelRun": "Model run",
       "region": "Region",
-      "parameters": "",
-      "level": ""
+      "parameters": "Parameters",
+      "level": "Level"
     },
     "alt": {
-      "fallback": "",
+      "fallback": "Forecast map",
       "image": "{{model}} {{parameter}}{{level}} {{region}} {{date}} {{hour}}Z"
     },
     "models": {
@@ -79,7 +79,7 @@
       "cloudLow": "Low"
     },
     "tooltips": {
-      "levelApproxElevation": ""
+      "levelApproxElevation": "Approx. elevation: ~{{height}} m"
     },
     "parameters": {
       "gfs": {
@@ -143,7 +143,7 @@
       "saveError": "Era hònt de perilh non s'a pas pogut sauvar!",
       "loadDangerSourcesError": "Era hònt de perilh non s'a pas pogut cargar!",
       "loadVariantsError": "Es variantes d'hònt de perilh non s'an pas pogut cargar!",
-      "noTitle": ""
+      "noTitle": "<no title>"
     },
     "variantStatus": {
       "active": "actiu",
@@ -165,14 +165,17 @@
       "variantStatus": "Estat",
       "variantEditable": "Aquesta varianta pòt èster modificada.",
       "variantNotEditable": "Aquesta varianta non pòt pas èster modificada.",
+      "uploadError": "The variant could not be loaded from the file.",
       "noVariantsForSelectedDay": "Cap de varianta definida per aguesta data.",
       "tooltip": {
         "editDangerSource": "Editar hònt de perilh",
         "loadVariants": "Cargar es variantes deth dia d'abans",
-        "loadVariantsFromForecast": "",
+        "loadVariantsFromForecast": "Load variants from forecast",
         "showVariantsOnMap": "Mostrar es variantes en mapa",
         "edit": "Editar micro-regions",
         "copy": "Copiar varianta",
+        "download": "Download variant as JSON",
+        "upload": "Load variant from JSON",
         "delete": "Esborrar varianta",
         "compare": "Comparar varianta",
         "forecast": "Comparar damb era prediccion"
@@ -193,27 +196,27 @@
       "label": {
         "glidingSnowActivity": "Activitat d'esguitlament de nhèu",
         "snowHeight": "Nautada de nhèu",
-        "snowHeightLowerLimit": "",
-        "snowHeightUpperLimit": "",
+        "snowHeightLowerLimit": "Min snow height",
+        "snowHeightUpperLimit": "Max snow height",
         "snowHeightAverage": "Nautada de nhèu mejana",
         "zeroDegreeIsotherm": "Isotèrma 0ºC",
         "looseSnowMoisture": "Umiditat dera nhèu sense coesion",
         "looseSnowGrainShape": "Forma de gran dera nhèu sense coesion",
         "slabGrainShape": "Forma de gran dera placa",
         "slabThickness": "Celh dera placa",
-        "slabThicknessLowerLimit": "",
-        "slabThicknessUpperLimit": "",
+        "slabThicknessLowerLimit": "Min slab thickness",
+        "slabThicknessUpperLimit": "Max slab thickness",
         "slabHandHardness": "Duresa de man dera placa",
-        "slabHandHardnessLowerLimit": "",
-        "slabHandHardnessUpperLimit": "",
+        "slabHandHardnessLowerLimit": "Min slab hand hardness",
+        "slabHandHardnessUpperLimit": "Max slab hand hardness",
         "slabHardnessProfile": "Duresa dera placa",
         "slabEnergyTransferPotential": "Potenciau de transferencia d'energia dera placa",
         "slabDistribution": "Distribucion dera placa",
         "weakLayerGrainShape": "Forma de gran dera capa fèbla",
-        "weakLayerGrainShapes": "",
+        "weakLayerGrainShapes": "Weak layer grain shapes",
         "weakLayerGrainSize": "Mesura de gran dera capa fèbla",
-        "weakLayerGrainSizeLowerLimit": "",
-        "weakLayerGrainSizeUpperLimit": "",
+        "weakLayerGrainSizeLowerLimit": "Min weak layer grain size",
+        "weakLayerGrainSizeUpperLimit": "Max weak layer grain size",
         "weakLayerPersistent": "Capa fèbla persistent",
         "weakLayerThickness": "Celh dera capa fèbla",
         "weakLayerStrength": "Resisténcia dera capa fèbla",
@@ -268,12 +271,12 @@
         "accept": "D'acòrd"
       },
       "loadDialog": {
-        "message": "",
+        "message": "Do you want to load all danger source variants from the day before?<br><strong>Existing analysis variants will be overwritten.</strong>",
         "accept": "Òc",
         "reject": "Non"
       },
       "loadFromForecastDialog": {
-        "message": "",
+        "message": "Do you want to load all variants from the forecast?<br><strong>Existing analysis variants will be overwritten.</strong>",
         "accept": "Òc",
         "reject": "Non"
       }
@@ -281,9 +284,9 @@
   },
   "avalancheType": {
     "title": "Tipe de lauet",
-    "slab": "",
-    "loose": "",
-    "glide": "",
+    "slab": "slab",
+    "loose": "loose",
+    "glide": "glide",
     "cornice": "cornisa",
     "unknown": "desconeishut",
     "label": {
@@ -316,95 +319,95 @@
       "submitUpdate": "Enviar actualizacion",
       "publishChange": "Publicar ara (sense messatges)",
       "publishUpdate": "Publicar ara",
-      "publishMinimal": "",
+      "publishMinimal": "Minimal publication",
       "caaml": "Mostrar CAAML",
       "json": "Mostrar JSON",
       "create": "Crear bulletin",
       "preview": "Vista previa deth bulletin (PDF)",
       "check": "Verificar bulletin",
       "info": "Mostrar er estat de publicacion",
-      "loadSuggestionFromDangerSources": "",
+      "loadSuggestionFromDangerSources": "Load suggestion from danger sources",
       "deleteAllWarningRegions": "Suprimir totes es regions d'alèrta",
       "publishAll": "Publicar totes es regions",
       "publishAllNoMessages": "Publicar totes es regions (sense missatges)",
       "mediaFile": "Cargar un fichèr multimèdia",
-      "publicationChecklist": ""
+      "publicationChecklist": "Open publication checklist"
     },
     "publicationChecklist": {
-      "title": "",
+      "title": "Publication checklist",
       "description": {
-        "website": "",
-        "email": "",
-        "telegram": "",
-        "whatsapp": ""
+        "website": "The map on the website shows the danger levels with their corresponding colors. Clicking on a region shows the avalanche problems and texts.",
+        "email": "An email was sent and contains a report.",
+        "telegram": "A message containing a link to the website was posted.",
+        "whatsapp": "A message containing a link to the website was posted."
       },
       "ok": "Òc ben",
-      "problem": "",
-      "problemDescription": "",
-      "problemPlaceholder": "",
+      "problem": "Problem",
+      "problemDescription": "Problem description",
+      "problemPlaceholder": "Describe the encountered problem",
       "channel": {
-        "website": "",
+        "website": "Website",
         "whatsapp": "WhatsApp",
         "telegram": "Telegram",
         "email": "Corrèu electronic"
       },
-      "publicationInProgress": "",
-      "publicationFinishedOnServer": "",
+      "publicationInProgress": "Publication in progress",
+      "publicationFinishedOnServer": "Finished publication on server",
       "publishDisabled": {
-        "inProgress": "",
-        "wrongStatus": ""
+        "inProgress": "Publication is currently in progress.",
+        "wrongStatus": "The bulletin must be submitted or published."
       },
-      "emailWaitHint": "",
+      "emailWaitHint": "Email delivery usually takes longer than social media messages. At least 5 minutes should have passed since publication before you proceed to the next step.",
       "email": {
-        "waitTitle": ""
+        "waitTitle": "Wait:"
       },
-      "options": "",
-      "republish": "",
-      "resend": "",
+      "options": "Options",
+      "republish": "Republish:",
+      "resend": "Resend:",
       "website": {
-        "checkInternetTitle": "",
-        "checkInternetDescriptionPrefix": "",
-        "checkInternetDescriptionSuffix": "",
-        "republishHint": "",
-        "publishMinimalTitle": "",
-        "publishMinimalHint": "",
-        "editAndResendTitle": "",
-        "openBulletin": "",
-        "clickEdit": "",
-        "clickSubmit": "",
-        "clickPublishNow": ""
+        "checkInternetTitle": "Check internet connection:",
+        "checkInternetDescriptionPrefix": "How is the internet connection on your device? Open",
+        "checkInternetDescriptionSuffix": "in a private window. Is yesterday's bulletin displayed correctly?",
+        "republishHint": "Only perform this step if “Check internet connection” was successful and at least 5 minutes have passed since the last publication attempt.",
+        "publishMinimalTitle": "Minimal publication:",
+        "publishMinimalHint": "Use this as a fallback if the full publication fails. Publishes CAAML data only — no maps, text-to-speech, or push messages. ⚠️ Also affects other regions on this server, not just your own. All will be republished in minimal mode.",
+        "editAndResendTitle": "Edit and resend:",
+        "openBulletin": "Open the bulletin",
+        "clickEdit": "Click “Edit”",
+        "clickSubmit": "Click “Submit”",
+        "clickPublishNow": "Click “Publish now”"
       },
       "manualSend": {
-        "title": "",
+        "title": "Manual send:",
         "description": {
-          "telegram": "",
-          "whatsapp": ""
+          "telegram": "Copy the text below and send it to the specified Telegram group.",
+          "whatsapp": "Copy the text below to the specified WhatsApp channel."
         },
-        "copyText": ""
+        "copyText": "Copy {{language}} {{channel}} text"
       },
-      "newChecklist": "",
-      "savedInfo": "",
+      "newChecklist": "New checklist",
+      "savedInfo": "Saved by {{user}}, {{time}}",
       "print": {
         "contact": {
-          "title": "",
-          "emailLabel": "",
-          "nameLabel": "",
-          "phoneLabel": ""
+          "title": "Emergency contact",
+          "emailLabel": "Email:",
+          "nameLabel": "Name:",
+          "phoneLabel": "Phone:"
         },
-        "emergencyTitle": "",
+        "emergencyTitle": "If serious problems occur",
         "fallback": {
-          "title": "",
-          "step1": "",
-          "step2": "",
-          "step3": "",
-          "step4": ""
+          "title": "Use fallback instance:",
+          "step1": "Navigate to the fallback Admin-GUI and publish the bulletin there.",
+          "step2": "Manually send messages to subscribed channels. Use the text below:",
+          "step3": "Inform the public by creating social media posts linking to the fallback website URL.",
+          "step4": "Inform the PR department about the situation."
         },
-        "hide": "",
-        "hint": "",
-        "hostingDescription": "",
-        "hostingTitle": "",
-        "print": "",
-        "toggle": ""
+        "hide": "Hide print version",
+        "hint": "Fill in the hosting service contact details and the fallback URLs below, then click \"Print\".",
+        "hostingDescription": "Ask about server status. If applicable, request a server restart.",
+        "hostingTitle": "Contact hosting service:",
+        "print": "Print",
+        "toggle": "Print version"
       }
     },
     "status": {
@@ -439,9 +442,9 @@
         "saveBulletin": "Sauvar bulletin",
         "discardBulletin": "Escartar cambiaments deth bulletin",
         "loadBulletin": "Cargar bulletin deth dia anterior",
-        "uploadCaamlBulletin": "",
+        "uploadCaamlBulletin": "Upload bulletin in CAAML format",
         "uploadJsonBulletin": "Cargar eth bulletin en format JSON",
-        "downloadCaamlBulletin": "",
+        "downloadCaamlBulletin": "Download bulletin in CAAML format",
         "downloadJsonBulletin": "Descargar eth bulletin en format JSON",
         "daytimeDependency": "Dependéncia ora deth dia",
         "treeline": "Limit deth bòsc",
@@ -462,10 +465,10 @@
         "moveDownAvalancheProblem": "Botjar eth problèma de lauegi cap enjós",
         "dangerRatingDirectionUp": "Cap ensús",
         "dangerRatingDirectionDown": "Cap enjós",
-        "addPhoto": "",
-        "removePhoto": "",
-        "uploadPhoto": "",
-        "editPhoto": ""
+        "addPhoto": "Add photo",
+        "removePhoto": "Remove photo",
+        "uploadPhoto": "Upload photo",
+        "editPhoto": "Edit photo"
       },
       "save": "Sauvar",
       "discard": "Escartar",
@@ -504,13 +507,13 @@
         "highlights": "Alèrte especiau",
         "avActivityHighlights": "Titular dera situacion de lauegi",
         "avActivityComment": "Descripcion deth perilh de lauegi",
-        "travelAdvisoryHighlights": "",
-        "travelAdvisoryComment": "",
+        "travelAdvisoryHighlights": "Headline travel advisory",
+        "travelAdvisoryComment": "Description of travel advisory",
         "snowpackStructureHighlights": "Estructura deth celh de nhèu",
         "snowpackStructureComment": "Descripcion deth celh de nhèu",
         "dangerPatterns": "Patrons de perilh",
         "tendencyComment": "Descripcion de tendéncia",
-        "synopsisHighlights": "",
+        "synopsisHighlights": "Headline weather synopsis",
         "synopsisComment": "Sinopsi deth temps",
         "notes": "Nòtes",
         "noSnow": "Sense nhèu"
@@ -525,18 +528,19 @@
         "dangerDescription": "Descripcion deth perilh de lauegi",
         "forenoon": "Maitin",
         "afternoon": "Tarde",
-        "photos": "",
+        "photos": "Photos",
         "snowpackStructure": "Estructura deth celh de nhèu",
         "tendency": "Tendéncia",
         "synopsis": "Temps atmosferic",
+        "travelAdvisory": "Travel advisory",
         "showTranslations": "Mostrar revirades",
         "hideTranslations": "Amagar revirades"
       },
       "photos": {
-        "url": "",
+        "url": "Image URL",
         "locationName": "Localitat",
-        "microregion": "",
-        "copyright": "",
+        "microregion": "Microregion",
+        "copyright": "Copyright",
         "date": "Data"
       },
       "placeholder": {
@@ -560,7 +564,7 @@
         "accept": "D'acòrd"
       },
       "loadDialog": {
-        "message": "",
+        "message": "Do you want to load the bulletins from the day before?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Òc",
         "reject": "Non"
       },
@@ -570,7 +574,7 @@
         "reject": "Non"
       },
       "loadSuggestionsFromDangerSourcesDialog": {
-        "message": "",
+        "message": "Do you want to load suggestions from danger sources?<br><strong>This will delete all existing regions!</strong>",
         "accept": "Òc",
         "reject": "Non"
       },
@@ -730,7 +734,7 @@
           "error": "Non s'an pogut enviar es notificacions Push!"
         },
         "accept": "Òc ben",
-        "confirm": ""
+        "confirm": "Do you want to send {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Fichèr multimèdia",
@@ -773,7 +777,7 @@
       },
       "bulletinCheck": {
         "missingDangerRating": "Grad de perilh non establit",
-        "missingDangerRatingModificator": "",
+        "missingDangerRatingModificator": "Danger rating modificator not set",
         "missingRegion": "Regions sense grad de perilh",
         "duplicateRegion": "Regions avalorades diuèrsi viatges",
         "missingAvActivityHighlights": "Manque eth titular dera situacion de lauegi",
@@ -1007,8 +1011,8 @@
   },
   "settings": {
     "title": "Configuracion",
-    "effectiveRole": "",
-    "effectiveRoleDefault": "",
+    "effectiveRole": "Effective role",
+    "effectiveRoleDefault": "All roles",
     "changePassword": {
       "title": "Cambiar contrasenha",
       "oldPassword": {
@@ -1045,18 +1049,18 @@
       }
     },
     "passkeys": {
-      "title": "",
-      "unsupported": "",
-      "empty": "",
-      "unnamed": "",
-      "lastUsed": "",
-      "neverUsed": "",
-      "namePlaceholder": "",
-      "add": "",
-      "delete": "",
-      "added": "",
-      "addError": "",
-      "deleteError": ""
+      "title": "Passkeys",
+      "unsupported": "Your browser does not support passkeys.",
+      "empty": "No passkeys registered yet.",
+      "unnamed": "Passkey",
+      "lastUsed": "Last used",
+      "neverUsed": "Never used",
+      "namePlaceholder": "e.g. iPhone, YubiKey",
+      "add": "Add passkey",
+      "delete": "Delete",
+      "added": "Passkey added",
+      "addError": "Could not add passkey",
+      "deleteError": "Could not delete passkey"
     }
   },
   "statistics": {
@@ -1072,7 +1076,7 @@
       "duplicates": "Duplicats"
     },
     "error": {
-      "downloadFailed": ""
+      "downloadFailed": "The statistics export could not be downloaded. Please try again."
     }
   },
   "strategicMindset": {
@@ -1318,8 +1322,8 @@
       "class": "Cristalhs facetadi"
     },
     "FCxr": {
-      "code": "",
-      "class": ""
+      "code": "FCxr",
+      "class": "Rounding Faceted Crystals"
     },
     "DH": {
       "code": "DH",
@@ -1334,8 +1338,8 @@
       "class": "Formes de fosion"
     },
     "MM": {
-      "code": "",
-      "class": ""
+      "code": "MM",
+      "class": "Machine Made"
     },
     "MFcr": {
       "code": "MFcr",
@@ -1354,8 +1358,8 @@
     "no": "Non"
   },
   "observations": {
-    "$externalURL": "",
-    "$type": "",
+    "$externalURL": "External URL (e.g. to photo database)",
+    "$type": "Observation type",
     "allowEdit": "Editar observacion extèrna",
     "allowEditTooltip": "Açò evitarà es sobreescriptures de {{ value }}",
     "editIconTooltip": "Observacion editada - non arrecep actualizacions de {{ value }}",
@@ -1363,7 +1367,7 @@
     "authorName": "Nom de l'autor",
     "avalancheLength": "Longitud de lauet",
     "avalancheProblem": "Problèma de lauegi",
-    "avalancheProblems": "",
+    "avalancheProblems": "Avalanche problem",
     "avalancheSize": "Mida de lauet",
     "avalancheType": "Tipe de lauet",
     "avalancheWidth": "Amplada de lauet",
@@ -1416,7 +1420,7 @@
     },
     "comment": "Comentari",
     "content": "Contengut",
-    "dangerPatterns": "",
+    "dangerPatterns": "Danger patterns",
     "dangerRating": "Grad de perilh",
     "dangerSource": "Hònt de perilh",
     "elevation": "Nautada",
@@ -1440,7 +1444,7 @@
     "fractureDepth": "Prigondor de cicatritz",
     "hasCoordinates": "A coordenades",
     "incline": "Inclinacion",
-    "importantObservations": "",
+    "importantObservations": "Important observations",
     "latitude": "Latitud",
     "locationName": "Localitat",
     "longitude": "Longitud",
@@ -1448,7 +1452,7 @@
     "personInvolvement": "Implicacion de persones",
     "reportDate": "Data der infòrme",
     "showTable": "Taula",
-    "stability": "",
+    "stability": "Snowpack Stability",
     "withoutCoordinates": "Observacions sense coordenades:",
     "sidebar": {
       "filter": {
@@ -1468,7 +1472,7 @@
   "personInvolvement": {
     "Dead": "Eveniment damb persones implicades (mòrtes)",
     "Injured": "Eveniment damb persones implicades (herides)",
-    "Yes": "",
+    "Yes": "Event involving persons",
     "No": "Eveniment sense persones implicades",
     "Uninjured": "Eveniment damb persones implicades (il·leses)",
     "Unknown": "Eveniment (desconeishut)"
@@ -1548,69 +1552,69 @@
     "hint": "Prémer Intro entà íger"
   },
   "awsstats": {
-    "title": "",
+    "title": "AWS statistics",
     "label": {
-      "loading": "",
-      "startDate": "",
-      "endDate": "",
-      "selectWeatherStation": "",
-      "selectMicroRegions": "",
-      "clearselection": "",
+      "loading": "Loading data...",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "selectWeatherStation": "Select weather station",
+      "selectMicroRegions": "Select micro-regions",
+      "clearselection": "Clear selection",
       "noMicroRegionsSelected": "cap",
-      "last7days": "",
-      "last30days": "",
-      "last90days": "",
-      "loadData": "",
-      "charttypes": ""
+      "last7days": "Last 7 days",
+      "last30days": "Last 30 days",
+      "last90days": "Last 90 days",
+      "loadData": "Load data",
+      "charttypes": "Chart types"
     },
     "charts": {
-      "aws-observations": "",
+      "aws-observations": "AWS observations",
       "aws-danger-rating": "Grad de perilh",
-      "aws-danger-rating-altitude": "",
-      "aws-avalanche-activity-index": "",
-      "aws-danger-rating-danger-source-variants": "",
-      "aws-danger-source-variants-matrix-parameter-stability": "",
-      "aws-danger-source-variants-matrix-parameter-frequency": "",
-      "aws-danger-source-variants-matrix-parameter-avalanche-size": ""
+      "aws-danger-rating-altitude": "Danger rating by altitude",
+      "aws-avalanche-activity-index": "Avalanche activity index",
+      "aws-danger-rating-danger-source-variants": "Danger source variants",
+      "aws-danger-source-variants-matrix-parameter-stability": "Danger source variants stability",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Danger source variants frequency",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Danger source variants avalanche size"
     },
     "error": {
-      "startDateBeforeEndDate": "",
-      "failedLoadData": "",
-      "startDateEndDateRequired": ""
+      "startDateBeforeEndDate": "Start date must be before or equal to end date.",
+      "failedLoadData": "Failed to load data for selected date range.",
+      "startDateEndDateRequired": "Start date and end date are required."
     }
   },
   "yearlystats": {
-    "title": "",
+    "title": "Yearly Statistics",
     "label": {
-      "startDate": "",
-      "endDate": "",
-      "loaddata": "",
-      "last90Days": "",
-      "last180Days": "",
-      "currentSeason": "",
-      "regionCode": "",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "loaddata": "Load data",
+      "last90Days": "Last 90 days",
+      "last180Days": "Last 180 days",
+      "currentSeason": "Current season",
+      "regionCode": "Region code",
       "allRegions": "TOTI",
-      "virtualTrainings": "",
-      "fieldTrainings": "",
-      "dangerRatingReference": ""
+      "virtualTrainings": "Virtual trainings (dates)",
+      "fieldTrainings": "Field trainings (dates)",
+      "dangerRatingReference": "Danger rating reference"
     },
     "charts": {
-      "aws-danger-rating-micro-regions-bars": "",
-      "aws-danger-rating-micro-regions": "",
-      "aws-danger-rating-distribution": "",
-      "aws-danger-pattern-micro-regions": "",
-      "aws-avalanche-problem-micro-regions": "",
-      "aws-products": "",
-      "aws-stress-level": ""
+      "aws-danger-rating-micro-regions-bars": "AWS Danger Rating - Micro Regions - Bars",
+      "aws-danger-rating-micro-regions": "AWS Danger Rating - Micro Regions",
+      "aws-danger-rating-distribution": "AWS Danger Rating - Distribution",
+      "aws-danger-pattern-micro-regions": "AWS Danger Pattern - Micro Regions",
+      "aws-avalanche-problem-micro-regions": "AWS Avalanche Problem - Micro Regions",
+      "aws-products": "AWS Products",
+      "aws-stress-level": "Team Stress Level"
     },
     "hint": {
-      "dangerRatingReference": "",
-      "dateChange": ""
+      "dangerRatingReference": "Reference values for a danger rating distribution over different seasons, shown in grey",
+      "dateChange": "After changing the date, the 'Load data' button must be pressed."
     }
   },
   "zodForm": {
-    "valid": "",
-    "required": "",
-    "invalidNumber": ""
+    "valid": "Valid",
+    "required": "Required",
+    "invalidNumber": "Please enter a valid number."
   }
 }
