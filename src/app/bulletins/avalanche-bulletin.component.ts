@@ -183,12 +183,13 @@ export class AvalancheBulletinComponent implements OnInit {
     return tendency === this.bulletin().tendency;
   }
 
-  /** Editable if enabled for the active region; when read-only, shown whenever the bulletin has text. */
-  isTextfieldShown(textfield: "travelAdvisoryHighlights" | "travelAdvisoryComment"): boolean {
-    return (
-      this.authenticationService.isTextfieldEnabled(textfield) ||
-      (this.disabled() && this.bulletin()[textfield].some((t) => !!t.text))
-    );
+  isTextfieldShown(textfield: keyof typeof Enums.TextcatTextfield): boolean {
+    return this.authenticationService.isTextfieldShown(textfield, this.bulletin(), this.disabled());
+  }
+
+  /** The sidebar shows only the own region's general headline, so another region's is shown here. */
+  isForeignGeneralHeadlineShown(): boolean {
+    return !this.isCreator(this.bulletin()) && this.bulletin().generalHeadlineComment.some((t) => !!t.text);
   }
 
   isInternal(): boolean {

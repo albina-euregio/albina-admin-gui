@@ -219,6 +219,18 @@
     </div>
   }
 
+  @if (isForeignGeneralHeadlineShown()) {
+    <div class="region-form__general-headline">
+      <app-bulletin-text
+        [textField]="TextcatTextfield.generalHeadlineComment"
+        [rows]="2"
+        [bulletin]="bulletin()"
+        [disabled]="disabled()"
+        (updateBulletinOnServer)="updateBulletinOnServer()"
+      />
+    </div>
+  }
+
   @if (!isNoSnowSelected()) {
     <main class="region-form__content">
       <accordion class="accordion">
@@ -575,7 +587,7 @@
         <!-- End tendency -->
 
         <!-- Weather synopsis -->
-        @if (this.authenticationService.isTextfieldEnabled("synopsisComment")) {
+        @if (isTextfieldShown("synopsisComment")) {
           <accordion-group [isOpen]="accordionOpen.tendency" (isOpenChange)="accordionChanged($event, 'synopsis')">
             <!-- Weather synopsis -->
             <div accordion-heading class="accordion-header">

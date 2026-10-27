@@ -14,6 +14,7 @@ import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
 import { TextcatTextfield } from "../../enums/enums";
+import type { BulletinModel } from "../../models/bulletin.model";
 import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
@@ -359,6 +360,15 @@ export class AuthenticationService {
       this.getActiveRegion()?.enabledEditableFields?.includes(TextcatTextfield[textfield]) ||
       false
     );
+  }
+
+  /** Editable if enabled for the active region; when read-only, shown whenever the bulletin has text. */
+  public isTextfieldShown(
+    textfield: keyof typeof TextcatTextfield,
+    bulletin: BulletinModel,
+    readonly: boolean,
+  ): boolean {
+    return this.isTextfieldEnabled(textfield) || (readonly && bulletin[textfield].some((t) => !!t.text));
   }
 
   public getActiveRegion(): RegionConfiguration | undefined {

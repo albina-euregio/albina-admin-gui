@@ -54,6 +54,10 @@ $region-form-width: 512px;
   }
 }
 
+.region-form__general-headline {
+  padding: 0 $region-form-padding;
+}
+
 .region-form__mindset-modal {
   overflow: auto;
   font-size: small;

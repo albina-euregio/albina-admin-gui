@@ -306,7 +306,11 @@
     <!-- End sidebar header -->
 
     <!-- Overall headline -->
-    @if (activeBulletin && authenticationService.isTextfieldEnabled("generalHeadlineComment")) {
+    @if (
+      activeBulletin &&
+      isCreator(activeBulletin) &&
+      authenticationService.isTextfieldShown("generalHeadlineComment", activeBulletin, isDisabled())
+    ) {
       <div class="create-bulletin__general-headline">
         <app-bulletin-text
           [textField]="TextcatTextfield.generalHeadlineComment"
