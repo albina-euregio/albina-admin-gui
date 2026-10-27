@@ -11,6 +11,8 @@ import { loginAdmin } from "./utils";
 test.beforeEach(async ({ page }) => {
   await page.goto("");
   await loginAdmin(page);
+  await page.getByRole("button", { name: "Effective role" }).click();
+  await page.locator(".dropdown-menu").getByRole("button", { name: "Administrator" }).click();
   await page.getByRole("button", { name: "Playwright Admin" }).click();
   await page.locator(".dropdown-menu").getByRole("link", { name: "Admin" }).click();
 });

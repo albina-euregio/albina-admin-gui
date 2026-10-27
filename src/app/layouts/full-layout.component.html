@@ -121,6 +121,49 @@
             }
           </ul>
         </li>
+        @if (authenticationService.effectiveRole; as effectiveRole) {
+          @let effectiveRoleLabel =
+            ("settings.effectiveRole" | translate) + ": " + ("role." + effectiveRole | translate);
+          <ng-template #effectiveRoleBadge>
+            <span class="badge" [class]="hasAdminPowers ? 'text-bg-danger' : 'text-bg-secondary'">
+              {{ "role." + effectiveRole | translate }}
+            </span>
+          </ng-template>
+          @if (roles.length > 1) {
+            <li class="nav-item dropdown d-flex align-items-center" dropdown>
+              <a
+                class="nav-link dropdown-toggle navbar__role"
+                role="button"
+                [attr.aria-label]="effectiveRoleLabel"
+                [title]="effectiveRoleLabel"
+                dropdownToggle
+              >
+                <ng-container *ngTemplateOutlet="effectiveRoleBadge" />
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+                <li>
+                  <h6 class="dropdown-header">{{ "settings.effectiveRole" | translate }}</h6>
+                </li>
+                @for (role of roles; track role) {
+                  <li>
+                    <a class="dropdown-item" role="button" (click)="switchEffectiveRole(role)">
+                      {{ "role." + role | translate }}
+                      @if (effectiveRole === role) {
+                        <i class="ph ph-check"></i>
+                      }
+                    </a>
+                  </li>
+                }
+              </ul>
+            </li>
+          } @else {
+            <li class="nav-item d-flex align-items-center">
+              <span class="nav-link navbar__role" [title]="effectiveRoleLabel">
+                <ng-container *ngTemplateOutlet="effectiveRoleBadge" />
+              </span>
+            </li>
+          }
+        }
         <li class="nav-item dropdown" dropdown>
           <a
             class="nav-link dropdown-toggle user-avatar"
@@ -138,14 +181,6 @@
               />
             }
             {{ authenticationService.getUsername() }}
-            @if (authenticationService.effectiveRole; as role) {
-              <span
-                class="badge"
-                [class]="role === 'ADMIN' || role === 'SUPERADMIN' ? 'text-bg-danger' : 'text-bg-secondary'"
-              >
-                {{ "role." + role | translate }}
-              </span>
-            }
           </a>
           <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
             <li>
@@ -302,7 +337,10 @@
 <div class="app-body">
   <!-- Main content -->
   <main class="main">
-    <router-outlet></router-outlet>
+    <!-- recreate the page on a role switch, as pages check the role only once on init -->
+    @for (role of [authenticationService.effectiveRole]; track role) {
+      <router-outlet></router-outlet>
+    }
   </main>
 </div>
 

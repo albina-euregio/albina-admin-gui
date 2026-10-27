@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, TemplateRef, viewChild, inject, ChangeDetectionStrategy } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
@@ -8,6 +9,7 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 import { environment } from "../../environments/environment";
+import * as Enums from "../enums/enums";
 import { RegionConfiguration } from "../models/region-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -21,7 +23,15 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
   templateUrl: "./full-layout.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [RouterLinkActive, RouterLink, BsDropdownModule, RouterOutlet, TranslatePipe, NgxMousetrapDirective],
+  imports: [
+    NgTemplateOutlet,
+    RouterLinkActive,
+    RouterLink,
+    BsDropdownModule,
+    RouterOutlet,
+    TranslatePipe,
+    NgxMousetrapDirective,
+  ],
 })
 export class FullLayoutComponent {
   translateService = inject(TranslateService);
@@ -50,6 +60,20 @@ export class FullLayoutComponent {
 
   get environment() {
     return environment;
+  }
+
+  get roles() {
+    return this.authenticationService.getCurrentAuthorRoles();
+  }
+
+  /** Re-runs the route guards, so that a page the new role may not see is left. */
+  switchEffectiveRole(role: Enums.UserRole) {
+    this.authenticationService.effectiveRole = role;
+    void this.router.navigateByUrl(this.router.url, { onSameUrlNavigation: "reload" });
+  }
+
+  get hasAdminPowers(): boolean {
+    return this.authenticationService.isCurrentUserInRole("ADMIN", "SUPERADMIN");
   }
 
   get isNavbarShown(): boolean {

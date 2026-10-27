@@ -18,6 +18,11 @@
     width: auto;
   }
 
+  .navbar__role {
+    display: flex;
+    align-items: center;
+  }
+
   .navbar__lang-toggle {
     text-transform: uppercase;
   }

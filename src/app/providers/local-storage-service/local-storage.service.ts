@@ -21,7 +21,7 @@ export class LocalStorageService {
   private translateService = inject(TranslateService);
 
   constructor() {
-    // migration: the effective role is no longer persisted
+    // migration: the effective role moved to sessionStorage
     localStorage.removeItem(this.key("effectiveRole"));
   }
 
