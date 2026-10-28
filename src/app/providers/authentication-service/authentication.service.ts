@@ -19,7 +19,7 @@ import { RegionConfiguration, RegionConfigurationSchema } from "../../models/reg
 import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
 import * as albinaApi from "../albina-api";
-import { zAuthenticationServiceAuthenticationResponse, zRegion } from "../albina-api/zod.gen";
+import { zAuthenticationServiceAuthenticationResponse, zPasswordStrength, zRegion } from "../albina-api/zod.gen";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 
 @Injectable({ providedIn: "root" })
@@ -457,7 +457,10 @@ const effectiveRolePriority: Enums.UserRole[] = [
   Enums.UserRole.SUPERADMIN,
 ];
 
-export const AuthenticationResponseSchema = zAuthenticationServiceAuthenticationResponse;
+// passkey logins carry no password, hence no passwordStrength
+export const AuthenticationResponseSchema = zAuthenticationServiceAuthenticationResponse.extend({
+  passwordStrength: zPasswordStrength.nullish(),
+});
 export type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;
 
 /**
