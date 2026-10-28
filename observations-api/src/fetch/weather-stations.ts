@@ -98,7 +98,7 @@ async function fetchStatistics(startDate: Date, endDate: Date, feature: Feature)
     ParameterTypeSchema.options.forEach((p) => {
       const values = smetData.values[p];
       if (!values?.length) return;
-      feature.properties.statistics[p] = buildStatistics(undefined, values);
+      feature.properties.statistics[p] = buildStatistics(undefined, Array.from(values));
     });
   } catch (e) {
     console.warn(`Failed to fetch statistics for ${station}`, e);

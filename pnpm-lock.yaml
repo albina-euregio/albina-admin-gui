@@ -182,8 +182,8 @@ importers:
   .:
     dependencies:
       '@albina-euregio/linea':
-        specifier: ^8.25.1
-        version: 8.25.1(valibot@1.5.0(typescript@6.0.3))
+        specifier: ^8.30.2
+        version: 8.30.2(valibot@1.5.0(typescript@6.0.3))
       '@angular/cdk':
         specifier: ^22.2.1
         version: 22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/forms@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)
@@ -374,10 +374,10 @@ importers:
 
 packages:
 
-  '@albina-euregio/linea@8.25.1':
-    resolution: {integrity: sha1-gU2XWX1muhsFlQfUH9P9wtWom50=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.25.1.tgz}
+  '@albina-euregio/linea@8.30.2':
+    resolution: {integrity: sha1-dQBn7I7+hsbzTmdOliBgTfC0uPo=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.30.2.tgz}
     peerDependencies:
-      valibot: ^1.4.2
+      valibot: ^1.5.0
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -4184,7 +4184,7 @@ packages:
 
 snapshots:
 
-  '@albina-euregio/linea@8.25.1(valibot@1.5.0(typescript@6.0.3))':
+  '@albina-euregio/linea@8.30.2(valibot@1.5.0(typescript@6.0.3))':
     dependencies:
       air-datepicker: 3.6.0
       temporal-polyfill: 1.0.1
