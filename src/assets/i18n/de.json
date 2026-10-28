@@ -165,7 +165,7 @@
       "variantStatus": "Status",
       "variantEditable": "Diese Variante kann bearbeitet werden.",
       "variantNotEditable": "Diese Variante kann nicht bearbeitet werden.",
-      "uploadError": "The variant could not be loaded from the file.",
+      "uploadError": "Die Variante kann nicht aus Datei geladen werden.",
       "noVariantsForSelectedDay": "Für dieses Datum sind keine Varianten definiert.",
       "tooltip": {
         "editDangerSource": "Gefahrenquelle bearbeiten",
@@ -174,8 +174,8 @@
         "showVariantsOnMap": "Varianten auf Karte anzeigen",
         "edit": "Kleinstregionen editieren",
         "copy": "Variante kopieren",
-        "download": "Download variant as JSON",
-        "upload": "Load variant from JSON",
+        "download": "Varianten als JSON herunterladen",
+        "upload": "Varianten aus JSON laden",
         "delete": "Variante löschen",
         "compare": "Variante vergleichen",
         "forecast": "Mit Vorhersage vergleichen"
@@ -532,7 +532,7 @@
         "snowpackStructure": "Schneedeckenaufbau",
         "tendency": "Tendenz",
         "synopsis": "Wetter",
-        "travelAdvisory": "Travel advisory",
+        "travelAdvisory": "Verhaltensempfehlung",
         "showTranslations": " Übersetzungen anzeigen",
         "hideTranslations": " Übersetzungen verbergen"
       },
