@@ -2,6 +2,12 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [9.1.1] - 2026-10-28
+
+### 🐛 Bug Fixes
+
+- _(auth)_ Successful passkey login does not expect passwordStrength in response
+
 ## [9.1.0] - 2026-10-28
 
 > ⚠️ Requires albina-server v9.1.0 (passkey login, travel advisory notes).
