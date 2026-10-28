@@ -347,8 +347,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           label: formatDate(s.creationDate, "mediumDate", this.translateService.getCurrentLang()) + " — " + s.title,
           legend: formatDate(s.creationDate, "mediumDate", this.translateService.getCurrentLang()) + " — " + s.title,
         }));
-        filter.values.length = 0;
-        filter.values.push(...values);
+        filter.replaceValues(values);
       });
   }
 

@@ -1,0 +1,57 @@
+<div class="elevation-cut-track"></div>
+@for (stop of stops(); track $index) {
+  <div class="elevation-cut-tick" [style.--k]="$index"></div>
+}
+@for (thumb of thumbs(); track thumb.cutIndex) {
+  @if (thumb.split) {
+    <div class="elevation-cut-line" [class.solid]="solid()" [style.--k]="thumb.stop"></div>
+  }
+  <div
+    class="elevation-cut-thumb"
+    [class.parked]="!thumb.split"
+    role="slider"
+    tabindex="0"
+    aria-orientation="vertical"
+    [attr.aria-label]="thumb.label | translate"
+    [attr.aria-valuemin]="thumb.min"
+    [attr.aria-valuemax]="thumb.max"
+    [attr.aria-valuenow]="thumb.cut"
+    [attr.aria-valuetext]="thumb.valueText | translate: { elevation: thumb.cut }"
+    [style.--k]="thumb.stop"
+    (pointerdown)="grab(thumb.cutIndex, $event)"
+    (pointermove)="drag(thumb.cutIndex, $event)"
+    (pointerup)="release()"
+    (lostpointercapture)="release()"
+    (pointercancel)="abandon()"
+    (keydown)="step(thumb.cutIndex, $event)"
+    (keyup)="commit()"
+    (blur)="commit()"
+  >
+    <span class="elevation-cut-pill">{{ thumb.code }}</span>
+  </div>
+}
+@for (band of bands(); track band.index) {
+  @let label = band.name.key | translate: band.name.params;
+  <button
+    type="button"
+    class="elevation-cut-band"
+    [class.pressed]="band.pressed"
+    [class.highlighted]="band.highlighted"
+    [style.--k]="band.top"
+    [style.--k-end]="band.bottom"
+    [attr.aria-pressed]="band.pressed"
+    [attr.aria-label]="label"
+    [title]="label"
+    (pointerdown)="startPress(band.index, $event)"
+    (pointerup)="cancelPress()"
+    (pointerleave)="cancelPress()"
+    (pointercancel)="cancelPress()"
+    (click)="clickBand(band.index, $event)"
+  >
+    @if (band.level; as level) {
+      <span class="elevation-cut-level" [class.white]="level.white" [style.background-color]="level.color">{{
+        level.level
+      }}</span>
+    }
+  </button>
+}

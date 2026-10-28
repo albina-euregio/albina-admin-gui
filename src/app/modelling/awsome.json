@@ -16,7 +16,6 @@
           "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='nivix/?file=/opt/awsome/sim/tirol25_profiles/xsnowpack.zarr&location={location}&params=grainshape,lwc&date={datetime}Z&profile=1&compact=1'></iframe></div>"
         }
       ],
-      "prewarmDays": 3,
       "regions": { "url": "tirol25_profiles/regions.geojson" }
     },
     {
@@ -46,7 +45,6 @@
           "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='nivix/?file=/opt/awsome/sim/trentino25/xsnowpack.zarr&location={location}&inclination={snowpack.inclination}&azimuth={snowpack.azimuth}&params=grainshape,lwc&date={datetime}Z&profile=1&compact=1'></iframe></div>"
         }
       ],
-      "prewarmDays": 3,
       "regions": { "url": "trentino25/regions.geojson" }
     },
     {
@@ -65,7 +63,6 @@
           "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='nivix/?file=/opt/awsome/sim/tirol25_stations/xsnowpack.zarr&location={location}&params=grainshape,lwc&date={datetime}Z&profile=1&compact=1'></iframe></div>"
         }
       ],
-      "prewarmDays": 3,
       "regions": { "url": "tirol25_stations/regions.geojson" }
     },
     {
@@ -95,7 +92,6 @@
           "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='nivix/?file=/opt/awsome/sim/stirol25/xsnowpack.zarr&location={location}&inclination={snowpack.inclination}&azimuth={snowpack.azimuth}&params=grainshape,lwc&date={datetime}Z&profile=1&compact=1'></iframe></div>"
         }
       ],
-      "prewarmDays": 3,
       "regions": { "url": "stirol25/regions.geojson" }
     },
     {
@@ -125,7 +121,6 @@
           "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='nivix/?file=/opt/awsome/sim/tirol25/xsnowpack.zarr&location={location}&inclination={snowpack.inclination}&azimuth={snowpack.azimuth}&params=grainshape,lwc&date={datetime}Z&profile=1&compact=1'></iframe></div>"
         }
       ],
-      "prewarmDays": 3,
       "regions": { "url": "tirol25/regions.geojson" }
     }
   ],
@@ -133,6 +128,7 @@
   "dateStepSeconds": 10800,
   "hazardChart": { "xType": "size_estimate", "xAxisLabels": [0, 18, 35, 70, 150, 300] },
   "timeseriesChart": { "url": "api/timeseries?days_before=14&days_after=3" },
+  "dangerLevel": { "frequencyBounds": { "few": 0.05, "some": 0.15, "many": 0.4 }, "sizePercentile": 90 },
   "dateMin": "2025-10-01T00:00:00",
   "dateMax": "2026-04-05T00:00:00",
   "date": "2026-04-05T00:00:00",
@@ -161,6 +157,7 @@
       "chartType": "bar",
       "chartRichLabel": "label",
       "default": "label",
+      "cuts": [2200],
       "values": [
         {
           "value": "3200-4000",
@@ -336,29 +333,30 @@
       "label": "Punstable",
       "key": "snowpack.Punstable.value",
       "type": "Punstable",
+      "stabilityIndex": "dry",
       "default": "classify",
       "chartAxisRange": [0, 1],
       "values": [
         {
-          "numericRange": [0.8, 1.0],
+          "numericRange": [0.85, 1.0],
           "color": "#d7191c",
-          "label": ">0.8",
-          "legend": "very poor (>=0.8)",
-          "value": ">=0.8"
+          "label": ">0.85",
+          "legend": "very poor (>=0.85)",
+          "value": ">=0.85"
         },
         {
-          "numericRange": [0.77, 0.8],
+          "numericRange": [0.78, 0.85],
           "color": "#fdae61",
-          "label": ">0.77",
-          "legend": "poor (>=0.77)",
-          "value": ">=0.77"
+          "label": ">0.78",
+          "legend": "poor (>=0.78)",
+          "value": ">=0.78"
         },
         {
-          "numericRange": [0.7, 0.77],
+          "numericRange": [0.7, 0.78],
           "color": "#ffffbf",
-          "label": "<0.77",
-          "legend": "fair (<0.77)",
-          "value": "<0.77"
+          "label": "<0.78",
+          "legend": "fair (<0.78)",
+          "value": "<0.78"
         },
         {
           "numericRange": [0.0, 0.7],
@@ -375,7 +373,7 @@
       "label": "Sk38_CCL",
       "key": "snowpack.sk38_ccl.value",
       "type": "sk38_ccl",
-      "stabilityIndex": true,
+      "stabilityIndex": "dry",
       "chartAxisRange": [0, 1.5],
       "values": [
         {
@@ -414,6 +412,7 @@
       "label": "LWC index",
       "key": "snowpack.lwc.value",
       "type": "lwc",
+      "stabilityIndex": "wet",
       "values": [
         { "numericRange": [3, 100], "color": "#d7301f", "label": ">3", "legend": "very poor (>3)", "value": "3" },
         { "numericRange": [1, 3], "color": "#fc8d59", "label": "<=3", "legend": "poor (<=3)", "value": "<=3" },

@@ -1,0 +1,51 @@
+<div
+  #toggle
+  dropdown
+  dropdownToggle
+  container="body"
+  [dropup]="opensUp()"
+  [placement]="opensUp() ? 'top right' : 'bottom right'"
+  [insideClick]="true"
+  (pointerdown)="aim(toggle)"
+  title="{{ 'awsome.Active datetags' | translate }}"
+>
+  <i class="ph ph-list-checks" aria-hidden="true"></i>
+  <div *dropdownMenu class="dropdown-menu dropdown-menu-end p-4">
+    <div class="small text-secondary text-nowrap mb-2">
+      {{ hintKey | translate: { active: activeCount(), visible: visibleCount() } }}
+    </div>
+    <div class="d-flex gap-2 mb-2">
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="setAllDates(true)">
+        {{ "awsome.All" | translate }}
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="setAllDates(false)">
+        {{ "awsome.None" | translate }}
+      </button>
+    </div>
+    <div class="dormant-datetags-list">
+      @for (value of values(); track value.value) {
+        <div class="form-check">
+          <label class="form-check-label text-nowrap">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [checked]="!pending().has(value.value)"
+              [disabled]="!isDateDatetag(value.value)"
+              (change)="setActive(value.value, $any($event.target).checked)"
+            />
+            {{ value.label }}
+          </label>
+        </div>
+      }
+    </div>
+    @if (error()) {
+      <div class="small text-danger mt-2">{{ "awsome.Saving failed" | translate }}: {{ error() }}</div>
+    }
+    <div class="border-top mt-2 pt-2">
+      <button type="button" class="btn btn-bare" [disabled]="!changed() || saving()" (click)="save()">
+        <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>
+        {{ "awsome.Save and reload" | translate }}
+      </button>
+    </div>
+  </div>
+</div>

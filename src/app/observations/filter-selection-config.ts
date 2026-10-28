@@ -57,6 +57,7 @@ export const FilterSelectionSpecSchema = z.object({
     .optional()
     .describe("Min and max value for chart range when plotting values on a parametric chart"),
   default: z.enum(["classify", "label"]).optional(),
+  hidden: z.boolean().optional().describe("Keeps the filter for the charts and templates but shows no panel for it"),
   key: z
     .string()
     .describe(
@@ -74,7 +75,12 @@ export const FilterSelectionSpecSchema = z.object({
     .array()
     .optional()
     .describe("Initially selected values, use 'nan' for features w/o specification"),
-  stabilityIndex: z.boolean().optional().describe("Whether this filter represents a snowpack stability index"),
+  stabilityIndex: z
+    .enum(["dry", "wet"])
+    .optional()
+    .describe(
+      "Marks this filter as a snowpack stability index of the dry or the wet regime. While the markers are classified by a filter with this keyword, that filter drives the timeseries chart and its type fills the `stabilityIndex` request parameter and the `$stabilityIndex` placeholder in keys and templates. While a filter without the keyword classifies, or none does, the placeholder is filled by the default classifier (`default: classify`) if it carries the keyword, else by the first filter in the list that does.",
+    ),
   type: z.string().describe("Identifier for this filter"),
   url: UrlSchema.optional().describe(
     "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",

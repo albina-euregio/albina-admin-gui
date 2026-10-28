@@ -1,16 +1,18 @@
-import { Component, OnInit, output, input, inject, ChangeDetectionStrategy } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
+import { Component, OnInit, output, input, inject, ChangeDetectionStrategy, TemplateRef } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { NgxEchartsDirective } from "ngx-echarts";
 
-import type { FilterSelectionData } from "./filter-selection-data";
+import { BAR_CHART_GRID_TOP, BAR_CHART_ROWS, BAR_LABEL_OFFSET } from "./bar-chart-layout";
+import { clickFilterValues, type FilterSelectionData } from "./filter-selection-data";
 import { ObservationMarkerService } from "./observation-marker.service";
 
 @Component({
   standalone: true,
   selector: "app-observation-chart",
-  imports: [NgxEchartsDirective, TranslatePipe],
+  imports: [NgTemplateOutlet, NgxEchartsDirective, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./observation-chart.component.html",
 })
@@ -22,6 +24,11 @@ export class ObservationChartComponent<T> implements OnInit {
   private pressTimer;
 
   readonly filterSelection = input<FilterSelectionData<T>>(undefined);
+  readonly classSlots = input(10);
+  readonly classifiable = input(true);
+  readonly reloadPending = input(false);
+  readonly switchTemplate = input<TemplateRef<unknown> | undefined>(undefined);
+  readonly asideTemplate = input<TemplateRef<unknown> | undefined>(undefined);
   readonly handleChange = output();
   readonly handleReload = output();
   public options: EChartsOption;
@@ -36,6 +43,11 @@ export class ObservationChartComponent<T> implements OnInit {
 
   get fontFamily() {
     return getComputedStyle(document.body).getPropertyValue("font-family");
+  }
+
+  /** Stacked class series: the unclassified in black, then the classifier's values by index. */
+  private get classSeries(): (number | undefined)[] {
+    return [undefined, ...Array.from({ length: this.classSlots() + 1 }, (_, i) => i)];
   }
 
   get barOptions(): EChartsOption {
@@ -59,7 +71,7 @@ export class ObservationChartComponent<T> implements OnInit {
       // },
       grid: [
         {
-          top: "5px",
+          top: `${BAR_CHART_GRID_TOP}px`,
           left: 0,
           right: 0,
           bottom: 0,
@@ -80,7 +92,7 @@ export class ObservationChartComponent<T> implements OnInit {
       yAxis: {
         inverse: true,
         min: 0,
-        max: 10,
+        max: BAR_CHART_ROWS - 1,
         boundaryGap: true,
         // scale: true,
         type: "category",
@@ -134,7 +146,7 @@ export class ObservationChartComponent<T> implements OnInit {
             fontFamily: this.fontFamily,
             //grey
             color: "#839194",
-            position: [0, -14],
+            position: [0, -BAR_LABEL_OFFSET],
             formatter: (params: CallbackDataParams) => this.getItemLabel(params),
             show: true,
             rich: {
@@ -196,7 +208,7 @@ export class ObservationChartComponent<T> implements OnInit {
             disabled: true,
           },
         },
-        ...[undefined, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
+        ...this.classSeries.map((i) => ({
           ...defaultDataBarOptions,
           stack: "total",
           itemStyle: {
@@ -351,7 +363,7 @@ export class ObservationChartComponent<T> implements OnInit {
             disabled: true,
           },
         },
-        ...[undefined, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
+        ...this.classSeries.map((i) => ({
           ...barDefaults,
           stack: "total",
           itemStyle: {
@@ -373,7 +385,7 @@ export class ObservationChartComponent<T> implements OnInit {
   onMouseDown(event: ECElementEvent) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
-      this.filterSelection().toggleFilterValue("highlighted", event.data[0]);
+      this.filterSelection().toggleFilterValues("highlighted", [event.data[0]]);
       this.handleChange.emit();
     }, this.longClickDur);
     return false;
@@ -393,15 +405,7 @@ export class ObservationChartComponent<T> implements OnInit {
   }
 
   onSeriesClick(event: MouseEvent | TouchEvent, value: "nan" | string) {
-    const subset = event.altKey ? "highlighted" : "selected";
-    if (event.shiftKey) {
-      this.filterSelection().toggleFilterValue(subset, value);
-    } else {
-      this.filterSelection().setFilterValue(subset, value);
-    }
-    if (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? event.metaKey : event.ctrlKey) {
-      this.filterSelection().invertFilter(subset);
-    }
+    clickFilterValues(this.filterSelection(), event, [value]);
     this.handleChange.emit();
   }
 
@@ -485,9 +489,7 @@ export class ObservationChartComponent<T> implements OnInit {
     if (params.seriesName === "highlighted") {
       val = params.value[1];
     } else if (params.seriesName === "all") {
-      val = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        .map((entry) => params.value[entry])
-        .reduce((sum, entry) => sum + entry);
+      val = (params.value as number[]).slice(6).reduce((sum, entry) => sum + entry);
     }
     return `
 <span class="badge rounded-pill me-1" style="width: 0.75rem;height:0.75rem;background-color:${params.color};"></span>

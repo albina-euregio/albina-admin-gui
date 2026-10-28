@@ -1,6 +1,7 @@
 import { FeatureProperties } from "app/modelling/awsome.component";
 import { castArray, get, memoize, toPath } from "es-toolkit/compat";
 
+import { haveSameElements } from "../shared/compareArrays";
 import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
 import type { GenericObservation } from "./models/generic-observation.model";
 
@@ -12,8 +13,11 @@ export type Dataset = (string | number)[][];
 
 export type ValueType = number | string | Date | number[] | string[];
 
+export type ClickModifiers = Pick<MouseEvent, "altKey" | "ctrlKey" | "metaKey" | "shiftKey">;
+
 export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
-  readonly stabilityIndex?: boolean;
+  readonly stabilityIndex?: FilterSelectionSpec<T>["stabilityIndex"];
+  readonly hidden?: boolean;
   readonly type: string;
   readonly label: string;
   readonly key: keyof T;
@@ -27,6 +31,8 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   highlighted = new Set<string>();
   dataset: Dataset;
   nan = 0;
+  unmatchedAsNan = false;
+  private offeredValues?: ReadonlySet<string>;
 
   constructor(spec: FilterSelectionSpec<T>) {
     Object.assign(this, spec);
@@ -35,28 +41,31 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     }
   }
 
-  setFilterValue(subset: "highlighted" | "selected", value: string) {
+  /** Puts exactly the given values in the subset, or empties it when it holds exactly them already. */
+  setFilterValues(subset: "highlighted" | "selected", values: readonly string[]) {
     const selectedData = this[subset];
-    if (selectedData.has(value) && selectedData.size === 1) {
-      selectedData.clear();
-    } else {
-      selectedData.clear();
-      selectedData.add(value);
-    }
+    const exactly = haveSameElements([...selectedData], [...values]);
+    selectedData.clear();
+    if (!exactly) values.forEach((value) => selectedData.add(value));
   }
 
-  toggleFilterValue(subset: "highlighted" | "selected", value: string) {
+  /** Adds the given values to the subset, or removes them all when it holds every one of them already. */
+  toggleFilterValues(subset: "highlighted" | "selected", values: readonly string[]) {
     const selectedData = this[subset];
-    if (selectedData.has(value)) {
-      selectedData.delete(value);
-    } else {
-      selectedData.add(value);
-    }
+    const all = values.every((value) => selectedData.has(value));
+    values.forEach((value) => (all ? selectedData.delete(value) : selectedData.add(value)));
   }
 
   resetFilter() {
     this.selected = new Set();
     this.highlighted = new Set();
+  }
+
+  /** Drops the selected and highlighted values the filter does not offer, keeping nan. */
+  retainKnown() {
+    const known = new Set(["nan", ...this.values.map((v) => v.value)]);
+    this.selected = new Set([...this.selected].filter((value) => known.has(value)));
+    this.highlighted = new Set([...this.highlighted].filter((value) => known.has(value)));
   }
 
   invertFilter(subset: "highlighted" | "selected") {
@@ -86,15 +95,23 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
 
   setDateRange(startDate: Date, endDate: Date) {
     const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-    this.values.length = 0;
+    const values: FilterSelectionValue[] = [];
     for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
-      this.values.push({
+      values.push({
         value: FilterSelectionData.getISODateString(i),
         color: colors.shift(),
         label: FilterSelectionData.getISODateString(i).slice(-2),
         legend: FilterSelectionData.getISODateString(i),
       });
     }
+    this.replaceValues(values);
+  }
+
+  /** Offers the given values in place of the current ones, in the same array. */
+  replaceValues(values: readonly FilterSelectionValue[]) {
+    this.values.length = 0;
+    this.values.push(...values);
+    this.offeredValues = undefined;
   }
 
   getValue(observation: T, key = this.key): ValueType {
@@ -109,7 +126,17 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
         return values;
       }
     }
-    return get(observation, this.path(key, (observation as unknown as FeatureProperties).$stabilityIndex)) as ValueType;
+    const value = get(observation, this.path(key, (observation as unknown as FeatureProperties).$stabilityIndex));
+    return this.unmatchedAsNan ? this.offeredPart(value as ValueType) : (value as ValueType);
+  }
+
+  /** The part of a value the filter offers: strings it does not offer drop out, and undefined when nothing is left. */
+  private offeredPart(value: ValueType): ValueType | undefined {
+    this.offeredValues ??= new Set(this.values.map((f) => f.value));
+    const offered = (v: unknown) => typeof v !== "string" || this.offeredValues.has(v);
+    if (!Array.isArray(value)) return offered(value) ? value : undefined;
+    const kept = (value as readonly unknown[]).filter(offered);
+    return kept.length ? (kept as ValueType) : undefined;
   }
 
   /** A key is parsed into its path once, then looked up. */
@@ -153,25 +180,14 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     observations: T[],
     isSelected: (o: T) => boolean,
     classifyValue: (o: T) => ValueType = (o) => markerClassify?.getValue(o),
+    classSlots = 10,
   ): void {
     this.nan = 0;
+    const slots = Array.from({ length: classSlots + 1 }, (_, slot) => slot);
+    const emptySlots = Object.fromEntries(slots.map((slot) => [slot, 0])) as Record<number, number>;
     const dataRaw = this.values.map((value) => ({
       value,
-      data: {
-        all: 0,
-        available: 0,
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-      },
+      data: { all: 0, available: 0, ...emptySlots },
     }));
     observations.forEach((observation) => {
       const value = this.getValue(observation);
@@ -203,25 +219,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
       });
     });
 
-    const header = [
-      "category",
-      "max",
-      "all",
-      "highlighted",
-      "available",
-      "selected",
-      "0",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-    ];
+    const header = ["category", "max", "all", "highlighted", "available", "selected", ...slots.map(String)];
 
     const data: Dataset = dataRaw.map((f) => {
       const key = f.value.value;
@@ -238,20 +236,28 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
         highlighted ? all : highlighted,
         available,
         selected,
-        values["0"],
-        values["1"],
-        values["2"],
-        values["3"],
-        values["4"],
-        values["5"],
-        values["6"],
-        values["7"],
-        values["8"],
-        values["9"],
-        values["10"],
+        ...slots.map((slot) => values[slot]),
       ];
     });
 
     this.dataset = [header, ...data];
+  }
+}
+
+/** Applies a chart click to the values: Alt aims at the highlight, Shift toggles, Ctrl (Cmd on Apple) inverts after. */
+export function clickFilterValues<T>(
+  filter: FilterSelectionData<T>,
+  event: ClickModifiers,
+  values: readonly string[],
+  platform = navigator.platform,
+) {
+  const subset = event.altKey ? "highlighted" : "selected";
+  if (event.shiftKey) {
+    filter.toggleFilterValues(subset, values);
+  } else {
+    filter.setFilterValues(subset, values);
+  }
+  if (/Mac|iPod|iPhone|iPad/.test(platform) ? event.metaKey : event.ctrlKey) {
+    filter.invertFilter(subset);
   }
 }
