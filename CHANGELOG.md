@@ -2,6 +2,49 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [9.1.0] - 2026-10-28
+
+> ⚠️ Requires albina-server v9.1.0 (passkey login, travel advisory notes).
+
+### 🚀 Features
+
+- **Passkey (WebAuthn) login**: users manage their own passkeys in the settings, admins see passkey icons for users who registered a passkey
+- _(bulletin)_ Travel advisory in its own collapsible block
+- _(bulletin)_ Downgrade danger rating outside the core zone
+- _(bulletin)_ Show the maximum danger rating per region on the map instead of an elevation split
+- _(bulletin)_ Deemphasize matrix cells not applicable to loose/glide avalanches
+- _(bulletin)_ Store free-text line breaks
+- _(auth)_ Show and switch the effective role in the navbar, kept across page reloads
+- _(danger-sources)_ Download and upload a variant as JSON
+- _(observations)_ Show incidents of the active region on the map
+- _(incidents)_ Import historic avalanche incidents
+- _(incidents)_ Parse pasted Leitstelle Tirol reports
+- _(incidents)_ Rework most-relevant fields, gate fields by avalanche type
+- _(awsome)_ Shareable links, 3D terrain, sources grouped by recipe, interactive hazard chart and details
+- _(modelling)_ Fetch ZAMG meteo overlay configuration per domain
+- _(datepicker)_ Use vanilla-calendar-pro showing three months, with typed input
+
+### 🐛 Bug Fixes
+
+- _(bulletin)_ Save free-text edits again (regression in 9.0.0)
+- _(bulletin)_ Save travel advisory notes, keep travel advisory text on CAAMLv6 re-import
+- _(bulletin)_ Show all region-specific text fields of read-only and foreign bulletins correctly
+- _(bulletin)_ Skip external CAAML bulletins not valid at the selected date
+- _(bulletin)_ Don't overwrite edits with bulletins loaded while saving
+- _(bulletin)_ Fix and validate JSON upload
+- _(map)_ Restore map center/zoom persistence (lost in the 9.0.0 MapLibre migration)
+- _(auth)_ Fix login on external servers
+- _(incidents)_ Publish external links and danger rating
+- _(incidents)_ Show all groups and persons in preview
+- _(awsome)_ Show observations that loaded before the map was ready
+- _(awsome)_ Fix map not loading when not logged in
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to Angular 22.2, maplibre-gl 6.12, vite-plus 1.0, pnpm 12
+- _(i18n)_ Move CAAML strings to their own Transifex resource, update translations
+- _(api)_ Use generated zod schemas for user and authentication responses
+
 ## [9.0.0] - 2026-07-26
 
 ### 🚀 Features
