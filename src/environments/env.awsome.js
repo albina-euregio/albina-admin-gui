@@ -1,5 +1,5 @@
 // @ts-check
-// An AWSOME server or container: the dashboard reads the awsome.json that this
+// An AWSOME server or container: the dashboard reads the operational.json that this
 // same host publishes, so awsomeConfigUrl is RELATIVE. That keeps the app
 // working wherever it is mounted - http://localhost:8002/ in a local container,
 // or behind a reverse proxy on a subpath such as https://models.<host>/dev/ -
