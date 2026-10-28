@@ -136,7 +136,7 @@ build:www2:
 deploy:www2:
   extends: .deploy
   needs:
-    - build:production
+    - build:www2
   environment:
     name: www2
   rules:
