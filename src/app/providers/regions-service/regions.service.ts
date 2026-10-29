@@ -116,26 +116,29 @@ export const RegionOutlineSchema = z.object({
   aws: z.array(
     z.object({
       name: z.string(),
-      url: z.partialRecord(
-        z.union([
-          LanguageSchema,
-          z.enum([
-            "api",
-            "api:date",
-            "facebook",
-            "flickr",
-            "instagram",
-            "linkedin",
-            "mail",
-            "telegram",
-            "whatsapp",
-            "twitter",
-            "youtube",
+      url: z
+        .object({
+          "api:lang": z.array(z.string()).optional(),
+        })
+        .catchall(
+          z.union([
+            LanguageSchema,
+            z.enum([
+              "api",
+              "api:date",
+              "facebook",
+              "flickr",
+              "instagram",
+              "linkedin",
+              "mail",
+              "telegram",
+              "whatsapp",
+              "twitter",
+              "youtube",
+            ]),
+            z.string(),
           ]),
-          z.string(),
-        ]),
-        z.string(),
-      ),
+        ),
     }),
   ),
 });
