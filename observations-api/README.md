@@ -6,6 +6,7 @@ HTTP API for observations built with [Bun.serve](https://bun.sh/docs/runtime/htt
 
 ```ini
 .env
+ALBINA_AVAL_POST_SECRET=
 ALBINA_LINEA_STATISTICS_PROVIDERS=
 ALBINA_LOLA_KRONOS_API_TOKEN=
 ALBINA_LWDKIP_PASSWORD=

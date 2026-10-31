@@ -2,6 +2,7 @@
 namespace NodeJS {
   interface ProcessEnv {
     ALBINA_ALPSOLUT_API_TOKEN: string;
+    ALBINA_AVAL_POST_SECRET: string;
     ALBINA_LOLA_KRONOS_API_TOKEN: string;
     ALBINA_LWDKIP_PASSWORD: string;
     ALBINA_LWDKIP_USERNAME: string;
