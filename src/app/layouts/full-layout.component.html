@@ -179,10 +179,18 @@
                 [src]="authenticationService.getUserImageSanitized(authenticationService.getCurrentAuthor().image)"
                 class="user-avatar__img"
               />
+            } @else {
+              <span class="d-md-none" [title]="authenticationService.getUsername()">{{ userInitials }}</span>
             }
-            {{ authenticationService.getUsername() }}
+            <span class="d-none d-md-inline">{{ authenticationService.getUsername() }}</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+            <li class="d-md-none">
+              <h6 class="dropdown-header">{{ authenticationService.getUsername() }}</h6>
+            </li>
+            <li class="d-md-none">
+              <hr class="dropdown-divider" />
+            </li>
             <li>
               <h6 class="dropdown-header">{{ "menu.region" | translate }}</h6>
             </li>

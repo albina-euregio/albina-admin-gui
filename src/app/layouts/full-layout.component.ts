@@ -4,6 +4,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { words } from "es-toolkit";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -74,6 +75,12 @@ export class FullLayoutComponent {
 
   get hasAdminPowers(): boolean {
     return this.authenticationService.isCurrentUserInRole("ADMIN", "SUPERADMIN");
+  }
+
+  get userInitials(): string {
+    return words(this.authenticationService.getUsername() ?? "")
+      .map((word) => word[0].toUpperCase())
+      .join("");
   }
 
   get isNavbarShown(): boolean {
