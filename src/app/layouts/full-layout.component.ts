@@ -83,6 +83,11 @@ export class FullLayoutComponent {
       .join("");
   }
 
+  /** Abbreviates a label to its capital letters, e.g. "Super Administrator:in" → "SA". */
+  capitals(label: string): string {
+    return label.replace(/[^\p{Lu}]/gu, "");
+  }
+
   get isNavbarShown(): boolean {
     return this.authenticationService.isUserLoggedIn() || !this.router.url.startsWith("/modelling");
   }

@@ -126,7 +126,9 @@
             ("settings.effectiveRole" | translate) + ": " + ("role." + effectiveRole | translate);
           <ng-template #effectiveRoleBadge>
             <span class="badge" [class]="hasAdminPowers ? 'text-bg-danger' : 'text-bg-secondary'">
-              {{ "role." + effectiveRole | translate }}
+              @let effectiveRoleName = "role." + effectiveRole | translate;
+              <span class="d-none d-md-inline">{{ effectiveRoleName }}</span>
+              <span class="d-md-none">{{ capitals(effectiveRoleName) }}</span>
             </span>
           </ng-template>
           @if (roles.length > 1) {
@@ -267,6 +269,13 @@
 <!-- Sidebar -->
 <div class="sidebar" [class.sidebar--open]="isSidebarOpen" id="sidebarMenu">
   <div class="sidebar-content">
+    @if (authenticationService.effectiveRole; as effectiveRole) {
+      <p class="d-md-none" [title]="'settings.effectiveRole' | translate">
+        <span class="badge" [class]="hasAdminPowers ? 'text-bg-danger' : 'text-bg-secondary'">
+          {{ "role." + effectiveRole | translate }}
+        </span>
+      </p>
+    }
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       @if (authenticationService.isUserLoggedIn()) {
         <li class="nav-item">
