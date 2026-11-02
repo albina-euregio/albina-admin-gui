@@ -2,6 +2,33 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [9.2.0] - 2026-11-02
+
+### 🚀 Features
+
+- _(awsome)_ Danger level view: read the selection against the EAWS matrix per elevation band
+- _(awsome)_ Elevation cut sliders and band selection beside the elevation chart
+- _(awsome)_ Set datetags dormant via menu, mark and reload a stale datetag selection
+- _(awsome)_ Show the other indices of a regime in the timeseries
+- _(awsome)_ Open the dashboard at a time relative to now, use `dcfg/operational.json` by default and `dcfg/research.json` for research
+- _(awsome)_ Colour hazard chart points by the classified stability index without a grain type filter
+- _(navbar)_ Show user avatar or initials and an abbreviated role badge on mobile, full role in the sidebar
+
+### 🐛 Bug Fixes
+
+- _(graphics)_ Load data of AT-07-GEOSPHERE weather stations in LINEA, incl. via datepicker (#486, #487)
+- _(regions)_ Accept `api:lang` in region outline URLs
+- _(awsome)_ Fix stale series, loading state and link dates of the danger level view
+- _(awsome)_ Send the aspect filter's nan selection to the API
+- _(awsome)_ Keep the details tabs in order when a tab is rebuilt
+- _(bulletin)_ Spacing of photos accordion heading
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to linea 8.30.2 (frontend and observations-api), eaws-regions 8.7.0, vite-plus 1.4.0
+- _(deps)_ Override fast-uri to 3.1.9 (GHSA-qw65-cvwx-89v3)
+- _(i18n)_ Update translations
+
 ## [9.1.1] - 2026-10-28
 
 ### 🐛 Bug Fixes
