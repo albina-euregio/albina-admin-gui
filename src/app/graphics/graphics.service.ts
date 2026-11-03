@@ -22,7 +22,7 @@ export class GraphicsService {
 
   async loadLineaStations(): Promise<Feature[]> {
     const stationById = new Map<string, Feature>();
-    const response = await fetch("https://static.avalanche.report/eaws_weather_stations/linea.geojson");
+    const response = await fetch("https://avalanche.report/eaws_weather_stations/linea.geojson");
     const json = await response.json();
     const collection = v.parse(FeatureCollectionSchema, json);
 
