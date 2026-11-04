@@ -1,0 +1,6 @@
+{
+  "/eaws_weather_stations": {
+    "target": "https://dev.avalanche.report",
+    "changeOrigin": true
+  }
+}

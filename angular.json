@@ -76,7 +76,8 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "albina-admin-gui:build"
+            "buildTarget": "albina-admin-gui:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "development": {
