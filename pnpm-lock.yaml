@@ -183,8 +183,8 @@ importers:
   .:
     dependencies:
       '@albina-euregio/linea':
-        specifier: ^8.30.2
-        version: 8.30.2(valibot@1.5.0(typescript@6.0.3))
+        specifier: ^8.31.0
+        version: 8.31.0(valibot@1.5.0(typescript@6.0.3))
       '@angular/cdk':
         specifier: ^22.2.1
         version: 22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/forms@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2))(@angular/platform-browser@22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)
@@ -375,8 +375,8 @@ importers:
 
 packages:
 
-  '@albina-euregio/linea@8.30.2':
-    resolution: {integrity: sha1-dQBn7I7+hsbzTmdOliBgTfC0uPo=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.30.2.tgz}
+  '@albina-euregio/linea@8.31.0':
+    resolution: {integrity: sha1-a5RS/lqHooMNDZqd7WhVoEse9UA=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.31.0.tgz}
     peerDependencies:
       valibot: ^1.5.0
 
@@ -3870,11 +3870,20 @@ packages:
   temporal-polyfill@1.0.1:
     resolution: {integrity: sha512-N2SoI9olnW7BUsU8RosDphZQl9s+WJ8O7PoJMFCr/e5/1rFkVI4GNOWaSeySG+UoP04foPYsnLWbJmbXOiShZg==}
 
+  temporal-polyfill@1.0.6:
+    resolution: {integrity: sha512-tYyEry1HLGUDbm2356W3iYD0OZdo7rlP7h98Zr/EnjqLZQwTAfcBDUvJnJbfA15v/vQad57hJZScG5O0W2oKEA==}
+
   temporal-spec@1.0.0:
     resolution: {integrity: sha512-00Ahj1e1ifaERTMOIIGpOCdOo9IEk2m6GGSMedsn9a2SIsGLdOTbmME1Htv6IM82b6VHrzSUTIVc7YHy6hdhFQ==}
 
+  temporal-spec@1.0.1:
+    resolution: {integrity: sha512-wxVoanmDeavXie1vu2JaQ3WIc3JZnWAOYFBsJyATaVsXsycKYUflGsyBmrRSnoCpZJpwPyr38VpgSUlQ8CbFxg==}
+
   temporal-utils@1.0.1:
     resolution: {integrity: sha512-HAixuesxFQIUaQk3ptX2jhfO/FsOkgVkDDMawvp6n/fkB1q6BKfs3lURw9I+pK/2e2e/q/vrLrxmeqauBoyGMQ==}
+
+  temporal-utils@1.0.3:
+    resolution: {integrity: sha512-9jbTSX3HvkOWvDpNpFzwX/d1mkCrgQgwLmVTOEiuocZGKHsrQJtttGZFmybJ2zYP5zCSZuU5ZyeS8+eOEPABiQ==}
 
   tinybench@6.2.2:
     resolution: {integrity: sha512-nIZ2N2dFpjBsg2hgitKu7mA+FvsIJuGJOwysRngmVRRmWgR/UyPjwJj8c/fT/dhm8EkHnF5EOogRf+0Z2qrimA==}
@@ -4114,10 +4123,10 @@ packages:
 
 snapshots:
 
-  '@albina-euregio/linea@8.30.2(valibot@1.5.0(typescript@6.0.3))':
+  '@albina-euregio/linea@8.31.0(valibot@1.5.0(typescript@6.0.3))':
     dependencies:
       air-datepicker: 3.6.0
-      temporal-polyfill: 1.0.1
+      temporal-polyfill: 1.0.6
       uplot: 1.6.32
       valibot: 1.5.0(typescript@6.0.3)
 
@@ -7188,9 +7197,18 @@ snapshots:
       temporal-spec: 1.0.0
       temporal-utils: 1.0.1
 
+  temporal-polyfill@1.0.6:
+    dependencies:
+      temporal-spec: 1.0.1
+      temporal-utils: 1.0.3
+
   temporal-spec@1.0.0: {}
 
+  temporal-spec@1.0.1: {}
+
   temporal-utils@1.0.1: {}
+
+  temporal-utils@1.0.3: {}
 
   tinybench@6.2.2: {}
 
