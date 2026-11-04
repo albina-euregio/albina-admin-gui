@@ -1,5 +1,6 @@
 import { formatDate } from "@angular/common";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 
 import * as pkg from "../../../../package.json";
 import { environment } from "../../../environments/environment";
@@ -7,6 +8,8 @@ import * as Enums from "../../enums/enums";
 
 @Injectable({ providedIn: "root" })
 export class ConstantsService {
+  private readonly translateService = inject(TranslateService);
+
   public release = [pkg.name, pkg.version].join("@");
   public gitlab = pkg.bugs.url;
   public dependencies = Object.entries(pkg.dependencies).map(([name, version]) => ({
@@ -147,6 +150,31 @@ export class ConstantsService {
   getISODateTimeString(date: Date) {
     // like Date.toISOString(), but not using UTC
     return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}T${this.pad(date.getHours())}:${this.pad(date.getMinutes())}` as const;
+  }
+
+  openBugReportLink() {
+    const url = new URL(`${pkg.bugs.url}/-/issues/new`);
+
+    url.searchParams.set("issue[title]", this.translateService.instant("bugreport.issue.title") + ": ");
+
+    const description = this.translateService.instant("bugreport.issue.description");
+
+    const debugInfo = `## System-Information
+\`\`\`
+URL: {{url}}
+Version: {{version}}
+User-Agent: {{user-agent}}
+\`\`\``;
+    const params: Record<string, string> = {
+      url: window.location.href,
+      version: this.release,
+      "user-agent": navigator.userAgent,
+    };
+
+    const resolvedDebugInfo = debugInfo.replace(/{{(.*?)}}/g, (_, key: string) => params[key.trim()] ?? "");
+
+    url.searchParams.set("issue[description]", [description, resolvedDebugInfo].filter(Boolean).join("\n\n"));
+    window.open(url, "_blank");
   }
 
   private pad(number: number) {

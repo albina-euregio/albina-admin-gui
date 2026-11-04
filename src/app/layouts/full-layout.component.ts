@@ -142,6 +142,10 @@ export class FullLayoutComponent {
     }
   }
 
+  bugreport() {
+    this.constantsService.openBugReportLink();
+  }
+
   private change(region: RegionConfiguration) {
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.loadStatus();

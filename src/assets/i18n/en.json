@@ -118,7 +118,8 @@
     "statistics": "Statistics",
     "admin": "Admin",
     "region": "Region",
-    "education": "Education"
+    "education": "Education",
+    "bugreport": "Bugreport"
   },
   "matrix": {
     "label": {
@@ -1692,5 +1693,11 @@
     "valid": "Valid",
     "required": "Required",
     "invalidNumber": "Please enter a valid number."
+  },
+  "bugreport": {
+    "issue": {
+      "title": "Bug report",
+      "description": "## Describtion\n\nPlease provide a detailed describtion of the bug including screenshots if possible."
+    }
   }
 }
