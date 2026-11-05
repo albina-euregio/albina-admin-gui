@@ -79,7 +79,7 @@
   "aspect.W": "Oeste",
   "aspect.NW": "Noroeste",
   "tendency.label": "Tendencia",
-  "tendency.progression.label": "Development of avalanche danger",
+  "tendency.progression.label": "Evolución del peligro de aludes",
   "tendency.decreasing": "Tendencia: peligro de aludes en disminución",
   "tendency.steady": "Tendencia: peligro de aludes sin cambios",
   "tendency.increasing": "Tendencia: peligro de aludes en aumento",
@@ -97,6 +97,6 @@
   "elevation.band": "Entre {0} y {1}",
   "synopsis.label": "Tiempo",
   "snowpack.label": "Manto nivoso",
-  "travelAdvisory.label": "Travel Advisory",
+  "travelAdvisory.label": "Terrain and Travel Advice",
   "forecast.label": "Predicción de Aludes"
 }

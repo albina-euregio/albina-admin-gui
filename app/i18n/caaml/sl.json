@@ -42,6 +42,7 @@
   "avalancheType.loose": "Plaz nesprijetega snega",
   "avalancheType.glide": "Zdrsni plaz",
   "avalancheProblem.label": "Plazovni problem",
+  "avalancheProblem.coreZones.label": "Avalanche Problems with Core Zones",
   "avalancheProblem.new_snow": "Nov sneg",
   "avalancheProblem.wind_slab": "Napihan sneg",
   "avalancheProblem.persistent_weak_layers": "Šibke plasti v starem snegu",
@@ -78,6 +79,7 @@
   "aspect.W": "Zahod",
   "aspect.NW": "Severozahod",
   "tendency.label": "Obeti",
+  "tendency.progression.label": "Development of avalanche danger",
   "tendency.decreasing": "Obeti: Zmanjšana plazovne nevarnosti",
   "tendency.steady": "Obeti: Nespremenjena plazovna nevarnost",
   "tendency.increasing": "Obeti: Povečana plazovna nevarnost",
@@ -95,6 +97,6 @@
   "elevation.band": "Med {0} in {1}",
   "synopsis.label": "Vreme",
   "snowpack.label": "Snežna odeja",
-  "travelAdvisory.label": "Travel Advisory",
+  "travelAdvisory.label": "Terrain and Travel Advice",
   "forecast.label": "Plazovna napoved"
 }

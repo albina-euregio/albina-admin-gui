@@ -79,7 +79,7 @@
   "aspect.W": "Oèst",
   "aspect.NW": "Nòrd-oèst",
   "tendency.label": "Tendéncia",
-  "tendency.progression.label": "Development of avalanche danger",
+  "tendency.progression.label": "Evolucion deth perilh de lauegi",
   "tendency.decreasing": "Tendéncia: Diminucion deth perilh de lauegi",
   "tendency.steady": "Tendéncia: perilh de lauegi constant",
   "tendency.increasing": "Tendéncia: aument deth perilh de lauegi",
@@ -97,6 +97,6 @@
   "elevation.band": "Entre {0} e {1}",
   "synopsis.label": "Temps",
   "snowpack.label": "Celh de nhèu",
-  "travelAdvisory.label": "Travel Advisory",
+  "travelAdvisory.label": "Terrain and Travel Advice",
   "forecast.label": "Prediccion de lauegi"
 }
