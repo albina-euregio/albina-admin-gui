@@ -159,21 +159,16 @@ export class ConstantsService {
 
     const description = this.translateService.instant("bugreport.issue.description");
 
-    const debugInfo = `## System-Information
-\`\`\`
-URL: {{url}}
-Version: {{version}}
-User-Agent: {{user-agent}}
-\`\`\``;
-    const params: Record<string, string> = {
-      url: window.location.href,
-      version: this.release,
-      "user-agent": navigator.userAgent,
-    };
+    const debugInfo = [
+      "## System information",
+      "```",
+      `URL: ${window.location.href}`,
+      `Version: ${this.release}`,
+      `User-Agent: ${navigator.userAgent}`,
+      "```",
+    ].join("\n");
 
-    const resolvedDebugInfo = debugInfo.replace(/{{(.*?)}}/g, (_, key: string) => params[key.trim()] ?? "");
-
-    url.searchParams.set("issue[description]", [description, resolvedDebugInfo].filter(Boolean).join("\n\n"));
+    url.searchParams.set("issue[description]", [description, debugInfo].filter(Boolean).join("\n\n"));
     return url.toString();
   }
 
