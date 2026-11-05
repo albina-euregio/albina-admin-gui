@@ -194,7 +194,7 @@ export function toSlfAvalancheTable(aval: SlfAvalanche): ObservationTableRow[] {
       label: "observations.avalancheLength",
       value: withAccuracy(aval.avalancheLength, aval.avalancheLengthAccuracy, "m"),
     },
-    { label: "Anrissbreite", value: withAccuracy(aval.fractureWidth, aval.fractureWidthAccuracy, "m") },
+    { label: "observations.avalancheWidth", value: withAccuracy(aval.fractureWidth, aval.fractureWidthAccuracy, "m") },
     { label: "observations.fractureDepth", value: withAccuracy(aval.fractureThicknessMean, undefined, "cm") },
     { label: "observations.incline", value: withAccuracy(aval.startZoneSlopeAngleInDegrees, undefined, "°") },
     {
