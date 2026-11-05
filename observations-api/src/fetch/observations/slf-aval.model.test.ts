@@ -142,9 +142,9 @@ describe("toSlfAvalancheObservation", () => {
     expect(o.$extraDialogRows.find((r) => r.label === "Ablagerung Länge")).toBeUndefined();
   });
 
-  test("generates an id without externalId", () => {
-    const o = toSlfAvalancheObservation(parseSlfAvalanche({ ...filled, externalId: "" }));
-    expect(o.$id).toMatch(/^[0-9a-f-]{36}$/);
+  test("rejects a payload without externalId", () => {
+    const aval = parseSlfAvalanche({ ...filled, externalId: "" });
+    expect(() => toSlfAvalancheObservation(aval)).toThrow("Expecting externalId");
   });
 
   test("rejects placeholder [0, 0] location and zones", () => {

@@ -109,8 +109,12 @@ export function toSlfAvalancheObservation(aval: SlfAvalanche): GenericObservatio
   if (latitude === undefined || longitude === undefined) {
     throw new Error("Expecting location or zones with coordinates");
   }
+  if (!aval.externalId) {
+    // without a stable id, re-sending the avalanche would create a duplicate
+    throw new Error("Expecting externalId");
+  }
   return {
-    $id: aval.externalId ?? crypto.randomUUID(),
+    $id: aval.externalId,
     $source: ObservationSource.SlfAval,
     $type: ObservationType.Avalanche,
     $data: aval,
