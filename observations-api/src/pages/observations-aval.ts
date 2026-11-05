@@ -18,7 +18,8 @@ export const POST = async (request: Bun.BunRequest) => {
   let observation: ReturnType<typeof toSlfAvalancheObservation>;
   try {
     const body = await request.json();
-    console.info("Receiving avalanche", body);
+    // do not log the whole payload, it contains notes and personal data
+    console.info("Receiving avalanche", body?.externalId);
     observation = toSlfAvalancheObservation(parseSlfAvalanche(body));
   } catch (e) {
     console.error(e);
