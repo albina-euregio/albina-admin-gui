@@ -7,7 +7,7 @@ import {
   ObservationType,
   PersonInvolvement,
 } from "../../generic-observation";
-import { parseSlfAvalanche, toSlfAvalancheObservation } from "./wyssen.model";
+import { parseWyssenAvalanche, toWyssenAvalancheObservation } from "./wyssen.model";
 
 /** the agreed payload template sent to the SLF Aval API v5 */
 const template = {
@@ -73,13 +73,13 @@ const filled = {
   location: { type: "Point", coordinates: [11.4, 47.2] },
 };
 
-describe("parseSlfAvalanche", () => {
+describe("parseWyssenAvalanche", () => {
   test("rejects the empty template (no trigger date)", () => {
-    expect(() => parseSlfAvalanche(template)).toThrow();
+    expect(() => parseWyssenAvalanche(template)).toThrow();
   });
 
   test("treats empty strings and zero placeholders as missing", () => {
-    const aval = parseSlfAvalanche({ ...template, triggerDateTime: "2026-01-15T10:30:00Z" });
+    const aval = parseWyssenAvalanche({ ...template, triggerDateTime: "2026-01-15T10:30:00Z" });
     expect(aval.triggerDateTime).toEqual(new Date("2026-01-15T10:30:00Z"));
     expect(aval.externalId).toBeUndefined();
     expect(aval.triggerType).toBeUndefined();
@@ -91,7 +91,7 @@ describe("parseSlfAvalanche", () => {
   });
 
   test("maps aliases to the spec field names and lower-cases enums", () => {
-    const aval = parseSlfAvalanche(filled);
+    const aval = parseWyssenAvalanche(filled);
     expect(aval).toMatchObject({
       triggerDateTimeAccuracy: "estimated",
       triggerType: "person",
@@ -114,21 +114,21 @@ describe("parseSlfAvalanche", () => {
   });
 
   test("rejects a trigger date without timezone offset", () => {
-    expect(() => parseSlfAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00" })).toThrow();
-    expect(() => parseSlfAvalanche({ ...filled, triggerDateTime: "2026-01-15" })).toThrow();
-    expect(parseSlfAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00+01:00" }).triggerDateTime).toEqual(
+    expect(() => parseWyssenAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00" })).toThrow();
+    expect(() => parseWyssenAvalanche({ ...filled, triggerDateTime: "2026-01-15" })).toThrow();
+    expect(parseWyssenAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00+01:00" }).triggerDateTime).toEqual(
       new Date("2026-01-15T09:30:00Z"),
     );
   });
 
   test("rejects invalid enum values", () => {
-    expect(() => parseSlfAvalanche({ ...filled, triggerType: "AVALANCHE_DOG" })).toThrow();
+    expect(() => parseWyssenAvalanche({ ...filled, triggerType: "AVALANCHE_DOG" })).toThrow();
   });
 });
 
-describe("toSlfAvalancheObservation", () => {
+describe("toWyssenAvalancheObservation", () => {
   test("converts a filled payload", () => {
-    const o = toSlfAvalancheObservation(parseSlfAvalanche(filled));
+    const o = toWyssenAvalancheObservation(parseWyssenAvalanche(filled));
     expect(o).toMatchObject({
       $id: "abc-123",
       $source: ObservationSource.Wyssen,
@@ -151,17 +151,17 @@ describe("toSlfAvalancheObservation", () => {
   });
 
   test("rejects a payload without externalId", () => {
-    const aval = parseSlfAvalanche({ ...filled, externalId: "" });
-    expect(() => toSlfAvalancheObservation(aval)).toThrow("Expecting externalId");
+    const aval = parseWyssenAvalanche({ ...filled, externalId: "" });
+    expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting externalId");
   });
 
   test("rejects placeholder [0, 0] location and zones", () => {
-    const aval = parseSlfAvalanche({ ...template, triggerDateTime: "2026-01-15T10:30:00Z" });
-    expect(() => toSlfAvalancheObservation(aval)).toThrow("Expecting location");
+    const aval = parseWyssenAvalanche({ ...template, triggerDateTime: "2026-01-15T10:30:00Z" });
+    expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting location");
   });
 
   test("falls back to the centroid of the avalanche shape", () => {
-    const aval = parseSlfAvalanche({
+    const aval = parseWyssenAvalanche({
       ...filled,
       location: template.location,
       zones: [
@@ -182,31 +182,31 @@ describe("toSlfAvalancheObservation", () => {
         },
       ],
     });
-    const o = toSlfAvalancheObservation(aval);
+    const o = toWyssenAvalancheObservation(aval);
     expect(o.longitude).toBe(11.5);
     expect(o.latitude).toBe(47.5);
   });
 
   test("handles an empty polygon", () => {
-    const aval = parseSlfAvalanche({
+    const aval = parseWyssenAvalanche({
       ...filled,
       location: "",
       zones: [{ type: "AVAL_SHAPE", geo: { type: "Polygon", coordinates: [] } }],
     });
-    expect(() => toSlfAvalancheObservation(aval)).toThrow("Expecting location");
+    expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting location");
   });
 
   test("derives avalanche problems and person involvement", () => {
-    const gliding = parseSlfAvalanche({ ...filled, avalancheType: "FULL_DEPTH", weakLayer: "" });
-    expect(toSlfAvalancheObservation(gliding).avalancheProblems).toEqual([AvalancheProblem.gliding_snow]);
-    const wet = parseSlfAvalanche({ ...filled, avalancheMoisture: "WET", weakLayer: "" });
-    expect(toSlfAvalancheObservation(wet).avalancheProblems).toEqual([AvalancheProblem.wet_snow]);
-    const dead = parseSlfAvalanche({
+    const gliding = parseWyssenAvalanche({ ...filled, avalancheType: "FULL_DEPTH", weakLayer: "" });
+    expect(toWyssenAvalancheObservation(gliding).avalancheProblems).toEqual([AvalancheProblem.gliding_snow]);
+    const wet = parseWyssenAvalanche({ ...filled, avalancheMoisture: "WET", weakLayer: "" });
+    expect(toWyssenAvalancheObservation(wet).avalancheProblems).toEqual([AvalancheProblem.wet_snow]);
+    const dead = parseWyssenAvalanche({
       ...filled,
       prsDmgPersons: [{ burialConsequence: "INJURED" }, { burialConsequence: "DEAD" }],
     });
-    expect(toSlfAvalancheObservation(dead).personInvolvement).toBe(PersonInvolvement.Dead);
-    const none = parseSlfAvalanche({ ...filled, prsDmgExists: "NO" });
-    expect(toSlfAvalancheObservation(none).personInvolvement).toBe(PersonInvolvement.No);
+    expect(toWyssenAvalancheObservation(dead).personInvolvement).toBe(PersonInvolvement.Dead);
+    const none = parseWyssenAvalanche({ ...filled, prsDmgExists: "NO" });
+    expect(toWyssenAvalancheObservation(none).personInvolvement).toBe(PersonInvolvement.No);
   });
 });

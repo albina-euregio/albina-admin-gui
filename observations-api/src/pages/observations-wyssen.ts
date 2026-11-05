@@ -1,5 +1,5 @@
 import { ObservationDatabaseConnection } from "../db/database";
-import { parseSlfAvalanche, toSlfAvalancheObservation } from "../fetch/observations/wyssen.model";
+import { parseWyssenAvalanche, toWyssenAvalancheObservation } from "../fetch/observations/wyssen.model";
 
 /**
  * Receives an avalanche in the format of the SLF Aval API v5 (https://test-api.slf.ch/aval/api/v5/)
@@ -7,20 +7,20 @@ import { parseSlfAvalanche, toSlfAvalancheObservation } from "../fetch/observati
  */
 export const POST = async (request: Bun.BunRequest) => {
   if (
-    !process.env.ALBINA_AVAL_POST_SECRET ||
-    process.env.ALBINA_AVAL_POST_SECRET !== request.headers.get("Authorization")
+    !process.env.ALBINA_WYSSEN_POST_SECRET ||
+    process.env.ALBINA_WYSSEN_POST_SECRET !== request.headers.get("Authorization")
   ) {
     return new Response("", { status: 403, statusText: "Forbidden" });
   }
   if (!request.headers.get("Content-Type")?.startsWith("application/json")) {
     return new Response("Expecting application/json", { status: 415 });
   }
-  let observation: ReturnType<typeof toSlfAvalancheObservation>;
+  let observation: ReturnType<typeof toWyssenAvalancheObservation>;
   try {
     const body = await request.json();
     // do not log the whole payload, it contains notes and personal data
     console.info("Receiving avalanche", body?.externalId);
-    observation = toSlfAvalancheObservation(parseSlfAvalanche(body));
+    observation = toWyssenAvalancheObservation(parseWyssenAvalanche(body));
   } catch (e) {
     console.error(e);
     return new Response(String(e), { status: 400 });

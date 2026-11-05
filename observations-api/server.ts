@@ -1,7 +1,7 @@
 import * as observations from "./src/pages/observations";
-import * as observationsAval from "./src/pages/observations-aval";
 import * as observationsFetchSnobs from "./src/pages/observations-fetch-snobs";
 import * as observationsSyncImages from "./src/pages/observations-sync-images";
+import * as observationsWyssen from "./src/pages/observations-wyssen";
 import * as observers from "./src/pages/observers";
 import * as weatherStations from "./src/pages/weather-stations";
 import * as webcams from "./src/pages/webcams";
@@ -10,9 +10,9 @@ import * as widgetAlpsolut from "./src/pages/widget.alpsolut.eu";
 const server = Bun.serve({
   routes: {
     "/observations": observations,
-    "/observations-aval": observationsAval,
     "/observations-fetch-snobs": observationsFetchSnobs,
     "/observations-sync-images": observationsSyncImages,
+    "/observations-wyssen": observationsWyssen,
     "/observers": observers,
     "/weather-stations": weatherStations,
     "/webcams": webcams,

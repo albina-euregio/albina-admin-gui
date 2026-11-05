@@ -31,7 +31,7 @@ const geometry = z.union([
   z.object({ type: z.literal("Polygon"), coordinates: position.array().array() }),
 ]);
 
-export const slfAvalancheSchema = z.looseObject({
+export const wyssenAvalancheSchema = z.looseObject({
   externalId: str,
   // without offset, the date would be interpreted in the timezone of the server
   triggerDateTime: z.iso.datetime({ offset: true }).pipe(z.coerce.date()),
@@ -77,12 +77,12 @@ export const slfAvalancheSchema = z.looseObject({
   zones: z.looseObject({ type: str, geo: geometry }).array().optional(),
 });
 
-export type SlfAvalanche = z.infer<typeof slfAvalancheSchema>;
+export type WyssenAvalanche = z.infer<typeof wyssenAvalancheSchema>;
 
 /**
  * Field names used in the agreed payload which differ from the SLF Aval API v5 spec.
  */
-const ALIASES: Record<string, keyof SlfAvalanche> = {
+const ALIASES: Record<string, keyof WyssenAvalanche> = {
   triggerDateTimeAcc: "triggerDateTimeAccuracy",
   avalancheLengthAcc: "avalancheLengthAccuracy",
   fractureWidthAcc: "fractureWidthAccuracy",
@@ -93,7 +93,7 @@ const ALIASES: Record<string, keyof SlfAvalanche> = {
   groupSizeAccuracy: "prsDmgGroupSizeAccuracy",
 };
 
-export function parseSlfAvalanche(body: unknown): SlfAvalanche {
+export function parseWyssenAvalanche(body: unknown): WyssenAvalanche {
   if (body && typeof body === "object" && !Array.isArray(body)) {
     const obj: Record<string, unknown> = { ...body };
     for (const [alias, key] of Object.entries(ALIASES)) {
@@ -102,10 +102,10 @@ export function parseSlfAvalanche(body: unknown): SlfAvalanche {
     }
     body = obj;
   }
-  return slfAvalancheSchema.parse(body);
+  return wyssenAvalancheSchema.parse(body);
 }
 
-export function toSlfAvalancheObservation(aval: SlfAvalanche): GenericObservation<SlfAvalanche> {
+export function toWyssenAvalancheObservation(aval: WyssenAvalanche): GenericObservation<WyssenAvalanche> {
   const [longitude, latitude] = getLocation(aval) ?? [];
   if (latitude === undefined || longitude === undefined) {
     throw new Error("Expecting location or zones with coordinates");
@@ -119,7 +119,7 @@ export function toSlfAvalancheObservation(aval: SlfAvalanche): GenericObservatio
     $source: ObservationSource.Wyssen,
     $type: ObservationType.Avalanche,
     $data: aval,
-    $extraDialogRows: toSlfAvalancheTable(aval),
+    $extraDialogRows: toWyssenAvalancheTable(aval),
     $allowEdit: false,
     $deleted: false,
     stability: SnowpackStability.very_poor,
@@ -138,7 +138,7 @@ export function toSlfAvalancheObservation(aval: SlfAvalanche): GenericObservatio
 // [0, 0] is the placeholder of the payload template
 const isSet = (p: number[]) => p[0] !== 0 || p[1] !== 0;
 
-function getLocation(aval: SlfAvalanche): number[] | undefined {
+function getLocation(aval: WyssenAvalanche): number[] | undefined {
   if (aval.location && isSet(aval.location.coordinates)) return aval.location.coordinates;
   // prefer the start zone, then any point, then the centroid of the vertices of a line/polygon
   const rank = (z: (typeof aval.zones)[number]) =>
@@ -157,7 +157,7 @@ function getLocation(aval: SlfAvalanche): number[] | undefined {
   }
 }
 
-function getAvalancheProblems(aval: SlfAvalanche): AvalancheProblem[] {
+function getAvalancheProblems(aval: WyssenAvalanche): AvalancheProblem[] {
   const problems = new Set<AvalancheProblem>();
   if (aval.avalancheType === "full_depth") problems.add(AvalancheProblem.gliding_snow);
   else if (aval.avalancheMoisture === "wet") problems.add(AvalancheProblem.wet_snow);
@@ -167,7 +167,7 @@ function getAvalancheProblems(aval: SlfAvalanche): AvalancheProblem[] {
   return [...problems];
 }
 
-function getPersonInvolvement(aval: SlfAvalanche): PersonInvolvement {
+function getPersonInvolvement(aval: WyssenAvalanche): PersonInvolvement {
   const consequences = aval.prsDmgPersons?.map((p) => p.burialConsequence) ?? [];
   if (consequences.includes("dead")) return PersonInvolvement.Dead;
   if (consequences.includes("injured")) return PersonInvolvement.Injured;
@@ -181,7 +181,7 @@ function withAccuracy(value: number | undefined, accuracy: string | undefined, u
   return accuracy && accuracy !== "accurate" ? `${value} ${unit} (${accuracy})` : `${value} ${unit}`;
 }
 
-export function toSlfAvalancheTable(aval: SlfAvalanche): ObservationTableRow[] {
+export function toWyssenAvalancheTable(aval: WyssenAvalanche): ObservationTableRow[] {
   const rows: ObservationTableRow[] = [
     { label: "Genauigkeit Abgangszeitpunkt", value: aval.triggerDateTimeAccuracy },
     { label: "Auslöseart", value: aval.triggerType },
