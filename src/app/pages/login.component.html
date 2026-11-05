@@ -57,15 +57,29 @@
                   </div>
                 }
                 <hr class="bg-secondary" />
-                <a href="{{ constantsService.gitlab }}" rel="noopener" target="_blank">
-                  <small>{{ constantsService.release }}</small>
-                </a>
-                ∥
-                @if (serverInfo) {
-                  <a href="{{ environment.apiBaseUrl }}" rel="noopener" target="_blank">
-                    <small>albina-server&#64;{{ serverInfo.version }}</small>
+                <div class="d-flex align-items-baseline">
+                  <div>
+                    <a href="{{ constantsService.gitlab }}" rel="noopener" target="_blank">
+                      <small>{{ constantsService.release }}</small>
+                    </a>
+                    ∥
+                    @if (serverInfo) {
+                      <a href="{{ environment.apiBaseUrl }}" rel="noopener" target="_blank">
+                        <small>albina-server&#64;{{ serverInfo.version }}</small>
+                      </a>
+                    }
+                  </div>
+
+                  <a
+                    class="icon-link small ms-auto text-decoration-none"
+                    [href]="constantsService.getBugReportUrl()"
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    <i class="ph ph-gitlab-logo-simple"></i>
+                    <span class="text-decoration-underline">{{ "menu.bugreport" | translate }}</span>
                   </a>
-                }
+                </div>
                 <details>
                   <summary>Open-source Licenses</summary>
                   @for (dependency of constantsService.dependencies; track dependency) {
