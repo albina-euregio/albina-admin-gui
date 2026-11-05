@@ -119,7 +119,7 @@
     "admin": "Admin",
     "region": "Region",
     "education": "Education",
-    "bugreport": "Bugreport"
+    "bugreport": "Report bug"
   },
   "matrix": {
     "label": {
@@ -1697,7 +1697,7 @@
   "bugreport": {
     "issue": {
       "title": "Bug report",
-      "description": "## Describtion\n\nPlease provide a detailed describtion of the bug including screenshots if possible."
+      "description": "## Description\n\nPlease provide a detailed description of the bug including screenshots if possible."
     }
   }
 }
