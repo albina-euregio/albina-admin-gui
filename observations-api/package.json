@@ -6,6 +6,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "bun server.ts",
+    "test": "bun test",
     "build": "bun build server.ts --target=bun --outfile=dist/observations-api.mjs && cp node_modules/@albina-euregio/linea/dist/smet.wasm dist/"
   },
   "dependencies": {

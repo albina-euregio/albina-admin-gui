@@ -94,10 +94,12 @@ const ALIASES: Record<string, keyof SlfAvalanche> = {
 
 export function parseSlfAvalanche(body: unknown): SlfAvalanche {
   if (body && typeof body === "object" && !Array.isArray(body)) {
-    body = { ...body };
+    const obj: Record<string, unknown> = { ...body };
     for (const [alias, key] of Object.entries(ALIASES)) {
-      body[key] ??= body[alias];
+      obj[key] ??= obj[alias];
+      delete obj[alias];
     }
+    body = obj;
   }
   return slfAvalancheSchema.parse(body);
 }
@@ -116,7 +118,7 @@ export function toSlfAvalancheObservation(aval: SlfAvalanche): GenericObservatio
     $allowEdit: false,
     $deleted: false,
     stability: SnowpackStability.very_poor,
-    aspect: aval.startZoneAspect ? Aspect[aval.startZoneAspect.toUpperCase()] : undefined,
+    aspect: aval.startZoneAspect ? Aspect[aval.startZoneAspect.toUpperCase() as keyof typeof Aspect] : undefined,
     avalancheProblems: getAvalancheProblems(aval),
     content: aval.note,
     elevation: aval.startZoneElevation ?? aval.depositElevation,
@@ -128,20 +130,26 @@ export function toSlfAvalancheObservation(aval: SlfAvalanche): GenericObservatio
   };
 }
 
+// [0, 0] is the placeholder of the payload template
+const isSet = (p: number[]) => p[0] !== 0 || p[1] !== 0;
+
 function getLocation(aval: SlfAvalanche): number[] | undefined {
-  if (aval.location) return aval.location.coordinates;
-  const zones = aval.zones ?? [];
+  if (aval.location && isSet(aval.location.coordinates)) return aval.location.coordinates;
   // prefer the start zone, then any point, then the centroid of the vertices of a line/polygon
-  const zone =
-    zones.find((z) => z.type?.toLowerCase() === "start_zone_point") ??
-    zones.find((z) => z.geo.type === "Point") ??
-    zones[0];
-  if (!zone) return;
-  const geo = zone.geo;
-  if (geo.type === "Point") return geo.coordinates;
-  const positions = geo.type === "LineString" ? geo.coordinates : geo.coordinates[0].slice(0, -1);
-  if (!positions?.length) return;
-  return [0, 1].map((i) => positions.reduce((sum, p) => sum + p[i], 0) / positions.length);
+  const rank = (z: (typeof aval.zones)[number]) =>
+    z.type?.toLowerCase() === "start_zone_point" ? 0 : z.geo.type === "Point" ? 1 : 2;
+  const zones = [...(aval.zones ?? [])].sort((z1, z2) => rank(z1) - rank(z2));
+  for (const { geo } of zones) {
+    const positions = (
+      geo.type === "Point"
+        ? [geo.coordinates]
+        : geo.type === "LineString"
+          ? geo.coordinates
+          : (geo.coordinates[0]?.slice(0, -1) ?? [])
+    ).filter(isSet);
+    if (!positions.length) continue;
+    return [0, 1].map((i) => positions.reduce((sum, p) => sum + p[i], 0) / positions.length);
+  }
 }
 
 function getAvalancheProblems(aval: SlfAvalanche): AvalancheProblem[] {
