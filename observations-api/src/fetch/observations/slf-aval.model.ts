@@ -33,7 +33,8 @@ const geometry = z.union([
 
 export const slfAvalancheSchema = z.looseObject({
   externalId: str,
-  triggerDateTime: z.coerce.date(),
+  // without offset, the date would be interpreted in the timezone of the server
+  triggerDateTime: z.iso.datetime({ offset: true }).pipe(z.coerce.date()),
   triggerDateTimeAccuracy: lowerStr,
   triggerType: enumOf(["natural", "person", "explosive", "snow_groomer", "other"]),
   triggerRemote: threestate,

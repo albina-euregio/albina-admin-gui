@@ -113,6 +113,14 @@ describe("parseSlfAvalanche", () => {
     expect(aval).not.toHaveProperty("startZoneSlopeAngle");
   });
 
+  test("rejects a trigger date without timezone offset", () => {
+    expect(() => parseSlfAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00" })).toThrow();
+    expect(() => parseSlfAvalanche({ ...filled, triggerDateTime: "2026-01-15" })).toThrow();
+    expect(parseSlfAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00+01:00" }).triggerDateTime).toEqual(
+      new Date("2026-01-15T09:30:00Z"),
+    );
+  });
+
   test("rejects invalid enum values", () => {
     expect(() => parseSlfAvalanche({ ...filled, triggerType: "AVALANCHE_DOG" })).toThrow();
   });
