@@ -7,7 +7,7 @@ import {
   ObservationType,
   PersonInvolvement,
 } from "../../generic-observation";
-import { parseSlfAvalanche, toSlfAvalancheObservation } from "./slf-aval.model";
+import { parseSlfAvalanche, toSlfAvalancheObservation } from "./wyssen.model";
 
 /** the agreed payload template sent to the SLF Aval API v5 */
 const template = {
@@ -131,7 +131,7 @@ describe("toSlfAvalancheObservation", () => {
     const o = toSlfAvalancheObservation(parseSlfAvalanche(filled));
     expect(o).toMatchObject({
       $id: "abc-123",
-      $source: ObservationSource.SlfAval,
+      $source: ObservationSource.Wyssen,
       $type: ObservationType.Avalanche,
       $allowEdit: false,
       $deleted: false,

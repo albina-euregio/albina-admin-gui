@@ -116,7 +116,7 @@ export function toSlfAvalancheObservation(aval: SlfAvalanche): GenericObservatio
   }
   return {
     $id: aval.externalId,
-    $source: ObservationSource.SlfAval,
+    $source: ObservationSource.Wyssen,
     $type: ObservationType.Avalanche,
     $data: aval,
     $extraDialogRows: toSlfAvalancheTable(aval),

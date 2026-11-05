@@ -1,5 +1,5 @@
 import { ObservationDatabaseConnection } from "../db/database";
-import { parseSlfAvalanche, toSlfAvalancheObservation } from "../fetch/observations/slf-aval.model";
+import { parseSlfAvalanche, toSlfAvalancheObservation } from "../fetch/observations/wyssen.model";
 
 /**
  * Receives an avalanche in the format of the SLF Aval API v5 (https://test-api.slf.ch/aval/api/v5/)

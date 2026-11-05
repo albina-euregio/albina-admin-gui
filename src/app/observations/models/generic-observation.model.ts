@@ -27,7 +27,7 @@ export enum ObservationSource {
   Panomax = "Panomax",
   RasBzIt = "RasBzIt",
   PanoCloud = "PanoCloud",
-  SlfAval = "SlfAval",
+  Wyssen = "Wyssen",
 }
 
 export enum ForecastSource {
