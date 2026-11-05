@@ -147,9 +147,5 @@ export class LoginComponent implements OnInit {
     this.loading = false;
   }
 
-  bugreport(): void {
-    this.constantsService.openBugReportLink();
-  }
-
   protected readonly environment = environment;
 }

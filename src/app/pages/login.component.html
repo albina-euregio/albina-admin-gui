@@ -70,10 +70,10 @@
                     }
                   </div>
 
-                  <button type="button" class="btn p-0 ms-auto" (click)="bugreport()">
+                  <a class="ms-auto" [href]="constantsService.getBugReportUrl()" rel="noopener" target="_blank">
                     <i class="ph ph-gitlab-logo-simple"></i>
-                    <span class="btn-link">{{ "menu.bugreport" | translate }}</span>
-                  </button>
+                    <small>{{ "menu.bugreport" | translate }}</small>
+                  </a>
                 </div>
                 <details>
                   <summary>Open-source Licenses</summary>

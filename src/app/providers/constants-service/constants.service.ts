@@ -152,7 +152,7 @@ export class ConstantsService {
     return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}T${this.pad(date.getHours())}:${this.pad(date.getMinutes())}` as const;
   }
 
-  openBugReportLink() {
+  getBugReportUrl(): string {
     const url = new URL(`${pkg.bugs.url}/-/issues/new`);
 
     url.searchParams.set("issue[title]", this.translateService.instant("bugreport.issue.title") + ": ");
@@ -174,7 +174,7 @@ User-Agent: {{user-agent}}
     const resolvedDebugInfo = debugInfo.replace(/{{(.*?)}}/g, (_, key: string) => params[key.trim()] ?? "");
 
     url.searchParams.set("issue[description]", [description, resolvedDebugInfo].filter(Boolean).join("\n\n"));
-    window.open(url, "_blank");
+    return url.toString();
   }
 
   private pad(number: number) {
