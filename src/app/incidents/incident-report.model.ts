@@ -221,12 +221,14 @@ export const VictimInformationSchema = z.object({
   professionalCertification: enumWithOther(
     z.enum([
       "None",
-      "IFMGAGuide",
+      "MountainGuide",
       "FullSkiGuide",
       "SkiInstructor",
       "ApprenticeGuide",
-      "AvalancheProfessional",
-      "AvalancheEducator",
+      "AlpineClubLeader",
+      "MountainRescuer",
+      "AvalancheTechnician",
+      "AvalancheForecaster",
     ]),
   ).nullish(),
   avalancheTraining: enumWithOther(z.enum(["None", "Awareness", "BasicREC", "AdvancedREC", "Professional"]))

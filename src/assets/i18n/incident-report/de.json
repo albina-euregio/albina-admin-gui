@@ -731,12 +731,14 @@
   },
   "professionalCertification": {
     "None": "Keine",
-    "IFMGAGuide": "IVBV Bergführer:in",
-    "FullSkiGuide": "Skiführer:in",
+    "MountainGuide": "Mountain Guide",
+    "FullSkiGuide": "Ski Guide",
     "SkiInstructor": "Skilehrer:in",
     "ApprenticeGuide": "Bergführer:in Anwärter",
-    "AvalancheProfessional": "Professionell ausgebildete Fachkraft für Lawinensicherheit",
-    "AvalancheEducator": "Ausbildner:in Lawine",
+    "AlpineClubLeader": "Alpine Club Leader",
+    "MountainRescuer": "Mountain Rescuer",
+    "AvalancheTechnician": "Avalanche Technician",
+    "AvalancheForecaster": "Avalanche Forecaster",
     "Other": "Andere"
   },
   "avalancheTraining": {
