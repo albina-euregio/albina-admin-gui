@@ -70,9 +70,14 @@
                     }
                   </div>
 
-                  <a class="ms-auto" [href]="constantsService.getBugReportUrl()" rel="noopener" target="_blank">
+                  <a
+                    class="icon-link small ms-auto"
+                    [href]="constantsService.getBugReportUrl()"
+                    rel="noopener"
+                    target="_blank"
+                  >
                     <i class="ph ph-gitlab-logo-simple"></i>
-                    <small>{{ "menu.bugreport" | translate }}</small>
+                    {{ "menu.bugreport" | translate }}
                   </a>
                 </div>
                 <details>
