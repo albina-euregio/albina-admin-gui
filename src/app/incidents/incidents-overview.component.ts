@@ -38,7 +38,7 @@ export class IncidentsOverviewComponent implements OnInit {
   readonly IncidentReportSchema = IncidentReportSchema;
 
   readonly allColumns: IncidentColumn[] = Object.entries(IncidentReportSchema.shape).flatMap(([k, v]) =>
-    unwrap(v).type !== "array" ? [k as IncidentColumn] : [],
+    unwrap(v).type !== "array" && !["id", "customData"].includes(k) ? [k as IncidentColumn] : [],
   );
   readonly columnVisibility: Partial<Record<IncidentColumn, boolean>> = {
     dateTime: true,

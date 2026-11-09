@@ -165,6 +165,7 @@ export const GroupInformationSchema = z.object({
     .nullish(),
   avalancheGear: z.enum(["All", "Some", "None", "Unknown"]).register(widgetRegistry, { mostRelevant: true }).nullish(),
   groupInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  customData: z.object({}).catchall(z.unknown()).register(widgetRegistry, { widget: "none" }).nullish(),
 });
 withShowIf(GroupInformationSchema, {
   groupSize: (m) => m.groupSizeAccuracy !== "Unknown",
@@ -309,6 +310,7 @@ export const VictimInformationSchema = z.object({
     .register(widgetRegistry, { class: "col-5 bg-person-rescue" })
     .nullish(),
   victimInformationComment: z.string().register(widgetRegistry, { widget: "textarea" }).nullish(),
+  customData: z.object({}).catchall(z.unknown()).register(widgetRegistry, { widget: "none" }).nullish(),
 });
 withShowIf(VictimInformationSchema, {
   fatalInjured: (m) => m.caught === "Involved" || m.caught === "Unknown",
@@ -612,6 +614,7 @@ export const IncidentAttachmentSchema = z.object({
   attachmentTags: enumWithOther(z.enum(["Picture", "PoliceReport", "MedicalReport"]))
     .array()
     .nullish(),
+  customData: z.object({}).catchall(z.unknown()).register(widgetRegistry, { widget: "none" }).nullish(),
 });
 export type IncidentAttachment = z.infer<typeof IncidentAttachmentSchema>;
 
@@ -631,6 +634,7 @@ export const IncidentReportSchema = z.object({
   ...IncidentAnalysisSchema.shape,
   ...IncidentLinksSchema.shape,
   attachments: IncidentAttachmentSchema.array().register(widgetRegistry, { mostRelevant: true }).nullish(),
+  customData: z.object({}).catchall(z.unknown()).register(widgetRegistry, { widget: "none" }).nullish(),
 });
 export type IncidentReport = z.infer<typeof IncidentReportSchema>;
 
@@ -651,7 +655,9 @@ export function toPublicIncidentReport(report: IncidentReport) {
   );
   publicReport.victimInformation = [];
   publicReport.groupInformation = [];
-  publicReport.attachments = (report.attachments ?? []).filter((a) => a.public);
+  publicReport.attachments = (report.attachments ?? [])
+    .map((a) => ({ ...a, customData: undefined }))
+    .filter((a) => a.public);
   return {
     ...publicReport,
     involvementsFatalitiesBurials,
