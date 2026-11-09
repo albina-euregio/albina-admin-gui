@@ -155,44 +155,8 @@ describe("toWyssenAvalancheObservation", () => {
     expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting externalId");
   });
 
-  test("rejects placeholder [0, 0] location and zones", () => {
-    const aval = parseWyssenAvalanche({ ...template, triggerDateTime: "2026-01-15T10:30:00Z" });
-    expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting location");
-  });
-
-  test("falls back to the centroid of the avalanche shape", () => {
-    const aval = parseWyssenAvalanche({
-      ...filled,
-      location: template.location,
-      zones: [
-        {
-          type: "AVAL_SHAPE",
-          geo: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [11, 47],
-                [12, 47],
-                [12, 48],
-                [11, 48],
-                [11, 47],
-              ],
-            ],
-          },
-        },
-      ],
-    });
-    const o = toWyssenAvalancheObservation(aval);
-    expect(o.longitude).toBe(11.5);
-    expect(o.latitude).toBe(47.5);
-  });
-
-  test("handles an empty polygon", () => {
-    const aval = parseWyssenAvalanche({
-      ...filled,
-      location: "",
-      zones: [{ type: "AVAL_SHAPE", geo: { type: "Polygon", coordinates: [] } }],
-    });
+  test("rejects a payload without location", () => {
+    const aval = parseWyssenAvalanche({ ...filled, location: "" });
     expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting location");
   });
 

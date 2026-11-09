@@ -25,11 +25,6 @@ const enumOf = <T extends string>(values: readonly [T, ...T[]]) => z.preprocess(
 const threestate = enumOf(["yes", "no", "unknown"]);
 const position = z.tuple([z.number(), z.number()]).rest(z.number());
 const point = z.object({ type: z.literal("Point"), coordinates: position });
-const geometry = z.union([
-  point,
-  z.object({ type: z.literal("LineString"), coordinates: position.array() }),
-  z.object({ type: z.literal("Polygon"), coordinates: position.array().array() }),
-]);
 
 export const wyssenAvalancheSchema = z.looseObject({
   externalId: str,
@@ -74,7 +69,6 @@ export const wyssenAvalancheSchema = z.looseObject({
     .array()
     .optional(),
   location: z.preprocess(blank, point.optional()),
-  zones: z.looseObject({ type: str, geo: geometry }).array().optional(),
 });
 
 export type WyssenAvalanche = z.infer<typeof wyssenAvalancheSchema>;
@@ -106,9 +100,9 @@ export function parseWyssenAvalanche(body: unknown): WyssenAvalanche {
 }
 
 export function toWyssenAvalancheObservation(aval: WyssenAvalanche): GenericObservation<WyssenAvalanche> {
-  const [longitude, latitude] = getLocation(aval) ?? [];
+  const [longitude, latitude] = aval.location?.coordinates ?? [];
   if (latitude === undefined || longitude === undefined) {
-    throw new Error("Expecting location or zones with coordinates");
+    throw new Error("Expecting location");
   }
   if (!aval.externalId) {
     // without a stable id, re-sending the avalanche would create a duplicate
@@ -133,28 +127,6 @@ export function toWyssenAvalancheObservation(aval: WyssenAvalanche): GenericObse
     personInvolvement: getPersonInvolvement(aval),
     reportDate: new Date(),
   };
-}
-
-// [0, 0] is the placeholder of the payload template
-const isSet = (p: number[]) => p[0] !== 0 || p[1] !== 0;
-
-function getLocation(aval: WyssenAvalanche): number[] | undefined {
-  if (aval.location && isSet(aval.location.coordinates)) return aval.location.coordinates;
-  // prefer the start zone, then any point, then the centroid of the vertices of a line/polygon
-  const rank = (z: (typeof aval.zones)[number]) =>
-    z.type?.toLowerCase() === "start_zone_point" ? 0 : z.geo.type === "Point" ? 1 : 2;
-  const zones = [...(aval.zones ?? [])].sort((z1, z2) => rank(z1) - rank(z2));
-  for (const { geo } of zones) {
-    const positions = (
-      geo.type === "Point"
-        ? [geo.coordinates]
-        : geo.type === "LineString"
-          ? geo.coordinates
-          : (geo.coordinates[0]?.slice(0, -1) ?? [])
-    ).filter(isSet);
-    if (!positions.length) continue;
-    return [0, 1].map((i) => positions.reduce((sum, p) => sum + p[i], 0) / positions.length);
-  }
 }
 
 function getAvalancheProblems(aval: WyssenAvalanche): AvalancheProblem[] {
