@@ -1,5 +1,5 @@
 import { ObservationDatabaseConnection } from "../db/database";
-import { parseWyssenAvalanche, toWyssenAvalancheObservation } from "../fetch/observations/wyssen.model";
+import { toWyssenAvalancheObservation } from "../fetch/observations/wyssen.model";
 
 /**
  * Receives an avalanche in the format of the SLF Aval API v5 (https://test-api.slf.ch/aval/api/v5/)
@@ -20,7 +20,7 @@ export const POST = async (request: Bun.BunRequest) => {
     const body = await request.json();
     // do not log the whole payload, it contains notes and personal data
     console.info("Receiving avalanche", body?.externalId);
-    observation = toWyssenAvalancheObservation(parseWyssenAvalanche(body));
+    observation = toWyssenAvalancheObservation(body);
   } catch (e) {
     console.error(e);
     return new Response(String(e), { status: 400 });

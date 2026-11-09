@@ -7,10 +7,10 @@ import {
   ObservationType,
   PersonInvolvement,
 } from "../../generic-observation";
-import { parseWyssenAvalanche, toWyssenAvalancheObservation } from "./wyssen.model";
+import { toWyssenAvalancheObservation, type WyssenAvalanche } from "./wyssen.model";
 
 /** the agreed payload template sent to the SLF Aval API v5 */
-const template = {
+const template: WyssenAvalanche = {
   triggerDateTime: "",
   triggerDateTimeAcc: "",
   triggerType: "",
@@ -45,9 +45,9 @@ const template = {
   zones: [{ type: "AVAL_SHAPE", geo: { type: "Polygon", coordinates: [[[0.0, 0.0]]] } }],
 };
 
-const filled = {
+const filled: WyssenAvalanche = {
   ...template,
-  triggerDateTime: "2026-01-15T10:30:00Z",
+  triggerDateTime: "2026-01-15T10:30:00+01:00",
   triggerDateTimeAcc: "ESTIMATED",
   triggerType: "PERSON",
   triggerRemote: "NO",
@@ -73,104 +73,87 @@ const filled = {
   location: { type: "Point", coordinates: [11.4, 47.2] },
 };
 
-describe("parseWyssenAvalanche", () => {
-  test("rejects the empty template (no trigger date)", () => {
-    expect(() => parseWyssenAvalanche(template)).toThrow();
-  });
-
-  test("treats empty strings and zero placeholders as missing", () => {
-    const aval = parseWyssenAvalanche({ ...template, triggerDateTime: "2026-01-15T10:30:00Z" });
-    expect(aval.triggerDateTime).toEqual(new Date("2026-01-15T10:30:00Z"));
-    expect(aval.externalId).toBeUndefined();
-    expect(aval.triggerType).toBeUndefined();
-    expect(aval.avalancheSize).toBeUndefined();
-    expect(aval.avalancheLength).toBeUndefined();
-    expect(aval.startZoneSlopeAngleInDegrees).toBeUndefined();
-    expect(aval.prsDmgGroupSize).toBeUndefined();
-    expect(aval.detectionType).toBe("manually");
-  });
-
-  test("maps aliases to the spec field names and lower-cases enums", () => {
-    const aval = parseWyssenAvalanche(filled);
-    expect(aval).toMatchObject({
-      triggerDateTimeAccuracy: "estimated",
-      triggerType: "person",
-      triggerRemote: "no",
-      avalancheType: "slab",
-      avalancheSize: 3,
-      avalancheMoisture: "dry",
-      avalancheLengthAccuracy: "estimated",
-      weakLayer: "in_old_snow",
-      startZoneAspect: "ne",
-      startZoneSlopeAngleInDegrees: 38,
-      startZoneElevationAccuracy: "accurate",
-      matDmgExists: "no",
-      rescueMissionExists: "yes",
-      prsDmgGroupSize: 4,
-      prsDmgGroupSizeAccuracy: "accurate",
-    });
-    expect(aval).not.toHaveProperty("groupSize");
-    expect(aval).not.toHaveProperty("startZoneSlopeAngle");
-  });
-
-  test("rejects a trigger date without timezone offset", () => {
-    expect(() => parseWyssenAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00" })).toThrow();
-    expect(() => parseWyssenAvalanche({ ...filled, triggerDateTime: "2026-01-15" })).toThrow();
-    expect(parseWyssenAvalanche({ ...filled, triggerDateTime: "2026-01-15T10:30:00+01:00" }).triggerDateTime).toEqual(
-      new Date("2026-01-15T09:30:00Z"),
-    );
-  });
-
-  test("rejects invalid enum values", () => {
-    expect(() => parseWyssenAvalanche({ ...filled, triggerType: "AVALANCHE_DOG" })).toThrow();
-  });
-});
-
 describe("toWyssenAvalancheObservation", () => {
   test("converts a filled payload", () => {
-    const o = toWyssenAvalancheObservation(parseWyssenAvalanche(filled));
+    const o = toWyssenAvalancheObservation(filled);
     expect(o).toMatchObject({
       $id: "abc-123",
       $source: ObservationSource.Wyssen,
       $type: ObservationType.Avalanche,
+      $data: filled,
       $allowEdit: false,
       $deleted: false,
       aspect: Aspect.NE,
       avalancheProblems: [AvalancheProblem.persistent_weak_layers],
       content: "Schneebrett am Nordosthang",
       elevation: 2650,
-      eventDate: new Date("2026-01-15T10:30:00Z"),
+      eventDate: new Date("2026-01-15T09:30:00Z"),
       latitude: 47.2,
       longitude: 11.4,
       personInvolvement: PersonInvolvement.Unknown,
     });
-    expect(o.$extraDialogRows).toContainEqual({ label: "observations.avalancheLength", value: "450 m (estimated)" });
-    expect(o.$extraDialogRows).toContainEqual({ label: "Anrisshöhe", value: "2650 m" });
-    expect(o.$extraDialogRows).toContainEqual({ label: "Gruppengröße", value: "4 Pers." });
-    expect(o.$extraDialogRows.find((r) => r.label === "Ablagerung Länge")).toBeUndefined();
+    expect(o.$extraDialogRows).toContainEqual({ label: "observations.avalancheSize", value: "3" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "observations.avalancheLength", value: "450 m (ESTIMATED)" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "observations.incline", value: "38 °" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "Anrisshöhe", value: "2650 m (ACCURATE)" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "Gruppengröße", value: "4 Pers. (ACCURATE)" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "Sachschaden", value: "NO" });
+  });
+
+  test("accepts the field names of the SLF Aval API v5 spec", () => {
+    const o = toWyssenAvalancheObservation({
+      ...template,
+      externalId: "abc-123",
+      triggerDateTime: "2026-01-15T10:30:00+01:00",
+      triggerDateTimeAcc: undefined,
+      triggerDateTimeAccuracy: "ESTIMATED",
+      startZoneSlopeAngle: undefined,
+      startZoneSlopeAngleInDegrees: 38,
+      materialDamageExists: undefined,
+      matDmgExists: "YES",
+      groupSize: undefined,
+      prsDmgGroupSize: 2,
+      location: filled.location,
+    });
+    expect(o.$extraDialogRows).toContainEqual({ label: "Genauigkeit Abgangszeitpunkt", value: "ESTIMATED" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "observations.incline", value: "38 °" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "Sachschaden", value: "YES" });
+    expect(o.$extraDialogRows).toContainEqual({ label: "Gruppengröße", value: "2 Pers." });
+  });
+
+  test("passes values through as sent", () => {
+    const o = toWyssenAvalancheObservation({ ...template, externalId: "abc-123", triggerDateTime: "2026-01-15" });
+    expect(o.aspect).toBeUndefined();
+    expect(o.elevation).toBe(0);
+    expect(o.latitude).toBe(0);
+    expect(o.longitude).toBe(0);
+    expect(o.$extraDialogRows).toContainEqual({ label: "Anrisshöhe", value: "0 m" });
+    expect(o.$extraDialogRows.find((r) => r.label === "Auslöseart")).toBeUndefined();
+  });
+
+  test("ignores an unknown aspect", () => {
+    expect(toWyssenAvalancheObservation({ ...filled, startZoneAspect: "ne" }).aspect).toBeUndefined();
   });
 
   test("rejects a payload without externalId", () => {
-    const aval = parseWyssenAvalanche({ ...filled, externalId: "" });
-    expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting externalId");
+    expect(() => toWyssenAvalancheObservation({ ...filled, externalId: "" })).toThrow("Expecting externalId");
   });
 
   test("rejects a payload without location", () => {
-    const aval = parseWyssenAvalanche({ ...filled, location: "" });
-    expect(() => toWyssenAvalancheObservation(aval)).toThrow("Expecting location");
+    expect(() => toWyssenAvalancheObservation({ ...filled, location: undefined })).toThrow("Expecting location");
   });
 
   test("derives avalanche problems and person involvement", () => {
-    const gliding = parseWyssenAvalanche({ ...filled, avalancheType: "FULL_DEPTH", weakLayer: "" });
-    expect(toWyssenAvalancheObservation(gliding).avalancheProblems).toEqual([AvalancheProblem.gliding_snow]);
-    const wet = parseWyssenAvalanche({ ...filled, avalancheMoisture: "WET", weakLayer: "" });
-    expect(toWyssenAvalancheObservation(wet).avalancheProblems).toEqual([AvalancheProblem.wet_snow]);
-    const dead = parseWyssenAvalanche({
+    const gliding = toWyssenAvalancheObservation({ ...filled, avalancheType: "FULL_DEPTH", weakLayer: "" });
+    expect(gliding.avalancheProblems).toEqual([AvalancheProblem.gliding_snow]);
+    const wet = toWyssenAvalancheObservation({ ...filled, avalancheMoisture: "WET", weakLayer: "" });
+    expect(wet.avalancheProblems).toEqual([AvalancheProblem.wet_snow]);
+    const dead = toWyssenAvalancheObservation({
       ...filled,
       prsDmgPersons: [{ burialConsequence: "INJURED" }, { burialConsequence: "DEAD" }],
     });
-    expect(toWyssenAvalancheObservation(dead).personInvolvement).toBe(PersonInvolvement.Dead);
-    const none = parseWyssenAvalanche({ ...filled, prsDmgExists: "NO" });
-    expect(toWyssenAvalancheObservation(none).personInvolvement).toBe(PersonInvolvement.No);
+    expect(dead.personInvolvement).toBe(PersonInvolvement.Dead);
+    const none = toWyssenAvalancheObservation({ ...filled, prsDmgExists: "NO" });
+    expect(none.personInvolvement).toBe(PersonInvolvement.No);
   });
 });

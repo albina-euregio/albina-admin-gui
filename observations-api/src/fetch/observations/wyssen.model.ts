@@ -1,5 +1,3 @@
-import { z } from "zod/v4";
-
 import {
   type GenericObservation,
   Aspect,
@@ -13,90 +11,51 @@ import {
 
 /**
  * Avalanche in the format of the SLF Aval API v5 (https://test-api.slf.ch/aval/api/v5/).
- * Enum values are accepted case-insensitively, empty strings (and zero for measures) are treated as missing.
+ * Where the agreed Wyssen payload uses a different field name than the spec, both are listed.
  */
-const blank = (v: unknown) => (v === "" || v === null ? undefined : v);
-const str = z.preprocess(blank, z.string().optional());
-// all measures (lengths, elevations, group size) are positive, so 0 is just the placeholder of the payload template
-const num = z.preprocess((v) => (v === 0 || v === "0" ? undefined : blank(v)), z.coerce.number().optional());
-const lower = (v: unknown) => (typeof v === "string" ? blank(v.toLowerCase()) : blank(v));
-const lowerStr = z.preprocess(lower, z.string().optional());
-const enumOf = <T extends string>(values: readonly [T, ...T[]]) => z.preprocess(lower, z.enum(values).optional());
-const threestate = enumOf(["yes", "no", "unknown"]);
-const position = z.tuple([z.number(), z.number()]).rest(z.number());
-const point = z.object({ type: z.literal("Point"), coordinates: position });
-
-export const wyssenAvalancheSchema = z.looseObject({
-  externalId: str,
-  // without offset, the date would be interpreted in the timezone of the server
-  triggerDateTime: z.iso.datetime({ offset: true }).pipe(z.coerce.date()),
-  triggerDateTimeAccuracy: lowerStr,
-  triggerType: enumOf(["natural", "person", "explosive", "snow_groomer", "other"]),
-  triggerRemote: threestate,
-  avalancheType: enumOf(["full_depth", "loose_snow", "slab"]),
-  avalancheSize: z.preprocess(blank, z.coerce.number().int().min(1).max(5).optional()),
-  avalancheMoisture: enumOf(["dry", "wet"]),
-  note: str,
-  confidential: z.boolean().optional(),
-  stormeRelevant: z.boolean().optional(),
-  detectionType: lowerStr,
-  avalancheLength: num,
-  avalancheLengthAccuracy: lowerStr,
-  weakLayer: enumOf([
-    "within_new_and_drifting_snow",
-    "at_the_transition_to_old_snow",
-    "in_old_snow",
-    "in_old_snow_close_to_the_ground",
-  ]),
-  fractureThicknessMean: num,
-  fractureWidth: num,
-  fractureWidthAccuracy: lowerStr,
-  startZoneAspect: enumOf(["n", "ne", "e", "se", "s", "sw", "w", "nw"]),
-  startZoneSlopeAngleInDegrees: num,
-  startZoneElevation: num,
-  startZoneElevationAccuracy: lowerStr,
-  depositElevation: num,
-  depositHeight: num,
-  depositWidth: num,
-  depositLength: num,
-  matDmgExists: threestate,
-  rescueMissionExists: threestate,
-  prsDmgExists: threestate,
-  prsDmgGroupSize: num,
-  prsDmgGroupSizeAccuracy: lowerStr,
-  prsDmgPersons: z
-    .looseObject({ burialConsequence: enumOf(["uninjured", "injured", "dead"]) })
-    .array()
-    .optional(),
-  location: z.preprocess(blank, point.optional()),
-});
-
-export type WyssenAvalanche = z.infer<typeof wyssenAvalancheSchema>;
-
-/**
- * Field names used in the agreed payload which differ from the SLF Aval API v5 spec.
- */
-const ALIASES: Record<string, keyof WyssenAvalanche> = {
-  triggerDateTimeAcc: "triggerDateTimeAccuracy",
-  avalancheLengthAcc: "avalancheLengthAccuracy",
-  fractureWidthAcc: "fractureWidthAccuracy",
-  startZoneSlopeAngle: "startZoneSlopeAngleInDegrees",
-  startZoneElevationAcc: "startZoneElevationAccuracy",
-  materialDamageExists: "matDmgExists",
-  groupSize: "prsDmgGroupSize",
-  groupSizeAccuracy: "prsDmgGroupSizeAccuracy",
-};
-
-export function parseWyssenAvalanche(body: unknown): WyssenAvalanche {
-  if (body && typeof body === "object" && !Array.isArray(body)) {
-    const obj: Record<string, unknown> = { ...body };
-    for (const [alias, key] of Object.entries(ALIASES)) {
-      obj[key] ??= obj[alias];
-      delete obj[alias];
-    }
-    body = obj;
-  }
-  return wyssenAvalancheSchema.parse(body);
+export interface WyssenAvalanche {
+  externalId: string;
+  triggerDateTime: string;
+  triggerDateTimeAcc?: string;
+  triggerDateTimeAccuracy?: string;
+  triggerType?: string;
+  triggerRemote?: string;
+  avalancheType?: string;
+  avalancheSize?: string | number;
+  avalancheMoisture?: string;
+  note?: string;
+  confidential?: boolean;
+  stormeRelevant?: boolean;
+  detectionType?: string;
+  avalancheLength?: number;
+  avalancheLengthAcc?: string;
+  avalancheLengthAccuracy?: string;
+  weakLayer?: string;
+  fractureThicknessMean?: number;
+  fractureWidth?: number;
+  fractureWidthAcc?: string;
+  fractureWidthAccuracy?: string;
+  startZoneAspect?: string;
+  startZoneSlopeAngle?: string | number;
+  startZoneSlopeAngleInDegrees?: string | number;
+  startZoneElevation?: number;
+  startZoneElevationAcc?: string;
+  startZoneElevationAccuracy?: string;
+  depositElevation?: number;
+  depositHeight?: number;
+  depositWidth?: number;
+  depositLength?: number;
+  materialDamageExists?: string;
+  matDmgExists?: string;
+  rescueMissionExists?: string;
+  prsDmgExists?: string;
+  groupSize?: number;
+  prsDmgGroupSize?: number;
+  groupSizeAccuracy?: string;
+  prsDmgGroupSizeAccuracy?: string;
+  prsDmgPersons?: { burialConsequence?: string }[];
+  location?: { type: "Point"; coordinates: number[] };
+  zones?: { type?: string; geo: unknown }[];
 }
 
 export function toWyssenAvalancheObservation(aval: WyssenAvalanche): GenericObservation<WyssenAvalanche> {
@@ -117,11 +76,11 @@ export function toWyssenAvalancheObservation(aval: WyssenAvalanche): GenericObse
     $allowEdit: false,
     $deleted: false,
     stability: SnowpackStability.very_poor,
-    aspect: aval.startZoneAspect ? Aspect[aval.startZoneAspect.toUpperCase() as keyof typeof Aspect] : undefined,
+    aspect: Object.values(Aspect).find((a) => a === aval.startZoneAspect),
     avalancheProblems: getAvalancheProblems(aval),
     content: aval.note,
     elevation: aval.startZoneElevation ?? aval.depositElevation,
-    eventDate: aval.triggerDateTime,
+    eventDate: new Date(aval.triggerDateTime),
     latitude,
     longitude,
     personInvolvement: getPersonInvolvement(aval),
@@ -130,62 +89,72 @@ export function toWyssenAvalancheObservation(aval: WyssenAvalanche): GenericObse
 }
 
 function getAvalancheProblems(aval: WyssenAvalanche): AvalancheProblem[] {
-  const problems = new Set<AvalancheProblem>();
-  if (aval.avalancheType === "full_depth") problems.add(AvalancheProblem.gliding_snow);
-  else if (aval.avalancheMoisture === "wet") problems.add(AvalancheProblem.wet_snow);
-  if (aval.weakLayer === "in_old_snow" || aval.weakLayer === "in_old_snow_close_to_the_ground") {
-    problems.add(AvalancheProblem.persistent_weak_layers);
+  const problems: AvalancheProblem[] = [];
+  if (aval.avalancheType === "FULL_DEPTH") problems.push(AvalancheProblem.gliding_snow);
+  else if (aval.avalancheMoisture === "WET") problems.push(AvalancheProblem.wet_snow);
+  if (aval.weakLayer === "IN_OLD_SNOW" || aval.weakLayer === "IN_OLD_SNOW_CLOSE_TO_THE_GROUND") {
+    problems.push(AvalancheProblem.persistent_weak_layers);
   }
-  return [...problems];
+  return problems;
 }
 
 function getPersonInvolvement(aval: WyssenAvalanche): PersonInvolvement {
   const consequences = aval.prsDmgPersons?.map((p) => p.burialConsequence) ?? [];
-  if (consequences.includes("dead")) return PersonInvolvement.Dead;
-  if (consequences.includes("injured")) return PersonInvolvement.Injured;
-  if (consequences.includes("uninjured")) return PersonInvolvement.Uninjured;
-  if (aval.prsDmgExists === "no") return PersonInvolvement.No;
+  if (consequences.includes("DEAD")) return PersonInvolvement.Dead;
+  if (consequences.includes("INJURED")) return PersonInvolvement.Injured;
+  if (consequences.includes("UNINJURED")) return PersonInvolvement.Uninjured;
+  if (aval.prsDmgExists === "NO") return PersonInvolvement.No;
   return PersonInvolvement.Unknown;
 }
 
-function withAccuracy(value: number | undefined, accuracy: string | undefined, unit: string): string | undefined {
-  if (value === undefined) return;
-  return accuracy && accuracy !== "accurate" ? `${value} ${unit} (${accuracy})` : `${value} ${unit}`;
+function withUnit(value: unknown, unit: string, accuracy?: string): string | undefined {
+  if (value === undefined || value === null || value === "") return;
+  return accuracy ? `${value} ${unit} (${accuracy})` : `${value} ${unit}`;
 }
 
 export function toWyssenAvalancheTable(aval: WyssenAvalanche): ObservationTableRow[] {
   const rows: ObservationTableRow[] = [
-    { label: "Genauigkeit Abgangszeitpunkt", value: aval.triggerDateTimeAccuracy },
+    { label: "Genauigkeit Abgangszeitpunkt", value: aval.triggerDateTimeAcc ?? aval.triggerDateTimeAccuracy },
     { label: "Auslöseart", value: aval.triggerType },
     { label: "Fernauslösung", value: aval.triggerRemote },
     { label: "observations.avalancheType", value: aval.avalancheType },
-    { label: "observations.avalancheSize", number: aval.avalancheSize },
+    { label: "observations.avalancheSize", value: aval.avalancheSize?.toString() },
     { label: "Feuchtigkeit", value: aval.avalancheMoisture },
     { label: "Schwachschicht", value: aval.weakLayer },
     {
       label: "observations.avalancheLength",
-      value: withAccuracy(aval.avalancheLength, aval.avalancheLengthAccuracy, "m"),
+      value: withUnit(aval.avalancheLength, "m", aval.avalancheLengthAcc ?? aval.avalancheLengthAccuracy),
     },
-    { label: "observations.avalancheWidth", value: withAccuracy(aval.fractureWidth, aval.fractureWidthAccuracy, "m") },
-    { label: "observations.fractureDepth", value: withAccuracy(aval.fractureThicknessMean, undefined, "cm") },
-    { label: "observations.incline", value: withAccuracy(aval.startZoneSlopeAngleInDegrees, undefined, "°") },
+    {
+      label: "observations.avalancheWidth",
+      value: withUnit(aval.fractureWidth, "m", aval.fractureWidthAcc ?? aval.fractureWidthAccuracy),
+    },
+    { label: "observations.fractureDepth", value: withUnit(aval.fractureThicknessMean, "cm") },
+    {
+      label: "observations.incline",
+      value: withUnit(aval.startZoneSlopeAngle ?? aval.startZoneSlopeAngleInDegrees, "°"),
+    },
     {
       label: "Anrisshöhe",
-      value: withAccuracy(aval.startZoneElevation, aval.startZoneElevationAccuracy, "m"),
+      value: withUnit(aval.startZoneElevation, "m", aval.startZoneElevationAcc ?? aval.startZoneElevationAccuracy),
     },
-    { label: "Ablagerung Höhe ü. M.", value: withAccuracy(aval.depositElevation, undefined, "m") },
-    { label: "Ablagerung Mächtigkeit", value: withAccuracy(aval.depositHeight, undefined, "m") },
-    { label: "Ablagerung Breite", value: withAccuracy(aval.depositWidth, undefined, "m") },
-    { label: "Ablagerung Länge", value: withAccuracy(aval.depositLength, undefined, "m") },
-    { label: "Sachschaden", value: aval.matDmgExists },
+    { label: "Ablagerung Höhe ü. M.", value: withUnit(aval.depositElevation, "m") },
+    { label: "Ablagerung Mächtigkeit", value: withUnit(aval.depositHeight, "m") },
+    { label: "Ablagerung Breite", value: withUnit(aval.depositWidth, "m") },
+    { label: "Ablagerung Länge", value: withUnit(aval.depositLength, "m") },
+    { label: "Sachschaden", value: aval.materialDamageExists ?? aval.matDmgExists },
     { label: "Rettungseinsatz", value: aval.rescueMissionExists },
     {
       label: "Gruppengröße",
-      value: withAccuracy(aval.prsDmgGroupSize, aval.prsDmgGroupSizeAccuracy, "Pers."),
+      value: withUnit(
+        aval.groupSize ?? aval.prsDmgGroupSize,
+        "Pers.",
+        aval.groupSizeAccuracy ?? aval.prsDmgGroupSizeAccuracy,
+      ),
     },
     { label: "Erfassungsart", value: aval.detectionType },
     { label: "Vertraulich", boolean: aval.confidential },
     { label: "StorMe-relevant", boolean: aval.stormeRelevant },
   ];
-  return rows.filter((r) => r.value !== undefined || r.number !== undefined || r.boolean !== undefined);
+  return rows.filter((row) => (row.value ?? "") !== "" || typeof row.boolean === "boolean");
 }
