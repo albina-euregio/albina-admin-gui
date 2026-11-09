@@ -62,17 +62,15 @@ export class LineaExportComponent implements AfterViewInit {
     const success = style.getPropertyValue("--bs-success");
     const subtle = style.getPropertyValue("--bs-primary-bg-subtle");
     this.mapService.setStations(
-      this.stations.map(
-        (s): StationPoint => ({
-          id: s.id,
-          lng: s.geometry.coordinates[0],
-          lat: s.geometry.coordinates[1],
-          radius: 8,
-          fillColor: this.selectedIds.includes(s.id) ? success : subtle,
-          strokeColor: "black",
-          tooltip: s.properties.name || s.id,
-        }),
-      ),
+      this.stations.map((s): StationPoint => ({
+        id: s.id,
+        lng: s.geometry.coordinates[0],
+        lat: s.geometry.coordinates[1],
+        radius: 8,
+        fillColor: this.selectedIds.includes(s.id) ? success : subtle,
+        strokeColor: "black",
+        tooltip: s.properties.name || s.id,
+      })),
     );
   }
 
@@ -191,7 +189,9 @@ export class LineaExportComponent implements AfterViewInit {
   }
 
   get selectedStations() {
-    return this.stations.filter((s) => this.selectedIds.includes(s.id));
+    return this.selectedIds
+      .map((id) => this.stations.find((station) => station.id === id))
+      .filter((station): station is Feature => station !== undefined);
   }
 
   // linea-plot features
