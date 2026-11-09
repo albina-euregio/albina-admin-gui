@@ -60,13 +60,6 @@ export interface WyssenAvalanche {
 
 export function toWyssenAvalancheObservation(aval: WyssenAvalanche): GenericObservation<WyssenAvalanche> {
   const [longitude, latitude] = aval.location?.coordinates ?? [];
-  if (latitude === undefined || longitude === undefined) {
-    throw new Error("Expecting location");
-  }
-  if (!aval.externalId) {
-    // without a stable id, re-sending the avalanche would create a duplicate
-    throw new Error("Expecting externalId");
-  }
   return {
     $id: aval.externalId,
     $source: ObservationSource.Wyssen,

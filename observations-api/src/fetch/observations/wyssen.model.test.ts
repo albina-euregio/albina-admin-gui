@@ -3,6 +3,7 @@ import { describe, expect, test } from "bun:test";
 import {
   Aspect,
   AvalancheProblem,
+  genericObservationWithIdSchema,
   ObservationSource,
   ObservationType,
   PersonInvolvement,
@@ -135,14 +136,6 @@ describe("toWyssenAvalancheObservation", () => {
     expect(toWyssenAvalancheObservation({ ...filled, startZoneAspect: "ne" }).aspect).toBeUndefined();
   });
 
-  test("rejects a payload without externalId", () => {
-    expect(() => toWyssenAvalancheObservation({ ...filled, externalId: "" })).toThrow("Expecting externalId");
-  });
-
-  test("rejects a payload without location", () => {
-    expect(() => toWyssenAvalancheObservation({ ...filled, location: undefined })).toThrow("Expecting location");
-  });
-
   test("derives avalanche problems and person involvement", () => {
     const gliding = toWyssenAvalancheObservation({ ...filled, avalancheType: "FULL_DEPTH", weakLayer: "" });
     expect(gliding.avalancheProblems).toEqual([AvalancheProblem.gliding_snow]);
@@ -155,5 +148,26 @@ describe("toWyssenAvalancheObservation", () => {
     expect(dead.personInvolvement).toBe(PersonInvolvement.Dead);
     const none = toWyssenAvalancheObservation({ ...filled, prsDmgExists: "NO" });
     expect(none.personInvolvement).toBe(PersonInvolvement.No);
+  });
+});
+
+describe("genericObservationWithIdSchema", () => {
+  test("accepts a converted payload", () => {
+    expect(() => genericObservationWithIdSchema.parse(toWyssenAvalancheObservation(filled))).not.toThrow();
+  });
+
+  test("accepts a payload without location", () => {
+    const o = toWyssenAvalancheObservation({ ...filled, location: undefined });
+    expect(() => genericObservationWithIdSchema.parse(o)).not.toThrow();
+  });
+
+  test("rejects a payload without externalId", () => {
+    const o = toWyssenAvalancheObservation({ ...filled, externalId: "" });
+    expect(() => genericObservationWithIdSchema.parse(o)).toThrow();
+  });
+
+  test("rejects a payload without valid triggerDateTime", () => {
+    const o = toWyssenAvalancheObservation({ ...filled, triggerDateTime: "" });
+    expect(() => genericObservationWithIdSchema.parse(o)).toThrow();
   });
 });
