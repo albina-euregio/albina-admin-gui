@@ -41,9 +41,16 @@ accordion-group {
 accordion-group.panel-open > .panel > .panel-heading .accordion__arrow {
   transform: rotate(90deg);
 }
+.accordion__icon {
+  font-size: 20px;
+  color: $gray-600;
+}
 .accordion-header__title {
   @include font-m-bold;
   margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .accordion-button:not(.collapsed) {

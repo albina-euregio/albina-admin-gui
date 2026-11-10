@@ -140,6 +140,7 @@
 
     <div class="region-form__no-snow-row">
       <h2 class="accordion-header__title region-form__no-snow-label">
+        <i class="accordion__icon ph ph-plant"></i>
         {{ "bulletins.create.label.noSnow" | translate }}
       </h2>
       <button
@@ -244,6 +245,7 @@
             <div accordion-heading class="accordion-header">
               <h2 class="accordion-header__title">
                 <i class="accordion__arrow ph ph-caret-right"></i>
+                <i class="accordion__icon ph ph-signpost"></i>
                 <span>
                   {{ "bulletins.create.title.travelAdvisory" | translate }}
                 </span>
@@ -284,10 +286,13 @@
           <div accordion-heading class="accordion-header accordion-header--with-buttons">
             <h2 class="accordion-header__title">
               <i class="accordion__arrow ph ph-caret-right"></i>
-              {{ "bulletins.create.title.avalancheProblem" | translate }}
-              @if (bulletin().hasDaytimeDependency) {
-                <span>&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span>
-              }
+              <i class="accordion__icon ph ph-mountains"></i>
+              <span>
+                {{ "bulletins.create.title.avalancheProblem" | translate }}
+                @if (bulletin().hasDaytimeDependency) {
+                  {{ "bulletins.create.title.forenoon" | translate }}
+                }
+              </span>
             </h2>
 
             <div class="btn-group accordion-header__buttons">
@@ -325,6 +330,7 @@
             <div accordion-heading class="accordion-header accordion-header--with-buttons">
               <h2 class="accordion-header__title">
                 <i class="accordion__arrow ph ph-caret-right"></i>
+                <i class="accordion__icon ph ph-mountains"></i>
                 <span
                   >{{ "bulletins.create.title.avalancheProblem" | translate }}
                   {{ "bulletins.create.title.afternoon" | translate }}</span
@@ -374,6 +380,7 @@
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
               <i class="accordion__arrow ph ph-caret-right"></i>
+              <i class="accordion__icon ph ph-warning"></i>
               <span>
                 {{ "bulletins.create.title.dangerDescription" | translate }}
               </span>
@@ -429,6 +436,7 @@
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
               <i class="accordion__arrow ph ph-caret-right"></i>
+              <i class="accordion__icon ph ph-images"></i>
               <span>
                 {{ "bulletins.create.title.photos" | translate }}
               </span>
@@ -468,6 +476,7 @@
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
               <i class="accordion__arrow ph ph-caret-right"></i>
+              <i class="accordion__icon ph ph-stack"></i>
               <span>
                 {{ "bulletins.create.title.snowpackStructure" | translate }}
               </span>
@@ -536,6 +545,7 @@
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
               <i class="accordion__arrow ph ph-caret-right"></i>
+              <i class="accordion__icon ph ph-trend-up"></i>
 
               <span>
                 {{ "bulletins.create.title.tendency" | translate }}
@@ -595,6 +605,7 @@
             <div accordion-heading class="accordion-header">
               <h2 class="accordion-header__title">
                 <i class="accordion__arrow ph ph-caret-right"></i>
+                <i class="accordion__icon ph ph-cloud-sun"></i>
                 <span>
                   {{ "bulletins.create.title.synopsis" | translate }}
                 </span>
