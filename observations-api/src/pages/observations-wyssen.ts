@@ -1,16 +1,18 @@
 import { ObservationDatabaseConnection } from "../db/database";
 import { toWyssenAvalancheObservation } from "../fetch/observations/wyssen.model";
-import { genericObservationWithIdSchema } from "../generic-observation";
+import { genericObservationWithIdSchema, ObservationSource } from "../generic-observation";
+
+function isAuthorized(request: Bun.BunRequest): boolean {
+  const secret = process.env.ALBINA_WYSSEN_POST_SECRET;
+  return !!secret && secret === request.headers.get("Authorization");
+}
 
 /**
  * Receives an avalanche in the format of the SLF Aval API v5 (https://test-api.slf.ch/aval/api/v5/)
  * and stores it as generic observation. Re-sending the same externalId updates the observation.
  */
 export const POST = async (request: Bun.BunRequest) => {
-  if (
-    !process.env.ALBINA_WYSSEN_POST_SECRET ||
-    process.env.ALBINA_WYSSEN_POST_SECRET !== request.headers.get("Authorization")
-  ) {
+  if (!isAuthorized(request)) {
     return new Response("", { status: 403, statusText: "Forbidden" });
   }
   if (!request.headers.get("Content-Type")?.startsWith("application/json")) {
@@ -45,6 +47,45 @@ export const POST = async (request: Bun.BunRequest) => {
   }
   return new Response(JSON.stringify({ id: observation.$id }), {
     status: 201,
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
+/**
+ * Deletes the avalanche given by ?externalId=… (soft delete, the observation is no longer shown).
+ */
+export const DELETE = async (request: Bun.BunRequest) => {
+  if (!isAuthorized(request)) {
+    return new Response("", { status: 403, statusText: "Forbidden" });
+  }
+  const externalId = new URL(request.url).searchParams.get("externalId");
+  if (!externalId) {
+    return new Response("Expecting ?externalId=", { status: 400 });
+  }
+  console.info("Deleting avalanche", externalId);
+  const observation = { $id: externalId, $source: ObservationSource.Wyssen };
+  try {
+    const connection = await ObservationDatabaseConnection.createConnection();
+    try {
+      const ex = await connection.selectObservation(observation);
+      if (!ex) {
+        return new Response("Observation not found", { status: 404 });
+      }
+      if (ex.$allowEdit) {
+        return new Response("Observation has been edited in albina-admin-gui", { status: 409 });
+      }
+      if (!ex.$deleted) {
+        await connection.deleteObservation(ex);
+      }
+    } finally {
+      connection.destroy();
+    }
+  } catch (e) {
+    console.error(e);
+    return new Response(String(e), { status: 500 });
+  }
+  return new Response(JSON.stringify({ id: externalId }), {
+    status: 200,
     headers: { "Content-Type": "application/json" },
   });
 };
