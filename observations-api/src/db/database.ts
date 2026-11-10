@@ -153,7 +153,7 @@ export class ObservationDatabaseConnection {
     return this.mapRows(rows);
   }
 
-  async selectObservation(o: GenericObservation): Promise<GenericObservation | undefined> {
+  async selectObservation(o: Pick<GenericObservation, "$id" | "$source">): Promise<GenericObservation | undefined> {
     const rows = await this.mysql`
       SELECT *
       FROM generic_observations
@@ -163,39 +163,37 @@ export class ObservationDatabaseConnection {
   }
 
   private mapRows(rows: unknown) {
-    return (rows as unknown as GenericObservationTable[]).map(
-      (row): GenericObservation => ({
-        $id: row.ID,
-        $source: row.SOURCE as ObservationSource | ForecastSource,
-        $allowEdit: row.ALLOW_EDIT === 1,
-        $deleted: row.DELETED === 1,
-        $type: (row.OBS_TYPE as ObservationType) ?? undefined,
-        $externalURL: row.EXTERNAL_URL ?? undefined,
-        $externalImgs: row.EXTERNAL_IMG ? row.EXTERNAL_IMG.split("\n") : undefined,
-        stability: (row.STABILITY as SnowpackStability) ?? undefined,
-        aspect: (row.ASPECTS?.split(",")?.[0] as Aspect) ?? undefined,
-        authorName: row.AUTHOR_NAME ?? undefined,
-        content: row.OBS_CONTENT ?? undefined,
-        $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : (row.OBS_DATA ?? undefined),
-        $extraDialogRows: /^\[.*\]$/.test(row.EXTRA_DIALOG_ROWS)
-          ? JSON.parse(row.EXTRA_DIALOG_ROWS)
-          : (row.EXTRA_DIALOG_ROWS ?? undefined),
-        elevation: row.ELEVATION ?? undefined,
-        elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
-        elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,
-        eventDate: row.EVENT_DATE instanceof Date ? row.EVENT_DATE : undefined,
-        latitude: row.LATITUDE ?? undefined,
-        locationName: row.LOCATION_NAME ?? undefined,
-        longitude: row.LONGITUDE ?? undefined,
-        region: row.REGION_ID ?? undefined,
-        reportDate: row.REPORT_DATE instanceof Date ? row.REPORT_DATE : undefined,
-        avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
-        dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
-        dangerSource: row.DANGER_SOURCE ?? undefined,
-        importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(",") as ImportantObservation[],
-        personInvolvement: (row.PERSON_INVOLVEMENT as PersonInvolvement) ?? undefined,
-      }),
-    );
+    return (rows as unknown as GenericObservationTable[]).map((row): GenericObservation => ({
+      $id: row.ID,
+      $source: row.SOURCE as ObservationSource | ForecastSource,
+      $allowEdit: row.ALLOW_EDIT === 1,
+      $deleted: row.DELETED === 1,
+      $type: (row.OBS_TYPE as ObservationType) ?? undefined,
+      $externalURL: row.EXTERNAL_URL ?? undefined,
+      $externalImgs: row.EXTERNAL_IMG ? row.EXTERNAL_IMG.split("\n") : undefined,
+      stability: (row.STABILITY as SnowpackStability) ?? undefined,
+      aspect: (row.ASPECTS?.split(",")?.[0] as Aspect) ?? undefined,
+      authorName: row.AUTHOR_NAME ?? undefined,
+      content: row.OBS_CONTENT ?? undefined,
+      $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : (row.OBS_DATA ?? undefined),
+      $extraDialogRows: /^\[.*\]$/.test(row.EXTRA_DIALOG_ROWS)
+        ? JSON.parse(row.EXTRA_DIALOG_ROWS)
+        : (row.EXTRA_DIALOG_ROWS ?? undefined),
+      elevation: row.ELEVATION ?? undefined,
+      elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
+      elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,
+      eventDate: row.EVENT_DATE instanceof Date ? row.EVENT_DATE : undefined,
+      latitude: row.LATITUDE ?? undefined,
+      locationName: row.LOCATION_NAME ?? undefined,
+      longitude: row.LONGITUDE ?? undefined,
+      region: row.REGION_ID ?? undefined,
+      reportDate: row.REPORT_DATE instanceof Date ? row.REPORT_DATE : undefined,
+      avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
+      dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
+      dangerSource: row.DANGER_SOURCE ?? undefined,
+      importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(",") as ImportantObservation[],
+      personInvolvement: (row.PERSON_INVOLVEMENT as PersonInvolvement) ?? undefined,
+    }));
   }
 
   destroy() {
