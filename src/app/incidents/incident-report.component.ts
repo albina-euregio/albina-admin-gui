@@ -18,7 +18,17 @@ import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, Observable, tap } from "rxjs";
+import {
+  catchError,
+  concatMap,
+  debounceTime,
+  distinctUntilChanged,
+  EMPTY,
+  firstValueFrom,
+  map,
+  Observable,
+  tap,
+} from "rxjs";
 import { z } from "zod/v4";
 
 import { ToggleBtnGroup } from "../shared/toggle-btn-group";
@@ -275,6 +285,18 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     return !!this.collapsedAttachments[fileName];
   }
 
+  /**
+   * A staged attachment is only held in memory: it was added before the report
+   * had a server-assigned id and is uploaded once the report has been saved.
+   */
+  isAttachmentStaged(attachment: IncidentModels.IncidentAttachment): boolean {
+    return !attachment.id && !!attachment.file;
+  }
+
+  readonly hasStagedAttachments = computed(() =>
+    (this.incidentReport().attachments ?? []).some((attachment) => this.isAttachmentStaged(attachment)),
+  );
+
   isAttachmentValid(attachment: any): boolean {
     return IncidentModels.IncidentAttachmentSchema.safeParse(attachment).success;
   }
@@ -335,7 +357,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
    * `involvementsFatalitiesBurials` from the group/victim arrays.
    */
   private serializeReportData(report: Partial<IncidentReport>): string {
-    return JSON.stringify({ ...report, id: undefined, updatedAt: undefined }, (key, value) =>
+    // Staged attachments do not exist on the server yet; they are added to the
+    // payload once they have been uploaded (see uploadStagedAttachments).
+    const attachments = report.attachments?.filter((attachment) => !this.isAttachmentStaged(attachment));
+    return JSON.stringify({ ...report, attachments, id: undefined, updatedAt: undefined }, (key, value) =>
       key === "file" || key === "$previewUrl" ? undefined : value,
     );
   }
@@ -369,6 +394,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         if (!id) {
           this.location.replaceState(`/incidents/${view.id}`);
         }
+        void this.uploadStagedAttachments();
       }),
       catchError((error) => {
         console.error("Failed to save incident", error);
@@ -380,6 +406,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     Object.values(this.attachments).forEach(async (url) => URL.revokeObjectURL(await url));
+    this.stagedPreviewUrls.forEach(async (url) => URL.revokeObjectURL(await url));
   }
 
   onReportStatusChange() {
@@ -398,7 +425,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (!file) {
       return;
     }
-    const attachment0: IncidentModels.IncidentAttachment = {
+    const staged: IncidentModels.IncidentAttachment = {
       dateAdded: new Date(),
       dateCreated: undefined as unknown as Date,
       file,
@@ -406,13 +433,63 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       mediaType: file.type,
       credit: "",
     };
-    const attachment = await this.incidentService
-      .uploadIncidentAttachment(this.incidentReport().id, attachment0)
-      .toPromise();
-    this.attachments[attachment.id] = Promise.resolve(URL.createObjectURL(file));
-    const attachments = this.incidentReport().attachments ?? [];
-    attachments.push(attachment);
-    this.incidentReport.set({ ...this.incidentReport(), attachments });
+    this.stagedPreviewUrls.set(file, Promise.resolve(URL.createObjectURL(file)));
+    this.incidentReport.update((report) => ({ ...report, attachments: [...(report.attachments ?? []), staged] }));
+    await this.uploadStagedAttachments();
+  }
+
+  /** Files of staged attachments whose upload is currently in flight. */
+  private readonly uploadingFiles = new Set<File>();
+
+  /**
+   * Uploads all staged attachments, provided the report has already been saved.
+   * Each uploaded attachment replaces its staged entry, keeping the metadata the
+   * user entered in the meantime. The resulting report change is then persisted
+   * by the autosave. Failed uploads stay staged and are retried after the next save.
+   */
+  private async uploadStagedAttachments() {
+    const id = this.incidentReport().id;
+    if (!id) return;
+    const staged = (this.incidentReport().attachments ?? []).filter(
+      (attachment) => this.isAttachmentStaged(attachment) && !this.uploadingFiles.has(attachment.file),
+    );
+    for (const attachment of staged) {
+      const file = attachment.file;
+      this.uploadingFiles.add(file);
+      try {
+        const uploaded = await firstValueFrom(this.incidentService.uploadIncidentAttachment(id, attachment));
+        const isStillPresent = (this.incidentReport().attachments ?? []).some((a) => a.file === file);
+        if (!isStillPresent) {
+          // The attachment was removed while being uploaded.
+          await firstValueFrom(this.incidentService.deleteIncidentAttachment(id, uploaded));
+          continue;
+        }
+        const previewUrl = this.stagedPreviewUrls.get(file);
+        if (previewUrl) {
+          this.attachments[uploaded.id] = previewUrl;
+          this.stagedPreviewUrls.delete(file);
+        }
+        this.incidentReport.update((report) => ({
+          ...report,
+          attachments: (report.attachments ?? []).map((a) =>
+            a.file === file
+              ? {
+                  ...a,
+                  id: uploaded.id,
+                  dateAdded: uploaded.dateAdded ?? a.dateAdded,
+                  fileName: uploaded.fileName ?? a.fileName,
+                  mediaType: uploaded.mediaType ?? a.mediaType,
+                  file: undefined,
+                }
+              : a,
+          ),
+        }));
+      } catch (error) {
+        console.error("Failed to upload attachment", file.name, error);
+      } finally {
+        this.uploadingFiles.delete(file);
+      }
+    }
   }
 
   updateAttachment(index: number, updatedAttachment: z.infer<typeof IncidentModels.IncidentAttachmentSchema>) {
@@ -422,16 +499,22 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   async removeAttachment(index: number) {
-    const attachments = this.incidentReport().attachments;
+    const attachment = this.incidentReport().attachments[index];
     const message = this.translateService.instant("incidentReportUI.dropAttachment", {
-      fileName: attachments[index].fileName,
+      fileName: attachment.fileName,
     });
     if (!confirm(message)) return;
-    const attachment = attachments[index];
-    await this.incidentService.deleteIncidentAttachment(this.incidentReport().id, attachment).toPromise();
-    this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
-    attachments.splice(index, 1);
-    this.incidentReport.set({ ...this.incidentReport(), attachments });
+    if (attachment.id) {
+      await firstValueFrom(this.incidentService.deleteIncidentAttachment(this.incidentReport().id, attachment));
+      this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
+    } else if (attachment.file) {
+      this.stagedPreviewUrls.get(attachment.file)?.then((url) => URL.revokeObjectURL(url));
+      this.stagedPreviewUrls.delete(attachment.file);
+    }
+    this.incidentReport.update((report) => ({
+      ...report,
+      attachments: (report.attachments ?? []).filter((a) => a !== attachment),
+    }));
   }
 
   deleteIncident() {
@@ -473,9 +556,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   attachments: Record<IncidentModels.IncidentAttachment["id"], Promise<ReturnType<typeof URL.createObjectURL>>> = {};
 
+  /** Local previews of staged attachments, keyed by their file. */
+  private readonly stagedPreviewUrls = new Map<File, Promise<ReturnType<typeof URL.createObjectURL>>>();
+
   getAttachmentPreviewUrl(
     attachment: IncidentModels.IncidentAttachment,
   ): Promise<ReturnType<typeof URL.createObjectURL>> {
+    if (attachment?.file && !attachment.id) {
+      return attachment.mediaType?.startsWith("image/") ? this.stagedPreviewUrls.get(attachment.file) : undefined;
+    }
     if (!attachment?.id) return;
     if (!attachment.mediaType?.startsWith("image/")) return;
     return (this.attachments[attachment.id] ??= this.incidentService

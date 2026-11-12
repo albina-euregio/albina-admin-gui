@@ -19,6 +19,8 @@
   },
   "incidentReportUI": {
     "addAttachment": "Add Attachment",
+    "attachmentPending": "Pending upload",
+    "attachmentsStaged": "Attachments will be uploaded as soon as the report has been saved.",
     "addAvalancheProblem": "Add Avalanche Problem",
     "addGroup": "Add Group",
     "addVictim": "Add Person",

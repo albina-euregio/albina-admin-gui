@@ -213,6 +213,12 @@
             />
           </div>
         </div>
+        @if (hasStagedAttachments() && !displayOnly) {
+          <div class="alert alert-info d-flex align-items-center gap-2 py-2">
+            <i class="ph ph-clock"></i>
+            {{ "incidentReportUI.attachmentsStaged" | translate }}
+          </div>
+        }
 
         @for (attachment of incidentReport().attachments; track attachment.fileName) {
           <div
@@ -238,6 +244,11 @@
                   />
                 }
                 <h5 class="mb-0 h6 fw-semibold text-secondary ms-1">{{ attachment.fileName }}</h5>
+                @if (isAttachmentStaged(attachment)) {
+                  <span class="badge text-bg-secondary ms-2">{{
+                    "incidentReportUI.attachmentPending" | translate
+                  }}</span>
+                }
                 @if (isAttachmentValid(attachment)) {
                   <span class="text-success ms-2" title="{{ 'zodForm.valid' | translate }}">
                     <i class="ph ph-check"></i>
