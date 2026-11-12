@@ -338,9 +338,9 @@
       "title": "",
       "description": {
         "website": "",
-        "email": "",
-        "telegram": "",
-        "whatsapp": ""
+        "email": "S'a enviat un corrèu electronic e conten un informe.",
+        "telegram": "S'a publicat un messatge que conten un enlaçament ath lòc web.",
+        "whatsapp": "Se ha publicado un mensaje que contiene un enlace a la página web."
       },
       "ok": "Òc ben",
       "problem": "Problèma",
@@ -355,16 +355,16 @@
       "publicationInProgress": "Publicacion en cors",
       "publicationFinishedOnServer": "Publicacion acabada ath servidor.",
       "publishDisabled": {
-        "inProgress": "",
+        "inProgress": "Era publicacion ei actuauments en cors.",
         "wrongStatus": ""
       },
       "emailWaitHint": "",
       "email": {
         "waitTitle": ""
       },
-      "options": "",
-      "republish": "",
-      "resend": "",
+      "options": "Opcions",
+      "republish": "Tornar a publicar:",
+      "resend": "Tornar a enviar:",
       "website": {
         "checkInternetTitle": "",
         "checkInternetDescriptionPrefix": "",

@@ -338,9 +338,9 @@
       "title": "",
       "description": {
         "website": "",
-        "email": "",
-        "telegram": "",
-        "whatsapp": ""
+        "email": "Se ha enviado un correo electrónico que contiene un informe.",
+        "telegram": "Se ha publicado un mensaje que contiene un enlace a la página web.",
+        "whatsapp": "Se ha publicado un mensaje que contiene un enlace a la página web."
       },
       "ok": "De acuerdo",
       "problem": "Problema",
@@ -355,16 +355,16 @@
       "publicationInProgress": "Publicación en curso",
       "publicationFinishedOnServer": "Publicación finalizada en el servidor.",
       "publishDisabled": {
-        "inProgress": "",
+        "inProgress": "La publicación está en curso.",
         "wrongStatus": ""
       },
       "emailWaitHint": "",
       "email": {
         "waitTitle": ""
       },
-      "options": "",
-      "republish": "",
-      "resend": "",
+      "options": "Opciones",
+      "republish": "Volver a publicar:",
+      "resend": "Reenviar",
       "website": {
         "checkInternetTitle": "",
         "checkInternetDescriptionPrefix": "",
