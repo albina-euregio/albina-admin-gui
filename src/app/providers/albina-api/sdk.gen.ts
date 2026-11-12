@@ -46,6 +46,8 @@ import type {
   FinishLoginResponses,
   FinishRegistrationData,
   FinishRegistrationResponses,
+  GetBlogCategoriesData,
+  GetBlogCategoriesResponses,
   GetBlogPostData,
   GetBlogPostResponses,
   GetBlogPostsData,
@@ -364,6 +366,14 @@ export const testAuth = <ThrowOnError extends boolean = false>(
   (options?.client ?? client).get<TestAuthResponses, unknown, ThrowOnError>({
     security: [{ scheme: "bearer", type: "http" }],
     url: "/authentication/test",
+    ...options,
+  });
+
+export const getBlogCategories = <ThrowOnError extends boolean = false>(
+  options?: Options<GetBlogCategoriesData, ThrowOnError>,
+): RequestResult<GetBlogCategoriesResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetBlogCategoriesResponses, unknown, ThrowOnError>({
+    url: "/blogs/categories",
     ...options,
   });
 

@@ -56,6 +56,19 @@ export const zAvalancheSize = z.enum(["small", "medium", "large", "very_large", 
 
 export const zAvalancheType = z.enum(["slab", "loose", "glide"]);
 
+/**
+ * A blog category; #id() is accepted as `searchCategory` by AbstractBlog#searchBlogPosts.
+ */
+export const zBlogCategory = z
+  .object({
+    id: z.coerce
+      .bigint()
+      .min(BigInt("-9223372036854775808"), { error: "Invalid value: Expected int64 to be >= -9223372036854775808" })
+      .max(BigInt("9223372036854775807"), { error: "Invalid value: Expected int64 to be <= 9223372036854775807" }),
+    name: z.string(),
+  })
+  .describe("A blog category; #id() is accepted as `searchCategory` by AbstractBlog#searchBlogPosts.");
+
 export const zBlogItem = z.object({
   id: z.string(),
   title: z.string(),
@@ -741,6 +754,7 @@ export const zIncidentsAttachment = z.object({
   attachmentTags: z.array(z.string()),
   caption: z.string(),
   credit: z.string(),
+  customData: z.record(z.string(), z.unknown()),
   dateAdded: z.iso.datetime(),
   dateCreated: z.iso.datetime(),
   fileName: z.string(),
@@ -823,6 +837,7 @@ export const zIncidentsIncidentTerrainType = z.enum([
 export const zIncidentsGroupInformation = z.object({
   anonymousGroupIdentifier: z.string(),
   avalancheGear: zIncidentsAvalancheGear,
+  customData: z.record(z.string(), z.unknown()),
   groupInformationComment: z.string(),
   groupSize: z.number(),
   groupSizeAccuracy: zIncidentsGroupSizeAccuracy,
@@ -952,6 +967,7 @@ export const zIncidentsVictimInformation = z.object({
   caught: zIncidentsCaught,
   causeOfDeath: z.string(),
   country: z.string(),
+  customData: z.record(z.string(), z.unknown()),
   estimatedTimeOfDeath: zIncidentsEstimatedTimeOfDeath,
   fatalInjured: zIncidentsFatalInjured,
   gender: zIncidentsGender,
@@ -995,6 +1011,7 @@ export const zIncidentsIncidentSchema = z.object({
   crownDepthAvg: z.number(),
   crownDepthMax: z.number(),
   crownDepthMin: z.number(),
+  customData: z.record(z.string(), z.unknown()),
   damagedAssets: z.array(z.string()),
   dangerPattern: z.array(zIncidentsDangerPattern),
   dangerRating: zIncidentsDangerRating,
@@ -1537,6 +1554,7 @@ export const zRegion = z
       .max(2147483647, { error: "Invalid value: Expected int32 to be <= 2147483647" })
       .describe("Map height for PDF")
       .optional(),
+    pdfCompactLayout: z.boolean().describe("Compact PDF layout: reduce page breaks").optional(),
     pdfFooterLogo: z.boolean().describe("Logo for PDF footer").optional(),
     pdfFooterLogoColorPath: z.string().describe("Logo for PDF footer (color)").optional(),
     pdfFooterLogoBwPath: z.string().describe("Logo for PDF footer (bw)").optional(),
@@ -2043,6 +2061,20 @@ export const zDeletePasskeyPath = z.object({
  * testAuth 200 response
  */
 export const zTestAuthResponse = zAuthenticationServiceUsername;
+
+export const zGetBlogCategoriesHeaders = z.object({
+  "If-None-Match": z.string().nullish(),
+});
+
+export const zGetBlogCategoriesQuery = z.object({
+  region: z.string().optional().default("AT-07"),
+  lang: zLanguageCode.optional(),
+});
+
+/**
+ * getBlogCategories 200 response
+ */
+export const zGetBlogCategoriesResponse = z.array(zBlogCategory).describe("getBlogCategories 200 response");
 
 export const zGetBlogPostHeaders = z.object({
   "If-None-Match": z.string().nullish(),

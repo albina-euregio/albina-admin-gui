@@ -199,6 +199,14 @@ export type AvalancheSize = "small" | "medium" | "large" | "very_large" | "extre
 
 export type AvalancheType = "slab" | "loose" | "glide";
 
+/**
+ * A blog category; #id() is accepted as `searchCategory` by AbstractBlog#searchBlogPosts.
+ */
+export type BlogCategory = {
+  id: number;
+  name: string;
+};
+
 export type BlogItem = {
   id: string;
   title: string;
@@ -997,6 +1005,9 @@ export type IncidentsAttachment = {
   attachmentTags: Array<string>;
   caption: string;
   credit: string;
+  customData: {
+    [key: string]: unknown;
+  };
   dateAdded: string;
   dateCreated: string;
   fileName: string;
@@ -1066,6 +1077,9 @@ export type IncidentsGender = "Female" | "Male" | "Other";
 export type IncidentsGroupInformation = {
   anonymousGroupIdentifier: string;
   avalancheGear: IncidentsAvalancheGear;
+  customData: {
+    [key: string]: unknown;
+  };
   groupInformationComment: string;
   groupSize: number;
   groupSizeAccuracy: IncidentsGroupSizeAccuracy;
@@ -1103,6 +1117,9 @@ export type IncidentsIncidentSchema = {
   crownDepthAvg: number;
   crownDepthMax: number;
   crownDepthMin: number;
+  customData: {
+    [key: string]: unknown;
+  };
   damagedAssets: Array<string>;
   dangerPattern: Array<IncidentsDangerPattern>;
   dangerRating: IncidentsDangerRating;
@@ -1292,6 +1309,9 @@ export type IncidentsVictimInformation = {
   caught: IncidentsCaught;
   causeOfDeath: string;
   country: string;
+  customData: {
+    [key: string]: unknown;
+  };
   estimatedTimeOfDeath: IncidentsEstimatedTimeOfDeath;
   fatalInjured: IncidentsFatalInjured;
   gender: IncidentsGender;
@@ -1626,6 +1646,10 @@ export type Region = {
    * Map height for PDF
    */
   pdfMapHeight?: number;
+  /**
+   * Compact PDF layout: reduce page breaks
+   */
+  pdfCompactLayout?: boolean;
   /**
    * Logo for PDF footer
    */
@@ -2380,6 +2404,28 @@ export type TestAuthResponses = {
 };
 
 export type TestAuthResponse = TestAuthResponses[keyof TestAuthResponses];
+
+export type GetBlogCategoriesData = {
+  body?: never;
+  headers?: {
+    "If-None-Match"?: string | null;
+  };
+  path?: never;
+  query?: {
+    region?: string;
+    lang?: LanguageCode;
+  };
+  url: "/blogs/categories";
+};
+
+export type GetBlogCategoriesResponses = {
+  /**
+   * getBlogCategories 200 response
+   */
+  200: Array<BlogCategory>;
+};
+
+export type GetBlogCategoriesResponse = GetBlogCategoriesResponses[keyof GetBlogCategoriesResponses];
 
 export type GetBlogPostData = {
   body?: never;
