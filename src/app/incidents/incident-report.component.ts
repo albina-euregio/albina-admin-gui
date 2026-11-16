@@ -297,6 +297,28 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     (this.incidentReport().attachments ?? []).some((attachment) => this.isAttachmentStaged(attachment)),
   );
 
+  /** Upload state of a staged attachment, `undefined` once it has been uploaded. */
+  attachmentUploadState(attachment: IncidentModels.IncidentAttachment): "pending" | "uploading" | "failed" | undefined {
+    if (!this.isAttachmentStaged(attachment)) return undefined;
+    if (this.uploadingFiles.has(attachment.file)) return "uploading";
+    if (this.failedFiles.has(attachment.file)) return "failed";
+    return "pending";
+  }
+
+  /** Overall upload state of the staged attachments, the most pressing first. */
+  stagedUploadState(): "failed" | "uploading" | "awaitingSave" | undefined {
+    const states = (this.incidentReport().attachments ?? []).map((a) => this.attachmentUploadState(a));
+    if (states.includes("failed")) return "failed";
+    if (states.includes("uploading")) return "uploading";
+    if (states.includes("pending")) return "awaitingSave";
+    return undefined;
+  }
+
+  retryAttachmentUploads() {
+    this.failedFiles.clear();
+    void this.uploadStagedAttachments();
+  }
+
   isAttachmentValid(attachment: any): boolean {
     return IncidentModels.IncidentAttachmentSchema.safeParse(attachment).success;
   }
@@ -440,12 +462,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   /** Files of staged attachments whose upload is currently in flight. */
   private readonly uploadingFiles = new Set<File>();
+  /** Files of staged attachments whose last upload attempt failed. */
+  private readonly failedFiles = new Set<File>();
 
   /**
    * Uploads all staged attachments, provided the report has already been saved.
    * Each uploaded attachment replaces its staged entry, keeping the metadata the
    * user entered in the meantime. The resulting report change is then persisted
-   * by the autosave. Failed uploads stay staged and are retried after the next save.
+   * by the autosave. Failed uploads stay staged; they are retried on the next successful
+   * save, on adding another attachment or via {@link retryAttachmentUploads}.
    */
   private async uploadStagedAttachments() {
     const id = this.incidentReport().id;
@@ -460,6 +485,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       const current = (this.incidentReport().attachments ?? []).find((a) => a.file === file);
       if (!current || !this.isAttachmentStaged(current) || this.uploadingFiles.has(file)) continue;
       this.uploadingFiles.add(file);
+      this.failedFiles.delete(file);
       try {
         const uploaded = await firstValueFrom(this.incidentService.uploadIncidentAttachment(id, attachment));
         const isStillPresent = (this.incidentReport().attachments ?? []).some((a) => a.file === file);
@@ -490,6 +516,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         }));
       } catch (error) {
         console.error("Failed to upload attachment", file.name, error);
+        this.failedFiles.add(file);
       } finally {
         this.uploadingFiles.delete(file);
       }
