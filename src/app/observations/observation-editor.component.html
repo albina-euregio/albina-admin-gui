@@ -11,11 +11,12 @@
             class="form-check-input"
             type="checkbox"
             role="switch"
+            id="observationAllowEdit"
             [ngModel]="observation().$allowEdit"
             (ngModelChange)="setAllowEdit($event)"
             [title]="'observations.allowEditTooltip' | translate: { value: observation().$source }"
           />
-          <label class="form-check-label mb-0" for="toggleBoolean">
+          <label class="form-check-label mb-0" for="observationAllowEdit">
             {{ "observations.allowEdit" | translate }}
           </label>
         </div>
