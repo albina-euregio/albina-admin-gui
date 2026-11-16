@@ -4,8 +4,11 @@
   "features": {
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
   },
-  "initializeCommand": "mkdir -p \"$HOME/.claude\"",
-  "mounts": ["source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind"],
+  "initializeCommand": "mkdir -p \"$HOME/.claude\" \"$HOME/.config/git\"",
+  "mounts": [
+    "source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind",
+    "source=${localEnv:HOME}/.config/git,target=/home/node/.config/git,type=bind,readonly"
+  ],
   "remoteEnv": {
     "CLAUDE_CODE_OAUTH_TOKEN": "${localEnv:CLAUDE_CODE_OAUTH_TOKEN}"
   },
