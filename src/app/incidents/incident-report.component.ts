@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  HostListener,
   inject,
   Injector,
   input,
@@ -312,6 +313,20 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     if (states.includes("uploading")) return "uploading";
     if (states.includes("pending")) return "awaitingSave";
     return undefined;
+  }
+
+  /** Asks before leaving the report (route change) while attachments have not been uploaded yet. */
+  canDeactivate(): boolean {
+    return (
+      !this.hasStagedAttachments() ||
+      confirm(this.translateService.instant("incidentReportUI.leaveWithStagedAttachments"))
+    );
+  }
+
+  /** Asks before closing or reloading the tab while attachments have not been uploaded yet. */
+  @HostListener("window:beforeunload", ["$event"])
+  onBeforeUnload(event: BeforeUnloadEvent) {
+    if (this.hasStagedAttachments()) event.preventDefault();
   }
 
   retryAttachmentUploads() {

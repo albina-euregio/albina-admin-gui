@@ -26,6 +26,7 @@
     "attachmentUploadFailed": "Upload failed",
     "attachmentsUploadFailed": "Some attachments could not be uploaded.",
     "retryUpload": "Retry upload",
+    "leaveWithStagedAttachments": "Some attachments have not been uploaded yet and will be lost. Leave anyway?",
     "addAvalancheProblem": "Add Avalanche Problem",
     "addGroup": "Add Group",
     "addVictim": "Add Person",
