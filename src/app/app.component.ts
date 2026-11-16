@@ -61,7 +61,7 @@ export class AppComponent {
     this.translateService.addLangs(Object.keys(resources));
     for (const [lang, translations] of Object.entries(resources)) {
       const layers = lang === "en" ? translations : [...resources.en, ...translations];
-      layers.forEach((t, i) => this.translateService.setTranslation(lang, withoutEmpty(t), i > 0));
+      layers.forEach((t, i) => this.translateService.setTranslation(lang, t, i > 0));
     }
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translateService.setFallbackLang("en");
@@ -71,15 +71,4 @@ export class AppComponent {
 
     document.getElementById("appFavicon").setAttribute("href", `${environment.faviconPath}`);
   }
-}
-
-function withoutEmpty(translations: TranslationObject): TranslationObject {
-  return Object.fromEntries(
-    Object.entries(translations)
-      .filter(([, value]) => value !== "")
-      .map(([key, value]) => [
-        key,
-        typeof value === "object" && value !== null ? withoutEmpty(value as TranslationObject) : value,
-      ]),
-  );
 }
