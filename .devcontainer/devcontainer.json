@@ -1,7 +1,7 @@
 {
   "image": "mcr.microsoft.com/devcontainers/typescript-node:26",
   "postAttachCommand": "pnpm dev",
-  "postCreateCommand": "pnpm ci",
+  "postCreateCommand": "npm install -g pnpm && pnpm install --frozen-lockfile",
   "mounts": ["source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind"],
   "customizations": {
     "vscode": {
