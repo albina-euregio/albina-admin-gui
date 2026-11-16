@@ -455,6 +455,10 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     );
     for (const attachment of staged) {
       const file = attachment.file;
+      // Re-check: a concurrent call (triggered by an autosave while this loop awaits an upload)
+      // may have picked up this file meanwhile, or it may have been removed.
+      const current = (this.incidentReport().attachments ?? []).find((a) => a.file === file);
+      if (!current || !this.isAttachmentStaged(current) || this.uploadingFiles.has(file)) continue;
       this.uploadingFiles.add(file);
       try {
         const uploaded = await firstValueFrom(this.incidentService.uploadIncidentAttachment(id, attachment));
