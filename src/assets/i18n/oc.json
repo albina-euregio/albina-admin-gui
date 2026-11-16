@@ -286,7 +286,7 @@
   "avalancheType": {
     "title": "Tipe de lauet",
     "slab": "placa",
-    "loose": "",
+    "loose": "sense coesion",
     "glide": "esguitlament basau",
     "cornice": "cornisa",
     "unknown": "desconeishut",
@@ -332,12 +332,12 @@
       "publishAll": "Publicar totes es regions",
       "publishAllNoMessages": "Publicar totes es regions (sense missatges)",
       "mediaFile": "Cargar un fichèr multimèdia",
-      "publicationChecklist": ""
+      "publicationChecklist": "Daurir era lista de verificacion dera publicacion"
     },
     "publicationChecklist": {
-      "title": "",
+      "title": "Lista de verificacion dera publicacion",
       "description": {
-        "website": "",
+        "website": "Eth mapa deth lòc web mòstre es nivèus de perilh damb es colors corresponentes. En hèr clic en ua region, se mòstren es problèmes de lauegi e es tèxtes informatius.",
         "email": "S'a enviat un corrèu electronic e conten un informe.",
         "telegram": "S'a publicat un messatge que conten un enlaçament ath lòc web.",
         "whatsapp": "Se ha publicado un mensaje que contiene un enlace a la página web."
@@ -356,59 +356,59 @@
       "publicationFinishedOnServer": "Publicacion acabada ath servidor.",
       "publishDisabled": {
         "inProgress": "Era publicacion ei actuauments en cors.",
-        "wrongStatus": ""
+        "wrongStatus": "Eth bulletin s’a de traméter o publicar."
       },
-      "emailWaitHint": "",
+      "emailWaitHint": "Eth liurament des corrèus electronics acostume a trigar mès que l’enviament de messatges as hilats sociaus. An d’auer passat aumens 5 menutes dempús dera publicacion abans de contunhar damb eth pas següent.",
       "email": {
-        "waitTitle": ""
+        "waitTitle": "Demorar:"
       },
       "options": "Opcions",
       "republish": "Tornar a publicar:",
       "resend": "Tornar a enviar:",
       "website": {
-        "checkInternetTitle": "",
-        "checkInternetDescriptionPrefix": "",
-        "checkInternetDescriptionSuffix": "",
-        "republishHint": "",
-        "publishMinimalTitle": "",
+        "checkInternetTitle": "Verificar era connexion en Internet:",
+        "checkInternetDescriptionPrefix": "Com ei era connexion a Internet deth tòn dispositiu? Daurir",
+        "checkInternetDescriptionSuffix": "en ua hièstra privada. Eth bulletin d’ager se mòstre corrèctament?",
+        "republishHint": "Realizar aguest pas solament s'era \"comprovacion dera connexion\" en Internet s’a completat corrèctaments e an passat aumens 5 menutes dempús deth darrèr ensag de publicacion.",
+        "publishMinimalTitle": "Publicacion minimau:",
         "publishMinimalHint": "",
-        "editAndResendTitle": "",
-        "openBulletin": "",
-        "clickEdit": "",
-        "clickSubmit": "",
-        "clickPublishNow": ""
+        "editAndResendTitle": "Editar e tornar a enviar:",
+        "openBulletin": "Daurir eth bulletin",
+        "clickEdit": "Hèr clic en \"Editar\"",
+        "clickSubmit": "Hèr clic en \"Enviar\"",
+        "clickPublishNow": "Hèr clic en \"Publicar ara\""
       },
       "manualSend": {
-        "title": "",
+        "title": "Enviament manuau:",
         "description": {
-          "telegram": "",
-          "whatsapp": ""
+          "telegram": "Copiar eth tèxte seguent e enviar-lo ath grop de Telegram indicat.",
+          "whatsapp": "Copiar eth tèxte seguent en canau de WhatsApp indicat."
         },
-        "copyText": ""
+        "copyText": "Copiar eth tèxte de {{language}} {{channel}}"
       },
-      "newChecklist": "",
-      "savedInfo": "",
+      "newChecklist": "Lista de verificacion naua",
+      "savedInfo": "Desat per {{user}}, {{time}}",
       "print": {
         "contact": {
-          "title": "",
-          "emailLabel": "",
-          "nameLabel": "",
-          "phoneLabel": ""
+          "title": "Contacte d’emergéncia",
+          "emailLabel": "Corrèu electronic",
+          "nameLabel": "Nòm:",
+          "phoneLabel": "Telefòn:"
         },
-        "emergencyTitle": "",
+        "emergencyTitle": "Se se produsissen problèmes grèus",
         "fallback": {
-          "title": "",
-          "step1": "",
-          "step2": "",
-          "step3": "",
-          "step4": ""
+          "title": "Utilizar era instància alternativa:",
+          "step1": "Accedir ara interfície d’administracion alternativa e publicar-i eth bulletin.",
+          "step2": "Enviar messatges manuaument as canaus soscriti. Utilizar eth tèxte seguent:",
+          "step3": "Informar eth public mejançant publicacions as hilats sociaus qu'includisquen un enlaçament ar URL deth lòc web alternatiu.",
+          "step4": "Informar eth departament de relacions publiques dera situacion."
         },
-        "hide": "",
-        "hint": "",
-        "hostingDescription": "",
-        "hostingTitle": "",
-        "print": "",
-        "toggle": ""
+        "hide": "Amagar era version entà estampar",
+        "hint": "Remplir es donades de contacte deth provedidor de lotjament e es URL alternatives que trobaratz de contunh e, ara seguida, hèr clic a \"Estampar\".",
+        "hostingDescription": "Consultar er estat deth servidor. Se cau, sollicitar-ne eth reinici.",
+        "hostingTitle": "Contactar eth provedidor de lotjament:",
+        "print": "Estampar",
+        "toggle": "Version entà estampar"
       }
     },
     "status": {
@@ -443,9 +443,9 @@
         "saveBulletin": "Sauvar bulletin",
         "discardBulletin": "Escartar cambiaments deth bulletin",
         "loadBulletin": "Cargar bulletin deth dia anterior",
-        "uploadCaamlBulletin": "",
+        "uploadCaamlBulletin": "Pujar eth bulletin en format CAAML",
         "uploadJsonBulletin": "Cargar eth bulletin en format JSON",
-        "downloadCaamlBulletin": "",
+        "downloadCaamlBulletin": "Descargar eth bulletin en format CAAML",
         "downloadJsonBulletin": "Descargar eth bulletin en format JSON",
         "daytimeDependency": "Dependéncia ora deth dia",
         "treeline": "Limit deth bòsc",
@@ -466,10 +466,10 @@
         "moveDownAvalancheProblem": "Botjar eth problèma de lauegi cap enjós",
         "dangerRatingDirectionUp": "Cap ensús",
         "dangerRatingDirectionDown": "Cap enjós",
-        "addPhoto": "",
-        "removePhoto": "",
-        "uploadPhoto": "",
-        "editPhoto": ""
+        "addPhoto": "Ahíger ua fotografia",
+        "removePhoto": "Eliminar era fotografia",
+        "uploadPhoto": "Pujar fotografia",
+        "editPhoto": "Editar era fotografia"
       },
       "save": "Sauvar",
       "discard": "Escartar",
@@ -514,7 +514,7 @@
         "snowpackStructureComment": "Descripcion deth celh de nhèu",
         "dangerPatterns": "Patrons de perilh",
         "tendencyComment": "Descripcion de tendéncia",
-        "synopsisHighlights": "",
+        "synopsisHighlights": "Resumit meteorologic destacat",
         "synopsisComment": "Sinopsi deth temps",
         "notes": "Nòtes",
         "noSnow": "Sense nhèu"
@@ -529,7 +529,7 @@
         "dangerDescription": "Descripcion deth perilh de lauegi",
         "forenoon": "Maitin",
         "afternoon": "Tarde",
-        "photos": "",
+        "photos": "Fotografies",
         "snowpackStructure": "Estructura deth celh de nhèu",
         "tendency": "Tendéncia",
         "synopsis": "Temps atmosferic",
@@ -538,7 +538,7 @@
         "hideTranslations": "Amagar revirades"
       },
       "photos": {
-        "url": "",
+        "url": "URL dera imatge",
         "locationName": "Localitat",
         "microregion": "",
         "copyright": "",
@@ -735,7 +735,7 @@
           "error": "Non s'an pogut enviar es notificacions Push!"
         },
         "accept": "Òc ben",
-        "confirm": ""
+        "confirm": "Vòs enviar {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Fichèr multimèdia",
@@ -778,7 +778,7 @@
       },
       "bulletinCheck": {
         "missingDangerRating": "Grad de perilh non establit",
-        "missingDangerRatingModificator": "",
+        "missingDangerRatingModificator": "Eth modificador deth nivèu de perilhositat non ei configurat",
         "missingRegion": "Regions sense grad de perilh",
         "duplicateRegion": "Regions avalorades diuèrsi viatges",
         "missingAvActivityHighlights": "Manque eth titular dera situacion de lauegi",
@@ -1012,7 +1012,7 @@
   },
   "settings": {
     "title": "Configuracion",
-    "effectiveRole": "",
+    "effectiveRole": "Ròtle efectiu",
     "changePassword": {
       "title": "Cambiar contrasenha",
       "oldPassword": {
@@ -1049,11 +1049,11 @@
       }
     },
     "passkeys": {
-      "title": "",
-      "unsupported": "",
-      "empty": "",
-      "unnamed": "",
-      "lastUsed": "",
+      "title": "Claus d'accès",
+      "unsupported": "Eth tòn navegador non admet es claus d'accès.",
+      "empty": "Encara non i a cap clau d’accès enregistrada.",
+      "unnamed": "Clau d'accès",
+      "lastUsed": "Darrèr usatge",
       "neverUsed": "",
       "namePlaceholder": "",
       "add": "",
@@ -1359,7 +1359,7 @@
   },
   "observations": {
     "$externalURL": "",
-    "$type": "",
+    "$type": "Tipe d’observacion",
     "allowEdit": "Editar observacion extèrna",
     "allowEditTooltip": "Açò evitarà es sobreescriptures de {{ value }}",
     "editIconTooltip": "Observacion editada - non arrecep actualizacions de {{ value }}",
@@ -1367,7 +1367,7 @@
     "authorName": "Nom de l'autor",
     "avalancheLength": "Longitud de lauet",
     "avalancheProblem": "Problèma de lauegi",
-    "avalancheProblems": "",
+    "avalancheProblems": "Problèma de lauegi",
     "avalancheSize": "Mida de lauet",
     "avalancheType": "Tipe de lauet",
     "avalancheWidth": "Amplada de lauet",
@@ -1420,7 +1420,7 @@
     },
     "comment": "Comentari",
     "content": "Contengut",
-    "dangerPatterns": "",
+    "dangerPatterns": "Patrons de perilh",
     "dangerRating": "Grad de perilh",
     "dangerSource": "Hònt de perilh",
     "elevation": "Nautada",
@@ -1444,7 +1444,7 @@
     "fractureDepth": "Prigondor de cicatritz",
     "hasCoordinates": "A coordenades",
     "incline": "Inclinacion",
-    "importantObservations": "",
+    "importantObservations": "Observacions importantes",
     "latitude": "Latitud",
     "locationName": "Localitat",
     "longitude": "Longitud",
@@ -1452,7 +1452,7 @@
     "personInvolvement": "Implicacion de persones",
     "reportDate": "Data der infòrme",
     "showTable": "Taula",
-    "stability": "",
+    "stability": "Estabilitat deth celh de nhèu",
     "withoutCoordinates": "Observacions sense coordenades:",
     "sidebar": {
       "filter": {
@@ -1472,7 +1472,7 @@
   "personInvolvement": {
     "Dead": "Eveniment damb persones implicades (mòrtes)",
     "Injured": "Eveniment damb persones implicades (herides)",
-    "Yes": "",
+    "Yes": "Eveniment damb persones implicades",
     "No": "Eveniment sense persones implicades",
     "Uninjured": "Eveniment damb persones implicades (il·leses)",
     "Unknown": "Eveniment (desconeishut)"

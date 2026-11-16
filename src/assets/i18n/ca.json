@@ -286,7 +286,7 @@
   "avalancheType": {
     "title": "Tipus d'allau",
     "slab": "placa",
-    "loose": "",
+    "loose": "sense cohesió",
     "glide": "lliscament basal",
     "cornice": "cornisa",
     "unknown": "desconegut",
@@ -332,12 +332,12 @@
       "publishAll": "Publicar totes les regions",
       "publishAllNoMessages": "Publica totes les regions (sense missatges)",
       "mediaFile": "Carregar un fitxer multimèdia",
-      "publicationChecklist": ""
+      "publicationChecklist": "Obrir la llista de comprovació de la publicació"
     },
     "publicationChecklist": {
-      "title": "",
+      "title": "Llista de comprovació de la publicació",
       "description": {
-        "website": "",
+        "website": "El mapa del lloc web mostra els nivells de perill amb els colors corresponents. En fer clic en una regió, es mostren els problemes d’allaus i els textos informatius.",
         "email": "S'ha enviat un correu electrònic i conté un informe.",
         "telegram": "S'ha publicat un missatge que conté un enllaç al lloc web.",
         "whatsapp": "S'ha publicat un missatge que conté un enllaç al lloc web."
@@ -356,59 +356,59 @@
       "publicationFinishedOnServer": "Publicació finalitzada al servidor",
       "publishDisabled": {
         "inProgress": "La publicació està actualment en curs.",
-        "wrongStatus": ""
+        "wrongStatus": "El butlletí s’ha de trametre o publicar."
       },
-      "emailWaitHint": "",
+      "emailWaitHint": "El lliurament dels correus electrònics acostuma a tardar més que l’enviament de missatges a les xarxes socials. Han d’haver passat almenys 5 minuts des de la publicació abans de continuar amb el pas següent.",
       "email": {
-        "waitTitle": ""
+        "waitTitle": "Esperar:"
       },
       "options": "Opcions",
       "republish": "Tornar a publicar:",
       "resend": "Tornar a enviar:",
       "website": {
-        "checkInternetTitle": "",
-        "checkInternetDescriptionPrefix": "",
-        "checkInternetDescriptionSuffix": "",
-        "republishHint": "",
-        "publishMinimalTitle": "",
+        "checkInternetTitle": "Comprovar la connexió a Internet:",
+        "checkInternetDescriptionPrefix": "Com és la connexió a Internet del teu dispositiu? Obrir",
+        "checkInternetDescriptionSuffix": "en una finestra privada. El butlletí d’ahir es mostra correctament?",
+        "republishHint": "Realitzar aquest pas només si \"la comprovació de la connexió a Internet\" s’ha completat correctament i han passat almenys 5 minuts des de l’últim intent de publicació.",
+        "publishMinimalTitle": "Publicació mínima",
         "publishMinimalHint": "",
-        "editAndResendTitle": "",
-        "openBulletin": "",
-        "clickEdit": "",
-        "clickSubmit": "",
-        "clickPublishNow": ""
+        "editAndResendTitle": "Editar i tornar a enviar:",
+        "openBulletin": "Obrir el butlletí",
+        "clickEdit": "Fer clic a \"Editar\"",
+        "clickSubmit": "Fer clic a \"Enviar\"",
+        "clickPublishNow": "Fer clic a \"Publicar ara\""
       },
       "manualSend": {
-        "title": "",
+        "title": "Enviament manual:",
         "description": {
-          "telegram": "",
-          "whatsapp": ""
+          "telegram": "Copiar el text següent i enviar-lo al grup de Telegram indicat.",
+          "whatsapp": "Copiar el text següent al canal de WhatsApp indicat."
         },
-        "copyText": ""
+        "copyText": "Copiar el text de {{language}} {{channel}}"
       },
-      "newChecklist": "",
-      "savedInfo": "",
+      "newChecklist": "Llista de verificació nova",
+      "savedInfo": "Desat per {{user}}, {{time}}",
       "print": {
         "contact": {
-          "title": "",
-          "emailLabel": "",
-          "nameLabel": "",
-          "phoneLabel": ""
+          "title": "Contacte d’emergència",
+          "emailLabel": "Correu electrònic",
+          "nameLabel": "Nom:",
+          "phoneLabel": "Telèfon:"
         },
-        "emergencyTitle": "",
+        "emergencyTitle": "Si es produeixen problemes greus",
         "fallback": {
-          "title": "",
-          "step1": "",
-          "step2": "",
-          "step3": "",
-          "step4": ""
+          "title": "Utilitzar la instància alternativa:",
+          "step1": "Accedir a la interfície d’administració alternativa i publicar-hi el butlletí.",
+          "step2": "Enviar missatges manualment als canals subscrits. Utilitzar el text següent:",
+          "step3": "Informar el públic mitjançant publicacions a les xarxes socials que incloguin un enllaç a l’URL del lloc web alternatiu.",
+          "step4": "Informar el departament de relacions públiques de la situació."
         },
-        "hide": "",
-        "hint": "",
-        "hostingDescription": "",
-        "hostingTitle": "",
-        "print": "",
-        "toggle": ""
+        "hide": "Amagar la versió per imprimir",
+        "hint": "Omplir les dades de contacte del proveïdor d’allotjament i les URL alternatives que trobareu a continuació i, tot seguit, feu clic a \"Imprimir\".",
+        "hostingDescription": "Consultar l’estat del servidor. Si s'escau, sol·licitar-ne el reinici.",
+        "hostingTitle": "Contactar amb el proveïdor d’allotjament:",
+        "print": "Imprimir",
+        "toggle": "Versió per imprimir"
       }
     },
     "status": {
@@ -443,9 +443,9 @@
         "saveBulletin": "Guardar el butlletí",
         "discardBulletin": "Descartar els canvis al butlletí",
         "loadBulletin": "Carregar el butlletí d'ahir",
-        "uploadCaamlBulletin": "",
+        "uploadCaamlBulletin": "Pujar el butlletí en format CAAML",
         "uploadJsonBulletin": "Carregar el butlletí en format JSON",
-        "downloadCaamlBulletin": "",
+        "downloadCaamlBulletin": "Descarregar el butlletí en format CAAML",
         "downloadJsonBulletin": "Descarregar el butlletí en format JSON",
         "daytimeDependency": "Dependència de l'hora",
         "treeline": "Límit del bosc",
@@ -466,10 +466,10 @@
         "moveDownAvalancheProblem": "Moure el problema d'allaus cap avall",
         "dangerRatingDirectionUp": "Cap amunt",
         "dangerRatingDirectionDown": "Cap avall",
-        "addPhoto": "",
-        "removePhoto": "",
-        "uploadPhoto": "",
-        "editPhoto": ""
+        "addPhoto": "Afegir una fotografia",
+        "removePhoto": "Eliminar la fotografia",
+        "uploadPhoto": "Pujar una fotografia",
+        "editPhoto": "Editar la fotografia"
       },
       "save": "Desar",
       "discard": "Descartar",
@@ -514,7 +514,7 @@
         "snowpackStructureComment": "Descripció de l'estructura del mantell",
         "dangerPatterns": "Patrons de perill",
         "tendencyComment": "Descripció de la tendència",
-        "synopsisHighlights": "",
+        "synopsisHighlights": "Resum meteorològic destacat",
         "synopsisComment": "Sinopsi meteorològica",
         "notes": "Notes",
         "noSnow": "Sense neu"
@@ -529,7 +529,7 @@
         "dangerDescription": "Descripció del perill d'allaus",
         "forenoon": "Matí",
         "afternoon": "Tarda",
-        "photos": "",
+        "photos": "Fotografies",
         "snowpackStructure": "Estructura del mantell",
         "tendency": "Tendència",
         "synopsis": "Temps atmosfèric",
@@ -538,7 +538,7 @@
         "hideTranslations": "Amaga traduccions"
       },
       "photos": {
-        "url": "",
+        "url": "URL de la imatge",
         "locationName": "Localitat",
         "microregion": "",
         "copyright": "",
@@ -735,7 +735,7 @@
           "error": "No s'han pogut enviar les notificacions push!"
         },
         "accept": "D'acord",
-        "confirm": ""
+        "confirm": "Vols enviar {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Fitxer multimèdia",
@@ -778,7 +778,7 @@
       },
       "bulletinCheck": {
         "missingDangerRating": "Grau de perill no especificat ",
-        "missingDangerRatingModificator": "",
+        "missingDangerRatingModificator": "El modificador del nivell de perillositat no està configurat",
         "missingRegion": "Regions sense graduar",
         "duplicateRegion": "Regions graduades més d'un cop",
         "missingAvActivityHighlights": "Falta el titular de la situació d'allaus",
@@ -1012,7 +1012,7 @@
   },
   "settings": {
     "title": "Configuració",
-    "effectiveRole": "",
+    "effectiveRole": "Rol efectiu",
     "changePassword": {
       "title": "Canviar la contrasenya",
       "oldPassword": {
@@ -1049,11 +1049,11 @@
       }
     },
     "passkeys": {
-      "title": "",
-      "unsupported": "",
-      "empty": "",
-      "unnamed": "",
-      "lastUsed": "",
+      "title": "Claus d’accés",
+      "unsupported": "El teu navegador no admet les claus d’accés.",
+      "empty": "Encara no hi ha cap clau d’accés registrada.",
+      "unnamed": "Clau d'accés",
+      "lastUsed": "Darrer ús",
       "neverUsed": "",
       "namePlaceholder": "",
       "add": "",
@@ -1359,7 +1359,7 @@
   },
   "observations": {
     "$externalURL": "",
-    "$type": "",
+    "$type": "Tipus d’observació",
     "allowEdit": "Editar observació externa",
     "allowEditTooltip": "Això evitarà les sobreescriptures de {{ value }}",
     "editIconTooltip": "Observació editada: no rep actualitzacions de {{ value }}",
@@ -1367,7 +1367,7 @@
     "authorName": "Nom de l'autor",
     "avalancheLength": "Longitud d'allau",
     "avalancheProblem": "Problema d'allaus",
-    "avalancheProblems": "",
+    "avalancheProblems": "Problema d’allaus",
     "avalancheSize": "Mida d'allau",
     "avalancheType": "Tipus d'allau",
     "avalancheWidth": "Amplada d'allau",
@@ -1420,7 +1420,7 @@
     },
     "comment": "Comentari",
     "content": "Contingut",
-    "dangerPatterns": "",
+    "dangerPatterns": "Patrons de perill",
     "dangerRating": "Grau de perill",
     "dangerSource": "Font de perill",
     "elevation": "Altitud",
@@ -1444,7 +1444,7 @@
     "fractureDepth": "Profunditat cicatriu",
     "hasCoordinates": "Té coordenades",
     "incline": "Pendent",
-    "importantObservations": "",
+    "importantObservations": "Observacions importants",
     "latitude": "Laltitud",
     "locationName": "Localitat",
     "longitude": "Longitud",
@@ -1452,7 +1452,7 @@
     "personInvolvement": "Implicació de persones",
     "reportDate": "Data de l'informe",
     "showTable": "Taula",
-    "stability": "",
+    "stability": "Estabilitat del mantell de neu",
     "withoutCoordinates": "Observacions sense coordenades:",
     "sidebar": {
       "filter": {
@@ -1472,7 +1472,7 @@
   "personInvolvement": {
     "Dead": "Esdeveniment amb persones implicades (mortes)",
     "Injured": "Esdeveniment amb persones implicades (ferides)",
-    "Yes": "",
+    "Yes": "Esdeveniment amb persones implicades",
     "No": "Esdeveniment sense persones implicades",
     "Uninjured": "Esdeveniment amb persones implicades (il·leses)",
     "Unknown": "Esdeveniment (desconegut)"

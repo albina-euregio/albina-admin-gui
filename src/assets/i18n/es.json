@@ -286,7 +286,7 @@
   "avalancheType": {
     "title": "Tipo de alud",
     "slab": "placa",
-    "loose": "",
+    "loose": "sin cohesión",
     "glide": "deslizamiento basal",
     "cornice": "cornisa",
     "unknown": "desconocido",
@@ -332,12 +332,12 @@
       "publishAll": "Publicar todas las regiones",
       "publishAllNoMessages": "Publicar todas las regiones (sin mensajes)",
       "mediaFile": "Subir archivo multimedia",
-      "publicationChecklist": ""
+      "publicationChecklist": "Abrir la lista de comprobación de la publicación"
     },
     "publicationChecklist": {
-      "title": "",
+      "title": "Lista de comprobación de la publicación",
       "description": {
-        "website": "",
+        "website": "El mapa del sitio web muestra los niveles de peligro con sus colores correspondientes. Al hacer clic en una región, se muestran los problemas de aludes y los textos informativos.",
         "email": "Se ha enviado un correo electrónico que contiene un informe.",
         "telegram": "Se ha publicado un mensaje que contiene un enlace a la página web.",
         "whatsapp": "Se ha publicado un mensaje que contiene un enlace a la página web."
@@ -356,59 +356,59 @@
       "publicationFinishedOnServer": "Publicación finalizada en el servidor.",
       "publishDisabled": {
         "inProgress": "La publicación está en curso.",
-        "wrongStatus": ""
+        "wrongStatus": "El boletín debe enviarse o publicarse."
       },
-      "emailWaitHint": "",
+      "emailWaitHint": "La entrega de los correos electrónicos suele tardar más que la de los mensajes en las redes sociales. Deben haber transcurrido al menos 5 minutos desde la publicación antes de pasar al siguiente paso.",
       "email": {
-        "waitTitle": ""
+        "waitTitle": "Esperar:"
       },
       "options": "Opciones",
       "republish": "Volver a publicar:",
       "resend": "Reenviar",
       "website": {
-        "checkInternetTitle": "",
-        "checkInternetDescriptionPrefix": "",
-        "checkInternetDescriptionSuffix": "",
-        "republishHint": "",
-        "publishMinimalTitle": "",
+        "checkInternetTitle": "Comprobar la conexión a Internet:",
+        "checkInternetDescriptionPrefix": "¿Cómo es la conexión a Internet de tu dispositivo? Abrir",
+        "checkInternetDescriptionSuffix": "en una ventana privada. ¿Se muestra correctamente el boletín de ayer?",
+        "republishHint": "Realizar este paso únicamente si \"la comprobación de la conexión a Internet\" se ha realizado correctamente y han pasado al menos 5 minutos desde el último intento de publicación.",
+        "publishMinimalTitle": "Publicación mínima",
         "publishMinimalHint": "",
-        "editAndResendTitle": "",
-        "openBulletin": "",
-        "clickEdit": "",
-        "clickSubmit": "",
-        "clickPublishNow": ""
+        "editAndResendTitle": "Editar y volver a enviar:",
+        "openBulletin": "Abrir el boletín",
+        "clickEdit": "Hacer clic en \"Editar\"",
+        "clickSubmit": "Hacer clic en \"Enviar\"",
+        "clickPublishNow": "Hacer clic en \"Publicar ahora\""
       },
       "manualSend": {
-        "title": "",
+        "title": "Envío manual:",
         "description": {
-          "telegram": "",
-          "whatsapp": ""
+          "telegram": "Copiar el texto siguiente y enviarlo al grupo de Telegram indicado.",
+          "whatsapp": "Copiar el texto siguiente en el canal de WhatsApp indicado."
         },
-        "copyText": ""
+        "copyText": "Copiar el texto de {{language}} {{channel}}"
       },
-      "newChecklist": "",
-      "savedInfo": "",
+      "newChecklist": "Nueva lista de verificación",
+      "savedInfo": "Guardado por {{user}}, {{time}}",
       "print": {
         "contact": {
-          "title": "",
-          "emailLabel": "",
-          "nameLabel": "",
-          "phoneLabel": ""
+          "title": "Contacto de emergencia",
+          "emailLabel": "Correo electrónico",
+          "nameLabel": "Nombre:",
+          "phoneLabel": "Teléfono:"
         },
-        "emergencyTitle": "",
+        "emergencyTitle": "Si se producen problemas graves",
         "fallback": {
-          "title": "",
-          "step1": "",
-          "step2": "",
-          "step3": "",
-          "step4": ""
+          "title": "Utilizar la instancia alternativa:",
+          "step1": "Acceder a la interfaz de administración alternativa y publicar allí el comunicado.",
+          "step2": "Enviar mensajes manualmente a los canales suscritos. Utilizar el texto siguiente:",
+          "step3": "Informar al público mediante publicaciones en las redes sociales que incluyan un enlace a la URL del sitio web alternativo.",
+          "step4": "Informar al departamento de relaciones públicas de la situación."
         },
-        "hide": "",
-        "hint": "",
-        "hostingDescription": "",
-        "hostingTitle": "",
-        "print": "",
-        "toggle": ""
+        "hide": "Ocultar la versión para imprimir",
+        "hint": "Rellenar los datos de contacto del proveedor de alojamiento y las URL alternativas que aparecen a continuación y, a continuación, haga clic en \"Imprimir\".",
+        "hostingDescription": "Consultar el estado del servidor. Si procede, solicitar su reinicio.",
+        "hostingTitle": "Contactar con el proveedor de alojamiento:",
+        "print": "Imprimir",
+        "toggle": "Versión para imprimir"
       }
     },
     "status": {
@@ -443,9 +443,9 @@
         "saveBulletin": "Guardar el boletín",
         "discardBulletin": "Descartar los cambios del boletín",
         "loadBulletin": "Cargar el boletín del día anterior",
-        "uploadCaamlBulletin": "",
+        "uploadCaamlBulletin": "Subir el boletín en formato CAAML",
         "uploadJsonBulletin": "Subir el boletín en formato JSON",
-        "downloadCaamlBulletin": "",
+        "downloadCaamlBulletin": "Descargar el boletín en formato CAAML",
         "downloadJsonBulletin": "Descargar el boletín en formato JSON",
         "daytimeDependency": "Dependencia diurna",
         "treeline": "Límite superior del bosque",
@@ -466,10 +466,10 @@
         "moveDownAvalancheProblem": "Mover el problema de aludes hacia abajo",
         "dangerRatingDirectionUp": "Hacia arriba",
         "dangerRatingDirectionDown": "Hacia abajo",
-        "addPhoto": "",
-        "removePhoto": "",
-        "uploadPhoto": "",
-        "editPhoto": ""
+        "addPhoto": "Añadir una fotografía",
+        "removePhoto": "Eliminar la fotografía",
+        "uploadPhoto": "Subir una fotografía",
+        "editPhoto": "Editar la fotografía"
       },
       "save": "Guardar",
       "discard": "Descartar",
@@ -529,7 +529,7 @@
         "dangerDescription": "Descripción del peligro de aludes",
         "forenoon": "Mañana",
         "afternoon": "Tarde",
-        "photos": "",
+        "photos": "Fotografías",
         "snowpackStructure": "Estructura del manto",
         "tendency": "Tendencia",
         "synopsis": "Tiempo atmosférico",
@@ -538,7 +538,7 @@
         "hideTranslations": "Ocultar traducciones"
       },
       "photos": {
-        "url": "",
+        "url": "URL de la imagen",
         "locationName": "Localización",
         "microregion": "",
         "copyright": "",
@@ -735,7 +735,7 @@
           "error": "¡No se pudieron enviar notificaciones push!"
         },
         "accept": "De acuerdo",
-        "confirm": ""
+        "confirm": "¿Quieres enviar {{channel}} ({{language}})?"
       },
       "mediaFileDialog": {
         "headline": "Archivo multimedia",
@@ -778,7 +778,7 @@
       },
       "bulletinCheck": {
         "missingDangerRating": "Grado de peligro no establecido",
-        "missingDangerRatingModificator": "",
+        "missingDangerRatingModificator": "El modificador del nivel de peligrosidad no está configurado.",
         "missingRegion": "Regiones no establecidas",
         "duplicateRegion": "Regiones establecidas varias veces",
         "missingAvActivityHighlights": "Falta el titular de la situación de aludes",
@@ -1012,7 +1012,7 @@
   },
   "settings": {
     "title": "Ajustes",
-    "effectiveRole": "",
+    "effectiveRole": "Rol efectivo",
     "changePassword": {
       "title": "Cambiar la contraseña ",
       "oldPassword": {
@@ -1049,11 +1049,11 @@
       }
     },
     "passkeys": {
-      "title": "",
-      "unsupported": "",
-      "empty": "",
-      "unnamed": "",
-      "lastUsed": "",
+      "title": "Llaves de acceso",
+      "unsupported": "Tu navegador no admite las llaves de acceso.",
+      "empty": "Todavía no hay ninguna llave de acceso registrada.",
+      "unnamed": "Llave de acceso",
+      "lastUsed": "Último uso",
       "neverUsed": "",
       "namePlaceholder": "",
       "add": "",
@@ -1359,7 +1359,7 @@
   },
   "observations": {
     "$externalURL": "",
-    "$type": "",
+    "$type": "Tipo de observación",
     "allowEdit": "Editar la observación externa",
     "allowEditTooltip": "Esto evitará sobrescrituras de {{ value }}",
     "editIconTooltip": "Observación editada: no recibe actualizaciones de {{ value }}",
@@ -1367,7 +1367,7 @@
     "authorName": "Nombre del autor",
     "avalancheLength": "Longitud de alud",
     "avalancheProblem": "Problema de aludes",
-    "avalancheProblems": "",
+    "avalancheProblems": "Problema de aludes",
     "avalancheSize": "Tamaño de alud",
     "avalancheType": "Tipo de alud",
     "avalancheWidth": "Ancho de alud",
@@ -1420,7 +1420,7 @@
     },
     "comment": "Comentario",
     "content": "Contenido",
-    "dangerPatterns": "",
+    "dangerPatterns": "Patrones de Peligro",
     "dangerRating": "Clasificación del peligro",
     "dangerSource": "Fuente de peligro",
     "elevation": "Altitud",
@@ -1444,7 +1444,7 @@
     "fractureDepth": "Profundiad de cicatriz",
     "hasCoordinates": "Tiene coordenadas",
     "incline": "Inclinación",
-    "importantObservations": "",
+    "importantObservations": "Observaciones importantes",
     "latitude": "Laltitud",
     "locationName": "Localización",
     "longitude": "Longitud",
@@ -1452,7 +1452,7 @@
     "personInvolvement": "Implicación de personas",
     "reportDate": "Fecha del informe",
     "showTable": "Tabla",
-    "stability": "",
+    "stability": "Estabilidad del manto nivoso",
     "withoutCoordinates": "Observaciones sin coordenadas:",
     "sidebar": {
       "filter": {
@@ -1472,7 +1472,7 @@
   "personInvolvement": {
     "Dead": "Evento con personas implicadas (muertos)",
     "Injured": "Evento con personas implicadas (heridos)",
-    "Yes": "",
+    "Yes": "Evento con personas implicadas",
     "No": "Evento sin personas implicadas",
     "Uninjured": "Evento con personas implicadas (ilesos)",
     "Unknown": "Evento (desconocido)"
