@@ -1229,9 +1229,11 @@ app-observation-editor app-avalanche-problem-icons img {
   width: 3rem;
 }
 
+// row-gap instead of --bs-gutter-y: the latter pulls the row up by a negative margin-top,
+// which would overlap (and swallow clicks on) the "allow edit" switch above the form
 app-observation-editor app-zod-schema-form .row {
   --bs-gutter-x: 1rem;
-  --bs-gutter-y: 2rem;
+  row-gap: 2rem;
 }
 
 // split.js
