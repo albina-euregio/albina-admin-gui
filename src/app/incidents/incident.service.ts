@@ -26,7 +26,7 @@ export class IncidentService {
    * date picker. Defaults to the current season. Mutating it reloads
    * {@link incidentsForActiveRegion}.
    */
-  readonly dateRange = signal<Date[]>([new Date(2025, 9, 1), new Date(2026, 9, 1)]); // 2025-10-01 – 2026-10-01
+  readonly dateRange = signal<Date[]>(this.#currentSeason()); // 2025-10-01 – 2026-10-01
 
   /**
    * A region-scoped resource of incidents for the active region, reloading
@@ -84,14 +84,12 @@ export class IncidentService {
   }
 
   private safeIncidentReport(i: IncidentView) {
-    return PartialIncidentReportSchema.safeParse(
-      this.migrateGroupAffiliation({ ...(i.data ?? i.publicData ?? {}), ...i }),
-    );
+    return PartialIncidentReportSchema.safeParse(this.migrateGroupAffiliation({ ...(i.data ?? i.publicData), ...i }));
   }
 
   private toIncidentReport(i: IncidentView): IncidentReport {
     return PartialIncidentReportSchema.parse(
-      this.migrateGroupAffiliation({ ...(i.data ?? i.publicData ?? {}), ...i }),
+      this.migrateGroupAffiliation({ ...(i.data ?? i.publicData), ...i }),
     ) as IncidentReport;
   }
 
@@ -185,5 +183,11 @@ export class IncidentService {
     return from(
       albinaApi.deleteIncidentAttachment({ path: { id, attachmentId: attachment.id! }, throwOnError: true }),
     ).pipe(map(() => undefined));
+  }
+
+  #currentSeason() {
+    const today = new Date();
+    const offset = today.getMonth() >= 9 ? 0 : -1;
+    return [new Date(today.getFullYear() + offset, 9, 1), new Date(today.getFullYear() + 1 + offset, 9, 1)];
   }
 }
