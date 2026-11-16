@@ -213,6 +213,32 @@
             />
           </div>
         </div>
+        @if (!displayOnly) {
+          @switch (stagedUploadState()) {
+            @case ("awaitingSave") {
+              <div class="alert alert-info d-flex align-items-center gap-2 py-2">
+                <i class="ph ph-clock"></i>
+                {{ "incidentReportUI.attachmentsStaged" | translate }}
+              </div>
+            }
+            @case ("uploading") {
+              <div class="alert alert-info d-flex align-items-center gap-2 py-2">
+                <i class="ph ph-circle-notch"></i>
+                {{ "incidentReportUI.attachmentsUploading" | translate }}
+              </div>
+            }
+            @case ("failed") {
+              <div class="alert alert-danger d-flex align-items-center gap-2 py-2">
+                <i class="ph ph-warning"></i>
+                {{ "incidentReportUI.attachmentsUploadFailed" | translate }}
+                <button type="button" class="btn btn-sm btn-outline-danger ms-auto" (click)="retryAttachmentUploads()">
+                  <i class="ph ph-arrow-clockwise"></i>
+                  {{ "incidentReportUI.retryUpload" | translate }}
+                </button>
+              </div>
+            }
+          }
+        }
 
         @for (attachment of incidentReport().attachments; track attachment.fileName) {
           <div
@@ -238,6 +264,23 @@
                   />
                 }
                 <h5 class="mb-0 h6 fw-semibold text-secondary ms-1">{{ attachment.fileName }}</h5>
+                @switch (attachmentUploadState(attachment)) {
+                  @case ("pending") {
+                    <span class="badge text-bg-secondary ms-2">{{
+                      "incidentReportUI.attachmentPending" | translate
+                    }}</span>
+                  }
+                  @case ("uploading") {
+                    <span class="badge text-bg-info ms-2">{{
+                      "incidentReportUI.attachmentUploading" | translate
+                    }}</span>
+                  }
+                  @case ("failed") {
+                    <span class="badge text-bg-danger ms-2">{{
+                      "incidentReportUI.attachmentUploadFailed" | translate
+                    }}</span>
+                  }
+                }
                 @if (isAttachmentValid(attachment)) {
                   <span class="text-success ms-2" title="{{ 'zodForm.valid' | translate }}">
                     <i class="ph ph-check"></i>
