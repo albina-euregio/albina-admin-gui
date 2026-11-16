@@ -1,7 +1,14 @@
 {
   "image": "mcr.microsoft.com/devcontainers/typescript-node:26",
   "postCreateCommand": "npm install -g pnpm && pnpm install --frozen-lockfile",
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
+  },
+  "initializeCommand": "mkdir -p \"$HOME/.claude\"",
   "mounts": ["source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind"],
+  "remoteEnv": {
+    "CLAUDE_CODE_OAUTH_TOKEN": "${localEnv:CLAUDE_CODE_OAUTH_TOKEN}"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
