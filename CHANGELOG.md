@@ -2,6 +2,34 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [9.3.0] - 2026-11-17
+
+### 🚀 Features
+
+- _(modelling)_ Add GeoSphere reduced meteograms
+- _(observations-api)_ Receive Wyssen avalanches via `POST /observations-wyssen` (SLF Aval API v5 format), delete them via `DELETE /observations-wyssen?externalId=`
+- _(incident-report)_ Add `customData` to incident report, group, victim and attachment
+- _(bulletin)_ Add icons to accordion headings
+- _(region-configuration)_ Compact PDF layout
+- _(bugreport)_ Link to GitLab bug reports in the menu and on the login page
+
+### 🐛 Bug Fixes
+
+- _(incident)_ Stage attachment uploads, show progress and failures, allow retry, upload each attachment once and warn before leaving with pending uploads
+- _(incident)_ Compute the date range dynamically instead of hardcoding it
+- _(i18n)_ Fall back to English for untranslated strings (#502)
+- _(observation-editor)_ Stop the form overlapping the allow-edit switch, associate its label
+- _(graphics)_ Load `linea.geojson` from the same host
+- _(linea-export)_ Stable sorting of selected features
+- _(login)_ Spacing and underline of the bug report link
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to linea 9.1.1, eaws-regions 9.0.0, angular-eslint, eslint, typescript-eslint
+- _(observations-api)_ Rename observation source SlfAval to Wyssen; update bun 1.4.4, zod 4.6.7, es-toolkit 1.53.1, simple-statistics 8.0.0
+- _(build)_ Devcontainer: install pnpm explicitly, mount host git config, Zed customizations
+- _(i18n)_ Update translations
+
 ## [9.2.0] - 2026-11-02
 
 ### 🚀 Features
