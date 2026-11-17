@@ -1,6 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { TranslateService, type TranslationObject } from "@ngx-translate/core";
+import { isDict, TranslateService, type TranslationObject } from "@ngx-translate/core";
 
 import caamlCa from "../../app/i18n/caaml/ca.json";
 import caamlDe from "../../app/i18n/caaml/de.json";
@@ -49,6 +49,7 @@ export class AppComponent {
     // (e.g. "aspect", "tendency" stay defined in the main resource on purpose).
     // Transifex pulls with --mode onlytranslated yield "" for untranslated strings,
     // so every language is layered over English, skipping those empty values.
+    // English itself is kept as is: its empty strings are intentional (e.g. incidentReportHelp).
     const resources: Record<string, TranslationObject[]> = {
       de: [de, incidentReportDe, caamlDe],
       it: [it, incidentReportIt, caamlIt],
@@ -60,7 +61,7 @@ export class AppComponent {
     };
     this.translateService.addLangs(Object.keys(resources));
     for (const [lang, translations] of Object.entries(resources)) {
-      const layers = lang === "en" ? translations : [...resources.en, ...translations];
+      const layers = lang === "en" ? translations : [...resources.en, ...translations.map(withoutEmpty)];
       layers.forEach((t, i) => this.translateService.setTranslation(lang, t, i > 0));
     }
     // this language will be used as a fallback when a translation isn't found in the current language
@@ -71,4 +72,12 @@ export class AppComponent {
 
     document.getElementById("appFavicon").setAttribute("href", `${environment.faviconPath}`);
   }
+}
+
+function withoutEmpty(translations: TranslationObject): TranslationObject {
+  return Object.fromEntries(
+    Object.entries(translations)
+      .filter(([, value]) => value !== "")
+      .map(([key, value]) => [key, isDict(value) ? withoutEmpty(value) : value]),
+  );
 }
