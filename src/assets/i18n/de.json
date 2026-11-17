@@ -32,6 +32,7 @@
     "modellingZamgECMWF": "ZAMG ECMWF-EPS",
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
     "modellingZamgMeteogram": "GeoSphere Meteogramm",
+    "modellingZamgMeteogramReduced": "GeoSphere reduziertes Meteogramm",
     "modellingSnowpack": "SNOWPACK Modell",
     "modellingSnowpackMeteo": "Modellierte Meteodaten SNOWPACK",
     "awsome": "AWSOME",

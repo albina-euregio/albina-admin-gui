@@ -78,6 +78,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   dropDownOptions: Record<ForecastSource, GenericObservation<unknown>[]> = {
     multimodel: [],
     meteogram: [],
+    meteogramReduced: [],
     qfa: [],
   };
 
@@ -127,6 +128,12 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
               loader: () => this.meteogramSource.getZamgMeteograms(),
               fillColor: "MediumVioletRed",
               name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
+            },
+            {
+              id: ForecastSource.meteogramReduced,
+              loader: () => this.meteogramSource.getZamgReducedMeteograms(),
+              fillColor: "DarkOrange",
+              name: this.translateService.instant("sidebar.modellingZamgMeteogramReduced"),
             },
             {
               id: ForecastSource.qfa,
