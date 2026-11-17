@@ -32,6 +32,7 @@ export enum ObservationSource {
 
 export enum ForecastSource {
   meteogram = "meteogram",
+  meteogramReduced = "meteogramReduced",
   multimodel = "multimodel",
   qfa = "qfa",
 }
@@ -89,20 +90,18 @@ export function imageCountString(images: unknown[] | undefined) {
 }
 
 export function toGeoJSON(observations: GenericObservation[]) {
-  const features = observations.map(
-    (o): GeoJSON.Feature => ({
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [o.longitude ?? 0.0, o.latitude ?? 0.0, o.elevation ?? 0.0],
-      },
-      properties: {
-        ...o,
-        ...o.$data,
-        $data: undefined,
-      },
-    }),
-  );
+  const features = observations.map((o): GeoJSON.Feature => ({
+    type: "Feature",
+    geometry: {
+      type: "Point",
+      coordinates: [o.longitude ?? 0.0, o.latitude ?? 0.0, o.elevation ?? 0.0],
+    },
+    properties: {
+      ...o,
+      ...o.$data,
+      $data: undefined,
+    },
+  }));
   const collection: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
     features,
