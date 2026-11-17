@@ -42,7 +42,7 @@
   "avalancheType.loose": "Alud de nieve sin cohesión",
   "avalancheType.glide": "Alud de deslizamiento de nieve",
   "avalancheProblem.label": "Problema de Aludes",
-  "avalancheProblem.coreZones.label": "Avalanche Problems with Core Zones",
+  "avalancheProblem.coreZones.label": "",
   "avalancheProblem.new_snow": "Nieve reciente",
   "avalancheProblem.wind_slab": "Placa de viento",
   "avalancheProblem.persistent_weak_layers": "Capa débil persistente",
@@ -97,6 +97,6 @@
   "elevation.band": "Entre {0} y {1}",
   "synopsis.label": "Tiempo",
   "snowpack.label": "Manto nivoso",
-  "travelAdvisory.label": "Terrain and Travel Advice",
+  "travelAdvisory.label": "",
   "forecast.label": "Predicción de Aludes"
 }

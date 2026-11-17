@@ -42,7 +42,7 @@
   "avalancheType.loose": "Lauet sense coesion",
   "avalancheType.glide": "Lauet d'esguitlament basau",
   "avalancheProblem.label": "Problèma de lauegi",
-  "avalancheProblem.coreZones.label": "Avalanche Problems with Core Zones",
+  "avalancheProblem.coreZones.label": "",
   "avalancheProblem.new_snow": "Nhèu recenta",
   "avalancheProblem.wind_slab": "Placa de vent",
   "avalancheProblem.persistent_weak_layers": "Cocha fèble persistenta",
@@ -97,6 +97,6 @@
   "elevation.band": "Entre {0} e {1}",
   "synopsis.label": "Temps",
   "snowpack.label": "Celh de nhèu",
-  "travelAdvisory.label": "Terrain and Travel Advice",
+  "travelAdvisory.label": "",
   "forecast.label": "Prediccion de lauegi"
 }

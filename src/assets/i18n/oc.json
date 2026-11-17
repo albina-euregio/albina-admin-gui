@@ -1057,10 +1057,10 @@
       "neverUsed": "",
       "namePlaceholder": "",
       "add": "",
-      "delete": "",
-      "added": "",
-      "addError": "",
-      "deleteError": ""
+      "delete": "Esborrar",
+      "added": "Clau d'accès ahijuda",
+      "addError": "Non s'a pogut ahíger era clau d'accès",
+      "deleteError": "Non s'a pogut eliminar era clau d'accès"
     }
   },
   "statistics": {
@@ -1076,7 +1076,7 @@
       "duplicates": "Duplicats"
     },
     "error": {
-      "downloadFailed": ""
+      "downloadFailed": "Non s'a pogut descargar era exportacion des estadistiques. Tornar a provar."
     }
   },
   "strategicMindset": {
@@ -1322,7 +1322,7 @@
       "class": "Cristalhs facetadi"
     },
     "FCxr": {
-      "code": "",
+      "code": "FCxr",
       "class": ""
     },
     "DH": {
@@ -1531,22 +1531,22 @@
     "{{share}} % {{stability}} of {{total}} slopes ({{margin}})": "",
     "{{share}} % good of {{total}} slopes; every other class {{none}}": "",
     "{{stability}} in {{frequency}} locations, size {{size}}: {{levels}}": "",
-    "→ {{next}}": "",
-    "< {{elevation}} m": "",
-    "≥ {{elevation}} m": "",
-    "above {{elevation}} m": "",
+    "→ {{next}}": "→ {{next}}",
+    "< {{elevation}} m": "< {{elevation}} m",
+    "≥ {{elevation}} m": "≥ {{elevation}} m",
+    "above {{elevation}} m": "per dessús de {{elevation}} m",
     "Active datetags": "",
     "Aggregation band": "Banda d'agregacion",
-    "All": "",
-    "all aspects": "",
-    "all elevations": "",
-    "also {{level}}": "",
-    "aspects {{aspects}}": "",
-    "at any elevation": "",
-    "below {{elevation}} m": "",
-    "between {{lower}} and {{upper}} m": "",
-    "Clear the {{label}} selection": "",
-    "Danger level": "",
+    "All": "Tot",
+    "all aspects": "Totes es orientacions",
+    "all elevations": "Totes es nautades",
+    "also {{level}}": "tanben {{level}}",
+    "aspects {{aspects}}": "orientacions {{aspects}}",
+    "at any elevation": "a quina nautada que sigue",
+    "below {{elevation}} m": "per dejós de {{elevation}} m",
+    "between {{lower}} and {{upper}} m": "entre {{lower}} e {{upper}} m",
+    "Clear the {{label}} selection": "Escafar era seleccion de {{label}}",
+    "Danger level": "Grad de perilh",
     "danger level series": "",
     "Date": "Data",
     "Datetag": "Etiqueta de dia",
@@ -1562,17 +1562,17 @@
     "good throughout": "",
     "Grain type": "Tipe de gra",
     "How the danger level is derived": "",
-    "loading": "",
+    "loading": "en tot cargar",
     "Lower elevation cut": "",
     "LWC index": "Índex LWC",
     "many above {{many}} %": "",
     "median of the decisive class's size estimates": "",
     "New snow": "Nhèu recenta",
-    "no aspect": "",
+    "no aspect": "sense orientacion",
     "no danger level series": "",
     "no elevation": "",
     "no index value": "",
-    "no size": "",
+    "no size": "sense mesura",
     "no snow or no model output": "",
     "No split": "",
     "no stability index to read": "",
@@ -1690,13 +1690,13 @@
     }
   },
   "zodForm": {
-    "valid": "",
-    "required": "",
-    "invalidNumber": ""
+    "valid": "Valid",
+    "required": "Obligatòri",
+    "invalidNumber": "Introdusir un numèro valid"
   },
   "bugreport": {
     "issue": {
-      "title": "",
+      "title": "Informe d'errors",
       "description": ""
     }
   }

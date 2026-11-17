@@ -42,7 +42,7 @@
   "avalancheType.loose": "Allau sense cohesió",
   "avalancheType.glide": "Allau de lliscament de neu",
   "avalancheProblem.label": "Problema d'allaus",
-  "avalancheProblem.coreZones.label": "Avalanche Problems with Core Zones",
+  "avalancheProblem.coreZones.label": "",
   "avalancheProblem.new_snow": "Neu recent",
   "avalancheProblem.wind_slab": "Placa de vent",
   "avalancheProblem.persistent_weak_layers": "Capa feble persistent",
@@ -97,6 +97,6 @@
   "elevation.band": "Entre {0} i {1}",
   "synopsis.label": "Temps",
   "snowpack.label": "Mantell de neu",
-  "travelAdvisory.label": "Terrain and Travel Advice",
+  "travelAdvisory.label": "",
   "forecast.label": "Predicció d'allaus"
 }
