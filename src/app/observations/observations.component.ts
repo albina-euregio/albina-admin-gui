@@ -587,8 +587,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         observation.stability = match as SnowpackStability;
       }
     });
-
-    console.log(observation);
     return observation;
   }
 
