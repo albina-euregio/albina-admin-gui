@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
 import { combineLatest, from, map, Observable } from "rxjs";
 
+import { RegionConfiguration } from "../models/region-configuration.model";
 import * as albinaApi from "../providers/albina-api";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -14,6 +16,56 @@ import {
 } from "./incident-report.model";
 
 type IncidentView = albinaApi.Incident;
+
+/** A request the server refused; the message is the server's explanation, e.g. "Not allowed to edit a published incident". */
+export class IncidentRequestError extends Error {
+  constructor(
+    readonly status: number,
+    message: string,
+  ) {
+    super(message);
+    this.name = "IncidentRequestError";
+  }
+
+  get forbidden(): boolean {
+    return this.status === 403;
+  }
+}
+
+/** The explanation in an error response body: plain text, a Micronaut JSON error or a problem detail. */
+function errorResponseText(body: unknown): string | undefined {
+  if (typeof body === "string") return body.trim() || undefined;
+  if (!body || typeof body !== "object") return undefined;
+  const json = body as { message?: unknown; detail?: unknown; _embedded?: { errors?: { message?: unknown }[] } };
+  const embedded = json._embedded?.errors?.map((e) => e.message).filter((m) => typeof m === "string");
+  if (embedded?.length) return embedded.join("; ");
+  if (typeof json.detail === "string") return json.detail;
+  if (typeof json.message === "string") return json.message;
+  return undefined;
+}
+
+/**
+ * Resolves a request sent without `throwOnError` to its data. A refused request is thrown as an
+ * {@link IncidentRequestError}, which keeps the HTTP status that `throwOnError` would drop.
+ */
+function orThrow<T>(request: Promise<{ data?: T; error?: unknown; response?: unknown }>): Observable<T> {
+  return from(
+    request.then(({ data, error, response }) => {
+      if (response instanceof HttpErrorResponse) {
+        throw new IncidentRequestError(response.status, errorResponseText(error) ?? response.message);
+      }
+      if (error !== undefined) throw error;
+      return data as T;
+    }),
+  );
+}
+
+/** i18n key of the reason why the user may not change an incident or one of its parts. */
+export type IncidentReadOnlyReason =
+  | "incidentReportUI.readOnly.role"
+  | "incidentReportUI.readOnly.published"
+  | "incidentReportUI.readOnly.publicAttachment"
+  | "incidentReportUI.readOnly.region";
 
 @Injectable()
 export class IncidentService {
@@ -83,6 +135,53 @@ export class IncidentService {
     });
   }
 
+  /** Whether the user may create, edit and delete incidents (in their own regions). */
+  canEdit(): boolean {
+    return this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER", "FOREMAN");
+  }
+
+  /**
+   * Whether the user may publish and unpublish incidents and change published ones; the same rule
+   * as for publishing bulletins.
+   */
+  canPublish(): boolean {
+    return this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER");
+  }
+
+  /** The regions the user may create and edit incidents in. */
+  writableRegions(): RegionConfiguration[] {
+    return this.authenticationService.getCurrentAuthorRegions();
+  }
+
+  /**
+   * Why the user may not change the incident, or `undefined` if they may. Pass `region` when it is
+   * known (e.g. for a new incident); otherwise the server refuses other regions with a 403.
+   */
+  readOnlyReason(
+    report: Pick<IncidentReport, "publishedAt">,
+    region?: string | null,
+  ): IncidentReadOnlyReason | undefined {
+    if (!this.canEdit()) return "incidentReportUI.readOnly.role";
+    if (region !== undefined && !this.writableRegions().some((r) => r.id === region)) {
+      return "incidentReportUI.readOnly.region";
+    }
+    if (report.publishedAt && !this.canPublish()) return "incidentReportUI.readOnly.published";
+    return undefined;
+  }
+
+  /** Why the user may not delete the attachment, or `undefined` if they may. */
+  attachmentReadOnlyReason(
+    report: Pick<IncidentReport, "publishedAt">,
+    attachment: IncidentAttachment,
+    region?: string | null,
+  ): IncidentReadOnlyReason | undefined {
+    const reason = this.readOnlyReason(report, region);
+    if (reason === "incidentReportUI.readOnly.published" && attachment.public) {
+      return "incidentReportUI.readOnly.publicAttachment";
+    }
+    return reason;
+  }
+
   private safeIncidentReport(i: IncidentView) {
     return PartialIncidentReportSchema.safeParse(this.migrateGroupAffiliation({ ...(i.data ?? i.publicData), ...i }));
   }
@@ -124,44 +223,43 @@ export class IncidentService {
    * server validates and stores it verbatim.
    */
   createIncident(region: string, data: string): Observable<IncidentReport> {
-    return from(albinaApi.createIncident({ query: { region }, body: data, throwOnError: true })).pipe(
-      map((res) => this.toIncidentReport(res.data)),
+    return orThrow(albinaApi.createIncident({ query: { region }, body: data })).pipe(
+      map((incident) => this.toIncidentReport(incident)),
     );
   }
 
   /** Publish an existing incident's report data. */
   publishIncident(id: string, data: string): Observable<IncidentReport> {
-    return from(albinaApi.publishIncident({ path: { id }, body: data, throwOnError: true })).pipe(
-      map((res) => this.toIncidentReport(res.data)),
+    return orThrow(albinaApi.publishIncident({ path: { id }, body: data })).pipe(
+      map((incident) => this.toIncidentReport(incident)),
     );
   }
 
   /** Unpublish an existing incident's report data. */
   unpublishIncident(id: string): Observable<void> {
-    return from(albinaApi.unpublishIncident({ path: { id }, throwOnError: true })).pipe(map(() => undefined));
+    return orThrow(albinaApi.unpublishIncident({ path: { id } })).pipe(map(() => undefined));
   }
 
   /** Update an existing incident's report data. */
   updateIncident(id: string, data: string): Observable<IncidentReport> {
-    return from(albinaApi.updateIncident({ path: { id }, body: data, throwOnError: true })).pipe(
-      map((res) => this.toIncidentReport(res.data)),
+    return orThrow(albinaApi.updateIncident({ path: { id }, body: data })).pipe(
+      map((incident) => this.toIncidentReport(incident)),
     );
   }
 
   /** Delete an incident by id. */
   deleteIncident(id: string): Observable<void> {
-    return from(albinaApi.deleteIncident({ path: { id }, throwOnError: true })).pipe(map(() => undefined));
+    return orThrow(albinaApi.deleteIncident({ path: { id } })).pipe(map(() => undefined));
   }
 
   /** Upload an attachment for an incident. */
   uploadIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<IncidentAttachment> {
-    return from(
+    return orThrow(
       albinaApi.uploadIncidentAttachment({
         path: { id },
         body: { file: attachment.file ?? undefined },
-        throwOnError: true,
       }),
-    ).pipe(map((res) => IncidentAttachmentSchema.partial().parse(res.data) as IncidentAttachment));
+    ).pipe(map((uploaded) => IncidentAttachmentSchema.partial().parse(uploaded) as IncidentAttachment));
   }
 
   /** Get a single attachment of an incident by id. */
@@ -180,9 +278,9 @@ export class IncidentService {
 
   /** Delete a single attachment of an incident by id. */
   deleteIncidentAttachment(id: string, attachment: IncidentAttachment): Observable<void> {
-    return from(
-      albinaApi.deleteIncidentAttachment({ path: { id, attachmentId: attachment.id! }, throwOnError: true }),
-    ).pipe(map(() => undefined));
+    return orThrow(albinaApi.deleteIncidentAttachment({ path: { id, attachmentId: attachment.id! } })).pipe(
+      map(() => undefined),
+    );
   }
 
   #currentSeason() {

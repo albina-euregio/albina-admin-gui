@@ -16,8 +16,21 @@
     <div class="align-self-end align-self-md-auto d-flex flex-column align-items-end gap-1">
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2" [class.d-none]="readOnly">
+        @if (!incidentReport().id && incidentService.writableRegions().length > 1) {
+          <!-- Only the user's own regions are offered, the server refuses others -->
+          <select
+            class="form-select w-auto"
+            [disabled]="disabled()"
+            [(ngModel)]="createRegion"
+            title="{{ 'incidentReportUI.createRegion' | translate }}"
+          >
+            @for (region of incidentService.writableRegions(); track region.id) {
+              <option [value]="region.id">{{ regionsService.getRegionName(region.id) }}</option>
+            }
+          </select>
+        }
         <select
-          [disabled]="disabled() || !userCan('CHANGE_STATUS') || !isReportValid()"
+          [disabled]="locked || !userCan('CHANGE_STATUS') || !isReportValid()"
           id="reportStatusSelect"
           title="{{ 'incidentReportHelp.reportStatus' | translate }}"
           class="form-select fw-semibold text-capitalize border w-auto"
@@ -46,7 +59,8 @@
         @if (userCan("PUBLISH")) {
           <button
             class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
-            [disabled]="disabled()"
+            [disabled]="locked"
+            [title]="readOnlyReason ?? ''"
             (click)="publishIncident('incidentReportUI.publishIncidentConfirm')"
           >
             {{ "incidentReportUI.publishIncident" | translate }}
@@ -55,7 +69,8 @@
         @if (userCan("REPUBLISH")) {
           <button
             class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
-            [disabled]="disabled()"
+            [disabled]="locked"
+            [title]="readOnlyReason ?? ''"
             (click)="publishIncident('incidentReportUI.republishIncidentConfirm')"
           >
             {{ "incidentReportUI.republishIncident" | translate }}
@@ -64,22 +79,26 @@
         @if (userCan("UNPUBLISH")) {
           <button
             class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 text-nowrap d-print-none"
-            [disabled]="disabled()"
+            [disabled]="locked"
+            [title]="readOnlyReason ?? ''"
             (click)="unpublishIncident()"
           >
             {{ "incidentReportUI.unpublishIncident" | translate }}
           </button>
         }
         @if (userCan("DELETE")) {
-          <button
-            type="button"
-            class="btn btn-outline-danger btn-icon d-print-none"
-            [disabled]="disabled()"
-            (click)="deleteIncident()"
-            title="{{ 'incidentReportUI.deleteIncident' | translate }}"
-          >
-            <i class="ph ph-trash"></i>
-          </button>
+          <!-- The wrapper shows the hint, disabled buttons get no mouse events in all browsers -->
+          <span class="d-print-none" [title]="readOnlyReason ?? ('incidentReportUI.deleteIncident' | translate)">
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-icon"
+              [disabled]="locked"
+              (click)="deleteIncident()"
+              [attr.aria-label]="'incidentReportUI.deleteIncident' | translate"
+            >
+              <i class="ph ph-trash"></i>
+            </button>
+          </span>
         }
       </div>
       <div class="d-flex align-items-center gap-1 text-secondary d-print-none" style="font-size: 12px">
@@ -95,6 +114,12 @@
           @case ("error") {
             <i class="ph ph-floppy-disk text-danger"></i>
             <span class="text-danger">{{ "incidentReportUI.saveStateError" | translate }}</span>
+          }
+          @case ("forbidden") {
+            <i class="ph ph-lock text-danger"></i>
+            <span class="text-danger" [title]="forbiddenReason">
+              {{ "incidentReportUI.saveStateForbidden" | translate }}
+            </span>
           }
           @case ("blocked") {
             <i class="ph ph-warning-circle text-danger"></i>
@@ -123,6 +148,13 @@
       </div>
     </div>
   </div>
+
+  @if (!readOnly && readOnlyReason; as reason) {
+    <div class="alert alert-warning d-flex align-items-center gap-2 py-2 d-print-none" role="status">
+      <i class="ph ph-lock"></i>
+      {{ reason }}
+    </div>
+  }
 
   <div class="d-flex flex-wrap align-items-center gap-2 mb-2 d-print-none">
     @if (!readOnly) {
@@ -178,7 +210,7 @@
   <div class="border p-4 rounded bg-light-subtle shadow-sm">
     <app-incident-report-editor
       [(incidentReport)]="incidentReport"
-      [disabled]="disabled()"
+      [disabled]="locked"
       [displayMode]="displayMode"
       [activeTab]="activeTab"
     />
@@ -192,14 +224,12 @@
           </h4>
         </div>
         <div class="mt-4 d-flex align-items-right mb-4">
-          <div>
+          <div [title]="readOnlyReason ?? ('incidentReportUI.addAttachment' | translate)">
             <button
-              [disabled]="disabled()"
+              [disabled]="locked"
               class="btn btn-sm btn-success d-flex align-items-center gap-1"
               [class.d-none]="displayOnly"
               (click)="attachmentFileInput.click()"
-              data-toggle="tooltip"
-              title="{{ 'incidentReportUI.addAttachment' | translate }}"
             >
               <i class="ph ph-upload"></i>
               {{ "incidentReportUI.addAttachment" | translate }}
@@ -303,21 +333,27 @@
                   <input
                     type="checkbox"
                     class="form-check-input public-switch ms-0 mt-0 float-none"
-                    [disabled]="disabled() || readOnly"
+                    [disabled]="locked || readOnly"
                     [(ngModel)]="attachment.public"
                     (ngModelChange)="incidentReport.set({ ...incidentReport() })"
                     [id]="'attachment-public-input-' + $index"
                   />
                 </div>
 
-                <button
-                  class="btn btn-sm btn-outline-danger"
-                  [class.d-none]="displayOnly"
-                  (click)="removeAttachment($index)"
-                  title="{{ 'incidentReportUI.removeAttachment' | translate }}"
-                >
-                  <i class="ph ph-trash"></i>
-                </button>
+                @let attachmentLock = attachmentReadOnlyReason(attachment);
+                <span
+                  >>>>>>> d2f8fa0d (fix(incidents): add hints/warnings if users don't have roles to do things)
+                  [class.d-none]="displayOnly" [title]="attachmentLock ?? ('incidentReportUI.removeAttachment' |
+                  translate)" >
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    [disabled]="disabled() || !!attachmentLock"
+                    (click)="removeAttachment($index)"
+                    [attr.aria-label]="'incidentReportUI.removeAttachment' | translate"
+                  >
+                    <i class="ph ph-trash"></i>
+                  </button>
+                </span>
               </div>
             </div>
 
@@ -337,7 +373,7 @@
                     </div>
                     <div class="col-12 col-md-8">
                       <app-zod-schema-form
-                        [disabled]="disabled()"
+                        [disabled]="locked"
                         [displayMode]="displayMode"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
@@ -349,7 +385,7 @@
                   } @else {
                     <div class="col-12">
                       <app-zod-schema-form
-                        [disabled]="disabled()"
+                        [disabled]="locked"
                         [displayMode]="displayMode"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
@@ -365,7 +401,7 @@
           </div>
         }
         <app-zod-schema-form
-          [disabled]="disabled()"
+          [disabled]="locked"
           [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"

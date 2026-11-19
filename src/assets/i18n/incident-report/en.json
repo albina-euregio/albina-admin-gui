@@ -85,7 +85,39 @@
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
     "saveStateError": "Save failed",
-    "saveStateBlocked": "Not saved — required fields are missing"
+    "saveStateBlocked": "Not saved — required fields are missing",
+    "openAvyref": "Open avyref",
+    "openAvyrefTitle": "Georeference the avalanche from this photo in avyref",
+    "avyrefGeoreferenced": "Georeferenced",
+    "avyrefSave": "Save to report",
+    "avyrefCancel": "Cancel",
+    "avyrefLoading": "Loading avyref…",
+    "avyrefNoResponse": "avyref does not respond. Is this site allowed to embed it?",
+    "avyrefLoadFailed": "The photo could not be opened in avyref: {{error}}",
+    "avyrefNothingToSave": "Nothing to save yet: outline the avalanche first.",
+    "avyrefDiscard": "Discard the changes made in avyref?",
+    "avyrefType": {
+      "PRIMARY": "Primary",
+      "SECONDARY": "Secondary",
+      "TERTIARY": "Tertiary"
+    },
+    "fillFromAvyref": "Avyref",
+    "fillFromAvyrefTitle": "Fill the line with the crown and the polygon with the avalanche georeferenced in avyref, the point if it is still empty, and the avalanche size, length, start zone aspect, elevation and incline, deposit elevation and slab and deposit widths",
+    "fillFromAvyrefOverwrite": "Replace the existing line, polygon or avalanche fields with the values from avyref?",
+    "fillFromAvyrefNothing": "This avalanche has no crown, area or measurements in avyref yet.",
+    "createRegion": "Region the incident is created in",
+    "forbidden": "Not allowed: {{reason}}",
+    "saveStateForbidden": "Not saved — not allowed",
+    "deleteIncidentError": "The incident could not be deleted.",
+    "publishIncidentError": "The incident could not be published.",
+    "unpublishIncidentError": "The incident could not be unpublished.",
+    "removeAttachmentError": "The attachment could not be removed.",
+    "readOnly": {
+      "role": "Read-only – only forecasters and foremen can change incidents",
+      "published": "Published – only forecasters can change it",
+      "publicAttachment": "Public attachment of a published incident – only forecasters can remove it",
+      "region": "Read-only – you are not assigned to the region of this incident"
+    }
   },
   "incidentReport": {
     "incidentReport": "Incident Report",

@@ -7,6 +7,7 @@ import { unwrap, zEnumValues } from "app/shared/zod-util";
 import { orderBy } from "es-toolkit";
 import "bootstrap";
 
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { DateRangePickerDirective } from "../shared/date-range-picker.directive";
 import { IncidentReport, IncidentReportSchema } from "./incident-report.model";
@@ -23,7 +24,8 @@ type IncidentColumn = keyof IncidentReport;
   providers: [IncidentService],
 })
 export class IncidentsOverviewComponent implements OnInit {
-  private incidentService = inject(IncidentService);
+  readonly incidentService = inject(IncidentService);
+  readonly authenticationService = inject(AuthenticationService);
   private router = inject(Router);
   private localStorageService = inject(LocalStorageService);
 
