@@ -712,31 +712,19 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       observations = data.flatMap((d) => d.all).filter(sameKind);
     }
     observations = this.sortByRegionWestToEast(observations);
-    console.log(observations);
     let index = observations.indexOf(observation);
     if (index < 0) {
       return;
     }
-    if (change === 1) {
-      index += 1;
-      const $externalImgs = this.$externalImgs(observation);
-      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
-        index += 1;
-      }
-      observation = observations[index];
-      if (observation) {
-        this.onObservationClick(observation, false, 0);
-      }
-    } else if (change === -1) {
-      index -= 1;
-      const $externalImgs = this.$externalImgs(observation);
-      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
-        index -= 1;
-      }
-      observation = observations[index];
-      if (observation) {
-        this.onObservationClick(observation, false, 0);
-      }
+    index += change;
+    const $externalImgs = this.$externalImgs(observation);
+    while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
+      index += change;
     }
+    observation = observations[index];
+    if (!observation) {
+      observation = change === 1 ? observations[0] : observations[observations.length - 1];
+    }
+    this.onObservationClick(observation, false, 0);
   }
 }
