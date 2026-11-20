@@ -610,16 +610,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   applyLocalFilter(applyOnlyToObservations = false) {
-    this.data.weatherStations.all = orderBy(
-      this.data.weatherStations.all,
-      [
-        // make sure that changeObservation (or ←/→) selects a sensible previous/next station
-        (s) => this.$externalImgs(s)?.[0],
-        (s) => s.region,
-        (s) => s.locationName,
-      ],
-      ["asc", "asc", "asc"],
-    );
+    this.data.weatherStations.all = this.sortByRegionWestToEast(this.data.weatherStations.all);
     // only apply filter to observations
     if (applyOnlyToObservations) {
       this.data.observations.applyLocalFilter(this.observationSearch);
@@ -648,6 +639,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         },
       } satisfies Feature,
     ]);
+  }
+
+  /**
+   * Sorts by micro-region ID, then from west to east (longitude),
+   * so that changeObservation (or ←/→) selects a sensible previous/next station
+   */
+  private sortByRegionWestToEast(observations: GenericObservation[]): GenericObservation[] {
+    return orderBy(
+      observations,
+      [(o) => o.region ?? "", (o) => o.longitude ?? Number.POSITIVE_INFINITY, (o) => this.$externalImgs(o)?.[0]],
+      ["asc", "asc", "asc"],
+    );
   }
 
   private $externalImgs(observation: GenericObservation) {
@@ -701,9 +704,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     let observation = this.observationPopup?.observation;
-    const observations = Object.values(this.data)
-      .flatMap((d) => d.all)
-      .filter((o) => o.$source === observation.$source && o.$type === observation.$type);
+    const sameKind = (o: GenericObservation) => o.$source === observation.$source && o.$type === observation.$type;
+    const data = Object.values(this.data);
+    // only flip through observations matching the current filter (fall back to all if the current one is filtered out)
+    let observations = data.flatMap((d) => d.filtered).filter(sameKind);
+    if (!observations.includes(observation)) {
+      observations = data.flatMap((d) => d.all).filter(sameKind);
+    }
+    observations = this.sortByRegionWestToEast(observations);
+    console.log(observations);
     let index = observations.indexOf(observation);
     if (index < 0) {
       return;
