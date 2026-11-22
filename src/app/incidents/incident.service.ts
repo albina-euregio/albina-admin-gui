@@ -4,7 +4,6 @@ import { rxResource, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
 import { combineLatest, from, map, Observable } from "rxjs";
 
-import { RegionConfiguration } from "../models/region-configuration.model";
 import * as albinaApi from "../providers/albina-api";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -128,11 +127,6 @@ export class IncidentService {
     });
   }
 
-  /** Whether the user may create, edit and delete incidents (in their own regions). */
-  canEdit(): boolean {
-    return this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER", "FOREMAN");
-  }
-
   /**
    * Whether the user may publish and unpublish incidents and change published ones; the same rule
    * as for publishing bulletins.
@@ -141,18 +135,12 @@ export class IncidentService {
     return this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER");
   }
 
-  /** The regions the user may create and edit incidents in. */
-  writableRegions(): RegionConfiguration[] {
-    return this.authenticationService.getCurrentAuthorRegions();
-  }
-
   /**
-   * Whether the user may change the incident, or create one when passing `{}`. Pass `region` when it
-   * is known (e.g. in the overview); otherwise the server refuses other regions with a 403.
+   * Whether the user may change the incident, or create one when passing `{}`. The region is not
+   * checked: the active region is always one of the user's, others are refused by the server (403).
    */
-  mayChange(report: Pick<IncidentReport, "publishedAt">, region?: string | null): boolean {
-    if (!this.canEdit()) return false;
-    if (region !== undefined && !this.writableRegions().some((r) => r.id === region)) return false;
+  mayChange(report: Pick<IncidentReport, "publishedAt">): boolean {
+    if (!this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER", "FOREMAN")) return false;
     return !report.publishedAt || this.canPublish();
   }
 

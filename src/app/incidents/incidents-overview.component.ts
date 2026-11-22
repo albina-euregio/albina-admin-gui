@@ -7,7 +7,6 @@ import { unwrap, zEnumValues } from "app/shared/zod-util";
 import { orderBy } from "es-toolkit";
 import "bootstrap";
 
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { DateRangePickerDirective } from "../shared/date-range-picker.directive";
 import { IncidentReport, IncidentReportSchema } from "./incident-report.model";
@@ -25,7 +24,6 @@ type IncidentColumn = keyof IncidentReport;
 })
 export class IncidentsOverviewComponent implements OnInit {
   private incidentService = inject(IncidentService);
-  private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
   private localStorageService = inject(LocalStorageService);
 
@@ -117,9 +115,9 @@ export class IncidentsOverviewComponent implements OnInit {
     URL.revokeObjectURL(url);
   }
 
-  /** Whether the user may change the incident, or create one when passing `{}`; all listed incidents are of the active region. */
+  /** Whether the user may change the incident, or create one when passing `{}`. */
   canEdit(incident: Pick<IncidentReport, "publishedAt">): boolean {
-    return this.incidentService.mayChange(incident, this.authenticationService.getActiveRegionId() ?? null);
+    return this.incidentService.mayChange(incident);
   }
 
   openIncident(id: string) {
