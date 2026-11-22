@@ -261,6 +261,9 @@
               <div class="alert alert-danger d-flex align-items-center gap-2 py-2">
                 <i class="ph ph-warning"></i>
                 {{ "incidentReportUI.attachmentsUploadFailed" | translate }}
+                @if (uploadForbiddenReason) {
+                  {{ "incidentReportUI.forbidden" | translate: { reason: uploadForbiddenReason } }}
+                }
                 <button type="button" class="btn btn-sm btn-outline-danger ms-auto" (click)="retryAttachmentUploads()">
                   <i class="ph ph-arrow-clockwise"></i>
                   {{ "incidentReportUI.retryUpload" | translate }}

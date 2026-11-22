@@ -380,6 +380,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   retryAttachmentUploads() {
     this.failedFiles.clear();
+    this.uploadForbiddenReason = null;
     void this.uploadStagedAttachments();
   }
 
@@ -536,17 +537,21 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private readonly uploadingFiles = new Set<File>();
   /** Files of staged attachments whose last upload attempt failed. */
   private readonly failedFiles = new Set<File>();
+  /** The server's explanation after it refused an attachment upload; cleared on retry. */
+  uploadForbiddenReason: string | null = null;
 
   /**
    * Uploads all staged attachments, provided the report has already been saved.
    * Each uploaded attachment replaces its staged entry, keeping the metadata the
    * user entered in the meantime. The resulting report change is then persisted
    * by the autosave. Failed uploads stay staged; they are retried on the next successful
-   * save, on adding another attachment or via {@link retryAttachmentUploads}.
+   * save, on adding another attachment or via {@link retryAttachmentUploads}
+   * (only the latter after the server refused an upload).
    */
   private async uploadStagedAttachments() {
     const id = this.incidentReport().id;
-    if (!id) return;
+    // After a refused upload, only an explicit retry tries again.
+    if (!id || this.uploadForbiddenReason) return;
     const staged = (this.incidentReport().attachments ?? []).filter(
       (attachment) => this.isAttachmentStaged(attachment) && !this.uploadingFiles.has(attachment.file),
     );
@@ -588,9 +593,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
         }));
       } catch (error) {
         console.error("Failed to upload attachment", file.name, error);
+        this.failedFiles.add(file);
         if (error instanceof IncidentRequestError && error.forbidden) {
-          // Further uploads would be refused as well; the template shows the reason.
-          this.forbiddenReason = error.message;
+          // Further uploads would be refused as well: mark them failed without trying.
+          // Only the attachments are affected; the report itself can still be saved.
+          this.uploadForbiddenReason = error.message;
+          staged.forEach((a) => this.failedFiles.add(a.file));
           break;
         }
       } finally {
