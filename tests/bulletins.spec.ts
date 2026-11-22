@@ -41,7 +41,7 @@ test("Check visible neighbors", async ({ page }) => {
   });
 });
 
-test("Upload media file", async ({ page, baseURL }) => {
+test("Upload media file", async ({ page }) => {
   const testDate = new Date("2024-12-24");
   const mediaText = "Es gibt ein Altschneeproblem.\nAlle Details und wo's günstiger ist findet ihr auf Lawinen.report.";
   await setFixedTime(page, testDate);
@@ -56,7 +56,7 @@ test("Upload media file", async ({ page, baseURL }) => {
   await page.locator("#textarea-input").fill(mediaText);
   const uploadResponsePromise = page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/media/) && response.request().method() === "POST" && response.status() === 200,
+      /\/api\/media/.test(response.url()) && response.request().method() === "POST" && response.status() === 200,
   );
   await page.getByRole("button", { name: "Send" }).click();
   const now = new Date();
@@ -113,7 +113,7 @@ test("JSON upload", async ({ page }) => {
   await fileChooser.setFiles(path.join(__dirname, "data/2026-03-29_report.json"));
   const postResponse = await page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins/) &&
+      /\/api\/bulletins/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST" &&
       response.request().postDataJSON().length === 4,
@@ -189,14 +189,15 @@ test("View bulletin", async ({ page }) => {
       - button ""
     `);
 
-    await page.locator("header").filter({ hasText: "SLF (7)" }).getByRole("button").click();
-    await expect(page.locator(".region-thumb").filter({ hasText: "Montana + 32" })).toMatchAriaSnapshot(`
-      - button /Montana \\+ \\d+/
-      - button
-      - text: 
-      - button "Incomplete"
-      - button ""
-    `);
+    // FIXME: SLF changed their CAAML
+    // await page.locator("header").filter({ hasText: "SLF (7)" }).getByRole("button").click();
+    // await expect(page.locator(".region-thumb").filter({ hasText: "Montana + 32" })).toMatchAriaSnapshot(`
+    //   - button /Montana \\+ \\d+/
+    //   - button
+    //   - text: 
+    //   - button "Incomplete"
+    //   - button ""
+    // `);
   });
 });
 
@@ -268,7 +269,7 @@ test("Edit bulletin", async ({ page }) => {
     await expect(regionProblem).toContainText("Brandenberg Alps + 1");
   });
   await test.step("delete problem", async () => {
-    await page.getByRole("button", { name: " Avalanche problems " }).click();
+    await page.getByRole("button", { name: "Avalanche problems " }).click();
     await page
       .getByRole("tab", { name: /SLAB.*Treeline/ })
       .getByTitle("Delete")
@@ -299,7 +300,7 @@ test("Copy foreign region", async ({ page }) => {
   await clickRegion(page, "Brandenberg Alps");
   const responsePromise = page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
+      /\/api\/bulletins/.test(response.url()) && response.status() === 200 && response.request().method() === "PUT",
   );
   await page.getByRole("button", { name: "Create region" }).click();
   await responsePromise;
@@ -332,7 +333,7 @@ test("Load bulletin from the day before", async ({ page }) => {
       await page.getByRole("button", { name: "Load bulletin from the day before" }).click();
       const responsePromise = page.waitForResponse(
         (response) =>
-          response.url().match(/\/api\/bulletins/) &&
+          /\/api\/bulletins/.test(response.url()) &&
           response.status() === 200 &&
           response.request().method() === "POST",
       );
@@ -356,7 +357,7 @@ test("Load bulletin from the day before", async ({ page }) => {
     await page.getByRole("button", { name: "Load bulletin from the day before" }).click();
     const responsePromise = page.waitForResponse(
       (response) =>
-        response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "POST",
+        /\/api\/bulletins/.test(response.url()) && response.status() === 200 && response.request().method() === "POST",
     );
     await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
     await responsePromise;
@@ -382,7 +383,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   await waitForGetEdit(page);
   const badge = statusBadge(page);
   await expect(badge).not.toContainText("missing");
-  if (!(await badge.textContent()).match(/draft|updated/)) {
+  if (!/draft|updated/.test((await badge.textContent()) ?? "")) {
     await page.getByRole("button", { name: "Edit" }).click();
   }
   await page.getByRole("button", { name: "Submit" }).click();
@@ -396,7 +397,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   await page.getByRole("button", { name: "Yes" }).click();
   await page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins\/submit/) &&
+      /\/api\/bulletins\/submit/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST",
   );
@@ -412,7 +413,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   await page.getByRole("button", { name: "Yes" }).click();
   await page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins\/publish/) &&
+      /\/api\/bulletins\/publish/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST",
   );
@@ -420,7 +421,7 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
   await page.getByRole("button", { name: "Edit" }).click();
   await page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins/) &&
+      /\/api\/bulletins/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST" &&
       response.request().postDataJSON().length === 4, // 4 bulletin regions are posted
@@ -439,7 +440,7 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
     await clearWarningRegions(page);
     const putResponse = page.waitForResponse(
       (response) =>
-        response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
+        /\/api\/bulletins/.test(response.url()) && response.status() === 200 && response.request().method() === "PUT",
     );
     await test.step("Create new region", async () => {
       await page.getByRole("button", { name: "" }).click();
@@ -467,7 +468,7 @@ test("Post bulletin ahead of DST change", async ({ page }) => {
     await clearWarningRegions(page);
     const putResponse = page.waitForResponse(
       (response) =>
-        response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
+        /\/api\/bulletins/.test(response.url()) && response.status() === 200 && response.request().method() === "PUT",
     );
     await test.step("Create new region", async () => {
       await page.getByRole("button", { name: "" }).click();
@@ -519,7 +520,7 @@ test("Textcat", async ({ page }) => {
   });
 
   await test.step("Create new Snowpack structure texts", async () => {
-    await page.getByRole("button", { name: " Snowpack structure" }).click();
+    await page.getByRole("button", { name: "Snowpack structure" }).click();
     // remove leftovers of previous (failed) runs, the new sentence would be appended otherwise
     if (await snowpackStructure.getByRole("textbox").inputValue()) {
       await deleteSnowpackStructureText();
@@ -535,7 +536,7 @@ test("Textcat", async ({ page }) => {
     await sentenceSelector.press("ArrowDown");
     await sentenceSelector.selectOption("Empfehlung08");
     await page.locator("iframe").contentFrame().getByRole("button", { name: "Add sentence" }).click();
-    await page.locator("iframe").contentFrame().getByText("Advice_08 — {⚠ distances}").click();
+    await page.locator("iframe").contentFrame().getByText("Advice_08 — {⚠ ").click();
     await page.locator("iframe").contentFrame().getByRole("listbox").selectOption("1");
     await page.locator("iframe").contentFrame().getByRole("button", { name: "Save" }).click();
     await expect(page.getByTitle("Edit").nth(1)).toBeVisible();

@@ -1,6 +1,6 @@
-- tab " Description of avalanche danger":
-  - button " Description of avalanche danger" [expanded]:
-    - heading " Description of avalanche danger" [level=2]
+- tab "  Description of avalanche danger":
+  - button "  Description of avalanche danger" [expanded]:
+    - heading "  Description of avalanche danger" [level=2]
 - tabpanel:
   - text: Special alert
   - button ""

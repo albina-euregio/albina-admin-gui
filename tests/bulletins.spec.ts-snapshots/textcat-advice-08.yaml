@@ -19,19 +19,19 @@
 - button ""
 - button ""
 - button "" [disabled]
-- heading "No snow" [level=2]
+- heading " No snow" [level=2]
 - switch "No snow"
 - main:
   - tablist:
-    - tab " Avalanche problems ":
-      - button " Avalanche problems " [expanded]:
-        - heading " Avalanche problems" [level=2]
+    - tab "  Avalanche problems ":
+      - button "  Avalanche problems " [expanded]:
+        - heading "  Avalanche problems" [level=2]
         - button ""
     - tabpanel:
       - tablist:
         - tab " low Wet snow SLAB ":
           - button " low Wet snow SLAB " [expanded]:
-            - text: 
+            - text: ""
             - img "low"
             - img "Wet snow"
             - text: SLAB
@@ -133,9 +133,9 @@
           - checkbox "(override danger rating)"
           - text: (override danger rating) Matrix
           - img: 5 4 3 2 1 Avalanche Size Frequency many some few none Refer to fair stability very poor 5 5 (4) 4 3 (4) 2 (3) 5 (4) 4 3 (4) 3 2 4 3 (4) 3 2 1 (2) poor 5 (4) 4 4 (3) 3 2 4 4 (3) 3 2 (3) 2 3 (4) 3 2 (3) 2 1 fair 4 (3) 3 (4) 3 (2) 2 1 (2) 3 (4) 3 2 (3) 2 1 (2) 3 2 (3) 2 (1) 1 (2) 1 Danger level 1 (Low) Refer to poor stability 5 4 3 2 1 5 4 3 2 1 Snowpack Stability
-    - tab " Description of avalanche danger":
-      - button " Description of avalanche danger" [expanded]:
-        - heading " Description of avalanche danger" [level=2]
+    - tab "  Description of avalanche danger":
+      - button "  Description of avalanche danger" [expanded]:
+        - heading "  Description of avalanche danger" [level=2]
     - tabpanel:
       - text: Special alert
       - button ""
@@ -180,13 +180,13 @@
       - button ""
       - textbox [disabled]: The wind will be light to moderate for a temporary period in some localities. The danger of wet and gliding avalanches will increase during the day, reaching danger level 4 (high). As a consequence of warming during the day and the solar radiation, the likelihood of wet avalanches being released will increase significantly in particular on steep slopes below the tree line. The surface of the snowpack is hardly frozen at all and will already soften in the late morning. A clear night will be followed in the early morning by quite favourable conditions generally, but the danger of wet and gliding avalanches will increase later. During the morning as well, individual, then as the precipitation becomes heavier more wet avalanches are to be expected. On steep southeast, south and southwest facing slopes and at low and intermediate altitudes numerous medium-sized to large natural wet avalanches are to be expected as a consequence of warming. On sunny slopes a high danger of wet and gliding avalanches will be encountered over a wide area. As the temperature drops there will be a gradual decrease in the avalanche danger towards the evening.
       - button " Show translations"
-    - tab " Photos ":
-      - button " Photos ":
-        - heading " Photos" [level=2]
+    - tab "  Photos ":
+      - button "  Photos ":
+        - heading "  Photos" [level=2]
         - button ""
-    - tab " Snowpack structure":
-      - button " Snowpack structure" [expanded]:
-        - heading " Snowpack structure" [level=2]
+    - tab "  Snowpack structure":
+      - button "  Snowpack structure" [expanded]:
+        - heading "  Snowpack structure" [level=2]
     - tabpanel:
       - text: Danger patterns
       - combobox:
@@ -220,6 +220,6 @@
       - button ""
       - textbox [disabled]: Maintaining distances between individuals and one-at-a-time descents are recommended.
       - button " Show translations"
-    - tab " Tendency":
-      - button " Tendency":
-        - heading " Tendency" [level=2]
+    - tab "  Tendency":
+      - button "  Tendency":
+        - heading "  Tendency" [level=2]

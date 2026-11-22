@@ -93,14 +93,15 @@ test("Travel advisory in textcat mode", async ({ page }) => {
       await field.getByTitle("Edit").click();
       const textcat = page.locator("iframe").contentFrame();
       const allSentences = textcat.getByRole("combobox", { name: "All sentences" });
-      await expect(allSentences.getByRole("option", { name: "Advice_08 — {distances}" })).toBeAttached();
+      // match by value, the phrase label may be untranslated depending on the textcat catalog
+      await expect(allSentences.locator('option[value="Empfehlung08"]')).toBeAttached();
       // selectOption() reports the option as not enabled inside the textcat iframe
       await allSentences.evaluate((el: HTMLSelectElement) => {
         el.value = "Empfehlung08";
         el.dispatchEvent(new Event("change"));
       });
       await textcat.getByRole("button", { name: "Add sentence" }).click();
-      await textcat.getByText("Advice_08 — {⚠ distances}").click();
+      await textcat.getByText("Advice_08 — {⚠").click();
       await textcat.getByRole("listbox").selectOption("1");
       const updateResponsePromise = waitForBulletinUpdate(page);
       await textcat.getByRole("button", { name: "Save" }).click();

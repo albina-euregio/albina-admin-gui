@@ -1,4 +1,7 @@
+- heading "textcat-ng" [level=1]
+- paragraph
 - heading "All sentences" [level=2]
+- button: Joker sentence
 - button "Add sentence" [disabled]
 - combobox "All sentences":
   - 'option "Advice_01 — {backcountry touring is to be} {to} {flat} {terrain} {as far as possible}"'
@@ -6,7 +9,7 @@
   - 'option "Advice_03 — {the conditions are} {dangerous} {for} {backcountry touring} {outside marked and open pistes}"'
   - 'option "Advice_04 — {backcountry touring calls for} {restraint}"'
   - 'option "Advice_05 — {experience is necessary}"'
-  - 'option "Advice_08 — {distances}"'
+  - 'option "Advice_08 — {Empfehlung08§Abstände}"'
   - 'option "Advice_09 — {backcountry tours} {and off-piste skiing} {should} {early} {be terminated}"'
   - 'option "Advice_10 — {in many places} {there is} {a danger of falling} {on the crust}"'
   - 'option "Advice_11 — {danger of falling}"'
@@ -95,6 +98,7 @@
   - 'option "Remark_04 — {next bulletin} {during weekday} {n.} {month} {publication time} {or sooner}"'
   - 'option "Remark_05 — {text summer bulletin}"'
   - 'option "Remark_06 — {correction} {date} {time} {colon/point}"'
+  - 'option "Schneedecke09 — {unter dem Neuschnee} {ist_die_Schneedecke}"'
   - 'option "Snowpack_01 — {the snowpack} {will be} {Schneedecke01§wo_NO} {prone to triggering} {where}"'
   - 'option "Snowpack_02 — {Schneedecke02§oft2_NO} {new snow is lying} {often} {on} {substrate}"'
   - 'option "Snowpack_03 — {snowpack the} {type of snow surface}"'
@@ -108,8 +112,8 @@
   - 'option "This_applies_05 — {this applies} {in case of/below} {steep} {high-elevation} {aspects} {comma/and} {starting zones} {elevation/regions} {release}"'
   - 'option "Weather_01 — {regions} {weather} {elevation} {point/colon}"'
   - 'option "Weather_02 — {incorrect weather forecast} {where} {colon}"'
-  - 'option "Weather_03 — {snow} {has fallen} {regions}"'
-  - 'option "Weather_04 — {regions} {how much snow} {more in some localities} {has fallen} {above an elevation}"'
+  - 'option "Weather_03 — {snow, rain} {has fallen} {begleitet_von} {kommt_wieviel_dazu}"'
+  - 'option "Weather_04 — {has fallen} {Höhe_Höhenlage4} {Wetter04§wieviel_Schnee} {has fallen} {more in some localities} {wieviel_Schnee_dazu}"'
   - 'option "Weather_05 — {the weather was} {temperature} {regions}"'
   - 'option "Weather_06 — {wind} {how strong} {regions}"'
   - 'option "Wet_snow_01 — {time} {why/where} {Nassschnee01§steigt_die_NO} {wie_stark2_NO} {increases} {danger} {how significant} {to level n} {on}"'
@@ -146,6 +150,7 @@
   - button "Move sentence down" [disabled]
   - button "Remove sentence"
   - text: Advice_08 — Maintaining distances between individuals and one-at-a-time descents are recommended.
+- status
 - button "Save"
 - button "Copy sentences"
 - button "Paste sentences"
@@ -154,6 +159,7 @@
   - listitem: textcat-ng
   - listitem: /• Version/
   - listitem: "• Tip: use mouse wheel and shift key to scroll horizontally"
+  - listitem: "• Tip: use Alt+↑ and Alt+↓ to move the focused sentence"
   - listitem:
     - text: •
     - link "gitlab.com/albina-euregio/textcat-ng":

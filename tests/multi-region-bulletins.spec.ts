@@ -5,7 +5,7 @@ import { changeRegion, clearWarningRegions, clickRegion, loginAdmin, loginForeca
 const waitForGetEdit = (page) =>
   page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins\/edit/) &&
+      /\/api\/bulletins\/edit/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "GET",
   );
@@ -40,7 +40,7 @@ test("Bulletin synchronization", async ({ browser }) => {
     await page1.getByRole("button", { name: "" }).click();
     const responsePromise = page1.waitForResponse(
       (response) =>
-        response.url().match(/\/api\/bulletins/) && response.status() === 200 && response.request().method() === "PUT",
+        /\/api\/bulletins/.test(response.url()) && response.status() === 200 && response.request().method() === "PUT",
     );
     await clickRegion(page1, "Brandenberg Alps");
     await page1.getByRole("button", { name: "Create region" }).click();

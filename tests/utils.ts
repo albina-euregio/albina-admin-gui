@@ -91,14 +91,14 @@ export async function login(page: Page, username: string, password: string) {
   await page.getByRole("button", { name: "Login", exact: true }).click();
   const authResponsePromise = page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/authentication/) &&
+      /\/api\/authentication/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST",
   );
   // wait for login to geosphere api
   const externalResponsePromise = page.waitForResponse(
     (response) =>
-      response.url().match("admin.lawinen-warnung.eu") &&
+      response.url().includes("admin.lawinen-warnung.eu") &&
       response.status() === 200 &&
       response.request().method() === "POST",
   );
@@ -129,7 +129,7 @@ export async function changeRegion(page: Page, region: string) {
 export const waitForGetEdit = (page: Page) =>
   page.waitForResponse(
     (response) =>
-      response.url().match(/\/api\/bulletins\/edit/) &&
+      /\/api\/bulletins\/edit/.test(response.url()) &&
       response.url().includes("regions=PLAYWRIGHT") &&
       response.status() === 200 &&
       response.request().method() === "GET",
@@ -150,7 +150,7 @@ export async function clearWarningRegions(page: Page) {
 
     const responsePromise = page.waitForResponse(
       (response) =>
-        response.url().match(/\/api\/bulletins/) &&
+        /\/api\/bulletins/.test(response.url()) &&
         response.status() === 200 &&
         response.request().method() === "DELETE",
     );
