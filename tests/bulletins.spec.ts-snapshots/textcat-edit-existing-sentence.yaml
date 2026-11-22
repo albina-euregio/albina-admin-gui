@@ -1,7 +1,6 @@
 - heading "textcat-ng" [level=1]
 - paragraph
 - heading "All sentences" [level=2]
-- button: Joker sentence
 - button "Add sentence" [disabled]
 - combobox "All sentences":
   - 'option "Advice_01 — {backcountry touring is to be} {to} {flat} {terrain} {as far as possible}"'
