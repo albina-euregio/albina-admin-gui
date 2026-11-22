@@ -17,7 +17,6 @@ import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { RegionsService } from "app/providers/regions-service/regions.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import {
@@ -61,8 +60,7 @@ import { IncidentRequestError, IncidentService } from "./incident.service";
 export class IncidentReportComponent implements OnInit, OnDestroy {
   authenticationService = inject(AuthenticationService);
   translateService = inject(TranslateService);
-  regionsService = inject(RegionsService);
-  incidentService = inject(IncidentService);
+  private incidentService = inject(IncidentService);
   private location = inject(Location);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -90,9 +88,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   displayMode = DisplayMode.Edit;
 
   readOnly = false;
-
-  /** The region a new incident is created in; only the user's own regions are offered. */
-  createRegion = this.authenticationService.getActiveRegionId();
 
   /**
    * The server's explanation after it refused to save the report, which is then locked.
@@ -455,7 +450,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       this.saveState = "blocked";
       return EMPTY;
     }
-    const region = this.createRegion;
+    const region = this.authenticationService.getActiveRegionId();
     if (!region) return EMPTY;
     this.saveState = "saving";
     const id = this.incidentReport().id;

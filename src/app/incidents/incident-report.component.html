@@ -16,19 +16,6 @@
     <div class="align-self-end align-self-md-auto d-flex flex-column align-items-end gap-1">
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2" [class.d-none]="readOnly">
-        @if (!incidentReport().id && incidentService.writableRegions().length > 1) {
-          <!-- Only the user's own regions are offered, the server refuses others -->
-          <select
-            class="form-select w-auto"
-            [disabled]="disabled()"
-            [(ngModel)]="createRegion"
-            title="{{ 'incidentReportUI.createRegion' | translate }}"
-          >
-            @for (region of incidentService.writableRegions(); track region.id) {
-              <option [value]="region.id">{{ regionsService.getRegionName(region.id) }}</option>
-            }
-          </select>
-        }
         <select
           [disabled]="locked || !userCan('CHANGE_STATUS') || !isReportValid()"
           id="reportStatusSelect"

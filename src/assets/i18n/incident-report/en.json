@@ -86,7 +86,6 @@
     "saveStateSaved": "Saved successfully",
     "saveStateError": "Save failed",
     "saveStateBlocked": "Not saved — required fields are missing",
-    "createRegion": "Region the incident is created in",
     "forbidden": "Not allowed: {{reason}}",
     "saveStateForbidden": "Not saved — not allowed",
     "deleteIncidentError": "The incident could not be deleted.",
