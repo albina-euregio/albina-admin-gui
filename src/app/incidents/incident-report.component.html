@@ -342,9 +342,9 @@
 
                 @let attachmentLock = attachmentReadOnlyReason(attachment);
                 <span
-                  >>>>>>> d2f8fa0d (fix(incidents): add hints/warnings if users don't have roles to do things)
-                  [class.d-none]="displayOnly" [title]="attachmentLock ?? ('incidentReportUI.removeAttachment' |
-                  translate)" >
+                  [class.d-none]="displayOnly"
+                  [title]="attachmentLock ?? ('incidentReportUI.removeAttachment' | translate)"
+                >
                   <button
                     class="btn btn-sm btn-outline-danger"
                     [disabled]="disabled() || !!attachmentLock"
