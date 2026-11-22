@@ -60,13 +60,6 @@ function orThrow<T>(request: Promise<{ data?: T; error?: unknown; response?: unk
   );
 }
 
-/** i18n key of the reason why the user may not change an incident or one of its parts. */
-export type IncidentReadOnlyReason =
-  | "incidentReportUI.readOnly.role"
-  | "incidentReportUI.readOnly.published"
-  | "incidentReportUI.readOnly.publicAttachment"
-  | "incidentReportUI.readOnly.region";
-
 @Injectable()
 export class IncidentService {
   private constantsService = inject(ConstantsService);
@@ -154,32 +147,13 @@ export class IncidentService {
   }
 
   /**
-   * Why the user may not change the incident, or `undefined` if they may. Pass `region` when it is
-   * known (e.g. for a new incident); otherwise the server refuses other regions with a 403.
+   * Whether the user may change the incident, or create one when passing `{}`. Pass `region` when it
+   * is known (e.g. in the overview); otherwise the server refuses other regions with a 403.
    */
-  readOnlyReason(
-    report: Pick<IncidentReport, "publishedAt">,
-    region?: string | null,
-  ): IncidentReadOnlyReason | undefined {
-    if (!this.canEdit()) return "incidentReportUI.readOnly.role";
-    if (region !== undefined && !this.writableRegions().some((r) => r.id === region)) {
-      return "incidentReportUI.readOnly.region";
-    }
-    if (report.publishedAt && !this.canPublish()) return "incidentReportUI.readOnly.published";
-    return undefined;
-  }
-
-  /** Why the user may not delete the attachment, or `undefined` if they may. */
-  attachmentReadOnlyReason(
-    report: Pick<IncidentReport, "publishedAt">,
-    attachment: IncidentAttachment,
-    region?: string | null,
-  ): IncidentReadOnlyReason | undefined {
-    const reason = this.readOnlyReason(report, region);
-    if (reason === "incidentReportUI.readOnly.published" && attachment.public) {
-      return "incidentReportUI.readOnly.publicAttachment";
-    }
-    return reason;
+  mayChange(report: Pick<IncidentReport, "publishedAt">, region?: string | null): boolean {
+    if (!this.canEdit()) return false;
+    if (region !== undefined && !this.writableRegions().some((r) => r.id === region)) return false;
+    return !report.publishedAt || this.canPublish();
   }
 
   private safeIncidentReport(i: IncidentView) {

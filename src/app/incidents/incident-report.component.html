@@ -60,7 +60,6 @@
           <button
             class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
             [disabled]="locked"
-            [title]="readOnlyReason ?? ''"
             (click)="publishIncident('incidentReportUI.publishIncidentConfirm')"
           >
             {{ "incidentReportUI.publishIncident" | translate }}
@@ -70,7 +69,6 @@
           <button
             class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
             [disabled]="locked"
-            [title]="readOnlyReason ?? ''"
             (click)="publishIncident('incidentReportUI.republishIncidentConfirm')"
           >
             {{ "incidentReportUI.republishIncident" | translate }}
@@ -80,25 +78,21 @@
           <button
             class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 text-nowrap d-print-none"
             [disabled]="locked"
-            [title]="readOnlyReason ?? ''"
             (click)="unpublishIncident()"
           >
             {{ "incidentReportUI.unpublishIncident" | translate }}
           </button>
         }
         @if (userCan("DELETE")) {
-          <!-- The wrapper shows the hint, disabled buttons get no mouse events in all browsers -->
-          <span class="d-print-none" [title]="readOnlyReason ?? ('incidentReportUI.deleteIncident' | translate)">
-            <button
-              type="button"
-              class="btn btn-outline-danger btn-icon"
-              [disabled]="locked"
-              (click)="deleteIncident()"
-              [attr.aria-label]="'incidentReportUI.deleteIncident' | translate"
-            >
-              <i class="ph ph-trash"></i>
-            </button>
-          </span>
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-icon d-print-none"
+            [disabled]="locked"
+            (click)="deleteIncident()"
+            title="{{ 'incidentReportUI.deleteIncident' | translate }}"
+          >
+            <i class="ph ph-trash"></i>
+          </button>
         }
       </div>
       <div class="d-flex align-items-center gap-1 text-secondary d-print-none" style="font-size: 12px">
@@ -149,10 +143,10 @@
     </div>
   </div>
 
-  @if (!readOnly && readOnlyReason; as reason) {
+  @if (!readOnly && forbiddenReason) {
     <div class="alert alert-warning d-flex align-items-center gap-2 py-2 d-print-none" role="status">
       <i class="ph ph-lock"></i>
-      {{ reason }}
+      {{ "incidentReportUI.forbidden" | translate: { reason: forbiddenReason } }}
     </div>
   }
 
@@ -224,12 +218,14 @@
           </h4>
         </div>
         <div class="mt-4 d-flex align-items-right mb-4">
-          <div [title]="readOnlyReason ?? ('incidentReportUI.addAttachment' | translate)">
+          <div>
             <button
               [disabled]="locked"
               class="btn btn-sm btn-success d-flex align-items-center gap-1"
               [class.d-none]="displayOnly"
               (click)="attachmentFileInput.click()"
+              data-toggle="tooltip"
+              title="{{ 'incidentReportUI.addAttachment' | translate }}"
             >
               <i class="ph ph-upload"></i>
               {{ "incidentReportUI.addAttachment" | translate }}
@@ -343,20 +339,15 @@
                   />
                 </div>
 
-                @let attachmentLock = attachmentReadOnlyReason(attachment);
-                <span
+                <button
+                  class="btn btn-sm btn-outline-danger"
                   [class.d-none]="displayOnly"
-                  [title]="attachmentLock ?? ('incidentReportUI.removeAttachment' | translate)"
+                  [disabled]="locked"
+                  (click)="removeAttachment($index)"
+                  title="{{ 'incidentReportUI.removeAttachment' | translate }}"
                 >
-                  <button
-                    class="btn btn-sm btn-outline-danger"
-                    [disabled]="disabled() || !!attachmentLock"
-                    (click)="removeAttachment($index)"
-                    [attr.aria-label]="'incidentReportUI.removeAttachment' | translate"
-                  >
-                    <i class="ph ph-trash"></i>
-                  </button>
-                </span>
+                  <i class="ph ph-trash"></i>
+                </button>
               </div>
             </div>
 

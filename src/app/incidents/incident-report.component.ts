@@ -38,7 +38,7 @@ import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../s
 import { IncidentReportEditorComponent } from "./incident-report-editor.component";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
-import { IncidentReadOnlyReason, IncidentRequestError, IncidentService } from "./incident.service";
+import { IncidentRequestError, IncidentService } from "./incident.service";
 
 @Component({
   selector: "app-incident-report",
@@ -94,35 +94,15 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   /** The region a new incident is created in; only the user's own regions are offered. */
   createRegion = this.authenticationService.getActiveRegionId();
 
-  /** The server's explanation after it refused to save the report, which is then read-only. */
+  /**
+   * The server's explanation after it refused to save the report, which is then locked.
+   * Users who may not change the report at all never get here: it is opened read-only (see {@link ngOnInit}).
+   */
   forbiddenReason: string | null = null;
 
-  /** Why the user may not change the report, or `undefined` if they may. */
-  get readOnlyReason(): string | undefined {
-    if (this.forbiddenReason) {
-      return this.translateService.instant("incidentReportUI.forbidden", { reason: this.forbiddenReason });
-    }
-    // The region of a saved incident is not sent by the server, which refuses other regions with a 403.
-    const region = this.incidentReport().id ? undefined : (this.createRegion ?? null);
-    return this.translateReason(this.incidentService.readOnlyReason(this.incidentReport(), region));
-  }
-
-  /** Whether editing the report is disabled, by the input or by a {@link readOnlyReason}. */
+  /** Whether editing the report is disabled, by the input or by a refused save. */
   get locked(): boolean {
-    return this.disabled() || !!this.readOnlyReason;
-  }
-
-  /** Why the user may not remove the attachment, or `undefined` if they may. */
-  attachmentReadOnlyReason(attachment: IncidentModels.IncidentAttachment): string | undefined {
-    if (this.forbiddenReason) return this.readOnlyReason;
-    const region = this.incidentReport().id ? undefined : (this.createRegion ?? null);
-    return this.translateReason(
-      this.incidentService.attachmentReadOnlyReason(this.incidentReport(), attachment, region),
-    );
-  }
-
-  private translateReason(reason: IncidentReadOnlyReason | undefined): string | undefined {
-    return reason && this.translateService.instant(reason);
+    return this.disabled() || !!this.forbiddenReason;
   }
 
   /** Shows why a request failed, with the server's explanation if it refused the request. */
@@ -390,20 +370,33 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get("id");
+    if (!id && !this.incidentService.mayChange({})) {
+      // Users who may not create incidents get no "new" button; this guards a manually entered URL.
+      void this.router.navigate(["/incidents"]);
+      return;
+    }
+    if (this.route.snapshot.queryParamMap.get("readOnly") === "true") {
+      this.setReadOnly();
+    }
     if (id) {
       this.loadIncident(id);
     }
-    this.readOnly = this.route.snapshot.queryParamMap.get("readOnly") === "true";
-    if (this.readOnly) {
-      this.displayMode = DisplayMode.All;
-    }
     this.startAutoSave();
+  }
+
+  private setReadOnly() {
+    this.readOnly = true;
+    this.displayMode = DisplayMode.All;
   }
 
   private loadIncident(id: string) {
     this.incidentService.getIncident(id).subscribe({
       next: (report) => {
         this.incidentReport.set(report);
+        // Users who may not change the incident get no edit button; this guards `readOnly=false` in the URL.
+        if (!this.incidentService.mayChange(report)) {
+          this.setReadOnly();
+        }
         // The report just loaded from the server is by definition already saved;
         // Without this, autosave would immediately trigger a redundant save.
         this.lastSavedData = this.serializeReport(report);
@@ -454,8 +447,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   private saveIncident(data: string): Observable<unknown> {
     if (data === this.lastSavedData) return EMPTY;
-    // The server would refuse the save; the template says why.
-    if (this.readOnlyReason) return EMPTY;
+    // The server would refuse the save.
+    if (this.readOnly || this.forbiddenReason) return EMPTY;
     // A report with missing required fields must not be persisted; it stays a
     // local draft until completed. Validity is re-checked on the next change.
     if (!this.isReportValid()) {
@@ -615,7 +608,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   async removeAttachment(index: number) {
     const attachment = this.incidentReport().attachments[index];
-    if (this.disabled() || this.attachmentReadOnlyReason(attachment)) return;
+    if (this.locked) return;
     const message = this.translateService.instant("incidentReportUI.dropAttachment", {
       fileName: attachment.fileName,
     });

@@ -24,8 +24,8 @@ type IncidentColumn = keyof IncidentReport;
   providers: [IncidentService],
 })
 export class IncidentsOverviewComponent implements OnInit {
-  readonly incidentService = inject(IncidentService);
-  readonly authenticationService = inject(AuthenticationService);
+  private incidentService = inject(IncidentService);
+  private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
   private localStorageService = inject(LocalStorageService);
 
@@ -115,6 +115,11 @@ export class IncidentsOverviewComponent implements OnInit {
     link.download = "incidents.geojson";
     link.click();
     URL.revokeObjectURL(url);
+  }
+
+  /** Whether the user may change the incident, or create one when passing `{}`; all listed incidents are of the active region. */
+  canEdit(incident: Pick<IncidentReport, "publishedAt">): boolean {
+    return this.incidentService.mayChange(incident, this.authenticationService.getActiveRegionId() ?? null);
   }
 
   openIncident(id: string) {

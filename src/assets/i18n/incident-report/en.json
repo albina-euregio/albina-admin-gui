@@ -92,13 +92,7 @@
     "deleteIncidentError": "The incident could not be deleted.",
     "publishIncidentError": "The incident could not be published.",
     "unpublishIncidentError": "The incident could not be unpublished.",
-    "removeAttachmentError": "The attachment could not be removed.",
-    "readOnly": {
-      "role": "Read-only – only forecasters and foremen can change incidents",
-      "published": "Published – only forecasters can change it",
-      "publicAttachment": "Public attachment of a published incident – only forecasters can remove it",
-      "region": "Read-only – you are not assigned to the region of this incident"
-    }
+    "removeAttachmentError": "The attachment could not be removed."
   },
   "incidentReport": {
     "incidentReport": "Incident Report",
