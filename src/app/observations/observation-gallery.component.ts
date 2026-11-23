@@ -6,7 +6,12 @@ import { TranslatePipe } from "@ngx-translate/core";
 import type { FotoWebcamEU } from "../../../observations-api/src/fetch/webcams/foto-webcam.model";
 import type { PanomaxThumbnailResponse } from "../../../observations-api/src/fetch/webcams/panomax.model";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { GenericObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ObservationSource,
+  ObservationType,
+  sortNorthWestToSouthEast,
+} from "./models/generic-observation.model";
 
 @Component({
   standalone: true,
@@ -29,7 +34,7 @@ export class ObservationGalleryComponent {
   }
 
   get sortedObservations(): GenericObservation[] {
-    return (this.observations() || [])
+    const webcams = (this.observations() || [])
       .filter((o) => o.$type === ObservationType.Webcam)
       .map((o) => {
         if (o.$source == ObservationSource.FotoWebcamsEU) {
@@ -39,11 +44,8 @@ export class ObservationGalleryComponent {
         }
         return o;
       })
-      .filter((o) => o.$externalImgs)
-      .sort((o1, o2) => {
-        // sort north west to south east
-        return -o1.latitude + o1.longitude + o2.latitude - o2.longitude;
-      });
+      .filter((o) => o.$externalImgs);
+    return sortNorthWestToSouthEast(webcams);
   }
 
   private mapFotoWebcamsEU(o: GenericObservation) {

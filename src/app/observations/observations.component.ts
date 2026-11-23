@@ -51,7 +51,10 @@ import {
   ObservationType,
   toGeoJSON,
   toCSV,
+  sortByEventDateDesc,
+  sortNorthWestToSouthEast,
   partialGenericObservationSchema,
+  sortByRegionWestToEast,
 } from "./models/generic-observation.model";
 import { ObservationChartComponent } from "./observation-chart.component";
 
@@ -70,6 +73,11 @@ import { ObsMarkerElement, ObservationMarkerService } from "./observation-marker
 import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationsMapService } from "./observations-map.service";
 import { AlbinaObservationsService } from "./observations.service";
+
+/**
+ * Where the observation popup was opened from: a map marker, or the table/gallery
+ */
+type ObservationPopupOrigin = "map" | "list";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -285,6 +293,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   public observationPopup: {
     observation: GenericObservation;
+    origin: ObservationPopupOrigin;
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
     imgUrls: SafeResourceUrl[];
@@ -587,8 +596,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         observation.stability = match as SnowpackStability;
       }
     });
-
-    console.log(observation);
     return observation;
   }
 
@@ -612,15 +619,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   applyLocalFilter(applyOnlyToObservations = false) {
-    this.data.weatherStations.all = orderBy(
+    this.data.weatherStations.all = sortByRegionWestToEast(
       this.data.weatherStations.all,
-      [
-        // make sure that changeObservation (or ←/→) selects a sensible previous/next station
-        (s) => this.$externalImgs(s)?.[0],
-        (s) => s.region,
-        (s) => s.locationName,
-      ],
-      ["asc", "asc", "asc"],
+      (o) => this.$externalImgs(o)?.[0],
     );
     // only apply filter to observations
     if (applyOnlyToObservations) {
@@ -652,6 +653,24 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     ]);
   }
 
+  /**
+   * Sorts in the same order as the view the popup was opened from,
+   * so that ←/→ steps through observations like the map or the table/gallery shows them
+   */
+  private sortForNavigation(
+    origin: ObservationPopupOrigin,
+    observation: GenericObservation,
+    observations: GenericObservation[],
+  ): GenericObservation[] {
+    if (origin === "map") {
+      return sortByRegionWestToEast(observations, (o) => this.$externalImgs(o)?.[0]);
+    } else if (this.data.webcams.all.includes(observation)) {
+      return sortNorthWestToSouthEast(observations);
+    } else {
+      return sortByEventDateDesc(observations);
+    }
+  }
+
   private $externalImgs(observation: GenericObservation) {
     if (!observation) return undefined;
     if (
@@ -670,16 +689,21 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     return observation.$externalImgs;
   }
 
-  onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
+  onObservationClick(
+    observation: GenericObservation,
+    doShow = true,
+    imgIndex = 0,
+    origin: ObservationPopupOrigin = "map",
+  ): void {
     const $externalImgs = this.$externalImgs(observation);
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe, imgUrls: undefined, imgIndex };
+      this.observationPopup = { observation, origin, table: [], iframe, imgUrls: undefined, imgIndex };
     } else if ($externalImgs) {
       const imgUrls = $externalImgs.map((img) =>
         img.endsWith(".smet.gz") ? img : this.sanitizer.bypassSecurityTrustResourceUrl(img),
       );
-      this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls, imgIndex };
+      this.observationPopup = { observation, origin, table: [], iframe: undefined, imgUrls: imgUrls, imgIndex };
     } else {
       const table: ObservationTableRow[] = [
         { label: this.translateService.instant("observations.eventDate"), date: observation.eventDate },
@@ -691,7 +715,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         { label: this.translateService.instant("observations.comment"), value: observation.content },
         ...(Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : []),
       ] satisfies ObservationTableRow[];
-      this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined, imgIndex };
+      this.observationPopup = { observation, origin, table, iframe: undefined, imgUrls: undefined, imgIndex };
     }
     if (doShow) {
       this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
@@ -703,33 +727,28 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     let observation = this.observationPopup?.observation;
-    const observations = Object.values(this.data)
-      .flatMap((d) => d.all)
-      .filter((o) => o.$source === observation.$source && o.$type === observation.$type);
+    const origin = this.observationPopup.origin;
+    const sameKind = (o: GenericObservation) => o.$source === observation.$source && o.$type === observation.$type;
+    const data = Object.values(this.data);
+    // only flip through observations matching the current filter (fall back to all if the current one is filtered out)
+    let observations = data.flatMap((d) => d.filtered).filter(sameKind);
+    if (!observations.includes(observation)) {
+      observations = data.flatMap((d) => d.all).filter(sameKind);
+    }
+    observations = this.sortForNavigation(origin, observation, observations);
     let index = observations.indexOf(observation);
     if (index < 0) {
       return;
     }
-    if (change === 1) {
-      index += 1;
-      const $externalImgs = this.$externalImgs(observation);
-      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
-        index += 1;
-      }
-      observation = observations[index];
-      if (observation) {
-        this.onObservationClick(observation, false, 0);
-      }
-    } else if (change === -1) {
-      index -= 1;
-      const $externalImgs = this.$externalImgs(observation);
-      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
-        index -= 1;
-      }
-      observation = observations[index];
-      if (observation) {
-        this.onObservationClick(observation, false, 0);
-      }
+    index += change;
+    const $externalImgs = this.$externalImgs(observation);
+    while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
+      index += change;
     }
+    observation = observations[index];
+    if (!observation) {
+      observation = change === 1 ? observations[0] : observations[observations.length - 1];
+    }
+    this.onObservationClick(observation, false, 0, origin);
   }
 }

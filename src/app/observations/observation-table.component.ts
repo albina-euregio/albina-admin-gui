@@ -10,6 +10,7 @@ import {
   ImportantObservation,
   ObservationSource,
   ObservationType,
+  sortByEventDateDesc,
 } from "./models/generic-observation.model";
 import { ObservationMarkerService } from "./observation-marker.service";
 
@@ -39,7 +40,7 @@ export class ObservationTableComponent {
   };
 
   get sortedObservations(): GenericObservation[] {
-    return (this.observations() || []).sort((o1, o2) => +o2.eventDate - +o1.eventDate);
+    return sortByEventDateDesc(this.observations() || []);
   }
 
   isShowObservation(observation: GenericObservation): boolean {
