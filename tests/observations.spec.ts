@@ -218,6 +218,10 @@ test("export observation details", async ({ page }) => {
 });
 
 test("Create new observation", async ({ page }) => {
+  // the external elevation service is unreliable
+  await page.route("https://voibos.rechenraum.com/voibos/voibos?**", (route) =>
+    route.fulfill({ json: { abfragestatus: "erfolgreich", hoeheDTM: 3003.2 } }),
+  );
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
   await page.getByTitle("New observation").click();
