@@ -8,6 +8,7 @@ import { default as regionsNamesEs } from "@eaws/micro-regions_names/es.json";
 import { default as regionsNamesFr } from "@eaws/micro-regions_names/fr.json";
 import { default as regionsNamesIt } from "@eaws/micro-regions_names/it.json";
 import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
+import { default as regionsNamesSl } from "@eaws/micro-regions_names/sl.json";
 import outline_properties from "@eaws/outline_properties/index.json";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageSchema } from "app/models/text.model";
@@ -81,6 +82,8 @@ export class RegionsService {
         return regionsNamesCa;
       case "oc":
         return regionsNamesOc;
+      case "sl":
+        return regionsNamesSl;
       default:
         return regionsNamesEn;
     }

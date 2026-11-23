@@ -222,6 +222,7 @@ export type BlogItem = {
     es?: string;
     ca?: string;
     oc?: string;
+    sl?: string;
   };
 };
 
@@ -1347,7 +1348,7 @@ export type IncidentsYearsActive = "From10Years" | "From3To9Years" | "UpTo2Years
 /**
  * The enum contains the ISO 639-1 codes for available languages.
  */
-export type LanguageCode = "de" | "it" | "en" | "fr" | "es" | "ca" | "oc";
+export type LanguageCode = "de" | "it" | "en" | "fr" | "es" | "ca" | "oc" | "sl";
 
 export type LocalServerInstance = {
   publishAt5PM: boolean;
