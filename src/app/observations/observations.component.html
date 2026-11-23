@@ -243,7 +243,7 @@
               <app-observation-table
                 #observationTable
                 [observations]="this.data.observations.filtered"
-                (observationClick)="onObservationClick($event, true, 0, 'list')"
+                (observationClick)="onObservationClick($event, true, 0, observationTable.visibleObservations)"
                 (editObservationEvent)="editObservation($event)"
               ></app-observation-table>
             </div>
@@ -256,8 +256,9 @@
           <div class="card h-100">
             <div class="card-body overflow-auto">
               <app-observation-gallery
+                #observationGallery
                 [observations]="this.data.webcams.filtered"
-                (observationClick)="onObservationClick($event, true, 0, 'list')"
+                (observationClick)="onObservationClick($event, true, 0, observationGallery.sortedObservations)"
               ></app-observation-gallery>
             </div>
           </div>
