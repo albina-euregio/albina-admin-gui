@@ -109,6 +109,38 @@ export function toGeoJSON(observations: GenericObservation[]) {
   return collection;
 }
 
+/**
+ * Order used by the observation table (and ←/→ in the observation popup): newest first
+ */
+export function sortByEventDateDesc<T extends Pick<GenericObservation, "eventDate">>(observations: T[]): T[] {
+  return orderBy(observations, [(o) => +o.eventDate], ["desc"]);
+}
+
+/**
+ * Order used by the webcam gallery (and ←/→ in the observation popup): north-west to south-east
+ */
+export function sortNorthWestToSouthEast<T extends Pick<GenericObservation, "latitude" | "longitude">>(
+  observations: T[],
+): T[] {
+  return orderBy(observations, [(o) => o.longitude - o.latitude], ["asc"]);
+}
+
+/**
+ * Sorts by micro-region ID, then from west to east (longitude),
+ * so that changeObservation (or ←/→) selects a sensible previous/next station.
+ * `imgKey` is the final tie-breaker that keeps entries sharing the same image next to each other.
+ */
+export function sortByRegionWestToEast(
+  observations: GenericObservation[],
+  imgKey: (o: GenericObservation) => string | undefined = (o) => o.$externalImgs?.[0],
+): GenericObservation[] {
+  return orderBy(
+    observations,
+    [(o) => o.region ?? "", (o) => o.longitude ?? Number.POSITIVE_INFINITY, (o) => imgKey(o) ?? ""],
+    ["asc", "asc", "asc"],
+  );
+}
+
 export function toCSV(observations: GenericObservation[]) {
   const csvDelimiter = ";";
   const csvLineBreak = "\n";
