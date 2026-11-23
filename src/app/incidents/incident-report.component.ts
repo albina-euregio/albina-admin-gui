@@ -365,12 +365,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get("id");
-    if (!id && !this.incidentService.mayChange({})) {
+    if (!id && !this.incidentService.mayChange()) {
       // Users who may not create incidents get no "new" button; this guards a manually entered URL.
       void this.router.navigate(["/incidents"]);
       return;
     }
-    if (this.route.snapshot.queryParamMap.get("readOnly") === "true") {
+    // Users who may not change incidents get no edit button; this guards `readOnly=false` in the URL.
+    if (this.route.snapshot.queryParamMap.get("readOnly") === "true" || !this.incidentService.mayChange()) {
       this.setReadOnly();
     }
     if (id) {
@@ -388,10 +389,6 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     this.incidentService.getIncident(id).subscribe({
       next: (report) => {
         this.incidentReport.set(report);
-        // Users who may not change the incident get no edit button; this guards `readOnly=false` in the URL.
-        if (!this.incidentService.mayChange(report)) {
-          this.setReadOnly();
-        }
         // The report just loaded from the server is by definition already saved;
         // Without this, autosave would immediately trigger a redundant save.
         this.lastSavedData = this.serializeReport(report);

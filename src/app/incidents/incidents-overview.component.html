@@ -55,7 +55,7 @@
     >
       <i class="ph ph-download-simple"></i> {{ "incidentsOverview.button.download" | translate }}
     </button>
-    @if (canEdit({})) {
+    @if (canEdit()) {
       <button (click)="newIncident()" class="btn btn-sm btn-primary px-3">
         <i class="ph ph-plus"></i> {{ "incidentsOverview.button.new" | translate }}
       </button>
@@ -106,7 +106,7 @@
               </td>
             }
             <td class="d-flex gap-2">
-              @if (canEdit(incident)) {
+              @if (canEdit()) {
                 <button
                   type="button"
                   class="btn btn-secondary btn-icon"

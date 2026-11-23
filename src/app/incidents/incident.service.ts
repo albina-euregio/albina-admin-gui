@@ -128,20 +128,19 @@ export class IncidentService {
   }
 
   /**
-   * Whether the user may publish and unpublish incidents and change published ones; the same rule
-   * as for publishing bulletins.
+   * Whether the user may publish, republish and unpublish incidents; the same rule as for
+   * publishing bulletins.
    */
   canPublish(): boolean {
     return this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER");
   }
 
   /**
-   * Whether the user may change the incident, or create one when passing `{}`. The region is not
+   * Whether the user may create and change incidents, published ones included. The region is not
    * checked: the active region is always one of the user's, others are refused by the server (403).
    */
-  mayChange(report: Pick<IncidentReport, "publishedAt">): boolean {
-    if (!this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER", "FOREMAN")) return false;
-    return !report.publishedAt || this.canPublish();
+  mayChange(): boolean {
+    return this.authenticationService.isCurrentUserInRole("ADMIN", "FORECASTER", "FOREMAN");
   }
 
   private safeIncidentReport(i: IncidentView) {
