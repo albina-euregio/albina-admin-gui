@@ -32,6 +32,7 @@
     "modellingZamgECMWF": "ZAMG ECMWF-EPS",
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
     "modellingZamgMeteogram": "meteograma GeoSphere",
+    "modellingZamgMeteogramReduced": "",
     "modellingSnowpack": "Modèl SNOWPACK",
     "modellingSnowpackMeteo": "Modèl meteo SNOWPACK",
     "awsome": "AWSOME",
@@ -113,6 +114,7 @@
     "es": "Castelhan",
     "ca": "Catalan",
     "oc": "Aranès",
+    "sl": "",
     "fullscreen": "Pantalha complèta",
     "settings": "Configuracion",
     "statistics": "Estadístiques",
@@ -371,7 +373,7 @@
         "checkInternetDescriptionSuffix": "en ua hièstra privada. Eth bulletin d’ager se mòstre corrèctament?",
         "republishHint": "Realizar aguest pas solament s'era \"comprovacion dera connexion\" en Internet s’a completat corrèctaments e an passat aumens 5 menutes dempús deth darrèr ensag de publicacion.",
         "publishMinimalTitle": "Publicacion minimau:",
-        "publishMinimalHint": "",
+        "publishMinimalHint": "Emplegar aguesta opcion coma alternativa se era publicacion completa hè falha. Sonque publique dades CAAML: non includís mapes ne sintèsi de votz ne messatges push. ⚠️ Tanben afècte es autes regions d'aguest servidor, non sonque era tua. Totes se tornaràn a publicar en mòde minim.",
         "editAndResendTitle": "Editar e tornar a enviar:",
         "openBulletin": "Daurir eth bulletin",
         "clickEdit": "Hèr clic en \"Editar\"",
@@ -540,8 +542,8 @@
       "photos": {
         "url": "URL dera imatge",
         "locationName": "Localitat",
-        "microregion": "",
-        "copyright": "",
+        "microregion": "Micro-regions",
+        "copyright": "Copyright",
         "date": "Data"
       },
       "placeholder": {
@@ -565,7 +567,7 @@
         "accept": "D'acòrd"
       },
       "loadDialog": {
-        "message": "",
+        "message": "Vòs cargar es bulletins deth dia anterior?<br><strong>Açò suprimirà totes es regions existentes!</strong>",
         "accept": "Òc",
         "reject": "Non"
       },
@@ -575,7 +577,7 @@
         "reject": "Non"
       },
       "loadSuggestionsFromDangerSourcesDialog": {
-        "message": "",
+        "message": "Vòs cargar es suggeriments des hònts de perilh?<br><strong>Per exemple, iPhone, YubiKey.</strong>",
         "accept": "Òc",
         "reject": "Non"
       },
@@ -1054,9 +1056,9 @@
       "empty": "Encara non i a cap clau d’accès enregistrada.",
       "unnamed": "Clau d'accès",
       "lastUsed": "Darrèr usatge",
-      "neverUsed": "",
-      "namePlaceholder": "",
-      "add": "",
+      "neverUsed": "jamès utilizat",
+      "namePlaceholder": "Per exemple, iPhone, YubiKey.",
+      "add": "Ahíger clau d'accès",
       "delete": "Esborrar",
       "added": "Clau d'accès ahijuda",
       "addError": "Non s'a pogut ahíger era clau d'accès",
@@ -1323,7 +1325,7 @@
     },
     "FCxr": {
       "code": "FCxr",
-      "class": ""
+      "class": "Partícules Facetades Arredonides"
     },
     "DH": {
       "code": "DH",
@@ -1338,8 +1340,8 @@
       "class": "Formes de fosion"
     },
     "MM": {
-      "code": "",
-      "class": ""
+      "code": "MM",
+      "class": "De fabricacion artificiau"
     },
     "MFcr": {
       "code": "MFcr",
@@ -1358,7 +1360,7 @@
     "no": "Non"
   },
   "observations": {
-    "$externalURL": "",
+    "$externalURL": "URL extèrna (p. ex., d'ua basa de donades de fotografies)",
     "$type": "Tipe d’observacion",
     "allowEdit": "Editar observacion extèrna",
     "allowEditTooltip": "Açò evitarà es sobreescriptures de {{ value }}",
@@ -1520,22 +1522,22 @@
     }
   },
   "awsome": {
-    "(nearly) none": "",
-    "{{active}} active, {{visible}} visible in the chart": "",
-    "{{band}}: series {{series}}, panel {{panel}}": "",
-    "{{count}} read": "",
-    "{{elevation}} m": "",
-    "{{index}} has no 2 to 4 chained classes the matrix can read": "",
-    "{{label}} selected: the shares are conditioned": "",
-    "{{lower}}–{{upper}} m": "",
-    "{{share}} % {{stability}} of {{total}} slopes ({{margin}})": "",
+    "(nearly) none": "(lèu) cap",
+    "{{active}} active, {{visible}} visible in the chart": "{{active}} actiu, {{visible}} visible ath grafic",
+    "{{band}}: series {{series}}, panel {{panel}}": "{{band}}: seria {{series}}, panèu {{panel}}",
+    "{{count}} read": "{{count}} liéger",
+    "{{elevation}} m": "{{elevation}} m",
+    "{{index}} has no 2 to 4 chained classes the matrix can read": "{{index}} non a entre 2 e 4 classes encadiades que era matritz pogue liéger",
+    "{{label}} selected: the shares are conditioned": "{{label}} seleccionada: es accions son condicionades",
+    "{{lower}}–{{upper}} m": "{{lower}}–{{upper}} m",
+    "{{share}} % {{stability}} of {{total}} slopes ({{margin}})": "{{share}} % {{stability}} de {{total}} pales ({{margin}})",
     "{{share}} % good of {{total}} slopes; every other class {{none}}": "",
     "{{stability}} in {{frequency}} locations, size {{size}}: {{levels}}": "",
     "→ {{next}}": "→ {{next}}",
     "< {{elevation}} m": "< {{elevation}} m",
     "≥ {{elevation}} m": "≥ {{elevation}} m",
     "above {{elevation}} m": "per dessús de {{elevation}} m",
-    "Active datetags": "",
+    "Active datetags": "Etiquetes de data actives",
     "Aggregation band": "Banda d'agregacion",
     "All": "Tot",
     "all aspects": "Totes es orientacions",
@@ -1547,21 +1549,21 @@
     "between {{lower}} and {{upper}} m": "entre {{lower}} e {{upper}} m",
     "Clear the {{label}} selection": "Escafar era seleccion de {{label}}",
     "Danger level": "Grad de perilh",
-    "danger level series": "",
+    "danger level series": "Sèria de nivèus de perilh",
     "Date": "Data",
     "Datetag": "Etiqueta de dia",
     "Depth": "Prigondor",
     "Dry instability": "Inestabilitat seca",
-    "Each read slope's stability class comes from the classifying stability index.": "",
-    "Elevation cut": "",
-    "fair (<0.78)": "",
+    "Each read slope's stability class comes from the classifying stability index.": "Era classa d'estabilitat de cada pala estudiada s'obten a compdar der indèx de classificacion dera estabilitat.",
+    "Elevation cut": "Lindau altitudinau",
+    "fair (<0.78)": "regular (<0.78)",
     "fair (<1.05)": "regular (<1.05)",
-    "few above {{few}} %, some from {{some}} %": "",
-    "flat": "",
+    "few above {{few}} %, some from {{some}} %": "pòqui per dessús deth {{few}} %, bèri uns a compdar deth {{some}} %",
+    "flat": "plan",
     "good": "",
     "good throughout": "",
     "Grain type": "Tipe de gra",
-    "How the danger level is derived": "",
+    "How the danger level is derived": "Com se determine eth nivèu de perilh",
     "loading": "en tot cargar",
     "Lower elevation cut": "",
     "LWC index": "Índex LWC",
@@ -1571,15 +1573,15 @@
     "no aspect": "sense orientacion",
     "no danger level series": "",
     "no elevation": "",
-    "no index value": "",
+    "no index value": "valor der indèx non disponible",
     "no size": "sense mesura",
-    "no snow or no model output": "",
-    "No split": "",
-    "no stability index to read": "",
-    "None": "",
-    "none or nearly none": "",
-    "not read": "",
-    "nothing read": "",
+    "no snow or no model output": "sense nhèu o sense resultat deth modèl",
+    "No split": "sense division",
+    "no stability index to read": "non i a cap indèx d'estabilitat disponible entà consultar",
+    "None": "cap",
+    "none or nearly none": "cap o lèu cap",
+    "not read": "non liejut",
+    "nothing read": "arren liejut",
     "nothing read {{band}}: {{count}} selected": "",
     "nothing selected {{band}}": "",
     "p{{percentile}} of the decisive class's size estimates": "",
@@ -1591,18 +1593,18 @@
     "rather stable (<0.7)": "fòrça estable (<0.7)",
     "rather stable (<1)": "fòrça estable (<1)",
     "rather stable (>1.05)": "fòrça estable (>1.05)",
-    "read": "",
-    "Region": "",
-    "Reload": "",
-    "Save and reload": "",
-    "Saving failed": "",
-    "Select the elevations above {{elevation}} m": "",
-    "Select the elevations below {{elevation}} m": "",
-    "Select the elevations between {{lower}} and {{upper}} m": "",
-    "selection not loaded": "",
+    "read": "liejut",
+    "Region": "Region",
+    "Reload": "Recargar",
+    "Save and reload": "Sauvar e tornar a cargar",
+    "Saving failed": "Non s'a pogut sauvar",
+    "Select the elevations above {{elevation}} m": "Seleccionar es nautades per dessús de {{elevation}} m",
+    "Select the elevations below {{elevation}} m": "Seleccionar es nautades per dejós de {{elevation}} m",
+    "Select the elevations between {{lower}} and {{upper}} m": "Seleccionar es nautades entre {{lower}} and {{upper}} m",
+    "selection not loaded": "seleccion non cargada",
     "series ≠ panel at this step": "",
     "series ignores: {{types}}": "",
-    "size {{size}}": "",
+    "size {{size}}": "mesura {{size}}",
     "Size estimate": "Estimacion de mesura",
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
     "some from {{some}} %, many above {{many}} %": "",
@@ -1611,12 +1613,12 @@
     "The avalanche size is the {{statistic}}.": "",
     "the decisive class carries no size": "",
     "The decisive class is the most unstable class whose share of the band's read slopes is above the {{few}} bound; without one the band is good throughout and reads 1. Its frequency class, {{none}}, {{few}}, {{some}} or {{many}}, follows the configured bounds.": "",
-    "the panel applies the {{types}} selection, the series does not": "",
-    "the series reads the API's population, every stored slope with a compass aspect, the panel the loaded features": "",
-    "timeseries ignores: {{label}}": "",
-    "Upper elevation cut": "",
+    "the panel applies the {{types}} selection, the series does not": "eth panèl aplique era seleccion {{types}}, era sèria non.",
+    "the series reads the API's population, every stored slope with a compass aspect, the panel the loaded features": "era sèria lieg eth conjunt de donades dera API, toti es pales emmagazinadi qu'an ua orientacion geografica definida e es caracteristiques cargades ath panèu",
+    "timeseries ignores: {{label}}": "era sèria temporau ignore: {{label}}",
+    "Upper elevation cut": "Lindau altitudinau superior",
     "very poor (<=0.5)": "fòrça praube (<=0.5)",
-    "very poor (>=0.85)": "",
+    "very poor (>=0.85)": "fòrça praube (>=0.85)",
     "very poor (>3)": "fòrça praube (>3)",
     "Wet instability": "Inestabilitat umida"
   },
@@ -1629,64 +1631,64 @@
     "hint": "Prémer Intro entà íger"
   },
   "awsstats": {
-    "title": "",
+    "title": "Estadístiques AWS",
     "label": {
-      "loading": "",
-      "startDate": "",
-      "endDate": "",
-      "selectWeatherStation": "",
-      "selectMicroRegions": "",
-      "clearselection": "",
+      "loading": "En tot cargar es donades...",
+      "startDate": "Data de començament",
+      "endDate": "Data de finalizacion",
+      "selectWeatherStation": "Seleccionar era estacion meteorologica",
+      "selectMicroRegions": "Seleccionar micro-regions",
+      "clearselection": "Escafar seleccion",
       "noMicroRegionsSelected": "cap",
-      "last7days": "",
-      "last30days": "",
-      "last90days": "",
-      "loadData": "",
-      "charttypes": ""
+      "last7days": "Darrèri 7 dies",
+      "last30days": "Darrèri 30 dies",
+      "last90days": "Darrèri 90 dies",
+      "loadData": "Cargar es donades",
+      "charttypes": "Tipes de grafic"
     },
     "charts": {
-      "aws-observations": "",
+      "aws-observations": "Observacions AWS",
       "aws-danger-rating": "Grad de perilh",
-      "aws-danger-rating-altitude": "",
-      "aws-avalanche-activity-index": "",
-      "aws-danger-rating-danger-source-variants": "",
-      "aws-danger-source-variants-matrix-parameter-stability": "",
-      "aws-danger-source-variants-matrix-parameter-frequency": "",
-      "aws-danger-source-variants-matrix-parameter-avalanche-size": ""
+      "aws-danger-rating-altitude": "Grad de perilh per altitud",
+      "aws-avalanche-activity-index": "Indèx d'activitat de lauegi",
+      "aws-danger-rating-danger-source-variants": "Variantes des hònts de perilh",
+      "aws-danger-source-variants-matrix-parameter-stability": "Variantes d'estabilitat des hònts de perilh",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Frequéncia des variantes des hònts de perilh",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Mesura des lauegi des variantes des hònts de perilh"
     },
     "error": {
-      "startDateBeforeEndDate": "",
-      "failedLoadData": "",
-      "startDateEndDateRequired": ""
+      "startDateBeforeEndDate": "Era data de començament li cau èster anteriora o parièra ara data d'acabament",
+      "failedLoadData": "Non s'an pogut cargar es donades entad intervau de dates seleccionades.",
+      "startDateEndDateRequired": "Cau indicar era data de començament e era data d'acabament."
     }
   },
   "yearlystats": {
-    "title": "",
+    "title": "Estadistiques annuaus",
     "label": {
-      "startDate": "",
-      "endDate": "",
-      "loaddata": "",
-      "last90Days": "",
-      "last180Days": "",
-      "currentSeason": "",
-      "regionCode": "",
+      "startDate": "Data de començament",
+      "endDate": "Data de finalizacion",
+      "loaddata": "Cargar es donades",
+      "last90Days": "Darrèri 90 dies",
+      "last180Days": "Darrèri 180 dies",
+      "currentSeason": "Sason actuau",
+      "regionCode": "Còdi de region",
       "allRegions": "TOTI",
-      "virtualTrainings": "",
-      "fieldTrainings": "",
-      "dangerRatingReference": ""
+      "virtualTrainings": "Formacions virtuaus (dates)",
+      "fieldTrainings": "Formacions de camp (dates)",
+      "dangerRatingReference": "Referéncia deth grad de perilh"
     },
     "charts": {
-      "aws-danger-rating-micro-regions-bars": "",
-      "aws-danger-rating-micro-regions": "",
-      "aws-danger-rating-distribution": "",
-      "aws-danger-pattern-micro-regions": "",
-      "aws-avalanche-problem-micro-regions": "",
-      "aws-products": "",
-      "aws-stress-level": ""
+      "aws-danger-rating-micro-regions-bars": "Grad de perilh AWS – Microrregions – Barres",
+      "aws-danger-rating-micro-regions": "Grad de perilh AWS – Microrregions",
+      "aws-danger-rating-distribution": "Grad de perilh AWS – Distribucion",
+      "aws-danger-pattern-micro-regions": "Patrón de perilh AWS – micro-regions",
+      "aws-avalanche-problem-micro-regions": "Problèma de lauegi AWS – micro-regions",
+      "aws-products": "Productes AWS",
+      "aws-stress-level": "Nivèu de estrès dera equipa"
     },
     "hint": {
-      "dangerRatingReference": "",
-      "dateChange": ""
+      "dangerRatingReference": "Valors de referéncia entara distribucion deth grad de perilh ath long de diferentes sasons, representadi eth gris",
+      "dateChange": "Dempús de cambiar era data, cau prémer eth boton 'Cargar es donades'."
     }
   },
   "zodForm": {
@@ -1697,7 +1699,7 @@
   "bugreport": {
     "issue": {
       "title": "Informe d'errors",
-      "description": ""
+      "description": "## Descripcion\n\nProporcionar ua descripcion detalhada der error e, se possible, adjuntar captures de pantalla."
     }
   }
 }

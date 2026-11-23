@@ -42,7 +42,7 @@
   "avalancheType.loose": "Valanga di neve a debole coesione",
   "avalancheType.glide": "Valanga di slittamento",
   "avalancheProblem.label": "Problema valanghivo",
-  "avalancheProblem.coreZones.label": "",
+  "avalancheProblem.coreZones.label": "Problemi valanghivi con zone centrali",
   "avalancheProblem.new_snow": "Neve fresca",
   "avalancheProblem.wind_slab": "Lastrone da vento",
   "avalancheProblem.persistent_weak_layers": "Strati deboli persistenti",
@@ -79,7 +79,7 @@
   "aspect.W": "Ovest",
   "aspect.NW": "Nord-Ovest",
   "tendency.label": "Tendenza",
-  "tendency.progression.label": "",
+  "tendency.progression.label": "Sviluppo del pericolo di valanghe",
   "tendency.decreasing": "Tendenza: pericolo valanghe in diminuzione",
   "tendency.steady": "Tendenza: pericolo valanghe stabile",
   "tendency.increasing": "Tendenza: pericolo valanghe in aumento",
@@ -97,6 +97,6 @@
   "elevation.band": "Tra {0} e {1}",
   "synopsis.label": "Meteo",
   "snowpack.label": "Manto nevoso",
-  "travelAdvisory.label": "",
+  "travelAdvisory.label": "Problemerkennung im Gelände und Verhaltensempfehlungen",
   "forecast.label": "Previsione valanghe"
 }

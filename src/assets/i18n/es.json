@@ -32,6 +32,7 @@
     "modellingZamgECMWF": "ZAMG ECMWF-EPS",
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
     "modellingZamgMeteogram": "Meteograma GeoSphere",
+    "modellingZamgMeteogramReduced": "",
     "modellingSnowpack": "modelo SNOWPACK",
     "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
     "awsome": "AWSOME",
@@ -113,6 +114,7 @@
     "es": "Español",
     "ca": "Catalán",
     "oc": "Aranés",
+    "sl": "",
     "fullscreen": "Pantalla completa",
     "settings": "Ajustes",
     "statistics": "Estadisticas",
@@ -508,13 +510,13 @@
         "highlights": "Alerta especial",
         "avActivityHighlights": "Titular de la situación de aludes",
         "avActivityComment": "Descripción del peligro de aludes",
-        "travelAdvisoryHighlights": "",
-        "travelAdvisoryComment": "",
+        "travelAdvisoryHighlights": "Titular para las recomendaciones de circulación",
+        "travelAdvisoryComment": "Descripción de las recomendaciones para la circulación",
         "snowpackStructureHighlights": "Titular de la estructura del manto",
         "snowpackStructureComment": "Descripción de la estructura del manto",
         "dangerPatterns": "Patrón de peligro",
         "tendencyComment": "Descripción de la tendencia",
-        "synopsisHighlights": "",
+        "synopsisHighlights": "Titular sobre la situación meteo",
         "synopsisComment": "Sinopsis del tiempo",
         "notes": "Notas",
         "noSnow": "Sin nieve"
@@ -533,15 +535,15 @@
         "snowpackStructure": "Estructura del manto",
         "tendency": "Tendencia",
         "synopsis": "Tiempo atmosférico",
-        "travelAdvisory": "",
+        "travelAdvisory": "Recomendaciones para la circulación",
         "showTranslations": "Mostrar traducciones",
         "hideTranslations": "Ocultar traducciones"
       },
       "photos": {
         "url": "URL de la imagen",
         "locationName": "Localización",
-        "microregion": "",
-        "copyright": "",
+        "microregion": "Micro-regiones",
+        "copyright": "Copyright",
         "date": "Fecha"
       },
       "placeholder": {
@@ -565,7 +567,7 @@
         "accept": "De acuerdo"
       },
       "loadDialog": {
-        "message": "",
+        "message": "¿Quieres cargar los boletines del día anterior?<br><strong>¡Esto eliminará todas las regiones existentes!</strong>",
         "accept": "Si",
         "reject": "No"
       },
@@ -1054,9 +1056,9 @@
       "empty": "Todavía no hay ninguna llave de acceso registrada.",
       "unnamed": "Llave de acceso",
       "lastUsed": "Último uso",
-      "neverUsed": "",
+      "neverUsed": "Nunca utilizado",
       "namePlaceholder": "",
-      "add": "",
+      "add": "Añadir llave de acceso",
       "delete": "Borrar",
       "added": "Clave de acceso añadida",
       "addError": "No se ha podido añadir la llave de acceso",
@@ -1323,7 +1325,7 @@
     },
     "FCxr": {
       "code": "FCxr",
-      "class": ""
+      "class": "Facetas redondeándose"
     },
     "DH": {
       "code": "DH",
@@ -1338,8 +1340,8 @@
       "class": "Formas de fusión"
     },
     "MM": {
-      "code": "",
-      "class": ""
+      "code": "MM",
+      "class": "Nieve artificial"
     },
     "MFcr": {
       "code": "MFcr",
@@ -1358,7 +1360,7 @@
     "no": "No"
   },
   "observations": {
-    "$externalURL": "",
+    "$externalURL": "URL externa (p. ej., de una base de datos de fotografías)",
     "$type": "Tipo de observación",
     "allowEdit": "Editar la observación externa",
     "allowEditTooltip": "Esto evitará sobrescrituras de {{ value }}",
@@ -1520,14 +1522,14 @@
     }
   },
   "awsome": {
-    "(nearly) none": "",
-    "{{active}} active, {{visible}} visible in the chart": "",
-    "{{band}}: series {{series}}, panel {{panel}}": "",
-    "{{count}} read": "",
-    "{{elevation}} m": "",
-    "{{index}} has no 2 to 4 chained classes the matrix can read": "",
+    "(nearly) none": "(casi) ninguno",
+    "{{active}} active, {{visible}} visible in the chart": "{{active}} activo, {{visible}} visible en el gráfico",
+    "{{band}}: series {{series}}, panel {{panel}}": "{{band}}: serie {{series}}, panel {{panel}}",
+    "{{count}} read": "{{count}} leer",
+    "{{elevation}} m": "{{elevation}} m",
+    "{{index}} has no 2 to 4 chained classes the matrix can read": "{{index}} no tiene entre 2 y 4 clases encadenadas que la matriz pueda leer",
     "{{label}} selected: the shares are conditioned": "",
-    "{{lower}}–{{upper}} m": "",
+    "{{lower}}–{{upper}} m": "{{lower}}–{{upper}} m",
     "{{share}} % {{stability}} of {{total}} slopes ({{margin}})": "",
     "{{share}} % good of {{total}} slopes; every other class {{none}}": "",
     "{{stability}} in {{frequency}} locations, size {{size}}: {{levels}}": "",
@@ -1535,7 +1537,7 @@
     "< {{elevation}} m": "< {{elevation}} m",
     "≥ {{elevation}} m": "≥ {{elevation}} m",
     "above {{elevation}} m": "por encima de {{elevation}} m",
-    "Active datetags": "",
+    "Active datetags": "Etiquetas de fecha activas",
     "Aggregation band": "Banda de agregación",
     "All": "Todos",
     "all aspects": "Todas las orientaciones",
@@ -1557,11 +1559,11 @@
     "fair (<0.78)": "",
     "fair (<1.05)": "regular (<1.05)",
     "few above {{few}} %, some from {{some}} %": "",
-    "flat": "",
+    "flat": "plano",
     "good": "",
     "good throughout": "",
     "Grain type": "Tipo de grano",
-    "How the danger level is derived": "",
+    "How the danger level is derived": "Cómo se determina el nivel de peligro",
     "loading": "cargando",
     "Lower elevation cut": "",
     "LWC index": "Índice LWC",
@@ -1571,15 +1573,15 @@
     "no aspect": "sin orientación",
     "no danger level series": "",
     "no elevation": "",
-    "no index value": "",
+    "no index value": "valor del índice no disponible",
     "no size": "sin tamaño",
-    "no snow or no model output": "",
-    "No split": "",
-    "no stability index to read": "",
-    "None": "",
-    "none or nearly none": "",
-    "not read": "",
-    "nothing read": "",
+    "no snow or no model output": "sin nieve o sin resultado del modelo",
+    "No split": "sin división",
+    "no stability index to read": "no hay ningún índice de estabilidad disponible para consultar",
+    "None": "Ninguno",
+    "none or nearly none": "ninguno o casi ninguno",
+    "not read": "no leído",
+    "nothing read": "nada leído",
     "nothing read {{band}}: {{count}} selected": "",
     "nothing selected {{band}}": "",
     "p{{percentile}} of the decisive class's size estimates": "",
@@ -1591,18 +1593,18 @@
     "rather stable (<0.7)": "bastante estable (<0.7)",
     "rather stable (<1)": "bastante estable (<1)",
     "rather stable (>1.05)": "bastante estable (>1.05)",
-    "read": "",
-    "Region": "",
-    "Reload": "",
-    "Save and reload": "",
-    "Saving failed": "",
-    "Select the elevations above {{elevation}} m": "",
-    "Select the elevations below {{elevation}} m": "",
-    "Select the elevations between {{lower}} and {{upper}} m": "",
-    "selection not loaded": "",
+    "read": "leído",
+    "Region": "Región",
+    "Reload": "Recargar",
+    "Save and reload": "Guardar y recargar",
+    "Saving failed": "No se ha podido guardar",
+    "Select the elevations above {{elevation}} m": "Seleccionar las altitudes por encima de {{elevation}} m",
+    "Select the elevations below {{elevation}} m": "Seleccionar las altitudes por debajo de {{elevation}} m",
+    "Select the elevations between {{lower}} and {{upper}} m": "Seleccionar las altitudes entre {{lower}} y {{upper}} m",
+    "selection not loaded": "selección no cargada",
     "series ≠ panel at this step": "",
     "series ignores: {{types}}": "",
-    "size {{size}}": "",
+    "size {{size}}": "tamaño {{size}}",
     "Size estimate": "Estimación de tamaño",
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
     "some from {{some}} %, many above {{many}} %": "",
@@ -1632,61 +1634,61 @@
     "title": "",
     "label": {
       "loading": "",
-      "startDate": "",
-      "endDate": "",
-      "selectWeatherStation": "",
-      "selectMicroRegions": "",
-      "clearselection": "",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de finalización",
+      "selectWeatherStation": "Seleccionar la estación meteorológica",
+      "selectMicroRegions": "Seleccionar micro-regiones",
+      "clearselection": "Borrar la selección",
       "noMicroRegionsSelected": "ninguno",
-      "last7days": "",
-      "last30days": "",
-      "last90days": "",
-      "loadData": "",
-      "charttypes": ""
+      "last7days": "Últimos 7 días",
+      "last30days": "Últimos 30 días",
+      "last90days": "Últimos 90 días",
+      "loadData": "Cargar los datos",
+      "charttypes": "Tipos de gráfico"
     },
     "charts": {
-      "aws-observations": "",
+      "aws-observations": "Observaciones AWS",
       "aws-danger-rating": "Clasificación del peligro",
-      "aws-danger-rating-altitude": "",
-      "aws-avalanche-activity-index": "",
-      "aws-danger-rating-danger-source-variants": "",
-      "aws-danger-source-variants-matrix-parameter-stability": "",
-      "aws-danger-source-variants-matrix-parameter-frequency": "",
-      "aws-danger-source-variants-matrix-parameter-avalanche-size": ""
+      "aws-danger-rating-altitude": "Grado de peligro por altitud",
+      "aws-avalanche-activity-index": "Índice de actividad de aludes",
+      "aws-danger-rating-danger-source-variants": "Variantes de las fuentes de peligro",
+      "aws-danger-source-variants-matrix-parameter-stability": "Variantes de estabilidad de las fuentes de peligro",
+      "aws-danger-source-variants-matrix-parameter-frequency": "Frecuencia de las variantes de las fuentes de peligro",
+      "aws-danger-source-variants-matrix-parameter-avalanche-size": "Tamaño de los aludes de las variantes de las fuentes de peligro"
     },
     "error": {
-      "startDateBeforeEndDate": "",
-      "failedLoadData": "",
-      "startDateEndDateRequired": ""
+      "startDateBeforeEndDate": "La fecha de inicio debe ser anterior o igual a la fecha de finalización.",
+      "failedLoadData": "No se han podido cargar los datos para el intervalo de fechas seleccionado.",
+      "startDateEndDateRequired": "Es necesario indicar la fecha de inicio y la fecha de finalización."
     }
   },
   "yearlystats": {
-    "title": "",
+    "title": "Estadísticas anuales",
     "label": {
-      "startDate": "",
-      "endDate": "",
-      "loaddata": "",
-      "last90Days": "",
-      "last180Days": "",
-      "currentSeason": "",
-      "regionCode": "",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de finalización",
+      "loaddata": "Cargar los datos",
+      "last90Days": "Últimos 90 días",
+      "last180Days": "Últimos 180 días",
+      "currentSeason": "Temporada actual",
+      "regionCode": "Código de región",
       "allRegions": "TODOS",
-      "virtualTrainings": "",
-      "fieldTrainings": "",
+      "virtualTrainings": "Formaciones virtuales (fechas)",
+      "fieldTrainings": "Formaciones de campo (fechas)",
       "dangerRatingReference": ""
     },
     "charts": {
       "aws-danger-rating-micro-regions-bars": "",
       "aws-danger-rating-micro-regions": "",
-      "aws-danger-rating-distribution": "",
-      "aws-danger-pattern-micro-regions": "",
-      "aws-avalanche-problem-micro-regions": "",
-      "aws-products": "",
-      "aws-stress-level": ""
+      "aws-danger-rating-distribution": "Grado de peligro AWS – Distribución",
+      "aws-danger-pattern-micro-regions": "Patrón de peligro AWS – micro-regiones",
+      "aws-avalanche-problem-micro-regions": "Problema de aludes AWS – micro-regiones",
+      "aws-products": "Productos AWS",
+      "aws-stress-level": "Nivel de estrés del equipo"
     },
     "hint": {
-      "dangerRatingReference": "",
-      "dateChange": ""
+      "dangerRatingReference": "Valores de referencia para la distribución del grado de peligro a lo largo de diferentes temporadas, representados en gris.",
+      "dateChange": "Después de cambiar la fecha, hay que pulsar el botón 'Cargar los datos'."
     }
   },
   "zodForm": {
@@ -1697,7 +1699,7 @@
   "bugreport": {
     "issue": {
       "title": "Informe de errores",
-      "description": ""
+      "description": "## Descripción\n\nProporcionar una descripción detallada del error y, si es posible, adjuntar capturas de pantalla."
     }
   }
 }
