@@ -2,6 +2,29 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [9.4.0] - 2026-11-23
+
+### 🚀 Features
+
+- _(i18n)_ Add Slovenian (sl) language
+- _(bulletin)_ Add Slovenian (sl) texts from textcat
+- _(observations)_ Show surface hoar potential in linea
+- _(observations)_ Sort weather stations from west to east
+- _(observations)_ Step through observations in the order of the opening view (table, gallery and weather stations share the sort order), looping around
+
+### 🐛 Bug Fixes
+
+- _(incidents)_ Role FOREMAN may change published incidents, since they can't publish
+- _(incidents)_ Hide new/edit buttons the user may not use, add hints/warnings if roles are missing
+- _(incidents)_ Always create new incidents in the active region
+- _(incidents)_ Mark failed attachment uploads as failed again
+- _(observations)_ Load flipper with listed observations
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to linea 9.2.0, eaws-regions 9.2.0
+- _(i18n)_ Update translations, remove unused avyref translation keys
+
 ## [9.3.0] - 2026-11-17
 
 ### 🚀 Features
