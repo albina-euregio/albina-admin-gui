@@ -84,6 +84,7 @@ export const zBlogItem = z.object({
     es: z.string().optional(),
     ca: z.string().optional(),
     oc: z.string().optional(),
+    sl: z.string().optional(),
   }),
 });
 
@@ -1090,7 +1091,7 @@ export const zIncidentsIncidentSchema = z.object({
  * The enum contains the ISO 639-1 codes for available languages.
  */
 export const zLanguageCode = z
-  .enum(["de", "it", "en", "fr", "es", "ca", "oc"])
+  .enum(["de", "it", "en", "fr", "es", "ca", "oc", "sl"])
   .describe("The enum contains the ISO 639-1 codes for available languages.");
 
 export const zAvalancheBulletinText = z.object({
