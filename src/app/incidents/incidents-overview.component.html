@@ -55,9 +55,11 @@
     >
       <i class="ph ph-download-simple"></i> {{ "incidentsOverview.button.download" | translate }}
     </button>
-    <button (click)="newIncident()" class="btn btn-sm btn-primary px-3">
-      <i class="ph ph-plus"></i> {{ "incidentsOverview.button.new" | translate }}
-    </button>
+    @if (canEdit({})) {
+      <button (click)="newIncident()" class="btn btn-sm btn-primary px-3">
+        <i class="ph ph-plus"></i> {{ "incidentsOverview.button.new" | translate }}
+      </button>
+    }
   </div>
 
   <div class="table-responsive">
@@ -104,14 +106,16 @@
               </td>
             }
             <td class="d-flex gap-2">
-              <button
-                type="button"
-                class="btn btn-secondary btn-icon"
-                (click)="openIncident(incident.id)"
-                title="{{ 'incidentsOverview.tooltip.edit' | translate }}"
-              >
-                <i class="ph ph-pencil-line"></i>
-              </button>
+              @if (canEdit(incident)) {
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-icon"
+                  (click)="openIncident(incident.id)"
+                  title="{{ 'incidentsOverview.tooltip.edit' | translate }}"
+                >
+                  <i class="ph ph-pencil-line"></i>
+                </button>
+              }
               <button
                 type="button"
                 class="btn btn-secondary btn-icon"

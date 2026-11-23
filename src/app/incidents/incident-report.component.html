@@ -17,7 +17,7 @@
       <!-- Report Status Dropdown -->
       <div class="d-flex align-items-center gap-2" [class.d-none]="readOnly">
         <select
-          [disabled]="disabled() || !userCan('CHANGE_STATUS') || !isReportValid()"
+          [disabled]="locked || !userCan('CHANGE_STATUS') || !isReportValid()"
           id="reportStatusSelect"
           title="{{ 'incidentReportHelp.reportStatus' | translate }}"
           class="form-select fw-semibold text-capitalize border w-auto"
@@ -46,7 +46,7 @@
         @if (userCan("PUBLISH")) {
           <button
             class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
-            [disabled]="disabled()"
+            [disabled]="locked"
             (click)="publishIncident('incidentReportUI.publishIncidentConfirm')"
           >
             {{ "incidentReportUI.publishIncident" | translate }}
@@ -55,7 +55,7 @@
         @if (userCan("REPUBLISH")) {
           <button
             class="btn btn-sm btn-success d-flex align-items-center gap-1 text-nowrap d-print-none"
-            [disabled]="disabled()"
+            [disabled]="locked"
             (click)="publishIncident('incidentReportUI.republishIncidentConfirm')"
           >
             {{ "incidentReportUI.republishIncident" | translate }}
@@ -64,7 +64,7 @@
         @if (userCan("UNPUBLISH")) {
           <button
             class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 text-nowrap d-print-none"
-            [disabled]="disabled()"
+            [disabled]="locked"
             (click)="unpublishIncident()"
           >
             {{ "incidentReportUI.unpublishIncident" | translate }}
@@ -74,7 +74,7 @@
           <button
             type="button"
             class="btn btn-outline-danger btn-icon d-print-none"
-            [disabled]="disabled()"
+            [disabled]="locked"
             (click)="deleteIncident()"
             title="{{ 'incidentReportUI.deleteIncident' | translate }}"
           >
@@ -95,6 +95,12 @@
           @case ("error") {
             <i class="ph ph-floppy-disk text-danger"></i>
             <span class="text-danger">{{ "incidentReportUI.saveStateError" | translate }}</span>
+          }
+          @case ("forbidden") {
+            <i class="ph ph-lock text-danger"></i>
+            <span class="text-danger" [title]="forbiddenReason">
+              {{ "incidentReportUI.saveStateForbidden" | translate }}
+            </span>
           }
           @case ("blocked") {
             <i class="ph ph-warning-circle text-danger"></i>
@@ -123,6 +129,13 @@
       </div>
     </div>
   </div>
+
+  @if (!readOnly && forbiddenReason) {
+    <div class="alert alert-warning d-flex align-items-center gap-2 py-2 d-print-none" role="status">
+      <i class="ph ph-lock"></i>
+      {{ "incidentReportUI.forbidden" | translate: { reason: forbiddenReason } }}
+    </div>
+  }
 
   <div class="d-flex flex-wrap align-items-center gap-2 mb-2 d-print-none">
     @if (!readOnly) {
@@ -178,7 +191,7 @@
   <div class="border p-4 rounded bg-light-subtle shadow-sm">
     <app-incident-report-editor
       [(incidentReport)]="incidentReport"
-      [disabled]="disabled()"
+      [disabled]="locked"
       [displayMode]="displayMode"
       [activeTab]="activeTab"
     />
@@ -194,7 +207,7 @@
         <div class="mt-4 d-flex align-items-right mb-4">
           <div>
             <button
-              [disabled]="disabled()"
+              [disabled]="locked"
               class="btn btn-sm btn-success d-flex align-items-center gap-1"
               [class.d-none]="displayOnly"
               (click)="attachmentFileInput.click()"
@@ -231,6 +244,9 @@
               <div class="alert alert-danger d-flex align-items-center gap-2 py-2">
                 <i class="ph ph-warning"></i>
                 {{ "incidentReportUI.attachmentsUploadFailed" | translate }}
+                @if (uploadForbiddenReason) {
+                  {{ "incidentReportUI.forbidden" | translate: { reason: uploadForbiddenReason } }}
+                }
                 <button type="button" class="btn btn-sm btn-outline-danger ms-auto" (click)="retryAttachmentUploads()">
                   <i class="ph ph-arrow-clockwise"></i>
                   {{ "incidentReportUI.retryUpload" | translate }}
@@ -303,7 +319,7 @@
                   <input
                     type="checkbox"
                     class="form-check-input public-switch ms-0 mt-0 float-none"
-                    [disabled]="disabled() || readOnly"
+                    [disabled]="locked || readOnly"
                     [(ngModel)]="attachment.public"
                     (ngModelChange)="incidentReport.set({ ...incidentReport() })"
                     [id]="'attachment-public-input-' + $index"
@@ -313,6 +329,7 @@
                 <button
                   class="btn btn-sm btn-outline-danger"
                   [class.d-none]="displayOnly"
+                  [disabled]="locked"
                   (click)="removeAttachment($index)"
                   title="{{ 'incidentReportUI.removeAttachment' | translate }}"
                 >
@@ -337,7 +354,7 @@
                     </div>
                     <div class="col-12 col-md-8">
                       <app-zod-schema-form
-                        [disabled]="disabled()"
+                        [disabled]="locked"
                         [displayMode]="displayMode"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
@@ -349,7 +366,7 @@
                   } @else {
                     <div class="col-12">
                       <app-zod-schema-form
-                        [disabled]="disabled()"
+                        [disabled]="locked"
                         [displayMode]="displayMode"
                         [value]="attachment"
                         (valueChange)="updateAttachment($index, $event)"
@@ -365,7 +382,7 @@
           </div>
         }
         <app-zod-schema-form
-          [disabled]="disabled()"
+          [disabled]="locked"
           [displayMode]="displayMode"
           [value]="incidentReport()"
           (valueChange)="incidentReport.set($event)"

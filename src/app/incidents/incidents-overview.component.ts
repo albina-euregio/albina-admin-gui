@@ -115,6 +115,11 @@ export class IncidentsOverviewComponent implements OnInit {
     URL.revokeObjectURL(url);
   }
 
+  /** Whether the user may change the incident, or create one when passing `{}`. */
+  canEdit(incident: Pick<IncidentReport, "publishedAt">): boolean {
+    return this.incidentService.mayChange(incident);
+  }
+
   openIncident(id: string) {
     this.router.navigate(["/incidents", id]);
   }

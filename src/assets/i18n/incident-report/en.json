@@ -85,7 +85,13 @@
     "saveStateSaving": "Saving…",
     "saveStateSaved": "Saved successfully",
     "saveStateError": "Save failed",
-    "saveStateBlocked": "Not saved — required fields are missing"
+    "saveStateBlocked": "Not saved — required fields are missing",
+    "forbidden": "Not allowed: {{reason}}",
+    "saveStateForbidden": "Not saved — not allowed",
+    "deleteIncidentError": "The incident could not be deleted.",
+    "publishIncidentError": "The incident could not be published.",
+    "unpublishIncidentError": "The incident could not be unpublished.",
+    "removeAttachmentError": "The attachment could not be removed."
   },
   "incidentReport": {
     "incidentReport": "Incident Report",

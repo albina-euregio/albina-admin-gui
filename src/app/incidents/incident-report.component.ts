@@ -37,7 +37,7 @@ import { DisplayMode, isEditableDisplayMode, ZodSchemaFormComponent } from "../s
 import { IncidentReportEditorComponent } from "./incident-report-editor.component";
 import * as IncidentModels from "./incident-report.model";
 import { IncidentReport } from "./incident-report.model";
-import { IncidentService } from "./incident.service";
+import { IncidentRequestError, IncidentService } from "./incident.service";
 
 @Component({
   selector: "app-incident-report",
@@ -71,7 +71,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private lastSavedData: string | null = null;
   // Status of the automatic server synchronization, exposed for the template.
   // "blocked" means the report has missing required fields and is not persisted.
-  saveState: "idle" | "saving" | "saved" | "error" | "blocked" = "idle";
+  // "forbidden" means the server refused the save, see forbiddenReason.
+  saveState: "idle" | "saving" | "saved" | "error" | "blocked" | "forbidden" = "idle";
   updatedAt: Date | null = null;
 
   readonly IncidentModels = IncidentModels;
@@ -87,6 +88,27 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   displayMode = DisplayMode.Edit;
 
   readOnly = false;
+
+  /**
+   * The server's explanation after it refused to save the report, which is then locked.
+   * Users who may not change the report at all never get here: it is opened read-only (see {@link ngOnInit}).
+   */
+  forbiddenReason: string | null = null;
+
+  /** Whether editing the report is disabled, by the input or by a refused save. */
+  get locked(): boolean {
+    return this.disabled() || !!this.forbiddenReason;
+  }
+
+  /** Shows why a request failed, with the server's explanation if it refused the request. */
+  private alertError(messageKey: string, error: unknown) {
+    console.error(error);
+    alert(
+      error instanceof IncidentRequestError && error.forbidden
+        ? this.translateService.instant("incidentReportUI.forbidden", { reason: error.message })
+        : this.translateService.instant(messageKey),
+    );
+  }
 
   /** True for any read-only preview mode; gates the print/preview layout in the template. */
   get displayOnly(): boolean {
@@ -171,15 +193,17 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     reportStatus = this.incidentReport().reportStatus,
   ): boolean {
     const isForecaster = this.authenticationService.isCurrentUserInRole("FORECASTER");
+    // Publishing changes what is publicly visible, which only forecasters and admins may do.
+    const canPublish = this.incidentService.canPublish();
     const inReview = reportStatus === "InReview" || reportStatus === "Verified";
     const isPublished = !!this.incidentReport().publishedAt;
     switch (op) {
       case "PUBLISH":
-        return isForecaster && reportStatus !== "Draft" && this.isReportValid() && !isPublished;
+        return canPublish && reportStatus !== "Draft" && this.isReportValid() && !isPublished;
       case "REPUBLISH":
-        return isForecaster && reportStatus !== "Draft" && this.isReportValid() && isPublished;
+        return canPublish && reportStatus !== "Draft" && this.isReportValid() && isPublished;
       case "UNPUBLISH":
-        return isForecaster && isPublished;
+        return canPublish && isPublished;
       case "CHANGE_STATUS":
         return isForecaster || !inReview;
       case "CHANGE_STATUS_TO_REVIEW":
@@ -331,6 +355,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   retryAttachmentUploads() {
     this.failedFiles.clear();
+    this.uploadForbiddenReason = null;
     void this.uploadStagedAttachments();
   }
 
@@ -340,20 +365,33 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get("id");
+    if (!id && !this.incidentService.mayChange({})) {
+      // Users who may not create incidents get no "new" button; this guards a manually entered URL.
+      void this.router.navigate(["/incidents"]);
+      return;
+    }
+    if (this.route.snapshot.queryParamMap.get("readOnly") === "true") {
+      this.setReadOnly();
+    }
     if (id) {
       this.loadIncident(id);
     }
-    this.readOnly = this.route.snapshot.queryParamMap.get("readOnly") === "true";
-    if (this.readOnly) {
-      this.displayMode = DisplayMode.All;
-    }
     this.startAutoSave();
+  }
+
+  private setReadOnly() {
+    this.readOnly = true;
+    this.displayMode = DisplayMode.All;
   }
 
   private loadIncident(id: string) {
     this.incidentService.getIncident(id).subscribe({
       next: (report) => {
         this.incidentReport.set(report);
+        // Users who may not change the incident get no edit button; this guards `readOnly=false` in the URL.
+        if (!this.incidentService.mayChange(report)) {
+          this.setReadOnly();
+        }
         // The report just loaded from the server is by definition already saved;
         // Without this, autosave would immediately trigger a redundant save.
         this.lastSavedData = this.serializeReport(report);
@@ -404,6 +442,8 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   private saveIncident(data: string): Observable<unknown> {
     if (data === this.lastSavedData) return EMPTY;
+    // The server would refuse the save.
+    if (this.readOnly || this.forbiddenReason) return EMPTY;
     // A report with missing required fields must not be persisted; it stays a
     // local draft until completed. Validity is re-checked on the next change.
     if (!this.isReportValid()) {
@@ -435,7 +475,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       }),
       catchError((error) => {
         console.error("Failed to save incident", error);
-        this.saveState = "error";
+        if (error instanceof IncidentRequestError && error.forbidden) {
+          // e.g. a published incident or one of another region; retrying would be refused again.
+          this.forbiddenReason = error.message;
+          this.saveState = "forbidden";
+        } else {
+          this.saveState = "error";
+        }
         return EMPTY;
       }),
     );
@@ -459,7 +505,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     const input = $event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = "";
-    if (!file) {
+    if (!file || this.locked) {
       return;
     }
     const staged: IncidentModels.IncidentAttachment = {
@@ -479,17 +525,21 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   private readonly uploadingFiles = new Set<File>();
   /** Files of staged attachments whose last upload attempt failed. */
   private readonly failedFiles = new Set<File>();
+  /** The server's explanation after it refused an attachment upload; cleared on retry. */
+  uploadForbiddenReason: string | null = null;
 
   /**
    * Uploads all staged attachments, provided the report has already been saved.
    * Each uploaded attachment replaces its staged entry, keeping the metadata the
    * user entered in the meantime. The resulting report change is then persisted
    * by the autosave. Failed uploads stay staged; they are retried on the next successful
-   * save, on adding another attachment or via {@link retryAttachmentUploads}.
+   * save, on adding another attachment or via {@link retryAttachmentUploads}
+   * (only the latter after the server refused an upload).
    */
   private async uploadStagedAttachments() {
     const id = this.incidentReport().id;
-    if (!id) return;
+    // After a refused upload, only an explicit retry tries again.
+    if (!id || this.uploadForbiddenReason) return;
     const staged = (this.incidentReport().attachments ?? []).filter(
       (attachment) => this.isAttachmentStaged(attachment) && !this.uploadingFiles.has(attachment.file),
     );
@@ -532,6 +582,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
       } catch (error) {
         console.error("Failed to upload attachment", file.name, error);
         this.failedFiles.add(file);
+        if (error instanceof IncidentRequestError && error.forbidden) {
+          // Further uploads would be refused as well: mark them failed without trying.
+          // Only the attachments are affected; the report itself can still be saved.
+          this.uploadForbiddenReason = error.message;
+          staged.forEach((a) => this.failedFiles.add(a.file));
+          break;
+        }
       } finally {
         this.uploadingFiles.delete(file);
       }
@@ -546,12 +603,18 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
 
   async removeAttachment(index: number) {
     const attachment = this.incidentReport().attachments[index];
+    if (this.locked) return;
     const message = this.translateService.instant("incidentReportUI.dropAttachment", {
       fileName: attachment.fileName,
     });
     if (!confirm(message)) return;
     if (attachment.id) {
-      await firstValueFrom(this.incidentService.deleteIncidentAttachment(this.incidentReport().id, attachment));
+      try {
+        await firstValueFrom(this.incidentService.deleteIncidentAttachment(this.incidentReport().id, attachment));
+      } catch (error) {
+        this.alertError("incidentReportUI.removeAttachmentError", error);
+        return;
+      }
       this.attachments[attachment.id]?.then((url) => URL.revokeObjectURL(url));
     } else if (attachment.file) {
       this.stagedPreviewUrls.get(attachment.file)?.then((url) => URL.revokeObjectURL(url));
@@ -564,7 +627,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   }
 
   deleteIncident() {
-    if (!this.userCan("DELETE")) return;
+    if (!this.userCan("DELETE") || this.locked) return;
     const message = this.translateService.instant("incidentReportUI.deleteIncidentConfirm");
     if (!confirm(message)) return;
     // A report that never became valid was never saved to the server, so there is nothing to delete there.
@@ -574,7 +637,7 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     }
     this.incidentService.deleteIncident(this.incidentReport().id).subscribe({
       next: () => this.router.navigate(["/incidents"]),
-      error: (error) => console.error("Incident could not be deleted!", error),
+      error: (error) => this.alertError("incidentReportUI.deleteIncidentError", error),
     });
   }
 
@@ -587,7 +650,13 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
     // involvement counts from the full data and emptied the group/victim arrays.
     // Recomputing here would zero the counts.
     const data = this.serializeReportData(publicReport);
-    const report = await this.incidentService.publishIncident(this.incidentReport().id, data).toPromise();
+    let report: IncidentReport;
+    try {
+      report = await firstValueFrom(this.incidentService.publishIncident(this.incidentReport().id, data));
+    } catch (error) {
+      this.alertError("incidentReportUI.publishIncidentError", error);
+      return;
+    }
     this.incidentReport.set(report);
     alert(this.translateService.instant("incidentReportUI.publishIncidentSuccess"));
   }
@@ -595,7 +664,12 @@ export class IncidentReportComponent implements OnInit, OnDestroy {
   async unpublishIncident() {
     if (!this.userCan("UNPUBLISH")) return;
     if (!confirm(this.translateService.instant("incidentReportUI.unpublishIncidentConfirm"))) return;
-    await this.incidentService.unpublishIncident(this.incidentReport().id).toPromise();
+    try {
+      await firstValueFrom(this.incidentService.unpublishIncident(this.incidentReport().id));
+    } catch (error) {
+      this.alertError("incidentReportUI.unpublishIncidentError", error);
+      return;
+    }
     this.incidentReport.update((report) => ({ ...report, publishedAt: undefined }));
     alert(this.translateService.instant("incidentReportUI.unpublishIncidentSuccess"));
   }

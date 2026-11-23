@@ -376,11 +376,15 @@ test("Load bulletin from the day before", async ({ page }) => {
 });
 
 test("Update -> Resubmit -> Republish", async ({ page }) => {
+  // the full submit/publish/edit round trip is slow against the CI dev server
+  test.slow();
   const testDate = new Date("2024-12-21");
   await setFixedTime(page, testDate);
   await page.reload();
+  // register response listeners before the triggering click, otherwise a fast response can be missed
+  const getEditPromise = waitForGetEdit(page);
   await page.getByRole("row", { name: "Friday, December 20, 2024" }).getByTitle("edit bulletin").click();
-  await waitForGetEdit(page);
+  await getEditPromise;
   const badge = statusBadge(page);
   await expect(badge).not.toContainText("missing");
   if (!/draft|updated/.test((await badge.textContent()) ?? "")) {
@@ -394,13 +398,14 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
         - button "Yes"
         - button "No"
   `);
-  await page.getByRole("button", { name: "Yes" }).click();
-  await page.waitForResponse(
+  const submitResponsePromise = page.waitForResponse(
     (response) =>
       /\/api\/bulletins\/submit/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST",
   );
+  await page.getByRole("button", { name: "Yes" }).click();
+  await submitResponsePromise;
   await expect(badge).toContainText("resubmitted");
   await page.getByRole("button", { name: "Publish now (no messages)" }).click();
   await expect(page.getByRole("dialog")).toMatchAriaSnapshot(`
@@ -410,22 +415,24 @@ test("Update -> Resubmit -> Republish", async ({ page }) => {
         - button "Yes"
         - button "No"
   `);
-  await page.getByRole("button", { name: "Yes" }).click();
-  await page.waitForResponse(
+  const publishResponsePromise = page.waitForResponse(
     (response) =>
       /\/api\/bulletins\/publish/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST",
   );
+  await page.getByRole("button", { name: "Yes" }).click();
+  await publishResponsePromise;
   await expect(badge).toContainText("republished");
-  await page.getByRole("button", { name: "Edit" }).click();
-  await page.waitForResponse(
+  const saveResponsePromise = page.waitForResponse(
     (response) =>
       /\/api\/bulletins/.test(response.url()) &&
       response.status() === 200 &&
       response.request().method() === "POST" &&
       response.request().postDataJSON().length === 4, // 4 bulletin regions are posted
   );
+  await page.getByRole("button", { name: "Edit" }).click();
+  await saveResponsePromise;
   await expect(badge).toContainText("updated");
 });
 
