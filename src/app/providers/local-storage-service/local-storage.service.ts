@@ -65,7 +65,8 @@ export class LocalStorageService {
       language === "en" ||
       language === "fr" ||
       language === "es" ||
-      language === "ca"
+      language === "ca" ||
+      language === "sl"
     ) {
       z.config(z.locales[language]());
     }

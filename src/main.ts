@@ -7,6 +7,7 @@ import localeEs from "@angular/common/locales/es";
 import localeFr from "@angular/common/locales/fr";
 import localeIt from "@angular/common/locales/it";
 import localeOc from "@angular/common/locales/oc";
+import localeSl from "@angular/common/locales/sl";
 import { provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { provideRouter, TitleStrategy, withHashLocation } from "@angular/router";
@@ -57,6 +58,7 @@ for (const [id, data] of Object.entries({
   es: localeEs,
   ca: localeCa,
   oc: localeOc,
+  sl: localeSl,
 })) {
   /**
    * Strip seconds from all of the locale's time formats (e.g. "HH:mm:ss" -> "HH:mm"),

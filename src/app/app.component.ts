@@ -9,6 +9,7 @@ import caamlEs from "../../app/i18n/caaml/es.json";
 import caamlFr from "../../app/i18n/caaml/fr.json";
 import caamlIt from "../../app/i18n/caaml/it.json";
 import caamlOc from "../../app/i18n/caaml/oc.json";
+import caamlSl from "../../app/i18n/caaml/sl.json";
 import ca from "../assets/i18n/ca.json";
 import de from "../assets/i18n/de.json";
 import en from "../assets/i18n/en.json";
@@ -21,8 +22,10 @@ import incidentReportEs from "../assets/i18n/incident-report/es.json";
 import incidentReportFr from "../assets/i18n/incident-report/fr.json";
 import incidentReportIt from "../assets/i18n/incident-report/it.json";
 import incidentReportOc from "../assets/i18n/incident-report/oc.json";
+import incidentReportSl from "../assets/i18n/incident-report/sl.json";
 import it from "../assets/i18n/it.json";
 import oc from "../assets/i18n/oc.json";
+import sl from "../assets/i18n/sl.json";
 import { environment } from "../environments/environment";
 import { LocalStorageService } from "./providers/local-storage-service/local-storage.service";
 
@@ -58,6 +61,7 @@ export class AppComponent {
       es: [es, incidentReportEs, caamlEs],
       ca: [ca, incidentReportCa, caamlCa],
       oc: [oc, incidentReportOc, caamlOc],
+      sl: [sl, incidentReportSl, caamlSl],
     };
     this.translateService.addLangs(Object.keys(resources));
     for (const [lang, translations] of Object.entries(resources)) {
