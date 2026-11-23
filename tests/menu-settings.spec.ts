@@ -21,6 +21,7 @@ test("change language setting", async ({ page }) => {
     "Spanish",
     "Catalan",
     "Aranese",
+    "Slovenian",
   ]);
   await page.getByRole("button", { name: "German" }).click();
   await expect(page.getByRole("button", { name: "DE" })).toBeVisible();
