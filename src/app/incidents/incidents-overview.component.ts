@@ -115,9 +115,9 @@ export class IncidentsOverviewComponent implements OnInit {
     URL.revokeObjectURL(url);
   }
 
-  /** Whether the user may change the incident, or create one when passing `{}`. */
-  canEdit(incident: Pick<IncidentReport, "publishedAt">): boolean {
-    return this.incidentService.mayChange(incident);
+  /** Whether the user may create and change incidents, published ones included. */
+  canEdit(): boolean {
+    return this.incidentService.mayChange();
   }
 
   openIncident(id: string) {
