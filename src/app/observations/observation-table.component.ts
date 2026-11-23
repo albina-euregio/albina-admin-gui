@@ -43,6 +43,13 @@ export class ObservationTableComponent {
     return sortByEventDateDesc(this.observations() || []);
   }
 
+  /**
+   * Observations as shown in the table (used by ←/→ in the observation popup)
+   */
+  get visibleObservations(): GenericObservation[] {
+    return this.sortedObservations.filter((o) => this.isShowObservation(o));
+  }
+
   isShowObservation(observation: GenericObservation): boolean {
     return !this.showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude);
   }
