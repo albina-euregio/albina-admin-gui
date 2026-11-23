@@ -493,6 +493,7 @@ interface TextcatLegacyOut {
   textFr: string;
   textCa: string;
   textOc: string;
+  textSl: string;
 }
 
 function convertTextcatToLangTexts(pmData: TextcatLegacyOut): LangTexts {
@@ -504,5 +505,6 @@ function convertTextcatToLangTexts(pmData: TextcatLegacyOut): LangTexts {
     es: pmData.textEs,
     ca: pmData.textCa,
     oc: pmData.textOc,
+    sl: pmData.textSl,
   };
 }

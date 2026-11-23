@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-export const LANGUAGES = Object.freeze(["de", "en", "it", "fr", "es", "ca", "oc"] as const);
+export const LANGUAGES = Object.freeze(["de", "en", "it", "fr", "es", "ca", "oc", "sl"] as const);
 
 export const LanguageSchema = z.enum(LANGUAGES);
 

@@ -760,6 +760,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         es: "⚠ Error: Missing translation",
         ca: "⚠ Error: Missing translation",
         oc: "⚠ Error: Missing translation",
+        sl: "⚠ Error: Missing translation",
       });
     }
 
