@@ -9,7 +9,7 @@ import {
   PublicationStatusSchema,
 } from "app/models/publication-checklist.model";
 import { StressLevel } from "app/models/stress-level.model";
-import { BehaviorSubject, from, Observable, of, Subject } from "rxjs";
+import { BehaviorSubject, from, Observable, of, Subject, Subscription } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import * as Enums from "../../enums/enums";
@@ -84,6 +84,7 @@ export class BulletinsService {
   readonly publicationStatus$: Observable<PublicationStatusModel | undefined> =
     this.publicationStatusSubject.asObservable();
   private publicationStatusPollTimeout: ReturnType<typeof setTimeout> | null = null;
+  private publicationStatusPollSubscription: Subscription | null = null;
 
   private static readonly PUBLICATION_STATUS_FAST_POLL_MS = 1000;
   private static readonly PUBLICATION_STATUS_SLOW_POLL_MS = 10000;
@@ -598,6 +599,8 @@ export class BulletinsService {
       clearTimeout(this.publicationStatusPollTimeout);
       this.publicationStatusPollTimeout = null;
     }
+    this.publicationStatusPollSubscription?.unsubscribe();
+    this.publicationStatusPollSubscription = null;
   }
 
   refreshPublicationStatus() {
@@ -608,7 +611,7 @@ export class BulletinsService {
   private pollPublicationStatus() {
     const regionId = this.authenticationService.getActiveRegionId();
     if (!regionId) return;
-    this.getPublicationStatus(regionId).subscribe({
+    this.publicationStatusPollSubscription = this.getPublicationStatus(regionId).subscribe({
       next: (data) => {
         this.publicationStatusSubject.next(data);
         const interval = data?.isBeingPublished

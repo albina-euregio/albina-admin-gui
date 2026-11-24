@@ -483,6 +483,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.resetAll();
     this.mapService.removeMaps();
 
+    this.bulletinsService.stopPublicationStatusPolling();
     this.bulletinsService.sourceDates.setActiveDate(undefined);
     this.bulletinsService.setStatusAllowsEditing(false);
 
