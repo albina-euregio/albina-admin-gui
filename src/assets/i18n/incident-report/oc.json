@@ -85,7 +85,13 @@
     "saveStateSaving": "",
     "saveStateSaved": "",
     "saveStateError": "",
-    "saveStateBlocked": ""
+    "saveStateBlocked": "",
+    "forbidden": "",
+    "saveStateForbidden": "",
+    "deleteIncidentError": "",
+    "publishIncidentError": "",
+    "unpublishIncidentError": "",
+    "removeAttachmentError": ""
   },
   "incidentReport": {
     "incidentReport": "",

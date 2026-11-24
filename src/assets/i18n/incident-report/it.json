@@ -85,7 +85,13 @@
     "saveStateSaving": "Salvataggio in corso",
     "saveStateSaved": "Salvato con successo",
     "saveStateError": "Salvataggio fallito",
-    "saveStateBlocked": "Non salvato - campi obbligatori mancanti"
+    "saveStateBlocked": "Non salvato - campi obbligatori mancanti",
+    "forbidden": "",
+    "saveStateForbidden": "",
+    "deleteIncidentError": "",
+    "publishIncidentError": "",
+    "unpublishIncidentError": "",
+    "removeAttachmentError": ""
   },
   "incidentReport": {
     "incidentReport": "Rapporto sull'evento valanghivo",

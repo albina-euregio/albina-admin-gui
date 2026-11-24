@@ -85,7 +85,13 @@
     "saveStateSaving": "Guardar...",
     "saveStateSaved": "Guardado con éxito",
     "saveStateError": "Errror al guardar",
-    "saveStateBlocked": "No guardado - faltan campos obligatorios"
+    "saveStateBlocked": "No guardado - faltan campos obligatorios",
+    "forbidden": "",
+    "saveStateForbidden": "",
+    "deleteIncidentError": "",
+    "publishIncidentError": "",
+    "unpublishIncidentError": "",
+    "removeAttachmentError": ""
   },
   "incidentReport": {
     "incidentReport": "Incidentes de alud",

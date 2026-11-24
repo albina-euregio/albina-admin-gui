@@ -85,7 +85,13 @@
     "saveStateSaving": "Enregistrer...",
     "saveStateSaved": "Enregistré avec succès",
     "saveStateError": "Échec de l'enregistrement",
-    "saveStateBlocked": "Non enregistré - champs obligatoires non renseignés"
+    "saveStateBlocked": "Non enregistré - champs obligatoires non renseignés",
+    "forbidden": "",
+    "saveStateForbidden": "",
+    "deleteIncidentError": "",
+    "publishIncidentError": "",
+    "unpublishIncidentError": "",
+    "removeAttachmentError": ""
   },
   "incidentReport": {
     "incidentReport": "Rapport d'incident",
