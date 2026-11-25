@@ -210,17 +210,17 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))
       '@eaws/micro-regions':
-        specifier: ^9.2.0
-        version: 9.2.0
+        specifier: ^9.3.1
+        version: 9.3.1
       '@eaws/micro-regions_names':
-        specifier: ^9.2.0
-        version: 9.2.0
+        specifier: ^9.3.1
+        version: 9.3.1
       '@eaws/outline_properties':
-        specifier: ^9.2.0
-        version: 9.2.0
+        specifier: ^9.3.1
+        version: 9.3.1
       '@eaws/pmtiles':
-        specifier: ^9.2.0
-        version: 9.2.0
+        specifier: ^9.3.1
+        version: 9.3.1
       '@ngx-translate/core':
         specifier: ^18.0.0
         version: 18.0.0(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
@@ -722,17 +722,17 @@ packages:
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
 
-  '@eaws/micro-regions@9.2.0':
-    resolution: {integrity: sha1-npiiwz8JxUVhB/pbdjgE0RMpgvo=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions/-/@eaws/micro-regions-9.2.0.tgz}
+  '@eaws/micro-regions@9.3.1':
+    resolution: {integrity: sha1-t8TDaEAtU+AwFq2q5S5559z2CN0=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions/-/@eaws/micro-regions-9.3.1.tgz}
 
-  '@eaws/micro-regions_names@9.2.0':
-    resolution: {integrity: sha1-pnljdNDZd/HB9i+RkBkKgB9Cedo=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions_names/-/@eaws/micro-regions_names-9.2.0.tgz}
+  '@eaws/micro-regions_names@9.3.1':
+    resolution: {integrity: sha1-HlGVg8fDeY+/api3lCXs76v4p7I=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions_names/-/@eaws/micro-regions_names-9.3.1.tgz}
 
-  '@eaws/outline_properties@9.2.0':
-    resolution: {integrity: sha1-8dF5QqZENOHq9DLeLy6sFMqE5mk=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/outline_properties/-/@eaws/outline_properties-9.2.0.tgz}
+  '@eaws/outline_properties@9.3.1':
+    resolution: {integrity: sha1-aIIBbRya2qyIUMQYckxVbuoxq/g=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/outline_properties/-/@eaws/outline_properties-9.3.1.tgz}
 
-  '@eaws/pmtiles@9.2.0':
-    resolution: {integrity: sha1-oYZx7TJXJDlo/Urt8ces7ahLWUA=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/pmtiles/-/@eaws/pmtiles-9.2.0.tgz}
+  '@eaws/pmtiles@9.3.1':
+    resolution: {integrity: sha1-Zv+SCjn+o+ghBOH89N9PAbSndgQ=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/pmtiles/-/@eaws/pmtiles-9.3.1.tgz}
 
   '@esbuild/aix-ppc64@0.28.2':
     resolution: {integrity: sha512-XExcO+dvLKvVtNTibSTBej1NCAbaGhWn9Ww1ZPx80qsahhPFe/8jgWP0IchNe0F3HwkU7n8ejhH8bjonqht8mQ==}
@@ -4648,13 +4648,13 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@eaws/micro-regions@9.2.0': {}
+  '@eaws/micro-regions@9.3.1': {}
 
-  '@eaws/micro-regions_names@9.2.0': {}
+  '@eaws/micro-regions_names@9.3.1': {}
 
-  '@eaws/outline_properties@9.2.0': {}
+  '@eaws/outline_properties@9.3.1': {}
 
-  '@eaws/pmtiles@9.2.0': {}
+  '@eaws/pmtiles@9.3.1': {}
 
   '@esbuild/aix-ppc64@0.28.2':
     optional: true
