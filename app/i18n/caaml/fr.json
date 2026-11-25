@@ -98,6 +98,6 @@
   "elevation.band": "Entre {0} et {1}",
   "synopsis.label": "Météo",
   "snowpack.label": "Manteau neigeux",
-  "travelAdvisory.label": "",
+  "travelAdvisory.label": "Conseils sur le terrain et les parcours",
   "forecast.label": "Bulletin d'avalanche"
 }
